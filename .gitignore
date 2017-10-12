@@ -1,0 +1,45 @@
+# Custom Ignores
+analogs/
+build/assemblies/*
+build/executables/*
+build/libraries/*
+build/logs/*
+build/objects/*
+rubbish/
+documentation/
+.vscode/
+asn1
+
+# General D Ignores
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.a
+*.lib
+*.exe
+.dub
+docs.json
+__dummy.html
+docs/
+*.lst
+
+# Mac OS Ignores
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk

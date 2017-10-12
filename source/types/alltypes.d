@@ -1,0 +1,32 @@
+module types.alltypes;
+public import
+// types.universal.bitstring,
+// types.universal.bmpstring,
+// types.universal.boolean,
+types.universal.characterstring,
+types.universal.embeddedpdv,
+// types.universal.endofcontent,
+// types.universal.enumerated,
+types.universal.external,
+// types.universal.generalizedtime,
+// types.universal.generalstring,
+// types.universal.graphicstring,
+// types.universal.ia5string,
+// types.universal.integer,
+// types.universal.nulltype,
+// types.universal.numericstring,
+types.universal.objectdescriptor,
+types.universal.objectidentifier,
+// types.universal.octetstring,
+// types.universal.printablestring,
+// types.universal.realtype,
+types.universal.relativeobjectidentifier
+// types.universal.sequence,
+// types.universal.set,
+// types.universal.teletexstring,
+// types.universal.universalstring,
+// types.universal.utctime,
+// types.universal.utf8string,
+// types.universal.videotexstring,
+// types.universal.visiblestring
+;

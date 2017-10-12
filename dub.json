@@ -1,0 +1,7 @@
+{
+	"name": "asn1",
+	"description": "An ASN.1 Encoder and decoder",
+	"authors": [ "jonathanwilbur" ],
+	"license": "ISC",
+	"targetType": "library"
+}
