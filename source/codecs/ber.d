@@ -1,19 +1,58 @@
+/**
+    Basic Encoding Rules (BER) is a standard for encoding ASN.1 data. It is by
+    far the most common standard for doing so, being used in LDAP, TLS, SNMP, 
+    RDP, and other protocols. Like Distinguished Encoding Rules (DER), 
+    Canonical Encoding Rules (CER), and Packed Encoding Rules (PER), Basic
+    Encoding Rules is a specification created by the 
+    $(LINK2 http://www.itu.int/en/pages/default.aspx, 
+        International Telecommunications Union),
+    and specified in 
+    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
+    
+    BER is generally regarded as the most flexible of the encoding schemes, 
+    because all values can be encoded in a multitude of ways. This flexibility
+    might be convenient for developers who use a BER Library, but creating
+    a BER library in the first place is a nightmare, because of its flexibility.
+    I personally suspect that the complexity of BER may make its implementation
+    inclined to security vulnerabilities, so I would not use it if you have a
+    choice in the matter. Also, the ability to represent values in several 
+    different ways is actually a security problem when data has to be guarded 
+    against tampering with a cryptographic signature. (Basically, it makes it 
+    a lot easier to find a tampered payload that has the identical signature 
+    as the genuine payload.)
+
+    Author: 
+        $(LINK2 http://jonathan.wilbur.space, Jonathan M. Wilbur) 
+            $(LINK2 mailto:jonathan@wilbur.space, jonathan@wilbur.space)
+    License: $(https://opensource.org/licenses/ISC, ISC License)
+    Standards:
+        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1))
+        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
+    See_Also:
+        $(LINK2 https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One, The Wikipedia Page on ASN.1)
+        $(LINK2 https://en.wikipedia.org/wiki/X.690, The Wikipedia Page on X.690)
+        $(LINK2 https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf, ASN.1 By Simple Words)
+        $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems)
+*/
 module codecs.ber;
 import asn1;
 import codec;
 import types.alltypes;
 import types.identification;
 import std.algorithm.mutation : reverse;
+import std.algorithm.searching : canFind;
+import std.ascii : isASCII;
 import std.bitmanip : BitArray;
 import std.datetime.date : DateTime;
 import std.outbuffer; // This is only used for OID and ROID...
 
-// Could be useful: http://asn1-playground.oss.com/
-// Cite PyASN1 as a source.
-// NOTE: ASN1 INTEGERs are Big-Endian! Mac OS X and Linux are Little-Endian!
-
 // REVIEW: Should I change all properties to methods, and renamed them to encode*()?
 // REVIEW: Should I change the name of the class?
+// TODO: Storage classes
+// TODO: nothrow, @safe, pure, @system, etc.
+// TODO: Standard Embedded Documentation fields
+// TODO: Remove dependency on std.outbuffer.
+// TODO: Aliases
 
 debug
 {
@@ -37,25 +76,85 @@ class BasicEncodingRulesException : ASN1CodecException
 
 ///
 alias BERValue = BasicEncodingRulesValue;
-///
+/**
+    The unit of encoding and decoding for Basic Encoding Rules (BER).
+    There are three parts to an encoded BER Value:
+
+    $(UL
+        $(LI A Type Tag, which specifies what data type is encoded)
+        $(LI A Length Tag, which specifies how many subsequent bytes encode the data)
+        $(LI The Encoded Value)
+    )
+
+    They appear in the binary encoding in that order, and as such, the encoding
+    scheme is sometimes described as "TLV," which stands for Type-Length-Value.
+
+    This class provides a properties for getting and setting bit fields of
+    the type tag, but most of it is functionality for encoding data per
+    the specification.
+
+    As an example, this is what encoding a simple INTEGER looks like:
+
+    ---
+    BERValue bv = new BERValue();
+    bv.type = 0x02u; // "2" means this is an INTEGER
+    bv.integer = 1433; // Now the data is encoded.
+    transmit(cast(ubyte[]) bv); // transmit() is a made-up function.
+    ---
+
+    And this is what decoding looks like:
+
+    ---
+    ubyte[] data = receive(); // receive() is a made-up function.
+    BERValue bv2 = new BERValue(data);
+
+    long x;
+    if (bv.type == 0x02u) // it is an INTEGER
+    {
+        x = bv.integer;
+    }
+    // Now x is 1433!
+    ---
+*/
 public
 class BasicEncodingRulesValue : ASN1BinaryValue
 {
-    // TODO: Create static configuration parameters
+    /**
+        Returns true if the value octets contain two consecutive 0x00u bytes.
 
-    // BOOLEAN
-    /*
-        From the ITU's X.690:
-        If the boolean value is TRUE the octet shall have any non-zero value, as a sender's option. 
+        The intent of this is to be used for indefinite-length encoding, which
+        cannot contain two consecutive null octets as the value.
     */
+    private @property
+    bool valueContainsDoubleNull()
+    {
+        if (this.value.length < 2u) return false;
+        for (size_t i = 1; i < this.value.length; i++)
+        {
+            if (this.value[i] == 0x00u && this.value[i-1] == 0x00u)
+                return true;
+        }
+        return false;
+    }
+
+    /**
+        Returns a boolean from the data. A boolean will always be one byte.
+        Any non-zero value will be interpreted as TRUE. Only zero will be
+        interpreted as FALSE.
+    */
+    // FIXME: Throw exception if length is invalid.
     override public @property
     bool boolean()
     {
-        throwIfEmptyValue!BERException();
         return (this.value[0] ? true : false);
     }
 
-    override public @property
+    /**
+        Encodes a boolean. A boolean will always be one byte.
+        Any non-zero value will be interpreted as TRUE. Only zero will be
+        interpreted as FALSE.
+    */
+    override public @property nothrow
     void boolean(bool value)
     {
         this.value = [(value ? 0xFF : 0x00)];
@@ -72,7 +171,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.boolean == false);
     }
 
-    // INTEGER
+    /**
+        Decodes an integer from a big-endian sequence of bytes, where the 
+        bytes represent the two's complement encoding of the integer.
+    */
     // TODO: Make this support more types.
     override public @property
     long integer()
@@ -93,6 +195,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return *cast(long *) value.ptr; // FIXME: This is vulnerable!
     }
 
+    /**
+        Encodes an integer as a big-endian sequence of bytes, where the bytes 
+        represent the two's complement encoding of the integer.
+    */
+    // TODO: Make this support more types.
     override public @property
     void integer(long value)
     {
@@ -120,7 +227,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         bv.integer = 65000L;
     }
 
-    // BIT STRING
+    /**
+        Decodes a BitArray. The first byte is an unsigned number of the unused
+        bits in the last byte of the encoded bit array.
+    */
     override public @property
     BitArray bitString()
     {
@@ -130,6 +240,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return BitArray(this.value[1 .. $], cast(size_t) (((this.length - 1u) * 8u) - this.value[0]));
     }
 
+    /**
+        Encodes a BitArray. The first byte is an unsigned number of the unused
+        bits in the last byte of the encoded bit array.
+    */
     override public @property
     void bitString(BitArray value)
     {
@@ -152,13 +266,18 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.bitString == ba);
     }
 
-    // OCTET STRING
+    /**
+        Decodes an OCTET STRING into an unsigned byte array.
+    */
     override public @property
     ubyte[] octetString()
     {
         return this.value;
     }
 
+    /**
+        Encodes an OCTET STRING from an unsigned byte array.
+    */
     override public @property
     void octetString(ubyte[] value)
     {
@@ -174,7 +293,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.octetString == [ 0x05u, 0x02u, 0xFF, 0x00, 0x6A ]);
     }
 
-    // NULL
+    /**
+        Returns an empty array, which is meant to indicate a null.
+        The length of a NULL is always zero.
+    */
     override public @property
     ubyte[] nill()
     {
@@ -184,6 +306,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return [];
     }
 
+    /**
+        The only thing this does is set the value to an empty array, which is
+        technically correct, since a NULL is always zero-length.
+    */
     override public @property
     void nill(ubyte[] value)
     {
@@ -199,7 +325,22 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.nill == []);
     }
 
-    // OBJECT IDENTIFIER
+    /**
+        Decodes an OBJECT IDENTIFIER.
+        See source/types/universal/objectidentifier.d for information about
+        the ObjectIdentifier class (aliased as "OID").
+
+        The encoded OBJECT IDENTIFIER's first byte contains the first number
+        of the OID multiplied by 40 and added to the second number of the OID.
+        The subsequent bytes have all the remaining number encoded in base-128
+        on the least significant 7 bits of each byte. For these bytes, the most
+        significant bit is set if the next byte continues the encoding of the
+        current OID number. In other words, the bytes encoding each number
+        always end with a byte whose most significant bit is cleared.
+
+        Standards:
+            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
+    */
     override public @property
     OID objectIdentifier()
     {
@@ -231,6 +372,22 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return new OID(oidComponents);
     }
 
+    /**
+        Encodes an OBJECT IDENTIFIER.
+        See source/types/universal/objectidentifier.d for information about
+        the ObjectIdentifier class (aliased as "OID").
+
+        The encoded OBJECT IDENTIFIER's first byte contains the first number
+        of the OID multiplied by 40 and added to the second number of the OID.
+        The subsequent bytes have all the remaining number encoded in base-128
+        on the least significant 7 bits of each byte. For these bytes, the most
+        significant bit is set if the next byte continues the encoding of the
+        current OID number. In other words, the bytes encoding each number
+        always end with a byte whose most significant bit is cleared.
+
+        Standards:
+            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
+    */
     override public @property
     void objectIdentifier(OID value)
     {
@@ -272,14 +429,32 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.objectIdentifier.numericArray ==  (new OID(1u, 30u, 256u, 623485u, 8u)).numericArray);
     }
 
-    // ObjectDescriptor
+    /**
+        Decodes an ObjectDescriptor, which is a string consisting of only
+        graphical characters. In fact, ObjectDescriptor is actually implicitly
+        just a GraphicString! The formal specification for an ObjectDescriptor
+        is:
+
+        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
+
+        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
+        0x20 to 0x7E.
+
+        Sources:
+            $(LINK2 ,
+                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+                The Wikipedia Page on ISO 2022)
+            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+
+    */
     override public @property
     string objectDescriptor()
     {
         import std.ascii : isGraphical;
         foreach (character; this.value)
         {
-            if (!character.isGraphical)
+            if ((!character.isGraphical) && (character != ' '))
             {
                 throw new BERException(
                     "Object descriptor can only contain graphical characters. '"
@@ -289,13 +464,32 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return cast(string) this.value;
     }
 
+    /**
+        Encodes an ObjectDescriptor, which is a string consisting of only
+        graphical characters. In fact, ObjectDescriptor is actually implicitly
+        just a GraphicString! The formal specification for an ObjectDescriptor
+        is:
+
+        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
+
+        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
+        0x20 to 0x7E.
+
+        Sources:
+            $(LINK2 ,
+                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+                The Wikipedia Page on ISO 2022)
+            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+
+    */
     override public @property
     void objectDescriptor(string value)
     {
         import std.ascii : isGraphical;
         foreach (character; value)
         {
-            if (!character.isGraphical)
+            if ((!character.isGraphical) && (character != ' '))
             {
                 throw new BERException(
                     "Object descriptor can only contain graphical characters. '"
@@ -305,18 +499,18 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         this.value = cast(ubyte[]) value;
     }
 
-    // EXTERNAL
     /* REVIEW:
         Is there some way to abstract the types into the parent class?
     */
-    /** NOTE:
-        Also found in X.680, Section 37.5.
+    /**
+        Decodes an EXTERNAL, which is a constructed data type, defined in 
+        the $(LINK2 https://www.itu.int, 
+            International Telecommunications Union)'s 
+        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 2.
+        The specification defines EXTERNAL as:
 
-        Duboisson Book, Page 303:
-
+        $(I
         EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
             identification CHOICE {
                 syntax OBJECT IDENTIFIER,
@@ -326,7 +520,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                     transfer-syntax OBJECT IDENTIFIER } },
             data-value-descriptor ObjectDescriptor OPTIONAL,
             data-value OCTET STRING }
+        )
 
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 2.
     */
     override public @property
     External external()
@@ -420,7 +617,29 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return ext;
     }
 
-    // REVIEW: The type tags below might be wrong... (Primitive? Constructed?)
+    /**
+        Encodes an EXTERNAL, which is a constructed data type, defined in 
+        the $(LINK2 https://www.itu.int, 
+            International Telecommunications Union)'s 
+        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+
+        The specification defines EXTERNAL as:
+
+        $(I
+        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+            identification CHOICE {
+                syntax OBJECT IDENTIFIER,
+                presentation-context-id INTEGER,
+                context-negotiation SEQUENCE {
+                    presentation-context-id INTEGER,
+                    transfer-syntax OBJECT IDENTIFIER } },
+            data-value-descriptor ObjectDescriptor OPTIONAL,
+            data-value OCTET STRING }
+        )
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 2.
+    */
     override public @property
     void external(External value)
     {
@@ -489,7 +708,41 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
     }
 
-    // REAL
+    /**
+        Decodes a float or double. This can never decode directly to a
+        real type, because of the way it works.
+
+        This is admittedly a pretty slow function, so I would recommend
+        avoiding it, if possible. Also, because it is so complex, it is
+        highly likely to have bugs, so for that reason as well, I highly
+        recommand against encoding or decoding REALs if you do not have
+        to; try using INTEGER instead.
+
+        For the BER-encoded REAL, a value of 0x40 means "positive infinity,"
+        a value of 0x41 means "negative infinity." An empty value means
+        exactly zero. A value whose first byte starts with two cleared bits
+        encodes the real as a string of characters, where the latter nybble
+        takes on values of 0x1, 0x2, or 0x3 to indicate that the string
+        representation conforms to
+        $(LINK2 , ISO 6093) Numeric Representation 1, 2, or 3 respectively.
+        
+        If the first bit is set, then the first byte is an "information block"
+        that describes the binary encoding of the REAL on the subsequent bytes.
+        If bit 6 is set, the value is negative; if clear, the value is 
+        positive. Bits 4 and 5 determine the base, with a value of 0 indicating
+        a base of 2, a value of 1 indicating a base of 8, and a value of 2
+        indicating a base of 16. Bits 2 and 3 indicates that the value should
+        be scaled by 1, 2, 4, or 8 for values of 1, 2, 3, or 4 respectively.
+        Bits 0 and 1 determine how the exponent is encoded, with 0 indicating
+        that the exponent is encoded as a signed byte on the second byte of
+        the value, with 1 indicating that the exponent is encoded as a signed
+        short on the subsequent two bytes, with 2 indicating that the exponent
+        is encoded as a three-byte signed integer on the subsequent three 
+        bytes, and with 4 indicating that the subsequent byte encodes the 
+        unsigned length of the exponent on the following bytes. The remaining
+        bytes encode an unsigned integer, N, such that mantissa is equal to
+        sign * N * 2^scale.
+    */
     public @property
     T realType(T)() if (is(T == float) || is(T == double))
     {
@@ -776,6 +1029,41 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         }
     }
 
+    /**
+        Encodes a float or double. This can never decode directly to a
+        real type, because of the way it works.
+
+        This is admittedly a pretty slow function, so I would recommend
+        avoiding it, if possible. Also, because it is so complex, it is
+        highly likely to have bugs, so for that reason as well, I highly
+        recommand against encoding or decoding REALs if you do not have
+        to; try using INTEGER instead.
+
+        For the BER-encoded REAL, a value of 0x40 means "positive infinity,"
+        a value of 0x41 means "negative infinity." An empty value means
+        exactly zero. A value whose first byte starts with two cleared bits
+        encodes the real as a string of characters, where the latter nybble
+        takes on values of 0x1, 0x2, or 0x3 to indicate that the string
+        representation conforms to
+        $(LINK2 , ISO 6093) Numeric Representation 1, 2, or 3 respectively.
+        
+        If the first bit is set, then the first byte is an "information block"
+        that describes the binary encoding of the REAL on the subsequent bytes.
+        If bit 6 is set, the value is negative; if clear, the value is 
+        positive. Bits 4 and 5 determine the base, with a value of 0 indicating
+        a base of 2, a value of 1 indicating a base of 8, and a value of 2
+        indicating a base of 16. Bits 2 and 3 indicates that the value should
+        be scaled by 1, 2, 4, or 8 for values of 1, 2, 3, or 4 respectively.
+        Bits 0 and 1 determine how the exponent is encoded, with 0 indicating
+        that the exponent is encoded as a signed byte on the second byte of
+        the value, with 1 indicating that the exponent is encoded as a signed
+        short on the subsequent two bytes, with 2 indicating that the exponent
+        is encoded as a three-byte signed integer on the subsequent three 
+        bytes, and with 4 indicating that the subsequent byte encodes the 
+        unsigned length of the exponent on the following bytes. The remaining
+        bytes encode an unsigned integer, N, such that mantissa is equal to
+        sign * N * 2^scale.
+    */
     public @property
     void realType(T)(T value)
     if (is(T == float) || is(T == double))
@@ -960,27 +1248,34 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.enumerated == 5L);
     }
 
-    // EMBEDDED PDV
     /**
+        Decodes an EMBEDDED PDV, which is a constructed data type, defined in 
+            the $(LINK2 https://www.itu.int, 
+                International Telecommunications Union)'s 
+            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-    This definition below assumes AUTOMATIC TAGS.
+        The specification defines EMBEDDED PDV as:
 
-    EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
-        identification CHOICE {
-            syntaxes SEQUENCE {
-                abstract OBJECT IDENTIFIER,
-                transfer OBJECT IDENTIFIER },
-            syntax OBJECT IDENTIFIER,
-            presentation-context-id INTEGER,
-            context-negotiation SEQUENCE {
-                presentation-context-id INTEGER,
-                transfer-syntax OBJECT IDENTIFIER },
-            transfer-syntax OBJECT IDENTIFIER,
-            fixed NULL },
-        data-value-descriptor ObjectDescriptor OPTIONAL,
-        data-value OCTET STRING }
-    (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
+        $(I
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
+        )
 
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 5.
     */
     override public @property
     EmbeddedPDV embeddedPDV()
@@ -1116,6 +1411,35 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return pdv;
     }
 
+    /**
+        Encodes an EMBEDDED PDV, which is a constructed data type, defined in 
+            the $(LINK2 https://www.itu.int, 
+                International Telecommunications Union)'s 
+            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+
+        The specification defines EMBEDDED PDV as:
+
+        $(I
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
+        )
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 5.
+    */
     override public @property
     void embeddedPDV(EmbeddedPDV value)
     {
@@ -1206,14 +1530,22 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(pdv2.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
     }
 
-    // UTF8String
+    /**
+        Decodes the value to UTF-8 characters.
+
+        Throws:
+            UTF8Exception if it does not decode correctly.
+    */
     override public @property
     string utf8string()
     {
         return cast(string) this.value;
     }
 
-    override public @property
+    /**
+        Encodes a UTF-8 string to bytes. No checks are performed.
+    */
+    override public @property nothrow
     void utf8string(string value)
     {
         this.value = cast(ubyte[]) value;
@@ -1228,7 +1560,20 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.utf8string == "henlo borthers");
     }
 
-    // RELATIVE OID
+    /**
+        Decodes a RELATIVE OBJECT IDENTIFIER.
+        See source/types/universal/objectidentifier.d for information about
+        the ObjectIdentifier class (aliased as "OID").
+
+        The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
+        on the least significant 7 bits of each byte. For these bytes, the most
+        significant bit is set if the next byte continues the encoding of the
+        current OID number. In other words, the bytes encoding each number
+        always end with a byte whose most significant bit is cleared.
+
+        Standards:
+            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
+    */
     override public @property
     RelativeOID relativeObjectIdentifier()
     {
@@ -1260,6 +1605,20 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return new RelativeOID(oidComponents);
     }
 
+    /**
+        Encodes a RELATIVE OBJECT IDENTIFIER.
+        See source/types/universal/objectidentifier.d for information about
+        the ObjectIdentifier class (aliased as "OID").
+
+        The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
+        on the least significant 7 bits of each byte. For these bytes, the most
+        significant bit is set if the next byte continues the encoding of the
+        current OID number. In other words, the bytes encoding each number
+        always end with a byte whose most significant bit is cleared.
+
+        Standards:
+            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
+    */
     override public @property
     void relativeObjectIdentifier(RelativeOID value)
     {
@@ -1295,7 +1654,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.relativeObjectIdentifier.numericArray == [ 3L, 5L, 7L, 9L, 4L ]);
     }
 
-    // SEQUENCE
+    /**
+        Decodes a sequence of BERValues.
+    */
     public @property
     BERValue[] sequence()
     {
@@ -1306,6 +1667,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return result;
     }
 
+    /**
+        Encodes a sequence of BERValues.
+    */
     public @property
     void sequence(BERValue[] value)
     {
@@ -1317,7 +1681,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         this.value = result;
     }
 
-    // SET
+    /**
+        Decodes a set of BERValues.
+    */
     public @property
     BERValue[] set()
     {
@@ -1328,6 +1694,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return result;
     }
 
+    /**
+        Encodes a set of BERValues.
+    */
     public @property
     void set(BERValue[] value)
     {
@@ -1339,20 +1708,29 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         this.value = result;
     }
 
-    // NumericString
+    /**
+        Decodes a string, where the characters of the string are limited to
+        0 - 9 and space.
+    */
     override public @property
     string numericString()
     {
-        // import std.algorithm.searching : any;
-        // import std.ascii : isDigit;
+        foreach (character; this.value)
+        {
+            if (!canFind("1234567890 ", character))
+                throw new BERException
+                ("NUMERIC STRING only accepts numbers and spaces.");
+        }
         return cast(string) this.value;
-        // return (new NumericString(cast (string) this.value)).value;
     }
 
+    /**
+        Encodes a string, where the characters of the string are limited to
+        0 - 9 and space.
+    */
     override public @property
     void numericString(string value)
     {
-        import std.algorithm.searching : canFind;
         foreach (character; value)
         {
             if (!canFind("1234567890 ", character))
@@ -1372,22 +1750,52 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assertThrown!BERException(bv.numericString = "hey hey");
     }
 
-    // PrintableString
+    /**
+        Decodes a string that will only contain characters a-z, A-Z, 0-9,
+        space, apostrophe, parentheses, comma, minus, plus, period, 
+        forward slash, colon, equals, and question mark.
+    */
     override public @property
     string printableString()
     {
+        /* NOTE:
+            The sorting of letters below is a slight optimization:
+            they are sorted in order of decreasing frequency in the English
+            language, so that canFind will usually have to iterate through
+            fewer letters before finding a match.
+        */
+        immutable string printables = 
+            "etaoinsrhdlucmfywgpbvkxqjzETAOINSRHDLUCMFYWGPBVKXQJZ0123456789 '()+,-./:=?";
+        foreach (character; this.value)
+        {
+            if (!canFind(printables, character))
+                throw new BERException
+                ("PrintableString only accepts these characters: " ~ printables);
+        }
         return cast(string) this.value;
     }
 
+    /**
+        Encodes a string that may only contain characters a-z, A-Z, 0-9,
+        space, apostrophe, parentheses, comma, minus, plus, period, 
+        forward slash, colon, equals, and question mark.
+    */
     override public @property
     void printableString(string value)
     {
-        import std.ascii : isPrintable;
+        /* NOTE:
+            The sorting of letters below is a slight optimization:
+            they are sorted in order of decreasing frequency in the English
+            language, so that canFind will usually have to iterate through
+            fewer letters before finding a match.
+        */
+        immutable string printables = 
+            "etaoinsrhdlucmfywgpbvkxqjzETAOINSRHDLUCMFYWGPBVKXQJZ0123456789 '()+,-./:=?";
         foreach (character; value)
         {
-            if (!character.isPrintable)
+            if (!canFind(printables, character))
                 throw new BERException
-                ("PRINTABLE STRING only accepts printable characters or space.");
+                ("PrintableString only accepts these characters: " ~ printables);
         }
         this.value = cast(ubyte[]) value;
     }
@@ -1407,18 +1815,24 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assertThrown!BERException(bv.printableString = "\r");
         assertThrown!BERException(bv.printableString = "\x13");
     }
-
-    // TeletexString
-    // REVIEW: This probably needs some validation, but that will come after I finish the Teletex library.
+   
+    /**
+        Literally just returns the value bytes.
+    */
     override public @property
     ubyte[] teletexString()
     {
+        // TODO: Validation. 
         return this.value;
     }
 
+    /**
+        Literally just sets the value bytes.
+    */
     override public @property
     void teletexString(ubyte[] value)
     {
+        // TODO: Validation.        
         this.value = value;
     }
 
@@ -1431,17 +1845,23 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.teletexString == [ 0x01, 0x03, 0x05, 0x07, 0x09 ]);
     }
 
-    // VideotexString
-    // REVIEW: This probably needs some validation, but that will come after I finish the Videotex library.
+    /**
+        Literally just returns the value bytes.
+    */
     override public @property
     ubyte[] videotexString()
     {
+        // TODO: Validation.
         return this.value;
     }
 
+    /**
+        Literally just sets the value bytes.
+    */
     override public @property
     void videotexString(ubyte[] value)
     {
+        // TODO: Validation.
         this.value = value;
     }
 
@@ -1454,7 +1874,26 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.videotexString == [ 0x01, 0x03, 0x05, 0x07, 0x09 ]);
     }
 
-    // IA5String
+    /* NOTE: 
+        Decodes a string that only contains ASCII characters.
+
+        IA5String differs from ASCII ever so slightly: IA5 is international,
+        leaving 10 characters up to be locale-specific:
+
+        $(TABLE
+            $(TR $(TH Byte) $(TH ASCII Character))
+            $(TR $(TD 0x40) $(TD @))
+            $(TR $(TD 0x5B) $(TD [))
+            $(TR $(TD 0x5C) $(TD \))
+            $(TR $(TD 0x5D) $(TD ]))
+            $(TR $(TD 0x5E) $(TD ^))
+            $(TR $(TD 0x60) $(TD `))
+            $(TR $(TD 0x7B) $(TD {))
+            $(TR $(TD 0x7C) $(TD /))
+            $(TR $(TD 0x7D) $(TD }))
+            $(TR $(TD 0x7E) $(TD ~))
+        )
+    */
     override public @property
     string ia5String()
     {
@@ -1469,6 +1908,26 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return ret;
     }
 
+    /* NOTE: 
+        Encodes a string that may only contain ASCII characters.
+
+        IA5String differs from ASCII ever so slightly: IA5 is international,
+        leaving 10 characters up to be locale-specific:
+
+        $(TABLE
+            $(TR $(TH Byte) $(TH ASCII Character))
+            $(TR $(TD 0x40) $(TD @))
+            $(TR $(TD 0x5B) $(TD [))
+            $(TR $(TD 0x5C) $(TD \))
+            $(TR $(TD 0x5D) $(TD ]))
+            $(TR $(TD 0x5E) $(TD ^))
+            $(TR $(TD 0x60) $(TD `))
+            $(TR $(TD 0x7B) $(TD {))
+            $(TR $(TD 0x7C) $(TD /))
+            $(TR $(TD 0x7D) $(TD }))
+            $(TR $(TD 0x7E) $(TD ~))
+        )
+    */
     override public @property
     void ia5String(string value)
     {
@@ -1492,21 +1951,49 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assertThrown!BERException(bv.ia5String = "Nitro dubs \xD7 T-Rix");
     }
 
-    // UTCTime
+    /**
+        Decodes a DateTime.
+        
+        The BER-encoded value is just the ASCII character representation of
+        the UTC-formatted timestamp.
+
+        An UTC Timestamp looks like: 
+        $(UL
+            $(LI 9912312359Z)
+            $(LI 991231235959+0200)
+        )
+
+        If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0, 
+        meaning that the date refers to the first 80 years of the century, this
+        assumes we are talking about the 21st century and prepend '20' when
+        creating the ISO Date String. Otherwise, it assumes we are talking 
+        about the 20th century, and prepend '19' when creating the string.
+
+        See_Also:
+            $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
+    */
     override public @property
     DateTime utcTime()
     {
-        /*
-            If the first digit of the two-digit year 7, 6, 5, 4, 3, 2, 1, or 0, 
-            meaning that the date refers to the first 80 years of the century,
-            assume we are talking about the 21st century and prepend '20' when
-            creating the ISO Date String. Otherwise, assume we are talking about
-            the 20th century, and prepend '19' when creating the ISO Date String.
-        */
         string dt = (((this.value[0] <= '7') ? "20" : "19") ~ cast(string) this.value);
         return DateTime.fromISOString(dt[0 .. 8].idup ~ "T" ~ dt[8 .. $].idup);
     }
 
+    /**
+        Encodes a DateTime.
+        
+        The BER-encoded value is just the ASCII character representation of
+        the UTC-formatted timestamp.
+
+        An UTC Timestamp looks like: 
+        $(UL
+            $(LI 9912312359Z)
+            $(LI 991231235959+0200)
+        )
+
+        See_Also:
+            $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
+    */
     override public @property
     void utcTime(DateTime value)
     {
@@ -1523,7 +2010,20 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.utcTime == DateTime(2017, 10, 3));
     }
 
-    // GeneralizedTime
+    /**
+        Decodes a DateTime.
+
+        The BER-encoded value is just the ASCII character representation of
+        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html, 
+        ISO 8601)-formatted timestamp.
+
+        An ISO-8601 Timestamp looks like: 
+        $(UL
+            $(LI 19851106210627.3)
+            $(LI 19851106210627.3Z)
+            $(LI 19851106210627.3-0500)
+        )
+    */
     override public @property
     DateTime generalizedTime()
     {
@@ -1531,6 +2031,20 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return DateTime.fromISOString(dt[0 .. 8].idup ~ "T" ~ dt[8 .. $].idup);
     }
 
+    /**
+        Encodes a DateTime.
+
+        The BER-encoded value is just the ASCII character representation of
+        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html, 
+        ISO 8601)-formatted timestamp.
+
+        An ISO-8601 Timestamp looks like: 
+        $(UL
+            $(LI 19851106210627.3)
+            $(LI 19851106210627.3Z)
+            $(LI 19851106210627.3-0500)
+        )
+    */
     override public @property
     void generalizedTime(DateTime value)
     {
@@ -1547,7 +2061,18 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.generalizedTime == DateTime(2017, 10, 3));
     }
 
-    // GraphicString
+    /**
+        Decodes an ASCII string that contains only characters between and 
+        including 0x20 and 0x75.
+
+        Sources:
+            $(LINK2 ,
+                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+                The Wikipedia Page on ISO 2022)
+            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+
+    */
     override public @property
     string graphicString()
     {
@@ -1562,6 +2087,18 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return ret;
     }
 
+    /**
+        Encodes an ASCII string that may contain only characters between and 
+        including 0x20 and 0x75.
+
+        Sources:
+            $(LINK2 ,
+                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+                The Wikipedia Page on ISO 2022)
+            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+
+    */
     override public @property
     void graphicString(string value)
     {
@@ -1592,8 +2129,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assertThrown!BERException(bv.graphicString = "\0");
     }
 
-    // VisibleString
-    // REVIEW: I am still not sure of the validation for .visibleString()
+    /**
+        Decodes a string that only contains characters between and including
+        0x20 and 0x7E. (Honestly, I don't know how this differs from
+        GraphicalString.)
+    */
     override public @property
     string visibleString()
     {
@@ -1608,6 +2148,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return ret;
     }
 
+    /**
+        Encodes a string that only contains characters between and including
+        0x20 and 0x7E. (Honestly, I don't know how this differs from
+        GraphicalString.)
+    */
     override public @property
     void visibleString(string value)
     {
@@ -1621,34 +2166,33 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         this.value = cast(ubyte[]) value;
     }
 
-    // GeneralString
-    /* REVIEW:
-        Delete is supposed to be a control character, but I
-        am not sure that isControl() treats it as such.
+    /**
+        Decodes a string containing only ASCII characters.
     */
     override public @property
     string generalString()
     {
-        import std.ascii : isControl, isGraphical;
         string ret = cast(string) this.value;
         foreach (character; ret)
         {
-            if (!character.isGraphical && !character.isControl && character != ' ')
+            if (!character.isASCII)
                 throw new BERException
-                ("GeneralString only accepts graphic characters, control characters, and space.");
+                ("GeneralString only accepts ASCII Characters.");
         }
         return ret;
     }
 
+    /**
+        Encodes a string containing only ASCII characters.
+    */
     override public @property
     void generalString(string value)
     {
-        import std.ascii : isControl, isGraphical;
         foreach (character; value)
         {
-            if (!character.isGraphical && !character.isControl && character != ' ')
+            if (!character.isASCII)
                 throw new BERException
-                ("GeneralString only accepts graphic characters, control characters, and space.");
+                ("GeneralString only accepts ASCII Characters.");
         }
         this.value = cast(ubyte[]) value;
     }
@@ -1663,8 +2207,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assertThrown!BERException(bv.generalString = "\xF5");
     }
 
-    // UniversalString
-    // REVIEW: Does UTF-32 endianness matter? NOTE: PyASN1 encodes this big-endian..
+    /**
+        Decodes a dstring of UTF-32 characters.
+    */
     override public @property
     dstring universalString()
     {
@@ -1698,6 +2243,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         }
     }
 
+    /**
+        Encodes a dstring of UTF-32 characters.
+    */
     override public @property
     void universalString(dstring value)
     {
@@ -1729,7 +2277,33 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.universalString == "abcd"d);
     }
 
-    // CHARACTER STRING
+    /**
+        Decodes a CHARACTER STRING, which is a constructed data type, defined
+        in the $(LINK2 https://www.itu.int, 
+                International Telecommunications Union)'s 
+            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+
+        The specification defines CHARACTER as:
+
+        $(I
+            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                string-value OCTET STRING }
+        )
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 5.
+    */
     override public @property
     CharacterString characterString()
     {
@@ -1859,6 +2433,33 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return cs;
     }
 
+    /**
+        Encodes a CHARACTER STRING, which is a constructed data type, defined
+        in the $(LINK2 https://www.itu.int, 
+                International Telecommunications Union)'s 
+            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+
+        The specification defines CHARACTER as:
+
+        $(I
+            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                string-value OCTET STRING }
+        )
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 5.
+    */
     override public @property
     void characterString(CharacterString value)
     {
@@ -1942,8 +2543,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(cs2.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
     }
 
-    // BMPString
-    // REVIEW: Does UTF-16 endianness matter? NOTE: PyASN1 encodes this big-endian..
+    /**
+        Decodes a wstring of UTF-16 characters.
+    */
     override public @property
     wstring bmpString()
     {
@@ -1975,6 +2577,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         }
     }
 
+    /**
+        Encodes a wstring of UTF-16 characters.
+    */
     override public @property
     void bmpString(wstring value)
     {
@@ -2006,6 +2611,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.bmpString == "abcd"w);
     }
 
+    /**
+        Creates an EndOfContent BER Value.
+    */
     this()
     {
         this.type = 0x00;
@@ -2013,19 +2621,25 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     }
 
     /**
-        Decoding looks like:
+        Creates a BERValue from the supplied bytes, inferring that the first
+        byte is the type tag. The supplied ubyte[] array is "chomped" by
+        reference, so the original array will grow shorter as BERValues are
+        generated. 
 
+        Example:
+        ---
+        // Decoding looks like:
         BERValue[] result;
         while (bytes.length > 0)
             result ~= new BERValue(bytes);
 
-        Encoding looks like:
-
+        // Encoding looks like:
         ubyte[] result;
         foreach (bv; bervalues)
         {
             result ~= cast(ubyte[]) bv;
         }
+        ---
     */
     this(ref ubyte[] bytes)
     {
@@ -2110,12 +2724,21 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         }
     }
 
-    // REVIEW: Is this necessary?
+    /**
+        This differs from $(D_INLINECODE this.value) in that 
+        $(D_INLINECODE this.value) only returns the value octets, whereas
+        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,
+        and the value octets, all concatenated.
+
+        This is the exact same as $(D_INLINECODE this.opCast!(ubyte[])()).
+
+        Returns: type tag, length tag, and value, all concatenated as a ubyte array.
+    */
     public @property
     ubyte[] toBytes()
     {
         ubyte[] lengthOctets = [ 0x00u ];
-        switch (this.longLengthEncodingPreference)
+        switch (this.lengthEncodingPreference)
         {
             case (LLEP.definite):
             {
@@ -2125,9 +2748,22 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 }
                 else
                 {
-                    // FIXME: Endianness!
-                    size_t length = this.value.length;
-                    lengthOctets = [ cast(ubyte) 0x88u ] ~ cast(ubyte[]) *cast(ubyte[4] *) &length;
+                    ulong length = cast(ulong) this.value.length;
+                    version (BigEndian)
+                    {
+                        lengthOctets = [ cast(ubyte) 0x88u ] ~ cast(ubyte[]) *cast(ubyte[8] *) &length;
+                    }
+                    else version (LittleEndian)
+                    {
+                        // REVIEW: You could use better variable names here.
+                        ubyte[] lengthBytes = cast(ubyte[]) *cast(ubyte[8] *) &length;
+                        reverse(lengthBytes);
+                        lengthOctets = [ cast(ubyte) 0x88u ] ~ lengthBytes;
+                    }
+                    else
+                    {
+                        static assert(0, "Could not determine endianness. Cannot compile.");
+                    }
                 }
                 break;
             }
@@ -2138,22 +2774,32 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             }
             default:
             {
-                assert(0, "Invalid LongLengthEncodingPreference encountered!");
+                assert(0, "Invalid LengthEncodingPreference encountered!");
             }
         }
         return (
             [ this.type ] ~ 
             lengthOctets ~ 
             this.value ~ 
-            (this.longLengthEncodingPreference == LLEP.indefinite ? cast(ubyte[]) [ 0x00, 0x00 ] : cast(ubyte[]) [])
+            (this.lengthEncodingPreference == LLEP.indefinite ? cast(ubyte[]) [ 0x00, 0x00 ] : cast(ubyte[]) [])
         );
     }
 
+    /**
+        This differs from $(D_INLINECODE this.value) in that 
+        $(D_INLINECODE this.value) only returns the value octets, whereas
+        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,
+        and the value octets, all concatenated.
+
+        This is the exact same as $(D_INLINECODE this.toBytes()).
+
+        Returns: type tag, length tag, and value, all concatenated as a ubyte array.
+    */
     public
     ubyte[] opCast(T = ubyte[])()
     {
         ubyte[] lengthOctets = [ 0x00u ];
-        switch (this.longLengthEncodingPreference)
+        switch (this.lengthEncodingPreference)
         {
             case (LLEP.definite):
             {
@@ -2163,9 +2809,22 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 }
                 else
                 {
-                    // FIXME: Endianness!
-                    size_t length = this.value.length;
-                    lengthOctets = [ cast(ubyte) 0x88u ] ~ cast(ubyte[]) *cast(ubyte[4] *) &length;
+                    ulong length = cast(ulong) this.value.length;
+                    version (BigEndian)
+                    {
+                        lengthOctets = [ cast(ubyte) 0x88u ] ~ cast(ubyte[]) *cast(ubyte[8] *) &length;
+                    }
+                    else version (LittleEndian)
+                    {
+                        // REVIEW: You could use better variable names here.
+                        ubyte[] lengthBytes = cast(ubyte[]) *cast(ubyte[8] *) &length;
+                        reverse(lengthBytes);
+                        lengthOctets = [ cast(ubyte) 0x88u ] ~ lengthBytes;
+                    }
+                    else
+                    {
+                        static assert(0, "Could not determine endianness. Cannot compile.");
+                    }
                 }
                 break;
             }
@@ -2176,14 +2835,14 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             }
             default:
             {
-                assert(0, "Invalid LongLengthEncodingPreference encountered!");
+                assert(0, "Invalid lengthEncodingPreference encountered!");
             }
         }
         return (
             [ this.type ] ~ 
             lengthOctets ~ 
             this.value ~ 
-            (this.longLengthEncodingPreference == LLEP.indefinite ? cast(ubyte[]) [ 0x00, 0x00 ] : cast(ubyte[]) [])
+            (this.lengthEncodingPreference == LLEP.indefinite ? cast(ubyte[]) [ 0x00, 0x00 ] : cast(ubyte[]) [])
         );
     }
 

@@ -3,7 +3,7 @@
 * Author: Jonathan M. Wilbur
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: 0.1.0
+* Version: 0.2.0
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -50,8 +50,34 @@ is just too volatile at this point.
 ## Development
 
 I hope to be done with this library before the end of 2017. When it is
-complete, it will contain several codes, and everything will be unit-tested 
+complete, it will contain several codecs, and everything will be unit-tested 
 and reviewed for security and performance.
+
+### Current
+
+Right now, I am only working on the Basic Encoding Rules module, since it will
+pretty much be copy-and-paste, then deleting functionality, to create the other
+modules, once I am done with BER. I want to make this module perfect before I
+create the others. Here are the changes I have to make before I consider it
+ready to serve as the basis for others:
+
+- [ ] Finish embedded documentation
+  - [ ] Throws
+  - [ ] Returns
+  - [ ] See_Also
+  - [ ] Bugs
+  - [ ] Standards
+  - [ ] DDoc Section Formatting Macros
+- [ ] Unabbreviated member names and abbreviated aliases
+- [ ] Storage classes
+- [ ] @safe, @trusted, @system, etc.
+- [ ] nothrow, pure, final, etc.
+- [ ] Character-encoded REAL
+- [ ] integer(T) if (isSigned!T && isIntegral!T)
+- [ ] Figure out the situation with `BitArray`...
+- [ ] Abstractions for set and sequence properties
+
+### Future
 
 The following codecs will be a part of the library:
 
@@ -107,7 +133,7 @@ The following build mechanisms will be implemented:
 - [ ] Bazel
 - [ ] D File / Compiled Executable
 - [ ] Bash Script
-- [ ] Batch Script
+- [x] Batch Script
 - [ ] GNU Make File
 
 The library will be marketed and distributed in the following ways:

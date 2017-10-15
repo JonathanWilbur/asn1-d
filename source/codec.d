@@ -22,12 +22,18 @@ class ASN1Value
 abstract public
 class ASN1BinaryValue : ASN1Value
 {
+
+    /* TODO:
+        Make a "foolproof" version that makes value a private member, so that
+        it can only be assigned values via legitimate properties.
+        ... if that's possible.
+    */
+
     protected import std.datetime.date : DateTime;
     private import std.math : log2;
 
-    alias LLEP = LongLengthEncodingPreference;
     public
-    enum LongLengthEncodingPreference
+    enum LengthEncodingPreference
     {
         definite,
         indefinite
@@ -39,7 +45,15 @@ class ASN1BinaryValue : ASN1Value
     private immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in encodeReal()
 
     // Settings
-    static public LLEP longLengthEncodingPreference = LLEP.definite;
+    /**
+        Unlike most other settings, this is non-static, because wanting to
+        encode with indefinite length is probably going to be somewhat rare,
+        and it is also less safe, because the value octets have to be inspected
+        for double octets before encoding! (If they are not, the receiver will 
+        interpret those inner null octets as the terminator for the indefinite
+        length value, and the rest will be truncated.)
+    */
+    public LengthEncodingPreference lengthEncodingPreference = LengthEncodingPreference.definite;
     static public bool encodeEverythingExplicitly = false;
     static public bool base10RealShouldShowPlusSignIfPositive = false;
     static public Base10RealDecimalSeparator base10RealDecimalSeparator = Base10RealDecimalSeparator.period;
