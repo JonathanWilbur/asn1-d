@@ -1,9 +1,9 @@
 # ASN.1 D Library
 
-* Author: Jonathan M. Wilbur
+* Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space), [jonathan@wilbur.space](mailto:jonathan@wilbur.space)
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: 0.2.0
+* Version: [0.2.0](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -62,20 +62,22 @@ create the others. Here are the changes I have to make before I consider it
 ready to serve as the basis for others:
 
 - [ ] Finish embedded documentation
-  - [ ] Throws
-  - [ ] Returns
-  - [ ] See_Also
-  - [ ] Bugs
-  - [ ] Standards
+  - [ ] `Throws`
+  - [ ] `Returns`
+  - [ ] `See_Also`
+  - [ ] `Bugs`
+  - [ ] `Standards`
   - [ ] DDoc Section Formatting Macros
 - [ ] Unabbreviated member names and abbreviated aliases
-- [ ] Storage classes
-- [ ] @safe, @trusted, @system, etc.
-- [ ] nothrow, pure, final, etc.
-- [ ] Character-encoded REAL
-- [ ] integer(T) if (isSigned!T && isIntegral!T)
+- [ ] Storage classes (`in`, `out`, `scope`, `const`, etc.)
+- [ ] `@safe`, `@trusted`, `@system`, etc.
+- [ ] `nothrow`, `pure`, `final`, etc.
+- [ ] Character-encoded `REAL`
+- [ ] `integer(T) if (isSigned!T && isIntegral!T)`
 - [ ] Figure out the situation with `BitArray`...
-- [ ] Abstractions for set and sequence properties
+- [ ] Abstractions for `set` and `sequence` properties
+- [ ] A better system of exceptions
+- [ ] 100% unit test code coverage
 
 ### Future
 
