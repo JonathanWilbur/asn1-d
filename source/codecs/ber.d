@@ -39,18 +39,17 @@ private import asn1;
 private import codec;
 private import types.alltypes;
 private import types.identification;
-private import std.algorithm.mutation : reverse;
-private import std.algorithm.searching : canFind;
-private import std.ascii : isASCII, isGraphical;
-private import std.bitmanip : BitArray;
-private import std.datetime.date : DateTime;
-private import std.outbuffer; // This is only used for OID and ROID...
+// private import std.bitmanip : BitArray;
+// private import std.datetime.date : DateTime;
+// private import std.outbuffer; // This is only used for OID and ROID...
 
 // REVIEW: Should I change all properties to methods, and renamed them to encode*()?
 // REVIEW: Should I change the name of the class?
 // TODO: Standard Embedded Documentation fields
 // TODO: Remove dependency on std.outbuffer.
 // TODO: Aliases
+// TODO: Add the 'u' to the end of all unsigned bytes.
+// TODO: Add scope specifiers to import statements
 
 debug
 {
@@ -864,7 +863,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 long exponent;
                 ubyte scale;
                 ubyte base;
-                RealBinaryEncodingBase realBinaryEncodingBase = RealBinaryEncodingBase.base2;
+                ASN1RealBinaryEncodingBase realBinaryEncodingBase = ASN1RealBinaryEncodingBase.base2;
 
                 // There must be at least one information byte and one exponent byte.
                 if (this.length < 2)
@@ -1084,9 +1083,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         bool positive = true;
         real significand;
-        RealEncodingScale scalingFactor = RealEncodingScale.scale0;
-        RealEncodingBase base = RealEncodingBase.base2;
-        RealBinaryEncodingBase realBinaryEncodingBase = RealBinaryEncodingBase.base2;
+        ASN1RealEncodingScale scalingFactor = ASN1RealEncodingScale.scale0;
+        ASN1RealEncodingBase base = ASN1RealEncodingBase.base2;
+        ASN1RealBinaryEncodingBase ASN1realBinaryEncodingBase = ASN1RealBinaryEncodingBase.base2;
         short exponent = 0;
 
         if (value == T.nan)
@@ -1189,8 +1188,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             0x80 | // First bit gets set for base2, base8, or base16 encoding
             (positive ? 0x00 : 0x40) | // 1 = negative, 0 = positive
             realBinaryEncodingBase | // Bitmask specifying base
-            RealEncodingScales.scale0 |
-            RealExponentEncoding.following2Octets;
+            ASN1RealEncodingScales.scale0 |
+            ASN1RealExponentEncoding.following2Octets;
 
         this.value = (infoByte ~ exponentBytes ~ significandBytes);
     }

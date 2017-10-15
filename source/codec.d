@@ -1,9 +1,22 @@
+/**
+    The codecs in this library are values of an ASN1 encoding scheme.
+    The type, length, and value are set using properties defined on
+    abstract classes from which the encoding-specific values inherit.
+    This module contains those abstract classes, and with these classes,
+    it serves as the root module from which all other codec modules will
+    inherit.
+*/
 module codec;
 import asn1;
 import types.alltypes;
-// import types.universal.objectidentifier;
-import std.bitmanip : BitArray;
-import std.traits : isIntegral;
+package import std.algorithm.mutation : reverse;
+package import std.algorithm.searching : canFind;
+package import std.ascii : isASCII, isGraphical;
+package import std.bitmanip : BitArray;
+package import std.datetime.date : DateTime;
+package import std.math : log2;
+package import std.outbuffer;
+package import std.traits : isIntegral;
 
 class ASN1CodecException : ASN1Exception
 {
@@ -11,16 +24,21 @@ class ASN1CodecException : ASN1Exception
     mixin basicExceptionCtors;
 }
 
-// An abstract class from which both ASN1BinaryCodec and ASN1TextCodec will inherit.
+///
+public alias ASN1Value = AbstractSyntaxNotation1Value;
+/// An abstract class from which both ASN1BinaryCodec and ASN1TextCodec will inherit.
 abstract public
-class ASN1Value
+class AbstractSyntaxNotation1Value
 {
 
 }
 
 // REVIEW: Should the setters return booleans indicating success instead of throwing errors?
+///
+public alias ASN1BinaryValue = AbstractSyntaxNotation1BinaryValue;
+///
 abstract public
-class ASN1BinaryValue : ASN1Value
+class AbstractSyntaxNotation1BinaryValue : ASN1Value
 {
 
     /* TODO:
@@ -30,9 +48,14 @@ class ASN1BinaryValue : ASN1Value
     */
     // NOTE: Storage classes are basically going to be impossible with properties...
 
-    protected import std.datetime.date : DateTime;
-    private import std.math : log2;
+    // Constants used to save CPU cycles
+    private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in encodeReal()
+    private immutable real maxUlongAsReal = cast(real) ulong.max; // Saves CPU cycles in encodeReal()
+    private immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in encodeReal()
 
+    // Settings
+
+    ///
     public
     enum LengthEncodingPreference
     {
@@ -40,12 +63,6 @@ class ASN1BinaryValue : ASN1Value
         indefinite
     }
 
-    // Constants used to save CPU cycles
-    private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in encodeReal()
-    private immutable real maxUlongAsReal = cast(real) ulong.max; // Saves CPU cycles in encodeReal()
-    private immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in encodeReal()
-
-    // Settings
     /**
         Unlike most other settings, this is non-static, because wanting to
         encode with indefinite length is probably going to be somewhat rare,
@@ -54,14 +71,53 @@ class ASN1BinaryValue : ASN1Value
         interpret those inner null octets as the terminator for the indefinite
         length value, and the rest will be truncated.)
     */
-    public LengthEncodingPreference lengthEncodingPreference = LengthEncodingPreference.definite;
-    static public bool encodeEverythingExplicitly = false;
+    public LengthEncodingPreference lengthEncodingPreference = 
+        LengthEncodingPreference.definite;
+
+    /**
+        Whether the base 10 / character-encoded representation of a REAL
+        should prepend a plus sign if the value is positive.
+    */
     static public bool base10RealShouldShowPlusSignIfPositive = false;
-    static public Base10RealDecimalSeparator base10RealDecimalSeparator = Base10RealDecimalSeparator.period;
-    static public Base10RealExponentCharacter base10RealExponentCharacter = Base10RealExponentCharacter.uppercaseE;
-    static public Base10RealNumericalRepresentation base10RealNumericalRepresentation = Base10RealNumericalRepresentation.nr3;
-    static public RealEncodingBase _realEncodingBase = RealEncodingBase.base2;
-    static public RealBinaryEncodingBase _realBinaryEncodingBase = RealBinaryEncodingBase.base2;
+
+    /**
+        Whether a comma or a period is used to separate the whole and
+        fractional components of the base 10 / character-encoded representation
+        of a REAL.
+    */
+    static public ASN1Base10RealDecimalSeparator base10RealDecimalSeparator = 
+        ASN1Base10RealDecimalSeparator.period;
+
+    /**
+        Whether a capital or lowercase E is used to separate the significand
+        from the exponent in the base 10 / character-encoded representation
+        of a REAL.
+    */
+    static public ASN1Base10RealExponentCharacter base10RealExponentCharacter = 
+        ASN1Base10RealExponentCharacter.uppercaseE;
+
+    /**
+        The standardized string representations of floating point numbers, as 
+        specified in $(LINK2 https://www.iso.org/standard/12285.html, ISO 6093).
+
+        $(TABLE
+            $(TR $(TH Representation) $(TH Description) $(TH Examples))
+            $(TR $(TD NR1) $(TD Implicit decimal point) $(TD "3", "-1", "+1000"))
+            $(TR $(TD NR2) $(TD Explicit decimal) $(TD "3.0", "-1.3", "-.3"))
+            $(TR $(TD NR3) $(TD Explicit exponent) $(TD "3.0E1", "123E+100"))
+        )
+
+        Source:
+            Page 143 of Dubuisson's ASN.1 Book
+    */
+    static public ASN1Base10RealNumericalRepresentation base10RealNumericalRepresentation = 
+        ASN1Base10RealNumericalRepresentation.nr3;
+
+    /// The base of encoded REALs. May be 2, 8, 10, or 16.
+    static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
+
+    /// The base of binary-encoded REALs. May be 2, 8, or 16.
+    static public ASN1RealBinaryEncodingBase realBinaryEncodingBase = ASN1RealBinaryEncodingBase.base2;
     // TODO: maximumValueLength (to prevent DoS attacks)
 
     // public ASN1TypeTag type;
