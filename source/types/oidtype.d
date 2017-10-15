@@ -12,6 +12,7 @@ public struct OIDNode
         The constructor for OIDNode
         Returns: An OIDNode
     */
+    public @safe
     this(T)(T number, ObjectDescriptor descriptor = null)
     if (isIntegral!T && isUnsigned!T)
     {
@@ -26,7 +27,8 @@ public struct OIDNode
         Gets the number associated with this OIDNode
         Returns: the unsigned long associated with this OIDNode
     */
-    @property public ulong number()
+    public @property @safe
+    ulong number()
     {
         return this._number;
     }
@@ -45,7 +47,8 @@ public struct OIDNode
         Gets the descriptor associated with this OIDNode
         Returns: the ObjectDescriptor associated with this OIDNode
     */
-    @property public ObjectDescriptor descriptor()
+    public @property @safe
+    ObjectDescriptor descriptor()
     {
         return this._descriptor;
     }
@@ -53,7 +56,8 @@ public struct OIDNode
     /**
         Sets the descriptor associated with this OIDNode
     */
-    @property public void descriptor(ObjectDescriptor descriptor)
+    public @property @safe
+    void descriptor(ObjectDescriptor descriptor)
     {
         this._descriptor = descriptor;
     }

@@ -35,21 +35,19 @@
         $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems)
 */
 module codecs.ber;
-import asn1;
-import codec;
-import types.alltypes;
-import types.identification;
-import std.algorithm.mutation : reverse;
-import std.algorithm.searching : canFind;
-import std.ascii : isASCII;
-import std.bitmanip : BitArray;
-import std.datetime.date : DateTime;
-import std.outbuffer; // This is only used for OID and ROID...
+private import asn1;
+private import codec;
+private import types.alltypes;
+private import types.identification;
+private import std.algorithm.mutation : reverse;
+private import std.algorithm.searching : canFind;
+private import std.ascii : isASCII, isGraphical;
+private import std.bitmanip : BitArray;
+private import std.datetime.date : DateTime;
+private import std.outbuffer; // This is only used for OID and ROID...
 
 // REVIEW: Should I change all properties to methods, and renamed them to encode*()?
 // REVIEW: Should I change the name of the class?
-// TODO: Storage classes
-// TODO: nothrow, @safe, pure, @system, etc.
 // TODO: Standard Embedded Documentation fields
 // TODO: Remove dependency on std.outbuffer.
 // TODO: Aliases
@@ -116,10 +114,10 @@ alias BERValue = BasicEncodingRulesValue;
     // Now x is 1433!
     ---
 */
-public
+public final
 class BasicEncodingRulesValue : ASN1BinaryValue
 {
-    /**
+    /*
         Returns true if the value octets contain two consecutive 0x00u bytes.
 
         The intent of this is to be used for indefinite-length encoding, which
@@ -143,7 +141,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         interpreted as FALSE.
     */
     // FIXME: Throw exception if length is invalid.
-    override public @property
+    override public @property @safe
     bool boolean()
     {
         return (this.value[0] ? true : false);
@@ -154,14 +152,14 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Any non-zero value will be interpreted as TRUE. Only zero will be
         interpreted as FALSE.
     */
-    override public @property nothrow
+    override public @property @safe nothrow
     void boolean(bool value)
     {
         this.value = [(value ? 0xFF : 0x00)];
     }
 
     ///
-    @system
+    @safe
     unittest
     {
         BERValue bv = new BERValue();
@@ -176,7 +174,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         bytes represent the two's complement encoding of the integer.
     */
     // TODO: Make this support more types.
-    override public @property
+    override public @property @system
     long integer()
     {
         /* NOTE:
@@ -200,7 +198,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         represent the two's complement encoding of the integer.
     */
     // TODO: Make this support more types.
-    override public @property
+    override public @property @system
     void integer(long value)
     {
         ubyte[] ub;
@@ -231,7 +229,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Decodes a BitArray. The first byte is an unsigned number of the unused
         bits in the last byte of the encoded bit array.
     */
-    override public @property
+    // NOTE: This has to be @system because BitArray sucks.
+    override public @property @system
     BitArray bitString()
     {
         if (this.value[0] > 0x07u)
@@ -244,7 +243,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Encodes a BitArray. The first byte is an unsigned number of the unused
         bits in the last byte of the encoded bit array.
     */
-    override public @property
+    // NOTE: This has to be @system because BitArray sucks.
+    override public @property @system
     void bitString(BitArray value)
     {
         // REVIEW: is 0x08u - (value.length % 0x08u) == 0x08u % value.length?
@@ -269,7 +269,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Decodes an OCTET STRING into an unsigned byte array.
     */
-    override public @property
+    override public @property @safe
     ubyte[] octetString()
     {
         return this.value;
@@ -278,14 +278,14 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Encodes an OCTET STRING from an unsigned byte array.
     */
-    override public @property
+    override public @property @safe
     void octetString(ubyte[] value)
     {
         this.value = value;
     }
 
     ///
-    @system
+    @safe
     unittest
     {
         BERValue bv = new BERValue();
@@ -297,7 +297,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Returns an empty array, which is meant to indicate a null.
         The length of a NULL is always zero.
     */
-    override public @property
+    override public @property @safe
     ubyte[] nill()
     {
         if (this.length != 0)
@@ -310,14 +310,14 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         The only thing this does is set the value to an empty array, which is
         technically correct, since a NULL is always zero-length.
     */
-    override public @property
+    override public @property @safe
     void nill(ubyte[] value)
     {
         this.value = [];
     }
 
     ///
-    @system
+    @safe
     unittest
     {
         BERValue bv = new BERValue();
@@ -341,7 +341,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    override public @property
+    // FIXME: change number sizes to size_t and add overflow checking.
+    override public @property @safe
     OID objectIdentifier()
     {
         ulong[] oidComponents = [ (this.value[0] / 0x28u), (this.value[0] % 0x28u) ];
@@ -388,7 +389,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    override public @property
+    // FIXME: change number sizes to size_t and add overflow checking.
+    override public @property @safe
     void objectIdentifier(OID value)
     {
         ulong[] oidComponents = value.numericArray();
@@ -420,7 +422,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     }
 
     ///
-    @system
+    @safe
     unittest
     {
         BERValue bv = new BERValue();
@@ -448,10 +450,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
     */
-    override public @property
+    override public @property @system
     string objectDescriptor()
     {
-        import std.ascii : isGraphical;
         foreach (character; this.value)
         {
             if ((!character.isGraphical) && (character != ' '))
@@ -483,10 +484,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
     */
-    override public @property
+    override public @property @system
     void objectDescriptor(string value)
     {
-        import std.ascii : isGraphical;
         foreach (character; value)
         {
             if ((!character.isGraphical) && (character != ' '))
@@ -498,6 +498,16 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         }
         this.value = cast(ubyte[]) value;
     }
+
+    ///
+    @system
+    unittest
+    {
+        BERValue bv = new BERValue();
+        bv.objectDescriptor = "qwert yuiop";
+        assert(bv.objectDescriptor == "qwert yuiop");
+    }
+    // TODO: Negative unit tests
 
     /* REVIEW:
         Is there some way to abstract the types into the parent class?
@@ -525,7 +535,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
     */
-    override public @property
+    // NOTE: If integer properties are marked @trusted, this can be @safe
+    override public @property @system
     External external()
     {
         BERValue[] bvs = this.sequence;
@@ -640,7 +651,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
     */
-    override public @property
+    // NOTE: If integer properties are marked @trusted, this can be @safe
+    override public @property @system
     void external(External value)
     {
         BERValue identification = new BERValue();
@@ -743,7 +755,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         bytes encode an unsigned integer, N, such that mantissa is equal to
         sign * N * 2^scale.
     */
-    public @property
+    public @property @system
     T realType(T)() if (is(T == float) || is(T == double))
     {
         // import std.array : split;
@@ -1064,7 +1076,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         bytes encode an unsigned integer, N, such that mantissa is equal to
         sign * N * 2^scale.
     */
-    public @property
+    public @property @system
     void realType(T)(T value)
     if (is(T == float) || is(T == double))
     {
@@ -1189,11 +1201,6 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     unittest
     {
         import std.math : approxEqual;
-        /*
-            After a VERY long Sunday morning, I finally figured out that the
-            most significant byte is going to be the left-most byte in the
-            BER-encoded REAL. Thanks, pyasn1!
-        */
         float f = 22.86;
         double d = 0.00583;
         BERValue bvf = new BERValue();
@@ -1206,8 +1213,12 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(approxEqual(bvd.realType!double, d));
     }
 
-    // ENUMERATED
-    override public @property
+    // TODO: Review, test, and mark as @trusted
+    /**
+        Decodes an integer from an ENUMERATED type. In BER, an ENUMERATED
+        type is encoded the exact same way that an INTEGER is.
+    */
+    override public @property @system
     long enumerated()
     {
         /* NOTE:
@@ -1226,7 +1237,12 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return *cast(long *) value.ptr; // FIXME: This is vulnerable!
     }
 
-    override public @property
+    // TODO: Review, test, and mark as @trusted
+    /**
+        Encodes an ENUMERATED type from an integer. In BER, an ENUMERATED
+        type is encoded the exact same way that an INTEGER is.
+    */
+    override public @property @system
     void enumerated(long value)
     {
         ubyte[] ub;
@@ -1277,7 +1293,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
     */
-    override public @property
+    // NOTE: If the integer properties are marked @trusted, this can be @safe.
+    override public @property @system
     EmbeddedPDV embeddedPDV()
     {
         BERValue[] bvs = this.sequence;
@@ -1440,7 +1457,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
     */
-    override public @property
+    // NOTE: If the integer properties are marked @trusted, this can be @safe.
+    override public @property @system
     void embeddedPDV(EmbeddedPDV value)
     {
         BERValue identification = new BERValue();
@@ -1536,7 +1554,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Throws:
             UTF8Exception if it does not decode correctly.
     */
-    override public @property
+    override public @property @system
     string utf8string()
     {
         return cast(string) this.value;
@@ -1545,7 +1563,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Encodes a UTF-8 string to bytes. No checks are performed.
     */
-    override public @property nothrow
+    override public @property @system nothrow
     void utf8string(string value)
     {
         this.value = cast(ubyte[]) value;
@@ -1574,7 +1592,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    override public @property
+    // REVIEW: Can this be nothrow?
+    // FIXME: change number sizes to size_t and add overflow checking.
+    override public @property @safe
     RelativeOID relativeObjectIdentifier()
     {
         ulong[] oidComponents = [];
@@ -1619,7 +1639,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    override public @property
+    // REVIEW: Can this be nothrow?
+    // TODO: Remove std.outbuffer dependency
+    // FIXME: change number sizes to size_t and add overflow checking.
+    override public @property @safe
     void relativeObjectIdentifier(RelativeOID value)
     {
         ulong[] oidComponents = value.numericArray();
@@ -1646,7 +1669,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     }
 
     ///
-    @system
+    @safe
     unittest
     {
         BERValue bv = new BERValue();
@@ -1657,7 +1680,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Decodes a sequence of BERValues.
     */
-    public @property
+    public @property @system
     BERValue[] sequence()
     {
         ubyte[] data = this.value.dup;
@@ -1670,7 +1693,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Encodes a sequence of BERValues.
     */
-    public @property
+    public @property @system
     void sequence(BERValue[] value)
     {
         ubyte[] result;
@@ -1684,7 +1707,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Decodes a set of BERValues.
     */
-    public @property
+    public @property @system
     BERValue[] set()
     {
         ubyte[] data = this.value.dup;
@@ -1697,7 +1720,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Encodes a set of BERValues.
     */
-    public @property
+    public @property @system
     void set(BERValue[] value)
     {
         ubyte[] result;
@@ -1712,7 +1735,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Decodes a string, where the characters of the string are limited to
         0 - 9 and space.
     */
-    override public @property
+    override public @property @system
     string numericString()
     {
         foreach (character; this.value)
@@ -1728,7 +1751,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Encodes a string, where the characters of the string are limited to
         0 - 9 and space.
     */
-    override public @property
+    override public @property @system
     void numericString(string value)
     {
         foreach (character; value)
@@ -1755,7 +1778,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         space, apostrophe, parentheses, comma, minus, plus, period, 
         forward slash, colon, equals, and question mark.
     */
-    override public @property
+    override public @property @system
     string printableString()
     {
         /* NOTE:
@@ -1780,7 +1803,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         space, apostrophe, parentheses, comma, minus, plus, period, 
         forward slash, colon, equals, and question mark.
     */
-    override public @property
+    override public @property @system
     void printableString(string value)
     {
         /* NOTE:
@@ -1805,8 +1828,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     unittest
     {
         BERValue bv = new BERValue();
-        bv.printableString = "1234567890 asdfjkl;";
-        assert(bv.printableString == "1234567890 asdfjkl;");
+        bv.printableString = "1234567890 asdfjkl";
+        assert(bv.printableString == "1234567890 asdfjkl");
         assertThrown!BERException(bv.printableString = "\t");
         assertThrown!BERException(bv.printableString = "\n");
         assertThrown!BERException(bv.printableString = "\0");
@@ -1819,25 +1842,25 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Literally just returns the value bytes.
     */
-    override public @property
+    override public @property @safe nothrow
     ubyte[] teletexString()
     {
-        // TODO: Validation. 
+        // TODO: Validation.
         return this.value;
     }
 
     /**
         Literally just sets the value bytes.
     */
-    override public @property
+    override public @property @safe nothrow
     void teletexString(ubyte[] value)
     {
-        // TODO: Validation.        
+        // TODO: Validation.
         this.value = value;
     }
 
     ///
-    @system
+    @safe
     unittest
     {
         BERValue bv = new BERValue();
@@ -1848,7 +1871,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Literally just returns the value bytes.
     */
-    override public @property
+    override public @property @safe nothrow
     ubyte[] videotexString()
     {
         // TODO: Validation.
@@ -1858,7 +1881,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Literally just sets the value bytes.
     */
-    override public @property
+    override public @property @safe nothrow
     void videotexString(ubyte[] value)
     {
         // TODO: Validation.
@@ -1866,7 +1889,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     }
 
     ///
-    @system
+    @safe
     unittest
     {
         BERValue bv = new BERValue();
@@ -1894,10 +1917,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(TR $(TD 0x7E) $(TD ~))
         )
     */
-    override public @property
+    override public @property @system
     string ia5String()
     {
-        import std.ascii : isASCII;
         string ret = cast(string) this.value;
         foreach (character; ret)
         {
@@ -1928,10 +1950,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(TR $(TD 0x7E) $(TD ~))
         )
     */
-    override public @property
+    override public @property @system
     void ia5String(string value)
     {
-        import std.ascii : isASCII;
         foreach (character; value)
         {
             if (!character.isASCII)
@@ -1972,7 +1993,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         See_Also:
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
-    override public @property
+    override public @property @system
     DateTime utcTime()
     {
         string dt = (((this.value[0] <= '7') ? "20" : "19") ~ cast(string) this.value);
@@ -1994,7 +2015,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         See_Also:
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
-    override public @property
+    // REVIEW: Is this nothrow?
+    override public @property @system
     void utcTime(DateTime value)
     {
         import std.string : replace;
@@ -2024,7 +2046,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LI 19851106210627.3-0500)
         )
     */
-    override public @property
+    override public @property @system
     DateTime generalizedTime()
     {
         string dt = cast(string) this.value;
@@ -2045,7 +2067,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LI 19851106210627.3-0500)
         )
     */
-    override public @property
+    // REVIEW: Is this nothrow?
+    override public @property @system
     void generalizedTime(DateTime value)
     {
         import std.string : replace;
@@ -2073,10 +2096,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
     */
-    override public @property
+    override public @property @system
     string graphicString()
     {
-        import std.ascii : isGraphical;
         string ret = cast(string) this.value;
         foreach (character; ret)
         {
@@ -2099,10 +2121,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
     */
-    override public @property
+    override public @property @system
     void graphicString(string value)
     {
-        import std.ascii : isGraphical;
         foreach (character; value)
         {
             if (!character.isGraphical && character != ' ')
@@ -2134,10 +2155,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         0x20 and 0x7E. (Honestly, I don't know how this differs from
         GraphicalString.)
     */
-    override public @property
+    override public @property @system
     string visibleString()
     {
-        import std.ascii : isGraphical;
         string ret = cast(string) this.value;
         foreach (character; ret)
         {
@@ -2153,10 +2173,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         0x20 and 0x7E. (Honestly, I don't know how this differs from
         GraphicalString.)
     */
-    override public @property
+    override public @property @system
     void visibleString(string value)
     {
-        import std.ascii : isGraphical;
         foreach (character; value)
         {
             if (!character.isGraphical && character != ' ')
@@ -2169,7 +2188,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Decodes a string containing only ASCII characters.
     */
-    override public @property
+    override public @property @system
     string generalString()
     {
         string ret = cast(string) this.value;
@@ -2185,7 +2204,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Encodes a string containing only ASCII characters.
     */
-    override public @property
+    override public @property @system
     void generalString(string value)
     {
         foreach (character; value)
@@ -2210,7 +2229,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Decodes a dstring of UTF-32 characters.
     */
-    override public @property
+    override public @property @system
     dstring universalString()
     {
         version (BigEndian)
@@ -2246,7 +2265,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Encodes a dstring of UTF-32 characters.
     */
-    override public @property
+    override public @property @system
     void universalString(dstring value)
     {
         version (BigEndian)
@@ -2304,7 +2323,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
     */
-    override public @property
+    // REVIEW: Is this nothrow?
+    // NOTE: if the integer properties are marked @trusted, this can be @safe
+    override public @property @system
     CharacterString characterString()
     {
         BERValue[] bvs = this.sequence;
@@ -2460,7 +2481,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
     */
-    override public @property
+    // REVIEW: Is this nothrow?
+    // NOTE: if the integer properties are marked @trusted, this can be @safe
+    override public @property @system
     void characterString(CharacterString value)
     {
         BERValue identification = new BERValue();
@@ -2546,7 +2569,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Decodes a wstring of UTF-16 characters.
     */
-    override public @property
+    override public @property @system
     wstring bmpString()
     {
         version (BigEndian)
@@ -2580,7 +2603,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Encodes a wstring of UTF-16 characters.
     */
-    override public @property
+    override public @property @system
     void bmpString(wstring value)
     {
         version (BigEndian)
@@ -2614,6 +2637,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Creates an EndOfContent BER Value.
     */
+    public @safe nothrow
     this()
     {
         this.type = 0x00;
@@ -2641,6 +2665,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         }
         ---
     */
+    public @system
     this(ref ubyte[] bytes)
     {
         import std.string : indexOf;
@@ -2734,13 +2759,13 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         Returns: type tag, length tag, and value, all concatenated as a ubyte array.
     */
-    public @property
+    public @property @system
     ubyte[] toBytes()
     {
         ubyte[] lengthOctets = [ 0x00u ];
         switch (this.lengthEncodingPreference)
         {
-            case (LLEP.definite):
+            case (LengthEncodingPreference.definite):
             {
                 if (this.length < 127)
                 {
@@ -2767,7 +2792,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 }
                 break;
             }
-            case (LLEP.indefinite):
+            case (LengthEncodingPreference.indefinite):
             {
                 lengthOctets = [ 0x80 ];
                 break;
@@ -2781,7 +2806,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             [ this.type ] ~ 
             lengthOctets ~ 
             this.value ~ 
-            (this.lengthEncodingPreference == LLEP.indefinite ? cast(ubyte[]) [ 0x00, 0x00 ] : cast(ubyte[]) [])
+            (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00, 0x00 ] : cast(ubyte[]) [])
         );
     }
 
@@ -2795,13 +2820,13 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         Returns: type tag, length tag, and value, all concatenated as a ubyte array.
     */
-    public
+    public @system
     ubyte[] opCast(T = ubyte[])()
     {
         ubyte[] lengthOctets = [ 0x00u ];
         switch (this.lengthEncodingPreference)
         {
-            case (LLEP.definite):
+            case (LengthEncodingPreference.definite):
             {
                 if (this.length < 127)
                 {
@@ -2828,7 +2853,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 }
                 break;
             }
-            case (LLEP.indefinite):
+            case (LengthEncodingPreference.indefinite):
             {
                 lengthOctets = [ 0x80 ];
                 break;
@@ -2842,7 +2867,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             [ this.type ] ~ 
             lengthOctets ~ 
             this.value ~ 
-            (this.lengthEncodingPreference == LLEP.indefinite ? cast(ubyte[]) [ 0x00, 0x00 ] : cast(ubyte[]) [])
+            (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00, 0x00 ] : cast(ubyte[]) [])
         );
     }
 
@@ -2872,7 +2897,7 @@ unittest
     // sequence
     // set
     ubyte[] dataNumeric = [ 0x12, 0x07, '8', '6', '7', '5', '3', '0', '9' ];
-    ubyte[] dataPrintable = [ 0x13, 0x08, '8', '6', ' ', 'b', '&', '~', 'f', '8' ];
+    ubyte[] dataPrintable = [ 0x13, 0x06, '8', '6', ' ', 'b', 'f', '8' ];
     ubyte[] dataTeletex = [ 0x14, 0x06, 0xFF, 0x05, 0x04, 0x03, 0x02, 0x01 ];
     ubyte[] dataVideotex = [ 0x15, 0x06, 0xFF, 0x05, 0x04, 0x03, 0x02, 0x01 ];
     ubyte[] dataIA5 = [ 0x16, 0x08, 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S' ];
@@ -2969,7 +2994,7 @@ unittest
     assert(result[12].utf8string == "HENLO");
     assert(result[13].relativeObjectIdentifier.numericArray == (new ROID(0x06u, 0x04u, 0x01u)).numericArray);
     assert(result[14].numericString == "8675309");
-    assert(result[15].printableString ==  "86 b&~f8");
+    assert(result[15].printableString ==  "86 bf8");
     assert(result[16].teletexString == [ 0xFF, 0x05, 0x04, 0x03, 0x02, 0x01 ]);
     assert(result[17].videotexString == [ 0xFF, 0x05, 0x04, 0x03, 0x02, 0x01 ]);
     assert(result[18].ia5String == "BORTHERS");

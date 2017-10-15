@@ -71,7 +71,7 @@ public class RelativeObjectIdentifier
         return new ObjectIdentifier(this._prefix.nodes ~ this._suffix);
     }
 
-    public @property
+    public @property @safe
     ulong[] numericArray()
     {
         ulong[] ret;

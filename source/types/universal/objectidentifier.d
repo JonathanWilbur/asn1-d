@@ -54,6 +54,7 @@ public class ObjectIdentifier
             ASN1ObjectIdentifierException if the first number is not 0, 1, or 2
             ASN1ObjectIdentifierException if the second number is greater than 39
     */
+    public @safe
     this(T)(T[] oidNumbers ...)
     if (isIntegral!T && isUnsigned!T)
     {
@@ -328,7 +329,8 @@ public class ObjectIdentifier
             an array of ulongs representing the dot-delimited sequence of
             integers that constitute the numeric OID
     */
-    @property public ulong[] numericArray()
+    public @property @safe
+    ulong[] numericArray()
     {
         ulong[] ret;
         foreach(node; this._nodes)

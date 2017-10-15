@@ -1,9 +1,9 @@
 # ASN.1 D Library
 
-* Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space), [jonathan@wilbur.space](mailto:jonathan@wilbur.space)
+* Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.2.0](http://semver.org/)
+* Version: [0.2.1](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -69,9 +69,9 @@ ready to serve as the basis for others:
   - [ ] `Standards`
   - [ ] DDoc Section Formatting Macros
 - [ ] Unabbreviated member names and abbreviated aliases
-- [ ] Storage classes (`in`, `out`, `scope`, `const`, etc.)
-- [ ] `@safe`, `@trusted`, `@system`, etc.
-- [ ] `nothrow`, `pure`, `final`, etc.
+- [x] Storage classes (`in`, `out`, `scope`, `const`, etc.)
+- [x] `@safe`, `@trusted`, `@system`, etc.
+- [x] `nothrow`, `pure`, `final`, etc.
 - [ ] Character-encoded `REAL`
 - [ ] `integer(T) if (isSigned!T && isIntegral!T)`
 - [ ] Figure out the situation with `BitArray`...

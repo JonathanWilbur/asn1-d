@@ -1,7 +1,5 @@
 module asn1;
 
-//TODO: Disable default constructor for all types!
-
 /// A Generic Exception from which all other ASN.1 Exceptions will inherit.
 class ASN1Exception : Exception
 {

@@ -28,6 +28,7 @@ class ASN1BinaryValue : ASN1Value
         it can only be assigned values via legitimate properties.
         ... if that's possible.
     */
+    // NOTE: Storage classes are basically going to be impossible with properties...
 
     protected import std.datetime.date : DateTime;
     private import std.math : log2;
@@ -66,31 +67,31 @@ class ASN1BinaryValue : ASN1Value
     // public ASN1TypeTag type;
     public ubyte type;
 
-    public @property
+    final public @property
     bool universal()
     {
         return ((this.type & 0xC) == 0x00);
     }
 
-    public @property
+    final public @property
     bool applicationSpecific()
     {
         return ((this.type & 0xC) == 0x40);
     }
 
-    public @property
+    final public @property
     bool contextSpecific()
     {
         return ((this.type & 0xC) == 0x80);
     }
 
-    public @property
+    final public @property
     bool privatelySpecific()
     {
         return ((this.type & 0xC) == 0x40);
     }
 
-    public @property
+    final public @property @safe nothrow
     size_t length()
     {
         return this.value.length;
@@ -100,7 +101,7 @@ class ASN1BinaryValue : ASN1Value
 
     // Convenience
     // pragma(inline, true);
-    private
+    final private
     void throwIfEmptyValue(X : ASN1CodecException)()
     {
         if (this.length != 1) throw new X ("Value bytes was zero");
