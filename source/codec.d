@@ -18,7 +18,11 @@ package import std.math : log2;
 package import std.outbuffer;
 package import std.traits : isIntegral;
 
-class ASN1CodecException : ASN1Exception
+///
+public alias ASN1CodecException = AbstractSyntaxNotation1CodecException;
+/// A generic exception from which any ASN.1 codec exception may inherit
+public
+class AbstractSyntaxNotation1CodecException : ASN1Exception
 {
     import std.exception : basicExceptionCtors;
     mixin basicExceptionCtors;
@@ -118,41 +122,88 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
 
     /// The base of binary-encoded REALs. May be 2, 8, or 16.
     static public ASN1RealBinaryEncodingBase realBinaryEncodingBase = ASN1RealBinaryEncodingBase.base2;
+
     // TODO: maximumValueLength (to prevent DoS attacks)
 
     // public ASN1TypeTag type;
     public ubyte type;
 
+    /**
+        Whether the value is one of the universally-defined data types, which
+        are:
+
+        $(TABLE
+            $(TR $(TH Type)                 $(TH Construction)      $(TH Hexadecimal Value))
+            $(TR $(TD End-of-Content)       $(TD Primitive)         $(TD 0x00))
+            $(TR $(TD BOOLEAN)	            $(TD Primitive)         $(TD 0x01))
+            $(TR $(TD INTEGER)	            $(TD Primitive)         $(TD 0x02))
+            $(TR $(TD BIT STRING)           $(TD Both)              $(TD 0x03))
+            $(TR $(TD OCTET STRING)         $(TD Both)              $(TD 0x04))
+            $(TR $(TD NULL)                 $(TD Primitive)         $(TD 0x05))
+            $(TR $(TD OBJECT IDENTIFIER)	$(TD Primitive)         $(TD 0x06))
+            $(TR $(TD Object Descriptor)    $(TD Both)              $(TD 0x07))
+            $(TR $(TD EXTERNAL)	            $(TD Constructed)       $(TD 0x08))
+            $(TR $(TD REAL)            	    $(TD Primitive)         $(TD 0x09))
+            $(TR $(TD ENUMERATED)	        $(TD Primitive)         $(TD 0x0A))
+            $(TR $(TD EMBEDDED PDV)	        $(TD Constructed)       $(TD 0x0B))
+            $(TR $(TD UTF8String)	        $(TD Both)              $(TD 0x0C))
+            $(TR $(TD RELATIVE-OID)	        $(TD Primitive)         $(TD 0x0D))
+            $(TR $(TD SEQUENCE)	            $(TD Constructed)       $(TD 0x10))
+            $(TR $(TD SET)	                $(TD Constructed)       $(TD 0x11))
+            $(TR $(TD NumericString)	    $(TD Both)              $(TD 0x12))
+            $(TR $(TD PrintableString)	    $(TD Both)              $(TD 0x13))
+            $(TR $(TD T61String)	        $(TD Both)              $(TD 0x14))
+            $(TR $(TD VideotexString)	    $(TD Both)              $(TD 0x15))
+            $(TR $(TD IA5String)	        $(TD Both)              $(TD 0x16))
+            $(TR $(TD UTCTime)	            $(TD Both)              $(TD 0x17))
+            $(TR $(TD GeneralizedTime)	    $(TD Both)              $(TD 0x18))
+            $(TR $(TD GraphicString)	    $(TD Both)              $(TD 0x19))
+            $(TR $(TD VisibleString)	    $(TD Both)              $(TD 0x1A))
+            $(TR $(TD GeneralString)	    $(TD Both)              $(TD 0x1B))
+            $(TR $(TD UniversalString)	    $(TD Both)              $(TD 0x1C))
+            $(TR $(TD CHARACTER STRING)	    $(TD Both)              $(TD 0x1D))
+            $(TR $(TD BMPString)	        $(TD Both)              $(TD 0x1E))
+        )
+    */
     final public @property
     bool universal()
     {
         return ((this.type & 0xC) == 0x00);
     }
 
+    /**
+        Whether the type is application-specific.
+    */
     final public @property
     bool applicationSpecific()
     {
         return ((this.type & 0xC) == 0x40);
     }
 
+    /**
+        Whether the type tag specifies an index within a SEQUENCE or CHOICE.
+    */
     final public @property
     bool contextSpecific()
     {
         return ((this.type & 0xC) == 0x80);
     }
 
+    /// I don't know what this even means.
     final public @property
     bool privatelySpecific()
     {
         return ((this.type & 0xC) == 0x40);
     }
 
+    /// The length of the value in octets
     final public @property @safe nothrow
     size_t length()
     {
         return this.value.length;
     }
 
+    /// The octets of the encoded value.
     public ubyte[] value;
 
     // Convenience
@@ -163,110 +214,244 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         if (this.length != 1) throw new X ("Value bytes was zero");
     }
 
+    /**
+        An opCast() override for converting the type-length-value tuple to
+        bytes.
+    */
     public
     ubyte[] opCast(T = ubyte[])()
     {
         return [];
     }
 
-    // END OF CONTENT
-    // IDEA: Make the empty constructor for each ER create an EOC.
-    // abstract public @property 
-    // endOfContent();
-
-    // abstract public @property
-    // void endOfContent(void* value); // REVIEW
-
-    // BOOLEAN
+    /// Decodes a boolean
     abstract public @property
     bool boolean();
 
+    /// Encodes a boolean
     abstract public @property
     void boolean(bool value);
 
-    // INTEGER
-    // TODO: Make this support more types.
+    /// Decodes an integer
     abstract public @property
     long integer();
 
+    /// Encodes an integer
     abstract public @property
     void integer(long value);
 
-    // BIT STRING
+    /// Decodes a BitArray
     abstract public @property
     BitArray bitString();
 
+    /// Encodes a BitArray
     abstract public @property
     void bitString(BitArray value);
 
-    // OCTET STRING
+    /// Decodes a ubyte[] array
     abstract public @property
     ubyte[] octetString();
 
+    /// Encodes a ubyte[] array
     abstract public @property
     void octetString(ubyte[] value);
 
-    // NULL
-    abstract public @property
-    ubyte[] nill();
-
-    abstract public @property
-    void nill(ubyte[] value); // REVIEW?
-
-    // OBJECT IDENTIFIER
+    /// Decodes an Object Identifier
     abstract public @property
     OID objectIdentifier();
 
+    /// Encodes an Object Identifier
     abstract public @property
     void objectIdentifier(OID value);
 
-    // ObjectDescriptor
+    /**
+        Decodes an ObjectDescriptor, which is a string consisting of only
+        graphical characters. In fact, ObjectDescriptor is actually implicitly
+        just a GraphicString! The formal specification for an ObjectDescriptor
+        is:
+
+        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
+
+        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
+        0x20 to 0x7E.
+
+        Sources:
+            $(LINK2 ,
+                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+                The Wikipedia Page on ISO 2022)
+            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+    */
     abstract public @property
     string objectDescriptor();
 
+    /**
+        Encodes an ObjectDescriptor, which is a string consisting of only
+        graphical characters. In fact, ObjectDescriptor is actually implicitly
+        just a GraphicString! The formal specification for an ObjectDescriptor
+        is:
+
+        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
+
+        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
+        0x20 to 0x7E.
+
+        Sources:
+            $(LINK2 ,
+                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+                The Wikipedia Page on ISO 2022)
+            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+    */
     abstract public @property
     void objectDescriptor(string value);
 
-    // EXTERNAL
+    /**
+        Decodes an EXTERNAL, which is a constructed data type, defined in 
+        the $(LINK2 https://www.itu.int, 
+            International Telecommunications Union)'s 
+        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+
+        The specification defines EXTERNAL as:
+
+        $(I
+        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+            identification CHOICE {
+                syntax OBJECT IDENTIFIER,
+                presentation-context-id INTEGER,
+                context-negotiation SEQUENCE {
+                    presentation-context-id INTEGER,
+                    transfer-syntax OBJECT IDENTIFIER } },
+            data-value-descriptor ObjectDescriptor OPTIONAL,
+            data-value OCTET STRING }
+        )
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 2.
+    */
     abstract public @property
     External external();
 
+    /**
+        Encodes an EXTERNAL, which is a constructed data type, defined in 
+        the $(LINK2 https://www.itu.int, 
+            International Telecommunications Union)'s 
+        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+
+        The specification defines EXTERNAL as:
+
+        $(I
+        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+            identification CHOICE {
+                syntax OBJECT IDENTIFIER,
+                presentation-context-id INTEGER,
+                context-negotiation SEQUENCE {
+                    presentation-context-id INTEGER,
+                    transfer-syntax OBJECT IDENTIFIER } },
+            data-value-descriptor ObjectDescriptor OPTIONAL,
+            data-value OCTET STRING }
+        )
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 2.
+    */
     abstract public @property
     void external(External value);
 
-    // REAL
     // TODO: Make string variants
+    /// Encodes a floating-point number
     abstract public @property
     T realType(T)() if (is(T == float) || is(T == double));
 
+    /// Encodes a floating-point number
     abstract public @property
     void realType(T)(T value) if (is(T == float) || is(T == double));
 
-    // ENUMERATED
+    /// Encodes an integer that represents an ENUMERATED value
     abstract public @property
     long enumerated();
 
+    /// Decodes an integer that represents an ENUMERATED value
     abstract public @property
     void enumerated(long value);
 
-    // EMBEDDED PDV
+    /**
+        Decodes an EMBEDDED PDV, which is a constructed data type, defined in 
+            the $(LINK2 https://www.itu.int, 
+                International Telecommunications Union)'s 
+            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+
+        The specification defines EMBEDDED PDV as:
+
+        $(I
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
+        )
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 5.
+    */
     abstract public @property
     EmbeddedPDV embeddedPDV();
 
+    /**
+        Encodes an EMBEDDED PDV, which is a constructed data type, defined in 
+            the $(LINK2 https://www.itu.int, 
+                International Telecommunications Union)'s 
+            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+
+        The specification defines EMBEDDED PDV as:
+
+        $(I
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
+        )
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 5.
+    */
     abstract public @property
     void embeddedPDV(EmbeddedPDV value);
 
-    // UTF8String
+    // Decodes a UTF-8 String
     abstract public @property
     string utf8string();
 
+    /// Encodes a UTF-8 String
     abstract public @property
     void utf8string(string value);
 
-    // RELATIVE OID
+    /// Decodes a portion of an Object Identifier
     abstract public @property
     RelativeOID relativeObjectIdentifier();
 
+    /// Encodes a porition of an Object Identifier
     abstract public @property
     void relativeObjectIdentifier(RelativeOID value);
 
@@ -284,96 +469,201 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     // abstract public @property
     // void set(BERValue[] value);
 
-    // NumericString
+    /**
+        Decodes a string, where the characters of the string are limited to
+        0 - 9 and space.
+    */
     abstract public @property
     string numericString();
 
+    /**
+        Encodes a string, where the characters of the string are limited to
+        0 - 9 and space.
+    */
     abstract public @property
     void numericString(string value);
 
-    // PrintableString
+    /**
+        Decodes a string that will only contain characters a-z, A-Z, 0-9,
+        space, apostrophe, parentheses, comma, minus, plus, period, 
+        forward slash, colon, equals, and question mark.
+    */
     abstract public @property
     string printableString();
 
+    /**
+        Encodes a string that will only contain characters a-z, A-Z, 0-9,
+        space, apostrophe, parentheses, comma, minus, plus, period, 
+        forward slash, colon, equals, and question mark.
+    */
     abstract public @property
     void printableString(string value);
 
-    // TeletexString
+    /// Decodes bytes representing the T.61 Character Set
     abstract public @property
     ubyte[] teletexString();
 
+    /// Encodes bytes representing the T.61 Character Set
     abstract public @property
     void teletexString(ubyte[] value);
 
-    // VideotexString
     abstract public @property
     ubyte[] videotexString();
 
     abstract public @property
     void videotexString(ubyte[] value);
 
-    // IA5String
+    /// Decodes a string of ASCII characters
     abstract public @property
     string ia5String();
 
+    /// Encodes a string of ASCII characters
     abstract public @property
     void ia5String(string value);
 
-    // UTCTime
+    /// Decodes a DateTime
     abstract public @property
     DateTime utcTime();
 
+    /// Encodes a DateTime
     abstract public @property
     void utcTime(DateTime value);
 
-    // GeneralizedTime
+    /// Decodes a DateTime
     abstract public @property
     DateTime generalizedTime();
 
+    /// Encodes a DateTime
     abstract public @property
     void generalizedTime(DateTime value);
 
-    // GraphicString
+    /**
+        Decodes an ASCII string that contains only characters between and 
+        including 0x20 and 0x75.
+
+        Sources:
+            $(LINK2 ,
+                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+                The Wikipedia Page on ISO 2022)
+            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+
+    */
     abstract public @property
     string graphicString();
 
+    /**
+        Encodes an ASCII string that contains only characters between and 
+        including 0x20 and 0x75.
+
+        Sources:
+            $(LINK2 ,
+                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+                The Wikipedia Page on ISO 2022)
+            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+
+    */
     abstract public @property
     void graphicString(string value);
 
-    // VisibleString
+    /**
+        Decodes a string that only contains characters between and including
+        0x20 and 0x7E. (Honestly, I don't know how this differs from
+        GraphicalString.)
+    */
     abstract public @property
     string visibleString();
 
+    /**
+        Encodes a string that only contains characters between and including
+        0x20 and 0x7E. (Honestly, I don't know how this differs from
+        GraphicalString.)
+    */
     abstract public @property
     void visibleString(string value);
 
-    // GeneralString
+    /// Decodes a string containing only ASCII characters.
     abstract public @property
     string generalString();
 
+    /// Encodes a string containing only ASCII characters.
     abstract public @property
     void generalString(string value);
 
-    // UniversalString
+    /// Decodes a string of UTF-32 characters
     abstract public @property
     dstring universalString();
 
+    /// Encodes a string of UTF-32 characters
     abstract public @property
     void universalString(dstring value);
 
-    // CHARACTER STRING
+    /**
+        Decodes a CHARACTER STRING, which is a constructed data type, defined
+        in the $(LINK2 https://www.itu.int, 
+                International Telecommunications Union)'s 
+            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+
+        The specification defines CHARACTER as:
+
+        $(I
+            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                string-value OCTET STRING }
+        )
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 5.
+    */
     abstract public @property
     CharacterString characterString();
 
+    /**
+        Encodes a CHARACTER STRING, which is a constructed data type, defined
+        in the $(LINK2 https://www.itu.int, 
+                International Telecommunications Union)'s 
+            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+
+        The specification defines CHARACTER as:
+
+        $(I
+            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                string-value OCTET STRING }
+        )
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 5.
+    */
     abstract public @property
     void characterString(CharacterString value);
 
-    // BMPString
+    /// Decodes a string of UTF-16 characters
     abstract public @property
     wstring bmpString();
 
+    /// Encodes a string of UTF-16 characters
     abstract public @property
     void bmpString(wstring value);
 }
-
-//TODO: Implement isImaginary and isComplex in std.traits.

@@ -293,38 +293,6 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     }
 
     /**
-        Returns an empty array, which is meant to indicate a null.
-        The length of a NULL is always zero.
-    */
-    override public @property @safe
-    ubyte[] nill()
-    {
-        if (this.length != 0)
-            throw new BERException
-            ("NULL could not be decoded when there are more than zero value bytes.");
-        return [];
-    }
-
-    /**
-        The only thing this does is set the value to an empty array, which is
-        technically correct, since a NULL is always zero-length.
-    */
-    override public @property @safe
-    void nill(ubyte[] value)
-    {
-        this.value = [];
-    }
-
-    ///
-    @safe
-    unittest
-    {
-        BERValue bv = new BERValue();
-        bv.nill = [];
-        assert(bv.nill == []);
-    }
-
-    /**
         Decodes an OBJECT IDENTIFIER.
         See source/types/universal/objectidentifier.d for information about
         the ObjectIdentifier class (aliased as "OID").
@@ -1503,7 +1471,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         else if (value.identification.fixed)
         {
             identificationValue.type = 0x85u;
-            identificationValue.nill = [];
+            identificationValue.value = [];
         }
         else // it must be the presentationContextID INTEGER
         {
@@ -1896,7 +1864,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.videotexString == [ 0x01, 0x03, 0x05, 0x07, 0x09 ]);
     }
 
-    /* NOTE: 
+    /**
         Decodes a string that only contains ASCII characters.
 
         IA5String differs from ASCII ever so slightly: IA5 is international,
@@ -1929,7 +1897,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         return ret;
     }
 
-    /* NOTE: 
+    /**
         Encodes a string that may only contain ASCII characters.
 
         IA5String differs from ASCII ever so slightly: IA5 is international,
@@ -2528,7 +2496,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         else if (value.identification.fixed)
         {
             identificationValue.type = 0x85u;
-            identificationValue.nill = [];
+            identificationValue.value = [];
         }
         else // it must be the presentationContextID INTEGER
         {
@@ -2948,7 +2916,7 @@ unittest
     assert(result[2].integer == result[2].integer);
     assert(cast(size_t[]) result[3].bitString == cast(size_t[]) result[3].bitString); // Not my fault that std.bitmanip.BitArray is fucking stupid.
     assert(result[4].octetString == result[4].octetString);
-    assert(result[5].nill.length == result[5].nill.length);
+    // assert(result[5].nill.length == result[5].nill.length);
     assert(result[6].objectIdentifier.numericArray == result[6].objectIdentifier.numericArray);
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
     assert(result[8].external == result[8].external);
@@ -2982,7 +2950,7 @@ unittest
     // assert(cast(void[]) result[3].bitString == cast(void[]) BitArray([0xF0, 0xF0], 13));
     // NOTE: I think std.bitmanip.BitArray.opCast(void[]) is broken...
     assert(result[4].octetString == [ 0xFF, 0x00, 0x88, 0x14 ]);
-    assert(result[5].nill == []);
+    // assert(result[5].nill == []);
     assert(result[6].objectIdentifier.numericArray == (new OID(0x01u, 0x03u, 0x06u, 0x04u, 0x01u)).numericArray);
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
     assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01, 0x02, 0x03, 0x04 ]));
