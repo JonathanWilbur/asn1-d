@@ -47,7 +47,6 @@ private import types.identification;
 // REVIEW: Should I change the name of the class?
 // TODO: Standard Embedded Documentation fields
 // TODO: Remove dependency on std.outbuffer.
-// TODO: Aliases
 // TODO: Add the 'u' to the end of all unsigned bytes.
 // TODO: Add scope specifiers to import statements
 
@@ -1535,7 +1534,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             UTF8Exception if it does not decode correctly.
     */
     override public @property @system
-    string utf8string()
+    string unicodeTransformationFormat8String()
     {
         return cast(string) this.value;
     }
@@ -1544,7 +1543,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Encodes a UTF-8 string to bytes. No checks are performed.
     */
     override public @property @system nothrow
-    void utf8string(string value)
+    void unicodeTransformationFormat8String(string value)
     {
         this.value = cast(ubyte[]) value;
     }
@@ -1554,8 +1553,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     unittest
     {
         BERValue bv = new BERValue();
-        bv.utf8string = "henlo borthers";
-        assert(bv.utf8string == "henlo borthers");
+        bv.utf8String = "henlo borthers";
+        assert(bv.utf8String == "henlo borthers");
     }
 
     /**
@@ -1898,7 +1897,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         )
     */
     override public @property @system
-    string ia5String()
+    string internationalAlphabetNumber5String()
     {
         string ret = cast(string) this.value;
         foreach (character; ret)
@@ -1931,7 +1930,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         )
     */
     override public @property @system
-    void ia5String(string value)
+    void internationalAlphabetNumber5String(string value)
     {
         foreach (character; value)
         {
@@ -1974,7 +1973,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
     override public @property @system
-    DateTime utcTime()
+    DateTime coordinatedUniversalTime()
     {
         string dt = (((this.value[0] <= '7') ? "20" : "19") ~ cast(string) this.value);
         return DateTime.fromISOString(dt[0 .. 8].idup ~ "T" ~ dt[8 .. $].idup);
@@ -1997,7 +1996,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     */
     // REVIEW: Is this nothrow?
     override public @property @system
-    void utcTime(DateTime value)
+    void coordinatedUniversalTime(DateTime value)
     {
         import std.string : replace;
         this.value = cast(ubyte[]) (value.toISOString()[2 .. $].replace("T", ""));
@@ -2550,7 +2549,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Decodes a wstring of UTF-16 characters.
     */
     override public @property @system
-    wstring bmpString()
+    wstring basicMultilingualPlaneString()
     {
         version (BigEndian)
         {
@@ -2584,7 +2583,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Encodes a wstring of UTF-16 characters.
     */
     override public @property @system
-    void bmpString(wstring value)
+    void basicMultilingualPlaneString(wstring value)
     {
         version (BigEndian)
         {
@@ -2936,7 +2935,7 @@ unittest
     assert(result[9].realType!float == result[9].realType!float);
     assert(result[10].enumerated == result[10].enumerated);
     assert(result[11].embeddedPresentationDataValue == result[11].embeddedPresentationDataValue);
-    assert(result[12].utf8string == result[12].utf8string);
+    assert(result[12].utf8String == result[12].utf8String);
     assert(result[13].relativeObjectIdentifier.numericArray == result[13].relativeObjectIdentifier.numericArray);
     assert(result[14].numericString == result[14].numericString);
     assert(result[15].printableString == result[15].printableString);
@@ -2971,7 +2970,7 @@ unittest
     assert(result[9].realType!double == 0.15625);
     assert(result[10].enumerated == 255L);
     assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01, 0x02, 0x03, 0x04 ]));
-    assert(result[12].utf8string == "HENLO");
+    assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier.numericArray == (new ROID(0x06u, 0x04u, 0x01u)).numericArray);
     assert(result[14].numericString == "8675309");
     assert(result[15].printableString ==  "86 bf8");

@@ -531,7 +531,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
 
     /// Encodes a string of ASCII characters
     abstract public @property
-    void internationalAlphabetNumber5(string value);
+    void internationalAlphabetNumber5String(string value);
 
     ///
     public alias utc = coordinatedUniversalTime;

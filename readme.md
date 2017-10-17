@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.2.2](http://semver.org/)
+* Version: [0.2.4](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -68,7 +68,7 @@ ready to serve as the basis for others:
   - [ ] `Bugs`
   - [ ] `Standards`
   - [ ] DDoc Section Formatting Macros
-- [ ] Unabbreviated member names and abbreviated aliases
+- [x] Unabbreviated member names and abbreviated aliases
 - [x] Storage classes (`in`, `out`, `scope`, `const`, etc.)
 - [x] `@safe`, `@trusted`, `@system`, etc.
 - [x] `nothrow`, `pure`, `final`, etc.
@@ -146,6 +146,12 @@ The library will be marketed and distributed in the following ways:
 - [ ] Share it on the Dlang Subreddit
 - [ ] Publish an RPM package 
 - [ ] Publish an APT package
+
+## Bugs
+
+The codecs are intended to be `final` classes, but due to 
+[this bug](https://issues.dlang.org/show_bug.cgi?id=17909) I found, it cannot
+be until that bug is resolved.
 
 ## See Also
 
