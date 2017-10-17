@@ -256,6 +256,8 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void octetString(ubyte[] value);
 
+    ///
+    public alias oid = objectIdentifier;
     /// Decodes an Object Identifier
     abstract public @property
     OID objectIdentifier();
@@ -375,6 +377,8 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void enumerated(long value);
 
+    ///
+    public alias embeddedPDV = embeddedPresentationDataValue;
     /**
         Decodes an EMBEDDED PDV, which is a constructed data type, defined in 
             the $(LINK2 https://www.itu.int, 
@@ -405,7 +409,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         will be context-specific and numbered from 0 to 5.
     */
     abstract public @property
-    EmbeddedPDV embeddedPDV();
+    EmbeddedPDV embeddedPresentationDataValue();
 
     /**
         Encodes an EMBEDDED PDV, which is a constructed data type, defined in 
@@ -437,16 +441,20 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         will be context-specific and numbered from 0 to 5.
     */
     abstract public @property
-    void embeddedPDV(EmbeddedPDV value);
+    void embeddedPresentationDataValue(EmbeddedPDV value);
 
-    // Decodes a UTF-8 String
+    ///
+    public alias utf8String = unicodeTransformationFormat8String;
+    /// Decodes a UTF-8 String
     abstract public @property
-    string utf8string();
+    string unicodeTransformationFormat8String();
 
     /// Encodes a UTF-8 String
     abstract public @property
-    void utf8string(string value);
+    void unicodeTransformationFormat8String(string value);
 
+    ///
+    public alias relativeOID = relativeObjectIdentifier;
     /// Decodes a portion of an Object Identifier
     abstract public @property
     RelativeOID relativeObjectIdentifier();
@@ -499,6 +507,8 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void printableString(string value);
 
+    ///
+    public alias t61String = teletexString;
     /// Decodes bytes representing the T.61 Character Set
     abstract public @property
     ubyte[] teletexString();
@@ -513,21 +523,27 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void videotexString(ubyte[] value);
 
+    ///
+    public alias ia5String = internationalAlphabetNumber5String;
     /// Decodes a string of ASCII characters
     abstract public @property
-    string ia5String();
+    string internationalAlphabetNumber5String();
 
     /// Encodes a string of ASCII characters
     abstract public @property
-    void ia5String(string value);
+    void internationalAlphabetNumber5(string value);
 
+    ///
+    public alias utc = coordinatedUniversalTime;
+    ///
+    public alias utcTime = coordinatedUniversalTime;
     /// Decodes a DateTime
     abstract public @property
-    DateTime utcTime();
+    DateTime coordinatedUniversalTime();
 
     /// Encodes a DateTime
     abstract public @property
-    void utcTime(DateTime value);
+    void coordinatedUniversalTime(DateTime value);
 
     /// Decodes a DateTime
     abstract public @property
@@ -659,11 +675,13 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void characterString(CharacterString value);
 
+    ///
+    public alias bmpString = basicMultilingualPlaneString;
     /// Decodes a string of UTF-16 characters
     abstract public @property
-    wstring bmpString();
+    wstring basicMultilingualPlaneString();
 
     /// Encodes a string of UTF-16 characters
     abstract public @property
-    void bmpString(wstring value);
+    void basicMultilingualPlaneString(wstring value);
 }

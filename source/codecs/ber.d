@@ -113,7 +113,16 @@ alias BERValue = BasicEncodingRulesValue;
     // Now x is 1433!
     ---
 */
-public final
+/* FIXME:
+    This class should be "final," but a bug in the DMD compiler produces
+    unlinkable objects if a final class inherits an alias to an internal
+    member of a parent class.
+
+    I have reported this to the D Language Foundation's Bugzilla site on
+    17 October, 2017, and this bug can be viewed here:
+    https://issues.dlang.org/show_bug.cgi?id=17909
+*/
+public
 class BasicEncodingRulesValue : ASN1BinaryValue
 {
     /*
@@ -1231,6 +1240,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.enumerated == 5L);
     }
 
+    ///
+    // public alias embeddedPDV = embeddedPresentationDataValue;
     /**
         Decodes an EMBEDDED PDV, which is a constructed data type, defined in 
             the $(LINK2 https://www.itu.int, 
@@ -1262,7 +1273,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     */
     // NOTE: If the integer properties are marked @trusted, this can be @safe.
     override public @property @system
-    EmbeddedPDV embeddedPDV()
+    EmbeddedPDV embeddedPresentationDataValue()
     {
         BERValue[] bvs = this.sequence;
         if (bvs.length < 2 || bvs.length > 3)
@@ -1426,7 +1437,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     */
     // NOTE: If the integer properties are marked @trusted, this can be @safe.
     override public @property @system
-    void embeddedPDV(EmbeddedPDV value)
+    void embeddedPresentationDataValue(EmbeddedPDV value)
     {
         BERValue identification = new BERValue();
         identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
@@ -1497,6 +1508,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     @system
     unittest
     {
+        // import types.universal.embeddedpdv;
         ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
         id.presentationContextID = 27L;
 
@@ -1507,9 +1519,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         BERValue bv = new BERValue();
         bv.embeddedPDV = pdv;
+        // bv.embeddedPresentationDataValue = pdv;
         // writefln("Embedded PDV: %(%02X %)", cast(ubyte[]) bv);
 
-        EmbeddedPDV pdv2 = bv.embeddedPDV;
+        EmbeddedPDV pdv2 = bv.embeddedPresentationDataValue;
         assert(pdv2.identification.presentationContextID == 27L);
         assert(pdv2.dataValueDescriptor == "AAAABBBB");
         assert(pdv2.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
@@ -2922,7 +2935,7 @@ unittest
     assert(result[8].external == result[8].external);
     assert(result[9].realType!float == result[9].realType!float);
     assert(result[10].enumerated == result[10].enumerated);
-    assert(result[11].embeddedPDV == result[11].embeddedPDV);
+    assert(result[11].embeddedPresentationDataValue == result[11].embeddedPresentationDataValue);
     assert(result[12].utf8string == result[12].utf8string);
     assert(result[13].relativeObjectIdentifier.numericArray == result[13].relativeObjectIdentifier.numericArray);
     assert(result[14].numericString == result[14].numericString);
@@ -2941,7 +2954,7 @@ unittest
 
     // Pre-processing
     External x = result[8].external;
-    EmbeddedPDV m = result[11].embeddedPDV;
+    EmbeddedPDV m = result[11].embeddedPresentationDataValue;
     CharacterString c = result[25].characterString;
 
     // Ensure accessors decode the data correctly.
