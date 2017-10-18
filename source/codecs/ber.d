@@ -180,37 +180,57 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Decodes an integer from a big-endian sequence of bytes, where the 
         bytes represent the two's complement encoding of the integer.
     */
-    // TODO: Make this support more types.
-    override public @property @system
-    long integer()
+    public @property @system
+    T integer(T)()
+    if (isIntegral!T && isSigned!T)
     {
         /* NOTE:
             this.value must be duplicated; if it is not, the reverse() operation
             below reverses this.value, which persists until the next decode!
         */
         ubyte[] value = this.value.dup;
-        if (value.length > 8)
+        if (value.length > T.sizeof)
             throw new BERException
             ("INTEGER is too big to be decoded.");
+
+        /* NOTE:
+            Because the BER INTEGER is stored in two's complement form, you 
+            can't just apppend 0x00u to the big end of it until it is as long
+            as T in bytes, then cast to T. Instead, you have to first determine
+            if the encoded integer is negative or positive. If it is negative,
+            then you actually want to append 0xFFu to the big end until it is
+            as big as T, so you get the two's complement form of whatever T
+            you choose.
+
+            The line immediately below this determines whether the padding byte
+            should be 0xFF or 0x00 based on the most significant bit of the 
+            most significant byte (which, since BER encodes big-endian, will
+            always be the first byte). If set (1), the number is negative, and
+            hence, the padding byte should be 0xFF. If not, it is positive,
+            and the padding byte should be 0x00.
+        */
+        ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
+        while (value.length < T.sizeof)
+            value = (paddingByte ~ value);
 
         version (LittleEndian)
         {
             reverse(value);
         }
-        return *cast(long *) value.ptr; // FIXME: This is vulnerable!
+        return *cast(T *) value.ptr;
     }
 
     /**
         Encodes an integer as a big-endian sequence of bytes, where the bytes 
         represent the two's complement encoding of the integer.
     */
-    // TODO: Make this support more types.
-    override public @property @system
-    void integer(long value)
+    public @property @system
+    void integer(T)(T value)
+    if (isIntegral!T && isSigned!T)
     {
         ubyte[] ub;
-        ub.length = long.sizeof;
-        *cast(long *)&ub[0] = value;
+        ub.length = T.sizeof;
+        *cast(T *)&ub[0] = value;
         version (LittleEndian)
         {
             reverse(ub);
@@ -223,13 +243,169 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     unittest
     {
         BERValue bv = new BERValue();
-        bv.integer = 1L;
-        assert(bv.integer == 1L);
 
-        bv.integer = -300L;
-        assert(bv.integer == -300L);
+        // Tests for zero
+        bv.integer!byte = 0;
+        assert(bv.integer!byte == 0);
+        assert(bv.integer!short == 0);
+        assert(bv.integer!int == 0);
+        assert(bv.integer!long == 0L);
 
-        bv.integer = 65000L;
+        bv.integer!short = 0;
+        assertThrown!BERException(bv.integer!byte);
+        assert(bv.integer!short == 0);
+        assert(bv.integer!int == 0);
+        assert(bv.integer!long == 0L);
+
+        bv.integer!int = 0;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assert(bv.integer!int == 0);
+        assert(bv.integer!long == 0L);
+
+        bv.integer!long = 0L;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assertThrown!BERException(bv.integer!int);
+        assert(bv.integer!long == 0L);
+
+        // Tests for small positives
+        bv.integer!byte = 3;
+        assert(bv.integer!byte == 3);
+        assert(bv.integer!short == 3);
+        assert(bv.integer!int == 3);
+        assert(bv.integer!long == 3L);
+
+        bv.integer!short = 5;
+        assertThrown!BERException(bv.integer!byte);
+        assert(bv.integer!short == 5);
+        assert(bv.integer!int == 5);
+        assert(bv.integer!long == 5L);
+
+        bv.integer!int = 7;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assert(bv.integer!int == 7);
+        assert(bv.integer!long == 7L);
+
+        bv.integer!long = 9L;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assertThrown!BERException(bv.integer!int);
+        assert(bv.integer!long == 9L);
+
+        // Tests for small negatives
+        bv.integer!byte = -3;
+        assert(bv.integer!byte == -3);
+        assert(bv.integer!short == -3);
+        assert(bv.integer!int == -3);
+        assert(bv.integer!long == -3L);
+
+        bv.integer!short = -5;
+        assertThrown!BERException(bv.integer!byte);
+        assert(bv.integer!short == -5);
+        assert(bv.integer!int == -5);
+        assert(bv.integer!long == -5L);
+
+        bv.integer!int = -7;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assert(bv.integer!int == -7);
+        assert(bv.integer!long == -7L);
+
+        bv.integer!long = -9L;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assertThrown!BERException(bv.integer!int);
+        assert(bv.integer!long == -9L);
+
+        // Tests for large positives
+        bv.integer!short = 20000;
+        assertThrown!BERException(bv.integer!byte);
+        assert(bv.integer!short == 20000);
+        assert(bv.integer!int == 20000);
+        assert(bv.integer!long == 20000L);
+
+        bv.integer!int = 70000;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assert(bv.integer!int == 70000);
+        assert(bv.integer!long == 70000L);
+
+        bv.integer!long = 70000L;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assertThrown!BERException(bv.integer!int);
+        assert(bv.integer!long == 70000L);
+
+        // Tests for large negatives
+        bv.integer!short = -20000;
+        assertThrown!BERException(bv.integer!byte);
+        assert(bv.integer!short == -20000);
+        assert(bv.integer!int == -20000);
+        assert(bv.integer!long == -20000L);
+
+        bv.integer!int = -70000;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assert(bv.integer!int == -70000);
+        assert(bv.integer!long == -70000L);
+
+        bv.integer!long = -70000L;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assertThrown!BERException(bv.integer!int);
+        assert(bv.integer!long == -70000L);
+
+        // Tests for maximum values
+        bv.integer!byte = byte.max;
+        assert(bv.integer!byte == byte.max);
+        assert(bv.integer!short == byte.max);
+        assert(bv.integer!int == byte.max);
+        assert(bv.integer!long == byte.max);
+
+        bv.integer!short = short.max;
+        assertThrown!BERException(bv.integer!byte);
+        assert(bv.integer!short == short.max);
+        assert(bv.integer!int == short.max);
+        assert(bv.integer!long == short.max);
+
+        bv.integer!int = int.max;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assert(bv.integer!int == int.max);
+        assert(bv.integer!long == int.max);
+
+        bv.integer!long = long.max;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assertThrown!BERException(bv.integer!int);
+        assert(bv.integer!long == long.max);
+
+        // Tests for minimum values
+        bv.integer!byte = byte.min;
+        assert(bv.integer!byte == byte.min);
+        assert(bv.integer!short == byte.min);
+        assert(bv.integer!int == byte.min);
+        assert(bv.integer!long == byte.min);
+
+        bv.integer!short = short.min;
+        assertThrown!BERException(bv.integer!byte);
+        assert(bv.integer!short == short.min);
+        assert(bv.integer!int == short.min);
+        assert(bv.integer!long == short.min);
+
+        bv.integer!int = int.min;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assert(bv.integer!int == int.min);
+        assert(bv.integer!long == int.min);
+
+        bv.integer!long = long.min;
+        assertThrown!BERException(bv.integer!byte);
+        assertThrown!BERException(bv.integer!short);
+        assertThrown!BERException(bv.integer!int);
+        assert(bv.integer!long == long.min);
     }
 
     /**
@@ -538,7 +714,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                         }
                         case (0x81u): // presentation-context-id
                         {
-                            identification.presentationContextID = identificationBV.integer;
+                            identification.presentationContextID = identificationBV.integer!long;
                             break;
                         }
                         case (0x82u): // context-negotiation
@@ -556,7 +732,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                                 {
                                     case (0x80u): // presentation-context-id
                                     {
-                                        contextNegotiation.presentationContextID = cn.integer;
+                                        contextNegotiation.presentationContextID = cn.integer!long;
                                         break;
                                     }
                                     case (0x81u): // transfer-syntax
@@ -655,7 +831,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         else // it must be the presentationContextID INTEGER
         {
             identificationValue.type = 0x81u;
-            identificationValue.integer = value.identification.presentationContextID;
+            identificationValue.integer!long = value.identification.presentationContextID;
         }
 
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
@@ -1193,23 +1369,44 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Decodes an integer from an ENUMERATED type. In BER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
     */
-    override public @property @system
-    long enumerated()
+    public @property @system
+    T enumerated(T)()
+    if (isIntegral!T && isSigned!T)
     {
         /* NOTE:
             this.value must be duplicated; if it is not, the reverse() operation
             below reverses this.value, which persists until the next decode!
         */
         ubyte[] value = this.value.dup;
-        if (value.length > 8)
+        if (value.length > T.sizeof)
             throw new BERException
             ("ENUMERATED is too big to be decoded.");
+
+        /* NOTE:
+            Because the BER ENUMERATED is stored in two's complement form, you 
+            can't just apppend 0x00u to the big end of it until it is as long
+            as T in bytes, then cast to T. Instead, you have to first determine
+            if the encoded integer is negative or positive. If it is negative,
+            then you actually want to append 0xFFu to the big end until it is
+            as big as T, so you get the two's complement form of whatever T
+            you choose.
+
+            The line immediately below this determines whether the padding byte
+            should be 0xFF or 0x00 based on the most significant bit of the 
+            most significant byte (which, since BER encodes big-endian, will
+            always be the first byte). If set (1), the number is negative, and
+            hence, the padding byte should be 0xFF. If not, it is positive,
+            and the padding byte should be 0x00.
+        */
+        ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
+        while (value.length < T.sizeof)
+            value = (paddingByte ~ value);
 
         version (LittleEndian)
         {
             reverse(value);
         }
-        return *cast(long *) value.ptr; // FIXME: This is vulnerable!
+        return *cast(T *) value.ptr;
     }
 
     // TODO: Review, test, and mark as @trusted
@@ -1217,12 +1414,12 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Encodes an ENUMERATED type from an integer. In BER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
     */
-    override public @property @system
-    void enumerated(long value)
+    public @property @system
+    void enumerated(T)(T value)
     {
         ubyte[] ub;
-        ub.length = long.sizeof;
-        *cast(long *)&ub[0] = value;
+        ub.length = T.sizeof;
+        *cast(T *)&ub[0] = value;
         version (LittleEndian)
         {
             reverse(ub);
@@ -1235,8 +1432,169 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     unittest
     {
         BERValue bv = new BERValue();
-        bv.enumerated = 5L;
-        assert(bv.enumerated == 5L);
+
+        // Tests for zero
+        bv.enumerated!byte = 0;
+        assert(bv.enumerated!byte == 0);
+        assert(bv.enumerated!short == 0);
+        assert(bv.enumerated!int == 0);
+        assert(bv.enumerated!long == 0L);
+
+        bv.enumerated!short = 0;
+        assertThrown!BERException(bv.enumerated!byte);
+        assert(bv.enumerated!short == 0);
+        assert(bv.enumerated!int == 0);
+        assert(bv.enumerated!long == 0L);
+
+        bv.enumerated!int = 0;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assert(bv.enumerated!int == 0);
+        assert(bv.enumerated!long == 0L);
+
+        bv.enumerated!long = 0L;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!BERException(bv.enumerated!int);
+        assert(bv.enumerated!long == 0L);
+
+        // Tests for small positives
+        bv.enumerated!byte = 3;
+        assert(bv.enumerated!byte == 3);
+        assert(bv.enumerated!short == 3);
+        assert(bv.enumerated!int == 3);
+        assert(bv.enumerated!long == 3L);
+
+        bv.enumerated!short = 5;
+        assertThrown!BERException(bv.enumerated!byte);
+        assert(bv.enumerated!short == 5);
+        assert(bv.enumerated!int == 5);
+        assert(bv.enumerated!long == 5L);
+
+        bv.enumerated!int = 7;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assert(bv.enumerated!int == 7);
+        assert(bv.enumerated!long == 7L);
+
+        bv.enumerated!long = 9L;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!BERException(bv.enumerated!int);
+        assert(bv.enumerated!long == 9L);
+
+        // Tests for small negatives
+        bv.enumerated!byte = -3;
+        assert(bv.enumerated!byte == -3);
+        assert(bv.enumerated!short == -3);
+        assert(bv.enumerated!int == -3);
+        assert(bv.enumerated!long == -3L);
+
+        bv.enumerated!short = -5;
+        assertThrown!BERException(bv.enumerated!byte);
+        assert(bv.enumerated!short == -5);
+        assert(bv.enumerated!int == -5);
+        assert(bv.enumerated!long == -5L);
+
+        bv.enumerated!int = -7;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assert(bv.enumerated!int == -7);
+        assert(bv.enumerated!long == -7L);
+
+        bv.enumerated!long = -9L;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!BERException(bv.enumerated!int);
+        assert(bv.enumerated!long == -9L);
+
+        // Tests for large positives
+        bv.enumerated!short = 20000;
+        assertThrown!BERException(bv.enumerated!byte);
+        assert(bv.enumerated!short == 20000);
+        assert(bv.enumerated!int == 20000);
+        assert(bv.enumerated!long == 20000L);
+
+        bv.enumerated!int = 70000;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assert(bv.enumerated!int == 70000);
+        assert(bv.enumerated!long == 70000L);
+
+        bv.enumerated!long = 70000L;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!BERException(bv.enumerated!int);
+        assert(bv.enumerated!long == 70000L);
+
+        // Tests for large negatives
+        bv.enumerated!short = -20000;
+        assertThrown!BERException(bv.enumerated!byte);
+        assert(bv.enumerated!short == -20000);
+        assert(bv.enumerated!int == -20000);
+        assert(bv.enumerated!long == -20000L);
+
+        bv.enumerated!int = -70000;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assert(bv.enumerated!int == -70000);
+        assert(bv.enumerated!long == -70000L);
+
+        bv.enumerated!long = -70000L;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!BERException(bv.enumerated!int);
+        assert(bv.enumerated!long == -70000L);
+
+        // Tests for maximum values
+        bv.enumerated!byte = byte.max;
+        assert(bv.enumerated!byte == byte.max);
+        assert(bv.enumerated!short == byte.max);
+        assert(bv.enumerated!int == byte.max);
+        assert(bv.enumerated!long == byte.max);
+
+        bv.enumerated!short = short.max;
+        assertThrown!BERException(bv.enumerated!byte);
+        assert(bv.enumerated!short == short.max);
+        assert(bv.enumerated!int == short.max);
+        assert(bv.enumerated!long == short.max);
+
+        bv.enumerated!int = int.max;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assert(bv.enumerated!int == int.max);
+        assert(bv.enumerated!long == int.max);
+
+        bv.enumerated!long = long.max;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!BERException(bv.enumerated!int);
+        assert(bv.enumerated!long == long.max);
+
+        // Tests for minimum values
+        bv.enumerated!byte = byte.min;
+        assert(bv.enumerated!byte == byte.min);
+        assert(bv.enumerated!short == byte.min);
+        assert(bv.enumerated!int == byte.min);
+        assert(bv.enumerated!long == byte.min);
+
+        bv.enumerated!short = short.min;
+        assertThrown!BERException(bv.enumerated!byte);
+        assert(bv.enumerated!short == short.min);
+        assert(bv.enumerated!int == short.min);
+        assert(bv.enumerated!long == short.min);
+
+        bv.enumerated!int = int.min;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assert(bv.enumerated!int == int.min);
+        assert(bv.enumerated!long == int.min);
+
+        bv.enumerated!long = long.min;
+        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!BERException(bv.enumerated!int);
+        assert(bv.enumerated!long == long.min);
     }
 
     ///
@@ -1330,7 +1688,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                         }
                         case (0x82u): // presentation-context-id
                         {
-                            identification.presentationContextID = identificationBV.integer;
+                            identification.presentationContextID = identificationBV.integer!long;
                             break;
                         }
                         case (0x83u): // context-negotiation
@@ -1348,7 +1706,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                                 {
                                     case (0x80u): // presentation-context-id
                                     {
-                                        contextNegotiation.presentationContextID = cn.integer;
+                                        contextNegotiation.presentationContextID = cn.integer!long;
                                         break;
                                     }
                                     case (0x81u): // transfer-syntax
@@ -1464,7 +1822,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         {
             BERValue presentationContextID = new BERValue();
             presentationContextID.type = 0x80u;
-            presentationContextID.integer = value.identification.contextNegotiation.presentationContextID;
+            presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
             
             BERValue transferSyntax = new BERValue();
             transferSyntax.type = 0x81u;
@@ -1486,7 +1844,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         else // it must be the presentationContextID INTEGER
         {
             identificationValue.type = 0x82u;
-            identificationValue.integer = value.identification.presentationContextID;
+            identificationValue.integer!long = value.identification.presentationContextID;
         }
 
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
@@ -2363,7 +2721,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                         }
                         case (0x82u): // presentation-context-id
                         {
-                            identification.presentationContextID = identificationBV.integer;
+                            identification.presentationContextID = identificationBV.integer!long;
                             break;
                         }
                         case (0x83u): // context-negotiation
@@ -2381,7 +2739,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                                 {
                                     case (0x80u): // presentation-context-id
                                     {
-                                        contextNegotiation.presentationContextID = cn.integer;
+                                        contextNegotiation.presentationContextID = cn.integer!long;
                                         break;
                                     }
                                     case (0x81u): // transfer-syntax
@@ -2491,7 +2849,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         {
             BERValue presentationContextID = new BERValue();
             presentationContextID.type = 0x80u;
-            presentationContextID.integer = value.identification.contextNegotiation.presentationContextID;
+            presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
             
             BERValue transferSyntax = new BERValue();
             transferSyntax.type = 0x81u;
@@ -2513,7 +2871,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         else // it must be the presentationContextID INTEGER
         {
             identificationValue.type = 0x82u;
-            identificationValue.integer = value.identification.presentationContextID;
+            identificationValue.integer!long = value.identification.presentationContextID;
         }
 
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
@@ -2925,15 +3283,15 @@ unittest
 
     // Ensure use of accessors does not mutate state.
     assert(result[1].boolean == result[1].boolean);
-    assert(result[2].integer == result[2].integer);
+    assert(result[2].integer!long == result[2].integer!long);
     assert(cast(size_t[]) result[3].bitString == cast(size_t[]) result[3].bitString); // Not my fault that std.bitmanip.BitArray is fucking stupid.
     assert(result[4].octetString == result[4].octetString);
-    // assert(result[5].nill.length == result[5].nill.length);
+    // nill
     assert(result[6].objectIdentifier.numericArray == result[6].objectIdentifier.numericArray);
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
     assert(result[8].external == result[8].external);
     assert(result[9].realType!float == result[9].realType!float);
-    assert(result[10].enumerated == result[10].enumerated);
+    assert(result[10].enumerated!long == result[10].enumerated!long);
     assert(result[11].embeddedPresentationDataValue == result[11].embeddedPresentationDataValue);
     assert(result[12].utf8String == result[12].utf8String);
     assert(result[13].relativeObjectIdentifier.numericArray == result[13].relativeObjectIdentifier.numericArray);
@@ -2958,17 +3316,16 @@ unittest
 
     // Ensure accessors decode the data correctly.
     assert(result[1].boolean == true);
-    assert(result[2].integer == 255L);
+    assert(result[2].integer!long == 255L);
     // assert(cast(void[]) result[3].bitString == cast(void[]) BitArray([0xF0, 0xF0], 13));
     // NOTE: I think std.bitmanip.BitArray.opCast(void[]) is broken...
     assert(result[4].octetString == [ 0xFF, 0x00, 0x88, 0x14 ]);
-    // assert(result[5].nill == []);
     assert(result[6].objectIdentifier.numericArray == (new OID(0x01u, 0x03u, 0x06u, 0x04u, 0x01u)).numericArray);
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
     assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01, 0x02, 0x03, 0x04 ]));
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
-    assert(result[10].enumerated == 255L);
+    assert(result[10].enumerated!long == 255L);
     assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01, 0x02, 0x03, 0x04 ]));
     assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier.numericArray == (new ROID(0x06u, 0x04u, 0x01u)).numericArray);

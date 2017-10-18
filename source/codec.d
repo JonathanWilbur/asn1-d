@@ -16,7 +16,7 @@ package import std.bitmanip : BitArray;
 package import std.datetime.date : DateTime;
 package import std.math : log2;
 package import std.outbuffer;
-package import std.traits : isIntegral;
+package import std.traits : isIntegral, isSigned;
 
 ///
 public alias ASN1CodecException = AbstractSyntaxNotation1CodecException;
@@ -234,11 +234,11 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
 
     /// Decodes an integer
     abstract public @property
-    long integer();
+    T integer(T)() if (isIntegral!T && isSigned!T);
 
     /// Encodes an integer
     abstract public @property
-    void integer(long value);
+    void integer(T)(T value) if (isIntegral!T && isSigned!T);
 
     /// Decodes a BitArray
     abstract public @property
@@ -371,11 +371,11 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
 
     /// Encodes an integer that represents an ENUMERATED value
     abstract public @property
-    long enumerated();
+    T enumerated(T)() if (isIntegral!T && isSigned!T);
 
     /// Decodes an integer that represents an ENUMERATED value
     abstract public @property
-    void enumerated(long value);
+    void enumerated(T)(T value) if (isIntegral!T && isSigned!T);
 
     ///
     public alias embeddedPDV = embeddedPresentationDataValue;
