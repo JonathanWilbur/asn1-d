@@ -38,10 +38,6 @@ module codecs.ber;
 public import codec;
 public import types.identification;
 
-// TODO: Rename BERValue / ASN1Value to BERElement / ASN1Element
-// TODO: Add the 'u' to the end of all unsigned bytes.
-// TODO: Add scope specifiers to import statements
-
 ///
 public alias BERValue = BasicEncodingRulesValue;
 /**
@@ -430,7 +426,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         if (this.value[0] > 0x07u)
             throw new ASN1InvalidValueException
             ("Unused bits byte cannot have a value greater than seven.");
-        return BitArray(this.value[1 .. $], cast(size_t) (((this.length - 1u) * 8u) - this.value[0]));
+        ubyte[] val = this.value[1 .. $];
+        while (val.length % size_t.sizeof) val ~= 0x00u;
+        return BitArray(val, cast(size_t) (((this.length - 1u) * 8u) - this.value[0]));
     }
 
     /**
@@ -459,6 +457,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         BitArray ba = BitArray([true, false, true, true, false]);
         BERValue bv = new BERValue();
         bv.bitString = ba;
+        debug writefln("BIT STRING: %(%02X %)", bv.value);
+        debug writefln("bv.bitString: %(%02X %)", cast(ubyte[]) cast(void[]) bv.bitString);
         assert(bv.bitString == ba);
     }
 
@@ -2179,7 +2179,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     {
         foreach (character; this.value)
         {
-            if (!canFind("1234567890 ", character))
+            if (!canFind(numericStringCharacters, character))
                 throw new ASN1InvalidValueException
                 ("NUMERIC STRING only accepts numbers and spaces.");
         }
@@ -2199,7 +2199,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     {
         foreach (character; value)
         {
-            if (!canFind("1234567890 ", character))
+            if (!canFind(numericStringCharacters, character))
                 throw new ASN1InvalidValueException
                 ("NUMERIC STRING only accepts numbers and spaces.");
         }
@@ -2231,20 +2231,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     override public @property @system
     string printableString()
     {
-        /* NOTE:
-            The sorting of letters below is a slight optimization:
-            they are sorted in order of decreasing frequency in the English
-            language, so that canFind will usually have to iterate through
-            fewer letters before finding a match.
-        */
-        // TODO: Move this, and create immutable strings like it in asn1.d
-        immutable string printables = 
-            "etaoinsrhdlucmfywgpbvkxqjzETAOINSRHDLUCMFYWGPBVKXQJZ0123456789 '()+,-./:=?";
         foreach (character; this.value)
         {
-            if (!canFind(printables, character))
+            if (!canFind(printableStringCharacters, character))
                 throw new ASN1InvalidValueException
-                ("PrintableString only accepts these characters: " ~ printables);
+                ("PrintableString only accepts these characters: " ~ printableStringCharacters);
         }
         return cast(string) this.value;
     }
@@ -2263,19 +2254,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     override public @property @system
     void printableString(string value)
     {
-        /* NOTE:
-            The sorting of letters below is a slight optimization:
-            they are sorted in order of decreasing frequency in the English
-            language, so that canFind will usually have to iterate through
-            fewer letters before finding a match.
-        */
-        immutable string printables = 
-            "etaoinsrhdlucmfywgpbvkxqjzETAOINSRHDLUCMFYWGPBVKXQJZ0123456789 '()+,-./:=?";
         foreach (character; value)
         {
-            if (!canFind(printables, character))
+            if (!canFind(printableStringCharacters, character))
                 throw new ASN1InvalidValueException
-                ("PrintableString only accepts these characters: " ~ printables);
+                ("PrintableString only accepts these characters: " ~ printableStringCharacters);
         }
         this.value = cast(ubyte[]) value;
     }
@@ -3410,7 +3393,7 @@ unittest
     ubyte[] dataEndOfContent = [ 0x00u, 0x00u ];
     ubyte[] dataBoolean = [ 0x01u, 0x01u, 0xFFu ];
     ubyte[] dataInteger = [ 0x02u, 0x08u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0xFFu ];
-    ubyte[] dataBitString = [ 0x03u, 0x03u, 0x03u, 0xF0u, 0xF0u ];
+    ubyte[] dataBitString = [ 0x03u, 0x03u, 0x02u, 0xF0u, 0xF0u ];
     ubyte[] dataOctetString = [ 0x04u, 0x04u, 0xFF, 0x00u, 0x88u, 0x14u ];
     ubyte[] dataNull = [ 0x05u, 0x00u ];
     ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
@@ -3524,7 +3507,7 @@ unittest
     // Ensure accessors decode the data correctly.
     assert(result[1].boolean == true);
     assert(result[2].integer!long == 255L);
-    // assert(cast(void[]) result[3].bitString == cast(void[]) BitArray([0xF0, 0xF0], 13));
+    // assert(cast(void[]) result[3].bitString == cast(void[]) BitArray([0xF0u, 0xF0u], 14));
     // NOTE: I think std.bitmanip.BitArray.opCast(void[]) is broken...
     assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
     assert(result[6].objectIdentifier.numericArray == (new OID(0x01u, 0x03u, 0x06u, 0x04u, 0x01u)).numericArray);

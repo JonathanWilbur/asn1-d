@@ -547,10 +547,10 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
 
     // SEQUENCE
     // abstract public @property
-    // BERValue[] sequence();
+    // typeof(this)[] sequence();
 
     // abstract public @property
-    // void sequence(BERValue[] value);
+    // void sequence(typeof(this)[] value);
 
     // SET
     // abstract public @property

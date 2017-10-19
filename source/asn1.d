@@ -207,3 +207,17 @@ enum AbstractSyntaxNotation1Base10RealExponentCharacter : char
     lowercaseE = 'e',
     uppercaseE = 'E'
 }
+
+/// The acceptable characters for a NumericString
+public immutable string numericStringCharacters = "0123456789 ";
+
+/**
+    The acceptable characters for a printableString.
+
+    The sorting of letters below is a slight optimization:
+    they are sorted in order of decreasing frequency in the English
+    language, so that canFind will usually have to iterate through
+    fewer letters before finding a match.
+*/
+public immutable string printableStringCharacters = 
+    "etaoinsrhdlucmfywgpbvkxqjzETAOINSRHDLUCMFYWGPBVKXQJZ0123456789 '()+,-./:=?";
