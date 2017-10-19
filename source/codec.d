@@ -7,13 +7,15 @@
     inherit.
 */
 module codec;
-import asn1;
-import types.alltypes;
+public import asn1;
+public import types.alltypes;
+// TODO: Remove dependency on std.outbuffer.
 package import std.algorithm.mutation : reverse;
 package import std.algorithm.searching : canFind;
 package import std.ascii : isASCII, isGraphical;
 package import std.bitmanip : BitArray;
 package import std.datetime.date : DateTime;
+private import std.exception : basicExceptionCtors;
 package import std.math : log2;
 package import std.outbuffer;
 package import std.traits : isIntegral, isSigned;
@@ -24,8 +26,88 @@ public alias ASN1CodecException = AbstractSyntaxNotation1CodecException;
 public
 class AbstractSyntaxNotation1CodecException : ASN1Exception
 {
-    import std.exception : basicExceptionCtors;
     mixin basicExceptionCtors;
+}
+
+///
+public alias ASN1ValueSizeException = AbstractSyntaxNotation1ValueSizeException;
+///
+public
+class AbstractSyntaxNotation1ValueSizeException : ASN1CodecException
+{
+    mixin basicExceptionCtors;
+}
+
+///
+public alias ASN1ValueTooBigException = AbstractSyntaxNotation1ValueTooBigException;
+///
+public
+class AbstractSyntaxNotation1ValueTooBigException : ASN1ValueSizeException
+{
+    mixin basicExceptionCtors;
+}
+
+///
+public alias ASN1ValueTooSmallException = AbstractSyntaxNotation1ValueTooSmallException;
+///
+public
+class AbstractSyntaxNotation1ValueTooSmallException : ASN1ValueSizeException
+{
+    mixin basicExceptionCtors;
+}
+
+///
+public alias ASN1InvalidValueException = AbstractSyntaxNotation1InvalidValueException;
+/**
+    Thrown when an encoded value, or a decoded value (attempting to be encoded)
+    takes on a value that the codec cannot encode or decode.
+
+    Examples:
+    $(UL
+        $(LI When a DER codec detects a BOOLEAN encoded in a byte other than 0xFF or 0x00)
+        $(LI When a )
+    )
+*/
+public
+class AbstractSyntaxNotation1InvalidValueException : ASN1CodecException
+{
+    mixin basicExceptionCtors; 
+}
+
+///
+public alias ASN1InvalidIndexException = AbstractSyntaxNotation1InvalidIndexException;
+/**
+    An exception thrown when a member of a CHOICE or SEQUENCE is given a
+    context-specific index that is not defined for that CHOICE or SEQUENCE.
+
+    For example, if:
+
+    TheQuestion := [APPLICATION 5] CHOICE {
+        toBe [0] NULL,
+        notToBe [1] NULL
+    }
+
+    This exception should be thrown if TheQuestion were to be decoded from the
+    BER-encoded byte sequence: $(D_INLINECODE 0x65 0x02 0x83 0x00), because
+    the third byte specifies a third choice in TheQuestion, but there is no
+    choice #3 in TheQuestion--there is only choice #0 and #1.
+*/
+public
+class AbstractSyntaxNotation1InvalidIndexException : ASN1CodecException
+{
+    mixin basicExceptionCtors; 
+}
+
+///
+public alias ASN1InvalidLengthException = AbstractSyntaxNotation1InvalidLengthException;
+/**
+    Thrown if an invalid length encoding is encountered, such as when a length byte
+    of 0xFF--which is reserved--is encountered in BER encoding.
+*/
+public
+class AbstractSyntaxNotation1InvalidLengthException : ASN1CodecException
+{
+    mixin basicExceptionCtors; 
 }
 
 ///

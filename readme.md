@@ -61,13 +61,12 @@ modules, once I am done with BER. I want to make this module perfect before I
 create the others. Here are the changes I have to make before I consider it
 ready to serve as the basis for others:
 
-- [ ] Finish embedded documentation
-  - [ ] `Throws`
-  - [ ] `Returns`
-  - [ ] `See_Also`
-  - [ ] `Bugs`
-  - [ ] `Standards`
-  - [ ] DDoc Section Formatting Macros
+- [x] Finish embedded documentation
+  - [x] `Throws`
+  - [x] `Returns`
+  - [x] `See_Also`
+  - [x] `Standards`
+  - [x] DDoc Section Formatting Macros
 - [x] Unabbreviated member names and abbreviated aliases
 - [x] Storage classes (`in`, `out`, `scope`, `const`, etc.)
 - [x] `@safe`, `@trusted`, `@system`, etc.
@@ -76,9 +75,14 @@ ready to serve as the basis for others:
 - [x] `integer(T) if (isSigned!T && isIntegral!T)`
 - [ ] Figure out the situation with `BitArray`...
 - [ ] Abstractions for `set` and `sequence` properties
-- [ ] A better system of exceptions
+- [x] A better system of exceptions
 - [ ] 100% unit test code coverage
+  - [ ] Negative unit tests for all string types
 - [ ] Add `deprecated` attribute to deprecated types.
+- [ ] Make constructor that takes ref to a `size_t` storing the number of bytes read
+- [ ] Overhaul OID and RelativeOID
+  - [ ] Fix `opCmp`
+- [ ] String validation mixins
 
 ### Future
 

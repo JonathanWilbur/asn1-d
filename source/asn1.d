@@ -34,12 +34,22 @@
 */
 module asn1;
 
+debug
+{
+    public import std.stdio : writefln, writeln;
+}
+
+version (unittest)
+{
+    public import std.exception : assertThrown;
+}
+
 ///
 public alias ASN1Exception = AbstractSyntaxNotation1Exception;
 /// A Generic Exception from which all other ASN.1 Exceptions will inherit.
 class AbstractSyntaxNotation1Exception : Exception
 {
-    import std.exception : basicExceptionCtors;
+    private import std.exception : basicExceptionCtors;
     mixin basicExceptionCtors;
 }
 

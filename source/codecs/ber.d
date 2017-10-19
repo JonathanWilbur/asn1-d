@@ -35,43 +35,15 @@
         $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems)
 */
 module codecs.ber;
-private import asn1;
-private import codec;
-private import types.alltypes;
-private import types.identification;
-// private import std.bitmanip : BitArray;
-// private import std.datetime.date : DateTime;
-// private import std.outbuffer; // This is only used for OID and ROID...
+public import codec;
+public import types.identification;
 
-// REVIEW: Should I change all properties to methods, and renamed them to encode*()?
-// REVIEW: Should I change the name of the class?
-// TODO: Standard Embedded Documentation fields
-// TODO: Remove dependency on std.outbuffer.
+// TODO: Rename BERValue / ASN1Value to BERElement / ASN1Element
 // TODO: Add the 'u' to the end of all unsigned bytes.
 // TODO: Add scope specifiers to import statements
 
-debug
-{
-    import std.stdio : writefln, writeln;
-}
-
-version (unittest)
-{
-    import std.exception : assertThrown;
-}
-
 ///
-alias BERException = BasicEncodingRulesException;
-///
-public
-class BasicEncodingRulesException : ASN1CodecException
-{
-    import std.exception : basicExceptionCtors;
-    mixin basicExceptionCtors;
-}
-
-///
-alias BERValue = BasicEncodingRulesValue;
+public alias BERValue = BasicEncodingRulesValue;
 /**
     The unit of encoding and decoding for Basic Encoding Rules (BER).
     There are three parts to an encoded BER Value:
@@ -143,26 +115,37 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     }
 
     /**
-        Returns a boolean from the data. A boolean will always be one byte.
+        Decodes a boolean.
+        
         Any non-zero value will be interpreted as TRUE. Only zero will be
         interpreted as FALSE.
+        
+        Returns: a boolean
+        Throws:
+            ASN1ValueSizeException = if the encoded value is anything other
+                than exactly 1 byte in size.
     */
     // FIXME: Throw exception if length is invalid.
     override public @property @safe
     bool boolean()
     {
+        if (this.value.length != 1)
+            throw new ASN1ValueSizeException
+            ("An ASN.1 BOOLEAN must be exactly 1 byte in size.");
+
         return (this.value[0] ? true : false);
     }
 
     /**
-        Encodes a boolean. A boolean will always be one byte.
+        Encodes a boolean.
+
         Any non-zero value will be interpreted as TRUE. Only zero will be
         interpreted as FALSE.
     */
     override public @property @safe nothrow
     void boolean(bool value)
     {
-        this.value = [(value ? 0xFF : 0x00)];
+        this.value = [(value ? 0xFFu : 0x00u)];
     }
 
     ///
@@ -174,11 +157,28 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.boolean == true);
         bv.boolean = false;
         assert(bv.boolean == false);
+        bv.value = [ 0x01u ];
+        assert(bv.boolean == true);
+        bv.value = [ 0xFFu ];
+        assert(bv.boolean == true);
+        bv.value = [ 0x00u ];
+        assert(bv.boolean == false);
+        bv.value = [ 0x01u, 0x00u ];
+        assertThrown!ASN1ValueSizeException(bv.boolean);
+        bv.value = [];
+        assertThrown!ASN1ValueSizeException(bv.boolean);
     }
 
     /**
-        Decodes an integer from a big-endian sequence of bytes, where the 
-        bytes represent the two's complement encoding of the integer.
+        Decodes a signed integer.
+        
+        Bytes are stored in big-endian order, where the bytes represent 
+        the two's complement encoding of the integer.
+
+        Returns: any chosen signed integral type
+        Throws:
+            ASN1ValueTooBigException = if the value is too big to decode
+                to a signed integral type.
     */
     public @property @system
     T integer(T)()
@@ -190,7 +190,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         */
         ubyte[] value = this.value.dup;
         if (value.length > T.sizeof)
-            throw new BERException
+            throw new ASN1ValueTooBigException
             ("INTEGER is too big to be decoded.");
 
         /* NOTE:
@@ -221,10 +221,12 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     }
 
     /**
-        Encodes an integer as a big-endian sequence of bytes, where the bytes 
-        represent the two's complement encoding of the integer.
+        Encodes an integer.
+        
+        Bytes are stored in big-endian order, where the bytes represent 
+        the two's complement encoding of the integer.
     */
-    public @property @system
+    public @property @system nothrow
     void integer(T)(T value)
     if (isIntegral!T && isSigned!T)
     {
@@ -252,21 +254,21 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.integer!long == 0L);
 
         bv.integer!short = 0;
-        assertThrown!BERException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
         assert(bv.integer!short == 0);
         assert(bv.integer!int == 0);
         assert(bv.integer!long == 0L);
 
         bv.integer!int = 0;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
         assert(bv.integer!int == 0);
         assert(bv.integer!long == 0L);
 
         bv.integer!long = 0L;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
-        assertThrown!BERException(bv.integer!int);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!int);
         assert(bv.integer!long == 0L);
 
         // Tests for small positives
@@ -277,21 +279,21 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.integer!long == 3L);
 
         bv.integer!short = 5;
-        assertThrown!BERException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
         assert(bv.integer!short == 5);
         assert(bv.integer!int == 5);
         assert(bv.integer!long == 5L);
 
         bv.integer!int = 7;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
         assert(bv.integer!int == 7);
         assert(bv.integer!long == 7L);
 
         bv.integer!long = 9L;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
-        assertThrown!BERException(bv.integer!int);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!int);
         assert(bv.integer!long == 9L);
 
         // Tests for small negatives
@@ -302,59 +304,59 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.integer!long == -3L);
 
         bv.integer!short = -5;
-        assertThrown!BERException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
         assert(bv.integer!short == -5);
         assert(bv.integer!int == -5);
         assert(bv.integer!long == -5L);
 
         bv.integer!int = -7;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
         assert(bv.integer!int == -7);
         assert(bv.integer!long == -7L);
 
         bv.integer!long = -9L;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
-        assertThrown!BERException(bv.integer!int);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!int);
         assert(bv.integer!long == -9L);
 
         // Tests for large positives
         bv.integer!short = 20000;
-        assertThrown!BERException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
         assert(bv.integer!short == 20000);
         assert(bv.integer!int == 20000);
         assert(bv.integer!long == 20000L);
 
         bv.integer!int = 70000;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
         assert(bv.integer!int == 70000);
         assert(bv.integer!long == 70000L);
 
         bv.integer!long = 70000L;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
-        assertThrown!BERException(bv.integer!int);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!int);
         assert(bv.integer!long == 70000L);
 
         // Tests for large negatives
         bv.integer!short = -20000;
-        assertThrown!BERException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
         assert(bv.integer!short == -20000);
         assert(bv.integer!int == -20000);
         assert(bv.integer!long == -20000L);
 
         bv.integer!int = -70000;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
         assert(bv.integer!int == -70000);
         assert(bv.integer!long == -70000L);
 
         bv.integer!long = -70000L;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
-        assertThrown!BERException(bv.integer!int);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!int);
         assert(bv.integer!long == -70000L);
 
         // Tests for maximum values
@@ -365,21 +367,21 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.integer!long == byte.max);
 
         bv.integer!short = short.max;
-        assertThrown!BERException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
         assert(bv.integer!short == short.max);
         assert(bv.integer!int == short.max);
         assert(bv.integer!long == short.max);
 
         bv.integer!int = int.max;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
         assert(bv.integer!int == int.max);
         assert(bv.integer!long == int.max);
 
         bv.integer!long = long.max;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
-        assertThrown!BERException(bv.integer!int);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!int);
         assert(bv.integer!long == long.max);
 
         // Tests for minimum values
@@ -390,44 +392,55 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.integer!long == byte.min);
 
         bv.integer!short = short.min;
-        assertThrown!BERException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
         assert(bv.integer!short == short.min);
         assert(bv.integer!int == short.min);
         assert(bv.integer!long == short.min);
 
         bv.integer!int = int.min;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
         assert(bv.integer!int == int.min);
         assert(bv.integer!long == int.min);
 
         bv.integer!long = long.min;
-        assertThrown!BERException(bv.integer!byte);
-        assertThrown!BERException(bv.integer!short);
-        assertThrown!BERException(bv.integer!int);
+        assertThrown!ASN1ValueTooBigException(bv.integer!byte);
+        assertThrown!ASN1ValueTooBigException(bv.integer!short);
+        assertThrown!ASN1ValueTooBigException(bv.integer!int);
         assert(bv.integer!long == long.min);
     }
 
     /**
-        Decodes a BitArray. The first byte is an unsigned number of the unused
-        bits in the last byte of the encoded bit array.
+        Decodes a BitArray. 
+        
+        The first byte is an unsigned number of the unused bits in the last 
+        byte of the encoded bit array.
+
+        Returns: a std.bitmanip.BitArray.
+        Throws:
+            ASN1InvalidValueException = if the first byte is greater than
+                seven, which indicates more than seven unused bits on the
+                last byte of the BIT STRING, which is obviously 
+                impossible, since a byte has 8 bits.
     */
     // NOTE: This has to be @system because BitArray sucks.
     override public @property @system
     BitArray bitString()
     {
         if (this.value[0] > 0x07u)
-            throw new BERException
+            throw new ASN1InvalidValueException
             ("Unused bits byte cannot have a value greater than seven.");
         return BitArray(this.value[1 .. $], cast(size_t) (((this.length - 1u) * 8u) - this.value[0]));
     }
 
     /**
-        Encodes a BitArray. The first byte is an unsigned number of the unused
+        Encodes a BitArray. 
+        
+        The first byte is an unsigned number of the unused
         bits in the last byte of the encoded bit array.
     */
     // NOTE: This has to be @system because BitArray sucks.
-    override public @property @system
+    override public @property @system nothrow
     void bitString(BitArray value)
     {
         // REVIEW: is 0x08u - (value.length % 0x08u) == 0x08u % value.length?
@@ -451,6 +464,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
     /**
         Decodes an OCTET STRING into an unsigned byte array.
+
+        Returns: an unsigned byte array.
     */
     override public @property @safe
     ubyte[] octetString()
@@ -472,8 +487,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     unittest
     {
         BERValue bv = new BERValue();
-        bv.octetString = [ 0x05u, 0x02u, 0xFF, 0x00, 0x6A ];
-        assert(bv.octetString == [ 0x05u, 0x02u, 0xFF, 0x00, 0x6A ]);
+        bv.octetString = [ 0x05u, 0x02u, 0xFFu, 0x00u, 0x6Au ];
+        assert(bv.octetString == [ 0x05u, 0x02u, 0xFFu, 0x00u, 0x6Au ]);
     }
 
     /**
@@ -554,7 +569,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 ubyte[] encodedOIDComponent;
                 if (x == 0) // REVIEW: Could you make this faster by using if (x < 128)?
                 {
-                    this.value ~= 0x00;
+                    this.value ~= 0x00u;
                     continue;
                 }
                 while (x != 0)
@@ -562,11 +577,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                     OutBuffer ob = new OutBuffer();
                     ob.write(x);
                     ubyte[] compbytes = ob.toBytes();
-                    if ((compbytes[0] & 0x80) == 0) compbytes[0] |= 0x80;
+                    if ((compbytes[0] & 0x80u) == 0) compbytes[0] |= 0x80u;
                     encodedOIDComponent = compbytes[0] ~ encodedOIDComponent;
                     x >>= 7;
                 }
-                encodedOIDComponent[$-1] &= 0x7F;
+                encodedOIDComponent[$-1] &= 0x7Fu;
                 this.value ~= encodedOIDComponent;
             }
         }
@@ -600,6 +615,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
+        Returns: a string.
+        Throws:
+            ASN1InvalidValueException = if the encoded value contains any bytes
+                outside of 0x20 to 0x7E.
     */
     override public @property @system
     string objectDescriptor()
@@ -608,8 +627,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         {
             if ((!character.isGraphical) && (character != ' '))
             {
-                throw new BERException(
-                    "Object descriptor can only contain graphical characters. '"
+                throw new ASN1InvalidValueException
+                    ("Object descriptor can only contain graphical characters. '"
                     ~ character ~ "' is not graphical.");
             }
         }
@@ -634,6 +653,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
+        Throws:
+            ASN1InvalidValueException = if the string value contains any
+                character outside of 0x20 to 0x7E, which means any control
+                characters or DELETE.
     */
     override public @property @system
     void objectDescriptor(string value)
@@ -642,8 +665,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         {
             if ((!character.isGraphical) && (character != ' '))
             {
-                throw new BERException(
-                    "Object descriptor can only contain graphical characters. '"
+                throw new ASN1InvalidValueException
+                    ("Object descriptor can only contain graphical characters. '"
                     ~ character ~ "' is not graphical.");
             }
         }
@@ -672,19 +695,33 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         The specification defines EXTERNAL as:
 
         $(I
-        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
-            identification CHOICE {
-                syntax OBJECT IDENTIFIER,
-                presentation-context-id INTEGER,
-                context-negotiation SEQUENCE {
+            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER,
                     presentation-context-id INTEGER,
-                    transfer-syntax OBJECT IDENTIFIER } },
-            data-value-descriptor ObjectDescriptor OPTIONAL,
-            data-value OCTET STRING }
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER } },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
         )
 
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
+
+        Returns: an External, defined in types.universal.external.
+        Throws:
+            ASN1SizeException = if encoded EmbeddedPDV has too few or too many
+                elements, or if syntaxes or context-negotiation element has
+                too few or too many elements.
+            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1InvalidValueException = if encoded ObjectDescriptor contains
+                invalid characters.
+            ASN1InvalidIndexException = if encoded value selects a choice for 
+                identification or uses an unspecified index for an element in
+                syntaxes or context-negotiation, or if an unspecified element
+                of EMBEDDED PDV itself is referenced by an out-of-range 
+                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
     */
     // NOTE: If integer properties are marked @trusted, this can be @safe
     override public @property @system
@@ -692,7 +729,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     {
         BERValue[] bvs = this.sequence;
         if (bvs.length < 2 || bvs.length > 3)
-            throw new BERException
+            throw new ASN1ValueSizeException
             ("Improper number of elements in EXTERNAL type.");
 
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
@@ -723,7 +760,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                             ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
                             BERValue[] cns = identificationBV.sequence;
                             if (cns.length != 2)
-                                throw new BERException
+                                throw new ASN1ValueTooBigException
                                 ("Invalid number of elements in EXTERNAL.identification.context-negotiation");
                             
                             foreach (cn; cns)
@@ -742,7 +779,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                                     }
                                     default:
                                     {
-                                        throw new BERException
+                                        throw new ASN1InvalidIndexException
                                         ("Invalid EXTERNAL.identification.context-negotiation tag.");
                                     }
                                 }
@@ -752,7 +789,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                         }
                         default:
                         {
-                            throw new BERException
+                            throw new ASN1InvalidIndexException
                             ("Invalid EXTERNAL.identification choice.");
                         }
                     }
@@ -771,7 +808,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 }
                 default:
                 {
-                    throw new BERException
+                    throw new ASN1InvalidIndexException
                     ("Invalid EXTERNAL context-specific tag.");
                 }
             }
@@ -801,6 +838,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
+
+        Throws:
+            ASN1ValueTooBigException = if encoded INTEGER is too large to decode
+            ASN1InvalidValueException = if encoded ObjectDescriptor contains
+                invalid characters.
     */
     // NOTE: If integer properties are marked @trusted, this can be @safe
     override public @property @system
@@ -861,9 +903,14 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         ext.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
 
         BERValue bv = new BERValue();
-        bv.type = 0x08;
+        bv.type = 0x08u;
         bv.external = ext;
-        assert(bv.toBytes() == [ 0x08, 0x1C, 0x80, 0x0A, 0x81, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1B, 0x81, 0x08, 0x65, 0x78, 0x74, 0x65, 0x72, 0x6E, 0x61, 0x6C, 0x82, 0x04, 0x01, 0x02, 0x03, 0x04 ]);
+        assert(bv.toBytes() == [ 
+            0x08u, 0x1Cu, 0x80u, 0x0Au, 0x81u, 0x08u, 0x00u, 0x00u, 
+            0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x1Bu, 0x81u, 0x08u, 
+            0x65u, 0x78u, 0x74u, 0x65u, 0x72u, 0x6Eu, 0x61u, 0x6Cu, 
+            0x82u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u 
+        ]);
 
         External x = bv.external;
         assert(x.identification.presentationContextID == 27L);
@@ -905,6 +952,20 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         unsigned length of the exponent on the following bytes. The remaining
         bytes encode an unsigned integer, N, such that mantissa is equal to
         sign * N * 2^scale.
+
+        Throws:
+            ConvException = if character-encoding cannot be converted to
+                the selected floating-point type, T.
+            ConvOverflowException = if the character-encoding encodes a 
+                number that is too big for the selected floating-point
+                type to express.
+            ASN1ValueTooSmallException = if the binary-encoding contains fewer
+                bytes than the information byte purports.
+            ASN1ValueTooBigException = if the binary-encoded mantissa is too 
+                big to be expressed by an unsigned long integer.
+            ASN1InvalidValueException = if both bits indicating the base in the
+                information byte of a binary-encoded REAL's information byte 
+                are set, which would indicate an invalid base.
     */
     public @property @system
     T realType(T)() if (is(T == float) || is(T == double))
@@ -916,11 +977,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         switch (this.value[0] & 0b_1100_0000)
         {
-            case (0b_0100_0000):
+            case (0b_0100_0000u):
             {
-                return ((this.value[0] & 0b_0011_1111) ? T.infinity : -T.infinity);
+                return ((this.value[0] & 0b_0011_1111u) ? T.infinity : -T.infinity);
             }
-            case (0b_0000_0000): // Character Encoding
+            case (0b_0000_0000u): // Character Encoding
             {
                 string chars = cast(string) this.value[1 .. $];
 
@@ -930,12 +991,12 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 }
                 catch (ConvOverflowException coe)
                 {
-                    throw new BERException
+                    throw new ASN1ValueTooBigException
                     ("Character-encoded REAL is too large to translate to a native floating-point type.");
                 }
                 catch (ConvException ce)
                 {
-                    throw new BERException
+                    throw new ASN1ValueTooBigException
                     ("Character-encoded REAL could not be decoded to a native floating-point type.");
                 }
 
@@ -1009,7 +1070,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 //     }
                 // }
             }
-            case 0b_1000_0000, 0b_1100_0000: // Binary Encoding
+            case 0b_1000_0000u, 0b_1100_0000u: // Binary Encoding
             {
                 ulong mantissa;
                 long exponent;
@@ -1019,12 +1080,12 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
                 // There must be at least one information byte and one exponent byte.
                 if (this.length < 2)
-                    throw new BERException
+                    throw new ASN1ValueTooSmallException
                     ("REAL value has too few bytes. Only an information byte was found.");
 
-                switch (this.value[0] & 0b00000011)
+                switch (this.value[0] & 0b00000011u)
                 {
-                    case 0b00000000: // Exponent on the following octet
+                    case 0b00000000u: // Exponent on the following octet
                     {
                         /*
                             this.value[1] has to be cast to a byte first so that it
@@ -1032,8 +1093,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                         */
                         exponent = cast(long) cast(byte) this.value[1];
 
-                        if (this.length - 2 > 8)
-                            throw new BERException
+                        if (this.length - 2u > 8u)
+                            throw new ASN1ValueTooBigException
                             ("REAL mantissa is too big for this encoder.");
 
                         ubyte m = 0x02u;
@@ -1046,10 +1107,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
                         break;
                     }
-                    case 0b00000001: // Exponent on the following two octets
+                    case 0b00000001u: // Exponent on the following two octets
                     {
-                        if (this.length == 2)
-                            throw new BERException
+                        if (this.length == 2u)
+                            throw new ASN1ValueTooSmallException
                             ("REAL value has too few bytes.");
 
                         // void[2] exponentBytes = *cast(void[2] *) &(this.value[1]);
@@ -1060,8 +1121,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                         }
                         exponent = cast(long) (*cast(short *) exponentBytes.ptr);
 
-                        if (this.length - 3 > 8)
-                            throw new BERException
+                        if (this.length - 3u > 8u)
+                            throw new ASN1ValueTooBigException
                             ("REAL mantissa is too big for this encoder.");
 
                         // REVIEW: There is probably a better way to do this.
@@ -1077,7 +1138,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                         }
                         version (BigEndian)
                         {
-                            while (this.length - m > 0)
+                            while (this.length - m > 0u)
                             {
                                 mantissa <<= 8;
                                 mantissa += this.value[m];
@@ -1089,14 +1150,14 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                     }
                     case 0b00000010: // Exponent on the following three octets
                     {
-                        if (this.length == 4)
-                            throw new BERException
+                        if (this.length == 4u)
+                            throw new ASN1ValueTooSmallException
                             ("REAL value has too few bytes.");
 
                         exponent = cast(long) ((*cast(int *) cast(void[4] *) &(this.value[1])) & 0x00FFFFFF);
 
-                        if (this.length - 4 > 8)
-                            throw new BERException
+                        if (this.length - 4u > 8u)
+                            throw new ASN1ValueTooBigException
                             ("REAL mantissa is too big for this encoder.");
 
                         ubyte m = 0x03u;
@@ -1110,18 +1171,18 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                     }
                     case 0b00000011: // Complicated
                     {
-                        if (this.length == 1)
-                            throw new BERException
+                        if (this.length == 1u)
+                            throw new ASN1ValueTooSmallException
                             ("REAL value has too few bytes.");
                         
                         ubyte exponentLength = this.value[1];
 
                         if (this.length == (exponentLength - 0x01u))
-                            throw new BERException
+                            throw new ASN1ValueTooSmallException
                             ("REAL value has too few bytes.");
 
                         if (exponentLength > 0x08u)
-                            throw new BERException
+                            throw new ASN1ValueTooBigException
                             ("REAL value exponent is too big.");
 
                         ubyte i = 0x00u;
@@ -1132,8 +1193,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                             i++;
                         }
 
-                        if (this.length - 1 - exponentLength > 8)
-                            throw new BERException
+                        if (this.length - 1u - exponentLength > 8u)
+                            throw new ASN1ValueTooBigException
                             ("REAL mantissa is too big for this encoder.");
 
                         ubyte m = 0x01u;
@@ -1170,15 +1231,15 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                     }
                     default:
                     {
-                        throw new BERException
+                        throw new ASN1InvalidValueException
                         ("Invalid binary-encoded REAL base");
                     }
                 }
 
-                scale = ((this.value[0] & 0b_0000_1100) >> 2);
+                scale = ((this.value[0] & 0b_0000_1100u) >> 2);
 
                 return (
-                    ((this.value[0] & 0b_0100_0000) ? -1 : 1) *
+                    ((this.value[0] & 0b_0100_0000u) ? -1 : 1) *
                     mantissa *
                     2^^scale *
                     (cast(T) base)^^exponent // base needs to be cast
@@ -1186,8 +1247,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             }
             default:
             {
-                throw new BERException
-                ("Invalid information block for REAL type.");
+                assert(0, "Impossible information byte value appeared!");
             }
         }
     }
@@ -1226,7 +1286,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         unsigned length of the exponent on the following bytes. The remaining
         bytes encode an unsigned integer, N, such that mantissa is equal to
         sign * N * 2^scale.
+
+        Throws:
+            ASN1InvalidValueException = if an attempt to encode NaN is made.
     */
+    // REVIEW: Doth mine eyes deceive me? Is this actually nothrow?
     public @property @system
     void realType(T)(T value)
     if (is(T == float) || is(T == double))
@@ -1242,15 +1306,15 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         if (value == T.nan)
         {
-            throw new BERException("ASN1 cannot encode NaN");
+            throw new ASN1InvalidValueException("ASN1 cannot encode NaN");
         }
         else if (value == T.infinity)
         {
-            this.value = [ 0x01, 0x40 ];
+            this.value = [ 0x01u, 0x40u ];
         }
         else if (value == -T.infinity)
         {
-            this.value = [ 0x01, 0x41 ];
+            this.value = [ 0x01u, 0x41u ];
         }
 
         /*
@@ -1273,12 +1337,12 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         static if (is(T == double))
         {
             DoubleRep valueUnion = DoubleRep(value);
-            significand = (valueUnion.fraction | 0x0010000000000000); // Flip bit #53
+            significand = (valueUnion.fraction | 0x0010000000000000u); // Flip bit #53
         }
         static if (is(T == float))
         {
             FloatRep valueUnion = FloatRep(value);
-            significand = (valueUnion.fraction | 0x00800000); // Flip bit #24
+            significand = (valueUnion.fraction | 0x00800000u); // Flip bit #24
         }
 
         // IEEE floating-point types use a set first bit to indicate a negative.
@@ -1337,8 +1401,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         }
 
         ubyte infoByte =
-            0x80 | // First bit gets set for base2, base8, or base16 encoding
-            (positive ? 0x00 : 0x40) | // 1 = negative, 0 = positive
+            0x80u | // First bit gets set for base2, base8, or base16 encoding
+            (positive ? 0x00u : 0x40u) | // 1 = negative, 0 = positive
             realBinaryEncodingBase | // Bitmask specifying base
             ASN1RealEncodingScales.scale0 |
             ASN1RealExponentEncoding.following2Octets;
@@ -1368,6 +1432,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Decodes an integer from an ENUMERATED type. In BER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
+
+        Returns: any chosen signed integral type
+        Throws:
+            ASN1ValueTooBigException = if the value is too big to decode
+                to a signed integral type.
     */
     public @property @system
     T enumerated(T)()
@@ -1379,7 +1448,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         */
         ubyte[] value = this.value.dup;
         if (value.length > T.sizeof)
-            throw new BERException
+            throw new ASN1ValueTooBigException
             ("ENUMERATED is too big to be decoded.");
 
         /* NOTE:
@@ -1441,21 +1510,21 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.enumerated!long == 0L);
 
         bv.enumerated!short = 0;
-        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
         assert(bv.enumerated!short == 0);
         assert(bv.enumerated!int == 0);
         assert(bv.enumerated!long == 0L);
 
         bv.enumerated!int = 0;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
         assert(bv.enumerated!int == 0);
         assert(bv.enumerated!long == 0L);
 
         bv.enumerated!long = 0L;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
-        assertThrown!BERException(bv.enumerated!int);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!int);
         assert(bv.enumerated!long == 0L);
 
         // Tests for small positives
@@ -1466,21 +1535,21 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.enumerated!long == 3L);
 
         bv.enumerated!short = 5;
-        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
         assert(bv.enumerated!short == 5);
         assert(bv.enumerated!int == 5);
         assert(bv.enumerated!long == 5L);
 
         bv.enumerated!int = 7;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
         assert(bv.enumerated!int == 7);
         assert(bv.enumerated!long == 7L);
 
         bv.enumerated!long = 9L;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
-        assertThrown!BERException(bv.enumerated!int);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!int);
         assert(bv.enumerated!long == 9L);
 
         // Tests for small negatives
@@ -1491,59 +1560,59 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.enumerated!long == -3L);
 
         bv.enumerated!short = -5;
-        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
         assert(bv.enumerated!short == -5);
         assert(bv.enumerated!int == -5);
         assert(bv.enumerated!long == -5L);
 
         bv.enumerated!int = -7;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
         assert(bv.enumerated!int == -7);
         assert(bv.enumerated!long == -7L);
 
         bv.enumerated!long = -9L;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
-        assertThrown!BERException(bv.enumerated!int);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!int);
         assert(bv.enumerated!long == -9L);
 
         // Tests for large positives
         bv.enumerated!short = 20000;
-        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
         assert(bv.enumerated!short == 20000);
         assert(bv.enumerated!int == 20000);
         assert(bv.enumerated!long == 20000L);
 
         bv.enumerated!int = 70000;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
         assert(bv.enumerated!int == 70000);
         assert(bv.enumerated!long == 70000L);
 
         bv.enumerated!long = 70000L;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
-        assertThrown!BERException(bv.enumerated!int);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!int);
         assert(bv.enumerated!long == 70000L);
 
         // Tests for large negatives
         bv.enumerated!short = -20000;
-        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
         assert(bv.enumerated!short == -20000);
         assert(bv.enumerated!int == -20000);
         assert(bv.enumerated!long == -20000L);
 
         bv.enumerated!int = -70000;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
         assert(bv.enumerated!int == -70000);
         assert(bv.enumerated!long == -70000L);
 
         bv.enumerated!long = -70000L;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
-        assertThrown!BERException(bv.enumerated!int);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!int);
         assert(bv.enumerated!long == -70000L);
 
         // Tests for maximum values
@@ -1554,21 +1623,21 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.enumerated!long == byte.max);
 
         bv.enumerated!short = short.max;
-        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
         assert(bv.enumerated!short == short.max);
         assert(bv.enumerated!int == short.max);
         assert(bv.enumerated!long == short.max);
 
         bv.enumerated!int = int.max;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
         assert(bv.enumerated!int == int.max);
         assert(bv.enumerated!long == int.max);
 
         bv.enumerated!long = long.max;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
-        assertThrown!BERException(bv.enumerated!int);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!int);
         assert(bv.enumerated!long == long.max);
 
         // Tests for minimum values
@@ -1579,26 +1648,25 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.enumerated!long == byte.min);
 
         bv.enumerated!short = short.min;
-        assertThrown!BERException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
         assert(bv.enumerated!short == short.min);
         assert(bv.enumerated!int == short.min);
         assert(bv.enumerated!long == short.min);
 
         bv.enumerated!int = int.min;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
         assert(bv.enumerated!int == int.min);
         assert(bv.enumerated!long == int.min);
 
         bv.enumerated!long = long.min;
-        assertThrown!BERException(bv.enumerated!byte);
-        assertThrown!BERException(bv.enumerated!short);
-        assertThrown!BERException(bv.enumerated!int);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(bv.enumerated!int);
         assert(bv.enumerated!long == long.min);
     }
 
     ///
-    // public alias embeddedPDV = embeddedPresentationDataValue;
     /**
         Decodes an EMBEDDED PDV, which is a constructed data type, defined in 
             the $(LINK2 https://www.itu.int, 
@@ -1627,6 +1695,19 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
+
+        Throws:
+            ASN1SizeException = if encoded EmbeddedPDV has too few or too many
+                elements, or if syntaxes or context-negotiation element has
+                too few or too many elements.
+            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1InvalidValueException = if encoded ObjectDescriptor contains
+                invalid characters.
+            ASN1InvalidIndexException = if encoded value selects a choice for 
+                identification or uses an unspecified index for an element in
+                syntaxes or context-negotiation, or if an unspecified element
+                of EMBEDDED PDV itself is referenced by an out-of-range 
+                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
     */
     // NOTE: If the integer properties are marked @trusted, this can be @safe.
     override public @property @system
@@ -1634,7 +1715,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     {
         BERValue[] bvs = this.sequence;
         if (bvs.length < 2 || bvs.length > 3)
-            throw new BERException
+            throw new ASN1ValueSizeException
             ("Improper number of elements in EMBEDDED PDV type.");
 
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
@@ -1654,7 +1735,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                             ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
                             BERValue[] syns = identificationBV.sequence;
                             if (syns.length != 2)
-                                throw new BERException
+                                throw new ASN1ValueSizeException
                                 ("Invalid number of elements in EMBEDDED PDV.identification.syntaxes");
 
                             foreach (syn; syns)
@@ -1673,7 +1754,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                                     }
                                     default:
                                     {
-                                        throw new BERException
+                                        throw new ASN1InvalidIndexException
                                         ("Invalid EMBEDDED PDV.identification.syntaxes tag.");
                                     }
                                 }
@@ -1697,7 +1778,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                             ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
                             BERValue[] cns = identificationBV.sequence;
                             if (cns.length != 2)
-                                throw new BERException
+                                throw new ASN1ValueTooBigException
                                 ("Invalid number of elements in EMBEDDED PDV.identification.context-negotiation");
                             
                             foreach (cn; cns)
@@ -1716,7 +1797,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                                     }
                                     default:
                                     {
-                                        throw new BERException
+                                        throw new ASN1InvalidIndexException
                                         ("Invalid EMBEDDED PDV.identification.context-negotiation tag.");
                                     }
                                 }
@@ -1736,7 +1817,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                         }
                         default:
                         {
-                            throw new BERException
+                            throw new ASN1InvalidIndexException
                             ("Invalid EMBEDDED PDV.identification choice.");
                         }
                     }
@@ -1755,7 +1836,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 }
                 default:
                 {
-                    throw new BERException
+                    throw new ASN1InvalidIndexException
                     ("Invalid EMBEDDED PDV context-specific tag.");
                 }
             }
@@ -1791,6 +1872,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
+
+        Throws:
+            ASN1InvalidValueException = if encoded ObjectDescriptor contains
+                invalid characters.
     */
     // NOTE: If the integer properties are marked @trusted, this can be @safe.
     override public @property @system
@@ -1876,8 +1961,6 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         BERValue bv = new BERValue();
         bv.embeddedPDV = pdv;
-        // bv.embeddedPresentationDataValue = pdv;
-        // writefln("Embedded PDV: %(%02X %)", cast(ubyte[]) bv);
 
         EmbeddedPDV pdv2 = bv.embeddedPresentationDataValue;
         assert(pdv2.identification.presentationContextID == 27L);
@@ -1986,21 +2069,21 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (x; oidComponents)
         {
             ubyte[] encodedOIDComponent;
-            if (x == 0) // REVIEW: Could you make this faster by using if (x < 128)?
+            if (x == 0u) // REVIEW: Could you make this faster by using if (x < 128)?
             {
-                this.value ~= 0x00;
+                this.value ~= 0x00u;
                 continue;
             }
-            while (x != 0)
+            while (x != 0u)
             {
                 OutBuffer ob = new OutBuffer();
                 ob.write(x);
                 ubyte[] compbytes = ob.toBytes();
-                if ((compbytes[0] & 0x80) == 0) compbytes[0] |= 0x80;
+                if ((compbytes[0] & 0x80u) == 0u) compbytes[0] |= 0x80u;
                 encodedOIDComponent = compbytes[0] ~ encodedOIDComponent;
                 x >>= 7;
             }
-            encodedOIDComponent[$-1] &= 0x7F;
+            encodedOIDComponent[$-1] &= 0x7Fu;
             this.value ~= encodedOIDComponent;
         }
     }
@@ -2016,13 +2099,20 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
     /**
         Decodes a sequence of BERValues.
+
+        Returns: an array of BERValues.
+        Throws:
+            ASN1ValueSizeException = if long definite-length is too big to be
+                decoded to an unsigned integral type.
+            ASN1ValueTooSmallException = if there are fewer value bytes than
+                indicated by the length tag.
     */
     public @property @system
     BERValue[] sequence()
     {
         ubyte[] data = this.value.dup;
         BERValue[] result;
-        while (data.length > 0)
+        while (data.length > 0u)
             result ~= new BERValue(data);
         return result;
     }
@@ -2043,13 +2133,20 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
     /**
         Decodes a set of BERValues.
+
+        Returns: an array of BERValues.
+        Throws:
+            ASN1ValueSizeException = if long definite-length is too big to be
+                decoded to an unsigned integral type.
+            ASN1ValueTooSmallException = if there are fewer value bytes than
+                indicated by the length tag.
     */
     public @property @system
     BERValue[] set()
     {
         ubyte[] data = this.value.dup;
         BERValue[] result;
-        while (data.length > 0)
+        while (data.length > 0u)
             result ~= new BERValue(data);
         return result;
     }
@@ -2071,6 +2168,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Decodes a string, where the characters of the string are limited to
         0 - 9 and space.
+
+        Returns: a string.
+        Throws:
+            ASN1InvalidValueException = if any character other than 0-9 or
+                space is encoded.
     */
     override public @property @system
     string numericString()
@@ -2078,7 +2180,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (character; this.value)
         {
             if (!canFind("1234567890 ", character))
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("NUMERIC STRING only accepts numbers and spaces.");
         }
         return cast(string) this.value;
@@ -2087,6 +2189,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Encodes a string, where the characters of the string are limited to
         0 - 9 and space.
+
+        Throws:
+            ASN1InvalidValueException = if any character other than 0-9 or
+                space is supplied.
     */
     override public @property @system
     void numericString(string value)
@@ -2094,7 +2200,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (character; value)
         {
             if (!canFind("1234567890 ", character))
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("NUMERIC STRING only accepts numbers and spaces.");
         }
         this.value = cast(ubyte[]) value;
@@ -2107,13 +2213,20 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         BERValue bv = new BERValue();
         bv.numericString = "1234567890";
         assert(bv.numericString == "1234567890");
-        assertThrown!BERException(bv.numericString = "hey hey");
+        assertThrown!ASN1InvalidValueException(bv.numericString = "hey hey");
     }
 
     /**
         Decodes a string that will only contain characters a-z, A-Z, 0-9,
         space, apostrophe, parentheses, comma, minus, plus, period, 
         forward slash, colon, equals, and question mark.
+
+        Returns: a string.
+        Throws:
+            ASN1InvalidValueException = if any character other than a-z, A-Z, 
+                0-9, space, apostrophe, parentheses, comma, minus, plus,
+                period, forward slash, colon, equals, or question mark are
+                encoded.
     */
     override public @property @system
     string printableString()
@@ -2124,12 +2237,13 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             language, so that canFind will usually have to iterate through
             fewer letters before finding a match.
         */
+        // TODO: Move this, and create immutable strings like it in asn1.d
         immutable string printables = 
             "etaoinsrhdlucmfywgpbvkxqjzETAOINSRHDLUCMFYWGPBVKXQJZ0123456789 '()+,-./:=?";
         foreach (character; this.value)
         {
             if (!canFind(printables, character))
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("PrintableString only accepts these characters: " ~ printables);
         }
         return cast(string) this.value;
@@ -2139,6 +2253,12 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Encodes a string that may only contain characters a-z, A-Z, 0-9,
         space, apostrophe, parentheses, comma, minus, plus, period, 
         forward slash, colon, equals, and question mark.
+
+        Throws:
+            ASN1InvalidValueException = if any character other than a-z, A-Z, 
+                0-9, space, apostrophe, parentheses, comma, minus, plus,
+                period, forward slash, colon, equals, or question mark are
+                supplied.
     */
     override public @property @system
     void printableString(string value)
@@ -2154,7 +2274,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (character; value)
         {
             if (!canFind(printables, character))
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("PrintableString only accepts these characters: " ~ printables);
         }
         this.value = cast(ubyte[]) value;
@@ -2167,17 +2287,19 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         BERValue bv = new BERValue();
         bv.printableString = "1234567890 asdfjkl";
         assert(bv.printableString == "1234567890 asdfjkl");
-        assertThrown!BERException(bv.printableString = "\t");
-        assertThrown!BERException(bv.printableString = "\n");
-        assertThrown!BERException(bv.printableString = "\0");
-        assertThrown!BERException(bv.printableString = "\v");
-        assertThrown!BERException(bv.printableString = "\b");
-        assertThrown!BERException(bv.printableString = "\r");
-        assertThrown!BERException(bv.printableString = "\x13");
+        assertThrown!ASN1InvalidValueException(bv.printableString = "\t");
+        assertThrown!ASN1InvalidValueException(bv.printableString = "\n");
+        assertThrown!ASN1InvalidValueException(bv.printableString = "\0");
+        assertThrown!ASN1InvalidValueException(bv.printableString = "\v");
+        assertThrown!ASN1InvalidValueException(bv.printableString = "\b");
+        assertThrown!ASN1InvalidValueException(bv.printableString = "\r");
+        assertThrown!ASN1InvalidValueException(bv.printableString = "\x13");
     }
    
     /**
         Literally just returns the value bytes.
+
+        Returns: an unsigned byte array, where each byte is a T.61 character.
     */
     override public @property @safe nothrow
     ubyte[] teletexString()
@@ -2201,12 +2323,14 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     unittest
     {
         BERValue bv = new BERValue();
-        bv.teletexString = [ 0x01, 0x03, 0x05, 0x07, 0x09 ];
-        assert(bv.teletexString == [ 0x01, 0x03, 0x05, 0x07, 0x09 ]);
+        bv.teletexString = [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ];
+        assert(bv.teletexString == [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ]);
     }
 
     /**
         Literally just returns the value bytes.
+
+        Returns: an unsigned byte array.
     */
     override public @property @safe nothrow
     ubyte[] videotexString()
@@ -2230,8 +2354,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     unittest
     {
         BERValue bv = new BERValue();
-        bv.videotexString = [ 0x01, 0x03, 0x05, 0x07, 0x09 ];
-        assert(bv.videotexString == [ 0x01, 0x03, 0x05, 0x07, 0x09 ]);
+        bv.videotexString = [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ];
+        assert(bv.videotexString == [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ]);
     }
 
     /**
@@ -2253,6 +2377,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(TR $(TD 0x7D) $(TD }))
             $(TR $(TD 0x7E) $(TD ~))
         )
+
+        Returns: a string.
+        Throws:
+            ASN1InvalidValueException = if any enecoded character is not ASCII.
     */
     override public @property @system
     string internationalAlphabetNumber5String()
@@ -2261,7 +2389,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (character; ret)
         {
             if (!character.isASCII)
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("IA5String only accepts ASCII characters.");
         }
         return ret;
@@ -2286,6 +2414,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(TR $(TD 0x7D) $(TD }))
             $(TR $(TD 0x7E) $(TD ~))
         )
+
+        Throws:
+            ASN1InvalidValueException = if any enecoded character is not ASCII.
     */
     override public @property @system
     void internationalAlphabetNumber5String(string value)
@@ -2293,7 +2424,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (character; value)
         {
             if (!character.isASCII)
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("IA5String only accepts ASCII characters.");
         }
         this.value = cast(ubyte[]) value;
@@ -2306,7 +2437,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         BERValue bv = new BERValue();
         bv.ia5String = "Nitro dubs & T-Rix";
         assert(bv.ia5String == "Nitro dubs & T-Rix");
-        assertThrown!BERException(bv.ia5String = "Nitro dubs \xD7 T-Rix");
+        assertThrown!ASN1InvalidValueException(bv.ia5String = "Nitro dubs \xD7 T-Rix");
     }
 
     /**
@@ -2330,6 +2461,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         See_Also:
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
+    // REVIEW: Is there some kind of exception this can throw?
     override public @property @system
     DateTime coordinatedUniversalTime()
     {
@@ -2352,7 +2484,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         See_Also:
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
-    // REVIEW: Is this nothrow?
+    // REVIEW: Is there some kind of exception this can throw?
     override public @property @system
     void coordinatedUniversalTime(DateTime value)
     {
@@ -2383,6 +2515,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LI 19851106210627.3-0500)
         )
     */
+    // REVIEW: Is there some kind of exception this can throw?
     override public @property @system
     DateTime generalizedTime()
     {
@@ -2404,7 +2537,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LI 19851106210627.3-0500)
         )
     */
-    // REVIEW: Is this nothrow?
+    // REVIEW: Is there some kind of exception this can throw?
     override public @property @system
     void generalizedTime(DateTime value)
     {
@@ -2432,6 +2565,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
+        Returns: a string.
+        Throws:
+            ASN1InvalidValueException = if any non-graphical character 
+                (including space) is encoded.
     */
     override public @property @system
     string graphicString()
@@ -2440,7 +2577,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (character; ret)
         {
             if (!character.isGraphical && character != ' ')
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("GraphicString only accepts graphic characters and space.");
         }
         return ret;
@@ -2457,6 +2594,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
+        Throws:
+            ASN1InvalidValueException = if any non-graphical character 
+                (including space) is supplied.
     */
     override public @property @system
     void graphicString(string value)
@@ -2464,7 +2604,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (character; value)
         {
             if (!character.isGraphical && character != ' ')
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("GraphicString only accepts graphic characters and space.");
         }
         this.value = cast(ubyte[]) value;
@@ -2477,20 +2617,25 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         BERValue bv = new BERValue();
         bv.graphicString = "Nitro dubs & T-Rix";
         assert(bv.graphicString == "Nitro dubs & T-Rix");
-        assertThrown!BERException(bv.graphicString = "\xD7");
-        assertThrown!BERException(bv.graphicString = "\t");
-        assertThrown!BERException(bv.graphicString = "\r");
-        assertThrown!BERException(bv.graphicString = "\n");
-        assertThrown!BERException(bv.graphicString = "\b");
-        assertThrown!BERException(bv.graphicString = "\v");
-        assertThrown!BERException(bv.graphicString = "\f");
-        assertThrown!BERException(bv.graphicString = "\0");
+        assertThrown!ASN1InvalidValueException(bv.graphicString = "\xD7");
+        assertThrown!ASN1InvalidValueException(bv.graphicString = "\t");
+        assertThrown!ASN1InvalidValueException(bv.graphicString = "\r");
+        assertThrown!ASN1InvalidValueException(bv.graphicString = "\n");
+        assertThrown!ASN1InvalidValueException(bv.graphicString = "\b");
+        assertThrown!ASN1InvalidValueException(bv.graphicString = "\v");
+        assertThrown!ASN1InvalidValueException(bv.graphicString = "\f");
+        assertThrown!ASN1InvalidValueException(bv.graphicString = "\0");
     }
 
     /**
         Decodes a string that only contains characters between and including
         0x20 and 0x7E. (Honestly, I don't know how this differs from
         GraphicalString.)
+
+        Returns: a string.
+        Throws:
+            ASN1InvalidValueException = if any non-graphical character 
+                (including space) is encoded.
     */
     override public @property @system
     string visibleString()
@@ -2499,7 +2644,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (character; ret)
         {
             if (!character.isGraphical && character != ' ')
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("VisibleString only accepts graphic characters and space.");
         }
         return ret;
@@ -2509,6 +2654,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Encodes a string that only contains characters between and including
         0x20 and 0x7E. (Honestly, I don't know how this differs from
         GraphicalString.)
+
+        Throws:
+            ASN1InvalidValueException = if any non-graphical character 
+                (including space) is supplied.
     */
     override public @property @system
     void visibleString(string value)
@@ -2516,7 +2665,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (character; value)
         {
             if (!character.isGraphical && character != ' ')
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("VisibleString only accepts graphic characters and space.");
         }
         this.value = cast(ubyte[]) value;
@@ -2524,6 +2673,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
     /**
         Decodes a string containing only ASCII characters.
+
+        Returns: a string.
+        Throws:
+            ASN1InvalidValueException = if any enecoded character is not ASCII.
     */
     override public @property @system
     string generalString()
@@ -2532,7 +2685,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (character; ret)
         {
             if (!character.isASCII)
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("GeneralString only accepts ASCII Characters.");
         }
         return ret;
@@ -2540,6 +2693,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
     /**
         Encodes a string containing only ASCII characters.
+
+        Throws:
+            ASN1InvalidValueException = if any enecoded character is not ASCII.
     */
     override public @property @system
     void generalString(string value)
@@ -2547,7 +2703,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         foreach (character; value)
         {
             if (!character.isASCII)
-                throw new BERException
+                throw new ASN1InvalidValueException
                 ("GeneralString only accepts ASCII Characters.");
         }
         this.value = cast(ubyte[]) value;
@@ -2560,11 +2716,16 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         BERValue bv = new BERValue();
         bv.generalString = "foin-ass sweatpants from BUCCI \0\n\t\b\v\r\f";
         assert(bv.generalString == "foin-ass sweatpants from BUCCI \0\n\t\b\v\r\f");
-        assertThrown!BERException(bv.generalString = "\xF5");
+        assertThrown!ASN1InvalidValueException(bv.generalString = "\xF5");
     }
 
     /**
         Decodes a dstring of UTF-32 characters.
+
+        Returns: a string of UTF-32 characters.
+        Throws:
+            ASN1InvalidValueException = if the encoded bytes is not evenly
+                divisible by four.
     */
     override public @property @system
     dstring universalString()
@@ -2575,8 +2736,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         }
         version (LittleEndian)
         {
-            if (this.value.length % 4)
-                throw new BERException
+            if (this.value.length % 4u)
+                throw new ASN1InvalidValueException
                 ("Invalid number of bytes for UniversalString. Must be a multiple of 4.");
 
             dstring ret;
@@ -2584,7 +2745,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             while (i < this.value.length-3)
             {
                 ubyte[] character;
-                character.length = 4;
+                character.length = 4u;
                 character[3] = this.value[i++];
                 character[2] = this.value[i++];
                 character[1] = this.value[i++];
@@ -2609,7 +2770,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         {
             this.value = cast(ubyte[]) value;
         }
-        version (LittleEndian)
+        else version (LittleEndian)
         {
             foreach(character; value)
             {
@@ -2659,6 +2820,18 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
+
+        Returns: an instance of types.universal.CharacterString.
+        Throws:
+            ASN1SizeException = if encoded CharacterString has too few or too many
+                elements, or if syntaxes or context-negotiation element has
+                too few or too many elements.
+            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1InvalidIndexException = if encoded value selects a choice for 
+                identification or uses an unspecified index for an element in
+                syntaxes or context-negotiation, or if an unspecified element
+                of CharacterString itself is referenced by an out-of-range 
+                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
     */
     // REVIEW: Is this nothrow?
     // NOTE: if the integer properties are marked @trusted, this can be @safe
@@ -2666,8 +2839,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     CharacterString characterString()
     {
         BERValue[] bvs = this.sequence;
-        if (bvs.length < 2 || bvs.length > 3)
-            throw new BERException
+        if (bvs.length < 2u || bvs.length > 3u)
+            throw new ASN1ValueSizeException
             ("Improper number of elements in CharacterString type.");
 
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
@@ -2686,8 +2859,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                         {
                             ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
                             BERValue[] syns = identificationBV.sequence;
-                            if (syns.length != 2)
-                                throw new BERException
+                            if (syns.length != 2u)
+                                throw new ASN1ValueSizeException
                                 ("Invalid number of elements in CharacterString.identification.syntaxes");
 
                             foreach (syn; syns)
@@ -2706,7 +2879,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                                     }
                                     default:
                                     {
-                                        throw new BERException
+                                        throw new ASN1InvalidIndexException
                                         ("Invalid CharacterString.identification.syntaxes tag.");
                                     }
                                 }
@@ -2729,8 +2902,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                             // REVIEW: Should this be split off into a separate function?
                             ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
                             BERValue[] cns = identificationBV.sequence;
-                            if (cns.length != 2)
-                                throw new BERException
+                            if (cns.length != 2u)
+                                throw new ASN1ValueSizeException
                                 ("Invalid number of elements in CharacterString.identification.context-negotiation");
                             
                             foreach (cn; cns)
@@ -2749,7 +2922,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                                     }
                                     default:
                                     {
-                                        throw new BERException
+                                        throw new ASN1InvalidIndexException
                                         ("Invalid CharacterString.identification.context-negotiation tag.");
                                     }
                                 }
@@ -2769,7 +2942,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                         }
                         default:
                         {
-                            throw new BERException
+                            throw new ASN1InvalidIndexException
                             ("Invalid CharacterString.identification choice.");
                         }
                     }
@@ -2783,7 +2956,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 }
                 default:
                 {
-                    throw new BERException
+                    throw new ASN1InvalidIndexException
                     ("Invalid CharacterString context-specific tag.");
                 }
             }
@@ -2905,6 +3078,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
     /**
         Decodes a wstring of UTF-16 characters.
+
+        Returns: an immutable array of UTF-16 characters.
+        Throws:
+            ASN1InvalidValueException = if the encoded bytes is not evenly
+                divisible by two.
     */
     override public @property @system
     wstring basicMultilingualPlaneString()
@@ -2915,8 +3093,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         }
         version (LittleEndian)
         {
-            if (this.value.length % 2)
-                throw new BERException
+            if (this.value.length % 2u)
+                throw new ASN1InvalidValueException
                 ("Invalid number of bytes for BMPString. Must be a multiple of 4.");
 
             wstring ret;
@@ -2924,7 +3102,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             while (i < this.value.length-1)
             {
                 ubyte[] character;
-                character.length = 2;
+                character.length = 2u;
                 character[1] = this.value[i++];
                 character[0] = this.value[i++];
                 ret ~= (*cast(wchar *) character.ptr);
@@ -2947,7 +3125,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         {
             this.value = cast(ubyte[]) value;
         }
-        version (LittleEndian)
+        else version (LittleEndian)
         {
             foreach(character; value)
             {
@@ -2974,7 +3152,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     /**
         Creates an EndOfContent BER Value.
     */
-    public @safe nothrow
+    public @safe @nogc nothrow
     this()
     {
         this.type = 0x00;
@@ -2986,6 +3164,18 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         byte is the type tag. The supplied ubyte[] array is "chomped" by
         reference, so the original array will grow shorter as BERValues are
         generated. 
+
+        Throws:
+            ASN1ValueTooSmallException = if the bytes supplied are fewer than
+                two (one or zero, in other words), such that no valid BERValue
+                can be decoded, or if the length is encoded in indefinite
+                form, but the END OF CONTENT octets (two consecutive null
+                octets) cannot be found, or if the value is encoded in fewer
+                octets than indicated by the length byte.
+            ASN1InvalidLengthException = if the length byte is set to 0xFF, 
+                which is reserved.
+            ASN1ValueTooBigException = if the length cannot be represented by 
+                the largest unsigned integer.
 
         Example:
         ---
@@ -3007,46 +3197,46 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     {
         import std.string : indexOf;
 
-        if (bytes.length < 2)
-            throw new BERException
+        if (bytes.length < 2u)
+            throw new ASN1ValueTooSmallException
             ("BER-encoded value terminated prematurely.");
         
         this.type = bytes[0];
         
         // Length
-        if (bytes[1] & 0x80)
+        if (bytes[1] & 0x80u)
         {
-            if (bytes[1] & 0x7F) // Definite Long or Reserved
+            if (bytes[1] & 0x7Fu) // Definite Long or Reserved
             {
-                if ((bytes[1] & 0x7F) == 0x7F) // Reserved
-                    throw new BERException
+                if ((bytes[1] & 0x7Fu) == 0x7Fu) // Reserved
+                    throw new ASN1InvalidLengthException
                     ("A BER-encoded length byte of 0xFF is reserved.");
 
                 // Definite Long, if it has made it this far
 
-                if ((bytes[1] & 0x7F) > size_t.sizeof)
-                    throw new BERException
+                if ((bytes[1] & 0x7Fu) > size_t.sizeof)
+                    throw new ASN1ValueTooBigException
                     ("BER-encoded value is too big to decode.");
 
                 version (D_LP64)
                 {
-                    ubyte[] lengthBytes = [ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ];
+                    ubyte[] lengthBytes = [ 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u ];
                 }
                 else // FIXME: This *assumes* that the computer must be 32-bit!
                 {
-                    ubyte[] lengthBytes = [ 0x00, 0x00, 0x00, 0x00 ];
+                    ubyte[] lengthBytes = [ 0x00u, 0x00u, 0x00u, 0x00u ];
                 }
                 
                 version (LittleEndian)
                 {
-                    for (ubyte i = (bytes[1] & 0x7F); i > 0; i--)
+                    for (ubyte i = (bytes[1] & 0x7Fu); i > 0u; i--)
                     {
                         lengthBytes[i] = bytes[2+i];
                     }
                 }
                 version (BigEndian)
                 {
-                    for (ubyte i = 0; i < (bytes[1] & 0x7F); i++)
+                    for (ubyte i = 0x00u; i < (bytes[1] & 0x7Fu); i++)
                     {
                         lengthBytes[i] = bytes[2+i];
                     }
@@ -3062,12 +3252,12 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 size_t indexOfEndOfContent = 0u;
                 for (size_t i = 2u; i < bytes.length-1; i++)
                 {
-                    if ((bytes[i] == 0x00) && (bytes[i+1] == 0x00))
+                    if ((bytes[i] == 0x00u) && (bytes[i+1] == 0x00))
                         indexOfEndOfContent = i;
                 }
 
                 if (indexOfEndOfContent == 0u)
-                    throw new BERException
+                    throw new ASN1ValueTooSmallException
                     ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERValue.");
 
                 this.value = bytes[2 .. indexOfEndOfContent];
@@ -3075,10 +3265,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         }
         else // Definite Short
         {
-            ubyte length = (bytes[1] & 0x7F);
+            ubyte length = (bytes[1] & 0x7Fu);
 
             if (length > (bytes.length-2))
-                throw new BERException
+                throw new ASN1ValueTooSmallException
                 ("BER-encoded value terminated prematurely.");
 
             this.value = bytes[2 .. 2+length].dup;
@@ -3104,7 +3294,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         {
             case (LengthEncodingPreference.definite):
             {
-                if (this.length < 127)
+                if (this.length < 127u)
                 {
                     lengthOctets = [ cast(ubyte) this.length ];    
                 }
@@ -3131,7 +3321,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             }
             case (LengthEncodingPreference.indefinite):
             {
-                lengthOctets = [ 0x80 ];
+                lengthOctets = [ 0x80u ];
                 break;
             }
             default:
@@ -3143,7 +3333,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             [ this.type ] ~ 
             lengthOctets ~ 
             this.value ~ 
-            (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00, 0x00 ] : cast(ubyte[]) [])
+            (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00u, 0x00u ] : cast(ubyte[]) [])
         );
     }
 
@@ -3157,7 +3347,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         Returns: type tag, length tag, and value, all concatenated as a ubyte array.
     */
-    public @system
+    public @system nothrow
     ubyte[] opCast(T = ubyte[])()
     {
         ubyte[] lengthOctets = [ 0x00u ];
@@ -3165,7 +3355,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         {
             case (LengthEncodingPreference.definite):
             {
-                if (this.length < 127)
+                if (this.length < 127u)
                 {
                     lengthOctets = [ cast(ubyte) this.length ];    
                 }
@@ -3192,7 +3382,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             }
             case (LengthEncodingPreference.indefinite):
             {
-                lengthOctets = [ 0x80 ];
+                lengthOctets = [ 0x80u ];
                 break;
             }
             default:
@@ -3204,7 +3394,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             [ this.type ] ~ 
             lengthOctets ~ 
             this.value ~ 
-            (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00, 0x00 ] : cast(ubyte[]) [])
+            (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00u, 0x00u ] : cast(ubyte[]) [])
         );
     }
 
@@ -3217,35 +3407,52 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 unittest
 {
     // Test data
-    ubyte[] dataEndOfContent = [ 0x00, 0x00 ];
-    ubyte[] dataBoolean = [ 0x01, 0x01, 0xFF ];
-    ubyte[] dataInteger = [ 0x02, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF ];
-    ubyte[] dataBitString = [ 0x03, 0x03, 0x03, 0xF0, 0xF0 ];
-    ubyte[] dataOctetString = [ 0x04, 0x04, 0xFF, 0x00, 0x88, 0x14 ];
-    ubyte[] dataNull = [ 0x05, 0x00 ];
-    ubyte[] dataOID = [ 0x06, 0x04, 0x2B, 0x06, 0x04, 0x01 ];
-    ubyte[] dataOD = [ 0x07, 0x05, 'H', 'N', 'E', 'L', 'O' ];
-    ubyte[] dataExternal = [ 0x08, 0x1C, 0x80, 0x0A, 0x81, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1B, 0x81, 0x08, 0x65, 0x78, 0x74, 0x65, 0x72, 0x6E, 0x61, 0x6C, 0x82, 0x04, 0x01, 0x02, 0x03, 0x04 ];
-    ubyte[] dataReal = [ 0x09, 0x03, 0x80, 0xFB, 0x05 ]; // 0.15625 (From StackOverflow question)
-    ubyte[] dataEnum = [ 0x0A, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF ];
-    ubyte[] dataEmbeddedPDV = [ 0x0B, 0x1C, 0x80, 0x0A, 0x82, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1B, 0x81, 0x08, 0x41, 0x41, 0x41, 0x41, 0x42, 0x42, 0x42, 0x42, 0x82, 0x04, 0x01, 0x02, 0x03, 0x04 ];
-    ubyte[] dataUTF8 = [ 0x0C, 0x05, 'H', 'E', 'N', 'L', 'O' ];
-    ubyte[] dataROID = [ 0x0D, 0x03, 0x06, 0x04, 0x01 ];
+    ubyte[] dataEndOfContent = [ 0x00u, 0x00u ];
+    ubyte[] dataBoolean = [ 0x01u, 0x01u, 0xFFu ];
+    ubyte[] dataInteger = [ 0x02u, 0x08u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0xFFu ];
+    ubyte[] dataBitString = [ 0x03u, 0x03u, 0x03u, 0xF0u, 0xF0u ];
+    ubyte[] dataOctetString = [ 0x04u, 0x04u, 0xFF, 0x00u, 0x88u, 0x14u ];
+    ubyte[] dataNull = [ 0x05u, 0x00u ];
+    ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
+    ubyte[] dataOD = [ 0x07u, 0x05u, 'H', 'N', 'E', 'L', 'O' ];
+    ubyte[] dataExternal = [ 
+        0x08u, 0x1Cu, 0x80u, 0x0Au, 0x81u, 0x08u, 0x00u, 0x00u, 
+        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x1Bu, 0x81u, 0x08u, 
+        0x65u, 0x78u, 0x74u, 0x65u, 0x72u, 0x6Eu, 0x61u, 0x6Cu, 
+        0x82u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
+    ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
+    ubyte[] dataEnum = [ 0x0Au, 0x08u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0xFFu ];
+    ubyte[] dataEmbeddedPDV = [ 
+        0x0Bu, 0x1Cu, 0x80u, 0x0Au, 0x82u, 0x08u, 0x00u, 0x00u, 
+        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x1Bu, 0x81u, 0x08u, 
+        0x41u, 0x41u, 0x41u, 0x41u, 0x42u, 0x42u, 0x42u, 0x42u, 
+        0x82u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
+    ubyte[] dataUTF8 = [ 0x0Cu, 0x05u, 'H', 'E', 'N', 'L', 'O' ];
+    ubyte[] dataROID = [ 0x0Du, 0x03u, 0x06u, 0x04u, 0x01u ];
     // sequence
     // set
-    ubyte[] dataNumeric = [ 0x12, 0x07, '8', '6', '7', '5', '3', '0', '9' ];
-    ubyte[] dataPrintable = [ 0x13, 0x06, '8', '6', ' ', 'b', 'f', '8' ];
-    ubyte[] dataTeletex = [ 0x14, 0x06, 0xFF, 0x05, 0x04, 0x03, 0x02, 0x01 ];
-    ubyte[] dataVideotex = [ 0x15, 0x06, 0xFF, 0x05, 0x04, 0x03, 0x02, 0x01 ];
-    ubyte[] dataIA5 = [ 0x16, 0x08, 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S' ];
-    ubyte[] dataUTC = [ 0x17, 0x0C, '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0' ];
-    ubyte[] dataGT = [ 0x18, 0x0E, '2', '0', '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0' ];
-    ubyte[] dataGraphic = [ 0x19, 0x0B, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
-    ubyte[] dataVisible = [ 0x1A, 0x0B, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
-    ubyte[] dataGeneral = [ 0x1B, 0x0B, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
-    ubyte[] dataUniversal = [ 0x1C, 0x10, 0x00, 0x00, 0x00, 0x61, 0x00, 0x00, 0x00, 0x62, 0x00, 0x00, 0x00, 0x63, 0x00, 0x00, 0x00, 0x64 ]; // Big-endian "abcd"
-    ubyte[] dataCharacter = [ 0x1D, 0x13, 0x80, 0x0A, 0x82, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0x81, 0x05, 0x48, 0x45, 0x4E, 0x4C, 0x4F ];
-    ubyte[] dataBMP = [ 0x1E, 0x08, 0x00, 0x61, 0x00, 0x62, 0x00, 0x63, 0x00, 0x64 ]; // Big-endian "abcd"
+    ubyte[] dataNumeric = [ 0x12u, 0x07u, '8', '6', '7', '5', '3', '0', '9' ];
+    ubyte[] dataPrintable = [ 0x13u, 0x06u, '8', '6', ' ', 'b', 'f', '8' ];
+    ubyte[] dataTeletex = [ 0x14u, 0x06u, 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ];
+    ubyte[] dataVideotex = [ 0x15u, 0x06u, 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ];
+    ubyte[] dataIA5 = [ 0x16u, 0x08u, 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S' ];
+    ubyte[] dataUTC = [ 0x17u, 0x0Cu, '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0' ];
+    ubyte[] dataGT = [ 0x18u, 0x0Eu, '2', '0', '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0' ];
+    ubyte[] dataGraphic = [ 0x19u, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
+    ubyte[] dataVisible = [ 0x1Au, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
+    ubyte[] dataGeneral = [ 0x1Bu, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
+    ubyte[] dataUniversal = [ 
+        0x1Cu, 0x10u, 
+        0x00u, 0x00u, 0x00u, 0x61u, 
+        0x00u, 0x00u, 0x00u, 0x62u, 
+        0x00u, 0x00u, 0x00u, 0x63u, 
+        0x00u, 0x00u, 0x00u, 0x64u 
+    ]; // Big-endian "abcd"
+    ubyte[] dataCharacter = [ 
+        0x1Du, 0x13u, 0x80u, 0x0Au, 0x82u, 0x08u, 0x00u, 0x00u, 
+        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x3Fu, 0x81u, 0x05u, 
+        0x48u, 0x45u, 0x4Eu, 0x4Cu, 0x4Fu ];
+    ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"
 
     // Combine it all
     ubyte[] data = 
@@ -3319,20 +3526,20 @@ unittest
     assert(result[2].integer!long == 255L);
     // assert(cast(void[]) result[3].bitString == cast(void[]) BitArray([0xF0, 0xF0], 13));
     // NOTE: I think std.bitmanip.BitArray.opCast(void[]) is broken...
-    assert(result[4].octetString == [ 0xFF, 0x00, 0x88, 0x14 ]);
+    assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
     assert(result[6].objectIdentifier.numericArray == (new OID(0x01u, 0x03u, 0x06u, 0x04u, 0x01u)).numericArray);
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
-    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01, 0x02, 0x03, 0x04 ]));
+    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
     assert(result[10].enumerated!long == 255L);
-    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01, 0x02, 0x03, 0x04 ]));
+    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier.numericArray == (new ROID(0x06u, 0x04u, 0x01u)).numericArray);
     assert(result[14].numericString == "8675309");
     assert(result[15].printableString ==  "86 bf8");
-    assert(result[16].teletexString == [ 0xFF, 0x05, 0x04, 0x03, 0x02, 0x01 ]);
-    assert(result[17].videotexString == [ 0xFF, 0x05, 0x04, 0x03, 0x02, 0x01 ]);
+    assert(result[16].teletexString == [ 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ]);
+    assert(result[17].videotexString == [ 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ]);
     assert(result[18].ia5String == "BORTHERS");
     assert(result[19].utcTime == DateTime(2017, 8, 31, 13, 45));
     assert(result[20].generalizedTime == DateTime(2017, 8, 31, 13, 45));
