@@ -545,19 +545,53 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void relativeObjectIdentifier(RelativeOID value);
 
-    // SEQUENCE
-    // abstract public @property
-    // typeof(this)[] sequence();
+    /**
+        Decodes an array of elements.
 
-    // abstract public @property
-    // void sequence(typeof(this)[] value);
+        Credits:
+            Thanks to StackOverflow user 
+            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
+            for teaching me how to create the abstract method that uses the 
+            child class as a template.
+    */
+    abstract public @property
+    T[] sequence(this T)();
 
-    // SET
-    // abstract public @property
-    // BERValue[] set();
+    /**
+        Encodes an array of elements.
 
-    // abstract public @property
-    // void set(BERValue[] value);
+        Credits:
+            Thanks to StackOverflow user 
+            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
+            for teaching me how to create the abstract method that uses the 
+            child class as a template.
+    */
+    abstract public @property
+    void sequence(this T)(T[] value);
+
+    /**
+        Decodes an array of elements.
+
+        Credits:
+            Thanks to StackOverflow user 
+            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
+            for teaching me how to create the abstract method that uses the 
+            child class as a template.
+    */
+    abstract public @property
+    T[] set(this T)();
+
+    /**
+        Encodes an array of elements.
+
+        Credits:
+            Thanks to StackOverflow user 
+            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
+            for teaching me how to create the abstract method that uses the 
+            child class as a template.
+    */
+    abstract public @property
+    void set(this T)(T[] value);
 
     /**
         Decodes a string, where the characters of the string are limited to

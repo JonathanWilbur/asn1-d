@@ -457,8 +457,6 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         BitArray ba = BitArray([true, false, true, true, false]);
         BERValue bv = new BERValue();
         bv.bitString = ba;
-        debug writefln("BIT STRING: %(%02X %)", bv.value);
-        debug writefln("bv.bitString: %(%02X %)", cast(ubyte[]) cast(void[]) bv.bitString);
         assert(bv.bitString == ba);
     }
 
