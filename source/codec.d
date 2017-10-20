@@ -322,13 +322,19 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void integer(T)(T value) if (isIntegral!T && isSigned!T);
 
-    /// Decodes a BitArray
-    abstract public @property
-    BitArray bitString();
+    // /// Decodes a BitArray
+    // abstract public @property
+    // BitArray bitString();
 
-    /// Encodes a BitArray
+    // /// Encodes a BitArray
+    // abstract public @property
+    // void bitString(BitArray value);
+
     abstract public @property
-    void bitString(BitArray value);
+    bool[] bitString();
+
+    abstract public @property
+    void bitString(bool[] value);
 
     /// Decodes a ubyte[] array
     abstract public @property

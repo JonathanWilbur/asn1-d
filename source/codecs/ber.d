@@ -420,16 +420,16 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 impossible, since a byte has 8 bits.
     */
     // NOTE: This has to be @system because BitArray sucks.
-    override public @property @system
-    BitArray bitString()
-    {
-        if (this.value[0] > 0x07u)
-            throw new ASN1InvalidValueException
-            ("Unused bits byte cannot have a value greater than seven.");
-        ubyte[] val = this.value[1 .. $];
-        while (val.length % size_t.sizeof) val ~= 0x00u;
-        return BitArray(val, cast(size_t) (((this.length - 1u) * 8u) - this.value[0]));
-    }
+    // override public @property @system
+    // BitArray bitString()
+    // {
+    //     if (this.value[0] > 0x07u)
+    //         throw new ASN1InvalidValueException
+    //         ("Unused bits byte cannot have a value greater than seven.");
+    //     ubyte[] val = this.value[1 .. $];
+    //     while (val.length % size_t.sizeof) val ~= 0x00u;
+    //     return BitArray(val, cast(size_t) (((this.length - 1u) * 8u) - this.value[0]));
+    // }
 
     /**
         Encodes a BitArray. 
@@ -438,26 +438,93 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         bits in the last byte of the encoded bit array.
     */
     // NOTE: This has to be @system because BitArray sucks.
-    override public @property @system nothrow
-    void bitString(BitArray value)
-    {
-        // REVIEW: is 0x08u - (value.length % 0x08u) == 0x08u % value.length?
-        size_t bitsNeeded = value.length; // value.length is the length in bits, not bytes.
-        while (bitsNeeded % 8u) bitsNeeded++; // round up to the nearest byte.
-        size_t bytesNeeded = bitsNeeded / 8u;
-        ubyte[] valueBytes = cast(ubyte[]) (cast(void[]) value);
-        valueBytes.length = bytesNeeded;
-        this.value = [ cast(ubyte) (0x08u - (value.length % 0x08u)) ] ~ valueBytes;
-    }
+    // override public @property @system nothrow
+    // void bitString(BitArray value)
+    // {
+    //     // REVIEW: is 0x08u - (value.length % 0x08u) == 0x08u % value.length?
+    //     size_t bitsNeeded = value.length; // value.length is the length in bits, not bytes.
+    //     while (bitsNeeded % 8u) bitsNeeded++; // round up to the nearest byte.
+    //     size_t bytesNeeded = bitsNeeded / 8u;
+    //     ubyte[] valueBytes = cast(ubyte[]) (cast(void[]) value);
+    //     valueBytes.length = bytesNeeded;
+    //     this.value = [ cast(ubyte) (0x08u - (value.length % 0x08u)) ] ~ valueBytes;
+    // }
 
     ///
+    // @system
+    // unittest
+    // {
+    //     BitArray ba = BitArray([true, false, true, true, false]);
+    //     BERValue bv = new BERValue();
+    //     bv.bitString = ba;
+    //     assert(bv.bitString == ba);
+    // }
+
+    override public @property
+    bool[] bitString()
+    {
+        if (this.value[0] > 0x07u)
+            throw new ASN1InvalidValueException
+            ("Unused bits byte cannot have a value greater than seven.");
+        
+        bool[] ret;
+        for (ptrdiff_t i = 1; i < this.value.length; i++)
+        {
+            ret ~= [
+                (this.value[i] & 0b1000_0000u ? true : false),
+                (this.value[i] & 0b0100_0000u ? true : false),
+                (this.value[i] & 0b0010_0000u ? true : false),
+                (this.value[i] & 0b0001_0000u ? true : false),
+                (this.value[i] & 0b0000_1000u ? true : false),
+                (this.value[i] & 0b0000_0100u ? true : false),
+                (this.value[i] & 0b0000_0010u ? true : false),
+                (this.value[i] & 0b0000_0001u ? true : false)
+            ];
+        }
+        ret.length -= this.value[0];
+        return ret;
+    }
+
+    override public @property
+    void bitString(bool[] value)
+    {
+        // REVIEW: I feel like there is a better way to do this...
+        this.value = [ cast(ubyte) (8u - (value.length % 8u)) ];
+        if (this.value[0] == 0x08u) this.value[0] = 0x00u;
+
+        ptrdiff_t i = 0;
+        while (i < value.length)
+        {
+            if (!(i % 8u)) this.value ~= 0x00u;
+            this.value[$-1] |= ((value[i] ? 0b1000_0000u : 0b0000_0000u) >> (i % 8u));
+            i++;
+        }
+    }
+
     @system
     unittest
     {
-        BitArray ba = BitArray([true, false, true, true, false]);
         BERValue bv = new BERValue();
-        bv.bitString = ba;
-        assert(bv.bitString == ba);
+
+        // FIXME: 0 bits 
+        bv.bitString = [];
+        debug writefln("0: %(%08b %)", bv.bitString);
+        assert(bv.bitString == []);
+
+        // 7 bits
+        bv.bitString = [ true, false, true, true, false, false, true ];
+        debug writefln("7: %(%08b %)", bv.bitString);
+        assert(bv.bitString == [ true, false, true, true, false, false, true ]);
+
+        // FIXME: 8 bits
+        bv.bitString = [ true, false, true, true, false, false, true, false ];
+        debug writefln("8: %(%08b %)", bv.bitString);
+        assert(bv.bitString == [ true, false, true, true, false, false, true, false ]);
+
+        // 9 bits
+        bv.bitString = [ true, false, true, true, false, false, true, false, true ];
+        debug writefln("9: %(%08b %)", bv.bitString);
+        assert(bv.bitString == [ true, false, true, true, false, false, true, false, true ]);
     }
 
     /**
@@ -3472,7 +3539,7 @@ unittest
     // Ensure use of accessors does not mutate state.
     assert(result[1].boolean == result[1].boolean);
     assert(result[2].integer!long == result[2].integer!long);
-    assert(cast(size_t[]) result[3].bitString == cast(size_t[]) result[3].bitString); // Not my fault that std.bitmanip.BitArray is fucking stupid.
+    // assert(cast(size_t[]) result[3].bitString == cast(size_t[]) result[3].bitString); // Not my fault that std.bitmanip.BitArray is fucking stupid.
     assert(result[4].octetString == result[4].octetString);
     // nill
     assert(result[6].objectIdentifier.numericArray == result[6].objectIdentifier.numericArray);

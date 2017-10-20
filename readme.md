@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.4.2](http://semver.org/)
+* Version: [0.5.0](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -73,7 +73,7 @@ ready to serve as the basis for others:
 - [x] `nothrow`, `pure`, `final`, etc.
 - [ ] Character-encoded `REAL`
 - [x] `integer(T) if (isSigned!T && isIntegral!T)`
-- [ ] Figure out the situation with `BitArray` (I am seriously considering just returning `bool[]` instead.)
+- [x] Convert `bitString` to get and set a `bool[]` instead of `std.bitmanip.BitArray`
 - [x] Abstractions for `set` and `sequence` properties \([StackOverflow Question](https://stackoverflow.com/questions/46828692/template-referring-to-child-class-within-parent-class)\)
 - [x] A better system of exceptions
 - [ ] 100% unit test code coverage
