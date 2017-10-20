@@ -505,25 +505,13 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     unittest
     {
         BERValue bv = new BERValue();
-
-        // FIXME: 0 bits 
-        bv.bitString = [];
-        debug writefln("0: %(%08b %)", bv.bitString);
+        bv.bitString = []; // 0 bits
         assert(bv.bitString == []);
-
-        // 7 bits
-        bv.bitString = [ true, false, true, true, false, false, true ];
-        debug writefln("7: %(%08b %)", bv.bitString);
+        bv.bitString = [ true, false, true, true, false, false, true ]; // 7 bits
         assert(bv.bitString == [ true, false, true, true, false, false, true ]);
-
-        // FIXME: 8 bits
-        bv.bitString = [ true, false, true, true, false, false, true, false ];
-        debug writefln("8: %(%08b %)", bv.bitString);
+        bv.bitString = [ true, false, true, true, false, false, true, false ]; // 8 bits
         assert(bv.bitString == [ true, false, true, true, false, false, true, false ]);
-
-        // 9 bits
-        bv.bitString = [ true, false, true, true, false, false, true, false, true ];
-        debug writefln("9: %(%08b %)", bv.bitString);
+        bv.bitString = [ true, false, true, true, false, false, true, false, true ]; // 9 bits
         assert(bv.bitString == [ true, false, true, true, false, false, true, false, true ]);
     }
 
@@ -1366,7 +1354,6 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         real significand;
         ASN1RealEncodingScale scalingFactor = ASN1RealEncodingScale.scale0;
         ASN1RealEncodingBase base = ASN1RealEncodingBase.base2;
-        ASN1RealBinaryEncodingBase ASN1realBinaryEncodingBase = ASN1RealBinaryEncodingBase.base2;
         short exponent = 0;
 
         if (value == T.nan)
@@ -1380,6 +1367,88 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         else if (value == -T.infinity)
         {
             this.value = [ 0x01u, 0x41u ];
+        }
+
+        if (this.realEncodingBase == ASN1RealEncodingBase.base10)
+        {
+            import std.array : appender, Appender;
+            import std.format : formattedWrite;
+            Appender!string writer = appender!string();
+
+            // REVIEW: Change the format strings to have the best precision for those types.
+            switch (this.base10RealNumericalRepresentation)
+            {
+                case (ASN1Base10RealNumericalRepresentation.nr1):
+                {
+                    static if (is(T == double))
+                    {
+                        writer.formattedWrite!"%g"(value);
+                    }
+                    static if (is(T == float))
+                    {
+                        writer.formattedWrite!"%g"(value);
+                    }
+                    break;
+                }
+                case (ASN1Base10RealNumericalRepresentation.nr2):
+                {                    
+                    static if (is(T == double))
+                    {
+                        writer.formattedWrite!"%.6f"(value);
+                    }
+                    static if (is(T == float))
+                    {
+                        writer.formattedWrite!"%.12f"(value);
+                    }
+                    break;
+                }
+                case (ASN1Base10RealNumericalRepresentation.nr3):
+                {
+                    switch (this.base10RealExponentCharacter)
+                    {
+                        case (ASN1Base10RealExponentCharacter.lowercaseE):
+                        {
+                            static if (is(T == double))
+                            {
+                                writer.formattedWrite!"%.12e"(value);
+                            }
+                            static if (is(T == float))
+                            {
+                                writer.formattedWrite!"%.6e"(value);
+                            }
+                            break;
+                        }
+                        case (ASN1Base10RealExponentCharacter.uppercaseE):
+                        {
+                            static if (is(T == double))
+                            {
+                                writer.formattedWrite!"%.12E"(value);
+                            }
+                            static if (is(T == float))
+                            {
+                                writer.formattedWrite!"%.6E"(value);
+                            }
+                            break;
+                        }
+                        default:
+                        {
+                            assert(0, "Invalid ASN1Base10RealExponentCharacter state.");
+                        }
+                    }
+                    break;
+                }
+                default:
+                {
+                    assert(0, "Invalid ASN1Base10RealNumericalRepresentation state emerged!");
+                }
+            }
+
+            this.value = 
+                cast(ubyte[]) [ (cast(ubyte) 0u | cast(ubyte) this.base10RealNumericalRepresentation) ] ~ 
+                ((this.base10RealShouldShowPlusSignIfPositive && (writer.data[0] != '-')) ? cast(ubyte[]) ['+'] : []) ~
+                cast(ubyte[]) writer.data;
+            
+            return;
         }
 
         /*
@@ -1491,6 +1560,36 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(approxEqual(bvf.realType!double, f));
         assert(approxEqual(bvd.realType!float, d));
         assert(approxEqual(bvd.realType!double, d));
+    }
+
+    // Testing Base-10 (Character-Encoded) REALs
+    @system
+    unittest
+    {
+        BERValue bv = new BERValue();
+        realEncodingBase = ASN1RealEncodingBase.base10;
+
+        // This test is to make sure that the no decimal + trailing zeros are added if not necessary.
+        bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr1;
+        bv.realType!float = 22.0;
+        debug writefln("float: %(%02X %)", bv.value);
+        debug writefln("float: %s", cast(char[]) bv.value[1 .. $]);
+
+        // This test is to make sure that the decimal + trailing zeros are added if necessary.
+        bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr1;
+        bv.realType!float = 22.86;
+        debug writefln("float: %(%02X %)", bv.value);
+        debug writefln("float: %s", cast(char[]) bv.value[1 .. $]);
+
+        bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr2;
+        bv.realType!float = 22.86;
+        debug writefln("float: %(%02X %)", bv.value);
+        debug writefln("float: %s", cast(char[]) bv.value[1 .. $]);
+
+        bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr3;
+        bv.realType!float = 22.86;
+        debug writefln("float: %(%02X %)", bv.value);
+        debug writefln("float: %s", cast(char[]) bv.value[1 .. $]);
     }
 
     // TODO: Review, test, and mark as @trusted

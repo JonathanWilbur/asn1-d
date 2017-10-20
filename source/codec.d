@@ -164,7 +164,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         Whether the base 10 / character-encoded representation of a REAL
         should prepend a plus sign if the value is positive.
     */
-    static public bool base10RealShouldShowPlusSignIfPositive = false;
+    static public bool base10RealShouldShowPlusSignIfPositive = true;
 
     /**
         Whether a comma or a period is used to separate the whole and
