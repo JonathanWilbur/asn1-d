@@ -41,7 +41,9 @@ debug
 
 version (unittest)
 {
+    public import core.exception : AssertError;
     public import std.exception : assertThrown;
+    public import std.math : approxEqual;
 }
 
 ///

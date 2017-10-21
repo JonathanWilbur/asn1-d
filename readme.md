@@ -10,11 +10,14 @@ progress on it and so that, if I get hit by a bus, my code survives.**
 
 ## What is ASN.1?
 
-ASN.1 stands for *Abstract Syntax Notation*. ASN.1 messages can be encoded in
-one of several encoding/decoding standards. It provides a system of types that
-are extensible, and can presumably describe every protocol. You can think of it
-as a protocol for describing other protocols as well as a family of standards
-for encoding and decoding said protocols. It is similar to Google's Protocol Buffers.
+ASN.1 stands for *Abstract Syntax Notation*. ASN.1 was first specified in 
+[X.680 - Abstract Syntax Notation One (ASN.1)](https://www.itu.int/rec/T-REC-X.680/en),
+by the [International Telecommunications Union](http://www.itu.int/en/pages/default.aspx).
+ASN.1 messages can be encoded in one of several encoding/decoding standards. 
+It provides a system of types that are extensible, and can presumably describe 
+every protocol. You can think of it as a protocol for describing other protocols 
+as well as a family of standards for encoding and decoding said protocols. 
+It is similar to [Google's Protocol Buffers](https://developers.google.com/protocol-buffers/).
 
 ## Why ASN.1?
 
@@ -78,11 +81,12 @@ ready to serve as the basis for others:
 - [x] A better system of exceptions
 - [ ] 100% unit test code coverage
   - [ ] Negative unit tests for all string types
-- [ ] Add `deprecated` attribute to deprecated types.
+- [x] Add `deprecated` attribute to deprecated types.
 - [ ] Make constructor that takes ref to a `size_t` storing the number of bytes read
 - [ ] Overhaul OID and RelativeOID
   - [ ] Fix `opCmp`
 - [ ] Rename `BERValue` to `BERElement` and `ASN1Value` to `ASN1Element`
+- [ ] `debug` statements
 
 ### Future
 
@@ -105,10 +109,6 @@ The following codecs will be a part of the library:
 - [ ] BACNet Encoding Rules
 - [ ] Signalling-specific Encoding Rules (SER)
 
-The Code will have the following features:
-
-- [ ] Storage classes applied to all parameters
-
 The following testing will be done:
 
 - [ ] At least one unit test for every method or function, including tests covering all code pathways in every method or function
@@ -123,10 +123,13 @@ The following testing will be done:
   - [ ] Reading X.509 Certificates
   - [ ] Creating a Session with OpenLDAP Server
   - [ ] Creating a Session with a TLS Endpoint
+- [ ] Build Version Testing
+  - [ ] `-noboundscheck`
 
 The following documentation will be done:
 
 - [ ] Embedded Documentation for everything
+  - [ ] Test that it actually compiles correctly!
 - [ ] Formal citations for unit tests
 
 The following reviews will be done:
@@ -134,6 +137,7 @@ The following reviews will be done:
 - [ ] Review by one security firm
 - [ ] Review for HeartBleed-like vulnerabilities
 - [ ] Review of all ASN.1-related CVEs
+- [ ] Review that character-encoded `REAL`s are strictly conformant to ISO 6093
 
 The following build mechanisms will be implemented:
 
@@ -146,10 +150,48 @@ The following build mechanisms will be implemented:
 The library will be marketed and distributed in the following ways:
 
 - [ ] Create a website for it
+  - [ ] Create a small API for responding to GitHub Webhooks.
 - [ ] Publish a Dub package for it
 - [ ] Share it on the Dlang Subreddit
 - [ ] Publish an RPM package 
 - [ ] Publish an APT package
+- [ ] Configure either Travis CI or Circle CI
+- [ ] Dynamic libraries
+
+The following command line tools will be created:
+
+- [ ] `encode-der`
+- [ ] `encode-ber`
+- [ ] `encode-cer`
+- [ ] `encode-xer`
+- [ ] `encode-cxer`
+- [ ] `encode-exer`
+- [ ] `encode-per`
+- [ ] `encode-uper`
+- [ ] `encode-cper`
+- [ ] `encode-oer`
+- [ ] `encode-coer`
+- [ ] `encode-jer`
+- [ ] `encode-gser`
+- [ ] `encode-lwer`
+- [ ] `encode-bacnet`
+- [ ] `encode-ser`
+- [ ] `decode-der`
+- [ ] `decode-ber`
+- [ ] `decode-cer`
+- [ ] `decode-xer`
+- [ ] `decode-cxer`
+- [ ] `decode-exer`
+- [ ] `decode-per`
+- [ ] `decode-uper`
+- [ ] `decode-cper`
+- [ ] `decode-oer`
+- [ ] `decode-coer`
+- [ ] `decode-jer`
+- [ ] `decode-gser`
+- [ ] `decode-lwer`
+- [ ] `decode-bacnet`
+- [ ] `decode-ser`
 
 ## Bugs
 

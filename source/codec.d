@@ -16,7 +16,7 @@ package import std.ascii : isASCII, isGraphical;
 package import std.bitmanip : BitArray;
 package import std.datetime.date : DateTime;
 private import std.exception : basicExceptionCtors;
-package import std.math : log2;
+package import std.math : isNaN, log2;
 package import std.outbuffer;
 package import std.traits : isIntegral, isSigned;
 
@@ -687,6 +687,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
     */
+    deprecated
     abstract public @property
     string graphicString();
 
@@ -702,6 +703,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
     */
+    deprecated
     abstract public @property
     void graphicString(string value);
 
@@ -722,10 +724,12 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     void visibleString(string value);
 
     /// Decodes a string containing only ASCII characters.
+    deprecated
     abstract public @property
     string generalString();
 
     /// Encodes a string containing only ASCII characters.
+    deprecated
     abstract public @property
     void generalString(string value);
 

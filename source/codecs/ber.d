@@ -1028,6 +1028,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         if (this.length == 0) return cast(T) 0.0;
 
+        if (this.value == [ 0x40u ]) return T.infinity;
+        if (this.value == [ 0x41u ]) return -T.infinity;
+
         switch (this.value[0] & 0b_1100_0000)
         {
             case (0b_0100_0000u):
@@ -1125,8 +1128,15 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             }
             case 0b_1000_0000u, 0b_1100_0000u: // Binary Encoding
             {
-                ulong mantissa;
-                long exponent;
+                /*
+                    The mantissa MUST be a long, unless you want a type-casting
+                    problem at the end (where the mantissa is multiplied by the
+                    sign (-1 or 1)) in which the sign gets converted to a ulong,
+                    which becomes ulong.max-1 from the resulting integer 
+                    underflow.
+                */
+                long mantissa;
+                long exponent; // REVIEW: Can this be a smaller data type?
                 ubyte scale;
                 ubyte base;
                 ASN1RealBinaryEncodingBase realBinaryEncodingBase = ASN1RealBinaryEncodingBase.base2;
@@ -1356,17 +1366,19 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         ASN1RealEncodingBase base = ASN1RealEncodingBase.base2;
         short exponent = 0;
 
-        if (value == T.nan)
+        if (value.isNaN)
         {
             throw new ASN1InvalidValueException("ASN1 cannot encode NaN");
         }
         else if (value == T.infinity)
         {
-            this.value = [ 0x01u, 0x40u ];
+            this.value = [ 0x40u ];
+            return;
         }
         else if (value == -T.infinity)
         {
-            this.value = [ 0x01u, 0x41u ];
+            this.value = [ 0x41u ];
+            return;
         }
 
         if (this.realEncodingBase == ASN1RealEncodingBase.base10)
@@ -1394,11 +1406,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 {                    
                     static if (is(T == double))
                     {
-                        writer.formattedWrite!"%.6f"(value);
+                        writer.formattedWrite!"%.12f"(value);
                     }
                     static if (is(T == float))
                     {
-                        writer.formattedWrite!"%.12f"(value);
+                        writer.formattedWrite!"%.6f"(value);
                     }
                     break;
                 }
@@ -1544,13 +1556,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         this.value = (infoByte ~ exponentBytes ~ significandBytes);
     }
 
-    // TODO: Test a LOT of values here.
     ///
     @system
     unittest
     {
-        import std.math : approxEqual;
-        float f = 22.86;
+        float f = -22.86;
         double d = 0.00583;
         BERValue bvf = new BERValue();
         BERValue bvd = new BERValue();
@@ -1562,34 +1572,386 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(approxEqual(bvd.realType!double, d));
     }
 
-    // Testing Base-10 (Character-Encoded) REALs
+    // Test a few edge cases
+    @system
+    unittest
+    {
+        BERValue bv = new BERValue();
+
+        // Positive Zeroes
+        bv.realType!float = 0.0;
+        assert(approxEqual(bv.realType!float, 0.0));
+        assert(approxEqual(bv.realType!double, 0.0));
+        bv.realType!double = 0.0;
+        assert(approxEqual(bv.realType!float, 0.0));
+        assert(approxEqual(bv.realType!double, 0.0));
+
+        // Negative Zeroes
+        bv.realType!float = -0.0;
+        assert(approxEqual(bv.realType!float, -0.0));
+        assert(approxEqual(bv.realType!double, -0.0));
+        bv.realType!double = -0.0;
+        assert(approxEqual(bv.realType!float, -0.0));
+        assert(approxEqual(bv.realType!double, -0.0));
+
+        // Positive Repeating decimal
+        bv.realType!float = (10.0 / 3.0);
+        assert(approxEqual(bv.realType!float, (10.0 / 3.0)));
+        assert(approxEqual(bv.realType!double, (10.0 / 3.0)));
+        bv.realType!double = (10.0 / 3.0);
+        assert(approxEqual(bv.realType!float, (10.0 / 3.0)));
+        assert(approxEqual(bv.realType!double, (10.0 / 3.0)));
+
+        // Negative Repeating Decimal
+        bv.realType!float = -(10.0 / 3.0);
+        assert(approxEqual(bv.realType!float, -(10.0 / 3.0)));
+        assert(approxEqual(bv.realType!double, -(10.0 / 3.0)));
+        bv.realType!double = -(10.0 / 3.0);
+        assert(approxEqual(bv.realType!float, -(10.0 / 3.0)));
+        assert(approxEqual(bv.realType!double, -(10.0 / 3.0)));
+
+        // Positive one
+        bv.realType!float = 1.0;
+        assert(approxEqual(bv.realType!float, 1.0));
+        assert(approxEqual(bv.realType!double, 1.0));
+        bv.realType!double = 1.0;
+        assert(approxEqual(bv.realType!float, 1.0));
+        assert(approxEqual(bv.realType!double, 1.0));
+
+        // Negative one
+        bv.realType!float = -1.0;
+        assert(approxEqual(bv.realType!float, -1.0));
+        assert(approxEqual(bv.realType!double, -1.0));
+        bv.realType!double = -1.0;
+        assert(approxEqual(bv.realType!float, -1.0));
+        assert(approxEqual(bv.realType!double, -1.0));
+
+        // Positive Infinity
+        bv.realType!float = float.infinity;
+        assert(bv.realType!float == float.infinity);
+        assert(bv.realType!double == double.infinity);
+        bv.realType!double = double.infinity;
+        assert(bv.realType!float == float.infinity);
+        assert(bv.realType!double == double.infinity);
+
+        // Negative Infinity
+        bv.realType!float = -float.infinity;
+        assert(bv.realType!float == -float.infinity);
+        assert(bv.realType!double == -double.infinity);
+        bv.realType!double = -double.infinity;
+        assert(bv.realType!float == -float.infinity);
+        assert(bv.realType!double == -double.infinity);
+
+        // Not-a-Number
+        assertThrown!ASN1InvalidValueException(bv.realType!float = float.nan);
+        assertThrown!ASN1InvalidValueException(bv.realType!double = double.nan);
+    }
+
+    // Test with all of the math constants, to make sure there are no edge cases.
+    @system
+    unittest
+    {
+        import std.math : 
+            E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2, 
+            LOG2E, LOG2T, LOG10E, SQRT2, SQRT1_2;
+
+        BERValue bv = new BERValue();
+
+        // Tests floats
+        bv.realType!float = cast(float) E;
+        assert(bv.realType!float == cast(float) E);
+        bv.realType!float = cast(float) PI;
+        assert(bv.realType!float == cast(float) PI);
+        bv.realType!float = cast(float) PI_2;
+        assert(bv.realType!float == cast(float) PI_2);
+        bv.realType!float = cast(float) PI_4;
+        assert(bv.realType!float == cast(float) PI_4);
+        bv.realType!float = cast(float) M_1_PI;
+        assert(bv.realType!float == cast(float) M_1_PI);
+        bv.realType!float = cast(float) M_2_PI;
+        assert(bv.realType!float == cast(float) M_2_PI);
+        bv.realType!float = cast(float) M_2_SQRTPI;
+        assert(bv.realType!float == cast(float) M_2_SQRTPI);
+        bv.realType!float = cast(float) LN10;
+        assert(bv.realType!float == cast(float) LN10);
+        bv.realType!float = cast(float) LN2;
+        assert(bv.realType!float == cast(float) LN2);
+        bv.realType!float = cast(float) LOG2;
+        assert(bv.realType!float == cast(float) LOG2);
+        bv.realType!float = cast(float) LOG2E;
+        assert(bv.realType!float == cast(float) LOG2E);
+        bv.realType!float = cast(float) LOG2T;
+        assert(bv.realType!float == cast(float) LOG2T);
+        bv.realType!float = cast(float) LOG10E;
+        assert(bv.realType!float == cast(float) LOG10E);
+        bv.realType!float = cast(float) SQRT2;
+        assert(bv.realType!float == cast(float) SQRT2);
+        bv.realType!float = cast(float) SQRT1_2;
+        assert(bv.realType!float == cast(float) SQRT1_2);
+
+        // Tests doubles
+        bv.realType!double = cast(double) E;
+        assert(bv.realType!double == cast(double) E);
+        bv.realType!double = cast(double) PI;
+        assert(bv.realType!double == cast(double) PI);
+        bv.realType!double = cast(double) PI_2;
+        assert(bv.realType!double == cast(double) PI_2);
+        bv.realType!double = cast(double) PI_4;
+        assert(bv.realType!double == cast(double) PI_4);
+        bv.realType!double = cast(double) M_1_PI;
+        assert(bv.realType!double == cast(double) M_1_PI);
+        bv.realType!double = cast(double) M_2_PI;
+        assert(bv.realType!double == cast(double) M_2_PI);
+        bv.realType!double = cast(double) M_2_SQRTPI;
+        assert(bv.realType!double == cast(double) M_2_SQRTPI);
+        bv.realType!double = cast(double) LN10;
+        assert(bv.realType!double == cast(double) LN10);
+        bv.realType!double = cast(double) LN2;
+        assert(bv.realType!double == cast(double) LN2);
+        bv.realType!double = cast(double) LOG2;
+        assert(bv.realType!double == cast(double) LOG2);
+        bv.realType!double = cast(double) LOG2E;
+        assert(bv.realType!double == cast(double) LOG2E);
+        bv.realType!double = cast(double) LOG2T;
+        assert(bv.realType!double == cast(double) LOG2T);
+        bv.realType!double = cast(double) LOG10E;
+        assert(bv.realType!double == cast(double) LOG10E);
+        bv.realType!double = cast(double) SQRT2;
+        assert(bv.realType!double == cast(double) SQRT2);
+        bv.realType!double = cast(double) SQRT1_2;
+        assert(bv.realType!double == cast(double) SQRT1_2);
+    }
+
+    @system
+    unittest
+    {
+        for (int i = -100; i < 100; i++)
+        {
+            // Alternating negative and positive floating point numbers exploring extreme values
+            immutable float f = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
+            immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
+            BERValue bvf = new BERValue();
+            BERValue bvd = new BERValue();
+            bvf.realType!float = f;
+            bvd.realType!double = d;
+            assert(approxEqual(bvf.realType!float, f));
+            assert(approxEqual(bvf.realType!double, f));
+            assert(approxEqual(bvd.realType!float, d));
+            assert(approxEqual(bvd.realType!double, d));
+        }
+    }
+
+    // Testing Base-10 (Character-Encoded) REALs - NR1
     @system
     unittest
     {
         BERValue bv = new BERValue();
         realEncodingBase = ASN1RealEncodingBase.base10;
-
-        // This test is to make sure that the no decimal + trailing zeros are added if not necessary.
         bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr1;
+        bv.base10RealShouldShowPlusSignIfPositive = false;
+
+        // Decimal + trailing zeros are not added if not necessary.
         bv.realType!float = 22.0;
-        debug writefln("float: %(%02X %)", bv.value);
-        debug writefln("float: %s", cast(char[]) bv.value[1 .. $]);
+        assert(cast(string) (bv.value[1 .. $]) == "22");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
+        bv.realType!double = 22.0;
+        assert(cast(string) (bv.value[1 .. $]) == "22");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
 
-        // This test is to make sure that the decimal + trailing zeros are added if necessary.
-        bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr1;
-        bv.realType!float = 22.86;
-        debug writefln("float: %(%02X %)", bv.value);
-        debug writefln("float: %s", cast(char[]) bv.value[1 .. $]);
+        // Plus sign appears before positive numbers.
+        bv.base10RealShouldShowPlusSignIfPositive = true;
+        bv.realType!float = 22.0;
+        assert(cast(string) (bv.value[1 .. $]) == "+22");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
+        bv.realType!double = 22.0;
+        assert(cast(string) (bv.value[1 .. $]) == "+22");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
 
+        // Decimal + trailing zeros are added if necessary.
+        bv.realType!float = 22.123;
+        assert(cast(string) (bv.value[1 .. $]) == "+22.123");
+        assert(approxEqual(bv.realType!float, 22.123));
+        assert(approxEqual(bv.realType!double, 22.123));
+        bv.realType!double = 22.123;
+        assert(cast(string) (bv.value[1 .. $]) == "+22.123");
+        assert(approxEqual(bv.realType!float, 22.123));
+        assert(approxEqual(bv.realType!double, 22.123));
+        
+        // Negative numbers are encoded correctly.
+        bv.realType!float = -22.123;
+        assert(cast(string) (bv.value[1 .. $]) == "-22.123");
+        assert(approxEqual(bv.realType!float, -22.123));
+        assert(approxEqual(bv.realType!double, -22.123));
+        bv.realType!double = -22.123;
+        assert(cast(string) (bv.value[1 .. $]) == "-22.123");
+        assert(approxEqual(bv.realType!float, -22.123));
+        assert(approxEqual(bv.realType!double, -22.123));
+
+        // Small positive numbers are encoded correctly.
+        bv.realType!float = 0.123;
+        assert(cast(string) (bv.value[1 .. $]) == "+0.123");
+        assert(approxEqual(bv.realType!float, 0.123));
+        assert(approxEqual(bv.realType!double, 0.123));
+        bv.realType!double = 0.123;
+        assert(cast(string) (bv.value[1 .. $]) == "+0.123");
+        assert(approxEqual(bv.realType!float, 0.123));
+        assert(approxEqual(bv.realType!double, 0.123));
+
+        // Small negative numbers are encoded correctly.
+        bv.realType!float = -0.123;
+        assert(cast(string) (bv.value[1 .. $]) == "-0.123");
+        assert(approxEqual(bv.realType!float, -0.123));
+        assert(approxEqual(bv.realType!double, -0.123));
+        bv.realType!double = -0.123;
+        assert(cast(string) (bv.value[1 .. $]) == "-0.123");
+        assert(approxEqual(bv.realType!float, -0.123));
+        assert(approxEqual(bv.realType!double, -0.123));
+    }
+
+    // Testing Base-10 (Character-Encoded) REALs - NR2
+    @system
+    unittest
+    {
+        BERValue bv = new BERValue();
+        realEncodingBase = ASN1RealEncodingBase.base10;
         bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr2;
-        bv.realType!float = 22.86;
-        debug writefln("float: %(%02X %)", bv.value);
-        debug writefln("float: %s", cast(char[]) bv.value[1 .. $]);
+        bv.base10RealShouldShowPlusSignIfPositive = false;
 
+        // Decimal + trailing zeros are not added if not necessary.
+        bv.realType!float = 22.0;
+        assert(cast(string) (bv.value[1 .. $]) == "22.000000");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
+        bv.realType!double = 22.0;
+        assert(cast(string) (bv.value[1 .. $]) == "22.000000000000");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
+
+        // Plus sign appears before positive numbers.
+        bv.base10RealShouldShowPlusSignIfPositive = true;
+        bv.realType!float = 22.0;
+        assert(cast(string) (bv.value[1 .. $]) == "+22.000000");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
+        bv.realType!double = 22.0;
+        assert(cast(string) (bv.value[1 .. $]) == "+22.000000000000");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
+
+        // Decimal + trailing zeros are added if necessary.
+        bv.realType!float = 22.123;
+        // assert(cast(string) (bv.value[1 .. $]) == "+22.123000"); // Precision problem
+        assert(approxEqual(bv.realType!float, 22.123));
+        assert(approxEqual(bv.realType!double, 22.123));
+        bv.realType!double = 22.123;
+        assert(cast(string) (bv.value[1 .. $]) == "+22.123000000000");
+        assert(approxEqual(bv.realType!float, 22.123));
+        assert(approxEqual(bv.realType!double, 22.123));
+        
+        // Negative numbers are encoded correctly.
+        bv.realType!float = -22.123;
+        // assert(cast(string) (bv.value[1 .. $]) == "-22.123000"); // Precision problem
+        assert(approxEqual(bv.realType!float, -22.123));
+        assert(approxEqual(bv.realType!double, -22.123));
+        bv.realType!double = -22.123;
+        assert(cast(string) (bv.value[1 .. $]) == "-22.123000000000");
+        assert(approxEqual(bv.realType!float, -22.123));
+        assert(approxEqual(bv.realType!double, -22.123));
+
+        // Small positive numbers are encoded correctly.
+        bv.realType!float = 0.123;
+        assert(cast(string) (bv.value[1 .. $]) == "+0.123000");
+        assert(approxEqual(bv.realType!float, 0.123));
+        assert(approxEqual(bv.realType!double, 0.123));
+        bv.realType!double = 0.123;
+        assert(cast(string) (bv.value[1 .. $]) == "+0.123000000000");
+        assert(approxEqual(bv.realType!float, 0.123));
+        assert(approxEqual(bv.realType!double, 0.123));
+
+        // Small negative numbers are encoded correctly.
+        bv.realType!float = -0.123;
+        assert(cast(string) (bv.value[1 .. $]) == "-0.123000");
+        assert(approxEqual(bv.realType!float, -0.123));
+        assert(approxEqual(bv.realType!double, -0.123));
+        bv.realType!double = -0.123;
+        assert(cast(string) (bv.value[1 .. $]) == "-0.123000000000");
+        assert(approxEqual(bv.realType!float, -0.123));
+        assert(approxEqual(bv.realType!double, -0.123));
+    }
+
+    // Testing Base-10 (Character-Encoded) REALs - NR3
+    @system
+    unittest
+    {
+        BERValue bv = new BERValue();
+        realEncodingBase = ASN1RealEncodingBase.base10;
         bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr3;
-        bv.realType!float = 22.86;
-        debug writefln("float: %(%02X %)", bv.value);
-        debug writefln("float: %s", cast(char[]) bv.value[1 .. $]);
+        bv.base10RealShouldShowPlusSignIfPositive = false;
+
+        // Decimal + trailing zeros are not added if not necessary.
+        bv.realType!float = 22.0;
+        assert(cast(string) (bv.value[1 .. $]) == "2.200000E+01");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
+        bv.realType!double = 22.0;
+        assert(cast(string) (bv.value[1 .. $]) == "2.200000000000E+01");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
+
+        // Plus sign appears before positive numbers.
+        bv.base10RealShouldShowPlusSignIfPositive = true;
+        bv.realType!float = 22.0;
+        assert(cast(string) (bv.value[1 .. $]) == "+2.200000E+01");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
+        bv.realType!double = 22.0;
+        assert(cast(string) (bv.value[1 .. $]) == "+2.200000000000E+01");
+        assert(approxEqual(bv.realType!float, 22.0));
+        assert(approxEqual(bv.realType!double, 22.0));
+
+        // Decimal + trailing zeros are added if necessary.
+        bv.realType!float = 22.123;
+        assert(cast(string) (bv.value[1 .. $]) == "+2.212300E+01");
+        assert(approxEqual(bv.realType!float, 22.123));
+        assert(approxEqual(bv.realType!double, 22.123));
+        bv.realType!double = 22.123;
+        assert(cast(string) (bv.value[1 .. $]) == "+2.212300000000E+01");
+        assert(approxEqual(bv.realType!float, 22.123));
+        assert(approxEqual(bv.realType!double, 22.123));
+        
+        // Negative numbers are encoded correctly.
+        bv.realType!float = -22.123;
+        assert(cast(string) (bv.value[1 .. $]) == "-2.212300E+01");
+        assert(approxEqual(bv.realType!float, -22.123));
+        assert(approxEqual(bv.realType!double, -22.123));
+        bv.realType!double = -22.123;
+        assert(cast(string) (bv.value[1 .. $]) == "-2.212300000000E+01");
+        assert(approxEqual(bv.realType!float, -22.123));
+        assert(approxEqual(bv.realType!double, -22.123));
+
+        // Small positive numbers are encoded correctly.
+        bv.realType!float = 0.123;     
+        assert(cast(string) (bv.value[1 .. $]) == "+1.230000E-01");
+        assert(approxEqual(bv.realType!float, 0.123));
+        assert(approxEqual(bv.realType!double, 0.123));
+        bv.realType!double = 0.123;
+        assert(cast(string) (bv.value[1 .. $]) == "+1.230000000000E-01");
+        assert(approxEqual(bv.realType!float, 0.123));
+        assert(approxEqual(bv.realType!double, 0.123));
+
+        // Small negative numbers are encoded correctly.
+        bv.realType!float = -0.123;
+        assert(cast(string) (bv.value[1 .. $]) == "-1.230000E-01");
+        assert(approxEqual(bv.realType!float, -0.123));
+        assert(approxEqual(bv.realType!double, -0.123));
+        bv.realType!double = -0.123;
+        assert(cast(string) (bv.value[1 .. $]) == "-1.230000000000E-01");
+        assert(approxEqual(bv.realType!float, -0.123));
+        assert(approxEqual(bv.realType!double, -0.123));
     }
 
     // TODO: Review, test, and mark as @trusted
@@ -2377,7 +2739,12 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         BERValue bv = new BERValue();
         bv.numericString = "1234567890";
         assert(bv.numericString == "1234567890");
+        bv.numericString = " ";
+        assert(bv.numericString == " ");
+        bv.numericString = "";
+        assert(bv.numericString == "");
         assertThrown!ASN1InvalidValueException(bv.numericString = "hey hey");
+        assertThrown!ASN1InvalidValueException(bv.numericString = "12345676789A");
     }
 
     /**
@@ -2434,6 +2801,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         BERValue bv = new BERValue();
         bv.printableString = "1234567890 asdfjkl";
         assert(bv.printableString == "1234567890 asdfjkl");
+        bv.printableString = " ";
+        assert(bv.printableString == " ");
+        bv.printableString = "";
+        assert(bv.printableString == "");
         assertThrown!ASN1InvalidValueException(bv.printableString = "\t");
         assertThrown!ASN1InvalidValueException(bv.printableString = "\n");
         assertThrown!ASN1InvalidValueException(bv.printableString = "\0");
@@ -2705,6 +3076,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Decodes an ASCII string that contains only characters between and 
         including 0x20 and 0x75.
 
+        Deprecated, according to page 182 of the Dubuisson book.
+
         Sources:
             $(LINK2 ,
                 ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
@@ -2734,6 +3107,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Encodes an ASCII string that may contain only characters between and 
         including 0x20 and 0x75.
 
+        Deprecated, according to page 182 of the Dubuisson book.
+
         Sources:
             $(LINK2 ,
                 ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
@@ -2757,13 +3132,16 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         this.value = cast(ubyte[]) value;
     }
 
-    ///
     @system
     unittest
     {
         BERValue bv = new BERValue();
         bv.graphicString = "Nitro dubs & T-Rix";
         assert(bv.graphicString == "Nitro dubs & T-Rix");
+        bv.graphicString = " ";
+        assert(bv.graphicString == " ");
+        bv.graphicString = "";
+        assert(bv.graphicString == "");
         assertThrown!ASN1InvalidValueException(bv.graphicString = "\xD7");
         assertThrown!ASN1InvalidValueException(bv.graphicString = "\t");
         assertThrown!ASN1InvalidValueException(bv.graphicString = "\r");
@@ -2818,8 +3196,30 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         this.value = cast(ubyte[]) value;
     }
 
+    @system
+    unittest
+    {
+        BERValue bv = new BERValue();
+        bv.visibleString = "hey hey";
+        assert(bv.visibleString == "hey hey");
+        bv.visibleString = " ";
+        assert(bv.visibleString == " ");
+        bv.visibleString = "";
+        assert(bv.visibleString == "");
+        assertThrown!ASN1InvalidValueException(bv.visibleString = "\xD7");
+        assertThrown!ASN1InvalidValueException(bv.visibleString = "\t");
+        assertThrown!ASN1InvalidValueException(bv.visibleString = "\r");
+        assertThrown!ASN1InvalidValueException(bv.visibleString = "\n");
+        assertThrown!ASN1InvalidValueException(bv.visibleString = "\b");
+        assertThrown!ASN1InvalidValueException(bv.visibleString = "\v");
+        assertThrown!ASN1InvalidValueException(bv.visibleString = "\f");
+        assertThrown!ASN1InvalidValueException(bv.visibleString = "\0");
+    }
+
     /**
         Decodes a string containing only ASCII characters.
+
+        Deprecated, according to page 182 of the Dubuisson book.
 
         Returns: a string.
         Throws:
@@ -2840,6 +3240,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
     /**
         Encodes a string containing only ASCII characters.
+
+        Deprecated, according to page 182 of the Dubuisson book.
 
         Throws:
             ASN1InvalidValueException = if any enecoded character is not ASCII.
