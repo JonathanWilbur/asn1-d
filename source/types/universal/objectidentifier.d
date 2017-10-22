@@ -1,363 +1,203 @@
 module types.universal.objectidentifier;
 import asn1;
-// import types.types : ASN1UniversalType, ASN1UniversalTypeTag;
 import types.oidtype;
-import types.universal.objectdescriptor;
-import std.traits : isIntegral, isUnsigned;
+import std.array : appender, Appender;
 
-alias ASN1OIDException = ASN1ObjectIdentifierException;
-alias ASN1ObjectIDException = ASN1ObjectIdentifierException;
-class ASN1ObjectIdentifierException : ASN1Exception
+///
+public alias OIDException = ObjectIdentifierException;
+///
+public alias ObjectIDException = ObjectIdentifierException;
+///
+public
+class ObjectIdentifierException : ASN1Exception
 {
     import std.exception : basicExceptionCtors;
     mixin basicExceptionCtors;
 }
 
+///
+public alias OID = ObjectIdentifier;
+///
+public alias ObjectID = ObjectIdentifier;
 /**
     A class for Object Identifiers, that supports object descriptors and various
     output formatting.
 */
-public alias OID = ObjectIdentifier;
-public alias ObjectID = ObjectIdentifier;
 public class ObjectIdentifier
 {
-
     import std.conv : text;
-    import std.algorithm.searching : canFind;
-    import std.algorithm.comparison : min;
 
-    // override public @property
-    // ASN1UniversalTypeTag typeTag()
-    // {
-    //     return ASN1UniversalTypeTag.objectidentifier; // 0x06
-    // }
+    static public bool showDescriptors = true;
+    immutable public OIDNode[] nodes;
 
-    public bool showDescriptors = true; //TODO
-    public size_t nodeLengthLimit = 64; //TODO
-
-    private OIDNode[] _nodes = [];
-    @property public OIDNode[] nodes()
+    /// Returns: the number of nodes in the OID.
+    public @property @safe
+    size_t length() const
     {
-        return this._nodes;
+        return this.nodes.length;
     }
 
     /**
-        Constructor for OID.
+        Constructor for an Object Identifier
+
         Params:
-            oidNumbers = An array of any integers of any unsigned integral type
-                representing the sequence of node numbers that constitute the
-                Object Identifier
-        Returns: An ObjectIdentifier with no descriptors.
-        Throws:
-            ASN1ObjectIdentifierException if no numbers are provided
-            ASN1ObjectIdentifierException if too many numbers are provided
-            ASN1ObjectIdentifierException if the first number is not 0, 1, or 2
-            ASN1ObjectIdentifierException if the second number is greater than 39
-    */
-    public @safe
-    this(T)(T[] oidNumbers ...)
-    if (isIntegral!T && isUnsigned!T)
-    {
-        if (oidNumbers.length == 0u)
-            throw new ASN1ObjectIdentifierException
-            ("No numbers provided to ObjectIdenifier constructor.");
-
-        if (oidNumbers.length > this.nodeLengthLimit)
-            throw new ASN1ObjectIdentifierException
-            ("Object identifier's length exceeded the configured length limit.");
-
-        if (!([0u,1u,2u].canFind(oidNumbers[0])))
-            throw new ASN1ObjectIdentifierException
-            ("First object identifier node number can only be 0, 1, or 2.");
-
-        if (oidNumbers.length > 1u && oidNumbers[1] > 39u)
-            throw new ASN1ObjectIdentifierException
-            ("Second object identifier node number cannot be greater than 39.");
-
-        foreach (number; oidNumbers)
-        {
-            this._nodes ~= OIDNode(number);
-        }
-    }
-
-    /**
-        Constructor for OID
-        Params:
-            oidnodes = An array of OIDNodes
+            numbers = an array of unsigned integer representing the Object Identifier
         Returns: An OID object
         Throws:
-            OIDLengthException if number of oidnodes (length of OID) is negative
-            or greater than 64
+            OIDException = if fewer than three numbers are provided, or if the
+                first number is not 0, 1, or 2, or if the second number is 
+                greater than 39.
     */
-    this(OIDNode[] nodes ...)
+    public @system
+    this(size_t[] numbers ...)
     {
-        if (nodes.length == 0)
-            throw new ASN1ObjectIdentifierException
-            ("No nodes provided to ObjectIdenifier constructor.");
+        if (numbers.length < 3u)
+            throw new OIDException
+            ("At least three nodes must be provided to ObjectIdenifier constructor.");
 
-        if (nodes.length > this.nodeLengthLimit)
-            throw new ASN1ObjectIdentifierException
-            ("Object identifier's length exceeded the configured length limit.");
-
-        if (!([0,1,2].canFind(nodes[0].number)))
-            throw new ASN1ObjectIdentifierException
+        if ((numbers[0] != 0) && (numbers[0] != 1) && (numbers[0] != 2))
+            throw new OIDException
             ("First object identifier node number can only be 0, 1, or 2.");
 
-        if (nodes.length > 1 && nodes[1].number > 39)
-            throw new ASN1ObjectIdentifierException
+        if (numbers[1] > 39)
+            throw new OIDException
             ("Second object identifier node number cannot be greater than 39.");
 
-        this._nodes = nodes;
-    }
-
-    // //NOTE: This ignores the descriptors applied to each node.
-    // override bool opEquals(ObjectIdentifier oid)
-    // {
-    //     if (this._nodes.length != oid.length) return false;
-    //     ulong[] oidNumbers = oid.numericArray();
-    //     for (int i; i < oid.length; i++)
-    //     {
-    //         if (this._nodes[i].number != oidNumbers[i]) return false;
-    //     }
-    //     return true;
-    // }
-    //
-    // //NOTE: This ignores the descriptors applied to each node.
-    // override bool opEquals(T)(T[] numbers)
-    // if (isIntegral!T && isUnsigned!T)
-    // {
-    //     if (this._nodes.length != numbers.length) return false;
-    //     for (int i; i < numbers.length; i++)
-    //     {
-    //         if (this._nodes[i].number != numbers[i]) return false;
-    //     }
-    //     return true;
-    // }
-    //
-    // //REVIEW: I am not sure what the return value is supposed to mean.
-    // //NOTE: This ignores the descriptors applied to each node.
-    // override int opCmp(ObjectIdentifier oid)
-    // {
-    //     ulong[] oidNumbers = oid.numericArray();
-    //     size_t comparableLength = min(this._nodes.length, oid.length);
-    //     for (int i; i < comparableLength; i++)
-    //     {
-    //         if (this._nodes[i].number < oidNumbers[i]) return -1;
-    //         if (this._nodes[i].number > oidNumbers[i]) return 1;
-    //     }
-    //     return 0;
-    // }
-    //
-    // //REVIEW: I am not sure what the return value is supposed to mean.
-    // //NOTE: This ignores the descriptors applied to each node.
-    // override int opCmp(T)(T[] numbers)
-    // if (isIntegral!T && isUnsigned!T)
-    // {
-    //     size_t comparableLength = min(this._nodes.length, numbers.length);
-    //     for (int i; i < comparableLength; i++)
-    //     {
-    //         if (this._nodes[i].number < numbers[i]) return -1;
-    //         if (this._nodes[i].number > numbers[i]) return 1;
-    //     }
-    //     return 0;
-    // }
-
-    void opIndexAssign(T)(T value, size_t index)
-    if (isIntegral!T && isUnsigned!T)
-    in
-    {
-        assert(index < this._nodes.length); // Also checks that length != 0
-    }
-    body
-    {
-        if (index == 0)
+        Appender!(OIDNode[]) nodes = appender!(OIDNode[]);
+        foreach (number; numbers)
         {
-            if ([0,1,2].canFind(value))
-            {
-                this._nodes[0] = OIDNode(value);
-            }
-            else
-            {
-                throw new ASN1ObjectIdentifierException
-                ("First object identifier node number can only be 0, 1, or 2.");
-            }
+            nodes.put(OIDNode(number));
         }
-        else if (index == 1)
+
+        this.nodes = cast(immutable (OIDNode[])) nodes.data;
+    }
+
+
+    /**
+        Constructor for an Object Identifier
+        
+        Params:
+            nodes = An array of OIDNodes
+        Returns: An OID object
+        Throws:
+            OIDException = if fewer than three nodes are provided, or if the
+                first node is not 0, 1, or 2, or if the second node is greater
+                than 39.
+    */
+    public @safe
+    this(immutable OIDNode[] nodes ...)
+    {
+        if (nodes.length < 3u)
+            throw new OIDException
+            ("At least three nodes must be provided to ObjectIdenifier constructor.");
+
+        if ((nodes[0].number != 0) && (nodes[0].number != 1) && (nodes[0].number != 2))
+            throw new OIDException
+            ("First object identifier node number can only be 0, 1, or 2.");
+
+        if (nodes[1].number > 39)
+            throw new OIDException
+            ("Second object identifier node number cannot be greater than 39.");
+
+        this.nodes = nodes;
+    }
+
+    override public @system
+    bool opEquals(Object other) const
+    {
+        OID that = cast(OID) other;
+        if (that is null) return false;
+        if (this.nodes.length != that.nodes.length) return false;
+        for (ptrdiff_t i = 0; i < this.nodes.length; i++)
         {
-            if (value < 40)
-            {
-                this._nodes[1] = OIDNode(value);
-            }
-            else
-            {
-                throw new ASN1ObjectIdentifierException
-                ("Second object identifier node number cannot be greater than 39.");
-            }
+            if (this.nodes[i].number != that.nodes[i].number) return false;
         }
-        else
-        {
-            this._nodes[index] = OIDNode(value);
-        }
+        return true;
     }
 
-    void opIndexAssign(ObjectDescriptor desc, size_t index)
-    in
+    /**
+        Returns: the OIDNode at the specified index.
+        Throws:
+            RangeError = if invalid index specified.
+    */
+    public @safe
+    OIDNode opIndex(ptrdiff_t index) const
     {
-        assert(index < this._nodes.length); // Also checks that length != 0
-    }
-    body
-    {
-        this._nodes[index].descriptor = desc;
-    }
-
-    void opOpAssign(string op)(OIDNode[] ons ...)
-    in
-    {
-        assert(this._nodes.length >= 1);
-    }
-    body
-    {
-        if (ons.length == 0) return;
-
-        if (ons.length + this._nodes.length > this.nodeLengthLimit)
-            throw new ASN1ObjectIdentifierException
-            ("Object identifier's length exceeded the configured length limit.");
-
-        static if (op == "~")
-        {
-            if (this._nodes.length == 1)
-            {
-                if (ons[0].number < 40)
-                {
-                    this._nodes ~= ons;
-                }
-                else
-                {
-                    throw new ASN1ObjectIdentifierException
-                    ("Second object identifier node number cannot be greater than 39.");
-                }
-            }
-            else
-            {
-                this._nodes ~= ons;
-            }
-        }
-        else static assert(0, "Operator "~op~" not implemented");
+        return this.nodes[index];
     }
 
-    public OIDNode opIndex(size_t index)
+    /**
+        Returns: a range of OIDNodes from the OID.
+        Throws:
+            RangeError = if invalid indices are specified.
+    */
+    public @system
+    OIDNode[] opSlice(ptrdiff_t index1, ptrdiff_t index2) const
     {
-        return this._nodes[index];
+        return cast(OIDNode[]) this.nodes[index1 .. index2];
     }
 
-    public OIDNode[] opSlice(size_t index1, size_t index2)
+    /**
+        Returns: the length of the OID.
+    */
+    public @safe nothrow
+    size_t opDollar() const
     {
-        return this._nodes[index1 .. index2];
-    }
-
-    // public size_t opDollar(size_t argumentPosition)()
-    // {
-    //     static if (pos == 0)
-    //         return width;
-    //     else
-    //         return height;
-    // }
-
-    public size_t opDollar()
-    {
-        return this._nodes.length;
+        return this.nodes.length;
     }
 
     /**
         Returns: The descriptor at the specified index.
-    */
-    public ObjectDescriptor descriptor(size_t index)
-    {
-        return this._nodes[index].descriptor;
-    }
-
-    /**
-        Supplies a node descriptor for a node at a specified index in the OID
-        Params:
-            index = an integer specifying an index of the node you wish to change
-            descriptor = the actual text that you want associated with a node.
-                This must be composed of only
-                $(LINK2 https://en.wikipedia.org/wiki/Graphic_character, Graphic Characters).
         Throws:
-            RangeError if the node addressed is non-existent or negative.
-            OIDDescriptorException if the descriptor is too long or non graphical.
+            RangeError = if invalid index specified.
     */
-    public void descriptor(T)(T index, ObjectDescriptor descriptor)
-    if (isIntegral!T && isUnsigned!T)
+    public @safe
+    string descriptor(size_t index) const
     {
-        this._nodes[index].descriptor = descriptor;
+        return this.nodes[index].descriptor;
     }
 
-    /**
-        Returns: an array of all descriptors in order
-    */
-    @property public ObjectDescriptor[] descriptors()
-    {
-        ObjectDescriptor[] ret;
-        foreach(node; this._nodes)
-        {
-            ret ~= node.descriptor;
-        }
-        return ret;
-    }
-
-    /**
-        Supplies multiple descriptors for nodes in the OID
-        Params:
-            descriptors = descriptors for each node in order
-        Throws:
-            ASN1ObjectIdentifierException if too many descriptors provided.
-    */
-    @property public void descriptors(ObjectDescriptor[] descriptors)
-    {
-        if (descriptors.length > this._nodes.length)
-            throw new ASN1ObjectIdentifierException("Too many descriptors.");
-
-        for (int i = 0; i < descriptors.length; i++)
-        {
-            this._nodes[i].descriptor = descriptors[i];
-        }
-    }
-
+    ///
+    public alias numbers = numericArray;
     /**
         Returns:
-            an array of ulongs representing the dot-delimited sequence of
-            integers that constitute the numeric OID
+            an array of $(D size_t)s representing the dot-delimited sequence of
+            integers that constitute the numeric OID.
     */
-    public @property @safe
-    ulong[] numericArray()
+    public @property @safe nothrow
+    size_t[] numericArray() const
     {
         ulong[] ret;
-        foreach(node; this._nodes)
+        ret.length = this.nodes.length;
+        for (ptrdiff_t i = 0; i < this.nodes.length; i++)
         {
-            ret ~= node.number;
+            ret[i] = this.nodes[i].number;
         }
         return ret;
     }
 
+    ///
+    public alias asn1Notation = abstractSyntaxNotation1Notation;
     /**
         Returns: the OID in ASN.1 Notation
     */
-    @property public string asn1Notation()
+    public @property @safe nothrow
+    string abstractSyntaxNotation1Notation() const
     {
-        string ret = "{";
-        foreach(node; this._nodes)
+        Appender!string ret = appender!string();
+        ret.put("{");
+        foreach(node; this.nodes)
         {
-            if (this.showDescriptors && node.descriptor.toString() != "")
+            if (this.showDescriptors && node.descriptor != "")
             {
-                ret ~= (node.descriptor.toString() ~ '(' ~ text(node.number) ~ ") ");
+                ret.put(node.descriptor ~ '(' ~ text(node.number) ~ ") ");
             }
             else
             {
-                ret ~= (text(node.number) ~ ' ');
+                ret.put(text(node.number) ~ ' ');
             }
         }
-        return (ret[0 .. $-1] ~ '}');
+        return (ret.data[0 .. $-1] ~ '}');
     }
 
     /**
@@ -365,48 +205,59 @@ public class ObjectIdentifier
             the OID as a dot-delimited string, where all nodes with descriptors
             are represented as descriptors instead of numbers
     */
-    @property public string dotNotation()
+    public @property @safe nothrow
+    string dotNotation() const
     {
-        string ret;
-        foreach (node; this._nodes)
+        Appender!string ret = appender!string();
+        foreach (node; this.nodes)
         {
-            if (this.showDescriptors && node.descriptor.toString() != "")
+            if (this.showDescriptors && node.descriptor != "")
             {
-                ret ~= node.descriptor.toString();
+                ret.put(node.descriptor);
             }
             else
             {
-                ret ~= text(node.number);
+                ret.put(text(node.number));
             }
-            ret ~= '.';
+            ret.put('.');
         }
-        return ret[0 .. $-1];
+        return ret.data[0 .. $-1];
     }
 
+    ///
+    public alias iriNotation = internationalizedResourceIdentifierNotation;
+    ///
+    public alias uriNotation = internationalizedResourceIdentifierNotation;
+    ///
+    public alias uniformResourceIdentifierNotation = internationalizedResourceIdentifierNotation;
     /**
         Returns:
             the OID as a forward-slash-delimited string (as one might expect in
             a URI / IRI path), where all nodes with descriptors are represented
             as descriptors instead of numbers
     */
-    @property public string iriNotation()
+    public @property @system
+    string internationalizedResourceIdentifierNotation() const
     {
-        import std.uri : encodeComponent;
-        string ret = "/";
-        foreach (node; this._nodes)
+        import std.uri : encodeComponent; // @system
+        Appender!string ret = appender!string();
+        ret.put("/");
+        foreach (node; this.nodes)
         {
-            if (this.showDescriptors && node.descriptor.toString() != "")
+            if (this.showDescriptors && node.descriptor != "")
             {
-                ret ~= (encodeComponent(node.descriptor.toString()) ~ '/');
+                ret.put(encodeComponent(node.descriptor) ~ '/');
             }
             else
             {
-                ret ~= (text(node.number) ~ '/');
+                ret.put(text(node.number) ~ '/');
             }
         }
-        return ret[0 .. $-1];
+        return ret.data[0 .. $-1];
     }
 
+    ///
+    public alias urnNotation = uniformResourceNameNotation;
     /**
         Returns:
             the OID as a URN, where all nodes of the OID are translated to a
@@ -415,31 +266,16 @@ public class ObjectIdentifier
         See_Also:
             $(LINK2 https://www.ietf.org/rfc/rfc3061.txt, RFC 3061)
     */
-    @property public string urnNotation()
+    public @property @safe nothrow
+    string uniformResourceNameNotation() const
     {
-        string ret = "urn:oid:";
-        foreach (node; this._nodes)
+        Appender!string ret = appender!string();
+        ret.put("urn:oid:");
+        foreach (node; this.nodes)
         {
-            ret ~= (text(node.number) ~ ':');
+            ret.put(text(node.number) ~ ':');
         }
-        return ret[0 .. $-1];
+        return ret.data[0 .. $-1];
     }
-
-    /**
-        Returns: the number of nodes in the OID.
-    */
-    @property public size_t length()
-    {
-        return this._nodes.length;
-    }
-
-    //NOTE: Having trouble compiling with this._nodes[#].number for some reason.
-    // invariant
-    // {
-    //     assert(this._nodes.length > 0, "OID length is zero!");
-    //     assert([0,1,2].canFind((this.nodes)[0].number), "OID node #1 is not 0, 1, or 2!");
-    //     if (this._nodes.length > 1)
-    //         assert(this._nodes[1].number < 40, "OID node #2 is greater than 39!");
-    // }
 
 }

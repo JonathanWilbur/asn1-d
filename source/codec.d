@@ -9,6 +9,7 @@
 module codec;
 public import asn1;
 public import types.alltypes;
+public import types.oidtype;
 // TODO: Remove dependency on std.outbuffer.
 package import std.algorithm.mutation : reverse;
 package import std.algorithm.searching : canFind;
@@ -248,7 +249,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         )
     */
     final public @property
-    bool universal()
+    bool universal() const
     {
         return ((this.type & 0xC) == 0x00);
     }
@@ -257,7 +258,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         Whether the type is application-specific.
     */
     final public @property
-    bool applicationSpecific()
+    bool applicationSpecific() const
     {
         return ((this.type & 0xC) == 0x40);
     }
@@ -266,21 +267,21 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         Whether the type tag specifies an index within a SEQUENCE or CHOICE.
     */
     final public @property
-    bool contextSpecific()
+    bool contextSpecific() const
     {
         return ((this.type & 0xC) == 0x80);
     }
 
     /// I don't know what this even means.
     final public @property
-    bool privatelySpecific()
+    bool privatelySpecific() const
     {
         return ((this.type & 0xC) == 0x40);
     }
 
     /// The length of the value in octets
     final public @property @safe nothrow
-    size_t length()
+    size_t length() const
     {
         return this.value.length;
     }
@@ -291,7 +292,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     // Convenience
     // pragma(inline, true);
     final private
-    void throwIfEmptyValue(X : ASN1CodecException)()
+    void throwIfEmptyValue(X : ASN1CodecException)() const
     {
         if (this.length != 1) throw new X ("Value bytes was zero");
     }
@@ -308,7 +309,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
 
     /// Decodes a boolean
     abstract public @property
-    bool boolean();
+    bool boolean() const;
 
     /// Encodes a boolean
     abstract public @property
@@ -316,7 +317,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
 
     /// Decodes an integer
     abstract public @property
-    T integer(T)() if (isIntegral!T && isSigned!T);
+    T integer(T)() const if (isIntegral!T && isSigned!T);
 
     /// Encodes an integer
     abstract public @property
@@ -331,14 +332,14 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     // void bitString(BitArray value);
 
     abstract public @property
-    bool[] bitString();
+    bool[] bitString() const;
 
     abstract public @property
     void bitString(bool[] value);
 
     /// Decodes a ubyte[] array
     abstract public @property
-    ubyte[] octetString();
+    ubyte[] octetString() const;
 
     /// Encodes a ubyte[] array
     abstract public @property
@@ -348,7 +349,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     public alias oid = objectIdentifier;
     /// Decodes an Object Identifier
     abstract public @property
-    OID objectIdentifier();
+    OID objectIdentifier() const;
 
     /// Encodes an Object Identifier
     abstract public @property
@@ -373,7 +374,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
     */
     abstract public @property
-    string objectDescriptor();
+    string objectDescriptor() const;
 
     /**
         Encodes an ObjectDescriptor, which is a string consisting of only
@@ -420,7 +421,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         will be context-specific and numbered from 0 to 2.
     */
     abstract public @property
-    External external();
+    External external() const;
 
     /**
         Encodes an EXTERNAL, which is a constructed data type, defined in 
@@ -451,7 +452,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     // TODO: Make string variants
     /// Encodes a floating-point number
     abstract public @property
-    T realType(T)() if (is(T == float) || is(T == double));
+    T realType(T)() const if (is(T == float) || is(T == double));
 
     /// Encodes a floating-point number
     abstract public @property
@@ -459,7 +460,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
 
     /// Encodes an integer that represents an ENUMERATED value
     abstract public @property
-    T enumerated(T)() if (isIntegral!T && isSigned!T);
+    T enumerated(T)() const if (isIntegral!T && isSigned!T);
 
     /// Decodes an integer that represents an ENUMERATED value
     abstract public @property
@@ -497,7 +498,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         will be context-specific and numbered from 0 to 5.
     */
     abstract public @property
-    EmbeddedPDV embeddedPresentationDataValue();
+    EmbeddedPDV embeddedPresentationDataValue() const;
 
     /**
         Encodes an EMBEDDED PDV, which is a constructed data type, defined in 
@@ -535,21 +536,23 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     public alias utf8String = unicodeTransformationFormat8String;
     /// Decodes a UTF-8 String
     abstract public @property
-    string unicodeTransformationFormat8String();
+    string unicodeTransformationFormat8String() const;
 
     /// Encodes a UTF-8 String
     abstract public @property
     void unicodeTransformationFormat8String(string value);
 
     ///
+    public alias roid = relativeObjectIdentifier;
+    ///
     public alias relativeOID = relativeObjectIdentifier;
     /// Decodes a portion of an Object Identifier
     abstract public @property
-    RelativeOID relativeObjectIdentifier();
+    OIDNode[] relativeObjectIdentifier() const;
 
     /// Encodes a porition of an Object Identifier
     abstract public @property
-    void relativeObjectIdentifier(RelativeOID value);
+    void relativeObjectIdentifier(OIDNode[] value);
 
     /**
         Decodes an array of elements.
@@ -561,7 +564,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
             child class as a template.
     */
     abstract public @property
-    T[] sequence(this T)();
+    T[] sequence(this T)() const;
 
     /**
         Encodes an array of elements.
@@ -585,7 +588,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
             child class as a template.
     */
     abstract public @property
-    T[] set(this T)();
+    T[] set(this T)() const;
 
     /**
         Encodes an array of elements.
@@ -604,7 +607,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         0 - 9 and space.
     */
     abstract public @property
-    string numericString();
+    string numericString() const;
 
     /**
         Encodes a string, where the characters of the string are limited to
@@ -619,7 +622,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         forward slash, colon, equals, and question mark.
     */
     abstract public @property
-    string printableString();
+    string printableString() const;
 
     /**
         Encodes a string that will only contain characters a-z, A-Z, 0-9,
@@ -633,14 +636,14 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     public alias t61String = teletexString;
     /// Decodes bytes representing the T.61 Character Set
     abstract public @property
-    ubyte[] teletexString();
+    ubyte[] teletexString() const;
 
     /// Encodes bytes representing the T.61 Character Set
     abstract public @property
     void teletexString(ubyte[] value);
 
     abstract public @property
-    ubyte[] videotexString();
+    ubyte[] videotexString() const;
 
     abstract public @property
     void videotexString(ubyte[] value);
@@ -649,7 +652,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     public alias ia5String = internationalAlphabetNumber5String;
     /// Decodes a string of ASCII characters
     abstract public @property
-    string internationalAlphabetNumber5String();
+    string internationalAlphabetNumber5String() const;
 
     /// Encodes a string of ASCII characters
     abstract public @property
@@ -661,7 +664,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     public alias utcTime = coordinatedUniversalTime;
     /// Decodes a DateTime
     abstract public @property
-    DateTime coordinatedUniversalTime();
+    DateTime coordinatedUniversalTime() const;
 
     /// Encodes a DateTime
     abstract public @property
@@ -669,7 +672,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
 
     /// Decodes a DateTime
     abstract public @property
-    DateTime generalizedTime();
+    DateTime generalizedTime() const;
 
     /// Encodes a DateTime
     abstract public @property
@@ -689,7 +692,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     */
     deprecated
     abstract public @property
-    string graphicString();
+    string graphicString() const;
 
     /**
         Encodes an ASCII string that contains only characters between and 
@@ -713,7 +716,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         GraphicalString.)
     */
     abstract public @property
-    string visibleString();
+    string visibleString() const;
 
     /**
         Encodes a string that only contains characters between and including
@@ -735,7 +738,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
 
     /// Decodes a string of UTF-32 characters
     abstract public @property
-    dstring universalString();
+    dstring universalString() const;
 
     /// Encodes a string of UTF-32 characters
     abstract public @property
@@ -769,7 +772,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
         will be context-specific and numbered from 0 to 5.
     */
     abstract public @property
-    CharacterString characterString();
+    CharacterString characterString() const;
 
     /**
         Encodes a CHARACTER STRING, which is a constructed data type, defined
@@ -805,7 +808,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     public alias bmpString = basicMultilingualPlaneString;
     /// Decodes a string of UTF-16 characters
     abstract public @property
-    wstring basicMultilingualPlaneString();
+    wstring basicMultilingualPlaneString() const;
 
     /// Encodes a string of UTF-16 characters
     abstract public @property

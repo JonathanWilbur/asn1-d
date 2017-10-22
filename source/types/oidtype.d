@@ -1,64 +1,53 @@
 module types.oidtype;
-import types.universal.objectdescriptor;
-import std.traits : isIntegral, isUnsigned;
+import asn1;
+import codec : ASN1InvalidValueException;
+import std.ascii : isGraphical;
 
+///
+public alias OIDNode = ObjectIdentifierNode;
 /**
     A struct representing a single node in an OID, which has a mandatory
     number and an optional descriptor.
 */
-public struct OIDNode
+public
+struct ObjectIdentifierNode
 {
-    /**
-        The constructor for OIDNode
-        Returns: An OIDNode
-    */
-    public @safe
-    this(T)(T number, ObjectDescriptor descriptor = null)
-    if (isIntegral!T && isUnsigned!T)
+    immutable public size_t number;
+    immutable public string descriptor;
+
+    public
+    bool opEquals(const OIDNode other) const
+    {
+        return (this.number == other.number);
+    }
+
+    public
+    int opCmp(ref const OIDNode other) const
+    {
+        return cast(int) (this.number - other.number);
+    }
+
+    public @safe @nogc nothrow
+    this(in size_t number)
     {
         this.number = number;
+        this.descriptor = "";
+    }
+
+    ///
+    public @system
+    this(in size_t number, in string descriptor)
+    {
+        foreach (character; descriptor)
+        {
+            if ((!character.isGraphical) && (character != ' '))
+            {
+                throw new ASN1InvalidValueException
+                    ("Object descriptor can only contain graphical characters. '"
+                    ~ character ~ "' is not graphical.");
+            }
+        }
+        this.number = number;
         this.descriptor = descriptor;
-    }
-
-    private ulong _number;
-    private ObjectDescriptor _descriptor;
-
-    /**
-        Gets the number associated with this OIDNode
-        Returns: the unsigned long associated with this OIDNode
-    */
-    public @property @safe
-    ulong number()
-    {
-        return this._number;
-    }
-    
-    /**
-        Sets the number associated with this OIDNode, casting it as a ulong
-        in the process
-    */
-    @property public void number(T)(T number)
-    if (isIntegral!T && isUnsigned!T)
-    {
-        this._number = cast(ulong) number;
-    }
-
-    /**
-        Gets the descriptor associated with this OIDNode
-        Returns: the ObjectDescriptor associated with this OIDNode
-    */
-    public @property @safe
-    ObjectDescriptor descriptor()
-    {
-        return this._descriptor;
-    }
-    
-    /**
-        Sets the descriptor associated with this OIDNode
-    */
-    public @property @safe
-    void descriptor(ObjectDescriptor descriptor)
-    {
-        this._descriptor = descriptor;
     }
 }

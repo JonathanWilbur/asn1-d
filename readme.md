@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.6.1](http://semver.org/)
+* Version: [0.7.0](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -83,10 +83,12 @@ ready to serve as the basis for others:
   - [ ] Negative unit tests for all string types
 - [x] Add `deprecated` attribute to deprecated types.
 - [ ] Make constructor that takes ref to a `size_t` storing the number of bytes read
-- [ ] Overhaul OID and RelativeOID
-  - [ ] Fix `opCmp`
+- [x] Overhaul OID and RelativeOID
 - [ ] Rename `BERValue` to `BERElement` and `ASN1Value` to `ASN1Element`
 - [ ] `debug` statements
+- [ ] Contracts
+- [x] Make all accessors `const` or `immutable`
+- [ ] Better exception messages
 
 ### Future
 

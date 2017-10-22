@@ -123,7 +123,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     */
     // FIXME: Throw exception if length is invalid.
     override public @property @safe
-    bool boolean()
+    bool boolean() const
     {
         if (this.value.length != 1)
             throw new ASN1ValueSizeException
@@ -177,7 +177,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 to a signed integral type.
     */
     public @property @system
-    T integer(T)()
+    T integer(T)() const
     if (isIntegral!T && isSigned!T)
     {
         /* NOTE:
@@ -406,62 +406,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         assert(bv.integer!long == long.min);
     }
 
-    /**
-        Decodes a BitArray. 
-        
-        The first byte is an unsigned number of the unused bits in the last 
-        byte of the encoded bit array.
-
-        Returns: a std.bitmanip.BitArray.
-        Throws:
-            ASN1InvalidValueException = if the first byte is greater than
-                seven, which indicates more than seven unused bits on the
-                last byte of the BIT STRING, which is obviously 
-                impossible, since a byte has 8 bits.
-    */
-    // NOTE: This has to be @system because BitArray sucks.
-    // override public @property @system
-    // BitArray bitString()
-    // {
-    //     if (this.value[0] > 0x07u)
-    //         throw new ASN1InvalidValueException
-    //         ("Unused bits byte cannot have a value greater than seven.");
-    //     ubyte[] val = this.value[1 .. $];
-    //     while (val.length % size_t.sizeof) val ~= 0x00u;
-    //     return BitArray(val, cast(size_t) (((this.length - 1u) * 8u) - this.value[0]));
-    // }
-
-    /**
-        Encodes a BitArray. 
-        
-        The first byte is an unsigned number of the unused
-        bits in the last byte of the encoded bit array.
-    */
-    // NOTE: This has to be @system because BitArray sucks.
-    // override public @property @system nothrow
-    // void bitString(BitArray value)
-    // {
-    //     // REVIEW: is 0x08u - (value.length % 0x08u) == 0x08u % value.length?
-    //     size_t bitsNeeded = value.length; // value.length is the length in bits, not bytes.
-    //     while (bitsNeeded % 8u) bitsNeeded++; // round up to the nearest byte.
-    //     size_t bytesNeeded = bitsNeeded / 8u;
-    //     ubyte[] valueBytes = cast(ubyte[]) (cast(void[]) value);
-    //     valueBytes.length = bytesNeeded;
-    //     this.value = [ cast(ubyte) (0x08u - (value.length % 0x08u)) ] ~ valueBytes;
-    // }
-
-    ///
-    // @system
-    // unittest
-    // {
-    //     BitArray ba = BitArray([true, false, true, true, false]);
-    //     BERValue bv = new BERValue();
-    //     bv.bitString = ba;
-    //     assert(bv.bitString == ba);
-    // }
-
     override public @property
-    bool[] bitString()
+    bool[] bitString() const
     {
         if (this.value[0] > 0x07u)
             throw new ASN1InvalidValueException
@@ -521,9 +467,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Returns: an unsigned byte array.
     */
     override public @property @safe
-    ubyte[] octetString()
+    ubyte[] octetString() const
     {
-        return this.value;
+        return this.value.dup;
     }
 
     /**
@@ -561,35 +507,43 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     // FIXME: change number sizes to size_t and add overflow checking.
-    override public @property @safe
-    OID objectIdentifier()
+    override public @property @system
+    OID objectIdentifier() const
     {
-        ulong[] oidComponents = [ (this.value[0] / 0x28u), (this.value[0] % 0x28u) ];
-
-        // The loop below breaks the bytes into components.
+        // TODO: Throw if too short
         ubyte[][] components;
+        size_t[] numbers = [ (this.value[0] / 0x28u), (this.value[0] % 0x28u) ];
+        Appender!(OIDNode[]) nodes = appender!(OIDNode[])();
+        
+        // Breaks bytes into groups, where each group encodes one OID number.
         ptrdiff_t lastTerminator = 1;
-        for (int i = 1; i < this.length; i++)
+        for (ptrdiff_t i = 1; i < this.length; i++)
         {
             if (!(this.value[i] & 0x80u))
             {
-                components ~= this.value[lastTerminator .. i+1];
+                components ~= cast(ubyte[]) this.value[lastTerminator .. i+1];
                 lastTerminator = i+1;
             }
         }
 
-        // The loop below converts each array of bytes (component) into a ulong, and appends it.
+        // Converts each group of bytes to a number.
         foreach (component; components)
         {
-            oidComponents ~= 0u;
+            numbers ~= 0u;
             for (ptrdiff_t i = 0; i < component.length; i++)
             {
-                oidComponents[$-1] <<= 7;
-                oidComponents[$-1] |= cast(ulong) (component[i] & 0x7Fu);
+                numbers[$-1] <<= 7;
+                numbers[$-1] |= cast(size_t) (component[i] & 0x7Fu);
             }
         }
+        
+        // Constructs the array of OIDNodes from the array of numbers.
+        foreach (number; numbers)
+        {
+            nodes.put(OIDNode(number));
+        }
 
-        return new OID(oidComponents);
+        return new OID(cast(immutable OIDNode[]) nodes.data);
     }
 
     /**
@@ -612,12 +566,12 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     override public @property @safe
     void objectIdentifier(OID value)
     {
-        ulong[] oidComponents = value.numericArray();
-        if (oidComponents.length == 1) oidComponents ~= 0L; // So the next line does not fail.
-        this.value = [ cast(ubyte) (oidComponents[0] * 40u + oidComponents[1]) ]; //FIXME: This might be suceptable to overflow attacks.
-        if (oidComponents.length > 2)
+        size_t[] numbers = value.numericArray();
+        if (numbers.length == 1) numbers ~= 0u; // So the next line does not fail.
+        this.value = [ cast(ubyte) (numbers[0] * 40u + numbers[1]) ]; //FIXME: This might be suceptable to overflow attacks.
+        if (numbers.length > 2)
         {
-            foreach (x; oidComponents[2 .. $])
+            foreach (x; numbers[2 .. $])
             {
                 ubyte[] encodedOIDComponent;
                 if (x == 0) // REVIEW: Could you make this faster by using if (x < 128)?
@@ -641,13 +595,14 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     }
 
     ///
-    @safe
+    @system
     unittest
     {
         BERValue bv = new BERValue();
-        bv.objectIdentifier = new OID(1u, 30u, 256u, 623485u, 8u);
-        // FIXME: I think this unittest fails without .numericArray because I have not designed opCmp() for OID well.
-        assert(bv.objectIdentifier.numericArray ==  (new OID(1u, 30u, 256u, 623485u, 8u)).numericArray);
+        bv.objectIdentifier = new OID(OIDNode(1u), OIDNode(30u), OIDNode(256u), OIDNode(623485u), OIDNode(8u));
+        // OID x = bv.objectIdentifier;
+        // writefln("%(%d %)", x.numericArray);
+        assert(bv.objectIdentifier == new OID(OIDNode(1u), OIDNode(30u), OIDNode(256u), OIDNode(623485u), OIDNode(8u)));
     }
 
     /**
@@ -674,7 +629,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 outside of 0x20 to 0x7E.
     */
     override public @property @system
-    string objectDescriptor()
+    string objectDescriptor() const
     {
         foreach (character; this.value)
         {
@@ -776,9 +731,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 of EMBEDDED PDV itself is referenced by an out-of-range 
                 context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
     */
-    // NOTE: If integer properties are marked @trusted, this can be @safe
     override public @property @system
-    External external()
+    External external() const
     {
         BERValue[] bvs = this.sequence;
         if (bvs.length < 2 || bvs.length > 3)
@@ -897,7 +851,6 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             ASN1InvalidValueException = if encoded ObjectDescriptor contains
                 invalid characters.
     */
-    // NOTE: If integer properties are marked @trusted, this can be @safe
     override public @property @system
     void external(External value)
     {
@@ -1021,7 +974,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 are set, which would indicate an invalid base.
     */
     public @property @system
-    T realType(T)() if (is(T == float) || is(T == double))
+    T realType(T)() const
+    if (is(T == float) || is(T == double))
     {
         // import std.array : split;
         import std.conv : ConvException, ConvOverflowException, to;
@@ -1055,76 +1009,6 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                     throw new ASN1ValueTooBigException
                     ("Character-encoded REAL could not be decoded to a native floating-point type.");
                 }
-
-                // size_t i;
-                // ptrdiff_t decimalPointIndex = -1;
-                // ptrdiff_t exponentOperatorIndex = -1; // 'e' or 'E'
-
-                // if (chars[0] >= '0' && chars[0] <= '9')
-                // {
-                //     ret = 0.0;
-                // }
-                // else if (chars[0] == '+')
-                // {
-                //     ret = 0.0;
-                //     i++;
-                // }
-                // else if (chars[0] == '.')
-                // {
-                //     ret = 0.0;
-                //     i++;
-                //     decimalPointIndex = 0;
-                // }
-                // else
-                // {
-                //     ret = -0.0;
-                //     i++;
-                // }
-
-                // while (i < chars.length)
-                // {
-                //     if (exponentOperatorEncountered && (chars[i] == 'e' || chars[i] == 'E'))
-                //         throw new BERException
-                //         ("Invalid character-encoded REAL; has two or more 'E's.");
-                //     if (exponentOperatorEncountered && chars[i] == '.')
-                //         throw new BERException
-                //         ("Invalid character-encoded REAL; has two or more '.'s.");
-                // }
-
-                // long mantissa;
-                // try 
-                // {
-                //     mantissa = exponentOperatorEncountered ? 
-                // }
-                // catch (ConvOverflowException)
-                // {
-
-                // }
-                // catch (ConvException ce)
-                // {
-
-                // }
-
-                // switch (this.value[0] & 0b_0011_1111)
-                // {
-                //     case (0b_0000_0001): // NR1
-                //     {
-                //         // 3, -1, +1000
-                //     }
-                //     case (0b_0000_0010): // NR2
-                //     {
-                //         // 3.0, -1.3, -.3
-                //     }
-                //     case (0b_0000_0011): // NR3
-                //     {
-                //         // 3.0E1, 123E+100
-                //     }
-                //     default:
-                //     {
-                //         throw new BERException
-                //         ("Invalid Numeric Representation for REAL selected.");
-                //     }
-                // }
             }
             case 0b_1000_0000u, 0b_1100_0000u: // Binary Encoding
             {
@@ -1965,7 +1849,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 to a signed integral type.
     */
     public @property @system
-    T enumerated(T)()
+    T enumerated(T)() const
     if (isIntegral!T && isSigned!T)
     {
         /* NOTE:
@@ -2235,9 +2119,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 of EMBEDDED PDV itself is referenced by an out-of-range 
                 context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
     */
-    // NOTE: If the integer properties are marked @trusted, this can be @safe.
     override public @property @system
-    EmbeddedPDV embeddedPresentationDataValue()
+    EmbeddedPDV embeddedPresentationDataValue() const
     {
         BERValue[] bvs = this.sequence;
         if (bvs.length < 2 || bvs.length > 3)
@@ -2403,7 +2286,6 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             ASN1InvalidValueException = if encoded ObjectDescriptor contains
                 invalid characters.
     */
-    // NOTE: If the integer properties are marked @trusted, this can be @safe.
     override public @property @system
     void embeddedPresentationDataValue(EmbeddedPDV value)
     {
@@ -2501,7 +2383,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             UTF8Exception if it does not decode correctly.
     */
     override public @property @system
-    string unicodeTransformationFormat8String()
+    string unicodeTransformationFormat8String() const
     {
         return cast(string) this.value;
     }
@@ -2540,35 +2422,43 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     */
     // REVIEW: Can this be nothrow?
     // FIXME: change number sizes to size_t and add overflow checking.
-    override public @property @safe
-    RelativeOID relativeObjectIdentifier()
+    // REVIEW: This could probably be a lot faster if you combine all three loops.
+    override public @property @system
+    OIDNode[] relativeObjectIdentifier() const
     {
-        ulong[] oidComponents = [];
-
-        // The loop below breaks the bytes into components.
         ubyte[][] components;
+        size_t[] numbers = [];
+        Appender!(OIDNode[]) nodes = appender!(OIDNode[])();
+        
+        // Breaks bytes into groups, where each group encodes one OID number.
         ptrdiff_t lastTerminator = 0;
         for (int i = 0; i < this.length; i++)
         {
             if (!(this.value[i] & 0x80u))
             {
-                components ~= this.value[lastTerminator .. i+1];
+                components ~= cast(ubyte[]) this.value[lastTerminator .. i+1];
                 lastTerminator = i+1;
             }
         }
 
-        // The loop below converts each array of bytes (component) into a ulong, and appends it.
+        // Converts each group of bytes to a number.
         foreach (component; components)
         {
-            oidComponents ~= 0u;
+            numbers ~= 0u;
             for (ptrdiff_t i = 0; i < component.length; i++)
             {
-                oidComponents[$-1] <<= 7;
-                oidComponents[$-1] |= cast(ulong) (component[i] & 0x7Fu);
+                numbers[$-1] <<= 7;
+                numbers[$-1] |= cast(size_t) (component[i] & 0x7Fu);
             }
         }
+        
+        // Constructs the array of OIDNodes from the array of numbers.
+        foreach (number; numbers)
+        {
+            nodes.put(OIDNode(number));
+        }
 
-        return new RelativeOID(oidComponents);
+        return nodes.data;
     }
 
     /**
@@ -2587,27 +2477,27 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     */
     // REVIEW: Can this be nothrow?
     // TODO: Remove std.outbuffer dependency
-    // FIXME: change number sizes to size_t and add overflow checking.
+    // FIXME: add overflow checking.
     override public @property @safe
-    void relativeObjectIdentifier(RelativeOID value)
+    void relativeObjectIdentifier(OIDNode[] value)
     {
-        ulong[] oidComponents = value.numericArray();
-        foreach (x; oidComponents)
+        foreach (node; value)
         {
+            size_t number = node.number;
             ubyte[] encodedOIDComponent;
-            if (x == 0u) // REVIEW: Could you make this faster by using if (x < 128)?
+            if (number == 0u) // REVIEW: Could you make this faster by using if (x < 128)?
             {
                 this.value ~= 0x00u;
                 continue;
             }
-            while (x != 0u)
+            while (number != 0u)
             {
                 OutBuffer ob = new OutBuffer();
-                ob.write(x);
+                ob.write(number);
                 ubyte[] compbytes = ob.toBytes();
                 if ((compbytes[0] & 0x80u) == 0u) compbytes[0] |= 0x80u;
                 encodedOIDComponent = compbytes[0] ~ encodedOIDComponent;
-                x >>= 7;
+                number >>= 7;
             }
             encodedOIDComponent[$-1] &= 0x7Fu;
             this.value ~= encodedOIDComponent;
@@ -2615,12 +2505,19 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     }
 
     ///
-    @safe
+    @system
     unittest
     {
         BERValue bv = new BERValue();
-        bv.relativeObjectIdentifier = new RelativeOID(3uL, 5uL, 7uL, 9uL, 4uL);
-        assert(bv.relativeObjectIdentifier.numericArray == [ 3L, 5L, 7L, 9L, 4L ]);
+        OIDNode[] input = [ OIDNode(3), OIDNode(5), OIDNode(7), OIDNode(9) ];
+        bv.roid = input;
+        OIDNode[] output = bv.roid;
+
+        assert(input.length == output.length);
+        for (ptrdiff_t i = 0; i < input.length; i++)
+        {
+            assert(input[i] == output[i]);
+        }
     }
 
     /**
@@ -2634,7 +2531,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 indicated by the length tag.
     */
     public @property @system
-    BERValue[] sequence()
+    BERValue[] sequence() const
     {
         ubyte[] data = this.value.dup;
         BERValue[] result;
@@ -2668,7 +2565,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 indicated by the length tag.
     */
     public @property @system
-    BERValue[] set()
+    BERValue[] set() const
     {
         ubyte[] data = this.value.dup;
         BERValue[] result;
@@ -2701,7 +2598,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 space is encoded.
     */
     override public @property @system
-    string numericString()
+    string numericString() const
     {
         foreach (character; this.value)
         {
@@ -2760,7 +2657,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 encoded.
     */
     override public @property @system
-    string printableString()
+    string printableString() const
     {
         foreach (character; this.value)
         {
@@ -2820,10 +2717,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Returns: an unsigned byte array, where each byte is a T.61 character.
     */
     override public @property @safe nothrow
-    ubyte[] teletexString()
+    ubyte[] teletexString() const
     {
         // TODO: Validation.
-        return this.value;
+        return this.value.dup;
     }
 
     /**
@@ -2851,10 +2748,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Returns: an unsigned byte array.
     */
     override public @property @safe nothrow
-    ubyte[] videotexString()
+    ubyte[] videotexString() const
     {
         // TODO: Validation.
-        return this.value;
+        return this.value.dup;
     }
 
     /**
@@ -2901,7 +2798,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             ASN1InvalidValueException = if any enecoded character is not ASCII.
     */
     override public @property @system
-    string internationalAlphabetNumber5String()
+    string internationalAlphabetNumber5String() const
     {
         string ret = cast(string) this.value;
         foreach (character; ret)
@@ -2981,7 +2878,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     */
     // REVIEW: Is there some kind of exception this can throw?
     override public @property @system
-    DateTime coordinatedUniversalTime()
+    DateTime coordinatedUniversalTime() const
     {
         string dt = (((this.value[0] <= '7') ? "20" : "19") ~ cast(string) this.value);
         return DateTime.fromISOString(dt[0 .. 8].idup ~ "T" ~ dt[8 .. $].idup);
@@ -3035,7 +2932,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     */
     // REVIEW: Is there some kind of exception this can throw?
     override public @property @system
-    DateTime generalizedTime()
+    DateTime generalizedTime() const
     {
         string dt = cast(string) this.value;
         return DateTime.fromISOString(dt[0 .. 8].idup ~ "T" ~ dt[8 .. $].idup);
@@ -3091,7 +2988,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 (including space) is encoded.
     */
     override public @property @system
-    string graphicString()
+    string graphicString() const
     {
         string ret = cast(string) this.value;
         foreach (character; ret)
@@ -3163,7 +3060,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 (including space) is encoded.
     */
     override public @property @system
-    string visibleString()
+    string visibleString() const
     {
         string ret = cast(string) this.value;
         foreach (character; ret)
@@ -3226,7 +3123,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             ASN1InvalidValueException = if any enecoded character is not ASCII.
     */
     override public @property @system
-    string generalString()
+    string generalString() const
     {
         string ret = cast(string) this.value;
         foreach (character; ret)
@@ -3277,7 +3174,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 divisible by four.
     */
     override public @property @system
-    dstring universalString()
+    dstring universalString() const
     {
         version (BigEndian)
         {
@@ -3382,10 +3279,8 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 of CharacterString itself is referenced by an out-of-range 
                 context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
     */
-    // REVIEW: Is this nothrow?
-    // NOTE: if the integer properties are marked @trusted, this can be @safe
     override public @property @system
-    CharacterString characterString()
+    CharacterString characterString() const
     {
         BERValue[] bvs = this.sequence;
         if (bvs.length < 2u || bvs.length > 3u)
@@ -3541,7 +3436,6 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         will be context-specific and numbered from 0 to 5.
     */
     // REVIEW: Is this nothrow?
-    // NOTE: if the integer properties are marked @trusted, this can be @safe
     override public @property @system
     void characterString(CharacterString value)
     {
@@ -3634,7 +3528,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 divisible by two.
     */
     override public @property @system
-    wstring basicMultilingualPlaneString()
+    wstring basicMultilingualPlaneString() const
     {
         version (BigEndian)
         {
@@ -3836,7 +3730,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Returns: type tag, length tag, and value, all concatenated as a ubyte array.
     */
     public @property @system
-    ubyte[] toBytes()
+    ubyte[] toBytes() const
     {
         ubyte[] lengthOctets = [ 0x00u ];
         switch (this.lengthEncodingPreference)
@@ -3959,7 +3853,7 @@ unittest
     ubyte[] dataEndOfContent = [ 0x00u, 0x00u ];
     ubyte[] dataBoolean = [ 0x01u, 0x01u, 0xFFu ];
     ubyte[] dataInteger = [ 0x02u, 0x08u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0xFFu ];
-    ubyte[] dataBitString = [ 0x03u, 0x03u, 0x02u, 0xF0u, 0xF0u ];
+    ubyte[] dataBitString = [ 0x03u, 0x03u, 0x07u, 0xF0u, 0xF0u ];
     ubyte[] dataOctetString = [ 0x04u, 0x04u, 0xFF, 0x00u, 0x88u, 0x14u ];
     ubyte[] dataNull = [ 0x05u, 0x00u ];
     ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
@@ -4040,17 +3934,17 @@ unittest
     // Ensure use of accessors does not mutate state.
     assert(result[1].boolean == result[1].boolean);
     assert(result[2].integer!long == result[2].integer!long);
-    // assert(cast(size_t[]) result[3].bitString == cast(size_t[]) result[3].bitString); // Not my fault that std.bitmanip.BitArray is fucking stupid.
+    assert(result[3].bitString == result[3].bitString);
     assert(result[4].octetString == result[4].octetString);
     // nill
-    assert(result[6].objectIdentifier.numericArray == result[6].objectIdentifier.numericArray);
+    assert(result[6].objectIdentifier == result[6].objectIdentifier);
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
     assert(result[8].external == result[8].external);
     assert(result[9].realType!float == result[9].realType!float);
     assert(result[10].enumerated!long == result[10].enumerated!long);
     assert(result[11].embeddedPresentationDataValue == result[11].embeddedPresentationDataValue);
     assert(result[12].utf8String == result[12].utf8String);
-    assert(result[13].relativeObjectIdentifier.numericArray == result[13].relativeObjectIdentifier.numericArray);
+    assert(result[13].relativeObjectIdentifier == result[13].relativeObjectIdentifier);
     assert(result[14].numericString == result[14].numericString);
     assert(result[15].printableString == result[15].printableString);
     assert(result[16].teletexString == result[16].teletexString);
@@ -4073,10 +3967,9 @@ unittest
     // Ensure accessors decode the data correctly.
     assert(result[1].boolean == true);
     assert(result[2].integer!long == 255L);
-    // assert(cast(void[]) result[3].bitString == cast(void[]) BitArray([0xF0u, 0xF0u], 14));
-    // NOTE: I think std.bitmanip.BitArray.opCast(void[]) is broken...
+    assert(result[3].bitString == [ true, true, true, true, false, false, false, false, true ]);
     assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
-    assert(result[6].objectIdentifier.numericArray == (new OID(0x01u, 0x03u, 0x06u, 0x04u, 0x01u)).numericArray);
+    assert(result[6].objectIdentifier == new OID(OIDNode(0x01u), OIDNode(0x03u), OIDNode(0x06u), OIDNode(0x04u), OIDNode(0x01u)));
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
     assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[9].realType!float == 0.15625);
@@ -4084,7 +3977,7 @@ unittest
     assert(result[10].enumerated!long == 255L);
     assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[12].utf8String == "HENLO");
-    assert(result[13].relativeObjectIdentifier.numericArray == (new ROID(0x06u, 0x04u, 0x01u)).numericArray);
+    assert(result[13].relativeObjectIdentifier == [ OIDNode(6), OIDNode(4), OIDNode(1) ]);
     assert(result[14].numericString == "8675309");
     assert(result[15].printableString ==  "86 bf8");
     assert(result[16].teletexString == [ 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ]);
