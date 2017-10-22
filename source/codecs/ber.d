@@ -509,6 +509,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     // FIXME: change number sizes to size_t and add overflow checking.
     override public @property @system
     OID objectIdentifier() const
+    out (value)
+    {
+        assert(value.length > 2u);
+    }
+    body
     {
         // TODO: Throw if too short
         ubyte[][] components;
@@ -565,6 +570,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     // FIXME: change number sizes to size_t and add overflow checking.
     override public @property @safe
     void objectIdentifier(OID value)
+    in
+    {
+        assert(value.length > 2u);
+    }
+    body
     {
         size_t[] numbers = value.numericArray();
         if (numbers.length == 1) numbers ~= 0u; // So the next line does not fail.
@@ -3051,8 +3061,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
         See_Also:
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
+        
+        Throws:
+            DateTimeException = if string cannot be decoded to a DateTime
     */
-    // REVIEW: Is there some kind of exception this can throw?
     override public @property @system
     DateTime coordinatedUniversalTime() const
     {
@@ -3075,8 +3087,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         See_Also:
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
-    // REVIEW: Is there some kind of exception this can throw?
-    override public @property @system
+    override public @property @system nothrow
     void coordinatedUniversalTime(DateTime value)
     {
         import std.string : replace;
@@ -3105,8 +3116,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LI 19851106210627.3Z)
             $(LI 19851106210627.3-0500)
         )
+
+        Throws:
+            DateTimeException = if string cannot be decoded to a DateTime
     */
-    // REVIEW: Is there some kind of exception this can throw?
     override public @property @system
     DateTime generalizedTime() const
     {
@@ -3128,8 +3141,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LI 19851106210627.3-0500)
         )
     */
-    // REVIEW: Is there some kind of exception this can throw?
-    override public @property @system
+    override public @property @system nothrow
     void generalizedTime(DateTime value)
     {
         import std.string : replace;
