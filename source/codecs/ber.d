@@ -600,9 +600,9 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     {
         BERValue bv = new BERValue();
         bv.objectIdentifier = new OID(OIDNode(1u), OIDNode(30u), OIDNode(256u), OIDNode(623485u), OIDNode(8u));
-        // OID x = bv.objectIdentifier;
-        // writefln("%(%d %)", x.numericArray);
         assert(bv.objectIdentifier == new OID(OIDNode(1u), OIDNode(30u), OIDNode(256u), OIDNode(623485u), OIDNode(8u)));
+        bv.objectIdentifier = new OID(1, 3, 6, 4, 0, 256, 70000, 39);
+        assert(bv.objectIdentifier.numericArray == [ 1, 3, 6, 4, 0, 256, 70000, 39 ]);
     }
 
     /**
@@ -681,19 +681,26 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         this.value = cast(ubyte[]) value;
     }
 
-    ///
     @system
     unittest
     {
         BERValue bv = new BERValue();
-        bv.objectDescriptor = "qwert yuiop";
-        assert(bv.objectDescriptor == "qwert yuiop");
+        bv.objectDescriptor = "Nitro dubs & T-Rix";
+        assert(bv.objectDescriptor == "Nitro dubs & T-Rix");
+        bv.objectDescriptor = " ";
+        assert(bv.objectDescriptor == " ");
+        bv.objectDescriptor = "";
+        assert(bv.objectDescriptor == "");
+        assertThrown!ASN1InvalidValueException(bv.objectDescriptor = "\xD7");
+        assertThrown!ASN1InvalidValueException(bv.objectDescriptor = "\t");
+        assertThrown!ASN1InvalidValueException(bv.objectDescriptor = "\r");
+        assertThrown!ASN1InvalidValueException(bv.objectDescriptor = "\n");
+        assertThrown!ASN1InvalidValueException(bv.objectDescriptor = "\b");
+        assertThrown!ASN1InvalidValueException(bv.objectDescriptor = "\v");
+        assertThrown!ASN1InvalidValueException(bv.objectDescriptor = "\f");
+        assertThrown!ASN1InvalidValueException(bv.objectDescriptor = "\0");
     }
-    // TODO: Negative unit tests
 
-    /* REVIEW:
-        Is there some way to abstract the types into the parent class?
-    */
     /**
         Decodes an EXTERNAL, which is a constructed data type, defined in 
         the $(LINK2 https://www.itu.int, 
@@ -832,15 +839,15 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         The specification defines EXTERNAL as:
 
         $(I
-        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
-            identification CHOICE {
-                syntax OBJECT IDENTIFIER,
-                presentation-context-id INTEGER,
-                context-negotiation SEQUENCE {
+            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER,
                     presentation-context-id INTEGER,
-                    transfer-syntax OBJECT IDENTIFIER } },
-            data-value-descriptor ObjectDescriptor OPTIONAL,
-            data-value OCTET STRING }
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER } },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
         )
 
         This assumes AUTOMATIC TAGS, so all of the identification choices
@@ -896,21 +903,42 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         this.sequence = [ identification, dataValueDescriptor, dataValue ];
     }
 
-    ///
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.syntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        External input = External();
+        input.identification = id;
+        input.dataValueDescriptor = "boop";
+        input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
+
+        BERValue bv = new BERValue();
+        bv.external = input;
+
+        // TODO: Test bv.value
+
+        External output = bv.external;
+        assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
+    }
+
     @system
     unittest
     {
         ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
         id.presentationContextID = 27L;
 
-        External ext = External();
-        ext.identification = id;
-        ext.dataValueDescriptor = "external";
-        ext.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
+        External input = External();
+        input.identification = id;
+        input.dataValueDescriptor = "external";
+        input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
 
         BERValue bv = new BERValue();
         bv.type = 0x08u;
-        bv.external = ext;
+        bv.external = input;
         assert(bv.toBytes() == [ 
             0x08u, 0x1Cu, 0x80u, 0x0Au, 0x81u, 0x08u, 0x00u, 0x00u, 
             0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x1Bu, 0x81u, 0x08u, 
@@ -918,10 +946,37 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             0x82u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u 
         ]);
 
-        External x = bv.external;
-        assert(x.identification.presentationContextID == 27L);
-        assert(x.dataValueDescriptor == "external");
-        assert(x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
+        External output = bv.external;
+        assert(output.identification.presentationContextID == 27L);
+        assert(output.dataValueDescriptor == "external");
+        assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
+        cn.presentationContextID = 27L;
+        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.contextNegotiation = cn;
+
+        External input = External();
+        input.identification = id;
+        input.dataValueDescriptor = "blap";
+        input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
+
+        BERValue bv = new BERValue();
+        bv.external = input;
+
+        // TODO: Test bv.value
+
+        External output = bv.external;
+        assert(output.identification.contextNegotiation.presentationContextID == 27L);
+        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "blap");
+        assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
     }
 
     /**
@@ -1237,7 +1292,6 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         Throws:
             ASN1InvalidValueException = if an attempt to encode NaN is made.
     */
-    // REVIEW: Doth mine eyes deceive me? Is this actually nothrow?
     public @property @system
     void realType(T)(T value)
     if (is(T == float) || is(T == double))
@@ -2296,11 +2350,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         if (!(value.identification.syntaxes.isNull))
         {
             BERValue abstractSyntax = new BERValue();
-            abstractSyntax.type = 0x81u;
+            abstractSyntax.type = 0x80u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
             BERValue transferSyntax = new BERValue();
-            transferSyntax.type = 0x82u;
+            transferSyntax.type = 0x81u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
             identificationValue.type = 0x80u;
@@ -2358,22 +2412,144 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     @system
     unittest
     {
-        // import types.universal.embeddedpdv;
+        ASN1ContextSwitchingTypeSyntaxes syn = ASN1ContextSwitchingTypeSyntaxes();
+        syn.abstractSyntax = new OID(1, 3, 6, 4, 1, 256, 7);
+        syn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 8);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.syntaxes = syn;
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "boop";
+        input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
+
+        BERValue bv = new BERValue();
+        bv.embeddedPDV = input;
+
+        // TODO: Test bv.value
+
+        EmbeddedPDV output = bv.embeddedPDV;
+        assert(output.identification.syntaxes.abstractSyntax == new OID(1, 3, 6, 4, 1, 256, 7));
+        assert(output.identification.syntaxes.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 8));
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.syntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "boop";
+        input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
+
+        BERValue bv = new BERValue();
+        bv.embeddedPDV = input;
+
+        // TODO: Test bv.value
+
+        EmbeddedPDV output = bv.embeddedPDV;
+        assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
+    }
+
+    @system
+    unittest
+    {
         ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
         id.presentationContextID = 27L;
 
-        EmbeddedPDV pdv = EmbeddedPDV();
-        pdv.identification = id;
-        pdv.dataValueDescriptor = "AAAABBBB";
-        pdv.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "external";
+        input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
 
         BERValue bv = new BERValue();
-        bv.embeddedPDV = pdv;
+        bv.type = 0x08u;
+        bv.embeddedPDV = input;
 
-        EmbeddedPDV pdv2 = bv.embeddedPresentationDataValue;
-        assert(pdv2.identification.presentationContextID == 27L);
-        assert(pdv2.dataValueDescriptor == "AAAABBBB");
-        assert(pdv2.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
+        // TODO: Test bv.value
+
+        EmbeddedPDV output = bv.embeddedPDV;
+        assert(output.identification.presentationContextID == 27L);
+        assert(output.dataValueDescriptor == "external");
+        assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
+        cn.presentationContextID = 27L;
+        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.contextNegotiation = cn;
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "blap";
+        input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
+
+        BERValue bv = new BERValue();
+        bv.embeddedPDV = input;
+
+        // TODO: Test bv.value
+
+        EmbeddedPDV output = bv.embeddedPDV;
+        assert(output.identification.contextNegotiation.presentationContextID == 27L);
+        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "blap");
+        assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "boop";
+        input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
+
+        BERValue bv = new BERValue();
+        bv.embeddedPDV = input;
+
+        // TODO: Test bv.value
+
+        EmbeddedPDV output = bv.embeddedPDV;
+        assert(output.identification.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.fixed = true;
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "boop";
+        input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
+
+        BERValue bv = new BERValue();
+        bv.embeddedPDV = input;
+
+        // TODO: Test bv.value
+
+        EmbeddedPDV output = bv.embeddedPDV;
+        assert(output.identification.fixed == true);
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
     }
 
     /**
@@ -3446,11 +3622,11 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         if (!(value.identification.syntaxes.isNull))
         {
             BERValue abstractSyntax = new BERValue();
-            abstractSyntax.type = 0x81u;
+            abstractSyntax.type = 0x80u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
             BERValue transferSyntax = new BERValue();
-            transferSyntax.type = 0x82u;
+            transferSyntax.type = 0x81u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
             identificationValue.type = 0x80u;
@@ -3504,19 +3680,132 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     @system
     unittest
     {
-        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
-        id.presentationContextID = 63L;
+        ASN1ContextSwitchingTypeSyntaxes syn = ASN1ContextSwitchingTypeSyntaxes();
+        syn.abstractSyntax = new OID(1, 3, 6, 4, 1, 256, 7);
+        syn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 8);
 
-        CharacterString cs = CharacterString();
-        cs.identification = id;
-        cs.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.syntaxes = syn;
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'L', 'N', 'O' ];
 
         BERValue bv = new BERValue();
-        bv.characterString = cs;
+        bv.characterString = input;
 
-        CharacterString cs2 = bv.characterString;
-        assert(cs2.identification.presentationContextID == 63L);
-        assert(cs2.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+        // TODO: Test bv.value
+
+        CharacterString output = bv.characterString;
+        assert(output.identification.syntaxes.abstractSyntax == new OID(1, 3, 6, 4, 1, 256, 7));
+        assert(output.identification.syntaxes.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 8));
+        assert(output.stringValue == [ 'H', 'E', 'L', 'N', 'O' ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.syntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        BERValue bv = new BERValue();
+        bv.characterString = input;
+
+        // TODO: Test bv.value
+
+        CharacterString output = bv.characterString;
+        assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.presentationContextID = 27L;
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        BERValue bv = new BERValue();
+        bv.type = 0x08u;
+        bv.characterString = input;
+
+        // TODO: Test bv.value
+
+        CharacterString output = bv.characterString;
+        assert(output.identification.presentationContextID == 27L);
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
+        cn.presentationContextID = 27L;
+        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.contextNegotiation = cn;
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        BERValue bv = new BERValue();
+        bv.characterString = input;
+
+        // TODO: Test bv.value
+
+        CharacterString output = bv.characterString;
+        assert(output.identification.contextNegotiation.presentationContextID == 27L);
+        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        BERValue bv = new BERValue();
+        bv.characterString = input;
+
+        // TODO: Test bv.value
+
+        CharacterString output = bv.characterString;
+        assert(output.identification.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.fixed = true;
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        BERValue bv = new BERValue();
+        bv.characterString = input;
+
+        // TODO: Test bv.value
+
+        CharacterString output = bv.characterString;
+        assert(output.identification.fixed == true);
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
     }
 
     /**
