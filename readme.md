@@ -150,7 +150,7 @@ Version 1.0.0-beta is expected to be released around November 30th, 2017.
 - [ ] Dynamically-linked libraries
 - [ ] Create `man(1)` (executables) and `man(3)` (Library calls) pages
 
-## 1.1.0 Release
+### 1.1.0 Release
 
 The following codecs will be added:
 
@@ -158,7 +158,7 @@ The following codecs will be added:
 - [ ] Unaligned Packed Encoding Rules (UPER)
 - [ ] Canonical Packed Encoding Rules (CPER)
 
-## 1.2.0 Release
+### 1.2.0 Release
 
 The following codecs will be added:
 
@@ -167,14 +167,14 @@ The following codecs will be added:
 - [ ] Canonical XML Encoding Rules (CXER)
 - [ ] Extended XML Encoding Rules (EXER)
 
-## 1.3.0 Release
+### 1.3.0 Release
 
 The following codecs will be added:
 
 - [ ] Octet Encoding Rules (OER)
 - [ ] Canonical Octet Encoding Rules (COER)
 
-## 1.4.0 Release
+### 1.4.0 Release
 
 The following codecs will be added:
 
@@ -183,7 +183,7 @@ The following codecs will be added:
 - [ ] BACNet Encoding Rules
 - [ ] Signalling-specific Encoding Rules (SER)
 
-## 1.5.0 Release
+### 1.5.0 Release
 
 The following command line tools will be released:
 
