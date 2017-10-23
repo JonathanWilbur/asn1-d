@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.7.3](http://semver.org/)
+* Version: [0.8.0](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
