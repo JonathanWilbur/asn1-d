@@ -37,6 +37,13 @@ public class ObjectIdentifier
         return this.nodes.length;
     }
 
+    @system
+    unittest
+    {
+        OID oid = new OID(1, 3, 6, 4, 1);
+        assert(oid.length == 5);
+    }
+
     /**
         Constructor for an Object Identifier
 
@@ -115,6 +122,18 @@ public class ObjectIdentifier
         return true;
     }
 
+    @system
+    unittest
+    {
+        OID a = new OID(1, 3, 6, 4, 1, 5);
+        OID b = new OID(1, 3, 6, 4, 1, 5);
+        assert(a == b);
+        OID c = new OID(1, 3, 6, 4, 1, 6);
+        assert(a != c);
+        OID d = new OID(2, 3, 6, 4, 1, 6);
+        assert(c != d);
+    }
+
     /**
         Returns: the OIDNode at the specified index.
         Throws:
@@ -124,6 +143,13 @@ public class ObjectIdentifier
     OIDNode opIndex(ptrdiff_t index) const
     {
         return this.nodes[index];
+    }
+
+    @system
+    unittest
+    {
+        OID oid = new OID(1, 3, 7000);
+        assert((oid[0].number == 1) && (oid[1].number == 3) && (oid[2].number == 7000));
     }
 
     /**
@@ -157,6 +183,14 @@ public class ObjectIdentifier
         return this.nodes[index].descriptor;
     }
 
+    @system
+    unittest
+    {
+        OID oid = new OID(OIDNode(1, "iso"), OIDNode(3, "registered-org"), OIDNode(4, "dod"));
+        assert(oid.descriptor(1) == "registered-org");
+        assertThrown!RangeError(oid.descriptor(6));
+    }
+
     ///
     public alias numbers = numericArray;
     /**
@@ -174,6 +208,13 @@ public class ObjectIdentifier
             ret[i] = this.nodes[i].number;
         }
         return ret;
+    }
+
+    @system
+    unittest
+    {
+        OID a = new OID(1, 3, 6, 4, 1, 5);
+        assert(a.numericArray == [ 1, 3, 6, 4, 1, 5 ]);
     }
 
     ///
@@ -200,6 +241,18 @@ public class ObjectIdentifier
         return (ret.data[0 .. $-1] ~ '}');
     }
 
+    @system
+    unittest
+    {
+        OID a = new OID(1, 3, 6, 4, 1, 5);
+        a.showDescriptors = true;
+        assert(a.asn1Notation == "{1 3 6 4 1 5}");
+
+        OID b = new OID(OIDNode(1, "iso"), OIDNode(3, "registered-org"), OIDNode(4, "dod"));
+        b.showDescriptors = true;
+        assert(b.asn1Notation == "{iso(1) registered-org(3) dod(4)}");
+    }
+
     /**
         Returns:
             the OID as a dot-delimited string, where all nodes with descriptors
@@ -222,6 +275,18 @@ public class ObjectIdentifier
             ret.put('.');
         }
         return ret.data[0 .. $-1];
+    }
+
+    @system
+    unittest
+    {
+        OID a = new OID(1, 3, 6, 4, 1, 5);
+        a.showDescriptors = true;
+        assert(a.dotNotation == "1.3.6.4.1.5");
+
+        OID b = new OID(OIDNode(1, "iso"), OIDNode(3, "registered-org"), OIDNode(4, "dod"));
+        b.showDescriptors = true;
+        assert(b.dotNotation == "iso.registered-org.dod");    
     }
 
     ///
@@ -256,6 +321,18 @@ public class ObjectIdentifier
         return ret.data[0 .. $-1];
     }
 
+    @system
+    unittest
+    {
+        OID a = new OID(1, 3, 6, 4, 1, 5);
+        a.showDescriptors = true;
+        assert(a.uriNotation == "/1/3/6/4/1/5");
+
+        OID b = new OID(OIDNode(1, "iso"), OIDNode(3, "registered-org"), OIDNode(4, "dod"));
+        b.showDescriptors = true;
+        assert(b.uriNotation == "/iso/registered-org/dod");
+    }
+
     ///
     public alias urnNotation = uniformResourceNameNotation;
     /**
@@ -276,6 +353,25 @@ public class ObjectIdentifier
             ret.put(text(node.number) ~ ':');
         }
         return ret.data[0 .. $-1];
+    }
+
+    @system
+    unittest
+    {
+        OID a = new OID(1, 3, 6, 4, 1, 5);
+        a.showDescriptors = true;
+        assert(a.urnNotation == "urn:oid:1:3:6:4:1:5");
+
+        OID b = new OID(OIDNode(1, "iso"), OIDNode(3, "registered-org"), OIDNode(4, "dod"));
+        b.showDescriptors = true;
+        assert(b.urnNotation == "urn:oid:1:3:4");
+    }
+
+    ///
+    override public @property
+    string toString()
+    {
+        return this.dotNotation();
     }
 
 }

@@ -10,15 +10,12 @@ module codec;
 public import asn1;
 public import types.alltypes;
 public import types.oidtype;
-// TODO: Remove dependency on std.outbuffer.
 package import std.algorithm.mutation : reverse;
 package import std.algorithm.searching : canFind;
 package import std.ascii : isASCII, isGraphical;
-package import std.bitmanip : BitArray;
 package import std.datetime.date : DateTime;
 private import std.exception : basicExceptionCtors;
 package import std.math : isNaN, log2;
-package import std.outbuffer;
 package import std.traits : isIntegral, isSigned;
 
 ///

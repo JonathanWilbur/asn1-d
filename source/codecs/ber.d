@@ -568,7 +568,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     // FIXME: change number sizes to size_t and add overflow checking.
-    override public @property @safe
+    override public @property @system
     void objectIdentifier(OID value)
     in
     {
@@ -577,26 +577,25 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     body
     {
         size_t[] numbers = value.numericArray();
-        if (numbers.length == 1) numbers ~= 0u; // So the next line does not fail.
         this.value = [ cast(ubyte) (numbers[0] * 40u + numbers[1]) ]; //FIXME: This might be suceptable to overflow attacks.
         if (numbers.length > 2)
         {
-            foreach (x; numbers[2 .. $])
+            foreach (number; numbers[2 .. $])
             {
                 ubyte[] encodedOIDComponent;
-                if (x == 0) // REVIEW: Could you make this faster by using if (x < 128)?
+                if (number == 0) // REVIEW: Could you make this faster by using if (x < 128)?
                 {
                     this.value ~= 0x00u;
                     continue;
                 }
-                while (x != 0)
+                while (number != 0)
                 {
-                    OutBuffer ob = new OutBuffer();
-                    ob.write(x);
-                    ubyte[] compbytes = ob.toBytes();
+                    ubyte[] compbytes;
+                    compbytes.length = size_t.sizeof;
+                    *cast(size_t *) compbytes.ptr = number;
                     if ((compbytes[0] & 0x80u) == 0) compbytes[0] |= 0x80u;
                     encodedOIDComponent = compbytes[0] ~ encodedOIDComponent;
-                    x >>= 7;
+                    number >>= 7;
                 }
                 encodedOIDComponent[$-1] &= 0x7Fu;
                 this.value ~= encodedOIDComponent;
@@ -2664,7 +2663,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
     // REVIEW: Can this be nothrow?
     // TODO: Remove std.outbuffer dependency
     // FIXME: add overflow checking.
-    override public @property @safe
+    override public @property @system
     void relativeObjectIdentifier(OIDNode[] value)
     {
         foreach (node; value)
@@ -2678,10 +2677,10 @@ class BasicEncodingRulesValue : ASN1BinaryValue
             }
             while (number != 0u)
             {
-                OutBuffer ob = new OutBuffer();
-                ob.write(number);
-                ubyte[] compbytes = ob.toBytes();
-                if ((compbytes[0] & 0x80u) == 0u) compbytes[0] |= 0x80u;
+                ubyte[] compbytes;
+                compbytes.length = size_t.sizeof;
+                *cast(size_t *) compbytes.ptr = number;
+                if ((compbytes[0] & 0x80u) == 0) compbytes[0] |= 0x80u;
                 encodedOIDComponent = compbytes[0] ~ encodedOIDComponent;
                 number >>= 7;
             }
@@ -3950,15 +3949,16 @@ class BasicEncodingRulesValue : ASN1BinaryValue
         // Length
         if (bytes[1] & 0x80u)
         {
-            if (bytes[1] & 0x7Fu) // Definite Long or Reserved
+            immutable ubyte numberOfLengthOctets = (bytes[1] & 0x7Fu);
+            if (numberOfLengthOctets) // Definite Long or Reserved
             {
-                if ((bytes[1] & 0x7Fu) == 0x7Fu) // Reserved
+                if (numberOfLengthOctets == 0x7Fu) // Reserved
                     throw new ASN1InvalidLengthException
                     ("A BER-encoded length byte of 0xFF is reserved.");
 
                 // Definite Long, if it has made it this far
 
-                if ((bytes[1] & 0x7Fu) > size_t.sizeof)
+                if (numberOfLengthOctets > size_t.sizeof)
                     throw new ASN1ValueTooBigException
                     ("BER-encoded value is too big to decode.");
 
@@ -3973,31 +3973,34 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                 
                 version (LittleEndian)
                 {
-                    for (ubyte i = (bytes[1] & 0x7Fu); i > 0u; i--)
+                    for (ubyte i = numberOfLengthOctets; i > 0u; i--)
                     {
-                        lengthBytes[i] = bytes[2+i];
+                        lengthBytes[i-1] = bytes[1+i];
                     }
                 }
                 version (BigEndian)
                 {
-                    for (ubyte i = 0x00u; i < (bytes[1] & 0x7Fu); i++)
+                    for (ubyte i = 0x00u; i < numberOfLengthOctets; i++)
                     {
-                        lengthBytes[i] = bytes[2+i];
+                        lengthBytes[i-1] = bytes[1+i];
                     }
                 }
 
+                size_t startOfValue = (2u + numberOfLengthOctets);
                 size_t length = *cast(size_t *) lengthBytes.ptr;
-                this.value = bytes[2 .. 3+length];
+                this.value = bytes[startOfValue .. startOfValue+length];
+                bytes = bytes[startOfValue+length .. $];
             }
             else // Indefinite
-            {
-                // immutable ptrdiff_t indexOfEndOfContent = bytes.indexOf([ 0x00u, 0x00u ]);
-                
+            {   
                 size_t indexOfEndOfContent = 0u;
                 for (size_t i = 2u; i < bytes.length-1; i++)
                 {
                     if ((bytes[i] == 0x00u) && (bytes[i+1] == 0x00))
+                    {
                         indexOfEndOfContent = i;
+                        break;
+                    }
                 }
 
                 if (indexOfEndOfContent == 0u)
@@ -4005,6 +4008,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
                     ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERValue.");
 
                 this.value = bytes[2 .. indexOfEndOfContent];
+                bytes = bytes[indexOfEndOfContent+2u .. $];
             }
         }
         else // Definite Short
@@ -4017,6 +4021,129 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
             this.value = bytes[2 .. 2+length].dup;
             bytes = bytes[2+length .. $];
+        }
+    }
+
+    /**
+        Creates a BERValue from the supplied bytes, inferring that the first
+        byte is the type tag. The supplied ubyte[] array is read, starting
+        from the index specified by $(D bytesRead), and increments 
+        $(D bytesRead) by the number of bytes read.
+
+        Throws:
+            ASN1ValueTooSmallException = if the bytes supplied are fewer than
+                two (one or zero, in other words), such that no valid BERValue
+                can be decoded, or if the length is encoded in indefinite
+                form, but the END OF CONTENT octets (two consecutive null
+                octets) cannot be found, or if the value is encoded in fewer
+                octets than indicated by the length byte.
+            ASN1InvalidLengthException = if the length byte is set to 0xFF, 
+                which is reserved.
+            ASN1ValueTooBigException = if the length cannot be represented by 
+                the largest unsigned integer.
+
+        Example:
+        ---
+        // Decoding looks like:
+        BERValue[] result;
+        size_t i = 0u;
+        while (i < bytes.length)
+            result ~= new BERValue(i, bytes);
+
+        // Encoding looks like:
+        ubyte[] result;
+        foreach (bv; bervalues)
+        {
+            result ~= cast(ubyte[]) bv;
+        }
+        ---
+    */
+    public @system
+    this(ref size_t bytesRead, ref ubyte[] bytes)
+    {
+        import std.string : indexOf;
+
+        if (bytes.length < (bytesRead + 2u))
+            throw new ASN1ValueTooSmallException
+            ("BER-encoded value terminated prematurely.");
+        
+        this.type = bytes[bytesRead];
+
+        // Length
+        if (bytes[bytesRead+1] & 0x80u)
+        {
+            immutable ubyte numberOfLengthOctets = (bytes[bytesRead+1] & 0x7Fu);            
+            if (numberOfLengthOctets) // Definite Long or Reserved
+            {
+                if (numberOfLengthOctets == 0x7Fu) // Reserved
+                    throw new ASN1InvalidLengthException
+                    ("A BER-encoded length byte of 0xFF is reserved.");
+
+                // Definite Long, if it has made it this far
+
+                if (numberOfLengthOctets > size_t.sizeof)
+                    throw new ASN1ValueTooBigException
+                    ("BER-encoded value is too big to decode.");
+
+                version (D_LP64)
+                {
+                    ubyte[] lengthBytes = [ 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u ];
+                }
+                else // FIXME: This *assumes* that the computer must be 32-bit!
+                {
+                    ubyte[] lengthBytes = [ 0x00u, 0x00u, 0x00u, 0x00u ];
+                }
+                
+                version (LittleEndian)
+                {
+                    for (ubyte i = numberOfLengthOctets; i > 0u; i--)
+                    {
+                        lengthBytes[i-1] = bytes[bytesRead+1+i];
+                    }
+                }
+                version (BigEndian)
+                {
+                    for (ubyte i = 0x00u; i < numberOfLengthOctets; i++)
+                    {
+                        lengthBytes[i-1] = bytes[bytesRead+1+i];
+                    }
+                }
+
+                size_t startOfValue = (bytesRead + 2 + numberOfLengthOctets);
+                size_t length = *cast(size_t *) lengthBytes.ptr;
+                this.value = bytes[startOfValue .. startOfValue+length];
+                bytesRead += (2 + numberOfLengthOctets + length);
+            }
+            else // Indefinite
+            {   
+                size_t indexOfEndOfContent = bytesRead;
+                for (size_t i = bytesRead+2u; i < bytes.length-1; i++)
+                {
+                    if ((bytes[i] == 0x00u) && (bytes[i+1] == 0x00))
+                    {
+                        indexOfEndOfContent = i;
+                        break;
+                    }
+                }
+
+                if (indexOfEndOfContent == 0u)
+                    throw new ASN1ValueTooSmallException
+                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERValue.");
+
+                this.value = bytes[bytesRead+2u .. indexOfEndOfContent];
+                bytesRead = (indexOfEndOfContent + 2u); // +2 for the EOC octets
+            }
+        }
+        else // Definite Short
+        {
+            ubyte length = (bytes[bytesRead+1] & 0x7Fu);
+
+            if ((length+bytesRead) > (bytes.length-2u))
+                throw new ASN1ValueTooSmallException
+                ("BER-encoded value terminated prematurely.");
+
+            this.value = bytes[bytesRead+2u .. bytesRead+length+2u].dup;
+            bytesRead += (2u + length);
         }
     }
 
@@ -4144,9 +4271,7 @@ class BasicEncodingRulesValue : ASN1BinaryValue
 
 }
 
-/*
-    Tests of all types using definite-short encoding.
-*/
+// Tests of all types using definite-short encoding.
 @system
 unittest
 {
@@ -4229,8 +4354,10 @@ unittest
         dataBMP;
 
     BERValue[] result;
-    while (data.length > 0)
-        result ~= new BERValue(data);
+
+    size_t i = 0u;
+    while (i < data.length)
+        result ~= new BERValue(i, data);
 
     // Ensure use of accessors does not mutate state.
     assert(result[1].boolean == result[1].boolean);
@@ -4291,4 +4418,153 @@ unittest
     assert(result[23].generalString == "PowerThirst");
     assert(result[24].universalString == "abcd"d);
     assert((c.identification.presentationContextID == 63L) && (c.stringValue == "HENLO"w));
+
+    result = [];
+    while (data.length > 0)
+        result ~= new BERValue(data);
+
+    // Ensure use of accessors does not mutate state.
+    assert(result[1].boolean == result[1].boolean);
+    assert(result[2].integer!long == result[2].integer!long);
+    assert(result[3].bitString == result[3].bitString);
+    assert(result[4].octetString == result[4].octetString);
+    // nill
+    assert(result[6].objectIdentifier == result[6].objectIdentifier);
+    assert(result[7].objectDescriptor == result[7].objectDescriptor);
+    assert(result[8].external == result[8].external);
+    assert(result[9].realType!float == result[9].realType!float);
+    assert(result[10].enumerated!long == result[10].enumerated!long);
+    assert(result[11].embeddedPresentationDataValue == result[11].embeddedPresentationDataValue);
+    assert(result[12].utf8String == result[12].utf8String);
+    assert(result[13].relativeObjectIdentifier == result[13].relativeObjectIdentifier);
+    assert(result[14].numericString == result[14].numericString);
+    assert(result[15].printableString == result[15].printableString);
+    assert(result[16].teletexString == result[16].teletexString);
+    assert(result[17].videotexString == result[17].videotexString);
+    assert(result[18].ia5String == result[18].ia5String);
+    assert(result[19].utcTime == result[19].utcTime);
+    assert(result[20].generalizedTime == result[20].generalizedTime);
+    assert(result[21].graphicString == result[21].graphicString);
+    assert(result[22].visibleString == result[22].visibleString);
+    assert(result[23].generalString == result[23].generalString);
+    assert(result[24].universalString == result[24].universalString);
+    assert(result[25].characterString == result[25].characterString);
+    assert(result[26].bmpString == result[26].bmpString);
+
+    // Pre-processing
+    x = result[8].external;
+    m = result[11].embeddedPresentationDataValue;
+    c = result[25].characterString;
+
+    // Ensure accessors decode the data correctly.
+    assert(result[1].boolean == true);
+    assert(result[2].integer!long == 255L);
+    assert(result[3].bitString == [ true, true, true, true, false, false, false, false, true ]);
+    assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
+    assert(result[6].objectIdentifier == new OID(OIDNode(0x01u), OIDNode(0x03u), OIDNode(0x06u), OIDNode(0x04u), OIDNode(0x01u)));
+    assert(result[7].objectDescriptor == result[7].objectDescriptor);
+    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert(result[9].realType!float == 0.15625);
+    assert(result[9].realType!double == 0.15625);
+    assert(result[10].enumerated!long == 255L);
+    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert(result[12].utf8String == "HENLO");
+    assert(result[13].relativeObjectIdentifier == [ OIDNode(6), OIDNode(4), OIDNode(1) ]);
+    assert(result[14].numericString == "8675309");
+    assert(result[15].printableString ==  "86 bf8");
+    assert(result[16].teletexString == [ 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ]);
+    assert(result[17].videotexString == [ 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ]);
+    assert(result[18].ia5String == "BORTHERS");
+    assert(result[19].utcTime == DateTime(2017, 8, 31, 13, 45));
+    assert(result[20].generalizedTime == DateTime(2017, 8, 31, 13, 45));
+    assert(result[21].graphicString == "PowerThirst");
+    assert(result[22].visibleString == "PowerThirst");
+    assert(result[23].generalString == "PowerThirst");
+    assert(result[24].universalString == "abcd"d);
+    assert((c.identification.presentationContextID == 63L) && (c.stringValue == "HENLO"w));
+}
+
+// Test of definite-long encoding
+@system
+unittest
+{
+    ubyte[] data = [ // 192 characters of boomer-posting
+        0x0Cu, 0x81u, 0xC0, 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n'  
+    ];
+
+    data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
+
+    BERValue[] result;
+    size_t i = 0u;
+    while (i < data.length)
+        result ~= new BERValue(i, data);
+        
+    assert(result.length == 3);
+    assert(result[0].utf8String[0 .. 5] == "AMREN");
+    assert(result[1].utf8String[6 .. 14] == "BORTHERS");
+    assert(result[2].utf8String[$-2] == '!');
+
+    result = [];
+    while (data.length > 0)
+        result ~= new BERValue(data);
+        
+    assert(result.length == 3);
+    assert(result[0].utf8String[0 .. 5] == "AMREN");
+    assert(result[1].utf8String[6 .. 14] == "BORTHERS");
+    assert(result[2].utf8String[$-2] == '!');
+}
+
+// Test of indefinite-length encoding
+@system
+unittest
+{
+    ubyte[] data = [ // 192 characters of boomer-posting
+        0x0Cu, 0x80u, 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x00u, 0x00u
+    ];
+
+    data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
+
+    BERValue[] result;
+    size_t i = 0u;
+    while (i < data.length)
+        result ~= new BERValue(i, data);
+        
+    assert(result.length == 3);
+    assert(result[0].utf8String[0 .. 5] == "AMREN");
+    assert(result[1].utf8String[6 .. 14] == "BORTHERS");
+    assert(result[2].utf8String[$-2] == '!');
+
+    result = [];
+    while (data.length > 0)
+        result ~= new BERValue(data);
+
+    assert(result.length == 3);
+    assert(result[0].utf8String[0 .. 5] == "AMREN");
+    assert(result[1].utf8String[6 .. 14] == "BORTHERS");
+    assert(result[2].utf8String[$-2] == '!');
 }

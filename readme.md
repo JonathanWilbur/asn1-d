@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.7.2](http://semver.org/)
+* Version: [0.7.3](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -81,22 +81,26 @@ ready to serve as the basis for others:
 - [x] A better system of exceptions
 - [x] 100% unit test code coverage
 - [x] Add `deprecated` attribute to deprecated types.
-- [ ] Make constructor that takes ref to a `size_t` storing the number of bytes read
-- [x] Overhaul OID and RelativeOID
-- [ ] Rename `BERValue` to `BERElement` and `ASN1Value` to `ASN1Element`
-- [ ] `debug` statements
 - [x] Contracts
 - [x] Make all accessors `const` or `immutable`
-- [ ] Better exception messages
+- [x] Overhaul OID and RelativeOID
+- [x] Make constructor that takes ref to a `size_t` storing the number of bytes read
+- [x] Test long definite encoding
+- [x] Test indefinite encoding
+- [x] Unit tests for OID Types
+  - [x] `ObjectIdentifierNode`
+  - [x] `ObjectIdentifier`
+- [x] Remove dependency on `std.outbuffer`  
 - [ ] Experiment with putting unit tests in abstract class
 - [ ] Abstract constructed types into parent class, `ASN1BinaryValue`
   - [ ] `External`
   - [ ] `EmbeddedPDV`
   - [ ] `CharacterString`
-- [ ] Unit tests for OID Types
-  - [ ] `ObjectIdentifierNode`
-  - [ ] `ObjectIdentifier`
-- [ ] Remove dependency on `std.outbuffer`
+- [ ] Better exception messages
+- [ ] Rename `BERValue` to `BERElement` and `ASN1Value` to `ASN1Element`
+- [ ] Rename `ASN1InvalidValueException` to `ASN1ValueInvalidException`
+- [ ] `debug` statements
+- [ ] Get rid of deprecation messages
 
 ### Future
 
