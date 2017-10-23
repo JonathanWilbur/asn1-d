@@ -9,6 +9,7 @@
 module codec;
 public import asn1;
 public import types.alltypes;
+public import types.identification;
 public import types.oidtype;
 package import std.algorithm.mutation : reverse;
 package import std.algorithm.searching : canFind;
@@ -55,7 +56,7 @@ class AbstractSyntaxNotation1ValueTooSmallException : ASN1ValueSizeException
 }
 
 ///
-public alias ASN1InvalidValueException = AbstractSyntaxNotation1InvalidValueException;
+public alias ASN1ValueInvalidException = AbstractSyntaxNotation1ValueInvalidException;
 /**
     Thrown when an encoded value, or a decoded value (attempting to be encoded)
     takes on a value that the codec cannot encode or decode.
@@ -67,7 +68,7 @@ public alias ASN1InvalidValueException = AbstractSyntaxNotation1InvalidValueExce
     )
 */
 public
-class AbstractSyntaxNotation1InvalidValueException : ASN1CodecException
+class AbstractSyntaxNotation1ValueInvalidException : ASN1CodecException
 {
     mixin basicExceptionCtors; 
 }
@@ -108,201 +109,24 @@ class AbstractSyntaxNotation1InvalidLengthException : ASN1CodecException
     mixin basicExceptionCtors; 
 }
 
+// ///
+// public alias ASN1TLVTriplet = AbstractSyntaxNotation1BinaryTypeLengthValueTriplet;
+// ///
+// public alias ASN1TypeLengthValueTriplet = AbstractSyntaxNotation1BinaryTypeLengthValueTriplet;
+// ///
+// public
+// interface AbstractSyntaxNotation1BinaryTypeLengthValueTriplet
+// {
+//     ubyte 
+// }
+
 ///
-public alias ASN1Value = AbstractSyntaxNotation1Value;
+public alias ASN1Element = AbstractSyntaxNotation1Element;
 /// An abstract class from which both ASN1BinaryCodec and ASN1TextCodec will inherit.
 abstract public
-class AbstractSyntaxNotation1Value
+class AbstractSyntaxNotation1Element(Element)
 {
-
-}
-
-// REVIEW: Should the setters return booleans indicating success instead of throwing errors?
-///
-public alias ASN1BinaryValue = AbstractSyntaxNotation1BinaryValue;
-///
-abstract public
-class AbstractSyntaxNotation1BinaryValue : ASN1Value
-{
-
-    /* TODO:
-        Make a "foolproof" version that makes value a private member, so that
-        it can only be assigned values via legitimate properties.
-        ... if that's possible.
-    */
-    // NOTE: Storage classes are basically going to be impossible with properties...
-
-    // Constants used to save CPU cycles
-    private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in encodeReal()
-    private immutable real maxUlongAsReal = cast(real) ulong.max; // Saves CPU cycles in encodeReal()
-    private immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in encodeReal()
-
-    // Settings
-
-    ///
-    public
-    enum LengthEncodingPreference
-    {
-        definite,
-        indefinite
-    }
-
-    /**
-        Unlike most other settings, this is non-static, because wanting to
-        encode with indefinite length is probably going to be somewhat rare,
-        and it is also less safe, because the value octets have to be inspected
-        for double octets before encoding! (If they are not, the receiver will 
-        interpret those inner null octets as the terminator for the indefinite
-        length value, and the rest will be truncated.)
-    */
-    public LengthEncodingPreference lengthEncodingPreference = 
-        LengthEncodingPreference.definite;
-
-    /**
-        Whether the base 10 / character-encoded representation of a REAL
-        should prepend a plus sign if the value is positive.
-    */
-    static public bool base10RealShouldShowPlusSignIfPositive = true;
-
-    /**
-        Whether a comma or a period is used to separate the whole and
-        fractional components of the base 10 / character-encoded representation
-        of a REAL.
-    */
-    static public ASN1Base10RealDecimalSeparator base10RealDecimalSeparator = 
-        ASN1Base10RealDecimalSeparator.period;
-
-    /**
-        Whether a capital or lowercase E is used to separate the significand
-        from the exponent in the base 10 / character-encoded representation
-        of a REAL.
-    */
-    static public ASN1Base10RealExponentCharacter base10RealExponentCharacter = 
-        ASN1Base10RealExponentCharacter.uppercaseE;
-
-    /**
-        The standardized string representations of floating point numbers, as 
-        specified in $(LINK2 https://www.iso.org/standard/12285.html, ISO 6093).
-
-        $(TABLE
-            $(TR $(TH Representation) $(TH Description) $(TH Examples))
-            $(TR $(TD NR1) $(TD Implicit decimal point) $(TD "3", "-1", "+1000"))
-            $(TR $(TD NR2) $(TD Explicit decimal) $(TD "3.0", "-1.3", "-.3"))
-            $(TR $(TD NR3) $(TD Explicit exponent) $(TD "3.0E1", "123E+100"))
-        )
-
-        Source:
-            Page 143 of Dubuisson's ASN.1 Book
-    */
-    static public ASN1Base10RealNumericalRepresentation base10RealNumericalRepresentation = 
-        ASN1Base10RealNumericalRepresentation.nr3;
-
-    /// The base of encoded REALs. May be 2, 8, 10, or 16.
-    static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
-
-    /// The base of binary-encoded REALs. May be 2, 8, or 16.
-    static public ASN1RealBinaryEncodingBase realBinaryEncodingBase = ASN1RealBinaryEncodingBase.base2;
-
-    // TODO: maximumValueLength (to prevent DoS attacks)
-
-    // public ASN1TypeTag type;
-    public ubyte type;
-
-    /**
-        Whether the value is one of the universally-defined data types, which
-        are:
-
-        $(TABLE
-            $(TR $(TH Type)                 $(TH Construction)      $(TH Hexadecimal Value))
-            $(TR $(TD End-of-Content)       $(TD Primitive)         $(TD 0x00))
-            $(TR $(TD BOOLEAN)	            $(TD Primitive)         $(TD 0x01))
-            $(TR $(TD INTEGER)	            $(TD Primitive)         $(TD 0x02))
-            $(TR $(TD BIT STRING)           $(TD Both)              $(TD 0x03))
-            $(TR $(TD OCTET STRING)         $(TD Both)              $(TD 0x04))
-            $(TR $(TD NULL)                 $(TD Primitive)         $(TD 0x05))
-            $(TR $(TD OBJECT IDENTIFIER)	$(TD Primitive)         $(TD 0x06))
-            $(TR $(TD Object Descriptor)    $(TD Both)              $(TD 0x07))
-            $(TR $(TD EXTERNAL)	            $(TD Constructed)       $(TD 0x08))
-            $(TR $(TD REAL)            	    $(TD Primitive)         $(TD 0x09))
-            $(TR $(TD ENUMERATED)	        $(TD Primitive)         $(TD 0x0A))
-            $(TR $(TD EMBEDDED PDV)	        $(TD Constructed)       $(TD 0x0B))
-            $(TR $(TD UTF8String)	        $(TD Both)              $(TD 0x0C))
-            $(TR $(TD RELATIVE-OID)	        $(TD Primitive)         $(TD 0x0D))
-            $(TR $(TD SEQUENCE)	            $(TD Constructed)       $(TD 0x10))
-            $(TR $(TD SET)	                $(TD Constructed)       $(TD 0x11))
-            $(TR $(TD NumericString)	    $(TD Both)              $(TD 0x12))
-            $(TR $(TD PrintableString)	    $(TD Both)              $(TD 0x13))
-            $(TR $(TD T61String)	        $(TD Both)              $(TD 0x14))
-            $(TR $(TD VideotexString)	    $(TD Both)              $(TD 0x15))
-            $(TR $(TD IA5String)	        $(TD Both)              $(TD 0x16))
-            $(TR $(TD UTCTime)	            $(TD Both)              $(TD 0x17))
-            $(TR $(TD GeneralizedTime)	    $(TD Both)              $(TD 0x18))
-            $(TR $(TD GraphicString)	    $(TD Both)              $(TD 0x19))
-            $(TR $(TD VisibleString)	    $(TD Both)              $(TD 0x1A))
-            $(TR $(TD GeneralString)	    $(TD Both)              $(TD 0x1B))
-            $(TR $(TD UniversalString)	    $(TD Both)              $(TD 0x1C))
-            $(TR $(TD CHARACTER STRING)	    $(TD Both)              $(TD 0x1D))
-            $(TR $(TD BMPString)	        $(TD Both)              $(TD 0x1E))
-        )
-    */
-    final public @property
-    bool universal() const
-    {
-        return ((this.type & 0xC) == 0x00);
-    }
-
-    /**
-        Whether the type is application-specific.
-    */
-    final public @property
-    bool applicationSpecific() const
-    {
-        return ((this.type & 0xC) == 0x40);
-    }
-
-    /**
-        Whether the type tag specifies an index within a SEQUENCE or CHOICE.
-    */
-    final public @property
-    bool contextSpecific() const
-    {
-        return ((this.type & 0xC) == 0x80);
-    }
-
-    /// I don't know what this even means.
-    final public @property
-    bool privatelySpecific() const
-    {
-        return ((this.type & 0xC) == 0x40);
-    }
-
-    /// The length of the value in octets
-    final public @property @safe nothrow
-    size_t length() const
-    {
-        return this.value.length;
-    }
-
-    /// The octets of the encoded value.
-    public ubyte[] value;
-
-    // Convenience
-    // pragma(inline, true);
-    final private
-    void throwIfEmptyValue(X : ASN1CodecException)() const
-    {
-        if (this.length != 1) throw new X ("Value bytes was zero");
-    }
-
-    /**
-        An opCast() override for converting the type-length-value tuple to
-        bytes.
-    */
-    public
-    ubyte[] opCast(T = ubyte[])()
-    {
-        return [];
-    }
+    static assert(is(Element : typeof(this)), "Tried to instantiate " ~ typeof(this).stringof ~ " with type parameter " ~ Element.stringof);
 
     /// Decodes a boolean
     abstract public @property
@@ -312,6 +136,19 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void boolean(bool value);
 
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.boolean = true;
+        assert(e.boolean == true);
+        el.boolean = false;
+        assert(el.boolean == false);
+
+        // Assert that accessor does not mutate state
+        assert(el.boolean == el.boolean);
+    }
+
     /// Decodes an integer
     abstract public @property
     T integer(T)() const if (isIntegral!T && isSigned!T);
@@ -320,19 +157,201 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void integer(T)(T value) if (isIntegral!T && isSigned!T);
 
-    // /// Decodes a BitArray
-    // abstract public @property
-    // BitArray bitString();
+    ///
+    @system
+    unittest
+    {
+        Element el = new Element();
 
-    // /// Encodes a BitArray
-    // abstract public @property
-    // void bitString(BitArray value);
+        // Tests for zero
+        el.integer!byte = 0;
+        assert(el.integer!byte == 0);
+        assert(el.integer!short == 0);
+        assert(el.integer!int == 0);
+        assert(el.integer!long == 0L);
+
+        el.integer!short = 0;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assert(el.integer!short == 0);
+        assert(el.integer!int == 0);
+        assert(el.integer!long == 0L);
+
+        el.integer!int = 0;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assert(el.integer!int == 0);
+        assert(el.integer!long == 0L);
+
+        el.integer!long = 0L;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assertThrown!ASN1ValueTooBigException(el.integer!int);
+        assert(el.integer!long == 0L);
+
+        // Tests for small positives
+        el.integer!byte = 3;
+        assert(el.integer!byte == 3);
+        assert(el.integer!short == 3);
+        assert(el.integer!int == 3);
+        assert(el.integer!long == 3L);
+
+        el.integer!short = 5;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assert(el.integer!short == 5);
+        assert(el.integer!int == 5);
+        assert(el.integer!long == 5L);
+
+        el.integer!int = 7;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assert(el.integer!int == 7);
+        assert(el.integer!long == 7L);
+
+        el.integer!long = 9L;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assertThrown!ASN1ValueTooBigException(el.integer!int);
+        assert(el.integer!long == 9L);
+
+        // Tests for small negatives
+        el.integer!byte = -3;
+        assert(el.integer!byte == -3);
+        assert(el.integer!short == -3);
+        assert(el.integer!int == -3);
+        assert(el.integer!long == -3L);
+
+        el.integer!short = -5;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assert(el.integer!short == -5);
+        assert(el.integer!int == -5);
+        assert(el.integer!long == -5L);
+
+        el.integer!int = -7;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assert(el.integer!int == -7);
+        assert(el.integer!long == -7L);
+
+        el.integer!long = -9L;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assertThrown!ASN1ValueTooBigException(el.integer!int);
+        assert(el.integer!long == -9L);
+
+        // Tests for large positives
+        el.integer!short = 20000;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assert(el.integer!short == 20000);
+        assert(el.integer!int == 20000);
+        assert(el.integer!long == 20000L);
+
+        el.integer!int = 70000;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assert(el.integer!int == 70000);
+        assert(el.integer!long == 70000L);
+
+        el.integer!long = 70000L;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assertThrown!ASN1ValueTooBigException(el.integer!int);
+        assert(el.integer!long == 70000L);
+
+        // Tests for large negatives
+        el.integer!short = -20000;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assert(el.integer!short == -20000);
+        assert(el.integer!int == -20000);
+        assert(el.integer!long == -20000L);
+
+        el.integer!int = -70000;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assert(el.integer!int == -70000);
+        assert(el.integer!long == -70000L);
+
+        el.integer!long = -70000L;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assertThrown!ASN1ValueTooBigException(el.integer!int);
+        assert(el.integer!long == -70000L);
+
+        // Tests for maximum values
+        el.integer!byte = byte.max;
+        assert(el.integer!byte == byte.max);
+        assert(el.integer!short == byte.max);
+        assert(el.integer!int == byte.max);
+        assert(el.integer!long == byte.max);
+
+        el.integer!short = short.max;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assert(el.integer!short == short.max);
+        assert(el.integer!int == short.max);
+        assert(el.integer!long == short.max);
+
+        el.integer!int = int.max;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assert(el.integer!int == int.max);
+        assert(el.integer!long == int.max);
+
+        el.integer!long = long.max;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assertThrown!ASN1ValueTooBigException(el.integer!int);
+        assert(el.integer!long == long.max);
+
+        // Tests for minimum values
+        el.integer!byte = byte.min;
+        assert(el.integer!byte == byte.min);
+        assert(el.integer!short == byte.min);
+        assert(el.integer!int == byte.min);
+        assert(el.integer!long == byte.min);
+
+        el.integer!short = short.min;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assert(el.integer!short == short.min);
+        assert(el.integer!int == short.min);
+        assert(el.integer!long == short.min);
+
+        el.integer!int = int.min;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assert(el.integer!int == int.min);
+        assert(el.integer!long == int.min);
+
+        el.integer!long = long.min;
+        assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        assertThrown!ASN1ValueTooBigException(el.integer!short);
+        assertThrown!ASN1ValueTooBigException(el.integer!int);
+        assert(el.integer!long == long.min);
+
+        // Assert that accessor does not mutate state
+        assert(el.integer!long == el.integer!long);
+    }
 
     abstract public @property
     bool[] bitString() const;
 
     abstract public @property
     void bitString(bool[] value);
+
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.bitString = []; // 0 bits
+        assert(el.bitString == []);
+        el.bitString = [ true, false, true, true, false, false, true ]; // 7 bits
+        assert(el.bitString == [ true, false, true, true, false, false, true ]);
+        el.bitString = [ true, false, true, true, false, false, true, false ]; // 8 bits
+        assert(el.bitString == [ true, false, true, true, false, false, true, false ]);
+        el.bitString = [ true, false, true, true, false, false, true, false, true ]; // 9 bits
+        assert(el.bitString == [ true, false, true, true, false, false, true, false, true ]);
+
+        // Assert that accessor does not mutate state
+        assert(el.bitString == el.bitString);
+    }
 
     /// Decodes a ubyte[] array
     abstract public @property
@@ -341,6 +360,17 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     /// Encodes a ubyte[] array
     abstract public @property
     void octetString(ubyte[] value);
+
+    @safe
+    unittest
+    {
+        Element el = new Element();
+        el.octetString = [ 0x05u, 0x02u, 0xFFu, 0x00u, 0x6Au ];
+        assert(el.octetString == [ 0x05u, 0x02u, 0xFFu, 0x00u, 0x6Au ]);
+
+        // Assert that accessor does not mutate state
+        assert(el.octetString == el.octetString);
+    }
 
     ///
     public alias oid = objectIdentifier;
@@ -351,6 +381,19 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     /// Encodes an Object Identifier
     abstract public @property
     void objectIdentifier(OID value);
+
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.objectIdentifier = new OID(OIDNode(1u), OIDNode(30u), OIDNode(256u), OIDNode(623485u), OIDNode(8u));
+        assert(el.objectIdentifier == new OID(OIDNode(1u), OIDNode(30u), OIDNode(256u), OIDNode(623485u), OIDNode(8u)));
+        el.objectIdentifier = new OID(1, 3, 6, 4, 0, 256, 70000, 39);
+        assert(el.objectIdentifier.numericArray == [ 1, 3, 6, 4, 0, 256, 70000, 39 ]);
+
+        // Assert that accessor does not mutate state
+        assert(el.objectIdentifier == el.objectIdentifier);
+    }
 
     /**
         Decodes an ObjectDescriptor, which is a string consisting of only
@@ -393,6 +436,29 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     */
     abstract public @property
     void objectDescriptor(string value);
+
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.objectDescriptor = "Nitro dubs & T-Rix";
+        assert(el.objectDescriptor == "Nitro dubs & T-Rix");
+        el.objectDescriptor = " ";
+        assert(el.objectDescriptor == " ");
+        el.objectDescriptor = "";
+        assert(el.objectDescriptor == "");
+        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\xD7");
+        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\t");
+        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\r");
+        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\n");
+        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\b");
+        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\v");
+        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\f");
+        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\0");
+
+        // Assert that accessor does not mutate state
+        assert(el.objectDescriptor == el.objectDescriptor);
+    }
 
     /**
         Decodes an EXTERNAL, which is a constructed data type, defined in 
@@ -446,6 +512,71 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void external(External value);
 
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.syntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        External input = External();
+        input.identification = id;
+        input.dataValueDescriptor = "boop";
+        input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
+
+        Element el = new Element();
+        el.external = input;
+        External output = el.external;
+        assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.presentationContextID = 27L;
+
+        External input = External();
+        input.identification = id;
+        input.dataValueDescriptor = "external";
+        input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
+
+        Element el = new Element();
+        el.external = input;
+        External output = el.external;
+        assert(output.identification.presentationContextID == 27L);
+        assert(output.dataValueDescriptor == "external");
+        assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
+        cn.presentationContextID = 27L;
+        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.contextNegotiation = cn;
+
+        External input = External();
+        input.identification = id;
+        input.dataValueDescriptor = "blap";
+        input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
+
+        Element el = new Element();
+        el.external = input;
+        External output = el.external;
+        assert(output.identification.contextNegotiation.presentationContextID == 27L);
+        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "blap");
+        assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
+
+        // Assert that accessor does not mutate state
+        assert(el.external == el.external);
+    }
+
     // TODO: Make string variants
     /// Encodes a floating-point number
     abstract public @property
@@ -455,6 +586,194 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void realType(T)(T value) if (is(T == float) || is(T == double));
 
+    ///
+    @system
+    unittest
+    {
+        float f = -22.86;
+        double d = 0.00583;
+        Element elf = new Element();
+        Element eld = new Element();
+        elf.realType!float = f;
+        eld.realType!double = d;
+        assert(approxEqual(elf.realType!float, f));
+        assert(approxEqual(elf.realType!double, f));
+        assert(approxEqual(eld.realType!float, d));
+        assert(approxEqual(eld.realType!double, d));
+
+        // Assert that accessor does not mutate state
+        assert(elf.realType!double == elf.realType!double);
+    }
+
+    // Test a few edge cases
+    @system
+    unittest
+    {
+        Element el = new Element();
+
+        // Positive Zeroes
+        el.realType!float = 0.0;
+        assert(approxEqual(el.realType!float, 0.0));
+        assert(approxEqual(el.realType!double, 0.0));
+        el.realType!double = 0.0;
+        assert(approxEqual(el.realType!float, 0.0));
+        assert(approxEqual(el.realType!double, 0.0));
+
+        // Negative Zeroes
+        el.realType!float = -0.0;
+        assert(approxEqual(el.realType!float, -0.0));
+        assert(approxEqual(el.realType!double, -0.0));
+        el.realType!double = -0.0;
+        assert(approxEqual(el.realType!float, -0.0));
+        assert(approxEqual(el.realType!double, -0.0));
+
+        // Positive Repeating decimal
+        el.realType!float = (10.0 / 3.0);
+        assert(approxEqual(el.realType!float, (10.0 / 3.0)));
+        assert(approxEqual(el.realType!double, (10.0 / 3.0)));
+        el.realType!double = (10.0 / 3.0);
+        assert(approxEqual(el.realType!float, (10.0 / 3.0)));
+        assert(approxEqual(el.realType!double, (10.0 / 3.0)));
+
+        // Negative Repeating Decimal
+        el.realType!float = -(10.0 / 3.0);
+        assert(approxEqual(el.realType!float, -(10.0 / 3.0)));
+        assert(approxEqual(el.realType!double, -(10.0 / 3.0)));
+        el.realType!double = -(10.0 / 3.0);
+        assert(approxEqual(el.realType!float, -(10.0 / 3.0)));
+        assert(approxEqual(el.realType!double, -(10.0 / 3.0)));
+
+        // Positive one
+        el.realType!float = 1.0;
+        assert(approxEqual(el.realType!float, 1.0));
+        assert(approxEqual(el.realType!double, 1.0));
+        el.realType!double = 1.0;
+        assert(approxEqual(el.realType!float, 1.0));
+        assert(approxEqual(el.realType!double, 1.0));
+
+        // Negative one
+        el.realType!float = -1.0;
+        assert(approxEqual(el.realType!float, -1.0));
+        assert(approxEqual(el.realType!double, -1.0));
+        el.realType!double = -1.0;
+        assert(approxEqual(el.realType!float, -1.0));
+        assert(approxEqual(el.realType!double, -1.0));
+
+        // Positive Infinity
+        el.realType!float = float.infinity;
+        assert(el.realType!float == float.infinity);
+        assert(el.realType!double == double.infinity);
+        el.realType!double = double.infinity;
+        assert(el.realType!float == float.infinity);
+        assert(el.realType!double == double.infinity);
+
+        // Negative Infinity
+        el.realType!float = -float.infinity;
+        assert(el.realType!float == -float.infinity);
+        assert(el.realType!double == -double.infinity);
+        el.realType!double = -double.infinity;
+        assert(el.realType!float == -float.infinity);
+        assert(el.realType!double == -double.infinity);
+
+        // Not-a-Number
+        assertThrown!ASN1ValueInvalidException(el.realType!float = float.nan);
+        assertThrown!ASN1ValueInvalidException(el.realType!double = double.nan);
+    }
+
+    // Test with all of the math constants, to make sure there are no edge cases.
+    @system
+    unittest
+    {
+        import std.math : 
+            E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2, 
+            LOG2E, LOG2T, LOG10E, SQRT2, SQRT1_2;
+
+        Element el = new Element();
+
+        // Tests floats
+        el.realType!float = cast(float) E;
+        assert(el.realType!float == cast(float) E);
+        el.realType!float = cast(float) PI;
+        assert(el.realType!float == cast(float) PI);
+        el.realType!float = cast(float) PI_2;
+        assert(el.realType!float == cast(float) PI_2);
+        el.realType!float = cast(float) PI_4;
+        assert(el.realType!float == cast(float) PI_4);
+        el.realType!float = cast(float) M_1_PI;
+        assert(el.realType!float == cast(float) M_1_PI);
+        el.realType!float = cast(float) M_2_PI;
+        assert(el.realType!float == cast(float) M_2_PI);
+        el.realType!float = cast(float) M_2_SQRTPI;
+        assert(el.realType!float == cast(float) M_2_SQRTPI);
+        el.realType!float = cast(float) LN10;
+        assert(el.realType!float == cast(float) LN10);
+        el.realType!float = cast(float) LN2;
+        assert(el.realType!float == cast(float) LN2);
+        el.realType!float = cast(float) LOG2;
+        assert(el.realType!float == cast(float) LOG2);
+        el.realType!float = cast(float) LOG2E;
+        assert(el.realType!float == cast(float) LOG2E);
+        el.realType!float = cast(float) LOG2T;
+        assert(el.realType!float == cast(float) LOG2T);
+        el.realType!float = cast(float) LOG10E;
+        assert(el.realType!float == cast(float) LOG10E);
+        el.realType!float = cast(float) SQRT2;
+        assert(el.realType!float == cast(float) SQRT2);
+        el.realType!float = cast(float) SQRT1_2;
+        assert(el.realType!float == cast(float) SQRT1_2);
+
+        // Tests doubles
+        el.realType!double = cast(double) E;
+        assert(el.realType!double == cast(double) E);
+        el.realType!double = cast(double) PI;
+        assert(el.realType!double == cast(double) PI);
+        el.realType!double = cast(double) PI_2;
+        assert(el.realType!double == cast(double) PI_2);
+        el.realType!double = cast(double) PI_4;
+        assert(el.realType!double == cast(double) PI_4);
+        el.realType!double = cast(double) M_1_PI;
+        assert(el.realType!double == cast(double) M_1_PI);
+        el.realType!double = cast(double) M_2_PI;
+        assert(el.realType!double == cast(double) M_2_PI);
+        el.realType!double = cast(double) M_2_SQRTPI;
+        assert(el.realType!double == cast(double) M_2_SQRTPI);
+        el.realType!double = cast(double) LN10;
+        assert(el.realType!double == cast(double) LN10);
+        el.realType!double = cast(double) LN2;
+        assert(el.realType!double == cast(double) LN2);
+        el.realType!double = cast(double) LOG2;
+        assert(el.realType!double == cast(double) LOG2);
+        el.realType!double = cast(double) LOG2E;
+        assert(el.realType!double == cast(double) LOG2E);
+        el.realType!double = cast(double) LOG2T;
+        assert(el.realType!double == cast(double) LOG2T);
+        el.realType!double = cast(double) LOG10E;
+        assert(el.realType!double == cast(double) LOG10E);
+        el.realType!double = cast(double) SQRT2;
+        assert(el.realType!double == cast(double) SQRT2);
+        el.realType!double = cast(double) SQRT1_2;
+        assert(el.realType!double == cast(double) SQRT1_2);
+    }
+
+    @system
+    unittest
+    {
+        for (int i = -100; i < 100; i++)
+        {
+            // Alternating negative and positive floating point numbers exploring extreme values
+            immutable float f = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
+            immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
+            Element elf = new Element();
+            Element eld = new Element();
+            elf.realType!float = f;
+            eld.realType!double = d;
+            assert(approxEqual(elf.realType!float, f));
+            assert(approxEqual(elf.realType!double, f));
+            assert(approxEqual(eld.realType!float, d));
+            assert(approxEqual(eld.realType!double, d));
+        }
+    }
+
     /// Encodes an integer that represents an ENUMERATED value
     abstract public @property
     T enumerated(T)() const if (isIntegral!T && isSigned!T);
@@ -462,6 +781,179 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     /// Decodes an integer that represents an ENUMERATED value
     abstract public @property
     void enumerated(T)(T value) if (isIntegral!T && isSigned!T);
+
+    ///
+    @system
+    unittest
+    {
+        Element el = new Element();
+
+        // Tests for zero
+        el.enumerated!byte = 0;
+        assert(el.enumerated!byte == 0);
+        assert(el.enumerated!short == 0);
+        assert(el.enumerated!int == 0);
+        assert(el.enumerated!long == 0L);
+
+        el.enumerated!short = 0;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assert(el.enumerated!short == 0);
+        assert(el.enumerated!int == 0);
+        assert(el.enumerated!long == 0L);
+
+        el.enumerated!int = 0;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assert(el.enumerated!int == 0);
+        assert(el.enumerated!long == 0L);
+
+        el.enumerated!long = 0L;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        assert(el.enumerated!long == 0L);
+
+        // Tests for small positives
+        el.enumerated!byte = 3;
+        assert(el.enumerated!byte == 3);
+        assert(el.enumerated!short == 3);
+        assert(el.enumerated!int == 3);
+        assert(el.enumerated!long == 3L);
+
+        el.enumerated!short = 5;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assert(el.enumerated!short == 5);
+        assert(el.enumerated!int == 5);
+        assert(el.enumerated!long == 5L);
+
+        el.enumerated!int = 7;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assert(el.enumerated!int == 7);
+        assert(el.enumerated!long == 7L);
+
+        el.enumerated!long = 9L;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        assert(el.enumerated!long == 9L);
+
+        // Tests for small negatives
+        el.enumerated!byte = -3;
+        assert(el.enumerated!byte == -3);
+        assert(el.enumerated!short == -3);
+        assert(el.enumerated!int == -3);
+        assert(el.enumerated!long == -3L);
+
+        el.enumerated!short = -5;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assert(el.enumerated!short == -5);
+        assert(el.enumerated!int == -5);
+        assert(el.enumerated!long == -5L);
+
+        el.enumerated!int = -7;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assert(el.enumerated!int == -7);
+        assert(el.enumerated!long == -7L);
+
+        el.enumerated!long = -9L;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        assert(el.enumerated!long == -9L);
+
+        // Tests for large positives
+        el.enumerated!short = 20000;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assert(el.enumerated!short == 20000);
+        assert(el.enumerated!int == 20000);
+        assert(el.enumerated!long == 20000L);
+
+        el.enumerated!int = 70000;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assert(el.enumerated!int == 70000);
+        assert(el.enumerated!long == 70000L);
+
+        el.enumerated!long = 70000L;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        assert(el.enumerated!long == 70000L);
+
+        // Tests for large negatives
+        el.enumerated!short = -20000;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assert(el.enumerated!short == -20000);
+        assert(el.enumerated!int == -20000);
+        assert(el.enumerated!long == -20000L);
+
+        el.enumerated!int = -70000;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assert(el.enumerated!int == -70000);
+        assert(el.enumerated!long == -70000L);
+
+        el.enumerated!long = -70000L;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        assert(el.enumerated!long == -70000L);
+
+        // Tests for maximum values
+        el.enumerated!byte = byte.max;
+        assert(el.enumerated!byte == byte.max);
+        assert(el.enumerated!short == byte.max);
+        assert(el.enumerated!int == byte.max);
+        assert(el.enumerated!long == byte.max);
+
+        el.enumerated!short = short.max;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assert(el.enumerated!short == short.max);
+        assert(el.enumerated!int == short.max);
+        assert(el.enumerated!long == short.max);
+
+        el.enumerated!int = int.max;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assert(el.enumerated!int == int.max);
+        assert(el.enumerated!long == int.max);
+
+        el.enumerated!long = long.max;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        assert(el.enumerated!long == long.max);
+
+        // Tests for minimum values
+        el.enumerated!byte = byte.min;
+        assert(el.enumerated!byte == byte.min);
+        assert(el.enumerated!short == byte.min);
+        assert(el.enumerated!int == byte.min);
+        assert(el.enumerated!long == byte.min);
+
+        el.enumerated!short = short.min;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assert(el.enumerated!short == short.min);
+        assert(el.enumerated!int == short.min);
+        assert(el.enumerated!long == short.min);
+
+        el.enumerated!int = int.min;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assert(el.enumerated!int == int.min);
+        assert(el.enumerated!long == int.min);
+
+        el.enumerated!long = long.min;
+        assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        assert(el.enumerated!long == long.min);
+
+        // Assert that accessor does not mutate state
+        assert(el.enumerated == el.enumerated);
+    }
 
     ///
     public alias embeddedPDV = embeddedPresentationDataValue;
@@ -529,6 +1021,134 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void embeddedPresentationDataValue(EmbeddedPDV value);
 
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeSyntaxes syn = ASN1ContextSwitchingTypeSyntaxes();
+        syn.abstractSyntax = new OID(1, 3, 6, 4, 1, 256, 7);
+        syn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 8);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.syntaxes = syn;
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "boop";
+        input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
+
+        Element el = new Element();
+        el.embeddedPDV = input;
+        EmbeddedPDV output = el.embeddedPDV;
+        assert(output.identification.syntaxes.abstractSyntax == new OID(1, 3, 6, 4, 1, 256, 7));
+        assert(output.identification.syntaxes.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 8));
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
+
+        // Assert that accessor does not mutate state
+        assert(el.embeddedPDV == el.embeddedPDV);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.syntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "boop";
+        input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
+
+        Element el = new Element();
+        el.embeddedPDV = input;
+        EmbeddedPDV output = el.embeddedPDV;
+        assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.presentationContextID = 27L;
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "external";
+        input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
+
+        Element el = new Element();
+        el.type = 0x08u;
+        el.embeddedPDV = input;
+        EmbeddedPDV output = el.embeddedPDV;
+        assert(output.identification.presentationContextID == 27L);
+        assert(output.dataValueDescriptor == "external");
+        assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
+        cn.presentationContextID = 27L;
+        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.contextNegotiation = cn;
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "blap";
+        input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
+
+        Element el = new Element();
+        el.embeddedPDV = input;
+        EmbeddedPDV output = el.embeddedPDV;
+        assert(output.identification.contextNegotiation.presentationContextID == 27L);
+        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "blap");
+        assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "boop";
+        input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
+
+        Element el = new Element();
+        el.embeddedPDV = input;
+        EmbeddedPDV output = el.embeddedPDV;
+        assert(output.identification.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.fixed = true;
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValueDescriptor = "boop";
+        input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
+
+        Element el = new Element();
+        el.embeddedPDV = input;
+        EmbeddedPDV output = el.embeddedPDV;
+        assert(output.identification.fixed == true);
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
+    }
+
     ///
     public alias utf8String = unicodeTransformationFormat8String;
     /// Decodes a UTF-8 String
@@ -538,6 +1158,17 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     /// Encodes a UTF-8 String
     abstract public @property
     void unicodeTransformationFormat8String(string value);
+
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.utf8String = "henlo borthers";
+        assert(el.utf8String == "henlo borthers");
+
+        // Assert that accessor does not mutate state
+        assert(el.utf8String == el.utf8String);
+    }
 
     ///
     public alias roid = relativeObjectIdentifier;
@@ -551,29 +1182,23 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void relativeObjectIdentifier(OIDNode[] value);
 
-    /**
-        Decodes an array of elements.
+    @system
+    unittest
+    {
+        Element el = new Element();
+        OIDNode[] input = [ OIDNode(3), OIDNode(5), OIDNode(7), OIDNode(9) ];
+        el.roid = input;
+        OIDNode[] output = el.roid;
 
-        Credits:
-            Thanks to StackOverflow user 
-            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
-            for teaching me how to create the abstract method that uses the 
-            child class as a template.
-    */
-    abstract public @property
-    T[] sequence(this T)() const;
+        assert(input.length == output.length);
+        for (ptrdiff_t i = 0; i < input.length; i++)
+        {
+            assert(input[i] == output[i]);
+        }
 
-    /**
-        Encodes an array of elements.
-
-        Credits:
-            Thanks to StackOverflow user 
-            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
-            for teaching me how to create the abstract method that uses the 
-            child class as a template.
-    */
-    abstract public @property
-    void sequence(this T)(T[] value);
+        // Assert that accessor does not mutate state
+        assert(el.relativeObjectIdentifier == el.relativeObjectIdentifier);
+    }
 
     /**
         Decodes an array of elements.
@@ -585,7 +1210,7 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
             child class as a template.
     */
     abstract public @property
-    T[] set(this T)() const;
+    Element[] sequence() const;
 
     /**
         Encodes an array of elements.
@@ -597,7 +1222,31 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
             child class as a template.
     */
     abstract public @property
-    void set(this T)(T[] value);
+    void sequence(Element[] value);
+
+    /**
+        Decodes an array of elements.
+
+        Credits:
+            Thanks to StackOverflow user 
+            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
+            for teaching me how to create the abstract method that uses the 
+            child class as a template.
+    */
+    abstract public @property
+    Element[] set() const;
+
+    /**
+        Encodes an array of elements.
+
+        Credits:
+            Thanks to StackOverflow user 
+            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
+            for teaching me how to create the abstract method that uses the 
+            child class as a template.
+    */
+    abstract public @property
+    void set(Element[] value);
 
     /**
         Decodes a string, where the characters of the string are limited to
@@ -612,6 +1261,23 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     */
     abstract public @property
     void numericString(string value);
+
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.numericString = "1234567890";
+        assert(el.numericString == "1234567890");
+        el.numericString = " ";
+        assert(el.numericString == " ");
+        el.numericString = "";
+        assert(el.numericString == "");
+        assertThrown!ASN1ValueInvalidException(el.numericString = "hey hey");
+        assertThrown!ASN1ValueInvalidException(el.numericString = "12345676789A");
+
+        // Assert that accessor does not mutate state
+        assert(el.numericString == el.numericString);
+    }
 
     /**
         Decodes a string that will only contain characters a-z, A-Z, 0-9,
@@ -629,6 +1295,28 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void printableString(string value);
 
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.printableString = "1234567890 asdfjkl";
+        assert(el.printableString == "1234567890 asdfjkl");
+        el.printableString = " ";
+        assert(el.printableString == " ");
+        el.printableString = "";
+        assert(el.printableString == "");
+        assertThrown!ASN1ValueInvalidException(el.printableString = "\t");
+        assertThrown!ASN1ValueInvalidException(el.printableString = "\n");
+        assertThrown!ASN1ValueInvalidException(el.printableString = "\0");
+        assertThrown!ASN1ValueInvalidException(el.printableString = "\v");
+        assertThrown!ASN1ValueInvalidException(el.printableString = "\b");
+        assertThrown!ASN1ValueInvalidException(el.printableString = "\r");
+        assertThrown!ASN1ValueInvalidException(el.printableString = "\x13");
+
+        // Assert that accessor does not mutate state
+        assert(el.printableString == el.printableString);
+    }
+
     ///
     public alias t61String = teletexString;
     /// Decodes bytes representing the T.61 Character Set
@@ -639,11 +1327,33 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void teletexString(ubyte[] value);
 
+    @safe
+    unittest
+    {
+        Element el = new Element();
+        el.teletexString = [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ];
+        assert(el.teletexString == [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ]);
+
+        // Assert that accessor does not mutate state
+        assert(el.teletexString == el.teletexString);
+    }
+
     abstract public @property
     ubyte[] videotexString() const;
 
     abstract public @property
     void videotexString(ubyte[] value);
+
+    @safe
+    unittest
+    {
+        Element el = new Element();
+        el.videotexString = [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ];
+        assert(el.videotexString == [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ]);
+
+        // Assert that accessor does not mutate state
+        assert(el.videotexString == el.videotexString);
+    }
 
     ///
     public alias ia5String = internationalAlphabetNumber5String;
@@ -654,6 +1364,18 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     /// Encodes a string of ASCII characters
     abstract public @property
     void internationalAlphabetNumber5String(string value);
+
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.ia5String = "Nitro dubs & T-Rix";
+        assert(el.ia5String == "Nitro dubs & T-Rix");
+        assertThrown!ASN1ValueInvalidException(el.ia5String = "Nitro dubs \xD7 T-Rix");
+
+        // Assert that accessor does not mutate state
+        assert(el.ia5String == el.ia5String);
+    }
 
     ///
     public alias utc = coordinatedUniversalTime;
@@ -667,6 +1389,17 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void coordinatedUniversalTime(DateTime value);
 
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.utcTime = DateTime(2017, 10, 3);
+        assert(el.utcTime == DateTime(2017, 10, 3));
+
+        // Assert that accessor does not mutate state
+        assert(el.utcTime == el.utcTime);
+    }
+
     /// Decodes a DateTime
     abstract public @property
     DateTime generalizedTime() const;
@@ -674,6 +1407,17 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     /// Encodes a DateTime
     abstract public @property
     void generalizedTime(DateTime value);
+
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.generalizedTime = DateTime(2017, 10, 3);
+        assert(el.generalizedTime == DateTime(2017, 10, 3));
+
+        // Assert that accessor does not mutate state
+        assert(el.generalizedTime == el.generalizedTime);
+    }
 
     /**
         Decodes an ASCII string that contains only characters between and 
@@ -707,6 +1451,29 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void graphicString(string value);
 
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.graphicString = "Nitro dubs & T-Rix";
+        assert(el.graphicString == "Nitro dubs & T-Rix");
+        el.graphicString = " ";
+        assert(el.graphicString == " ");
+        el.graphicString = "";
+        assert(el.graphicString == "");
+        assertThrown!ASN1ValueInvalidException(el.graphicString = "\xD7");
+        assertThrown!ASN1ValueInvalidException(el.graphicString = "\t");
+        assertThrown!ASN1ValueInvalidException(el.graphicString = "\r");
+        assertThrown!ASN1ValueInvalidException(el.graphicString = "\n");
+        assertThrown!ASN1ValueInvalidException(el.graphicString = "\b");
+        assertThrown!ASN1ValueInvalidException(el.graphicString = "\v");
+        assertThrown!ASN1ValueInvalidException(el.graphicString = "\f");
+        assertThrown!ASN1ValueInvalidException(el.graphicString = "\0");
+
+        // Assert that accessor does not mutate state
+        assert(el.graphicString == el.graphicString);
+    }
+
     /**
         Decodes a string that only contains characters between and including
         0x20 and 0x7E. (Honestly, I don't know how this differs from
@@ -723,6 +1490,29 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void visibleString(string value);
 
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.visibleString = "hey hey";
+        assert(el.visibleString == "hey hey");
+        el.visibleString = " ";
+        assert(el.visibleString == " ");
+        el.visibleString = "";
+        assert(el.visibleString == "");
+        assertThrown!ASN1ValueInvalidException(el.visibleString = "\xD7");
+        assertThrown!ASN1ValueInvalidException(el.visibleString = "\t");
+        assertThrown!ASN1ValueInvalidException(el.visibleString = "\r");
+        assertThrown!ASN1ValueInvalidException(el.visibleString = "\n");
+        assertThrown!ASN1ValueInvalidException(el.visibleString = "\b");
+        assertThrown!ASN1ValueInvalidException(el.visibleString = "\v");
+        assertThrown!ASN1ValueInvalidException(el.visibleString = "\f");
+        assertThrown!ASN1ValueInvalidException(el.visibleString = "\0");
+
+        // Assert that accessor does not mutate state
+        assert(el.visibleString == el.visibleString);
+    }
+
     /// Decodes a string containing only ASCII characters.
     deprecated
     abstract public @property
@@ -733,6 +1523,18 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void generalString(string value);
 
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.generalString = "foin-ass sweatpants from BUCCI \0\n\t\b\v\r\f";
+        assert(el.generalString == "foin-ass sweatpants from BUCCI \0\n\t\b\v\r\f");
+        assertThrown!ASN1ValueInvalidException(el.generalString = "\xF5");
+
+        // Assert that accessor does not mutate state
+        assert(el.generalString == el.generalString);
+    }
+
     /// Decodes a string of UTF-32 characters
     abstract public @property
     dstring universalString() const;
@@ -740,6 +1542,17 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     /// Encodes a string of UTF-32 characters
     abstract public @property
     void universalString(dstring value);
+
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.universalString = "abcd"d;
+        assert(el.universalString == "abcd"d);
+
+        // Assert that accessor does not mutate state
+        assert(el.universalString == el.universalString);
+    }
 
     /**
         Decodes a CHARACTER STRING, which is a constructed data type, defined
@@ -801,6 +1614,125 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     abstract public @property
     void characterString(CharacterString value);
 
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeSyntaxes syn = ASN1ContextSwitchingTypeSyntaxes();
+        syn.abstractSyntax = new OID(1, 3, 6, 4, 1, 256, 7);
+        syn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 8);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.syntaxes = syn;
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'L', 'N', 'O' ];
+
+        Element el = new Element();
+        el.characterString = input;
+
+        // TODO: Test el.value
+
+        CharacterString output = el.characterString;
+        assert(output.identification.syntaxes.abstractSyntax == new OID(1, 3, 6, 4, 1, 256, 7));
+        assert(output.identification.syntaxes.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 8));
+        assert(output.stringValue == [ 'H', 'E', 'L', 'N', 'O' ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.syntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        Element el = new Element();
+        el.characterString = input;
+        CharacterString output = el.characterString;
+        assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.presentationContextID = 27L;
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        Element el = new Element();
+        el.type = 0x08u;
+        el.characterString = input;
+        CharacterString output = el.characterString;
+        assert(output.identification.presentationContextID == 27L);
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
+        cn.presentationContextID = 27L;
+        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.contextNegotiation = cn;
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        Element el = new Element();
+        el.characterString = input;
+        CharacterString output = el.characterString;
+        assert(output.identification.contextNegotiation.presentationContextID == 27L);
+        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        Element el = new Element();
+        el.characterString = input;
+        CharacterString output = el.characterString;
+        assert(output.identification.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+    }
+
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.fixed = true;
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        Element el = new Element();
+        el.characterString = input;
+        CharacterString output = el.characterString;
+        assert(output.identification.fixed == true);
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+
+        // Assert that accessor does not mutate state
+        assert(el.characterString == el.characterString);
+    }
+
     ///
     public alias bmpString = basicMultilingualPlaneString;
     /// Decodes a string of UTF-16 characters
@@ -810,4 +1742,26 @@ class AbstractSyntaxNotation1BinaryValue : ASN1Value
     /// Encodes a string of UTF-16 characters
     abstract public @property
     void basicMultilingualPlaneString(wstring value);
+
+    @system
+    unittest
+    {
+        Element el = new Element();
+        el.bmpString = "abcd"w;
+        assert(el.bmpString == "abcd"w);
+
+        // Assert that accessor does not mutate state
+        assert(el.bmpString == el.bmpString);
+    }
+    
+}
+
+// REVIEW: Should the setters return booleans indicating success instead of throwing errors?
+///
+public alias ASN1BinaryElement = AbstractSyntaxNotation1BinaryElement;
+///
+abstract public
+class AbstractSyntaxNotation1BinaryElement(Element) : ASN1Element
+{
+
 }

@@ -56,13 +56,7 @@ I hope to be done with this library before the end of 2017. When it is
 complete, it will contain several codecs, and everything will be unit-tested 
 and reviewed for security and performance.
 
-### Current
-
-Right now, I am only working on the Basic Encoding Rules module, since it will
-pretty much be copy-and-paste, then deleting functionality, to create the other
-modules, once I am done with BER. I want to make this module perfect before I
-create the others. Here are the changes I have to make before I consider it
-ready to serve as the basis for others:
+### Pre-1.0.0-alpha Development
 
 - [x] Finish embedded documentation
   - [x] `Throws`
@@ -70,6 +64,7 @@ ready to serve as the basis for others:
   - [x] `See_Also`
   - [x] `Standards`
   - [x] DDoc Section Formatting Macros
+  - [ ] Test that it actually compiles correctly
 - [x] Unabbreviated member names and abbreviated aliases
 - [x] Storage classes (`in`, `out`, `scope`, `const`, etc.)
 - [x] `@safe`, `@trusted`, `@system`, etc.
@@ -90,89 +85,107 @@ ready to serve as the basis for others:
 - [x] Unit tests for OID Types
   - [x] `ObjectIdentifierNode`
   - [x] `ObjectIdentifier`
-- [x] Remove dependency on `std.outbuffer`  
-- [ ] Experiment with putting unit tests in abstract class
-- [ ] Abstract constructed types into parent class, `ASN1BinaryValue`
-  - [ ] `External`
-  - [ ] `EmbeddedPDV`
-  - [ ] `CharacterString`
+- [x] Remove dependency on `std.outbuffer`
+- [x] Experiment with putting unit tests in abstract class
+- [x] Abstract constructed types into parent class, `ASN1BinaryValue`
+  - [x] `External`
+  - [x] `EmbeddedPDV`
+  - [x] `CharacterString`
 - [ ] Better exception messages
-- [ ] Rename `BERValue` to `BERElement` and `ASN1Value` to `ASN1Element`
-- [ ] Rename `ASN1InvalidValueException` to `ASN1ValueInvalidException`
+- [x] Rename `BERValue` to `BERElement` and `ASN1Value` to `ASN1Element`
+- [x] Rename `ASN1InvalidValueException` to `ASN1ValueInvalidException`
 - [ ] `debug` statements
-- [ ] Get rid of deprecation messages
+- [ ] Get rid of deprecation messages (Might be caused by [this bug](https://issues.dlang.org/show_bug.cgi?id=15903))
+- [ ] Formal citations for unit tests
+- [ ] Build System
+  - [ ] [Bazel](https://www.bazel.build)
+  - [ ] D File / Compiled Executable
+  - [ ] Bash Script
+  - [x] Batch Script
+  - [ ] GNU Make File
 
-### Future
+Version 1.0.0-alpha development is expected to begin on November 1st, 2017.
 
-The following codecs will be a part of the library:
+### 1.0.0-alpha Development
+
+Version 1.0.0-alpha development will consist entirely of creating these codecs:
 
 - [ ] Distinguished Encoding Rules (DER)
 - [ ] Basic Encoding Rules (BER)
 - [ ] Canonical Encoding Rules (CER)
-- [ ] XML Encoding Rules (XER)
-- [ ] Canonical XML Encoding Rules (CXER)
-- [ ] Extended XML Encoding Rules (EXER)
-- [ ] Aligned Packed Encoding Rules (PER)
-- [ ] Unaligned Packed Encoding Rules (UPER)
-- [ ] Canonical Packed Encoding Rules (CPER)
-- [ ] Octet Encoding Rules (OER)
-- [ ] Canonical Octet Encoding Rules (COER)
-- [ ] JSON Encoding Rules (JER)
-- [ ] Generic String Encoding Rules (GSER)
-- [ ] Lightweight Encoding Rules (LWER)
-- [ ] BACNet Encoding Rules
-- [ ] Signalling-specific Encoding Rules (SER)
 
-The following testing will be done:
+Version 1.0.0-alpha is expected to be released around November 12th, 2017.
 
-- [ ] At least one unit test for every method or function, including tests covering all code pathways in every method or function
+### 1.0.0-beta Development
+
+Version 1.0.0-beta is expected to be released around November 30th, 2017.
+
 - [ ] Fuzz testing (Sending random bytes to a decoder to get something unexpected)
 - [ ] Cross-Platform Testing
   - [ ] Windows
   - [ ] Mac OS X
   - [ ] Linux
-- [ ] Comparison Testing (Comparing the behavior of this library with others)
-  - [ ] PyASN1
+- [ ] Comparison Testing with
+  - [ ] [PyASN1](http://pyasn1.sourceforge.net)
+  - [ ] @YuryStrozhevsky 's [ASN1 BER Codec](https://github.com/YuryStrozhevsky/C-plus-plus-ASN.1-2008-coder-decoder)
 - [ ] Field Testing
   - [ ] Reading X.509 Certificates
-  - [ ] Creating a Session with OpenLDAP Server
+  - [ ] Creating a Session with [OpenLDAP Server](http://www.openldap.org)
   - [ ] Creating a Session with a TLS Endpoint
+  - [ ] @YuryStrozhevsky 's [ASN1 Test Suite](https://github.com/YuryStrozhevsky/ASN1-2008-free-test-suite)
 - [ ] Build Version Testing
   - [ ] `-noboundscheck`
-
-The following documentation will be done:
-
-- [ ] Embedded Documentation for everything
-  - [ ] Test that it actually compiles correctly!
-- [ ] Formal citations for unit tests
-
-The following reviews will be done:
-
 - [ ] Review by one security firm
 - [ ] Review for HeartBleed-like vulnerabilities
 - [ ] Review of all ASN.1-related CVEs
-- [ ] Review that character-encoded `REAL`s are strictly conformant to ISO 6093
+- [ ] Review that character-encoded `REAL`s are strictly conformant to ISO 6093 (Maybe even make an ISO 6093 Library...)
 
-The following build mechanisms will be implemented:
+### 1.0.0 Release
 
-- [ ] Bazel
-- [ ] D File / Compiled Executable
-- [ ] Bash Script
-- [x] Batch Script
-- [ ] GNU Make File
+- [ ] Publish a [Dub package](https://code.dlang.org) for it
+- [ ] Share it on [the Dlang Subreddit](https://www.reddit.com/r/dlang/)
+- [ ] [Publish an RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
+- [ ] [Publish an APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
+- [ ] Configure [Travis CI](https://travis-ci.org)
+- [ ] Dynamically-linked libraries
+- [ ] Create `man(1)` (executables) and `man(3)` (Library calls) pages
 
-The library will be marketed and distributed in the following ways:
+## 1.1.0 Release
 
-- [ ] Create a website for it
-  - [ ] Create a small API for responding to GitHub Webhooks.
-- [ ] Publish a Dub package for it
-- [ ] Share it on the Dlang Subreddit
-- [ ] Publish an RPM package 
-- [ ] Publish an APT package
-- [ ] Configure either Travis CI or Circle CI
-- [ ] Dynamic libraries
+The following codecs will be added:
 
-The following command line tools will be created:
+- [ ] Aligned Packed Encoding Rules (PER)
+- [ ] Unaligned Packed Encoding Rules (UPER)
+- [ ] Canonical Packed Encoding Rules (CPER)
+
+## 1.2.0 Release
+
+The following codecs will be added:
+
+- [ ] JSON Encoding Rules (JER)
+- [ ] XML Encoding Rules (XER)
+- [ ] Canonical XML Encoding Rules (CXER)
+- [ ] Extended XML Encoding Rules (EXER)
+
+## 1.3.0 Release
+
+The following codecs will be added:
+
+- [ ] Octet Encoding Rules (OER)
+- [ ] Canonical Octet Encoding Rules (COER)
+
+## 1.4.0 Release
+
+The following codecs will be added:
+
+- [ ] Generic String Encoding Rules (GSER)
+- [ ] Lightweight Encoding Rules (LWER)
+- [ ] BACNet Encoding Rules
+- [ ] Signalling-specific Encoding Rules (SER)
+
+## 1.5.0 Release
+
+The following command line tools will be released:
 
 - [ ] `encode-der`
 - [ ] `encode-ber`
