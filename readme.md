@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.8.1](http://semver.org/)
+* Version: [0.8.2](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -92,6 +92,9 @@ and reviewed for security and performance.
   - [x] `EmbeddedPDV`
   - [x] `CharacterString`
 - [ ] Better exception messages
+  - [x] URIs to documentation
+  - [ ] Unique numbers
+  - [ ] Display Values
 - [x] Rename `BERValue` to `BERElement` and `ASN1Value` to `ASN1Element`
 - [x] Rename `ASN1InvalidValueException` to `ASN1ValueInvalidException`
 - [ ] `debug` statements

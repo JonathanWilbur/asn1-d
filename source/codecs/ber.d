@@ -92,10 +92,41 @@ public alias BERElement = BasicEncodingRulesElement;
 public
 class BasicEncodingRulesElement : ASN1Element!BERElement
 {
-        // Constants used to save CPU cycles
+    // Constants used to save CPU cycles
     private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in encodeReal()
     private immutable real maxUlongAsReal = cast(real) ulong.max; // Saves CPU cycles in encodeReal()
     private immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in encodeReal()
+
+    // Constants for exception messages
+    immutable string notWhatYouMeantText = 
+        "It is highly likely that what you attempted to decode was not the " ~
+        "data type that you thought it was. Most likely, one of the following " ~
+        "scenarios occurred: (1) you did not write this program to the exact " ~
+        "specification of the protocol, or (2) someone is attempting to hack " ~
+        "this program (review the HeartBleed bug), or (3) the client sent " ~
+        "valid data that was just too big to decode. ";
+    immutable string forMoreInformationText = 
+        "For more information on the specific method or property that originated " ~
+        "this exception, see the documentation associated with this ASN.1 " ~
+        "library. For more information on ASN.1's data types in general, see " ~
+        "the International Telecommunications Union's X.680 specification, " ~
+        "which can be found at: " ~
+        "https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf." ~
+        "For more information on how those data types are supposed to be " ~
+        "encoded using Basic Encoding Rules, Canonical Encoding Rules, or " ~
+        "Distinguished Encoding Rules, see the International " ~
+        "Telecommunications Union's X.690 specification, which can be found " ~
+        "at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf. ";
+    immutable string debugInformationText =
+        "If reviewing the documentation does not help, you may want to run " ~
+        "the ASN.1 library in debug mode. To do this, compile the source code " ~
+        "for this library with the `-debug=asn1` flag (if you are compiling " ~
+        "with `dmd`). This will display information to the console that may " ~
+        "help you diagnose any issues. ";
+    immutable string reportBugsText =
+        "If none of the steps above helped, and you believe that you have " ~
+        "discovered a bug, please create an issue on the GitHub page's Issues " ~
+        "section at: https://github.com/JonathanWilbur/asn1-d/issues. ";
 
     // Settings
 
@@ -283,8 +314,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 "one byte (in addition to the type and length bytes, of " ~
                 "course). This exception was thrown because you attempted to " ~
                 "decode a BOOLEAN from an element that had either zero or more " ~
-                "than one bytes as the encoded value. This means that what you " ~
-                "tried to decode was probably not even a BOOLEAN at all!"
+                "than one bytes as the encoded value. " ~ notWhatYouMeantText ~ 
+                forMoreInformationText ~ debugInformationText ~ reportBugsText
             );
 
         return (this.value[0] ? true : false);
@@ -345,10 +376,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 "This exception was thrown because you attempted to decode an " ~
                 "INTEGER that was just too large to decode to any signed " ~
                 "integral data type. The largest INTEGER that can be decoded " ~
-                "is eight bytes, which can only be decoded to a long. While " ~
-                "it is possible that what you tried to decode was actually " ~
-                "an integer, it is more likely that what you tried to decode " ~
-                "was not actually an integer at all." 
+                "is eight bytes, which can only be decoded to a long. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
             );
 
         /* NOTE:
@@ -422,11 +452,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 "Since a byte is eight bits, the largest number that the " ~
                 "first byte should encode is 7, since, if you have eight " ~
                 "unused bits or more, you may as well truncate an entire " ~
-                "byte from the encoded data. This exception was thrown " ~
+                "byte from the encoded data. This exception was thrown because " ~
                 "you attempted to decode a BIT STRING whose first byte " ~
                 "had a value greater than seven. The value was: " ~ 
-                text(this.value[0]) ~ ". This probably means that you are " ~
-                "trying to decode something that is not a BIT STRING at all!"
+                text(this.value[0]) ~ ". " ~ notWhatYouMeantText ~ 
+                forMoreInformationText ~ debugInformationText ~ reportBugsText
             );
         
         bool[] ret;
@@ -627,16 +657,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             if ((!character.isGraphical) && (character != ' '))
             {
                 throw new ASN1ValueInvalidException
-                    (
-                        "This exception was thrown because you tried to decode " ~
-                        "an ObjectDescriptor that contained a character that " ~
-                        "is not graphical (a character whose ASCII encoding " ~
-                        "is outside of the range 0x20 to 0x7E). Though it is " ~
-                        "possible that you just received bad data, it is more " ~
-                        "likely that what you tried to decode was not an " ~
-                        "ObjectDescriptor at all. The offending character " ~
-                        "is '" ~ character ~ "'."
-                    );
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "an ObjectDescriptor that contained a character that " ~
+                    "is not graphical (a character whose ASCII encoding " ~
+                    "is outside of the range 0x20 to 0x7E). The offending " ~
+                    "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                    ~ forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
             }
         }
         return cast(string) this.value;
@@ -673,16 +701,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             if ((!character.isGraphical) && (character != ' '))
             {
                 throw new ASN1ValueInvalidException
-                    (
-                        "This exception was thrown because you tried to decode " ~
-                        "an ObjectDescriptor that contained a character that " ~
-                        "is not graphical (a character whose ASCII encoding " ~
-                        "is outside of the range 0x20 to 0x7E). Though it is " ~
-                        "possible that you just received bad data, it is more " ~
-                        "likely that what you tried to decode was not an " ~
-                        "ObjectDescriptor at all. The offending character " ~
-                        "is '" ~ character ~ "'."
-                    );
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "an ObjectDescriptor that contained a character that " ~
+                    "is not graphical (a character whose ASCII encoding " ~
+                    "is outside of the range 0x20 to 0x7E). The offending " ~
+                    "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                    ~ forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
             }
         }
         this.value = cast(ubyte[]) value;
@@ -734,11 +760,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an EXTERNAL that contained too many or too few elements. " ~
-                "An EXTERNAL should have either 2 or 3 elements. This " ~
-                "probably means that you tried to decode something that is " ~
-                "not an EXTERNAL at all. For more information on the EXTERNAL " ~
-                "data type, see either the ASN.1 library documentation, or the " ~
-                "International Telecommunications Union's X.680 specification."
+                "An EXTERNAL should have either 2 or 3 elements." ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
             );
 
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
@@ -775,13 +799,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                     "attempted to decode an EXTERNAL that had " ~
                                     "too many elements within the context-" ~
                                     "negotiation element, which is supposed to " ~
-                                    "have only two elements. This means that " ~
-                                    "what you tried to decode was probably not " ~
-                                    "even an EXTERNAL at all. For more " ~
-                                    "information on the EXTERNAL data type, " ~
-                                    "see either the ASN.1 library documentation, " ~
-                                    "or the International Telecommuncations " ~
-                                    "Union's X.680 specification."
+                                    "have only two elements. " ~ 
+                                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                                    debugInformationText ~ reportBugsText
                                 );
                             
                             foreach (cn; cns)
@@ -804,13 +824,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                         (
                                             "This exception was thrown because " ~
                                             "you attempted to decode an EXTERNAL " ~
-                                            "that had a context-specific type tag " ~
-                                            "within the context-negotiation " ~
-                                            "element. For more information on " ~
-                                            "the EXTERNAL data type, see either " ~
-                                            "ASN.1 library documentation, or " ~
-                                            "the International Telecommuncations " ~
-                                            "Union's X.680 specification."
+                                            "that had an undefined context-specific " ~
+                                            "type tag within the context-" ~
+                                            "negotiation element." ~ 
+                                            notWhatYouMeantText ~ forMoreInformationText ~ 
+                                            debugInformationText ~ reportBugsText
                                         );
                                     }
                                 }
@@ -825,12 +843,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 "This exception was thrown because you attempted " ~
                                 "to decode an EXTERNAL whose identification " ~
                                 "CHOICE is not recognized by the specification. " ~
-                                "This probably means that what you tried to " ~
-                                "decode was not an EXTERNAL at all. For more " ~
-                                "information on the EXTERNAL data type, see " ~
-                                "either the ASN.1 library documentation, or " ~
-                                "the International Telecommuncations Union's " ~
-                                "X.680 specification."
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
                             );
                         }
                     }
@@ -854,12 +868,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         "This exception was thrown because you attempted to " ~
                         "decode an EXTERNAL that contained an element whose " ~
                         "context-specific type is not specified by the " ~
-                        "definition of the EXTERNAL data type. This probably " ~
-                        "means that you tried to decode something that was " ~
-                        "not an EXTERNAL at all. For more information on the " ~
-                        "EXTERNAL data type, see either the ASN.1 library " ~
-                        "documentation, or the International Telecommuncations " ~
-                        "Union's X.680 specification."
+                        "definition of the EXTERNAL data type." ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
                     );
                 }
             }
@@ -1043,11 +1054,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         "which cannot encode a valid binary-encoded REAL. A " ~
                         "correctly-encoded REAL has one byte for general " ~
                         "encoding information about the REAL, and at least " ~
-                        "one byte for encoding the exponent. This means that " ~
-                        "what you tried to decode probably was not a REAL " ~
-                        "at all. For more information, see the ASN.1 library " ~
-                        "documentation, or the International Telecommunication " ~
-                        "Union's X.690 specification."
+                        "one byte for encoding the exponent." ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
                     );
 
                 switch (this.value[0] & 0b00000011u)
@@ -1083,12 +1092,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 "byte indicated that the subsequent two bytes " ~
                                 "would encode the exponent of the REAL, but " ~
                                 "there were less than three bytes in the entire " ~
-                                "encoded value. This means that what you tried " ~
-                                "to decode was probably not a REAL at all. For " ~
-                                "more information about the REAL data type, see " ~
-                                "the ASN.1 library documentation, or the " ~
-                                "International Telecommunication Union's X.690" ~
-                                "specification."
+                                "encoded value." ~
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
                             );
 
                         ubyte[] exponentBytes = this.value[1 .. 3].dup;
@@ -1134,12 +1140,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 "byte indicated that the subsequent three bytes " ~
                                 "would encode the exponent of the REAL, but " ~
                                 "there were less than four bytes in the entire " ~
-                                "encoded value. This means that what you tried " ~
-                                "to decode was probably not a REAL at all. For " ~
-                                "more information about the REAL data type, see " ~
-                                "the ASN.1 library documentation, or the " ~
-                                "International Telecommunication Union's X.690" ~
-                                "specification."
+                                "encoded value." ~
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
                             );
 
                         exponent = cast(long) ((*cast(int *) cast(void[4] *) &(this.value[1])) & 0x00FFFFFF);
@@ -1166,12 +1169,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 "byte indicated that the subsequent byte " ~
                                 "would encode the length of the exponent of the REAL, but " ~
                                 "there were less than two bytes in the entire " ~
-                                "encoded value. This means that what you tried " ~
-                                "to decode was probably not a REAL at all. For " ~
-                                "more information about the REAL data type, see " ~
-                                "the ASN.1 library documentation, or the " ~
-                                "International Telecommunication Union's X.690" ~
-                                "specification."
+                                "encoded value." ~
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
                             );
                         
                         ubyte exponentLength = this.value[1];
@@ -1186,16 +1186,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 "exponent, which would begin on the next byte " ~
                                 "(the third byte). However, the encoded value " ~
                                 "does not have enough bytes to encode the " ~
-                                "exponent with the size indicated. For more " ~
-                                "information, see either the ASN.1 library " ~
-                                "documentation, or see the International " ~
-                                "Telecommunication Union's X.690 specification."
+                                "exponent with the size indicated." ~
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
                             );
 
                         if (exponentLength > 0x08u)
                             throw new ASN1ValueTooBigException
                             (
-                                "REAL value exponent is too big."
+                                "This exception was thrown because you attempted" ~
+                                "to decode a REAL that had an exponent that was " ~
+                                "too big to decode to a floating-point type." ~
+                                "Specifically, the exponent was encoded on " ~
+                                "more than eight bytes." ~
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
                             );
 
                         ubyte i = 0x00u;
@@ -1244,7 +1249,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     default:
                     {
                         throw new ASN1ValueInvalidException
-                        ("Invalid binary-encoded REAL base");
+                        (
+                            "This exception was throw because you attempted to " ~
+                            "decode a REAL that had both base bits in the " ~
+                            "information block set, the meaning of which is " ~
+                            "not specified." ~
+                            notWhatYouMeantText ~ forMoreInformationText ~ 
+                            debugInformationText ~ reportBugsText 
+                        );
                     }
                 }
 
@@ -1316,7 +1328,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
         if (value.isNaN)
         {
-            throw new ASN1ValueInvalidException("ASN1 cannot encode NaN");
+            throw new 
+            ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to encode a " ~
+                "floating-point data type with a value of NaN (not-a-number) " ~
+                "as an ASN.1 REAL, but the ASN.1 REAL cannot encode NaN."
+            );
         }
         else if (value == T.infinity)
         {
@@ -1737,7 +1755,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         ubyte[] value = this.value.dup;
         if (value.length > T.sizeof)
             throw new ASN1ValueTooBigException
-            ("ENUMERATED is too big to be decoded.");
+            (
+                "This exception was thrown because you attempted to decode an " ~
+                "ENUMERATED that was just too large to decode to any signed " ~
+                "integral data type. The largest ENUMERATED that can be decoded " ~
+                "is eight bytes, which can only be decoded to a long. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
 
         /* NOTE:
             Because the BER ENUMERATED is stored in two's complement form, you 
@@ -1766,7 +1791,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         return *cast(T *) value.ptr;
     }
 
-    // TODO: Review, test, and mark as @trusted
     /**
         Encodes an ENUMERATED type from an integer. In BER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
@@ -1833,7 +1857,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         BERElement[] bvs = this.sequence;
         if (bvs.length < 2 || bvs.length > 3)
             throw new ASN1ValueSizeException
-            ("Improper number of elements in EMBEDDED PDV type.");
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "an EMBEDDED PDV that contained too many or too few elements. " ~
+                "An EMBEDDED PDV should have either 2 or 3 elements." ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
 
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         EmbeddedPDV pdv = EmbeddedPDV();
@@ -1852,8 +1882,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                             ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
                             BERElement[] syns = identificationBV.sequence;
                             if (syns.length != 2)
-                                throw new ASN1ValueSizeException
-                                ("Invalid number of elements in EMBEDDED PDV.identification.syntaxes");
+                                throw new ASN1ValueTooBigException
+                                (
+                                    "This exception was thrown because you " ~
+                                    "attempted to decode an EMBEDDED PDV that had " ~
+                                    "too many elements within the syntaxes" ~
+                                    "element, which is supposed to " ~
+                                    "have only two elements. " ~ 
+                                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                                    debugInformationText ~ reportBugsText
+                                );
 
                             foreach (syn; syns)
                             {
@@ -1896,7 +1934,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                             BERElement[] cns = identificationBV.sequence;
                             if (cns.length != 2)
                                 throw new ASN1ValueTooBigException
-                                ("Invalid number of elements in EMBEDDED PDV.identification.context-negotiation");
+                                (
+                                    "This exception was thrown because you " ~
+                                    "attempted to decode an EMBEDDED PDV that had " ~
+                                    "too many elements within the context-" ~
+                                    "negotiation element, which is supposed to " ~
+                                    "have only two elements. " ~ 
+                                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                                    debugInformationText ~ reportBugsText
+                                );
                             
                             foreach (cn; cns)
                             {
@@ -1915,7 +1961,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                     default:
                                     {
                                         throw new ASN1InvalidIndexException
-                                        ("Invalid EMBEDDED PDV.identification.context-negotiation tag.");
+                                        (
+                                            "This exception was thrown because " ~
+                                            "you attempted to decode an EMBEDDED PDV " ~
+                                            "that had an undefined context-specific " ~
+                                            "type tag within the context-" ~
+                                            "negotiation element." ~ 
+                                            notWhatYouMeantText ~ forMoreInformationText ~ 
+                                            debugInformationText ~ reportBugsText
+                                        );
                                     }
                                 }
                             }
@@ -1935,7 +1989,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         default:
                         {
                             throw new ASN1InvalidIndexException
-                            ("Invalid EMBEDDED PDV.identification choice.");
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode an EMBEDDED PDV whose identification " ~
+                                "CHOICE is not recognized by the specification. " ~
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
+                            );
                         }
                     }
                     pdv.identification = identification;
@@ -1954,7 +2014,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 default:
                 {
                     throw new ASN1InvalidIndexException
-                    ("Invalid EMBEDDED PDV context-specific tag.");
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EMBEDDED PDV that contained an element whose " ~
+                        "context-specific type is not specified by the " ~
+                        "definition of the EMBEDDED PDV data type." ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
                 }
             }
         }
@@ -2153,7 +2220,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     // REVIEW: Can this be nothrow?
-    // TODO: Remove std.outbuffer dependency
     // FIXME: add overflow checking.
     override public @property @system
     void relativeObjectIdentifier(OIDNode[] value)
@@ -2265,7 +2331,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!canFind(numericStringCharacters, character))
                 throw new ASN1ValueInvalidException
-                ("NUMERIC STRING only accepts numbers and spaces.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "a NumericString that contained a character that " ~
+                    "is not numeric or space. The offending character is '" ~
+                    character ~ "'. " ~ notWhatYouMeantText ~
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
         }
         return cast(string) this.value;
     }
@@ -2285,7 +2357,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!canFind(numericStringCharacters, character))
                 throw new ASN1ValueInvalidException
-                ("NUMERIC STRING only accepts numbers and spaces.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "a NumericString that contained a character that " ~
+                    "is not numeric or space. The offending character is '" ~
+                    character ~ "'. " ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
         }
         this.value = cast(ubyte[]) value;
     }
@@ -2309,7 +2387,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!canFind(printableStringCharacters, character))
                 throw new ASN1ValueInvalidException
-                ("PrintableString only accepts these characters: " ~ printableStringCharacters);
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "a PrintableString that contained a character that " ~
+                    "is not considered 'printable' by the specification. " ~
+                    "The offending character is '" ~ character ~ "'. " ~
+                    "The allowed characters are: " ~ printableStringCharacters ~ " " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
         }
         return cast(string) this.value;
     }
@@ -2332,7 +2418,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!canFind(printableStringCharacters, character))
                 throw new ASN1ValueInvalidException
-                ("PrintableString only accepts these characters: " ~ printableStringCharacters);
+                (
+                    "This exception was thrown because you tried to encode " ~
+                    "a PrintableString that contained a character that " ~
+                    "is not considered 'printable' by the specification. " ~
+                    "The offending character is '" ~ character ~ "'. " ~
+                    "The allowed characters are: " ~ printableStringCharacters ~ " " ~
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
         }
         this.value = cast(ubyte[]) value;
     }
@@ -2413,7 +2506,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!character.isASCII)
                 throw new ASN1ValueInvalidException
-                ("IA5String only accepts ASCII characters.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "an IA5String that contained a character that " ~
+                    "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                    ~ notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
         }
         return ret;
     }
@@ -2448,7 +2547,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!character.isASCII)
                 throw new ASN1ValueInvalidException
-                ("IA5String only accepts ASCII characters.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "an IA5String that contained a character that " ~
+                    "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
         }
         this.value = cast(ubyte[]) value;
     } 
@@ -2579,7 +2683,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!character.isGraphical && character != ' ')
                 throw new ASN1ValueInvalidException
-                ("GraphicString only accepts graphic characters and space.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "a GraphicString that contained a character that " ~
+                    "is not graphical (a character whose ASCII encoding " ~
+                    "is outside of the range 0x20 to 0x7E). The offending " ~
+                    "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                    ~ forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
         }
         return ret;
     }
@@ -2608,7 +2719,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!character.isGraphical && character != ' ')
                 throw new ASN1ValueInvalidException
-                ("GraphicString only accepts graphic characters and space.");
+                (
+                    "This exception was thrown because you tried to encode " ~
+                    "a GraphicString that contained a character that " ~
+                    "is not graphical (a character whose ASCII encoding " ~
+                    "is outside of the range 0x20 to 0x7E). The offending " ~
+                    "character is '" ~ character ~ "'. " ~ 
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
         }
         this.value = cast(ubyte[]) value;
     }
@@ -2631,7 +2749,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!character.isGraphical && character != ' ')
                 throw new ASN1ValueInvalidException
-                ("VisibleString only accepts graphic characters and space.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "a VisibleString that contained a character that " ~
+                    "is not graphical (a character whose ASCII encoding " ~
+                    "is outside of the range 0x20 to 0x7E) or space. The offending " ~
+                    "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
         }
         return ret;
     }
@@ -2652,7 +2777,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!character.isGraphical && character != ' ')
                 throw new ASN1ValueInvalidException
-                ("VisibleString only accepts graphic characters and space.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "a VisibleString that contained a character that " ~
+                    "is not graphical (a character whose ASCII encoding " ~
+                    "is outside of the range 0x20 to 0x7E) or space. The offending " ~
+                    "character is '" ~ character ~ "'. " ~ 
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
         }
         this.value = cast(ubyte[]) value;
     }
@@ -2674,7 +2806,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!character.isASCII)
                 throw new ASN1ValueInvalidException
-                ("GeneralString only accepts ASCII Characters.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "an GeneralString that contained a character that " ~
+                    "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
         }
         return ret;
     }
@@ -2694,7 +2832,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (!character.isASCII)
                 throw new ASN1ValueInvalidException
-                ("GeneralString only accepts ASCII Characters.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "an GeneralString that contained a character that " ~
+                    "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
         }
         this.value = cast(ubyte[]) value;
     }
@@ -2714,11 +2857,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             return cast(dstring) this.value;
         }
-        version (LittleEndian)
+        else version (LittleEndian)
         {
             if (this.value.length % 4u)
                 throw new ASN1ValueInvalidException
-                ("Invalid number of bytes for UniversalString. Must be a multiple of 4.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "a UniversalString that contained a number of bytes that " ~
+                    "is not divisible by four. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
 
             dstring ret;
             ptrdiff_t i = 0;
@@ -2810,7 +2959,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         BERElement[] bvs = this.sequence;
         if (bvs.length < 2u || bvs.length > 3u)
             throw new ASN1ValueSizeException
-            ("Improper number of elements in CharacterString type.");
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "a CharacterString that contained too many or too few elements. " ~
+                "A CharacterString should have either 2 or 3 elements. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
 
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         CharacterString cs = CharacterString();
@@ -2829,8 +2984,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                             ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
                             BERElement[] syns = identificationBV.sequence;
                             if (syns.length != 2u)
-                                throw new ASN1ValueSizeException
-                                ("Invalid number of elements in CharacterString.identification.syntaxes");
+                                throw new ASN1ValueTooBigException
+                                (
+                                    "This exception was thrown because you " ~
+                                    "attempted to decode an CharacterString that had " ~
+                                    "too many elements within the syntaxes" ~
+                                    "element, which is supposed to " ~
+                                    "have only two elements. " ~ 
+                                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                                    debugInformationText ~ reportBugsText
+                                );
 
                             foreach (syn; syns)
                             {
@@ -2849,7 +3012,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                     default:
                                     {
                                         throw new ASN1InvalidIndexException
-                                        ("Invalid CharacterString.identification.syntaxes tag.");
+                                        (
+                                            "This exception was thrown because " ~
+                                            "you attempted to decode a CharacterString " ~
+                                            "that had an undefined context-specific " ~
+                                            "type tag within the syntaxes element. " ~
+                                            notWhatYouMeantText ~ forMoreInformationText ~ 
+                                            debugInformationText ~ reportBugsText
+                                        );
                                     }
                                 }
                             }
@@ -2872,8 +3042,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                             ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
                             BERElement[] cns = identificationBV.sequence;
                             if (cns.length != 2u)
-                                throw new ASN1ValueSizeException
-                                ("Invalid number of elements in CharacterString.identification.context-negotiation");
+                                throw new ASN1ValueTooBigException
+                                (
+                                    "This exception was thrown because you " ~
+                                    "attempted to decode an CharacterString that had " ~
+                                    "too many elements within the context-" ~
+                                    "negotiation element, which is supposed to " ~
+                                    "have only two elements. " ~ 
+                                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                                    debugInformationText ~ reportBugsText
+                                );
                             
                             foreach (cn; cns)
                             {
@@ -2892,7 +3070,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                     default:
                                     {
                                         throw new ASN1InvalidIndexException
-                                        ("Invalid CharacterString.identification.context-negotiation tag.");
+                                        (
+                                            "This exception was thrown because " ~
+                                            "you attempted to decode a CharacterString " ~
+                                            "that had an undefined context-specific " ~
+                                            "type tag within the context-" ~
+                                            "negotiation element." ~ 
+                                            notWhatYouMeantText ~ forMoreInformationText ~ 
+                                            debugInformationText ~ reportBugsText
+                                        );
                                     }
                                 }
                             }
@@ -2912,7 +3098,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         default:
                         {
                             throw new ASN1InvalidIndexException
-                            ("Invalid CharacterString.identification choice.");
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode a CharacterString whose identification " ~
+                                "CHOICE is not recognized by the specification. " ~
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
+                            );
                         }
                     }
                     cs.identification = identification;
@@ -2926,7 +3118,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 default:
                 {
                     throw new ASN1InvalidIndexException
-                    ("Invalid CharacterString context-specific tag.");
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a CharacterString that contained an element whose " ~
+                        "context-specific type is not specified by the " ~
+                        "definition of the CharacterString data type. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
                 }
             }
         }
@@ -3040,11 +3239,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             return cast(wstring) this.value;
         }
-        version (LittleEndian)
+        else version (LittleEndian)
         {
             if (this.value.length % 2u)
                 throw new ASN1ValueInvalidException
-                ("Invalid number of bytes for BMPString. Must be a multiple of 2.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "a BMPString that contained a number of bytes that " ~
+                    "is not divisible by two. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
 
             wstring ret;
             ptrdiff_t i = 0;
