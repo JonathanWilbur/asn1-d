@@ -11,14 +11,14 @@ public import asn1;
 public import types.alltypes;
 public import types.identification;
 public import types.oidtype;
-package import std.algorithm.mutation : reverse;
-package import std.algorithm.searching : canFind;
-package import std.ascii : isASCII, isGraphical;
-package import std.conv : text;
-package import std.datetime.date : DateTime;
+public import std.algorithm.mutation : reverse;
+public import std.algorithm.searching : canFind;
+public import std.ascii : isASCII, isGraphical;
+public import std.conv : text;
+public import std.datetime.date : DateTime;
 private import std.exception : basicExceptionCtors;
-package import std.math : isNaN, log2;
-package import std.traits : isIntegral, isSigned;
+public import std.math : isNaN, log2;
+public import std.traits : isIntegral, isSigned;
 
 ///
 public alias ASN1CodecException = AbstractSyntaxNotation1CodecException;
@@ -65,7 +65,7 @@ public alias ASN1ValueInvalidException = AbstractSyntaxNotation1ValueInvalidExce
     Examples:
     $(UL
         $(LI When a DER codec detects a BOOLEAN encoded in a byte other than 0xFF or 0x00)
-        $(LI When a )
+        $(LI When a BER codec finds an invalid character in a string)
     )
 */
 public
@@ -578,7 +578,6 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.external == el.external);
     }
 
-    // TODO: Make string variants
     /// Encodes a floating-point number
     abstract public @property
     T realType(T)() const if (is(T == float) || is(T == double));

@@ -231,7 +231,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             $(TR $(TD BMPString)	        $(TD Both)              $(TD 0x1E))
         )
     */
-    final public @property
+    final public @property nothrow
     bool universal() const
     {
         return ((this.type & 0xC) == 0x00);
@@ -240,7 +240,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /**
         Whether the type is application-specific.
     */
-    final public @property
+    final public @property nothrow
     bool applicationSpecific() const
     {
         return ((this.type & 0xC) == 0x40);
@@ -249,14 +249,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /**
         Whether the type tag specifies an index within a SEQUENCE or CHOICE.
     */
-    final public @property
+    final public @property nothrow
     bool contextSpecific() const
     {
         return ((this.type & 0xC) == 0x80);
     }
 
     /// I don't know what this even means.
-    final public @property
+    final public @property nothrow
     bool privatelySpecific() const
     {
         return ((this.type & 0xC) == 0x40);
@@ -663,7 +663,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     "is not graphical (a character whose ASCII encoding " ~
                     "is outside of the range 0x20 to 0x7E). The offending " ~
                     "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
-                    ~ forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
             }
         }
@@ -707,7 +707,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     "is not graphical (a character whose ASCII encoding " ~
                     "is outside of the range 0x20 to 0x7E). The offending " ~
                     "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
-                    ~ forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
             }
         }
@@ -1140,7 +1140,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 "byte indicated that the subsequent three bytes " ~
                                 "would encode the exponent of the REAL, but " ~
                                 "there were less than four bytes in the entire " ~
-                                "encoded value." ~
+                                "encoded value. " ~
                                 notWhatYouMeantText ~ forMoreInformationText ~ 
                                 debugInformationText ~ reportBugsText
                             );
@@ -2510,7 +2510,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     "This exception was thrown because you tried to decode " ~
                     "an IA5String that contained a character that " ~
                     "is not ASCII. The offending character is '" ~ character ~ "'. " ~
-                    ~ notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
         }
@@ -2689,7 +2689,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     "is not graphical (a character whose ASCII encoding " ~
                     "is outside of the range 0x20 to 0x7E). The offending " ~
                     "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
-                    ~ forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
         return ret;

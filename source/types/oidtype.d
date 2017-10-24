@@ -78,14 +78,26 @@ struct ObjectIdentifierNode
     */
     public @system
     this(in size_t number, in string descriptor)
-    {
+    {   
         foreach (character; descriptor)
         {
             if ((!character.isGraphical) && (character != ' '))
             {
                 throw new ASN1ValueInvalidException
-                    ("Object descriptor can only contain graphical characters. '"
-                    ~ character ~ "' is not graphical.");
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "a GraphicString that contained a character that " ~
+                    "is not graphical (a character whose ASCII encoding " ~
+                    "is outside of the range 0x20 to 0x7E). The offending " ~
+                    "character is '" ~ character ~ "'. " ~
+                    "For more information on Object Identifiers, read the " ~
+                    "International Telecommunications Union's X.660 specification, " ~
+                    "which can be found at " ~
+                    "http://www.itu.int/rec/T-REC-X.660-201107-I/en. " ~ 
+                    "If you believe that you have " ~
+                    "discovered a bug, please create an issue on the GitHub page's Issues " ~
+                    "section at: https://github.com/JonathanWilbur/asn1-d/issues. "
+                );
             }
         }
         this.number = number;

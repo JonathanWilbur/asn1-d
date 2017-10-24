@@ -34,9 +34,9 @@
 */
 module asn1;
 
-debug
+debug(asn1)
 {
-    public import std.stdio : writefln, writeln;
+    public import std.stdio : write, writefln, writeln;
 }
 
 version (unittest)
@@ -45,6 +45,8 @@ version (unittest)
     public import std.exception : assertThrown;
     public import std.math : approxEqual;
 }
+
+public import std.array : appender, Appender;
 
 ///
 public alias ASN1Exception = AbstractSyntaxNotation1Exception;

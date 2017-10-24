@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.8.2](http://semver.org/)
+* Version: [0.8.3](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -91,22 +91,17 @@ and reviewed for security and performance.
   - [x] `External`
   - [x] `EmbeddedPDV`
   - [x] `CharacterString`
-- [ ] Better exception messages
-  - [x] URIs to documentation
-  - [ ] Unique numbers
-  - [ ] Display Values
+- [x] Better exception messages
 - [x] Rename `BERValue` to `BERElement` and `ASN1Value` to `ASN1Element`
 - [x] Rename `ASN1InvalidValueException` to `ASN1ValueInvalidException`
-- [ ] `debug` statements
-- [ ] Get rid of deprecation messages (Might be caused by [this bug](https://issues.dlang.org/show_bug.cgi?id=15903))
+- [x] Get rid of deprecation messages
+- [ ] Unit test variations of `REAL` base and scale.
 - [ ] Formal citations for unit tests
 - [ ] Modify `realType()` binary decoding to use pointer casting instead of or-shift loops.
 - [ ] Build System
   - [ ] [Bazel](https://www.bazel.build)
-  - [ ] D File / Compiled Executable
-  - [ ] Bash Script
-  - [x] Batch Script
-  - [ ] GNU Make File
+  - [x] Bash Script
+  - [ ] Batch Script
 
 Version 1.0.0-alpha development is expected to begin on November 1st, 2017.
 
