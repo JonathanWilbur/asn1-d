@@ -244,14 +244,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /// The octets of the encoded value.
     public ubyte[] value;
 
-    // Convenience
-    // pragma(inline, true);
-    final private
-    void throwIfEmptyValue(X : ASN1CodecException)() const
-    {
-        if (this.length != 1) throw new X ("Value bytes was zero");
-    }
-
     /*
         Returns true if the value octets contain two consecutive 0x00u bytes.
 
@@ -281,13 +273,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             ASN1ValueSizeException = if the encoded value is anything other
                 than exactly 1 byte in size.
     */
-    // FIXME: Throw exception if length is invalid.
     override public @property @safe
     bool boolean() const
     {
         if (this.value.length != 1)
             throw new ASN1ValueSizeException
-            ("An ASN.1 BOOLEAN must be exactly 1 byte in size.");
+            (
+                "In Basic Encoding Rules, a BOOLEAN must be encoded on exactly " ~
+                "one byte (in addition to the type and length bytes, of " ~
+                "course). This exception was thrown because you attempted to " ~
+                "decode a BOOLEAN from an element that had either zero or more " ~
+                "than one bytes as the encoded value. This means that what you " ~
+                "tried to decode was probably not even a BOOLEAN at all!"
+            );
 
         return (this.value[0] ? true : false);
     }
@@ -343,7 +341,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         ubyte[] value = this.value.dup;
         if (value.length > T.sizeof)
             throw new ASN1ValueTooBigException
-            ("INTEGER is too big to be decoded.");
+            (
+                "This exception was thrown because you attempted to decode an " ~
+                "INTEGER that was just too large to decode to any signed " ~
+                "integral data type. The largest INTEGER that can be decoded " ~
+                "is eight bytes, which can only be decoded to a long. While " ~
+                "it is possible that what you tried to decode was actually " ~
+                "an integer, it is more likely that what you tried to decode " ~
+                "was not actually an integer at all." 
+            );
 
         /* NOTE:
             Because the BER INTEGER is stored in two's complement form, you 
@@ -392,12 +398,36 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         this.value = ub[0 .. $];
     }
 
+    /**
+        Decodes an array of $(D bool)s representing a string of bits.
+
+        Returns: an array of booleans.
+        Throws:
+            ASN1ValueInvalidException = if 
+    */
     override public @property
     bool[] bitString() const
     {
         if (this.value[0] > 0x07u)
             throw new ASN1ValueInvalidException
-            ("Unused bits byte cannot have a value greater than seven.");
+            (
+                "In Basic Encoding Rules, the first byte of the encoded " ~
+                "binary value (after the type and length bytes, of course) " ~ 
+                "is used to indicate how many unused bits there are at the " ~
+                "end of the BIT STRING. Since everything is encoded in bytes " ~
+                "in Basic Encoding Rules, but a BIT STRING may not " ~
+                "necessarily encode a number of bits, divisible by eight " ~
+                "there may be bits at the end of the BIT STRING that will " ~
+                "need to be identified as padding instead of meaningful data." ~
+                "Since a byte is eight bits, the largest number that the " ~
+                "first byte should encode is 7, since, if you have eight " ~
+                "unused bits or more, you may as well truncate an entire " ~
+                "byte from the encoded data. This exception was thrown " ~
+                "you attempted to decode a BIT STRING whose first byte " ~
+                "had a value greater than seven. The value was: " ~ 
+                text(this.value[0]) ~ ". This probably means that you are " ~
+                "trying to decode something that is not a BIT STRING at all!"
+            );
         
         bool[] ret;
         for (ptrdiff_t i = 1; i < this.value.length; i++)
@@ -597,8 +627,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             if ((!character.isGraphical) && (character != ' '))
             {
                 throw new ASN1ValueInvalidException
-                    ("Object descriptor can only contain graphical characters. '"
-                    ~ character ~ "' is not graphical.");
+                    (
+                        "This exception was thrown because you tried to decode " ~
+                        "an ObjectDescriptor that contained a character that " ~
+                        "is not graphical (a character whose ASCII encoding " ~
+                        "is outside of the range 0x20 to 0x7E). Though it is " ~
+                        "possible that you just received bad data, it is more " ~
+                        "likely that what you tried to decode was not an " ~
+                        "ObjectDescriptor at all. The offending character " ~
+                        "is '" ~ character ~ "'."
+                    );
             }
         }
         return cast(string) this.value;
@@ -635,8 +673,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             if ((!character.isGraphical) && (character != ' '))
             {
                 throw new ASN1ValueInvalidException
-                    ("Object descriptor can only contain graphical characters. '"
-                    ~ character ~ "' is not graphical.");
+                    (
+                        "This exception was thrown because you tried to decode " ~
+                        "an ObjectDescriptor that contained a character that " ~
+                        "is not graphical (a character whose ASCII encoding " ~
+                        "is outside of the range 0x20 to 0x7E). Though it is " ~
+                        "possible that you just received bad data, it is more " ~
+                        "likely that what you tried to decode was not an " ~
+                        "ObjectDescriptor at all. The offending character " ~
+                        "is '" ~ character ~ "'."
+                    );
             }
         }
         this.value = cast(ubyte[]) value;
@@ -685,7 +731,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         BERElement[] bvs = this.sequence;
         if (bvs.length < 2 || bvs.length > 3)
             throw new ASN1ValueSizeException
-            ("Improper number of elements in EXTERNAL type.");
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "an EXTERNAL that contained too many or too few elements. " ~
+                "An EXTERNAL should have either 2 or 3 elements. This " ~
+                "probably means that you tried to decode something that is " ~
+                "not an EXTERNAL at all. For more information on the EXTERNAL " ~
+                "data type, see either the ASN.1 library documentation, or the " ~
+                "International Telecommunications Union's X.680 specification."
+            );
 
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         External ext = External();
@@ -716,7 +770,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                             BERElement[] cns = identificationBV.sequence;
                             if (cns.length != 2)
                                 throw new ASN1ValueTooBigException
-                                ("Invalid number of elements in EXTERNAL.identification.context-negotiation");
+                                (
+                                    "This exception was thrown because you " ~
+                                    "attempted to decode an EXTERNAL that had " ~
+                                    "too many elements within the context-" ~
+                                    "negotiation element, which is supposed to " ~
+                                    "have only two elements. This means that " ~
+                                    "what you tried to decode was probably not " ~
+                                    "even an EXTERNAL at all. For more " ~
+                                    "information on the EXTERNAL data type, " ~
+                                    "see either the ASN.1 library documentation, " ~
+                                    "or the International Telecommuncations " ~
+                                    "Union's X.680 specification."
+                                );
                             
                             foreach (cn; cns)
                             {
@@ -735,7 +801,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                     default:
                                     {
                                         throw new ASN1InvalidIndexException
-                                        ("Invalid EXTERNAL.identification.context-negotiation tag.");
+                                        (
+                                            "This exception was thrown because " ~
+                                            "you attempted to decode an EXTERNAL " ~
+                                            "that had a context-specific type tag " ~
+                                            "within the context-negotiation " ~
+                                            "element. For more information on " ~
+                                            "the EXTERNAL data type, see either " ~
+                                            "ASN.1 library documentation, or " ~
+                                            "the International Telecommuncations " ~
+                                            "Union's X.680 specification."
+                                        );
                                     }
                                 }
                             }
@@ -745,7 +821,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         default:
                         {
                             throw new ASN1InvalidIndexException
-                            ("Invalid EXTERNAL.identification choice.");
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode an EXTERNAL whose identification " ~
+                                "CHOICE is not recognized by the specification. " ~
+                                "This probably means that what you tried to " ~
+                                "decode was not an EXTERNAL at all. For more " ~
+                                "information on the EXTERNAL data type, see " ~
+                                "either the ASN.1 library documentation, or " ~
+                                "the International Telecommuncations Union's " ~
+                                "X.680 specification."
+                            );
                         }
                     }
                     ext.identification = identification;
@@ -764,7 +850,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 default:
                 {
                     throw new ASN1InvalidIndexException
-                    ("Invalid EXTERNAL context-specific tag.");
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EXTERNAL that contained an element whose " ~
+                        "context-specific type is not specified by the " ~
+                        "definition of the EXTERNAL data type. This probably " ~
+                        "means that you tried to decode something that was " ~
+                        "not an EXTERNAL at all. For more information on the " ~
+                        "EXTERNAL data type, see either the ASN.1 library " ~
+                        "documentation, or the International Telecommuncations " ~
+                        "Union's X.680 specification."
+                    );
                 }
             }
         }
@@ -897,10 +993,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     T realType(T)() const
     if (is(T == float) || is(T == double))
     {
-        // import std.array : split;
         import std.conv : ConvException, ConvOverflowException, to;
 
-        if (this.length == 0) return cast(T) 0.0;
+        if (this.value.length == 0) return cast(T) 0.0;
 
         if (this.value == [ 0x40u ]) return T.infinity;
         if (this.value == [ 0x41u ]) return -T.infinity;
@@ -913,22 +1008,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             }
             case (0b_0000_0000u): // Character Encoding
             {
-                string chars = cast(string) this.value[1 .. $];
-
-                try 
-                {
-                    return to!(T)(chars);
-                }
-                catch (ConvOverflowException coe)
-                {
-                    throw new ASN1ValueTooBigException
-                    ("Character-encoded REAL is too large to translate to a native floating-point type.");
-                }
-                catch (ConvException ce)
-                {
-                    throw new ASN1ValueTooBigException
-                    ("Character-encoded REAL could not be decoded to a native floating-point type.");
-                }
+                return to!(T)(cast(string) this.value[1 .. $]);
             }
             case 0b_1000_0000u, 0b_1100_0000u: // Binary Encoding
             {
@@ -945,10 +1025,30 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 ubyte base;
                 ASN1RealBinaryEncodingBase realBinaryEncodingBase = ASN1RealBinaryEncodingBase.base2;
 
+                immutable string mantissaTooBigExceptionText = 
+                    "This exception was thrown because the mantissa encoded by " ~
+                    "a Basic Encoding Rules-encoded REAL could not fit in " ~
+                    "to a 64-bit signed integer (long). This might indicate that " ~
+                    "what you tried to decode was not actually a REAL at all. " ~
+                    "For more information, see the ASN.1 library documentation, " ~
+                    "or the International Telecommuncation Union's X.690 " ~
+                    "specification.";
+
                 // There must be at least one information byte and one exponent byte.
                 if (this.length < 2)
                     throw new ASN1ValueTooSmallException
-                    ("REAL value has too few bytes. Only an information byte was found.");
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a REAL that had either zero or one bytes of data," ~
+                        "which cannot encode a valid binary-encoded REAL. A " ~
+                        "correctly-encoded REAL has one byte for general " ~
+                        "encoding information about the REAL, and at least " ~
+                        "one byte for encoding the exponent. This means that " ~
+                        "what you tried to decode probably was not a REAL " ~
+                        "at all. For more information, see the ASN.1 library " ~
+                        "documentation, or the International Telecommunication " ~
+                        "Union's X.690 specification."
+                    );
 
                 switch (this.value[0] & 0b00000011u)
                 {
@@ -961,8 +1061,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         exponent = cast(long) cast(byte) this.value[1];
 
                         if (this.length - 2u > 8u)
-                            throw new ASN1ValueTooBigException
-                            ("REAL mantissa is too big for this encoder.");
+                            throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
 
                         ubyte m = 0x02u;
                         while (m < this.length)
@@ -976,11 +1075,22 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     }
                     case 0b00000001u: // Exponent on the following two octets
                     {
-                        if (this.length == 2u)
+                        if (this.length < 3u)
                             throw new ASN1ValueTooSmallException
-                            ("REAL value has too few bytes.");
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode a REAL that had too few bytes. The first " ~
+                                "byte indicated that the subsequent two bytes " ~
+                                "would encode the exponent of the REAL, but " ~
+                                "there were less than three bytes in the entire " ~
+                                "encoded value. This means that what you tried " ~
+                                "to decode was probably not a REAL at all. For " ~
+                                "more information about the REAL data type, see " ~
+                                "the ASN.1 library documentation, or the " ~
+                                "International Telecommunication Union's X.690" ~
+                                "specification."
+                            );
 
-                        // void[2] exponentBytes = *cast(void[2] *) &(this.value[1]);
                         ubyte[] exponentBytes = this.value[1 .. 3].dup;
                         version (LittleEndian)
                         {
@@ -989,8 +1099,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         exponent = cast(long) (*cast(short *) exponentBytes.ptr);
 
                         if (this.length - 3u > 8u)
-                            throw new ASN1ValueTooBigException
-                            ("REAL mantissa is too big for this encoder.");
+                            throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
 
                         // REVIEW: There is probably a better way to do this.
                         ubyte m = 0x02u;
@@ -1017,15 +1126,26 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     }
                     case 0b00000010: // Exponent on the following three octets
                     {
-                        if (this.length == 4u)
+                        if (this.length < 4u)
                             throw new ASN1ValueTooSmallException
-                            ("REAL value has too few bytes.");
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode a REAL that had too few bytes. The first " ~
+                                "byte indicated that the subsequent three bytes " ~
+                                "would encode the exponent of the REAL, but " ~
+                                "there were less than four bytes in the entire " ~
+                                "encoded value. This means that what you tried " ~
+                                "to decode was probably not a REAL at all. For " ~
+                                "more information about the REAL data type, see " ~
+                                "the ASN.1 library documentation, or the " ~
+                                "International Telecommunication Union's X.690" ~
+                                "specification."
+                            );
 
                         exponent = cast(long) ((*cast(int *) cast(void[4] *) &(this.value[1])) & 0x00FFFFFF);
 
                         if (this.length - 4u > 8u)
-                            throw new ASN1ValueTooBigException
-                            ("REAL mantissa is too big for this encoder.");
+                            throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
 
                         ubyte m = 0x03u;
                         while (m < this.length)
@@ -1038,19 +1158,45 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     }
                     case 0b00000011: // Complicated
                     {
-                        if (this.length == 1u)
+                        if (this.length < 2u)
                             throw new ASN1ValueTooSmallException
-                            ("REAL value has too few bytes.");
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode a REAL that had too few bytes. The first " ~
+                                "byte indicated that the subsequent byte " ~
+                                "would encode the length of the exponent of the REAL, but " ~
+                                "there were less than two bytes in the entire " ~
+                                "encoded value. This means that what you tried " ~
+                                "to decode was probably not a REAL at all. For " ~
+                                "more information about the REAL data type, see " ~
+                                "the ASN.1 library documentation, or the " ~
+                                "International Telecommunication Union's X.690" ~
+                                "specification."
+                            );
                         
                         ubyte exponentLength = this.value[1];
 
-                        if (this.length == (exponentLength - 0x01u))
+                        if (this.length < exponentLength)
                             throw new ASN1ValueTooSmallException
-                            ("REAL value has too few bytes.");
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode a REAL that had too few bytes. The " ~
+                                "first byte of the value indicated that the " ~
+                                "second byte would encode the length of the " ~
+                                "exponent, which would begin on the next byte " ~
+                                "(the third byte). However, the encoded value " ~
+                                "does not have enough bytes to encode the " ~
+                                "exponent with the size indicated. For more " ~
+                                "information, see either the ASN.1 library " ~
+                                "documentation, or see the International " ~
+                                "Telecommunication Union's X.690 specification."
+                            );
 
                         if (exponentLength > 0x08u)
                             throw new ASN1ValueTooBigException
-                            ("REAL value exponent is too big.");
+                            (
+                                "REAL value exponent is too big."
+                            );
 
                         ubyte i = 0x00u;
                         while (i < exponentLength)
@@ -1061,8 +1207,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         }
 
                         if (this.length - 1u - exponentLength > 8u)
-                            throw new ASN1ValueTooBigException
-                            ("REAL mantissa is too big for this encoder.");
+                            throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
 
                         ubyte m = 0x01u;
                         while (m < this.length)
@@ -2899,7 +3044,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             if (this.value.length % 2u)
                 throw new ASN1ValueInvalidException
-                ("Invalid number of bytes for BMPString. Must be a multiple of 4.");
+                ("Invalid number of bytes for BMPString. Must be a multiple of 2.");
 
             wstring ret;
             ptrdiff_t i = 0;

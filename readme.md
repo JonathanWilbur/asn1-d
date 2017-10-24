@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.8.0](http://semver.org/)
+* Version: [0.8.1](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -97,6 +97,7 @@ and reviewed for security and performance.
 - [ ] `debug` statements
 - [ ] Get rid of deprecation messages (Might be caused by [this bug](https://issues.dlang.org/show_bug.cgi?id=15903))
 - [ ] Formal citations for unit tests
+- [ ] Modify `realType()` binary decoding to use pointer casting instead of or-shift loops.
 - [ ] Build System
   - [ ] [Bazel](https://www.bazel.build)
   - [ ] D File / Compiled Executable

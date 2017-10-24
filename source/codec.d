@@ -14,6 +14,7 @@ public import types.oidtype;
 package import std.algorithm.mutation : reverse;
 package import std.algorithm.searching : canFind;
 package import std.ascii : isASCII, isGraphical;
+package import std.conv : text;
 package import std.datetime.date : DateTime;
 private import std.exception : basicExceptionCtors;
 package import std.math : isNaN, log2;
@@ -141,7 +142,7 @@ class AbstractSyntaxNotation1Element(Element)
     {
         Element el = new Element();
         el.boolean = true;
-        assert(e.boolean == true);
+        assert(el.boolean == true);
         el.boolean = false;
         assert(el.boolean == false);
 
@@ -952,7 +953,7 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.enumerated!long == long.min);
 
         // Assert that accessor does not mutate state
-        assert(el.enumerated == el.enumerated);
+        assert(el.enumerated!long == el.enumerated!long);
     }
 
     ///
