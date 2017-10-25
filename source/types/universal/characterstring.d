@@ -21,6 +21,8 @@ CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
 public
 struct CharacterString
 {
+    ///
     public ASN1ContextSwitchingTypeID identification;
+    ///
     public ubyte[] stringValue;
 }

@@ -41,7 +41,8 @@ public import types.identification;
 ///
 public alias BERElement = BasicEncodingRulesElement;
 /**
-    The unit of encoding and decoding for Basic Encoding Rules (BER).
+    The unit of encoding and decoding for Basic Encoding Rules BER.
+    
     There are three parts to an encoded BER Value:
 
     $(UL
@@ -132,7 +133,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
     ///
     public
-    enum LengthEncodingPreference
+    enum LengthEncodingPreference : ubyte
     {
         definite,
         indefinite
@@ -182,8 +183,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             $(TR $(TD NR3) $(TD Explicit exponent) $(TD "3.0E1", "123E+100"))
         )
 
-        Source:
-            Page 143 of Dubuisson's ASN.1 Book
+        Citation:
+            Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between 
+            Heterogeneous Systems, Morgan Kaufmann, 2001, p. 143.
     */
     static public ASN1Base10RealNumericalRepresentation base10RealNumericalRepresentation = 
         ASN1Base10RealNumericalRepresentation.nr3;
@@ -529,7 +531,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    // FIXME: change number sizes to size_t and add overflow checking.
+    // FIXME: Add overflow checking.
     override public @property @system
     OID objectIdentifier() const
     out (value)
@@ -590,7 +592,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    // FIXME: change number sizes to size_t and add overflow checking.
+    // FIXME: Add overflow checking.
     override public @property @system
     void objectIdentifier(OID value)
     in
@@ -637,9 +639,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
-        Sources:
-            $(LINK2 ,
-                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+        Citations:
+            Dubuisson, Olivier. “Character String Types.” ASN.1: 
+                Communication between Heterogeneous Systems, Morgan 
+                Kaufmann, 2001, pp. 175-178.
             $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
@@ -681,9 +684,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
-        Sources:
-            $(LINK2 ,
-                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+        Citations:
+            Dubuisson, Olivier. “Character String Types.” ASN.1: 
+                Communication between Heterogeneous Systems, Morgan 
+                Kaufmann, 2001, pp. 175-178.
             $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
@@ -999,6 +1003,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             ASN1ValueInvalidException = if both bits indicating the base in the
                 information byte of a binary-encoded REAL's information byte 
                 are set, which would indicate an invalid base.
+
+        Citations:
+            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Communication between Heterogeneous Systems, Morgan Kaufmann, 
+            2001, pp. 400–402.
     */
     public @property @system
     T realType(T)() const
@@ -1313,6 +1322,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
         Throws:
             ASN1ValueInvalidException = if an attempt to encode NaN is made.
+
+        Citations:
+            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Communication between Heterogeneous Systems, Morgan Kaufmann, 
+            2001, pp. 400–402.
     */
     public @property @system
     void realType(T)(T value)
@@ -2165,7 +2179,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     // REVIEW: Can this be nothrow?
-    // FIXME: change number sizes to size_t and add overflow checking.
+    // FIXME: Add overflow checking.
     // REVIEW: This could probably be a lot faster if you combine all three loops.
     override public @property @system
     OIDNode[] relativeObjectIdentifier() const
@@ -2663,9 +2677,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
         Deprecated, according to page 182 of the Dubuisson book.
 
-        Sources:
-            $(LINK2 ,
-                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+        Citations:
+            Dubuisson, Olivier. “Character String Types.” ASN.1: 
+                Communication between Heterogeneous Systems, Morgan 
+                Kaufmann, 2001, pp. 175-178.
             $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
@@ -2701,9 +2716,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
         Deprecated, according to page 182 of the Dubuisson book.
 
-        Sources:
-            $(LINK2 ,
-                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+        Citations:
+            Dubuisson, Olivier. “Character String Types.” ASN.1: 
+                Communication between Heterogeneous Systems, Morgan 
+                Kaufmann, 2001, pp. 175-178.
             $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
@@ -2797,6 +2813,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Returns: a string.
         Throws:
             ASN1ValueInvalidException = if any enecoded character is not ASCII.
+
+        Citations:
+            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Communication between Heterogeneous Systems, Morgan Kaufmann, 
+            2001, p. 182.
     */
     override public @property @system
     string generalString() const
@@ -2824,6 +2845,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
         Throws:
             ASN1ValueInvalidException = if any enecoded character is not ASCII.
+
+        Citations:
+            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Communication between Heterogeneous Systems, Morgan Kaufmann, 
+            2001, p. 182.
     */
     override public @property @system
     void generalString(string value)

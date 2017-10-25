@@ -158,7 +158,6 @@ class AbstractSyntaxNotation1Element(Element)
     abstract public @property
     void integer(T)(T value) if (isIntegral!T && isSigned!T);
 
-    ///
     @system
     unittest
     {
@@ -782,7 +781,6 @@ class AbstractSyntaxNotation1Element(Element)
     abstract public @property
     void enumerated(T)(T value) if (isIntegral!T && isSigned!T);
 
-    ///
     @system
     unittest
     {

@@ -59,7 +59,10 @@ EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
 public
 struct EmbeddedPresentationDataValue
 {
+    ///
     public ASN1ContextSwitchingTypeID identification;
+    ///
     public string dataValueDescriptor; // Made public because validation is done at encoding.
+    ///
     public ubyte[] dataValue;
 }

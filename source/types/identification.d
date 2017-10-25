@@ -6,7 +6,9 @@ import types.universal.objectidentifier;
 public
 struct ASN1ContextNegotiation
 {
+    ///
     public long presentationContextID = 0L;
+    ///
     public ObjectIdentifier transferSyntax;
 }
 
@@ -14,7 +16,9 @@ struct ASN1ContextNegotiation
 public
 struct ASN1ContextSwitchingTypeSyntaxes
 {
+    ///
     public ObjectIdentifier abstractSyntax;
+    ///
     public ObjectIdentifier transferSyntax;
 }
 
@@ -26,11 +30,17 @@ public alias ASN1ContextSwitchingTypeID = ASN1ContextSwitchingTypeIdentification
 public
 struct ASN1ContextSwitchingTypeIdentification
 {
+    ///
     public Nullable!ASN1ContextSwitchingTypeSyntaxes syntaxes;
+    ///
     public Nullable!ObjectIdentifier syntax;
+    ///
     public long presentationContextID = 0L;
+    ///
     public Nullable!ASN1ContextNegotiation contextNegotiation;
+    ///
     public Nullable!ObjectIdentifier transferSyntax;
+    ///
     public bool fixed;
 }
 

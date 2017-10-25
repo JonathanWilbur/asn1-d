@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.8.3](http://semver.org/)
+* Version: [0.8.4](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -64,7 +64,7 @@ and reviewed for security and performance.
   - [x] `See_Also`
   - [x] `Standards`
   - [x] DDoc Section Formatting Macros
-  - [ ] Test that it actually compiles correctly
+  - [x] Test that it actually compiles correctly
 - [x] Unabbreviated member names and abbreviated aliases
 - [x] Storage classes (`in`, `out`, `scope`, `const`, etc.)
 - [x] `@safe`, `@trusted`, `@system`, etc.
@@ -96,8 +96,10 @@ and reviewed for security and performance.
 - [x] Rename `ASN1InvalidValueException` to `ASN1ValueInvalidException`
 - [x] Get rid of deprecation messages
 - [ ] Unit test variations of `REAL` base and scale.
-- [ ] Formal citations for unit tests
+- [x] Formal citations for unit tests
 - [ ] Modify `realType()` binary decoding to use pointer casting instead of or-shift loops.
+- [ ] Implement `opHash()` on `ObjectIdentifier` and `ObjectIdentifierNode`
+- [ ] Add Overflow checking to `objectIdentifier` properties
 - [ ] Build System
   - [ ] [Bazel](https://www.bazel.build)
   - [x] Bash Script
@@ -218,6 +220,18 @@ The following command line tools will be released:
 - [ ] `decode-lwer`
 - [ ] `decode-bacnet`
 - [ ] `decode-ser`
+
+## Suggestions
+
+I would like to have `debug` statements all throughout the code, but any method
+in which I put a `write`, `writeln`, or `writefln` statement cannot be `nothrow`.
+I would like a solution for this that:
+
+1. Allows me to put a `debug` statement in _every_ method.
+2. Allows methods to still be `nothrow`.
+3. Does not use `version` statements that dramatically increase the lines of code.
+
+If you have any great ideas, let me know.
 
 ## Bugs
 

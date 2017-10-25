@@ -18,7 +18,10 @@ EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
 public
 struct External
 {
+    ///
     public ASN1ContextSwitchingTypeID identification;
+    ///
     public string dataValueDescriptor; // Made public because validation is done at encoding.
+    ///
     public ubyte[] dataValue;
 }
