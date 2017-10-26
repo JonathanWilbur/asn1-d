@@ -110,17 +110,6 @@ class AbstractSyntaxNotation1InvalidLengthException : ASN1CodecException
     mixin basicExceptionCtors; 
 }
 
-// ///
-// public alias ASN1TLVTriplet = AbstractSyntaxNotation1BinaryTypeLengthValueTriplet;
-// ///
-// public alias ASN1TypeLengthValueTriplet = AbstractSyntaxNotation1BinaryTypeLengthValueTriplet;
-// ///
-// public
-// interface AbstractSyntaxNotation1BinaryTypeLengthValueTriplet
-// {
-//     ubyte 
-// }
-
 ///
 public alias ASN1Element = AbstractSyntaxNotation1Element;
 /// An abstract class from which both ASN1BinaryCodec and ASN1TextCodec will inherit.

@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.8.4](http://semver.org/)
+* Version: [0.9.0](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -95,7 +95,7 @@ and reviewed for security and performance.
 - [x] Rename `BERValue` to `BERElement` and `ASN1Value` to `ASN1Element`
 - [x] Rename `ASN1InvalidValueException` to `ASN1ValueInvalidException`
 - [x] Get rid of deprecation messages
-- [ ] Unit test variations of `REAL` base and scale.
+- [x] Unit test variations of `REAL` base and scale.
 - [x] Formal citations for unit tests
 - [ ] Modify `realType()` binary decoding to use pointer casting instead of or-shift loops.
 - [ ] Implement `opHash()` on `ObjectIdentifier` and `ObjectIdentifierNode`

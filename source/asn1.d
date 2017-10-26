@@ -103,17 +103,6 @@ enum AbstractSyntaxNotation1RealEncodingBase : ubyte
     base16 = 0x10
 }
 
-///
-public alias ASN1RealBinaryEncodingBase = AbstractSyntaxNotation1RealBinaryEncodingBase;
-///
-public
-enum AbstractSyntaxNotation1RealBinaryEncodingBase : ubyte
-{
-    base2 = 0b00000000,
-    base8 = 0b00010000,
-    base16 = 0b00100000
-}
-
 /* FIXME:
     Duplicates:
     ASN1RealEncodingScale

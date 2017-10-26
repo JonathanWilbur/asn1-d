@@ -94,9 +94,9 @@ public
 class BasicEncodingRulesElement : ASN1Element!BERElement
 {
     // Constants used to save CPU cycles
-    private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in encodeReal()
-    private immutable real maxUlongAsReal = cast(real) ulong.max; // Saves CPU cycles in encodeReal()
-    private immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in encodeReal()
+    private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()
+    private immutable real maxLongAsReal = cast(real) long.max; // Saves CPU cycles in realType()
+    private immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in realType()
 
     // Constants for exception messages
     immutable string notWhatYouMeantText = 
@@ -192,9 +192,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
     static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
-
-    /// The base of binary-encoded REALs. May be 2, 8, or 16.
-    static public ASN1RealBinaryEncodingBase realBinaryEncodingBase = ASN1RealBinaryEncodingBase.base2;
 
     /**
         Whether the value is one of the universally-defined data types, which
@@ -1033,17 +1030,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             case 0b_1000_0000u, 0b_1100_0000u: // Binary Encoding
             {
                 /*
-                    The mantissa MUST be a long, unless you want a type-casting
-                    problem at the end (where the mantissa is multiplied by the
-                    sign (-1 or 1)) in which the sign gets converted to a ulong,
-                    which becomes ulong.max-1 from the resulting integer 
-                    underflow.
+                    While the mantissa is a ulong here, it must be cast to a
+                    long later on, so it is important that it is less than
+                    long.max.
                 */
-                long mantissa;
+                ulong mantissa;
                 long exponent; // REVIEW: Can this be a smaller data type?
                 ubyte scale;
                 ubyte base;
-                ASN1RealBinaryEncodingBase realBinaryEncodingBase = ASN1RealBinaryEncodingBase.base2;
 
                 immutable string mantissaTooBigExceptionText = 
                     "This exception was thrown because the mantissa encoded by " ~
@@ -1052,7 +1046,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     "what you tried to decode was not actually a REAL at all. " ~
                     "For more information, see the ASN.1 library documentation, " ~
                     "or the International Telecommuncation Union's X.690 " ~
-                    "specification.";
+                    "specification. ";
 
                 // There must be at least one information byte and one exponent byte.
                 if (this.length < 2)
@@ -1063,7 +1057,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         "which cannot encode a valid binary-encoded REAL. A " ~
                         "correctly-encoded REAL has one byte for general " ~
                         "encoding information about the REAL, and at least " ~
-                        "one byte for encoding the exponent." ~
+                        "one byte for encoding the exponent. " ~
                         notWhatYouMeantText ~ forMoreInformationText ~ 
                         debugInformationText ~ reportBugsText
                     );
@@ -1101,7 +1095,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 "byte indicated that the subsequent two bytes " ~
                                 "would encode the exponent of the REAL, but " ~
                                 "there were less than three bytes in the entire " ~
-                                "encoded value." ~
+                                "encoded value. " ~
                                 notWhatYouMeantText ~ forMoreInformationText ~ 
                                 debugInformationText ~ reportBugsText
                             );
@@ -1178,7 +1172,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 "byte indicated that the subsequent byte " ~
                                 "would encode the length of the exponent of the REAL, but " ~
                                 "there were less than two bytes in the entire " ~
-                                "encoded value." ~
+                                "encoded value. " ~
                                 notWhatYouMeantText ~ forMoreInformationText ~ 
                                 debugInformationText ~ reportBugsText
                             );
@@ -1195,7 +1189,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 "exponent, which would begin on the next byte " ~
                                 "(the third byte). However, the encoded value " ~
                                 "does not have enough bytes to encode the " ~
-                                "exponent with the size indicated." ~
+                                "exponent with the size indicated. " ~
                                 notWhatYouMeantText ~ forMoreInformationText ~ 
                                 debugInformationText ~ reportBugsText
                             );
@@ -1207,7 +1201,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 "to decode a REAL that had an exponent that was " ~
                                 "too big to decode to a floating-point type." ~
                                 "Specifically, the exponent was encoded on " ~
-                                "more than eight bytes." ~
+                                "more than eight bytes. " ~
                                 notWhatYouMeantText ~ forMoreInformationText ~ 
                                 debugInformationText ~ reportBugsText
                             );
@@ -1237,6 +1231,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         assert(0, "Impossible binary exponent encoding on REAL type");
                     }
                 }
+                
+                if (mantissa > long.max)
+                    throw new ASN1ValueInvalidException(mantissaTooBigExceptionText);
 
                 switch (this.value[0] & 0b_0011_0000)
                 {
@@ -1245,12 +1242,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         base = 0x02u;
                         break;
                     }
-                    case (0b_0000_0001): // Base 8
+                    case (0b_0001_0000): // Base 8
                     {
                         base = 0x08u;
                         break;
                     }
-                    case (0b_0000_0010): // Base 16
+                    case (0b_0010_0000): // Base 16
                     {
                         base = 0x10u;
                         break;
@@ -1262,7 +1259,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                             "This exception was throw because you attempted to " ~
                             "decode a REAL that had both base bits in the " ~
                             "information block set, the meaning of which is " ~
-                            "not specified." ~
+                            "not specified. " ~
                             notWhatYouMeantText ~ forMoreInformationText ~ 
                             debugInformationText ~ reportBugsText 
                         );
@@ -1272,8 +1269,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 scale = ((this.value[0] & 0b_0000_1100u) >> 2);
 
                 return (
-                    ((this.value[0] & 0b_0100_0000u) ? -1 : 1) *
-                    mantissa *
+                    ((this.value[0] & 0b_0100_0000u) ? -1.0 : 1.0) *
+                    cast(long) mantissa * // Mantissa MUST be cast to a long
                     2^^scale *
                     (cast(T) base)^^exponent // base needs to be cast
                 );
@@ -1333,12 +1330,20 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     if (is(T == float) || is(T == double))
     {
         import std.bitmanip : DoubleRep, FloatRep;
+        import std.math : floor;
 
         bool positive = true;
         real significand;
-        ASN1RealEncodingScale scalingFactor = ASN1RealEncodingScale.scale0;
-        ASN1RealEncodingBase base = ASN1RealEncodingBase.base2;
+        ubyte scale = 2u;
         short exponent = 0;
+
+        /**
+            Because the current settings for realEncodingBase must be referenced
+            repeatedly throughout this method, a private copy must be made of
+            the state of this.realEncodingBase to prevent both TOCTOU 
+            vulnerabilities as well as problems with concurrent programming.
+        */
+        ASN1RealEncodingBase base = this.realEncodingBase;
 
         if (value.isNaN)
         {
@@ -1361,9 +1366,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             return;
         }
 
-        if (this.realEncodingBase == ASN1RealEncodingBase.base10)
+        if (base == ASN1RealEncodingBase.base10)
         {
-            import std.array : appender, Appender;
             import std.format : formattedWrite;
             Appender!string writer = appender!string();
 
@@ -1478,6 +1482,72 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         exponent = cast(short)
             (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
 
+        // FIXME: Convert current numbers to Base-8 or 16 if necessary
+        /*
+            This section here converts the base-2 floating-point type to
+            either base-8 or base-16 by dividing the significand by
+            2^^((log2(base)-1)*exponent), which effectively gives the
+            significand the value necessary to maintain the same exponent,
+            despite the underlying base having changed. Of course, doing
+            so makes the significand a non-integral number, so in the
+            while loop, we actually mulitply it by the base until we
+            have an integral value again, decrementing the exponent by 1
+            with each iteration. If the while loop detects an overflow,
+            which you may get with a non-terminating fraction (such as
+            10 / 3), it just reverses the last iteration, and breaks the
+            loop. Yes, this may result in a loss of precision.
+        */
+        if (base != ASN1RealEncodingBase.base2)
+        {
+            if (base == ASN1RealEncodingBase.base8)
+            {
+                significand /= (2.0^^(2.0*exponent));
+            }
+            else if (base == ASN1RealEncodingBase.base16)
+            {
+                significand /= (2.0^^(3.0*exponent));
+            }
+
+            /*
+                Sometimes the significand generated from the previous
+                step can be so high that the last bit of precision is
+                not a fractional bit--integral precision, in other words.
+                When this happens, the long to which the significand is
+                cast later on in the code is completely zeroed out. The
+                loops below iteratively divide the significand by the
+                base, while incrementing the exponent (so that the same
+                number is represented, just with a different combination
+                of significand and exponent), which gives us a significand
+                that can safely be cast to a long.
+
+                Note that the significand must be cast only to a SIGNED
+                long later on, because it will be multiplied with other
+                signed integral types, hence we use this loop to bring
+                the floating-point significand within the range that
+                can be safely cast to a signed long.
+            */
+            while (significand > maxLongAsReal)
+            {
+                significand /= base;
+                if (exponent >= short.max)
+                    throw new ASN1ValueInvalidException("Arithmetic Overflow");
+                exponent++;
+            }
+
+            while (significand - floor(significand) != 0.0)
+            {
+                significand *= base;
+                if (significand > maxLongAsReal)
+                {
+                    significand /= base;
+                    break;
+                }
+                if (exponent <= short.min)
+                    throw new ASN1ValueInvalidException("Arithmetic overflow!");
+                exponent--;
+            }
+        }
+
         /*
             However, by doing this, we sometimes underflow the exponent.
             Fortunately, we can tell we have underflowed the exponent if
@@ -1526,14 +1596,87 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             reverse(significandBytes);
         }
 
+        ubyte baseBitMask;
+        switch (base)
+        {
+            case (ASN1RealEncodingBase.base2):
+            {
+                baseBitMask = 0b0000_0000u;
+                break;
+            }
+            case (ASN1RealEncodingBase.base8):
+            {
+                baseBitMask = 0b0001_0000u;
+                break;
+            }
+            case (ASN1RealEncodingBase.base16):
+            {
+                baseBitMask = 0b0010_0000u;
+                break;
+            }
+            default:
+            {
+                assert(0, "Impossible ASN1RealEncodingBase state appeared!");
+            }
+        }
+
         ubyte infoByte =
             0x80u | // First bit gets set for base2, base8, or base16 encoding
             (positive ? 0x00u : 0x40u) | // 1 = negative, 0 = positive
-            realBinaryEncodingBase | // Bitmask specifying base
+            baseBitMask | // Bitmask specifying base
             ASN1RealEncodingScales.scale0 |
             ASN1RealExponentEncoding.following2Octets;
 
         this.value = (infoByte ~ exponentBytes ~ significandBytes);
+    }
+
+    // Tests of Base-8 Encoding
+    @system
+    unittest
+    {
+        BERElement.realEncodingBase = ASN1RealEncodingBase.base8;
+        for (int i = -100; i < 100; i++)
+        {
+            // Alternating negative and positive floating point numbers exploring extreme values
+            immutable float f = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
+            immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
+            BERElement elf = new BERElement();
+            BERElement eld = new BERElement();
+            elf.realType!float = f;
+            eld.realType!double = d;
+            // debug (asn1) writefln("F: %(%02X %)", elf.value);
+            // debug (asn1) writefln("D: %(%02X %)", eld.value);
+            // debug (asn1) writefln("i: %d, Float: %f %f", i, f, elf.realType!float);
+            // debug (asn1) writefln("i: %d, Float: %f %f, Double: %f %f", i, f, elf.realType!float, d, eld.realType!double);
+            assert(approxEqual(elf.realType!float, f));
+            assert(approxEqual(elf.realType!double, f));
+            assert(approxEqual(eld.realType!float, d));
+            assert(approxEqual(eld.realType!double, d));
+        }
+        BERElement.realEncodingBase = ASN1RealEncodingBase.base2;
+    }
+
+    // Tests of Base-16 Encoding
+    @system
+    unittest
+    {
+        BERElement.realEncodingBase = ASN1RealEncodingBase.base16;
+        for (int i = -10; i < 10; i++)
+        {
+            // Alternating negative and positive floating point numbers exploring extreme values
+            immutable float f = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
+            immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
+            BERElement elf = new BERElement();
+            BERElement eld = new BERElement();
+            elf.realType!float = f;
+            eld.realType!double = d;
+            // debug (asn1) writefln("i: %d, Float: %f %f, Double: %f %f", i, f, elf.realType!float, d, eld.realType!double);
+            assert(approxEqual(elf.realType!float, f));
+            assert(approxEqual(elf.realType!double, f));
+            assert(approxEqual(eld.realType!float, d));
+            assert(approxEqual(eld.realType!double, d));
+        }
+        BERElement.realEncodingBase = ASN1RealEncodingBase.base2;
     }
 
     // Testing Base-10 (Character-Encoded) REALs - NR1
