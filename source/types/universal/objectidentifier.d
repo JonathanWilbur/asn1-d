@@ -373,4 +373,21 @@ public class ObjectIdentifier
         return this.dotNotation();
     }
 
+    // REVIEW: Mainly, I want to know that this line is secure.
+    /**
+        An override so that associative arrays can use an OIDNode as a
+        key.
+        Returns: A size_t that represents a hash of the OIDNode
+    */
+    override public nothrow @trusted
+    size_t toHash() const
+    {
+        size_t sum;
+        foreach (node; this.nodes)
+        {
+            sum += typeid(node).getHash(cast(const void*) &node);
+        }
+        return sum;
+    }
+
 }

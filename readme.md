@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.9.0](http://semver.org/)
+* Version: [0.10.0](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -97,9 +97,9 @@ and reviewed for security and performance.
 - [x] Get rid of deprecation messages
 - [x] Unit test variations of `REAL` base and scale.
 - [x] Formal citations for unit tests
-- [ ] Modify `realType()` binary decoding to use pointer casting instead of or-shift loops.
-- [ ] Implement `opHash()` on `ObjectIdentifier` and `ObjectIdentifierNode`
-- [ ] Add Overflow checking to `objectIdentifier` properties
+- [x] Modify `realType()` binary decoding to use pointer casting instead of or-shift loops.
+- [x] Implement `toHash()` on `ObjectIdentifier` and `ObjectIdentifierNode`
+- [x] Add Overflow checking to `objectIdentifier` properties
 - [ ] Build System
   - [ ] [Bazel](https://www.bazel.build)
   - [x] Bash Script
@@ -220,6 +220,15 @@ The following command line tools will be released:
 - [ ] `decode-lwer`
 - [ ] `decode-bacnet`
 - [ ] `decode-ser`
+
+### 1.6.0 Release
+
+- [ ] Scale selection for binary-encoded `REAL` type
+
+### 2.0.0 Release
+
+- [ ] Teletex (T61String) validation
+- [ ] Videotex validation
 
 ## Suggestions
 

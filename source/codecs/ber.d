@@ -525,10 +525,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         current OID number. In other words, the bytes encoding each number
         always end with a byte whose most significant bit is cleared.
 
+        Throws:
+            ASN1ValueTooSmallException = if an attempt is made to decode
+                an Object Identifier from zero bytes.
+            ASN1ValueTooBigException = if a single OID number is too big to 
+                decode to a size_t.
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    // FIXME: Add overflow checking.
     override public @property @system
     OID objectIdentifier() const
     out (value)
@@ -537,7 +541,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
     body
     {
-        // TODO: Throw if too short
+        if (this.value.length == 0u)
+            throw new ASN1ValueTooSmallException
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "an OBJECT IDENTIFIER from no bytes. An OBJECT IDENTIFIER " ~
+                "must be encoded on at least one byte. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
         ubyte[][] components;
         size_t[] numbers = [ (this.value[0] / 0x28u), (this.value[0] % 0x28u) ];
         Appender!(OIDNode[]) nodes = appender!(OIDNode[])();
@@ -556,6 +569,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         // Converts each group of bytes to a number.
         foreach (component; components)
         {
+            if (component.length > (size_t.sizeof * 2u))
+                throw new ASN1ValueTooBigException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "an OBJECT IDENTIFIER that encoded a number on more than " ~
+                    "size_t*2 bytes (16 on 64-bit, 8 on 32-bit). " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+
             numbers ~= 0u;
             for (ptrdiff_t i = 0; i < component.length; i++)
             {
@@ -589,25 +612,26 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    // FIXME: Add overflow checking.
     override public @property @system
     void objectIdentifier(OID value)
     in
     {
         assert(value.length > 2u);
+        assert(value.numericArray[0] <= 2u);
+        assert(value.numericArray[1] <= 39u);
     }
     body
     {
         size_t[] numbers = value.numericArray();
-        this.value = [ cast(ubyte) (numbers[0] * 40u + numbers[1]) ]; //FIXME: This might be suceptable to overflow attacks.
+        this.value = [ cast(ubyte) (numbers[0] * 40u + numbers[1]) ];
         if (numbers.length > 2)
         {
             foreach (number; numbers[2 .. $])
             {
                 ubyte[] encodedOIDComponent;
-                if (number == 0) // REVIEW: Could you make this faster by using if (x < 128)?
+                if (number < 128u)
                 {
-                    this.value ~= 0x00u;
+                    this.value ~= cast(ubyte) number;
                     continue;
                 }
                 while (number != 0)
@@ -1319,6 +1343,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
         Throws:
             ASN1ValueInvalidException = if an attempt to encode NaN is made.
+            ASN1ValueTooSmallException = if an attempt to encode would result 
+                in an arithmetic underflow of a signed short.
+            ASN1ValueTooBigException = if an attempt to encode would result
+                in an arithmetic overflow of a signed short.
 
         Citations:
             Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
@@ -1357,12 +1385,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         }
         else if (value == T.infinity)
         {
-            this.value = [ 0x40u ];
+            this.value = [ ASN1SpecialRealValue.plusInfinity ];
             return;
         }
         else if (value == -T.infinity)
         {
-            this.value = [ 0x41u ];
+            this.value = [ ASN1SpecialRealValue.minusInfinity ];
             return;
         }
 
@@ -1482,7 +1510,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         exponent = cast(short)
             (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
 
-        // FIXME: Convert current numbers to Base-8 or 16 if necessary
         /*
             This section here converts the base-2 floating-point type to
             either base-8 or base-16 by dividing the significand by
@@ -1530,7 +1557,22 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             {
                 significand /= base;
                 if (exponent >= short.max)
-                    throw new ASN1ValueInvalidException("Arithmetic Overflow");
+                    throw new ASN1ValueTooBigException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "encode a floating-point type as a REAL, which " ~
+                        "resulted in an exponent that was larger than a " ~
+                        "signed short integer could encode. It is not your " ~
+                        "fault that this exception occurred: it is a bug. " ~
+                        "If you have encountered this exception, and if you " ~
+                        "know specifically what number created the exception, " ~
+                        "please report it on the ASN.1 library's GitHub " ~
+                        "issues page: " ~ 
+                        "https://github.com/JonathanWilbur/asn1-d/issues. " ~
+                        "Please include your machine architecture, bit-width, " ~
+                        "the exact number you tried to encode, and whether you " ~
+                        "tried to encode it from a float or double."
+                    );
                 exponent++;
             }
 
@@ -1543,7 +1585,22 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     break;
                 }
                 if (exponent <= short.min)
-                    throw new ASN1ValueInvalidException("Arithmetic overflow!");
+                    throw new ASN1ValueTooSmallException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "encode a floating-point type as a REAL, which " ~
+                        "resulted in an exponent that was smaller than a " ~
+                        "signed short integer could encode. It is not your " ~
+                        "fault that this exception occurred: it is a bug. " ~
+                        "If you have encountered this exception, and if you " ~
+                        "know specifically what number created the exception, " ~
+                        "please report it on the ASN.1 library's GitHub " ~
+                        "issues page: " ~ 
+                        "https://github.com/JonathanWilbur/asn1-d/issues. " ~
+                        "Please include your machine architecture, bit-width, " ~
+                        "the exact number you tried to encode, and whether you " ~
+                        "tried to encode it from a float or double."
+                    );
                 exponent--;
             }
         }
@@ -1576,10 +1633,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             exponent++;
         }
 
-        /* FIXME:
-            Converting from a significand of type real to uint or ulong means that an overflow
-            exception is highly possible.
-        */
         ubyte[] exponentBytes;
         exponentBytes.length = short.sizeof;
         *cast(short *)exponentBytes.ptr = exponent;
@@ -1624,7 +1677,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             0x80u | // First bit gets set for base2, base8, or base16 encoding
             (positive ? 0x00u : 0x40u) | // 1 = negative, 0 = positive
             baseBitMask | // Bitmask specifying base
-            ASN1RealEncodingScales.scale0 |
+            // Scale = 0
             ASN1RealExponentEncoding.following2Octets;
 
         this.value = (infoByte ~ exponentBytes ~ significandBytes);
@@ -1644,10 +1697,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             BERElement eld = new BERElement();
             elf.realType!float = f;
             eld.realType!double = d;
-            // debug (asn1) writefln("F: %(%02X %)", elf.value);
-            // debug (asn1) writefln("D: %(%02X %)", eld.value);
-            // debug (asn1) writefln("i: %d, Float: %f %f", i, f, elf.realType!float);
-            // debug (asn1) writefln("i: %d, Float: %f %f, Double: %f %f", i, f, elf.realType!float, d, eld.realType!double);
             assert(approxEqual(elf.realType!float, f));
             assert(approxEqual(elf.realType!double, f));
             assert(approxEqual(eld.realType!float, d));
@@ -1670,7 +1719,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             BERElement eld = new BERElement();
             elf.realType!float = f;
             eld.realType!double = d;
-            // debug (asn1) writefln("i: %d, Float: %f %f, Double: %f %f", i, f, elf.realType!float, d, eld.realType!double);
             assert(approxEqual(elf.realType!float, f));
             assert(approxEqual(elf.realType!double, f));
             assert(approxEqual(eld.realType!float, d));
@@ -2321,8 +2369,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    // REVIEW: Can this be nothrow?
-    // FIXME: Add overflow checking.
     // REVIEW: This could probably be a lot faster if you combine all three loops.
     override public @property @system
     OIDNode[] relativeObjectIdentifier() const
@@ -2345,6 +2391,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         // Converts each group of bytes to a number.
         foreach (component; components)
         {
+            if (component.length > (size_t.sizeof * 2u))
+                throw new ASN1ValueTooBigException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a RELATIVE OID that encoded a number on more than " ~
+                    "size_t*2 bytes (16 on 64-bit, 8 on 32-bit). " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+
             numbers ~= 0u;
             for (ptrdiff_t i = 0; i < component.length; i++)
             {
@@ -2376,18 +2432,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    // REVIEW: Can this be nothrow?
-    // FIXME: add overflow checking.
-    override public @property @system
+    override public @property @system nothrow
     void relativeObjectIdentifier(OIDNode[] value)
     {
         foreach (node; value)
         {
             size_t number = node.number;
             ubyte[] encodedOIDComponent;
-            if (number == 0u) // REVIEW: Could you make this faster by using if (x < 128)?
+            if (number < 128u)
             {
-                this.value ~= 0x00u;
+                this.value ~= cast(ubyte) number;
                 continue;
             }
             while (number != 0u)

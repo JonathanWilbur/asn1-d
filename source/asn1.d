@@ -36,7 +36,7 @@ module asn1;
 
 debug(asn1)
 {
-    public import std.stdio : write, writefln, writeln;
+    public import std.stdio : writefln, writeln;
 }
 
 version (unittest)
@@ -80,6 +80,64 @@ enum AbstractSyntaxNotation1Construction : ubyte
 }
 
 ///
+public alias ASN1UniversalType = AbstractSyntaxNotation1UniversalType;
+///
+public
+enum AbstractSyntaxNotation1UniversalType : ubyte
+{
+    endOfContent = 0x00u,
+    eoc = endOfContent,
+    boolean = 0x01u,
+    integer = 0x02u,
+    bitString = 0x03u,
+    octetString = 0x04u,
+    nill = 0x05u,
+    objectIdentifier = 0x06u,
+    oid = objectIdentifier,
+    objectDescriptor = 0x07u,
+    external = 0x08u,
+    ext = external,
+    realType = 0x09u,
+    enumerated = 0x0Au,
+    embeddedPresentationDataValue = 0x0Bu,
+    embeddedPDV = embeddedPresentationDataValue,
+    pdv = embeddedPresentationDataValue,
+    unicodeTransformationFormat8String = 0x0Cu,
+    utf8String = unicodeTransformationFormat8String,
+    utf8 = unicodeTransformationFormat8String,
+    relativeObjectIdentifier = 0x0Du,
+    relativeOID = relativeObjectIdentifier,
+    roid = relativeObjectIdentifier,
+    reserved14 = 0x0Eu,
+    reserved15 = 0x0Fu,
+    sequence = 0x10u,
+    set = 0x11u,
+    numericString = 0x12u,
+    numeric = numericString,
+    printableString = 0x13u,
+    printable = printableString,
+    teletexString = 0x14u,
+    t61String = teletexString,
+    videotexString = 0x15u,
+    internationalAlphabetNumber5String = 0x16u,
+    ia5String = internationalAlphabetNumber5String,
+    coordinatedUniversalTime = 0x17u,
+    utcTime = coordinatedUniversalTime,
+    generalizedTime = 0x18u,
+    graphicString = 0x19u,
+    graphic = graphicString,
+    visibleString = 0x1Au,
+    visible = visibleString,
+    generalString = 0x1Bu,
+    general = generalString,
+    universalString = 0x1Cu,
+    universal = universalString,
+    characterString = 0x1Du,
+    basicMultilingualPlaneString = 0x1Eu,
+    bmpString = basicMultilingualPlaneString
+}
+
+///
 public alias ASN1LengthEncoding = AbstractSyntaxNotation1LengthEncoding;
 ///
 public
@@ -103,13 +161,6 @@ enum AbstractSyntaxNotation1RealEncodingBase : ubyte
     base16 = 0x10
 }
 
-/* FIXME:
-    Duplicates:
-    ASN1RealEncodingScale
-    ASN1RealEncodingScales
-
-    Get rid of one.
-*/
 ///
 public alias ASN1RealEncodingScale = AbstractSyntaxNotation1RealEncodingScale;
 ///
@@ -120,18 +171,6 @@ enum AbstractSyntaxNotation1RealEncodingScale : ubyte
     scale1 = 0x01,
     scale2 = 0x02,
     scale3 = 0x03
-}
-
-///
-public alias ASN1RealEncodingScales = AbstractSyntaxNotation1RealEncodingScales;
-///
-public
-enum AbstractSyntaxNotation1RealEncodingScales : ubyte //TODO: Rename this
-{
-    scale0 = 0b00000000,
-    scale1 = 0b00000100,
-    scale2 = 0b00001000,
-    scale3 = 0b00001100
 }
 
 ///
@@ -171,8 +210,10 @@ public alias ASN1Base10RealNumericalRepresentation = AbstractSyntaxNotation1Base
         $(TR $(TD NR3) $(TD Explicit exponent) $(TD "3.0E1", "123E+100"))
     )
 
-    Source:
-        Page 143 of Dubuisson's ASN.1 Book
+    Citations:
+        Dubuisson, Olivier. “Character String Types.” ASN.1: 
+            Communication between Heterogeneous Systems, Morgan 
+            Kaufmann, 2001, p. 143.
 */
 public
 enum AbstractSyntaxNotation1Base10RealNumericalRepresentation : ubyte
@@ -182,7 +223,6 @@ enum AbstractSyntaxNotation1Base10RealNumericalRepresentation : ubyte
     nr3 = 0b0000_0011
 }
 
-// TODO: Make the default determined by locale
 ///
 public alias ASN1Base10RealDecimalSeparator = AbstractSyntaxNotation1Base10RealDecimalSeparator;
 ///

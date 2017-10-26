@@ -38,6 +38,18 @@ struct ObjectIdentifierNode
         return cast(int) (this.number - other.number);
     }
 
+    // REVIEW: Mainly, I want to know that this line is secure.
+    /**
+        An override so that associative arrays can use an OIDNode as a
+        key.
+        Returns: A size_t that represents a hash of the OIDNode
+    */
+    public nothrow @trusted
+    size_t toHash() const
+    {
+        return typeid(this.number).getHash(cast(const void*) &this.number);
+    }
+
     ///
     @system
     unittest
