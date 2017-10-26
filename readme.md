@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.10.0](http://semver.org/)
+* Version: [0.10.1](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -103,7 +103,7 @@ and reviewed for security and performance.
 - [ ] Build System
   - [ ] [Bazel](https://www.bazel.build)
   - [x] Bash Script
-  - [ ] Batch Script
+  - [x] Batch Script
 
 Version 1.0.0-alpha development is expected to begin on November 1st, 2017.
 

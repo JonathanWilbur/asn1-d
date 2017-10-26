@@ -200,7 +200,7 @@ public class ObjectIdentifier
     public @property @safe nothrow
     size_t[] numericArray() const
     {
-        ulong[] ret;
+        size_t[] ret;
         ret.length = this.nodes.length;
         for (ptrdiff_t i = 0; i < this.nodes.length; i++)
         {
