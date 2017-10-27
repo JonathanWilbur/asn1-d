@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [0.10.1](http://semver.org/)
+* Version: [1.0.0-alpha.rc1](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -50,65 +50,34 @@ file is what a developer who needed an ASN.1 BER codec would use.
 I am not going to document the usage of this library just yet, because it
 is just too volatile at this point.
 
+## Compile and Install
+
+In `build/scripts` there are three scripts you can use to build the library.
+When the library is built, it will be located in `build/libraries`.
+
+### On POSIX-Compliant Machines (Linux, Mac OS X)
+
+Run `./build/scripts/build.sh`.
+If you get a permissions error, you need to set that file to be executable
+using the `chmod` command.
+
+### On Windows
+
+Run `.\build\scripts\build.bat` from a `cmd` or run `.\build\scripts\build.ps1`
+from the PowerShell command line. If you get a warning about needing a 
+cryptographic signature for the PowerShell script, it is probably because
+your system is blocking running unsigned PowerShell scripts. Just run the
+other script if that is the case.
+
 ## Development
 
 I hope to be done with this library before the end of 2017. When it is
 complete, it will contain several codecs, and everything will be unit-tested 
 and reviewed for security and performance.
 
-### Pre-1.0.0-alpha Development
-
-- [x] Finish embedded documentation
-  - [x] `Throws`
-  - [x] `Returns`
-  - [x] `See_Also`
-  - [x] `Standards`
-  - [x] DDoc Section Formatting Macros
-  - [x] Test that it actually compiles correctly
-- [x] Unabbreviated member names and abbreviated aliases
-- [x] Storage classes (`in`, `out`, `scope`, `const`, etc.)
-- [x] `@safe`, `@trusted`, `@system`, etc.
-- [x] `nothrow`, `pure`, `final`, etc.
-- [x] Character-encoded `REAL`
-- [x] `integer(T) if (isSigned!T && isIntegral!T)`
-- [x] Convert `bitString` to get and set a `bool[]` instead of `std.bitmanip.BitArray`
-- [x] Abstractions for `set` and `sequence` properties \([StackOverflow Question](https://stackoverflow.com/questions/46828692/template-referring-to-child-class-within-parent-class)\)
-- [x] A better system of exceptions
-- [x] 100% unit test code coverage
-- [x] Add `deprecated` attribute to deprecated types.
-- [x] Contracts
-- [x] Make all accessors `const` or `immutable`
-- [x] Overhaul OID and RelativeOID
-- [x] Make constructor that takes ref to a `size_t` storing the number of bytes read
-- [x] Test long definite encoding
-- [x] Test indefinite encoding
-- [x] Unit tests for OID Types
-  - [x] `ObjectIdentifierNode`
-  - [x] `ObjectIdentifier`
-- [x] Remove dependency on `std.outbuffer`
-- [x] Experiment with putting unit tests in abstract class
-- [x] Abstract constructed types into parent class, `ASN1BinaryValue`
-  - [x] `External`
-  - [x] `EmbeddedPDV`
-  - [x] `CharacterString`
-- [x] Better exception messages
-- [x] Rename `BERValue` to `BERElement` and `ASN1Value` to `ASN1Element`
-- [x] Rename `ASN1InvalidValueException` to `ASN1ValueInvalidException`
-- [x] Get rid of deprecation messages
-- [x] Unit test variations of `REAL` base and scale.
-- [x] Formal citations for unit tests
-- [x] Modify `realType()` binary decoding to use pointer casting instead of or-shift loops.
-- [x] Implement `toHash()` on `ObjectIdentifier` and `ObjectIdentifierNode`
-- [x] Add Overflow checking to `objectIdentifier` properties
-- [ ] Build System
-  - [ ] [Bazel](https://www.bazel.build)
-  - [x] Bash Script
-  - [x] Batch Script
-
-Version 1.0.0-alpha development is expected to begin on November 1st, 2017.
-
 ### 1.0.0-alpha Development
 
+Pre-alpha development was completed on October 26th, 2017. 
 Version 1.0.0-alpha development will consist entirely of creating these codecs:
 
 - [ ] Distinguished Encoding Rules (DER)
@@ -229,6 +198,12 @@ The following command line tools will be released:
 
 - [ ] Teletex (T61String) validation
 - [ ] Videotex validation
+- [ ] Included Source Signature
+- [ ] Build System
+  - [ ] [Bazel](https://www.bazel.build)
+  - [ ] Makefile
+  - [ ] Compiled D Executable
+  - [ ] Support `gdc` and `ldc` compilation
 
 ## Suggestions
 

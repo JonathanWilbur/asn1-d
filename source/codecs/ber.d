@@ -1145,7 +1145,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 m++;
                             }
                         }
-                        version (BigEndian)
+                        else version (BigEndian)
                         {
                             while (this.length - m > 0u)
                             {
@@ -1153,6 +1153,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                                 mantissa += this.value[m];
                                 m--;
                             }
+                        }
+                        else
+                        {
+                            static assert(0, "Could not determine endianness!");
                         }
 
                         break;
@@ -1178,12 +1182,29 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                             throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
 
                         ubyte m = 0x03u;
-                        while (m < this.length)
+                        version (LittleEndian)
                         {
-                            mantissa <<= 8;
-                            mantissa += this.value[m];
-                            m++;
+                            while (m < this.length)
+                            {
+                                mantissa <<= 8;
+                                mantissa += this.value[m];
+                                m++;
+                            }
                         }
+                        else version (BigEndian)
+                        {
+                            while (this.length - m > 0u)
+                            {
+                                mantissa <<= 8;
+                                mantissa += this.value[m];
+                                m--;
+                            }
+                        }
+                        else
+                        {
+                            static assert(0, "Could not determine endianness!");
+                        }
+                        
                         break;
                     }
                     case 0b00000011: // Complicated
@@ -1241,12 +1262,28 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         if (this.length - 1u - exponentLength > 8u)
                             throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
 
-                        ubyte m = 0x01u;
-                        while (m < this.length)
+                        ubyte m = 0x01u; // FIXME: I think this needs to be 0x01u + exponentLength;
+                        version (LittleEndian)
                         {
-                            mantissa <<= 8;
-                            mantissa += this.value[m];
-                            m++;
+                            while (m < this.length)
+                            {
+                                mantissa <<= 8;
+                                mantissa += this.value[m];
+                                m++;
+                            }
+                        }
+                        else version (BigEndian)
+                        {
+                            while (this.length - m > 0u)
+                            {
+                                mantissa <<= 8;
+                                mantissa += this.value[m];
+                                m--;
+                            }
+                        }
+                        else
+                        {
+                            static assert(0, "Could not determine endianness!");
                         }
                         break;
                     }

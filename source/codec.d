@@ -590,7 +590,7 @@ class AbstractSyntaxNotation1Element(Element)
         assert(approxEqual(eld.realType!double, d));
 
         // Assert that accessor does not mutate state
-        assert(elf.realType!double == elf.realType!double);
+        assert(approxEqual(elf.realType!double, elf.realType!double));
     }
 
     // Test a few edge cases
@@ -680,67 +680,67 @@ class AbstractSyntaxNotation1Element(Element)
 
         // Tests floats
         el.realType!float = cast(float) E;
-        assert(el.realType!float == cast(float) E);
+        assert(approxEqual(el.realType!float, cast(float) E));
         el.realType!float = cast(float) PI;
-        assert(el.realType!float == cast(float) PI);
+        assert(approxEqual(el.realType!float, cast(float) PI));
         el.realType!float = cast(float) PI_2;
-        assert(el.realType!float == cast(float) PI_2);
+        assert(approxEqual(el.realType!float, cast(float) PI_2));
         el.realType!float = cast(float) PI_4;
-        assert(el.realType!float == cast(float) PI_4);
+        assert(approxEqual(el.realType!float, cast(float) PI_4));
         el.realType!float = cast(float) M_1_PI;
-        assert(el.realType!float == cast(float) M_1_PI);
+        assert(approxEqual(el.realType!float, cast(float) M_1_PI));
         el.realType!float = cast(float) M_2_PI;
-        assert(el.realType!float == cast(float) M_2_PI);
+        assert(approxEqual(el.realType!float, cast(float) M_2_PI));
         el.realType!float = cast(float) M_2_SQRTPI;
-        assert(el.realType!float == cast(float) M_2_SQRTPI);
+        assert(approxEqual(el.realType!float, cast(float) M_2_SQRTPI));
         el.realType!float = cast(float) LN10;
-        assert(el.realType!float == cast(float) LN10);
+        assert(approxEqual(el.realType!float, cast(float) LN10));
         el.realType!float = cast(float) LN2;
-        assert(el.realType!float == cast(float) LN2);
+        assert(approxEqual(el.realType!float, cast(float) LN2));
         el.realType!float = cast(float) LOG2;
-        assert(el.realType!float == cast(float) LOG2);
+        assert(approxEqual(el.realType!float, cast(float) LOG2));
         el.realType!float = cast(float) LOG2E;
-        assert(el.realType!float == cast(float) LOG2E);
+        assert(approxEqual(el.realType!float, cast(float) LOG2E));
         el.realType!float = cast(float) LOG2T;
-        assert(el.realType!float == cast(float) LOG2T);
+        assert(approxEqual(el.realType!float, cast(float) LOG2T));
         el.realType!float = cast(float) LOG10E;
-        assert(el.realType!float == cast(float) LOG10E);
+        assert(approxEqual(el.realType!float, cast(float) LOG10E));
         el.realType!float = cast(float) SQRT2;
-        assert(el.realType!float == cast(float) SQRT2);
+        assert(approxEqual(el.realType!float, cast(float) SQRT2));
         el.realType!float = cast(float) SQRT1_2;
-        assert(el.realType!float == cast(float) SQRT1_2);
+        assert(approxEqual(el.realType!float, cast(float) SQRT1_2));
 
         // Tests doubles
         el.realType!double = cast(double) E;
-        assert(el.realType!double == cast(double) E);
+        assert(approxEqual(el.realType!double, cast(double) E));
         el.realType!double = cast(double) PI;
-        assert(el.realType!double == cast(double) PI);
+        assert(approxEqual(el.realType!double, cast(double) PI));
         el.realType!double = cast(double) PI_2;
-        assert(el.realType!double == cast(double) PI_2);
+        assert(approxEqual(el.realType!double, cast(double) PI_2));
         el.realType!double = cast(double) PI_4;
-        assert(el.realType!double == cast(double) PI_4);
+        assert(approxEqual(el.realType!double, cast(double) PI_4));
         el.realType!double = cast(double) M_1_PI;
-        assert(el.realType!double == cast(double) M_1_PI);
+        assert(approxEqual(el.realType!double, cast(double) M_1_PI));
         el.realType!double = cast(double) M_2_PI;
-        assert(el.realType!double == cast(double) M_2_PI);
+        assert(approxEqual(el.realType!double, cast(double) M_2_PI));
         el.realType!double = cast(double) M_2_SQRTPI;
-        assert(el.realType!double == cast(double) M_2_SQRTPI);
+        assert(approxEqual(el.realType!double, cast(double) M_2_SQRTPI));
         el.realType!double = cast(double) LN10;
-        assert(el.realType!double == cast(double) LN10);
+        assert(approxEqual(el.realType!double, cast(double) LN10));
         el.realType!double = cast(double) LN2;
-        assert(el.realType!double == cast(double) LN2);
+        assert(approxEqual(el.realType!double, cast(double) LN2));
         el.realType!double = cast(double) LOG2;
-        assert(el.realType!double == cast(double) LOG2);
+        assert(approxEqual(el.realType!double, cast(double) LOG2));
         el.realType!double = cast(double) LOG2E;
-        assert(el.realType!double == cast(double) LOG2E);
+        assert(approxEqual(el.realType!double, cast(double) LOG2E));
         el.realType!double = cast(double) LOG2T;
-        assert(el.realType!double == cast(double) LOG2T);
+        assert(approxEqual(el.realType!double, cast(double) LOG2T));
         el.realType!double = cast(double) LOG10E;
-        assert(el.realType!double == cast(double) LOG10E);
+        assert(approxEqual(el.realType!double, cast(double) LOG10E));
         el.realType!double = cast(double) SQRT2;
-        assert(el.realType!double == cast(double) SQRT2);
+        assert(approxEqual(el.realType!double, cast(double) SQRT2));
         el.realType!double = cast(double) SQRT1_2;
-        assert(el.realType!double == cast(double) SQRT1_2);
+        assert(approxEqual(el.realType!double, cast(double) SQRT1_2));
     }
 
     @system
@@ -1461,6 +1461,8 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.graphicString == el.graphicString);
     }
 
+    ///
+    public alias iso646String = visibleString;
     /**
         Decodes a string that only contains characters between and including
         0x20 and 0x7E. (Honestly, I don't know how this differs from

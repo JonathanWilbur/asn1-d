@@ -2,6 +2,7 @@
 analogs/
 build/assemblies/*
 build/executables/*
+build/interfaces/*
 build/libraries/*
 build/logs/*
 build/objects/*

@@ -1,6 +1,11 @@
 #!/bin/sh
-
-# CODECS=(der ber cer xer cxer exer per uper cper oer coer jer gser lwer bacnet ser)
+mkdir ./documentation &> /dev/null
+mkdir ./documentation/html &> /dev/null
+mkdir ./build &> /dev/null
+mkdir ./build/executables &> /dev/null
+mkdir ./build/interfaces &> /dev/null
+mkdir ./build/libraries &> /dev/null
+mkdir ./build/objects &> /dev/null
     
 dmd \
 ./source/asn1.d \
@@ -8,6 +13,12 @@ dmd \
 ./source/types/*.d \
 ./source/types/universal/*.d \
 ./source/codecs/*.d \
+-Dd./documentation/html \
+-Hf./build/interfaces/asn1.di \
+-of./build/libraries/asn1.lib \
+-Xf./documentation/asn1.json \
 -lib \
--od./build/libraries/ \
--d
+-cov \
+-O \
+-profile \
+-release
