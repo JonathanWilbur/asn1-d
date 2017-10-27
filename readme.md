@@ -81,7 +81,7 @@ Pre-alpha development was completed on October 26th, 2017.
 Version 1.0.0-alpha development will consist entirely of creating these codecs:
 
 - [ ] Distinguished Encoding Rules (DER)
-- [ ] Basic Encoding Rules (BER)
+- [x] Basic Encoding Rules (BER)
 - [ ] Canonical Encoding Rules (CER)
 
 Version 1.0.0-alpha is expected to be released around November 12th, 2017.
@@ -91,6 +91,7 @@ Version 1.0.0-alpha is expected to be released around November 12th, 2017.
 Version 1.0.0-beta is expected to be released around November 30th, 2017.
 
 - [ ] Fuzz testing (Sending random bytes to a decoder to get something unexpected)
+- [ ] Test that all one-byte elements throw exceptions
 - [ ] Cross-Platform Testing
   - [ ] Windows
   - [ ] Mac OS X
