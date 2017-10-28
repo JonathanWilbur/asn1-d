@@ -1022,7 +1022,6 @@ class AbstractSyntaxNotation1Element(Element)
 
         EmbeddedPDV input = EmbeddedPDV();
         input.identification = id;
-        input.dataValueDescriptor = "boop";
         input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
 
         Element el = new Element();
@@ -1030,7 +1029,6 @@ class AbstractSyntaxNotation1Element(Element)
         EmbeddedPDV output = el.embeddedPDV;
         assert(output.identification.syntaxes.abstractSyntax == new OID(1, 3, 6, 4, 1, 256, 7));
         assert(output.identification.syntaxes.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 8));
-        assert(output.dataValueDescriptor == "boop");
         assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
 
         // Assert that accessor does not mutate state
@@ -1045,14 +1043,12 @@ class AbstractSyntaxNotation1Element(Element)
 
         EmbeddedPDV input = EmbeddedPDV();
         input.identification = id;
-        input.dataValueDescriptor = "boop";
         input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
 
         Element el = new Element();
         el.embeddedPDV = input;
         EmbeddedPDV output = el.embeddedPDV;
         assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
-        assert(output.dataValueDescriptor == "boop");
         assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
     }
 
@@ -1064,7 +1060,6 @@ class AbstractSyntaxNotation1Element(Element)
 
         EmbeddedPDV input = EmbeddedPDV();
         input.identification = id;
-        input.dataValueDescriptor = "external";
         input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
 
         Element el = new Element();
@@ -1072,7 +1067,6 @@ class AbstractSyntaxNotation1Element(Element)
         el.embeddedPDV = input;
         EmbeddedPDV output = el.embeddedPDV;
         assert(output.identification.presentationContextID == 27L);
-        assert(output.dataValueDescriptor == "external");
         assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
     }
 
@@ -1088,7 +1082,6 @@ class AbstractSyntaxNotation1Element(Element)
 
         EmbeddedPDV input = EmbeddedPDV();
         input.identification = id;
-        input.dataValueDescriptor = "blap";
         input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
 
         Element el = new Element();
@@ -1096,7 +1089,6 @@ class AbstractSyntaxNotation1Element(Element)
         EmbeddedPDV output = el.embeddedPDV;
         assert(output.identification.contextNegotiation.presentationContextID == 27L);
         assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
-        assert(output.dataValueDescriptor == "blap");
         assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
     }
 
@@ -1108,14 +1100,12 @@ class AbstractSyntaxNotation1Element(Element)
 
         EmbeddedPDV input = EmbeddedPDV();
         input.identification = id;
-        input.dataValueDescriptor = "boop";
         input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
 
         Element el = new Element();
         el.embeddedPDV = input;
         EmbeddedPDV output = el.embeddedPDV;
         assert(output.identification.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
-        assert(output.dataValueDescriptor == "boop");
         assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
     }
 
@@ -1127,14 +1117,12 @@ class AbstractSyntaxNotation1Element(Element)
 
         EmbeddedPDV input = EmbeddedPDV();
         input.identification = id;
-        input.dataValueDescriptor = "boop";
         input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
 
         Element el = new Element();
         el.embeddedPDV = input;
         EmbeddedPDV output = el.embeddedPDV;
         assert(output.identification.fixed == true);
-        assert(output.dataValueDescriptor == "boop");
         assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
     }
 

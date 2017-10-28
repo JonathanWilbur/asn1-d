@@ -2065,7 +2065,15 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 }
                 case (0x81u): // data-value-descriptor
                 {
-                    pdv.dataValueDescriptor = dv.objectDescriptor;
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EMBEDDED PDV that contained a data-value-" ~
+                        "descriptor, which is forbidden from inclusion by " ~
+                        "specification." ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText                        
+                    );
                     break;
                 }
                 case (0x82u): // data-value
@@ -2180,15 +2188,11 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
         identification.value = cast(ubyte[]) identificationValue;
 
-        DERElement dataValueDescriptor = new DERElement();
-        dataValueDescriptor.type = 0x81u; // Primitive ObjectDescriptor
-        dataValueDescriptor.objectDescriptor = value.dataValueDescriptor;
-
         DERElement dataValue = new DERElement();
         dataValue.type = 0x82u;
         dataValue.octetString = value.dataValue;
 
-        this.sequence = [ identification, dataValueDescriptor, dataValue ];
+        this.sequence = [ identification, dataValue ];
     }
 
     /**
@@ -3754,10 +3758,9 @@ unittest
     ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
     ubyte[] dataEnum = [ 0x0Au, 0x08u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0xFFu ];
     ubyte[] dataEmbeddedPDV = [ 
-        0x0Bu, 0x1Cu, 0x80u, 0x0Au, 0x82u, 0x08u, 0x00u, 0x00u, 
-        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x1Bu, 0x81u, 0x08u, 
-        0x41u, 0x41u, 0x41u, 0x41u, 0x42u, 0x42u, 0x42u, 0x42u, 
-        0x82u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
+        0x0Bu, 0x12u, 0x80u, 0x0Au, 0x82u, 0x08u, 0x00u, 0x00u, 
+        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x1Bu, 0x82u, 0x04u, 
+        0x01u, 0x02u, 0x03u, 0x04u ];
     ubyte[] dataUTF8 = [ 0x0Cu, 0x05u, 'H', 'E', 'N', 'L', 'O' ];
     ubyte[] dataROID = [ 0x0Du, 0x03u, 0x06u, 0x04u, 0x01u ];
     // sequence
@@ -3837,7 +3840,7 @@ unittest
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
     assert(result[10].enumerated!long == 255L);
-    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((m.identification.presentationContextID == 27L) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier == [ OIDNode(6), OIDNode(4), OIDNode(1) ]);
     assert(result[14].numericString == "8675309");
@@ -3873,7 +3876,7 @@ unittest
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
     assert(result[10].enumerated!long == 255L);
-    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((m.identification.presentationContextID == 27L) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier == [ OIDNode(6), OIDNode(4), OIDNode(1) ]);
     assert(result[14].numericString == "8675309");
