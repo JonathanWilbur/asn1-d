@@ -80,9 +80,14 @@ and reviewed for security and performance.
 Pre-alpha development was completed on October 26th, 2017. 
 Version 1.0.0-alpha development will consist entirely of creating these codecs:
 
+- [ ] Fixes
+  - [ ] Incorrect encoding / decoding of `EmbeddedPDV` (Should not include `data-value-descriptor`)
 - [ ] Distinguished Encoding Rules (DER)
 - [x] Basic Encoding Rules (BER)
 - [ ] Canonical Encoding Rules (CER)
+- [ ] Documentation
+  - [ ] Use
+  - [ ] Structure
 
 Version 1.0.0-alpha is expected to be released around November 12th, 2017.
 
@@ -110,6 +115,7 @@ Version 1.0.0-beta is expected to be released around November 30th, 2017.
 - [ ] Review for HeartBleed-like vulnerabilities
 - [ ] Review of all ASN.1-related CVEs
 - [ ] Review that character-encoded `REAL`s are strictly conformant to ISO 6093 (Maybe even make an ISO 6093 Library...)
+- [ ] Indefinite-Length Encoding
 
 ### 1.0.0 Release
 

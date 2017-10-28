@@ -1,25 +1,17 @@
 /**
-    Basic Encoding Rules (BER) is a standard for encoding ASN.1 data. It is by
-    far the most common standard for doing so, being used in LDAP, TLS, SNMP, 
-    RDP, and other protocols. Like Distinguished Encoding Rules (DER), 
-    Canonical Encoding Rules (CER), and Packed Encoding Rules (PER), Basic
-    Encoding Rules is a specification created by the 
+    Distinguished Encoding Rules (DER) is a standard for encoding ASN.1 data.
+    DER is often used for cryptgraphically-signed data, such as X.509
+    certificates, because DER's defining feature is that there is only one way
+    to encode each data type, which means that two encodings of the same data
+    could not have different cryptographic signatures. For this reason, DER
+    is generally regarded as the most secure encoding standard for ASN.1.
+    Like Basic Encoding Rules (BER), Canonical Encoding Rules (CER), and 
+    Packed Encoding Rules (PER), Distinguished Encoding Rules is a 
+    specification created by the 
     $(LINK2 http://www.itu.int/en/pages/default.aspx, 
         International Telecommunications Union),
     and specified in 
     $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
-    
-    BER is generally regarded as the most flexible of the encoding schemes, 
-    because all values can be encoded in a multitude of ways. This flexibility
-    might be convenient for developers who use a BER Library, but creating
-    a BER library in the first place is a nightmare, because of its flexibility.
-    I personally suspect that the complexity of BER may make its implementation
-    inclined to security vulnerabilities, so I would not use it if you have a
-    choice in the matter. Also, the ability to represent values in several 
-    different ways is actually a security problem when data has to be guarded 
-    against tampering with a cryptographic signature. (Basically, it makes it 
-    a lot easier to find a tampered payload that has the identical signature 
-    as the genuine payload.)
 
     Author: 
         $(LINK2 http://jonathan.wilbur.space, Jonathan M. Wilbur) 
@@ -34,16 +26,16 @@
         $(LINK2 https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf, ASN.1 By Simple Words)
         $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems)
 */
-module codecs.ber;
+module codecs.der;
 public import codec;
 public import types.identification;
 
 ///
-public alias BERElement = BasicEncodingRulesElement;
+public alias DERElement = DistinguishedEncodingRulesElement;
 /**
-    The unit of encoding and decoding for Basic Encoding Rules BER.
+    The unit of encoding and decoding for Distinguished Encoding Rules DER.
     
-    There are three parts to an encoded BER Value:
+    There are three parts to an encoded DER Value:
 
     $(UL
         $(LI A Type Tag, which specifies what data type is encoded)
@@ -61,22 +53,22 @@ public alias BERElement = BasicEncodingRulesElement;
     As an example, this is what encoding a simple INTEGER looks like:
 
     ---
-    BERElement bv = new BERElement();
-    bv.type = 0x02u; // "2" means this is an INTEGER
-    bv.integer = 1433; // Now the data is encoded.
-    transmit(cast(ubyte[]) bv); // transmit() is a made-up function.
+    DERElement dv = new DERElement();
+    dv.type = 0x02u; // "2" means this is an INTEGER
+    dv.integer = 1433; // Now the data is encoded.
+    transmit(cast(ubyte[]) dv); // transmit() is a made-up function.
     ---
 
     And this is what decoding looks like:
 
     ---
     ubyte[] data = receive(); // receive() is a made-up function.
-    BERElement bv2 = new BERElement(data);
+    DERElement dv2 = new DERElement(data);
 
     long x;
-    if (bv.type == 0x02u) // it is an INTEGER
+    if (dv.type == 0x02u) // it is an INTEGER
     {
-        x = bv.integer;
+        x = dv.integer;
     }
     // Now x is 1433!
     ---
@@ -91,7 +83,7 @@ public alias BERElement = BasicEncodingRulesElement;
     https://issues.dlang.org/show_bug.cgi?id=17909
 */
 public
-class BasicEncodingRulesElement : ASN1Element!BERElement
+class DistinguishedEncodingRulesElement : ASN1Element!DERElement
 {
     // Constants used to save CPU cycles
     private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()
@@ -114,7 +106,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         "which can be found at: " ~
         "https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf." ~
         "For more information on how those data types are supposed to be " ~
-        "encoded using Basic Encoding Rules, Canonical Encoding Rules, or " ~
+        "encoded using Distinguished Encoding Rules, Canonical Encoding Rules, or " ~
         "Distinguished Encoding Rules, see the International " ~
         "Telecommunications Union's X.690 specification, which can be found " ~
         "at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf. ";
@@ -138,57 +130,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         definite,
         indefinite
     }
-
-    /**
-        Unlike most other settings, this is non-static, because wanting to
-        encode with indefinite length is probably going to be somewhat rare,
-        and it is also less safe, because the value octets have to be inspected
-        for double octets before encoding! (If they are not, the receiver will 
-        interpret those inner null octets as the terminator for the indefinite
-        length value, and the rest will be truncated.)
-    */
-    public LengthEncodingPreference lengthEncodingPreference = 
-        LengthEncodingPreference.definite;
-
-    /**
-        Whether the base 10 / character-encoded representation of a REAL
-        should prepend a plus sign if the value is positive.
-    */
-    static public bool base10RealShouldShowPlusSignIfPositive = true;
-
-    /**
-        Whether a comma or a period is used to separate the whole and
-        fractional components of the base 10 / character-encoded representation
-        of a REAL.
-    */
-    static public ASN1Base10RealDecimalSeparator base10RealDecimalSeparator = 
-        ASN1Base10RealDecimalSeparator.period;
-
-    /**
-        Whether a capital or lowercase E is used to separate the significand
-        from the exponent in the base 10 / character-encoded representation
-        of a REAL.
-    */
-    static public ASN1Base10RealExponentCharacter base10RealExponentCharacter = 
-        ASN1Base10RealExponentCharacter.uppercaseE;
-
-    /**
-        The standardized string representations of floating point numbers, as 
-        specified in $(LINK2 https://www.iso.org/standard/12285.html, ISO 6093).
-
-        $(TABLE
-            $(TR $(TH Representation) $(TH Description) $(TH Examples))
-            $(TR $(TD NR1) $(TD Implicit decimal point) $(TD "3", "-1", "+1000"))
-            $(TR $(TD NR2) $(TD Explicit decimal) $(TD "3.0", "-1.3", "-.3"))
-            $(TR $(TD NR3) $(TD Explicit exponent) $(TD "3.0E1", "123E+100"))
-        )
-
-        Citation:
-            Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between 
-            Heterogeneous Systems, Morgan Kaufmann, 2001, p. 143.
-    */
-    static public ASN1Base10RealNumericalRepresentation base10RealNumericalRepresentation = 
-        ASN1Base10RealNumericalRepresentation.nr3;
 
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
     static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
@@ -274,24 +215,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /// The octets of the encoded value.
     public ubyte[] value;
 
-    /*
-        Returns true if the value octets contain two consecutive 0x00u bytes.
-
-        The intent of this is to be used for indefinite-length encoding, which
-        cannot contain two consecutive null octets as the value.
-    */
-    private @property
-    bool valueContainsDoubleNull()
-    {
-        if (this.value.length < 2u) return false;
-        for (size_t i = 1; i < this.value.length; i++)
-        {
-            if (this.value[i] == 0x00u && this.value[i-1] == 0x00u)
-                return true;
-        }
-        return false;
-    }
-
     /**
         Decodes a boolean.
         
@@ -302,6 +225,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Throws:
             ASN1ValueSizeException = if the encoded value is anything other
                 than exactly 1 byte in size.
+            ASN1ValueInvalidException = if the encoded byte is not 0xFF or 0x00
     */
     override public @property @safe
     bool boolean() const
@@ -309,7 +233,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         if (this.value.length != 1u)
             throw new ASN1ValueSizeException
             (
-                "In Basic Encoding Rules, a BOOLEAN must be encoded on exactly " ~
+                "In Distinguished Encoding Rules, a BOOLEAN must be encoded on exactly " ~
                 "one byte (in addition to the type and length bytes, of " ~
                 "course). This exception was thrown because you attempted to " ~
                 "decode a BOOLEAN from an element that had either zero or more " ~
@@ -317,7 +241,25 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 forMoreInformationText ~ debugInformationText ~ reportBugsText
             );
 
-        return (this.value[0] ? true : false);
+        if (this.value[0] == 0xFFu)
+        {
+            return true;
+        }
+        else if (this.value[0] == 0x00u)
+        {
+            return false;
+        }
+        else
+        {
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode a BOOLEAN " ~
+                "that was encoded on a byte that was not 0xFF or 0x00 using the DER " ~
+                "codec. Any encoding of a boolean other than 0xFF (true) or 0x00 " ~
+                "(false) is restricted by the DER codec. " ~ notWhatYouMeantText ~
+                forMoreInformationText ~ debugInformationText ~ reportBugsText
+            );
+        }
     }
 
     /**
@@ -336,17 +278,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     @safe
     unittest
     {
-        BERElement bv = new BERElement();
-        bv.value = [ 0x01u ];
-        assert(bv.boolean == true);
-        bv.value = [ 0xFFu ];
-        assert(bv.boolean == true);
-        bv.value = [ 0x00u ];
-        assert(bv.boolean == false);
-        bv.value = [ 0x01u, 0x00u ];
-        assertThrown!ASN1ValueSizeException(bv.boolean);
-        bv.value = [];
-        assertThrown!ASN1ValueSizeException(bv.boolean);
+        DERElement dv = new DERElement();
+        dv.value = [ 0xFFu ];
+        assert(dv.boolean == true);
+        dv.value = [ 0x00u ];
+        assert(dv.boolean == false);
+        dv.value = [ 0x01u, 0x00u ];
+        assertThrown!ASN1ValueSizeException(dv.boolean);
+        dv.value = [];
+        assertThrown!ASN1ValueSizeException(dv.boolean);
+        dv.value = [ 0x01u ];
+        assertThrown!ASN1ValueInvalidException(dv.boolean);
     }
 
     /**
@@ -380,8 +322,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 debugInformationText ~ reportBugsText
             );
 
+        // REVIEW: Does this need to apply to BER as well?
         /* NOTE:
-            Because the BER INTEGER is stored in two's complement form, you 
+            Because the DER INTEGER is stored in two's complement form, you 
             can't just apppend 0x00u to the big end of it until it is as long
             as T in bytes, then cast to T. Instead, you have to first determine
             if the encoded integer is negative or positive. If it is negative,
@@ -391,7 +334,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
             The line immediately below this determines whether the padding byte
             should be 0xFF or 0x00 based on the most significant bit of the 
-            most significant byte (which, since BER encodes big-endian, will
+            most significant byte (which, since DER encodes big-endian, will
             always be the first byte). If set (1), the number is negative, and
             hence, the padding byte should be 0xFF. If not, it is positive,
             and the padding byte should be 0x00.
@@ -426,15 +369,40 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             reverse(ub);
         }
-        this.value = ub[0 .. $];
+    
+        /*
+            An INTEGER must be encoded on the fewest number of bytes than can
+            encode it. The loops below identify how many bytes can be 
+            truncated from the start of the INTEGER, with one loop for positive
+            and another loop for negative numbers. 
+        */
+        ptrdiff_t startOfNonPadding = 0;
+        if (value >= 0)
+        {
+            for (ptrdiff_t i = 0; i < ub.length-1; i++)
+            {
+                if (ub[i] == 0x00 && ((ub[i+1] & 0x80) == 0x00)) 
+                    startOfNonPadding++;
+            }
+        }
+        else
+        {
+            for (ptrdiff_t i = 0; i < ub.length-1; i++)
+            {
+                if (ub[i] == 0xFF && ((ub[i+1] & 0x80) == 0x80)) 
+                    startOfNonPadding++;
+            }
+        }
+
+        this.value = ub[startOfNonPadding .. $];
     }
 
     /**
-        Encodes an array of $(D bool)s representing a string of bits.
+        Decodes an array of $(D bool)s representing a string of bits.
 
-        In Basic Encoding Rules, the first byte is an unsigned
+        In Distinguished Encoding Rules, the first byte is an unsigned
         integral byte indicating the number of unused bits at the end of
-        the BIT STRING. The unused bits can be anything.
+        the BIT STRING. The unused bits must be zeroed.
 
         Returns: an array of booleans.
         Throws:
@@ -453,15 +421,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 ~ notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
-        
+
         if (this.value[0] > 0x07u)
             throw new ASN1ValueInvalidException
             (
-                "In Basic Encoding Rules, the first byte of the encoded " ~
+                "In Distinguished Encoding Rules, the first byte of the encoded " ~
                 "binary value (after the type and length bytes, of course) " ~ 
                 "is used to indicate how many unused bits there are at the " ~
                 "end of the BIT STRING. Since everything is encoded in bytes " ~
-                "in Basic Encoding Rules, but a BIT STRING may not " ~
+                "in Distinguished Encoding Rules, but a BIT STRING may not " ~
                 "necessarily encode a number of bits, divisible by eight " ~
                 "there may be bits at the end of the BIT STRING that will " ~
                 "need to be identified as padding instead of meaningful data." ~
@@ -496,9 +464,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /**
         Encodes an array of $(D bool)s representing a string of bits.
 
-        In Basic Encoding Rules, the first byte is an unsigned
+        In Distinguished Encoding Rules, the first byte is an unsigned
         integral byte indicating the number of unused bits at the end of
-        the BIT STRING. The unused bits can be anything.
+        the BIT STRING. The unused bits must be zeroed.
     */
     override public @property
     void bitString(bool[] value)
@@ -808,8 +776,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     External external() const
     {
-        BERElement[] bvs = this.sequence;
-        if (bvs.length < 2 || bvs.length > 3)
+        DERElement[] dvs = this.sequence;
+        if (dvs.length < 2 || dvs.length > 3)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
@@ -822,13 +790,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         External ext = External();
 
-        foreach (bv; bvs)
+        foreach (dv; dvs)
         {
-            switch (bv.type)
+            switch (dv.type)
             {
                 case (0x80u): // identification
                 {
-                    BERElement identificationBV = new BERElement(bv.value);
+                    DERElement identificationBV = new DERElement(dv.value);
                     switch(identificationBV.type)
                     {
                         case (0x80u): // syntax
@@ -845,7 +813,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         {
                             // REVIEW: Should this be split off into a separate function?
                             ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-                            BERElement[] cns = identificationBV.sequence;
+                            DERElement[] cns = identificationBV.sequence;
                             if (cns.length != 2)
                                 throw new ASN1ValueTooBigException
                                 (
@@ -907,12 +875,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 }
                 case (0x81u): // data-value-descriptor
                 {
-                    ext.dataValueDescriptor = bv.objectDescriptor;
+                    ext.dataValueDescriptor = dv.objectDescriptor;
                     break;
                 }
                 case (0x82u): // data-value
                 {
-                    ext.dataValue = bv.octetString;
+                    ext.dataValue = dv.octetString;
                     break;
                 }
                 default:
@@ -963,10 +931,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     void external(External value)
     {
-        BERElement identification = new BERElement();
+        DERElement identification = new DERElement();
         identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
-        BERElement identificationValue = new BERElement();
+        DERElement identificationValue = new DERElement();
         if (!(value.identification.syntax.isNull))
         {
             identificationValue.type = 0x80u;
@@ -974,11 +942,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         }
         else if (!(value.identification.contextNegotiation.isNull))
         {
-            BERElement presentationContextID = new BERElement();
+            DERElement presentationContextID = new DERElement();
             presentationContextID.type = 0x80u;
             presentationContextID.integer = value.identification.contextNegotiation.presentationContextID;
             
-            BERElement transferSyntax = new BERElement();
+            DERElement transferSyntax = new DERElement();
             transferSyntax.type = 0x81u;
             transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
             
@@ -994,17 +962,23 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
         identification.value = cast(ubyte[]) identificationValue;
 
-        BERElement dataValueDescriptor = new BERElement();
+        DERElement dataValueDescriptor = new DERElement();
         dataValueDescriptor.type = 0x81u; // Primitive ObjectDescriptor
         dataValueDescriptor.objectDescriptor = value.dataValueDescriptor;
 
-        BERElement dataValue = new BERElement();
+        DERElement dataValue = new DERElement();
         dataValue.type = 0x82u;
         dataValue.octetString = value.dataValue;
 
         this.sequence = [ identification, dataValueDescriptor, dataValue ];
     }
 
+    /* REVIEW:
+        I have not seen it confirmed in the specification that you can use
+        base-8 or base-16 for DER-encoded REALs. It seems like that would
+        be a problem, since with base-2, the expectation is that the mantissa 
+        is 0 or odd. I have looked at the Dubuisson book and X.690.
+    */
     /**
         Decodes a float or double. This can never decode directly to a
         real type, because of the way it works.
@@ -1015,7 +989,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         recommand against encoding or decoding REALs if you do not have
         to; try using INTEGER instead.
 
-        For the BER-encoded REAL, a value of 0x40 means "positive infinity,"
+        For the DER-encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1055,7 +1029,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 are set, which would indicate an invalid base.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1: 
             Communication between Heterogeneous Systems, Morgan Kaufmann, 
             2001, pp. 400–402.
     */
@@ -1094,7 +1068,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
                 immutable string mantissaTooBigExceptionText = 
                     "This exception was thrown because the mantissa encoded by " ~
-                    "a Basic Encoding Rules-encoded REAL could not fit in " ~
+                    "a Distinguished Encoding Rules-encoded REAL could not fit in " ~
                     "to a 64-bit signed integer (long). This might indicate that " ~
                     "what you tried to decode was not actually a REAL at all. " ~
                     "For more information, see the ASN.1 library documentation, " ~
@@ -1372,6 +1346,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         }
     }
 
+    /* REVIEW:
+        I have not seen it confirmed in the specification that you can use
+        base-8 or base-16 for DER-encoded REALs. It seems like that would
+        be a problem, since with base-2, the expectation is that the mantissa 
+        is 0 or odd. I have looked at the Dubuisson book and X.690.
+    */
     /**
         Encodes a float or double. This can never decode directly to a
         real type, because of the way it works.
@@ -1382,7 +1362,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         recommand against encoding or decoding REALs if you do not have
         to; try using INTEGER instead.
 
-        For the BER-encoded REAL, a value of 0x40 means "positive infinity,"
+        For the DER-encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1415,7 +1395,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 in an arithmetic overflow of a signed short.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1: 
             Communication between Heterogeneous Systems, Morgan Kaufmann, 
             2001, pp. 400–402.
     */
@@ -1464,77 +1444,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             import std.format : formattedWrite;
             Appender!string writer = appender!string();
 
+            // FIXME: This is not exactly to specification....
             // REVIEW: Change the format strings to have the best precision for those types.
-            switch (this.base10RealNumericalRepresentation)
+            static if (is(T == double))
             {
-                case (ASN1Base10RealNumericalRepresentation.nr1):
-                {
-                    static if (is(T == double))
-                    {
-                        writer.formattedWrite!"%g"(value);
-                    }
-                    static if (is(T == float))
-                    {
-                        writer.formattedWrite!"%g"(value);
-                    }
-                    break;
-                }
-                case (ASN1Base10RealNumericalRepresentation.nr2):
-                {                    
-                    static if (is(T == double))
-                    {
-                        writer.formattedWrite!"%.12f"(value);
-                    }
-                    static if (is(T == float))
-                    {
-                        writer.formattedWrite!"%.6f"(value);
-                    }
-                    break;
-                }
-                case (ASN1Base10RealNumericalRepresentation.nr3):
-                {
-                    switch (this.base10RealExponentCharacter)
-                    {
-                        case (ASN1Base10RealExponentCharacter.lowercaseE):
-                        {
-                            static if (is(T == double))
-                            {
-                                writer.formattedWrite!"%.12e"(value);
-                            }
-                            static if (is(T == float))
-                            {
-                                writer.formattedWrite!"%.6e"(value);
-                            }
-                            break;
-                        }
-                        case (ASN1Base10RealExponentCharacter.uppercaseE):
-                        {
-                            static if (is(T == double))
-                            {
-                                writer.formattedWrite!"%.12E"(value);
-                            }
-                            static if (is(T == float))
-                            {
-                                writer.formattedWrite!"%.6E"(value);
-                            }
-                            break;
-                        }
-                        default:
-                        {
-                            assert(0, "Invalid ASN1Base10RealExponentCharacter state.");
-                        }
-                    }
-                    break;
-                }
-                default:
-                {
-                    assert(0, "Invalid ASN1Base10RealNumericalRepresentation state emerged!");
-                }
+                writer.formattedWrite!"%.12E"(value);
+            }
+            static if (is(T == float))
+            {
+                writer.formattedWrite!"%.6E"(value);
             }
 
             this.value = 
-                cast(ubyte[]) [ (cast(ubyte) 0u | cast(ubyte) this.base10RealNumericalRepresentation) ] ~ 
-                ((this.base10RealShouldShowPlusSignIfPositive && (writer.data[0] != '-')) ? cast(ubyte[]) ['+'] : []) ~
+                cast(ubyte[]) [ (cast(ubyte) 0u | cast(ubyte) ASN1Base10RealNumericalRepresentation.nr3) ] ~ 
                 cast(ubyte[]) writer.data;
             
             return;
@@ -1698,6 +1620,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             exponent++;
         }
 
+        // If the significand is even and we're using Base-2 encoding, make it odd or 0
+        // REVIEW: You might have a precision problem here, since significand is a FP type.
+        if (base == ASN1RealEncodingBase.base2 && !(significand % 2) && significand != 0)
+        {
+            significand /= 2.0;
+            exponent++;
+        }
+
         ubyte[] exponentBytes;
         exponentBytes.length = short.sizeof;
         *cast(short *)exponentBytes.ptr = exponent;
@@ -1752,14 +1682,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     @system
     unittest
     {
-        BERElement.realEncodingBase = ASN1RealEncodingBase.base8;
+        DERElement.realEncodingBase = ASN1RealEncodingBase.base8;
         for (int i = -100; i < 100; i++)
         {
             // Alternating negative and positive floating point numbers exploring extreme values
             immutable float f = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
             immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
-            BERElement elf = new BERElement();
-            BERElement eld = new BERElement();
+            DERElement elf = new DERElement();
+            DERElement eld = new DERElement();
             elf.realType!float = f;
             eld.realType!double = d;
             assert(approxEqual(elf.realType!float, f));
@@ -1767,21 +1697,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             assert(approxEqual(eld.realType!float, d));
             assert(approxEqual(eld.realType!double, d));
         }
-        BERElement.realEncodingBase = ASN1RealEncodingBase.base2;
+        DERElement.realEncodingBase = ASN1RealEncodingBase.base2;
     }
 
     // Tests of Base-16 Encoding
     @system
     unittest
     {
-        BERElement.realEncodingBase = ASN1RealEncodingBase.base16;
+        DERElement.realEncodingBase = ASN1RealEncodingBase.base16;
         for (int i = -10; i < 10; i++)
         {
             // Alternating negative and positive floating point numbers exploring extreme values
             immutable float f = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
             immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
-            BERElement elf = new BERElement();
-            BERElement eld = new BERElement();
+            DERElement elf = new DERElement();
+            DERElement eld = new DERElement();
             elf.realType!float = f;
             eld.realType!double = d;
             assert(approxEqual(elf.realType!float, f));
@@ -1789,224 +1719,69 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             assert(approxEqual(eld.realType!float, d));
             assert(approxEqual(eld.realType!double, d));
         }
-        BERElement.realEncodingBase = ASN1RealEncodingBase.base2;
+        DERElement.realEncodingBase = ASN1RealEncodingBase.base2;
     }
 
-    // Testing Base-10 (Character-Encoded) REALs - NR1
+    // Testing Base-10 (Character-Encoded) REALs
     @system
     unittest
     {
-        BERElement bv = new BERElement();
+        DERElement dv = new DERElement();
         realEncodingBase = ASN1RealEncodingBase.base10;
-        bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr1;
-        bv.base10RealShouldShowPlusSignIfPositive = false;
 
         // Decimal + trailing zeros are not added if not necessary.
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "22");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "22");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-
-        // Plus sign appears before positive numbers.
-        bv.base10RealShouldShowPlusSignIfPositive = true;
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+22");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+22");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
+        dv.realType!float = 22.0;
+        assert(cast(string) (dv.value[1 .. $]) == "2.200000E+01");
+        assert(approxEqual(dv.realType!float, 22.0));
+        assert(approxEqual(dv.realType!double, 22.0));
+        dv.realType!double = 22.0;
+        assert(cast(string) (dv.value[1 .. $]) == "2.200000000000E+01");
+        assert(approxEqual(dv.realType!float, 22.0));
+        assert(approxEqual(dv.realType!double, 22.0));
 
         // Decimal + trailing zeros are added if necessary.
-        bv.realType!float = 22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+22.123");
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
-        bv.realType!double = 22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+22.123");
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
+        dv.realType!float = 22.123;
+        assert(cast(string) (dv.value[1 .. $]) == "2.212300E+01");
+        assert(approxEqual(dv.realType!float, 22.123));
+        assert(approxEqual(dv.realType!double, 22.123));
+        dv.realType!double = 22.123;
+        assert(cast(string) (dv.value[1 .. $]) == "2.212300000000E+01");
+        assert(approxEqual(dv.realType!float, 22.123));
+        assert(approxEqual(dv.realType!double, 22.123));
         
         // Negative numbers are encoded correctly.
-        bv.realType!float = -22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-22.123");
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
-        bv.realType!double = -22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-22.123");
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
+        dv.realType!float = -22.123;
+        assert(cast(string) (dv.value[1 .. $]) == "-2.212300E+01");
+        assert(approxEqual(dv.realType!float, -22.123));
+        assert(approxEqual(dv.realType!double, -22.123));
+        dv.realType!double = -22.123;
+        assert(cast(string) (dv.value[1 .. $]) == "-2.212300000000E+01");
+        assert(approxEqual(dv.realType!float, -22.123));
+        assert(approxEqual(dv.realType!double, -22.123));
 
         // Small positive numbers are encoded correctly.
-        bv.realType!float = 0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+0.123");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
-        bv.realType!double = 0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+0.123");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
+        dv.realType!float = 0.123;     
+        assert(cast(string) (dv.value[1 .. $]) == "1.230000E-01");
+        assert(approxEqual(dv.realType!float, 0.123));
+        assert(approxEqual(dv.realType!double, 0.123));
+        dv.realType!double = 0.123;
+        assert(cast(string) (dv.value[1 .. $]) == "1.230000000000E-01");
+        assert(approxEqual(dv.realType!float, 0.123));
+        assert(approxEqual(dv.realType!double, 0.123));
 
         // Small negative numbers are encoded correctly.
-        bv.realType!float = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-0.123");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
-        bv.realType!double = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-0.123");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
-    }
-
-    // Testing Base-10 (Character-Encoded) REALs - NR2
-    @system
-    unittest
-    {
-        BERElement bv = new BERElement();
-        realEncodingBase = ASN1RealEncodingBase.base10;
-        bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr2;
-        bv.base10RealShouldShowPlusSignIfPositive = false;
-
-        // Decimal + trailing zeros are not added if not necessary.
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "22.000000");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "22.000000000000");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-
-        // Plus sign appears before positive numbers.
-        bv.base10RealShouldShowPlusSignIfPositive = true;
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+22.000000");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+22.000000000000");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-
-        // Decimal + trailing zeros are added if necessary.
-        bv.realType!float = 22.123;
-        // assert(cast(string) (bv.value[1 .. $]) == "+22.123000"); // Precision problem
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
-        bv.realType!double = 22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+22.123000000000");
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
-        
-        // Negative numbers are encoded correctly.
-        bv.realType!float = -22.123;
-        // assert(cast(string) (bv.value[1 .. $]) == "-22.123000"); // Precision problem
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
-        bv.realType!double = -22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-22.123000000000");
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
-
-        // Small positive numbers are encoded correctly.
-        bv.realType!float = 0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+0.123000");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
-        bv.realType!double = 0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+0.123000000000");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
-
-        // Small negative numbers are encoded correctly.
-        bv.realType!float = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-0.123000");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
-        bv.realType!double = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-0.123000000000");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
-    }
-
-    // Testing Base-10 (Character-Encoded) REALs - NR3
-    @system
-    unittest
-    {
-        BERElement bv = new BERElement();
-        realEncodingBase = ASN1RealEncodingBase.base10;
-        bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr3;
-        bv.base10RealShouldShowPlusSignIfPositive = false;
-
-        // Decimal + trailing zeros are not added if not necessary.
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "2.200000E+01");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "2.200000000000E+01");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-
-        // Plus sign appears before positive numbers.
-        bv.base10RealShouldShowPlusSignIfPositive = true;
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+2.200000E+01");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+2.200000000000E+01");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-
-        // Decimal + trailing zeros are added if necessary.
-        bv.realType!float = 22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+2.212300E+01");
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
-        bv.realType!double = 22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+2.212300000000E+01");
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
-        
-        // Negative numbers are encoded correctly.
-        bv.realType!float = -22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-2.212300E+01");
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
-        bv.realType!double = -22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-2.212300000000E+01");
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
-
-        // Small positive numbers are encoded correctly.
-        bv.realType!float = 0.123;     
-        assert(cast(string) (bv.value[1 .. $]) == "+1.230000E-01");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
-        bv.realType!double = 0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+1.230000000000E-01");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
-
-        // Small negative numbers are encoded correctly.
-        bv.realType!float = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-1.230000E-01");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
-        bv.realType!double = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-1.230000000000E-01");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
+        dv.realType!float = -0.123;
+        assert(cast(string) (dv.value[1 .. $]) == "-1.230000E-01");
+        assert(approxEqual(dv.realType!float, -0.123));
+        assert(approxEqual(dv.realType!double, -0.123));
+        dv.realType!double = -0.123;
+        assert(cast(string) (dv.value[1 .. $]) == "-1.230000000000E-01");
+        assert(approxEqual(dv.realType!float, -0.123));
+        assert(approxEqual(dv.realType!double, -0.123));
     }
 
     /**
-        Decodes an integer from an ENUMERATED type. In BER, an ENUMERATED
+        Decodes an integer from an ENUMERATED type. In DER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
 
         Returns: any chosen signed integral type
@@ -2035,7 +1810,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             );
 
         /* NOTE:
-            Because the BER ENUMERATED is stored in two's complement form, you 
+            Because the DER ENUMERATED is stored in two's complement form, you 
             can't just apppend 0x00u to the big end of it until it is as long
             as T in bytes, then cast to T. Instead, you have to first determine
             if the encoded integer is negative or positive. If it is negative,
@@ -2045,7 +1820,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
             The line immediately below this determines whether the padding byte
             should be 0xFF or 0x00 based on the most significant bit of the 
-            most significant byte (which, since BER encodes big-endian, will
+            most significant byte (which, since DER encodes big-endian, will
             always be the first byte). If set (1), the number is negative, and
             hence, the padding byte should be 0xFF. If not, it is positive,
             and the padding byte should be 0x00.
@@ -2062,7 +1837,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
 
     /**
-        Encodes an ENUMERATED type from an integer. In BER, an ENUMERATED
+        Encodes an ENUMERATED type from an integer. In DER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
     */
     public @property @system
@@ -2108,6 +1883,23 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 
+        In Distinguished Encoding Rules, the identification CHOICE cannot be
+        presentation-context-id, nor context-negotiation. Also, the elements
+        must appear in the exact order of the specification. With these 
+        constraints in mind, the specification effectively becomes:
+
+        $(I
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification [0] CHOICE {
+                    syntaxes [0] SEQUENCE {
+                        abstract [0] OBJECT IDENTIFIER,
+                        transfer [1] OBJECT IDENTIFIER },
+                    syntax [1] OBJECT IDENTIFIER,
+                    transfer-syntax [4] OBJECT IDENTIFIER,
+                    fixed [5] NULL },
+                data-value [2] OCTET STRING }
+        )
+
         Throws:
             ASN1SizeException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
@@ -2124,8 +1916,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     EmbeddedPDV embeddedPresentationDataValue() const
     {
-        BERElement[] bvs = this.sequence;
-        if (bvs.length < 2 || bvs.length > 3)
+        DERElement[] dvs = this.sequence;
+        if (dvs.length < 2 || dvs.length > 3)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
@@ -2138,19 +1930,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         EmbeddedPDV pdv = EmbeddedPDV();
 
-        foreach (bv; bvs)
+        foreach (dv; dvs)
         {
-            switch (bv.type)
+            switch (dv.type)
             {
                 case (0x80u): // identification
                 {
-                    BERElement identificationBV = new BERElement(bv.value);
+                    DERElement identificationBV = new DERElement(dv.value);
                     switch (identificationBV.type)
                     {
                         case (0x80u): // syntaxes
                         {
                             ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
-                            BERElement[] syns = identificationBV.sequence;
+                            DERElement[] syns = identificationBV.sequence;
                             if (syns.length != 2)
                                 throw new ASN1ValueTooBigException
                                 (
@@ -2201,7 +1993,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         {
                             // REVIEW: Should this be split off into a separate function?
                             ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-                            BERElement[] cns = identificationBV.sequence;
+                            DERElement[] cns = identificationBV.sequence;
                             if (cns.length != 2)
                                 throw new ASN1ValueTooBigException
                                 (
@@ -2273,12 +2065,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 }
                 case (0x81u): // data-value-descriptor
                 {
-                    pdv.dataValueDescriptor = bv.objectDescriptor;
+                    pdv.dataValueDescriptor = dv.objectDescriptor;
                     break;
                 }
                 case (0x82u): // data-value
                 {
-                    pdv.dataValue = bv.octetString;
+                    pdv.dataValue = dv.octetString;
                     break;
                 }
                 default:
@@ -2334,17 +2126,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     void embeddedPresentationDataValue(EmbeddedPDV value)
     {
-        BERElement identification = new BERElement();
+        DERElement identification = new DERElement();
         identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
-        BERElement identificationValue = new BERElement();
+        DERElement identificationValue = new DERElement();
         if (!(value.identification.syntaxes.isNull))
         {
-            BERElement abstractSyntax = new BERElement();
+            DERElement abstractSyntax = new DERElement();
             abstractSyntax.type = 0x80u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
-            BERElement transferSyntax = new BERElement();
+            DERElement transferSyntax = new DERElement();
             transferSyntax.type = 0x81u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
@@ -2358,11 +2150,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         }
         else if (!(value.identification.contextNegotiation.isNull))
         {
-            BERElement presentationContextID = new BERElement();
+            DERElement presentationContextID = new DERElement();
             presentationContextID.type = 0x80u;
             presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
             
-            BERElement transferSyntax = new BERElement();
+            DERElement transferSyntax = new DERElement();
             transferSyntax.type = 0x81u;
             transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
             
@@ -2388,11 +2180,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
         identification.value = cast(ubyte[]) identificationValue;
 
-        BERElement dataValueDescriptor = new BERElement();
+        DERElement dataValueDescriptor = new DERElement();
         dataValueDescriptor.type = 0x81u; // Primitive ObjectDescriptor
         dataValueDescriptor.objectDescriptor = value.dataValueDescriptor;
 
-        BERElement dataValue = new BERElement();
+        DERElement dataValue = new DERElement();
         dataValue.type = 0x82u;
         dataValue.octetString = value.dataValue;
 
@@ -2524,9 +2316,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
 
     /**
-        Decodes a sequence of BERElements.
+        Decodes a sequence of DERElements.
 
-        Returns: an array of BERElements.
+        Returns: an array of DERElements.
         Throws:
             ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
@@ -2534,33 +2326,33 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 indicated by the length tag.
     */
     override public @property @system
-    BERElement[] sequence() const
+    DERElement[] sequence() const
     {
         ubyte[] data = this.value.dup;
-        BERElement[] result;
+        DERElement[] result;
         while (data.length > 0u)
-            result ~= new BERElement(data);
+            result ~= new DERElement(data);
         return result;
     }
 
     /**
-        Encodes a sequence of BERElements.
+        Encodes a sequence of DERElements.
     */
     override public @property @system
-    void sequence(BERElement[] value)
+    void sequence(DERElement[] value)
     {
         ubyte[] result;
-        foreach (bv; value)
+        foreach (dv; value)
         {
-            result ~= cast(ubyte[]) bv;
+            result ~= cast(ubyte[]) dv;
         }
         this.value = result;
     }
 
     /**
-        Decodes a set of BERElements.
+        Decodes a set of DERElements.
 
-        Returns: an array of BERElements.
+        Returns: an array of DERElements.
         Throws:
             ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
@@ -2568,25 +2360,25 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 indicated by the length tag.
     */
     override public @property @system
-    BERElement[] set() const
+    DERElement[] set() const
     {
         ubyte[] data = this.value.dup;
-        BERElement[] result;
+        DERElement[] result;
         while (data.length > 0u)
-            result ~= new BERElement(data);
+            result ~= new DERElement(data);
         return result;
     }
 
     /**
-        Encodes a set of BERElements.
+        Encodes a set of DERElements.
     */
     override public @property @system
-    void set(BERElement[] value)
+    void set(DERElement[] value)
     {
         ubyte[] result;
-        foreach (bv; value)
+        foreach (dv; value)
         {
-            result ~= cast(ubyte[]) bv;
+            result ~= cast(ubyte[]) dv;
         }
         this.value = result;
     }
@@ -2836,7 +2628,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /**
         Decodes a DateTime.
         
-        The BER-encoded value is just the ASCII character representation of
+        The DER-encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 
         An UTC Timestamp looks like: 
@@ -2877,7 +2669,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /**
         Encodes a DateTime.
         
-        The BER-encoded value is just the ASCII character representation of
+        The DER-encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 
         An UTC Timestamp looks like: 
@@ -2889,7 +2681,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         See_Also:
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
-    override public @property @system nothrow
+    override public @property @system
     void coordinatedUniversalTime(DateTime value)
     {
         import std.string : replace;
@@ -2900,7 +2692,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /**
         Decodes a DateTime.
 
-        The BER-encoded value is just the ASCII character representation of
+        The DER-encoded value is just the ASCII character representation of
         the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html, 
         ISO 8601)-formatted timestamp.
 
@@ -2934,7 +2726,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /**
         Encodes a DateTime.
 
-        The BER-encoded value is just the ASCII character representation of
+        The DER-encoded value is just the ASCII character representation of
         the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html, 
         ISO 8601)-formatted timestamp.
 
@@ -2945,7 +2737,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             $(LI 19851106210627.3-0500)
         )
     */
-    override public @property @system nothrow
+    override public @property @system
     void generalizedTime(DateTime value)
     {
         import std.string : replace;
@@ -3097,7 +2889,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             ASN1ValueInvalidException = if any enecoded character is not ASCII.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1: 
             Communication between Heterogeneous Systems, Morgan Kaufmann, 
             2001, p. 182.
     */
@@ -3129,7 +2921,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             ASN1ValueInvalidException = if any enecoded character is not ASCII.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1: 
             Communication between Heterogeneous Systems, Morgan Kaufmann, 
             2001, p. 182.
     */
@@ -3264,8 +3056,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     CharacterString characterString() const
     {
-        BERElement[] bvs = this.sequence;
-        if (bvs.length < 2u || bvs.length > 3u)
+        DERElement[] dvs = this.sequence;
+        if (dvs.length < 2u || dvs.length > 3u)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
@@ -3278,19 +3070,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         CharacterString cs = CharacterString();
 
-        foreach (bv; bvs)
+        foreach (dv; dvs)
         {
-            switch (bv.type)
+            switch (dv.type)
             {
                 case (0x80u): // identification
                 {
-                    BERElement identificationBV = new BERElement(bv.value);
+                    DERElement identificationBV = new DERElement(dv.value);
                     switch (identificationBV.type)
                     {
                         case (0x80u): // syntaxes
                         {
                             ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
-                            BERElement[] syns = identificationBV.sequence;
+                            DERElement[] syns = identificationBV.sequence;
                             if (syns.length != 2u)
                                 throw new ASN1ValueTooBigException
                                 (
@@ -3348,7 +3140,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         {
                             // REVIEW: Should this be split off into a separate function?
                             ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-                            BERElement[] cns = identificationBV.sequence;
+                            DERElement[] cns = identificationBV.sequence;
                             if (cns.length != 2u)
                                 throw new ASN1ValueTooBigException
                                 (
@@ -3420,7 +3212,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 }
                 case (0x81u): // string-value
                 {
-                    cs.stringValue = bv.octetString;
+                    cs.stringValue = dv.octetString;
                     break;
                 }
                 default:
@@ -3471,17 +3263,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     void characterString(CharacterString value)
     {
-        BERElement identification = new BERElement();
+        DERElement identification = new DERElement();
         identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
-        BERElement identificationValue = new BERElement();
+        DERElement identificationValue = new DERElement();
         if (!(value.identification.syntaxes.isNull))
         {
-            BERElement abstractSyntax = new BERElement();
+            DERElement abstractSyntax = new DERElement();
             abstractSyntax.type = 0x80u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
-            BERElement transferSyntax = new BERElement();
+            DERElement transferSyntax = new DERElement();
             transferSyntax.type = 0x81u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
@@ -3495,11 +3287,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         }
         else if (!(value.identification.contextNegotiation.isNull))
         {
-            BERElement presentationContextID = new BERElement();
+            DERElement presentationContextID = new DERElement();
             presentationContextID.type = 0x80u;
             presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
             
-            BERElement transferSyntax = new BERElement();
+            DERElement transferSyntax = new DERElement();
             transferSyntax.type = 0x81u;
             transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
             
@@ -3525,7 +3317,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
         identification.value = cast(ubyte[]) identificationValue;
 
-        BERElement stringValue = new BERElement();
+        DERElement stringValue = new DERElement();
         stringValue.type = 0x81u;
         stringValue.octetString = value.stringValue;
 
@@ -3603,7 +3395,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
 
     /**
-        Creates an EndOfContent BER Value.
+        Creates an EndOfContent DER Value.
     */
     public @safe @nogc nothrow
     this()
@@ -3613,14 +3405,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
 
     /**
-        Creates a BERElement from the supplied bytes, inferring that the first
+        Creates a DERElement from the supplied bytes, inferring that the first
         byte is the type tag. The supplied ubyte[] array is "chomped" by
-        reference, so the original array will grow shorter as BERElements are
+        reference, so the original array will grow shorter as DERElements are
         generated. 
 
         Throws:
             ASN1ValueTooSmallException = if the bytes supplied are fewer than
-                two (one or zero, in other words), such that no valid BERElement
+                two (one or zero, in other words), such that no valid DERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive null
                 octets) cannot be found, or if the value is encoded in fewer
@@ -3633,15 +3425,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Example:
         ---
         // Decoding looks like:
-        BERElement[] result;
+        DERElement[] result;
         while (bytes.length > 0)
-            result ~= new BERElement(bytes);
+            result ~= new DERElement(bytes);
 
         // Encoding looks like:
         ubyte[] result;
-        foreach (bv; bervalues)
+        foreach (dv; bervalues)
         {
-            result ~= cast(ubyte[]) bv;
+            result ~= cast(ubyte[]) dv;
         }
         ---
     */
@@ -3652,7 +3444,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
         if (bytes.length < 2u)
             throw new ASN1ValueTooSmallException
-            ("BER-encoded value terminated prematurely.");
+            ("DER-encoded value terminated prematurely.");
         
         this.type = bytes[0];
         
@@ -3664,13 +3456,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             {
                 if (numberOfLengthOctets == 0x7Fu) // Reserved
                     throw new ASN1InvalidLengthException
-                    ("A BER-encoded length byte of 0xFF is reserved.");
+                    ("A DER-encoded length byte of 0xFF is reserved.");
 
                 // Definite Long, if it has made it this far
 
                 if (numberOfLengthOctets > size_t.sizeof)
                     throw new ASN1ValueTooBigException
-                    ("BER-encoded value is too big to decode.");
+                    ("DER-encoded value is too big to decode.");
 
                 version (D_LP64)
                 {
@@ -3715,7 +3507,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
                 if (indexOfEndOfContent == 0u)
                     throw new ASN1ValueTooSmallException
-                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERElement.");
+                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded DERElement.");
 
                 this.value = bytes[2 .. indexOfEndOfContent];
                 bytes = bytes[indexOfEndOfContent+2u .. $];
@@ -3727,7 +3519,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
             if (length > (bytes.length-2))
                 throw new ASN1ValueTooSmallException
-                ("BER-encoded value terminated prematurely.");
+                ("DER-encoded value terminated prematurely.");
 
             this.value = bytes[2 .. 2+length].dup;
             bytes = bytes[2+length .. $];
@@ -3735,14 +3527,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
 
     /**
-        Creates a BERElement from the supplied bytes, inferring that the first
+        Creates a DERElement from the supplied bytes, inferring that the first
         byte is the type tag. The supplied ubyte[] array is read, starting
         from the index specified by $(D bytesRead), and increments 
         $(D bytesRead) by the number of bytes read.
 
         Throws:
             ASN1ValueTooSmallException = if the bytes supplied are fewer than
-                two (one or zero, in other words), such that no valid BERElement
+                two (one or zero, in other words), such that no valid DERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive null
                 octets) cannot be found, or if the value is encoded in fewer
@@ -3755,16 +3547,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Example:
         ---
         // Decoding looks like:
-        BERElement[] result;
+        DERElement[] result;
         size_t i = 0u;
         while (i < bytes.length)
-            result ~= new BERElement(i, bytes);
+            result ~= new DERElement(i, bytes);
 
         // Encoding looks like:
         ubyte[] result;
-        foreach (bv; bervalues)
+        foreach (dv; bervalues)
         {
-            result ~= cast(ubyte[]) bv;
+            result ~= cast(ubyte[]) dv;
         }
         ---
     */
@@ -3775,7 +3567,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
         if (bytes.length < (bytesRead + 2u))
             throw new ASN1ValueTooSmallException
-            ("BER-encoded value terminated prematurely.");
+            ("DER-encoded value terminated prematurely.");
         
         this.type = bytes[bytesRead];
 
@@ -3787,13 +3579,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             {
                 if (numberOfLengthOctets == 0x7Fu) // Reserved
                     throw new ASN1InvalidLengthException
-                    ("A BER-encoded length byte of 0xFF is reserved.");
+                    ("A DER-encoded length byte of 0xFF is reserved.");
 
                 // Definite Long, if it has made it this far
 
                 if (numberOfLengthOctets > size_t.sizeof)
                     throw new ASN1ValueTooBigException
-                    ("BER-encoded value is too big to decode.");
+                    ("DER-encoded value is too big to decode.");
 
                 version (D_LP64)
                 {
@@ -3838,7 +3630,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
                 if (indexOfEndOfContent == 0u)
                     throw new ASN1ValueTooSmallException
-                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERElement.");
+                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded DERElement.");
 
                 this.value = bytes[bytesRead+2u .. indexOfEndOfContent];
                 bytesRead = (indexOfEndOfContent + 2u); // +2 for the EOC octets
@@ -3850,7 +3642,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
             if ((length+bytesRead) > (bytes.length-2u))
                 throw new ASN1ValueTooSmallException
-                ("BER-encoded value terminated prematurely.");
+                ("DER-encoded value terminated prematurely.");
 
             this.value = bytes[bytesRead+2u .. bytesRead+length+2u].dup;
             bytesRead += (2u + length);
@@ -3871,51 +3663,31 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     ubyte[] toBytes() const
     {
         ubyte[] lengthOctets = [ 0x00u ];
-        switch (this.lengthEncodingPreference)
+        if (this.length < 127u)
         {
-            case (LengthEncodingPreference.definite):
+            lengthOctets = [ cast(ubyte) this.length ];    
+        }
+        else
+        {
+            ulong length = cast(ulong) this.value.length;
+            version (BigEndian)
             {
-                if (this.length < 127u)
-                {
-                    lengthOctets = [ cast(ubyte) this.length ];    
-                }
-                else
-                {
-                    ulong length = cast(ulong) this.value.length;
-                    version (BigEndian)
-                    {
-                        lengthOctets = [ cast(ubyte) 0x88u ] ~ cast(ubyte[]) *cast(ubyte[8] *) &length;
-                    }
-                    else version (LittleEndian)
-                    {
-                        // REVIEW: You could use better variable names here.
-                        ubyte[] lengthBytes = cast(ubyte[]) *cast(ubyte[8] *) &length;
-                        reverse(lengthBytes);
-                        lengthOctets = [ cast(ubyte) 0x88u ] ~ lengthBytes;
-                    }
-                    else
-                    {
-                        static assert(0, "Could not determine endianness. Cannot compile.");
-                    }
-                }
-                break;
+                lengthOctets = [ cast(ubyte) 0x88u ] ~ cast(ubyte[]) *cast(ubyte[8] *) &length;
             }
-            case (LengthEncodingPreference.indefinite):
+            else version (LittleEndian)
             {
-                lengthOctets = [ 0x80u ];
-                break;
+                // REVIEW: You could use better variable names here.
+                ubyte[] lengthBytes = cast(ubyte[]) *cast(ubyte[8] *) &length;
+                reverse(lengthBytes);
+                lengthOctets = [ cast(ubyte) 0x88u ] ~ lengthBytes;
             }
-            default:
+            else
             {
-                assert(0, "Invalid LengthEncodingPreference encountered!");
+                static assert(0, "Could not determine endianness. Cannot compile.");
             }
         }
-        return (
-            [ this.type ] ~ 
-            lengthOctets ~ 
-            this.value ~ 
-            (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00u, 0x00u ] : cast(ubyte[]) [])
-        );
+
+        return ([ this.type ] ~ lengthOctets ~ this.value);
     }
 
     /**
@@ -3932,51 +3704,31 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     ubyte[] opCast(T = ubyte[])()
     {
         ubyte[] lengthOctets = [ 0x00u ];
-        switch (this.lengthEncodingPreference)
+        if (this.length < 127u)
         {
-            case (LengthEncodingPreference.definite):
+            lengthOctets = [ cast(ubyte) this.length ];    
+        }
+        else
+        {
+            ulong length = cast(ulong) this.value.length;
+            version (BigEndian)
             {
-                if (this.length < 127u)
-                {
-                    lengthOctets = [ cast(ubyte) this.length ];    
-                }
-                else
-                {
-                    ulong length = cast(ulong) this.value.length;
-                    version (BigEndian)
-                    {
-                        lengthOctets = [ cast(ubyte) 0x88u ] ~ cast(ubyte[]) *cast(ubyte[8] *) &length;
-                    }
-                    else version (LittleEndian)
-                    {
-                        // REVIEW: You could use better variable names here.
-                        ubyte[] lengthBytes = cast(ubyte[]) *cast(ubyte[8] *) &length;
-                        reverse(lengthBytes);
-                        lengthOctets = [ cast(ubyte) 0x88u ] ~ lengthBytes;
-                    }
-                    else
-                    {
-                        static assert(0, "Could not determine endianness. Cannot compile.");
-                    }
-                }
-                break;
+                lengthOctets = [ cast(ubyte) 0x88u ] ~ cast(ubyte[]) *cast(ubyte[8] *) &length;
             }
-            case (LengthEncodingPreference.indefinite):
+            else version (LittleEndian)
             {
-                lengthOctets = [ 0x80u ];
-                break;
+                // REVIEW: You could use better variable names here.
+                ubyte[] lengthBytes = cast(ubyte[]) *cast(ubyte[8] *) &length;
+                reverse(lengthBytes);
+                lengthOctets = [ cast(ubyte) 0x88u ] ~ lengthBytes;
             }
-            default:
+            else
             {
-                assert(0, "Invalid lengthEncodingPreference encountered!");
+                static assert(0, "Could not determine endianness. Cannot compile.");
             }
         }
-        return (
-            [ this.type ] ~ 
-            lengthOctets ~ 
-            this.value ~ 
-            (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00u, 0x00u ] : cast(ubyte[]) [])
-        );
+
+        return ([ this.type ] ~ lengthOctets ~ this.value);
     }
 
 }
@@ -4063,11 +3815,11 @@ unittest
         dataCharacter ~
         dataBMP;
 
-    BERElement[] result;
+    DERElement[] result;
 
     size_t i = 0u;
     while (i < data.length)
-        result ~= new BERElement(i, data);
+        result ~= new DERElement(i, data);
 
     // Pre-processing
     External x = result[8].external;
@@ -4103,7 +3855,7 @@ unittest
 
     result = [];
     while (data.length > 0)
-        result ~= new BERElement(data);
+        result ~= new DERElement(data);
 
     // Pre-processing
     x = result[8].external;
@@ -4160,10 +3912,10 @@ unittest
 
     data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
 
-    BERElement[] result;
+    DERElement[] result;
     size_t i = 0u;
     while (i < data.length)
-        result ~= new BERElement(i, data);
+        result ~= new DERElement(i, data);
         
     assert(result.length == 3);
     assert(result[0].utf8String[0 .. 5] == "AMREN");
@@ -4172,7 +3924,7 @@ unittest
 
     result = [];
     while (data.length > 0)
-        result ~= new BERElement(data);
+        result ~= new DERElement(data);
         
     assert(result.length == 3);
     assert(result[0].utf8String[0 .. 5] == "AMREN");
@@ -4203,10 +3955,10 @@ unittest
 
     data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
 
-    BERElement[] result;
+    DERElement[] result;
     size_t i = 0u;
     while (i < data.length)
-        result ~= new BERElement(i, data);
+        result ~= new DERElement(i, data);
         
     assert(result.length == 3);
     assert(result[0].utf8String[0 .. 5] == "AMREN");
@@ -4215,7 +3967,7 @@ unittest
 
     result = [];
     while (data.length > 0)
-        result ~= new BERElement(data);
+        result ~= new DERElement(data);
 
     assert(result.length == 3);
     assert(result[0].utf8String[0 .. 5] == "AMREN");
