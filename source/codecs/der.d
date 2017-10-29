@@ -782,122 +782,111 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an EXTERNAL that contained too many or too few elements. " ~
-                "An EXTERNAL should have either 2 or 3 elements." ~
+                "An EXTERNAL should have either two or three elements: " ~
+                "identification, an optional data-value-descriptor, and " ~
+                "a data-value, in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         External ext = External();
-
-        foreach (dv; dvs)
+        if (dvs[0].type == 0x80u)
         {
-            switch (dv.type)
+            ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+            DERElement identificationElement = new DERElement(dvs[0].value);
+            /* NOTE:
+                'syntax' is the only permitted CHOICE for EXTERNAL's identification, 
+                when using Distinguished Encoding Rules (DER).
+            */
+            if (identificationElement.type == 0x80u) 
             {
-                case (0x80u): // identification
-                {
-                    DERElement identificationBV = new DERElement(dv.value);
-                    switch(identificationBV.type)
-                    {
-                        case (0x80u): // syntax
-                        {
-                            identification.syntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x81u): // presentation-context-id
-                        {
-                            identification.presentationContextID = identificationBV.integer!long;
-                            break;
-                        }
-                        case (0x82u): // context-negotiation
-                        {
-                            // REVIEW: Should this be split off into a separate function?
-                            ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-                            DERElement[] cns = identificationBV.sequence;
-                            if (cns.length != 2)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an EXTERNAL that had " ~
-                                    "too many elements within the context-" ~
-                                    "negotiation element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-                            
-                            foreach (cn; cns)
-                            {
-                                switch (cn.type)
-                                {
-                                    case (0x80u): // presentation-context-id
-                                    {
-                                        contextNegotiation.presentationContextID = cn.integer!long;
-                                        break;
-                                    }
-                                    case (0x81u): // transfer-syntax
-                                    {
-                                        contextNegotiation.transferSyntax = cn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        (
-                                            "This exception was thrown because " ~
-                                            "you attempted to decode an EXTERNAL " ~
-                                            "that had an undefined context-specific " ~
-                                            "type tag within the context-" ~
-                                            "negotiation element." ~ 
-                                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                                            debugInformationText ~ reportBugsText
-                                        );
-                                    }
-                                }
-                            }
-                            identification.contextNegotiation = contextNegotiation;
-                            break;
-                        }
-                        default:
-                        {
-                            throw new ASN1InvalidIndexException
-                            (
-                                "This exception was thrown because you attempted " ~
-                                "to decode an EXTERNAL whose identification " ~
-                                "CHOICE is not recognized by the specification. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
-                                debugInformationText ~ reportBugsText
-                            );
-                        }
-                    }
-                    ext.identification = identification;
-                    break;
-                }
-                case (0x81u): // data-value-descriptor
-                {
-                    ext.dataValueDescriptor = dv.objectDescriptor;
-                    break;
-                }
-                case (0x82u): // data-value
-                {
-                    ext.dataValue = dv.octetString;
-                    break;
-                }
-                default:
-                {
-                    throw new ASN1InvalidIndexException
-                    (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EXTERNAL that contained an element whose " ~
-                        "context-specific type is not specified by the " ~
-                        "definition of the EXTERNAL data type." ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
-                        debugInformationText ~ reportBugsText
-                    );
-                }
+                identification.syntax = identificationElement.objectIdentifier;
             }
+            else
+            {
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "an EXTERNAL whose CHOICE of identification was something " ~
+                    "other than `syntax`. When using Distinguished Encoding " ~
+                    "Rules (DER), `syntax` is the only permitted CHOICE of " ~
+                    "identification. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+            }
+            ext.identification = identification;
         }
-        return ext;
+        else
+        {
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an EXTERNAL whose elements were not exactly in the order " ~
+                "they appear in the specification. Distinguished Encoding " ~
+                "Rules (DER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of EXTERNAL, means that identification " ~
+                "must appear first, then data-value. The problem in your case " ~
+                "is that the first encoded element was not identification, as " ~
+                "indicated by a context-specific type tag of 0x80. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+        }
+
+        if (dvs[1].type == 0x81u) // Next tag is the data-value-descriptor
+        {
+            ext.dataValueDescriptor = dvs[1].objectDescriptor;
+        }
+        else if (dvs[1].type == 0x82u) // Next tag is the data-value-descriptor
+        {
+            ext.dataValue = dvs[1].octetString;
+            return ext;
+        }
+        else
+        {
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an EXTERNAL whose elements were not exactly in the order " ~
+                "they appear in the specification, or entirely omitted the " ~
+                " mandatory data-value field, as indicated by a context-" ~
+                "specific type tag of 0x82. Distinguished Encoding " ~
+                "Rules (DER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of EXTERNAL, means that identification " ~
+                "must appear first, then the optional data-value descriptor, " ~
+                "then the data-value. The problem in your case " ~
+                "is that the second encoded element was not the data-value-" ~
+                "descriptor or a data-value, as would be indicated by a context-" ~
+                "specific type tag of either 0x81 or 0x82 respectively. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+        }
+
+        if (dvs[2].type == 0x82u)
+        {
+            ext.dataValue = dvs[2].octetString;
+            return ext;
+        }
+        else
+        {
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an EXTERNAL whose last element was not the data-value field, " ~ 
+                "as indicated by a context-specific type tag of 0x82. " ~
+                "Distinguished Encoding Rules (DER) specify that the encoded " ~
+                "elements of any constructed type must appear in the order of " ~
+                "their specification, which, in the case of EXTERNAL, means that " ~
+                "identification must appear first, then the optional data-value " ~
+                "descriptor, then the data-value. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+        }
     }
 
     /**
@@ -935,30 +924,22 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
         DERElement identificationValue = new DERElement();
-        if (!(value.identification.syntax.isNull))
+        if (value.identification.syntax.isNull)
         {
-            identificationValue.type = 0x80u;
-            identificationValue.objectIdentifier = value.identification.syntax;
-        }
-        else if (!(value.identification.contextNegotiation.isNull))
-        {
-            DERElement presentationContextID = new DERElement();
-            presentationContextID.type = 0x80u;
-            presentationContextID.integer = value.identification.contextNegotiation.presentationContextID;
-            
-            DERElement transferSyntax = new DERElement();
-            transferSyntax.type = 0x81u;
-            transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
-            
-            identificationValue.type = 0x82u;
-            identificationValue.sequence = [ presentationContextID, transferSyntax ];
-        }
-        else // it must be the presentationContextID INTEGER
-        {
-            identificationValue.type = 0x81u;
-            identificationValue.integer!long = value.identification.presentationContextID;
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to encode " ~
+                "an EXTERNAL that used a CHOICE of identification other than " ~
+                "syntax. Distinguished Encoding Rules (DER) requires that " ~
+                "EXTERNALs may only use `syntax` as their CHOICE of " ~
+                "identification. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
         }
 
+        identificationValue.type = 0x80u;
+        identificationValue.objectIdentifier = value.identification.syntax;
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
         identification.value = cast(ubyte[]) identificationValue;
 
@@ -1917,184 +1898,103 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     EmbeddedPDV embeddedPresentationDataValue() const
     {
         DERElement[] dvs = this.sequence;
-        if (dvs.length < 2 || dvs.length > 3)
+        if (dvs.length != 2)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an EMBEDDED PDV that contained too many or too few elements. " ~
-                "An EMBEDDED PDV should have either 2 or 3 elements." ~
+                "An EMBEDDED PDV should have exactly two elements: " ~
+                "identification and data-value, in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+        if (dvs[0].type != 0x80u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an EMBEDDED PDV whose elements were not exactly in the order " ~
+                "they appear in the specification. Distinguished Encoding " ~
+                "Rules (DER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of EMBEDDED PDV, means that identification " ~
+                "must appear first, then data-value. The problem in your case " ~
+                "is that the first encoded element was not identification, as " ~
+                "indicated by a context-specific type tag of 0x80." ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        if (dvs[1].type != 0x82u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an EMBEDDED PDV whose elements were not exactly in the order " ~
+                "they appear in the specification. Distinguished Encoding " ~
+                "Rules (DER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of EMBEDDED PDV, means that identification " ~
+                "must appear first, then data-value. The problem in your case " ~
+                "is that the second encoded element was not data-value, as " ~
+                "indicated by a context-specific type tag of 0x82." ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
         EmbeddedPDV pdv = EmbeddedPDV();
-
-        foreach (dv; dvs)
+        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+        DERElement identificationElement = new DERElement(dvs[0].value);
+        switch (identificationElement.type)
         {
-            switch (dv.type)
+            case (0x80u): // syntaxes
             {
-                case (0x80u): // identification
-                {
-                    DERElement identificationBV = new DERElement(dv.value);
-                    switch (identificationBV.type)
-                    {
-                        case (0x80u): // syntaxes
-                        {
-                            ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
-                            DERElement[] syns = identificationBV.sequence;
-                            if (syns.length != 2)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an EMBEDDED PDV that had " ~
-                                    "too many elements within the syntaxes" ~
-                                    "element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-
-                            foreach (syn; syns)
-                            {
-                                switch (syn.type)
-                                {
-                                    case (0x80u): // abstract
-                                    {
-                                        syntaxes.abstractSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    case (0x81): // transfer
-                                    {
-                                        syntaxes.transferSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        ("Invalid EMBEDDED PDV.identification.syntaxes tag.");
-                                    }
-                                }
-                            }
-                            identification.syntaxes = syntaxes;
-                            break;
-                        }
-                        case (0x81u): // syntax
-                        {
-                            identification.syntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x82u): // presentation-context-id
-                        {
-                            identification.presentationContextID = identificationBV.integer!long;
-                            break;
-                        }
-                        case (0x83u): // context-negotiation
-                        {
-                            // REVIEW: Should this be split off into a separate function?
-                            ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-                            DERElement[] cns = identificationBV.sequence;
-                            if (cns.length != 2)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an EMBEDDED PDV that had " ~
-                                    "too many elements within the context-" ~
-                                    "negotiation element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-                            
-                            foreach (cn; cns)
-                            {
-                                switch (cn.type)
-                                {
-                                    case (0x80u): // presentation-context-id
-                                    {
-                                        contextNegotiation.presentationContextID = cn.integer!long;
-                                        break;
-                                    }
-                                    case (0x81u): // transfer-syntax
-                                    {
-                                        contextNegotiation.transferSyntax = cn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        (
-                                            "This exception was thrown because " ~
-                                            "you attempted to decode an EMBEDDED PDV " ~
-                                            "that had an undefined context-specific " ~
-                                            "type tag within the context-" ~
-                                            "negotiation element." ~ 
-                                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                                            debugInformationText ~ reportBugsText
-                                        );
-                                    }
-                                }
-                            }
-                            identification.contextNegotiation = contextNegotiation;
-                            break;
-                        }
-                        case (0x84u): // transfer-syntax
-                        {
-                            identification.transferSyntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x85u): // fixed
-                        {
-                            identification.fixed = true;
-                            break;
-                        }
-                        default:
-                        {
-                            throw new ASN1InvalidIndexException
-                            (
-                                "This exception was thrown because you attempted " ~
-                                "to decode an EMBEDDED PDV whose identification " ~
-                                "CHOICE is not recognized by the specification. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
-                                debugInformationText ~ reportBugsText
-                            );
-                        }
-                    }
-                    pdv.identification = identification;
-                    break;
-                }
-                case (0x81u): // data-value-descriptor
-                {
-                    throw new ASN1ValueInvalidException
+                ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
+                DERElement[] syns = identificationElement.sequence;
+                if (syns.length != 2)
+                    throw new ASN1ValueTooBigException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV that contained a data-value-" ~
-                        "descriptor, which is forbidden from inclusion by " ~
-                        "specification." ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
-                        debugInformationText ~ reportBugsText                        
-                    );
-                    break;
-                }
-                case (0x82u): // data-value
-                {
-                    pdv.dataValue = dv.octetString;
-                    break;
-                }
-                default:
-                {
-                    throw new ASN1InvalidIndexException
-                    (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV that contained an element whose " ~
-                        "context-specific type is not specified by the " ~
-                        "definition of the EMBEDDED PDV data type." ~
+                        "This exception was thrown because you " ~
+                        "attempted to decode an EMBEDDED PDV that had " ~
+                        "too many elements within the syntaxes" ~
+                        "element, which is supposed to " ~
+                        "have only two elements. " ~ 
                         notWhatYouMeantText ~ forMoreInformationText ~ 
                         debugInformationText ~ reportBugsText
                     );
-                }
+                syntaxes.abstractSyntax = syns[0].objectIdentifier;
+                syntaxes.transferSyntax = syns[1].objectIdentifier;
+                identification.syntaxes = syntaxes;
+                break;
+            }
+            case (0x81u): // syntax
+            {
+                identification.syntax = identificationElement.objectIdentifier;
+                break;
+            }
+            case (0x84u): // transfer-syntax
+            {
+                identification.transferSyntax = identificationElement.objectIdentifier;
+                break;
+            }
+            case (0x85u): // fixed
+            {
+                identification.fixed = true;
+                break;
+            }
+            default:
+            {
+                throw new ASN1InvalidIndexException
+                (
+                    "This exception was thrown because you attempted " ~
+                    "to decode an EMBEDDED PDV whose identification " ~
+                    "CHOICE is not recognized by the specification. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
             }
         }
+        pdv.identification = identification;
+        pdv.dataValue = dvs[1].octetString;
         return pdv;
     }
 
@@ -2123,6 +2023,30 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 data-value OCTET STRING }
             (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
         )
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 5.
+
+        In Distinguished Encoding Rules, the identification CHOICE cannot be
+        presentation-context-id, nor context-negotiation. Also, the elements
+        must appear in the exact order of the specification. With these 
+        constraints in mind, the specification effectively becomes:
+
+        $(I
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification [0] CHOICE {
+                    syntaxes [0] SEQUENCE {
+                        abstract [0] OBJECT IDENTIFIER,
+                        transfer [1] OBJECT IDENTIFIER },
+                    syntax [1] OBJECT IDENTIFIER,
+                    transfer-syntax [4] OBJECT IDENTIFIER,
+                    fixed [5] NULL },
+                data-value [2] OCTET STRING }
+        )
+
+        If the supplied identification for the EmbeddedPDV is a 
+        presentation-context-id or a context-negotiation, no exception will be
+        thrown; the identification will be set to fixed silently.
 
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
@@ -2156,33 +2080,15 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             identificationValue.type = 0x81u;
             identificationValue.objectIdentifier = value.identification.syntax;
         }
-        else if (!(value.identification.contextNegotiation.isNull))
-        {
-            DERElement presentationContextID = new DERElement();
-            presentationContextID.type = 0x80u;
-            presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
-            
-            DERElement transferSyntax = new DERElement();
-            transferSyntax.type = 0x81u;
-            transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
-            
-            identificationValue.type = 0x83u;
-            identificationValue.sequence = [ presentationContextID, transferSyntax ];
-        }
         else if (!(value.identification.transferSyntax.isNull))
         {
             identificationValue.type = 0x84u;
             identificationValue.objectIdentifier = value.identification.transferSyntax;
         }
-        else if (value.identification.fixed)
+        else // Default to fixed
         {
             identificationValue.type = 0x85u;
             identificationValue.value = [];
-        }
-        else // it must be the presentationContextID INTEGER
-        {
-            identificationValue.type = 0x82u;
-            identificationValue.integer!long = value.identification.presentationContextID;
         }
 
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
@@ -2193,6 +2099,61 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         dataValue.octetString = value.dataValue;
 
         this.sequence = [ identification, dataValue ];
+    }
+
+    /* NOTE:
+        This unit test had to be moved out of ASN1Element because DER and CER
+        do not support encoding of presentation-context-id in EMBEDDED PDV.
+
+        This unit test ensures that, if you attempt to create an EMBEDDED PDV
+        with presentation-context-id as the CHOICE of identification, the 
+        encoded EMBEDDED PDV's identification defaults to fixed.
+    */
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.presentationContextID = 27L;
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
+
+        DERElement el = new DERElement();
+        el.type = 0x08u;
+        el.embeddedPDV = input;
+        EmbeddedPDV output = el.embeddedPDV;
+        assert(output.identification.fixed == true);
+        assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
+    }
+
+    /* NOTE:
+        This unit test had to be moved out of ASN1Element because DER and CER
+        do not support encoding of context-negotiation in EMBEDDED PDV.
+
+        This unit test ensures that, if you attempt to create an EMBEDDED PDV
+        with context-negotiation as the CHOICE of identification, the 
+        encoded EMBEDDED PDV's identification defaults to fixed.
+    */
+    @system
+    unittest
+    {
+        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
+        cn.presentationContextID = 27L;
+        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.contextNegotiation = cn;
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
+
+        DERElement el = new DERElement();
+        el.embeddedPDV = input;
+        EmbeddedPDV output = el.embeddedPDV;
+        assert(output.identification.fixed == true);
+        assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
     }
 
     /**
@@ -3061,178 +3022,103 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     CharacterString characterString() const
     {
         DERElement[] dvs = this.sequence;
-        if (dvs.length < 2u || dvs.length > 3u)
+        if (dvs.length != 2)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
-                "a CharacterString that contained too many or too few elements. " ~
-                "A CharacterString should have either 2 or 3 elements. " ~
+                "an CharacterString that contained too many or too few elements. " ~
+                "An CharacterString should have exactly two elements: " ~
+                "identification and string-value, in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+        if (dvs[0].type != 0x80u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an CharacterString whose elements were not exactly in the order " ~
+                "they appear in the specification. Distinguished Encoding " ~
+                "Rules (DER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of CharacterString, means that identification " ~
+                "must appear first, then string-value. The problem in your case " ~
+                "is that the first encoded element was not identification, as " ~
+                "indicated by a context-specific type tag of 0x80." ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        if (dvs[1].type != 0x81u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an CharacterString whose elements were not exactly in the order " ~
+                "they appear in the specification. Distinguished Encoding " ~
+                "Rules (DER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of CharacterString, means that identification " ~
+                "must appear first, then string-value. The problem in your case " ~
+                "is that the second encoded element was not string-value, as " ~
+                "indicated by a context-specific type tag of 0x81." ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
         CharacterString cs = CharacterString();
-
-        foreach (dv; dvs)
+        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+        DERElement identificationElement = new DERElement(dvs[0].value);
+        switch (identificationElement.type)
         {
-            switch (dv.type)
+            case (0x80u): // syntaxes
             {
-                case (0x80u): // identification
-                {
-                    DERElement identificationBV = new DERElement(dv.value);
-                    switch (identificationBV.type)
-                    {
-                        case (0x80u): // syntaxes
-                        {
-                            ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
-                            DERElement[] syns = identificationBV.sequence;
-                            if (syns.length != 2u)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an CharacterString that had " ~
-                                    "too many elements within the syntaxes" ~
-                                    "element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-
-                            foreach (syn; syns)
-                            {
-                                switch (syn.type)
-                                {
-                                    case (0x80u): // abstract
-                                    {
-                                        syntaxes.abstractSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    case (0x81): // transfer
-                                    {
-                                        syntaxes.transferSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        (
-                                            "This exception was thrown because " ~
-                                            "you attempted to decode a CharacterString " ~
-                                            "that had an undefined context-specific " ~
-                                            "type tag within the syntaxes element. " ~
-                                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                                            debugInformationText ~ reportBugsText
-                                        );
-                                    }
-                                }
-                            }
-                            identification.syntaxes = syntaxes;
-                            break;
-                        }
-                        case (0x81u): // syntax
-                        {
-                            identification.syntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x82u): // presentation-context-id
-                        {
-                            identification.presentationContextID = identificationBV.integer!long;
-                            break;
-                        }
-                        case (0x83u): // context-negotiation
-                        {
-                            // REVIEW: Should this be split off into a separate function?
-                            ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-                            DERElement[] cns = identificationBV.sequence;
-                            if (cns.length != 2u)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an CharacterString that had " ~
-                                    "too many elements within the context-" ~
-                                    "negotiation element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-                            
-                            foreach (cn; cns)
-                            {
-                                switch (cn.type)
-                                {
-                                    case (0x80u): // presentation-context-id
-                                    {
-                                        contextNegotiation.presentationContextID = cn.integer!long;
-                                        break;
-                                    }
-                                    case (0x81u): // transfer-syntax
-                                    {
-                                        contextNegotiation.transferSyntax = cn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        (
-                                            "This exception was thrown because " ~
-                                            "you attempted to decode a CharacterString " ~
-                                            "that had an undefined context-specific " ~
-                                            "type tag within the context-" ~
-                                            "negotiation element." ~ 
-                                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                                            debugInformationText ~ reportBugsText
-                                        );
-                                    }
-                                }
-                            }
-                            identification.contextNegotiation = contextNegotiation;
-                            break;
-                        }
-                        case (0x84u): // transfer-syntax
-                        {
-                            identification.transferSyntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x85u): // fixed
-                        {
-                            identification.fixed = true;
-                            break;
-                        }
-                        default:
-                        {
-                            throw new ASN1InvalidIndexException
-                            (
-                                "This exception was thrown because you attempted " ~
-                                "to decode a CharacterString whose identification " ~
-                                "CHOICE is not recognized by the specification. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
-                                debugInformationText ~ reportBugsText
-                            );
-                        }
-                    }
-                    cs.identification = identification;
-                    break;
-                }
-                case (0x81u): // string-value
-                {
-                    cs.stringValue = dv.octetString;
-                    break;
-                }
-                default:
-                {
-                    throw new ASN1InvalidIndexException
+                ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
+                DERElement[] syns = identificationElement.sequence;
+                if (syns.length != 2)
+                    throw new ASN1ValueTooBigException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString that contained an element whose " ~
-                        "context-specific type is not specified by the " ~
-                        "definition of the CharacterString data type. " ~
+                        "This exception was thrown because you " ~
+                        "attempted to decode an EMBEDDED PDV that had " ~
+                        "too many elements within the syntaxes" ~
+                        "element, which is supposed to " ~
+                        "have only two elements. " ~ 
                         notWhatYouMeantText ~ forMoreInformationText ~ 
                         debugInformationText ~ reportBugsText
                     );
-                }
+                syntaxes.abstractSyntax = syns[0].objectIdentifier;
+                syntaxes.transferSyntax = syns[1].objectIdentifier;
+                identification.syntaxes = syntaxes;
+                break;
+            }
+            case (0x81u): // syntax
+            {
+                identification.syntax = identificationElement.objectIdentifier;
+                break;
+            }
+            case (0x84u): // transfer-syntax
+            {
+                identification.transferSyntax = identificationElement.objectIdentifier;
+                break;
+            }
+            case (0x85u): // fixed
+            {
+                identification.fixed = true;
+                break;
+            }
+            default:
+            {
+                throw new ASN1InvalidIndexException
+                (
+                    "This exception was thrown because you attempted " ~
+                    "to decode an CharacterString whose identification " ~
+                    "CHOICE is not recognized by the specification. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
             }
         }
+        cs.identification = identification;
+        cs.stringValue = dvs[1].octetString;
         return cs;
     }
 
@@ -3263,7 +3149,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
     */
-    // REVIEW: Is this nothrow?
     override public @property @system
     void characterString(CharacterString value)
     {
@@ -3289,33 +3174,15 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             identificationValue.type = 0x81u;
             identificationValue.objectIdentifier = value.identification.syntax;
         }
-        else if (!(value.identification.contextNegotiation.isNull))
-        {
-            DERElement presentationContextID = new DERElement();
-            presentationContextID.type = 0x80u;
-            presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
-            
-            DERElement transferSyntax = new DERElement();
-            transferSyntax.type = 0x81u;
-            transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
-            
-            identificationValue.type = 0x83u;
-            identificationValue.sequence = [ presentationContextID, transferSyntax ];
-        }
         else if (!(value.identification.transferSyntax.isNull))
         {
             identificationValue.type = 0x84u;
             identificationValue.objectIdentifier = value.identification.transferSyntax;
         }
-        else if (value.identification.fixed)
+        else // Default to fixed
         {
             identificationValue.type = 0x85u;
             identificationValue.value = [];
-        }
-        else // it must be the presentationContextID INTEGER
-        {
-            identificationValue.type = 0x82u;
-            identificationValue.integer!long = value.identification.presentationContextID;
         }
 
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
@@ -3751,15 +3618,14 @@ unittest
     ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
     ubyte[] dataOD = [ 0x07u, 0x05u, 'H', 'N', 'E', 'L', 'O' ];
     ubyte[] dataExternal = [ 
-        0x08u, 0x1Cu, 0x80u, 0x0Au, 0x81u, 0x08u, 0x00u, 0x00u, 
-        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x1Bu, 0x81u, 0x08u, 
-        0x65u, 0x78u, 0x74u, 0x65u, 0x72u, 0x6Eu, 0x61u, 0x6Cu, 
-        0x82u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
+        0x08u, 0x18u, 0x80u, 0x06u, 0x80u, 0x04u, 0x29u, 0x06u, 
+        0x04u, 0x01u, 0x81u, 0x08u, 0x65u, 0x78u, 0x74u, 0x65u, 
+        0x72u, 0x6Eu, 0x61u, 0x6Cu, 0x82u, 0x04u, 0x01u, 0x02u, 
+        0x03u, 0x04u ];
     ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
     ubyte[] dataEnum = [ 0x0Au, 0x08u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0xFFu ];
     ubyte[] dataEmbeddedPDV = [ 
-        0x0Bu, 0x12u, 0x80u, 0x0Au, 0x82u, 0x08u, 0x00u, 0x00u, 
-        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x1Bu, 0x82u, 0x04u, 
+        0x0Bu, 0x0Au, 0x80u, 0x02u, 0x85u, 0x00u, 0x82u, 0x04u, 
         0x01u, 0x02u, 0x03u, 0x04u ];
     ubyte[] dataUTF8 = [ 0x0Cu, 0x05u, 'H', 'E', 'N', 'L', 'O' ];
     ubyte[] dataROID = [ 0x0Du, 0x03u, 0x06u, 0x04u, 0x01u ];
@@ -3783,9 +3649,9 @@ unittest
         0x00u, 0x00u, 0x00u, 0x64u 
     ]; // Big-endian "abcd"
     ubyte[] dataCharacter = [ 
-        0x1Du, 0x13u, 0x80u, 0x0Au, 0x82u, 0x08u, 0x00u, 0x00u, 
-        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x3Fu, 0x81u, 0x05u, 
-        0x48u, 0x45u, 0x4Eu, 0x4Cu, 0x4Fu ];
+        0x1Du, 0x0Fu, 0x80u, 0x06u, 0x81u, 0x04u, 0x29u, 0x06u, 
+        0x04u, 0x01u, 0x81u, 0x05u, 0x48u, 0x45u, 0x4Eu, 0x4Cu, 
+        0x4Fu ];
     ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"
 
     // Combine it all
@@ -3836,11 +3702,11 @@ unittest
     assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
     assert(result[6].objectIdentifier == new OID(OIDNode(0x01u), OIDNode(0x03u), OIDNode(0x06u), OIDNode(0x04u), OIDNode(0x01u)));
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
-    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((x.identification.syntax == new OID(1u, 1u, 6u, 4u, 1u)) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
     assert(result[10].enumerated!long == 255L);
-    assert((m.identification.presentationContextID == 27L) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((m.identification.fixed == true) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier == [ OIDNode(6), OIDNode(4), OIDNode(1) ]);
     assert(result[14].numericString == "8675309");
@@ -3854,7 +3720,7 @@ unittest
     assert(result[22].visibleString == "PowerThirst");
     assert(result[23].generalString == "PowerThirst");
     assert(result[24].universalString == "abcd"d);
-    assert((c.identification.presentationContextID == 63L) && (c.stringValue == "HENLO"w));
+    assert((c.identification.syntax == new OID(1u, 1u, 6u, 4u, 1u)) && (c.stringValue == "HENLO"w));
 
     result = [];
     while (data.length > 0)
@@ -3872,11 +3738,11 @@ unittest
     assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
     assert(result[6].objectIdentifier == new OID(OIDNode(0x01u), OIDNode(0x03u), OIDNode(0x06u), OIDNode(0x04u), OIDNode(0x01u)));
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
-    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((x.identification.syntax == new OID(1u, 1u, 6u, 4u, 1u)) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
     assert(result[10].enumerated!long == 255L);
-    assert((m.identification.presentationContextID == 27L) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((m.identification.fixed == true) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier == [ OIDNode(6), OIDNode(4), OIDNode(1) ]);
     assert(result[14].numericString == "8675309");
@@ -3890,7 +3756,7 @@ unittest
     assert(result[22].visibleString == "PowerThirst");
     assert(result[23].generalString == "PowerThirst");
     assert(result[24].universalString == "abcd"d);
-    assert((c.identification.presentationContextID == 63L) && (c.stringValue == "HENLO"w));
+    assert((c.identification.syntax == new OID(1u, 1u, 6u, 4u, 1u)) && (c.stringValue == "HENLO"w));
 }
 
 // Test of definite-long encoding

@@ -1005,6 +1005,62 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         this.sequence = [ identification, dataValueDescriptor, dataValue ];
     }
 
+    /* NOTE:
+        This unit test had to be moved out of ASN1Element, because Distinguished 
+        Encoding Rules (DER) does not permit EXTERNALs to use an identification
+        CHOICE of presentation-context-id or context-negotiation
+    */
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.presentationContextID = 27L;
+
+        External input = External();
+        input.identification = id;
+        input.dataValueDescriptor = "external";
+        input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
+
+        BERElement el = new BERElement();
+        el.external = input;
+        External output = el.external;
+        assert(output.identification.presentationContextID == 27L);
+        assert(output.dataValueDescriptor == "external");
+        assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
+    }
+
+    /* NOTE:
+        This unit test had to be moved out of ASN1Element, because Distinguished 
+        Encoding Rules (DER) does not permit EXTERNALs to use an identification
+        CHOICE of presentation-context-id or context-negotiation
+    */
+    @system
+    unittest
+    {
+        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
+        cn.presentationContextID = 27L;
+        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.contextNegotiation = cn;
+
+        External input = External();
+        input.identification = id;
+        input.dataValueDescriptor = "blap";
+        input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
+
+        BERElement el = new BERElement();
+        el.external = input;
+        External output = el.external;
+        assert(output.identification.contextNegotiation.presentationContextID == 27L);
+        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "blap");
+        assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
+
+        // Assert that accessor does not mutate state
+        assert(el.external == el.external);
+    }
+
     /**
         Decodes a float or double. This can never decode directly to a
         real type, because of the way it works.
@@ -2125,12 +2181,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     EmbeddedPDV embeddedPresentationDataValue() const
     {
         BERElement[] bvs = this.sequence;
-        if (bvs.length < 2 || bvs.length > 3)
+        if (bvs.length != 2)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an EMBEDDED PDV that contained too many or too few elements. " ~
-                "An EMBEDDED PDV should have either 2 or 3 elements." ~
+                "An EMBEDDED PDV should have exactly two elements: " ~
+                "identification and data-value, in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
@@ -2401,6 +2458,54 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         dataValue.octetString = value.dataValue;
 
         this.sequence = [ identification, dataValue ];
+    }
+
+    /* NOTE:
+        This unit test had to be moved out of ASN1Element because DER and CER
+        do not support encoding of presentation-context-id in EMBEDDED PDV.
+    */
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.presentationContextID = 27L;
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
+
+        BERElement el = new BERElement();
+        el.type = 0x08u;
+        el.embeddedPDV = input;
+        EmbeddedPDV output = el.embeddedPDV;
+        assert(output.identification.presentationContextID == 27L);
+        assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
+    }
+
+    /* NOTE:
+        This unit test had to be moved out of ASN1Element because DER and CER
+        do not support encoding of context-negotiation in EMBEDDED PDV.
+    */
+    @system
+    unittest
+    {
+        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
+        cn.presentationContextID = 27L;
+        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.contextNegotiation = cn;
+
+        EmbeddedPDV input = EmbeddedPDV();
+        input.identification = id;
+        input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
+
+        BERElement el = new BERElement();
+        el.embeddedPDV = input;
+        EmbeddedPDV output = el.embeddedPDV;
+        assert(output.identification.contextNegotiation.presentationContextID == 27L);
+        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
     }
 
     /**
@@ -3534,6 +3639,56 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         stringValue.octetString = value.stringValue;
 
         this.sequence = [ identification, stringValue ];
+    }
+
+    /* NOTE:
+        This unit test had to be moved out of ASN1Element, because Distinguished 
+        Encoding Rules (DER) does not permit CharacterStrings to use an identification
+        CHOICE of presentation-context-id or context-negotiation
+    */
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.presentationContextID = 27L;
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        BERElement el = new BERElement();
+        el.type = 0x08u;
+        el.characterString = input;
+        CharacterString output = el.characterString;
+        assert(output.identification.presentationContextID == 27L);
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+    }
+    
+    /* NOTE:
+        This unit test had to be moved out of ASN1Element, because Distinguished 
+        Encoding Rules (DER) does not permit CharacterStrings to use an identification
+        CHOICE of presentation-context-id or context-negotiation
+    */
+    @system
+    unittest
+    {
+        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
+        cn.presentationContextID = 27L;
+        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.contextNegotiation = cn;
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        BERElement el = new BERElement();
+        el.characterString = input;
+        CharacterString output = el.characterString;
+        assert(output.identification.contextNegotiation.presentationContextID == 27L);
+        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
     }
 
     /**

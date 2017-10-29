@@ -522,52 +522,6 @@ class AbstractSyntaxNotation1Element(Element)
         assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
     }
 
-    @system
-    unittest
-    {
-        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
-        id.presentationContextID = 27L;
-
-        External input = External();
-        input.identification = id;
-        input.dataValueDescriptor = "external";
-        input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
-
-        Element el = new Element();
-        el.external = input;
-        External output = el.external;
-        assert(output.identification.presentationContextID == 27L);
-        assert(output.dataValueDescriptor == "external");
-        assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
-    }
-
-    @system
-    unittest
-    {
-        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
-        cn.presentationContextID = 27L;
-        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
-
-        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
-        id.contextNegotiation = cn;
-
-        External input = External();
-        input.identification = id;
-        input.dataValueDescriptor = "blap";
-        input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
-
-        Element el = new Element();
-        el.external = input;
-        External output = el.external;
-        assert(output.identification.contextNegotiation.presentationContextID == 27L);
-        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
-        assert(output.dataValueDescriptor == "blap");
-        assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
-
-        // Assert that accessor does not mutate state
-        assert(el.external == el.external);
-    }
-
     /// Encodes a floating-point number
     abstract public @property
     T realType(T)() const if (is(T == float) || is(T == double));
@@ -1050,46 +1004,6 @@ class AbstractSyntaxNotation1Element(Element)
         EmbeddedPDV output = el.embeddedPDV;
         assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
         assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
-    }
-
-    @system
-    unittest
-    {
-        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
-        id.presentationContextID = 27L;
-
-        EmbeddedPDV input = EmbeddedPDV();
-        input.identification = id;
-        input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
-
-        Element el = new Element();
-        el.type = 0x08u;
-        el.embeddedPDV = input;
-        EmbeddedPDV output = el.embeddedPDV;
-        assert(output.identification.presentationContextID == 27L);
-        assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
-    }
-
-    @system
-    unittest
-    {
-        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
-        cn.presentationContextID = 27L;
-        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
-
-        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
-        id.contextNegotiation = cn;
-
-        EmbeddedPDV input = EmbeddedPDV();
-        input.identification = id;
-        input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
-
-        Element el = new Element();
-        el.embeddedPDV = input;
-        EmbeddedPDV output = el.embeddedPDV;
-        assert(output.identification.contextNegotiation.presentationContextID == 27L);
-        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
-        assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
     }
 
     @system
@@ -1632,46 +1546,6 @@ class AbstractSyntaxNotation1Element(Element)
         el.characterString = input;
         CharacterString output = el.characterString;
         assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
-        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
-    }
-
-    @system
-    unittest
-    {
-        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
-        id.presentationContextID = 27L;
-
-        CharacterString input = CharacterString();
-        input.identification = id;
-        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
-
-        Element el = new Element();
-        el.type = 0x08u;
-        el.characterString = input;
-        CharacterString output = el.characterString;
-        assert(output.identification.presentationContextID == 27L);
-        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
-    }
-
-    @system
-    unittest
-    {
-        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
-        cn.presentationContextID = 27L;
-        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
-
-        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
-        id.contextNegotiation = cn;
-
-        CharacterString input = CharacterString();
-        input.identification = id;
-        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
-
-        Element el = new Element();
-        el.characterString = input;
-        CharacterString output = el.characterString;
-        assert(output.identification.contextNegotiation.presentationContextID == 27L);
-        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
         assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
     }
 

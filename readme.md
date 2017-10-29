@@ -80,9 +80,11 @@ and reviewed for security and performance.
 Pre-alpha development was completed on October 26th, 2017. 
 Version 1.0.0-alpha development will consist entirely of creating these codecs:
 
-- [ ] Fixes
-  - [ ] Incorrect encoding / decoding of `EmbeddedPDV` (Should not include `data-value-descriptor`)
+- [x] Fixes
+  - [x] Incorrect encoding / decoding of `EmbeddedPDV` (Should not include `data-value-descriptor`)
+  - [ ] Should `identification` be constructed?
 - [ ] Distinguished Encoding Rules (DER)
+  - [ ] Ensure that context-switching types require elements in the specified order.
 - [x] Basic Encoding Rules (BER)
 - [ ] Canonical Encoding Rules (CER)
 - [ ] Documentation
