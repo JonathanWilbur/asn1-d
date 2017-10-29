@@ -112,7 +112,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         "library. For more information on ASN.1's data types in general, see " ~
         "the International Telecommunications Union's X.680 specification, " ~
         "which can be found at: " ~
-        "https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf." ~
+        "https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf. " ~
         "For more information on how those data types are supposed to be " ~
         "encoded using Basic Encoding Rules, Canonical Encoding Rules, or " ~
         "Distinguished Encoding Rules, see the International " ~

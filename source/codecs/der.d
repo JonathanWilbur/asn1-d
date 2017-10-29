@@ -104,7 +104,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         "library. For more information on ASN.1's data types in general, see " ~
         "the International Telecommunications Union's X.680 specification, " ~
         "which can be found at: " ~
-        "https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf." ~
+        "https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf. " ~
         "For more information on how those data types are supposed to be " ~
         "encoded using Distinguished Encoding Rules, Canonical Encoding Rules, or " ~
         "Distinguished Encoding Rules, see the International " ~
@@ -952,6 +952,26 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         dataValue.octetString = value.dataValue;
 
         this.sequence = [ identification, dataValueDescriptor, dataValue ];
+    }
+
+    /*
+        Since a DER-encoded EXTERNAL can only use the syntax field for
+        the CHOICE of identification, this unit test ensures that an
+        exception if thrown if an alternative identification is supplied.
+    */
+    @system
+    unittest
+    {
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.presentationContextID = 27L;
+
+        External input = External();
+        input.identification = id;
+        input.dataValueDescriptor = "external";
+        input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
+
+        DERElement el = new DERElement();
+        assertThrown!ASN1ValueInvalidException(el.external = input);
     }
 
     /* REVIEW:
@@ -3195,6 +3215,35 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         this.sequence = [ identification, stringValue ];
     }
 
+    /* NOTE:
+        This unit test had to be moved out of ASN1Element because DER and CER
+        do not support encoding of context-negotiation in CharacterString.
+
+        This unit test ensures that, if you attempt to create a CharacterString
+        with context-negotiation as the CHOICE of identification, the 
+        encoded CharacterString's identification defaults to fixed.
+    */
+    @system
+    unittest
+    {
+        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
+        cn.presentationContextID = 27L;
+        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
+
+        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
+        id.contextNegotiation = cn;
+
+        CharacterString input = CharacterString();
+        input.identification = id;
+        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
+
+        DERElement el = new DERElement();
+        el.characterString = input;
+        CharacterString output = el.characterString;
+        assert(output.identification.fixed == true);
+        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+    }
+
     /**
         Decodes a wstring of UTF-16 characters.
 
@@ -3366,22 +3415,13 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             }
             else // Indefinite
             {   
-                size_t indexOfEndOfContent = 0u;
-                for (size_t i = 2u; i < bytes.length-1; i++)
-                {
-                    if ((bytes[i] == 0x00u) && (bytes[i+1] == 0x00))
-                    {
-                        indexOfEndOfContent = i;
-                        break;
-                    }
-                }
-
-                if (indexOfEndOfContent == 0u)
-                    throw new ASN1ValueTooSmallException
-                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded DERElement.");
-
-                this.value = bytes[2 .. indexOfEndOfContent];
-                bytes = bytes[indexOfEndOfContent+2u .. $];
+                throw new ASN1InvalidLengthException
+                (
+                    "This exception was thrown because an invalid length tag " ~
+                    "was encountered. Distinguished Encoding Rules (DER) do not " ~
+                    "permit indefinite-length encoded data. Are you sure you are " ~
+                    "using the correct codec?"
+                );
             }
         }
         else // Definite Short
@@ -3489,22 +3529,13 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             }
             else // Indefinite
             {   
-                size_t indexOfEndOfContent = bytesRead;
-                for (size_t i = bytesRead+2u; i < bytes.length-1; i++)
-                {
-                    if ((bytes[i] == 0x00u) && (bytes[i+1] == 0x00))
-                    {
-                        indexOfEndOfContent = i;
-                        break;
-                    }
-                }
-
-                if (indexOfEndOfContent == 0u)
-                    throw new ASN1ValueTooSmallException
-                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded DERElement.");
-
-                this.value = bytes[bytesRead+2u .. indexOfEndOfContent];
-                bytesRead = (indexOfEndOfContent + 2u); // +2 for the EOC octets
+                throw new ASN1InvalidLengthException
+                (
+                    "This exception was thrown because an invalid length tag " ~
+                    "was encountered. Distinguished Encoding Rules (DER) do not " ~
+                    "permit indefinite-length encoded data. Are you sure you are " ~
+                    "using the correct codec?"
+                );
             }
         }
         else // Definite Short
@@ -3801,7 +3832,7 @@ unittest
     assert(result[2].utf8String[$-2] == '!');
 }
 
-// Test of indefinite-length encoding
+// Test that indefinite-length encoding throws an exception.
 @system
 unittest
 {
@@ -3823,23 +3854,8 @@ unittest
     ];
 
     data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
-
-    DERElement[] result;
+    
     size_t i = 0u;
-    while (i < data.length)
-        result ~= new DERElement(i, data);
-        
-    assert(result.length == 3);
-    assert(result[0].utf8String[0 .. 5] == "AMREN");
-    assert(result[1].utf8String[6 .. 14] == "BORTHERS");
-    assert(result[2].utf8String[$-2] == '!');
-
-    result = [];
-    while (data.length > 0)
-        result ~= new DERElement(data);
-
-    assert(result.length == 3);
-    assert(result[0].utf8String[0 .. 5] == "AMREN");
-    assert(result[1].utf8String[6 .. 14] == "BORTHERS");
-    assert(result[2].utf8String[$-2] == '!');
+    assertThrown!ASN1InvalidLengthException(new DERElement(i, data));
+    assertThrown!ASN1InvalidLengthException(new DERElement(data));
 }
