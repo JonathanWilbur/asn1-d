@@ -48,6 +48,11 @@ version (unittest)
 
 public import std.array : appender, Appender;
 
+// Check fundamental assumptions of this library.
+static assert(char.sizeof == 1u);
+static assert(wchar.sizeof == 2u);
+static assert(dchar.sizeof == 4u);
+
 ///
 public alias ASN1Exception = AbstractSyntaxNotation1Exception;
 /// A Generic Exception from which all other ASN.1 Exceptions will inherit.

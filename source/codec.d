@@ -1054,6 +1054,8 @@ class AbstractSyntaxNotation1Element(Element)
     unittest
     {
         Element el = new Element();
+        el.utf8String = "";
+        assert(el.utf8String == "");
         el.utf8String = "henlo borthers";
         assert(el.utf8String == "henlo borthers");
 
@@ -1157,12 +1159,12 @@ class AbstractSyntaxNotation1Element(Element)
     unittest
     {
         Element el = new Element();
+        el.numericString = "";
+        assert(el.numericString == "");
         el.numericString = "1234567890";
         assert(el.numericString == "1234567890");
         el.numericString = " ";
         assert(el.numericString == " ");
-        el.numericString = "";
-        assert(el.numericString == "");
         assertThrown!ASN1ValueInvalidException(el.numericString = "hey hey");
         assertThrown!ASN1ValueInvalidException(el.numericString = "12345676789A");
 
@@ -1190,12 +1192,12 @@ class AbstractSyntaxNotation1Element(Element)
     unittest
     {
         Element el = new Element();
+        el.printableString = "";
+        assert(el.printableString == "");
         el.printableString = "1234567890 asdfjkl";
         assert(el.printableString == "1234567890 asdfjkl");
         el.printableString = " ";
         assert(el.printableString == " ");
-        el.printableString = "";
-        assert(el.printableString == "");
         assertThrown!ASN1ValueInvalidException(el.printableString = "\t");
         assertThrown!ASN1ValueInvalidException(el.printableString = "\n");
         assertThrown!ASN1ValueInvalidException(el.printableString = "\0");
@@ -1222,6 +1224,8 @@ class AbstractSyntaxNotation1Element(Element)
     unittest
     {
         Element el = new Element();
+        el.teletexString = [];
+        assert(el.teletexString == []);
         el.teletexString = [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ];
         assert(el.teletexString == [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ]);
 
@@ -1239,6 +1243,8 @@ class AbstractSyntaxNotation1Element(Element)
     unittest
     {
         Element el = new Element();
+        el.videotexString = [];
+        assert(el.videotexString == []);
         el.videotexString = [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ];
         assert(el.videotexString == [ 0x01u, 0x03u, 0x05u, 0x07u, 0x09u ]);
 
@@ -1260,6 +1266,8 @@ class AbstractSyntaxNotation1Element(Element)
     unittest
     {
         Element el = new Element();
+        el.ia5String = "";
+        assert(el.ia5String == "");
         el.ia5String = "Nitro dubs & T-Rix";
         assert(el.ia5String == "Nitro dubs & T-Rix");
         assertThrown!ASN1ValueInvalidException(el.ia5String = "Nitro dubs \xD7 T-Rix");
@@ -1346,12 +1354,12 @@ class AbstractSyntaxNotation1Element(Element)
     unittest
     {
         Element el = new Element();
+        el.graphicString = "";
+        assert(el.graphicString == "");
         el.graphicString = "Nitro dubs & T-Rix";
         assert(el.graphicString == "Nitro dubs & T-Rix");
         el.graphicString = " ";
         assert(el.graphicString == " ");
-        el.graphicString = "";
-        assert(el.graphicString == "");
         assertThrown!ASN1ValueInvalidException(el.graphicString = "\xD7");
         assertThrown!ASN1ValueInvalidException(el.graphicString = "\t");
         assertThrown!ASN1ValueInvalidException(el.graphicString = "\r");
@@ -1387,12 +1395,12 @@ class AbstractSyntaxNotation1Element(Element)
     unittest
     {
         Element el = new Element();
+        el.visibleString = "";
+        assert(el.visibleString == "");
         el.visibleString = "hey hey";
         assert(el.visibleString == "hey hey");
         el.visibleString = " ";
         assert(el.visibleString == " ");
-        el.visibleString = "";
-        assert(el.visibleString == "");
         assertThrown!ASN1ValueInvalidException(el.visibleString = "\xD7");
         assertThrown!ASN1ValueInvalidException(el.visibleString = "\t");
         assertThrown!ASN1ValueInvalidException(el.visibleString = "\r");
@@ -1420,6 +1428,8 @@ class AbstractSyntaxNotation1Element(Element)
     unittest
     {
         Element el = new Element();
+        el.generalString = "";
+        assert(el.generalString == "");
         el.generalString = "foin-ass sweatpants from BUCCI \0\n\t\b\v\r\f";
         assert(el.generalString == "foin-ass sweatpants from BUCCI \0\n\t\b\v\r\f");
         assertThrown!ASN1ValueInvalidException(el.generalString = "\xF5");
@@ -1440,6 +1450,8 @@ class AbstractSyntaxNotation1Element(Element)
     unittest
     {
         Element el = new Element();
+        el.universalString = ""d;
+        assert(el.universalString == ""d);
         el.universalString = "abcd"d;
         assert(el.universalString == "abcd"d);
 
@@ -1600,6 +1612,8 @@ class AbstractSyntaxNotation1Element(Element)
     unittest
     {
         Element el = new Element();
+        el.bmpString = ""w;
+        assert(el.bmpString == ""w);
         el.bmpString = "abcd"w;
         assert(el.bmpString == "abcd"w);
 

@@ -82,15 +82,15 @@ Version 1.0.0-alpha development will consist entirely of creating these codecs:
 
 - [x] Fixes
   - [x] Incorrect encoding / decoding of `EmbeddedPDV` (Should not include `data-value-descriptor`)
-  - [ ] Should `identification` be constructed?
-  - [ ] Add `else version` instead of two back-to-back `version`s for `LittleEndian` and `BigEndian`
-  - [ ] Make `toBytes()` the return value for `opCast(ubyte[])` instead of duplicating code.
+  - [x] Make `context-negotiation` and `syntaxes` constructed
+  - [x] Add `else version` instead of two back-to-back `version`s for `LittleEndian` and `BigEndian`
+  - [x] Make `toBytes()` the return value for `opCast(ubyte[])` instead of duplicating code.
   - [ ] Test Definite Long encoding when the length is encoded on more than one byte.
-  - [ ] ~~Contracts~~ Static assertions for `sizeof` `char`, `wchar`, and `dchar`. (Contracts would be duplicated a lot.)
-  - [ ] "The offending character is ?" sometimes screws up terminal output...
-  - [ ] Checks for % 4 or % 2 for `UniversalString` and `BMPString` only occur in `LittleEndian` builds
-  - [ ] Test all zero-length strings
-  - [ ] Ensure all one-byte values cannot decode.
+  - [x] ~~Contracts~~ Static assertions for `sizeof` `char`, `wchar`, and `dchar`. (Contracts would be duplicated a lot.)
+  - [ ] CER codec should throw exception if non-constructed elements large than 1000 bytes are encountered.
+  - [x] "The offending character is ?" sometimes screws up terminal output...
+  - [x] Checks for % 4 or % 2 for `UniversalString` and `BMPString` only occur in `LittleEndian` builds
+  - [x] Test all zero-length strings
 - [x] Distinguished Encoding Rules (DER)
   - [x] Ensure that context-switching types require elements in the specified order.
 - [x] Basic Encoding Rules (BER)

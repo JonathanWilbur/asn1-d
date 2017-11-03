@@ -342,12 +342,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
         while (value.length < T.sizeof)
             value = (paddingByte ~ value);
-
-        version (LittleEndian)
-        {
-            reverse(value);
-        }
-
+        version (LittleEndian) reverse(value);
         assert(value.length == T.sizeof);
         return *cast(T *) value.ptr;
     }
@@ -365,10 +360,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         ubyte[] ub;
         ub.length = T.sizeof;
         *cast(T *)&ub[0] = value;
-        version (LittleEndian)
-        {
-            reverse(ub);
-        }
+        version (LittleEndian) reverse(ub);
     
         /*
             An INTEGER must be encoded on the fewest number of bytes than can
@@ -682,8 +674,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     "This exception was thrown because you tried to decode " ~
                     "an ObjectDescriptor that contained a character that " ~
                     "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E). The offending " ~
-                    "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                    "is outside of the range 0x20 to 0x7E). The encoding of the offending " ~
+                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ notWhatYouMeantText ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
             }
@@ -727,8 +719,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     "This exception was thrown because you tried to decode " ~
                     "an ObjectDescriptor that contained a character that " ~
                     "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E). The offending " ~
-                    "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                    "is outside of the range 0x20 to 0x7E). The encoding of the offending " ~
+                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ notWhatYouMeantText ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
             }
@@ -1129,10 +1121,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                             );
 
                         ubyte[] exponentBytes = this.value[1 .. 3].dup;
-                        version (LittleEndian)
-                        {
-                            reverse(exponentBytes);
-                        }
+                        version (LittleEndian) reverse(exponentBytes);
                         exponent = cast(long) (*cast(short *) exponentBytes.ptr);
 
                         if (this.length - 3u > 8u)
@@ -1632,18 +1621,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         ubyte[] exponentBytes;
         exponentBytes.length = short.sizeof;
         *cast(short *)exponentBytes.ptr = exponent;
-        version (LittleEndian)
-        {
-            reverse(exponentBytes);
-        }
+        version (LittleEndian) reverse(exponentBytes);
         
         ubyte[] significandBytes;
         significandBytes.length = ulong.sizeof;
         *cast(ulong *)significandBytes.ptr = cast(ulong) significand;
-        version (LittleEndian)
-        {
-            reverse(significandBytes);
-        }
+        version (LittleEndian) reverse(significandBytes);
 
         ubyte baseBitMask;
         switch (base)
@@ -1830,10 +1813,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         while (value.length < T.sizeof)
             value = (paddingByte ~ value);
 
-        version (LittleEndian)
-        {
-            reverse(value);
-        }
+        version (LittleEndian) reverse(value);
         return *cast(T *) value.ptr;
     }
 
@@ -1847,10 +1827,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         ubyte[] ub;
         ub.length = T.sizeof;
         *cast(T *)&ub[0] = value;
-        version (LittleEndian)
-        {
-            reverse(ub);
-        }
+        version (LittleEndian) reverse(ub);
         this.value = ub[0 .. $];
     }
 
@@ -1966,7 +1943,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         DERElement identificationElement = new DERElement(dvs[0].value);
         switch (identificationElement.type)
         {
-            case (0x80u): // syntaxes
+            case (0xA0u): // syntaxes
             {
                 ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
                 DERElement[] syns = identificationElement.sequence;
@@ -2092,7 +2069,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             transferSyntax.type = 0x81u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
-            identificationValue.type = 0x80u;
+            identificationValue.type = 0xA0u;
             identificationValue.sequence = [ abstractSyntax, transferSyntax ];
         }
         else if (!(value.identification.syntax.isNull))
@@ -2387,7 +2364,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 (
                     "This exception was thrown because you tried to decode " ~
                     "a NumericString that contained a character that " ~
-                    "is not numeric or space. The offending character is '" ~
+                    "is not numeric or space. The encoding of the offending character is '" ~
                     character ~ "'. " ~ notWhatYouMeantText ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
@@ -2413,7 +2390,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 (
                     "This exception was thrown because you tried to decode " ~
                     "a NumericString that contained a character that " ~
-                    "is not numeric or space. The offending character is '" ~
+                    "is not numeric or space. The encoding of the offending character is '" ~
                     character ~ "'. " ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
@@ -2444,7 +2421,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     "This exception was thrown because you tried to decode " ~
                     "a PrintableString that contained a character that " ~
                     "is not considered 'printable' by the specification. " ~
-                    "The offending character is '" ~ character ~ "'. " ~
+                    "The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
                     "The allowed characters are: " ~ printableStringCharacters ~ " " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
@@ -2475,7 +2452,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     "This exception was thrown because you tried to encode " ~
                     "a PrintableString that contained a character that " ~
                     "is not considered 'printable' by the specification. " ~
-                    "The offending character is '" ~ character ~ "'. " ~
+                    "The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
                     "The allowed characters are: " ~ printableStringCharacters ~ " " ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
@@ -2562,7 +2539,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 (
                     "This exception was thrown because you tried to decode " ~
                     "an IA5String that contained a character that " ~
-                    "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                    "is not ASCII. The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
@@ -2603,7 +2580,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 (
                     "This exception was thrown because you tried to decode " ~
                     "an IA5String that contained a character that " ~
-                    "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                    "is not ASCII. The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
@@ -2761,8 +2738,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     "This exception was thrown because you tried to decode " ~
                     "a GraphicString that contained a character that " ~
                     "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E). The offending " ~
-                    "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                    "is outside of the range 0x20 to 0x7E). The encoding of the offending " ~
+                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ notWhatYouMeantText ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
@@ -2798,8 +2775,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     "This exception was thrown because you tried to encode " ~
                     "a GraphicString that contained a character that " ~
                     "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E). The offending " ~
-                    "character is '" ~ character ~ "'. " ~ 
+                    "is outside of the range 0x20 to 0x7E). The encoding of the offending " ~
+                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ 
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
@@ -2828,8 +2805,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     "This exception was thrown because you tried to decode " ~
                     "a VisibleString that contained a character that " ~
                     "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E) or space. The offending " ~
-                    "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                    "is outside of the range 0x20 to 0x7E) or space. The encoding of the offending " ~
+                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ notWhatYouMeantText ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
@@ -2856,8 +2833,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     "This exception was thrown because you tried to decode " ~
                     "a VisibleString that contained a character that " ~
                     "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E) or space. The offending " ~
-                    "character is '" ~ character ~ "'. " ~ 
+                    "is outside of the range 0x20 to 0x7E) or space. The encoding of the offending " ~
+                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ 
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
@@ -2889,7 +2866,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 (
                     "This exception was thrown because you tried to decode " ~
                     "an GeneralString that contained a character that " ~
-                    "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                    "is not ASCII. The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
@@ -2920,7 +2897,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 (
                     "This exception was thrown because you tried to decode " ~
                     "an GeneralString that contained a character that " ~
-                    "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                    "is not ASCII. The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
@@ -2938,22 +2915,23 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     override public @property @system
     dstring universalString() const
     {
+        if (this.value.length == 0u) return ""d;
+        if (this.value.length % 4u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you tried to decode " ~
+                "a UniversalString that contained a number of bytes that " ~
+                "is not divisible by four. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
         version (BigEndian)
         {
             return cast(dstring) this.value;
         }
         else version (LittleEndian)
         {
-            if (this.value.length % 4u)
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "a UniversalString that contained a number of bytes that " ~
-                    "is not divisible by four. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                    debugInformationText ~ reportBugsText
-                );
-
             dstring ret;
             ptrdiff_t i = 0;
             while (i < this.value.length-3)
@@ -3255,22 +3233,23 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     override public @property @system
     wstring basicMultilingualPlaneString() const
     {
+        if (this.value.length == 0u) return ""w;
+        if (this.value.length % 2u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you tried to decode " ~
+                "a BMPString that contained a number of bytes that " ~
+                "is not divisible by two. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
         version (BigEndian)
         {
             return cast(wstring) this.value;
         }
         else version (LittleEndian)
         {
-            if (this.value.length % 2u)
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "a BMPString that contained a number of bytes that " ~
-                    "is not divisible by two. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                    debugInformationText ~ reportBugsText
-                );
-
             wstring ret;
             ptrdiff_t i = 0;
             while (i < this.value.length-1)
@@ -3529,7 +3508,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
 
         Returns: type tag, length tag, and value, all concatenated as a ubyte array.
     */
-    public @property @system
+    public @property @system nothrow
     ubyte[] toBytes() const
     {
         ubyte[] lengthOctets = [ 0x00u ];
@@ -3573,32 +3552,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     public @system nothrow
     ubyte[] opCast(T = ubyte[])()
     {
-        ubyte[] lengthOctets = [ 0x00u ];
-        if (this.length < 127u)
-        {
-            lengthOctets = [ cast(ubyte) this.length ];    
-        }
-        else
-        {
-            ulong length = cast(ulong) this.value.length;
-            version (BigEndian)
-            {
-                lengthOctets = [ cast(ubyte) 0x88u ] ~ cast(ubyte[]) *cast(ubyte[8] *) &length;
-            }
-            else version (LittleEndian)
-            {
-                // REVIEW: You could use better variable names here.
-                ubyte[] lengthBytes = cast(ubyte[]) *cast(ubyte[8] *) &length;
-                reverse(lengthBytes);
-                lengthOctets = [ cast(ubyte) 0x88u ] ~ lengthBytes;
-            }
-            else
-            {
-                static assert(0, "Could not determine endianness. Cannot compile.");
-            }
-        }
-
-        return ([ this.type ] ~ lengthOctets ~ this.value);
+        return this.toBytes();
     }
 
 }
