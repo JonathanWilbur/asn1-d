@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [1.0.0-alpha.rc1](http://semver.org/)
+* Version: [1.0.0-alpha.2](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -83,10 +83,19 @@ Version 1.0.0-alpha development will consist entirely of creating these codecs:
 - [x] Fixes
   - [x] Incorrect encoding / decoding of `EmbeddedPDV` (Should not include `data-value-descriptor`)
   - [ ] Should `identification` be constructed?
-- [ ] Distinguished Encoding Rules (DER)
-  - [ ] Ensure that context-switching types require elements in the specified order.
+  - [ ] Add `else version` instead of two back-to-back `version`s for `LittleEndian` and `BigEndian`
+  - [ ] Make `toBytes()` the return value for `opCast(ubyte[])` instead of duplicating code.
+  - [ ] Test Definite Long encoding when the length is encoded on more than one byte.
+  - [ ] ~~Contracts~~ Static assertions for `sizeof` `char`, `wchar`, and `dchar`. (Contracts would be duplicated a lot.)
+  - [ ] "The offending character is ?" sometimes screws up terminal output...
+  - [ ] Checks for % 4 or % 2 for `UniversalString` and `BMPString` only occur in `LittleEndian` builds
+  - [ ] Test all zero-length strings
+  - [ ] Ensure all one-byte values cannot decode.
+- [x] Distinguished Encoding Rules (DER)
+  - [x] Ensure that context-switching types require elements in the specified order.
 - [x] Basic Encoding Rules (BER)
-- [ ] Canonical Encoding Rules (CER)
+- [x] Canonical Encoding Rules (CER)
+- [ ] Mutators for `primitive`, `constructed`, `applicationSpecific`, etc.
 - [ ] Documentation
   - [ ] Use
   - [ ] Structure

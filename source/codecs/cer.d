@@ -1,25 +1,17 @@
 /**
-    Basic Encoding Rules (BER) is a standard for encoding ASN.1 data. It is by
-    far the most common standard for doing so, being used in LDAP, TLS, SNMP, 
-    RDP, and other protocols. Like Distinguished Encoding Rules (DER), 
-    Canonical Encoding Rules (CER), and Packed Encoding Rules (PER), Basic
-    Encoding Rules is a specification created by the 
+    Canonical Encoding Rules (CER) is a standard for encoding ASN.1 data.
+    CER is often used for cryptgraphically-signed data, such as X.509
+    certificates, because CER's defining feature is that there is only one way
+    to encode each data type, which means that two encodings of the same data
+    could not have different cryptographic signatures. For this reason, CER
+    is generally regarded as the most secure encoding standard for ASN.1.
+    Like Basic Encoding Rules (BER), Canonical Encoding Rules (CER), and 
+    Packed Encoding Rules (PER), Canonical Encoding Rules is a 
+    specification created by the 
     $(LINK2 http://www.itu.int/en/pages/default.aspx, 
         International Telecommunications Union),
     and specified in 
     $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
-    
-    BER is generally regarded as the most flexible of the encoding schemes, 
-    because all values can be encoded in a multitude of ways. This flexibility
-    might be convenient for developers who use a BER Library, but creating
-    a BER library in the first place is a nightmare, because of its flexibility.
-    I personally suspect that the complexity of BER may make its implementation
-    inclined to security vulnerabilities, so I would not use it if you have a
-    choice in the matter. Also, the ability to represent values in several 
-    different ways is actually a security problem when data has to be guarded 
-    against tampering with a cryptographic signature. (Basically, it makes it 
-    a lot easier to find a tampered payload that has the identical signature 
-    as the genuine payload.)
 
     Author: 
         $(LINK2 http://jonathan.wilbur.space, Jonathan M. Wilbur) 
@@ -34,16 +26,16 @@
         $(LINK2 https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf, ASN.1 By Simple Words)
         $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems)
 */
-module codecs.ber;
+module codecs.cer;
 public import codec;
 public import types.identification;
 
 ///
-public alias BERElement = BasicEncodingRulesElement;
+public alias CERElement = CanonicalEncodingRulesElement;
 /**
-    The unit of encoding and decoding for Basic Encoding Rules BER.
+    The unit of encoding and decoding for Canonical Encoding Rules CER.
     
-    There are three parts to an encoded BER Value:
+    There are three parts to an encoded CER Value:
 
     $(UL
         $(LI A Type Tag, which specifies what data type is encoded)
@@ -61,22 +53,22 @@ public alias BERElement = BasicEncodingRulesElement;
     As an example, this is what encoding a simple INTEGER looks like:
 
     ---
-    BERElement bv = new BERElement();
-    bv.type = 0x02u; // "2" means this is an INTEGER
-    bv.integer = 1433; // Now the data is encoded.
-    transmit(cast(ubyte[]) bv); // transmit() is a made-up function.
+    CERElement cv = new CERElement();
+    cv.type = 0x02u; // "2" means this is an INTEGER
+    cv.integer = 1433; // Now the data is encoded.
+    transmit(cast(ubyte[]) cv); // transmit() is a made-up function.
     ---
 
     And this is what decoding looks like:
 
     ---
     ubyte[] data = receive(); // receive() is a made-up function.
-    BERElement bv2 = new BERElement(data);
+    CERElement cv2 = new CERElement(data);
 
     long x;
-    if (bv.type == 0x02u) // it is an INTEGER
+    if (cv.type == 0x02u) // it is an INTEGER
     {
-        x = bv.integer;
+        x = cv.integer;
     }
     // Now x is 1433!
     ---
@@ -91,7 +83,7 @@ public alias BERElement = BasicEncodingRulesElement;
     https://issues.dlang.org/show_bug.cgi?id=17909
 */
 public
-class BasicEncodingRulesElement : ASN1Element!BERElement
+class CanonicalEncodingRulesElement : ASN1Element!CERElement
 {
     // Constants used to save CPU cycles
     private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()
@@ -114,8 +106,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         "which can be found at: " ~
         "https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf. " ~
         "For more information on how those data types are supposed to be " ~
-        "encoded using Basic Encoding Rules, Canonical Encoding Rules, or " ~
-        "Distinguished Encoding Rules, see the International " ~
+        "encoded using Canonical Encoding Rules, Canonical Encoding Rules, or " ~
+        "Canonical Encoding Rules, see the International " ~
         "Telecommunications Union's X.690 specification, which can be found " ~
         "at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf. ";
     immutable string debugInformationText =
@@ -149,46 +141,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     */
     public LengthEncodingPreference lengthEncodingPreference = 
         LengthEncodingPreference.definite;
-
-    /**
-        Whether the base 10 / character-encoded representation of a REAL
-        should prepend a plus sign if the value is positive.
-    */
-    static public bool base10RealShouldShowPlusSignIfPositive = true;
-
-    /**
-        Whether a comma or a period is used to separate the whole and
-        fractional components of the base 10 / character-encoded representation
-        of a REAL.
-    */
-    static public ASN1Base10RealDecimalSeparator base10RealDecimalSeparator = 
-        ASN1Base10RealDecimalSeparator.period;
-
-    /**
-        Whether a capital or lowercase E is used to separate the significand
-        from the exponent in the base 10 / character-encoded representation
-        of a REAL.
-    */
-    static public ASN1Base10RealExponentCharacter base10RealExponentCharacter = 
-        ASN1Base10RealExponentCharacter.uppercaseE;
-
-    /**
-        The standardized string representations of floating point numbers, as 
-        specified in $(LINK2 https://www.iso.org/standard/12285.html, ISO 6093).
-
-        $(TABLE
-            $(TR $(TH Representation) $(TH Description) $(TH Examples))
-            $(TR $(TD NR1) $(TD Implicit decimal point) $(TD "3", "-1", "+1000"))
-            $(TR $(TD NR2) $(TD Explicit decimal) $(TD "3.0", "-1.3", "-.3"))
-            $(TR $(TD NR3) $(TD Explicit exponent) $(TD "3.0E1", "123E+100"))
-        )
-
-        Citation:
-            Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between 
-            Heterogeneous Systems, Morgan Kaufmann, 2001, p. 143.
-    */
-    static public ASN1Base10RealNumericalRepresentation base10RealNumericalRepresentation = 
-        ASN1Base10RealNumericalRepresentation.nr3;
 
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
     static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
@@ -274,24 +226,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /// The octets of the encoded value.
     public ubyte[] value;
 
-    /*
-        Returns true if the value octets contain two consecutive 0x00u bytes.
-
-        The intent of this is to be used for indefinite-length encoding, which
-        cannot contain two consecutive null octets as the value.
-    */
-    private @property
-    bool valueContainsDoubleNull()
-    {
-        if (this.value.length < 2u) return false;
-        for (size_t i = 1; i < this.value.length; i++)
-        {
-            if (this.value[i] == 0x00u && this.value[i-1] == 0x00u)
-                return true;
-        }
-        return false;
-    }
-
     /**
         Decodes a boolean.
         
@@ -302,6 +236,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Throws:
             ASN1ValueSizeException = if the encoded value is anything other
                 than exactly 1 byte in size.
+            ASN1ValueInvalidException = if the encoded byte is not 0xFF or 0x00
     */
     override public @property @safe
     bool boolean() const
@@ -309,7 +244,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         if (this.value.length != 1u)
             throw new ASN1ValueSizeException
             (
-                "In Basic Encoding Rules, a BOOLEAN must be encoded on exactly " ~
+                "In Canonical Encoding Rules, a BOOLEAN must be encoded on exactly " ~
                 "one byte (in addition to the type and length bytes, of " ~
                 "course). This exception was thrown because you attempted to " ~
                 "decode a BOOLEAN from an element that had either zero or more " ~
@@ -317,7 +252,25 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 forMoreInformationText ~ debugInformationText ~ reportBugsText
             );
 
-        return (this.value[0] ? true : false);
+        if (this.value[0] == 0xFFu)
+        {
+            return true;
+        }
+        else if (this.value[0] == 0x00u)
+        {
+            return false;
+        }
+        else
+        {
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode a BOOLEAN " ~
+                "that was encoded on a byte that was not 0xFF or 0x00 using the CER " ~
+                "codec. Any encoding of a boolean other than 0xFF (true) or 0x00 " ~
+                "(false) is restricted by the CER codec. " ~ notWhatYouMeantText ~
+                forMoreInformationText ~ debugInformationText ~ reportBugsText
+            );
+        }
     }
 
     /**
@@ -336,17 +289,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     @safe
     unittest
     {
-        BERElement bv = new BERElement();
-        bv.value = [ 0x01u ];
-        assert(bv.boolean == true);
-        bv.value = [ 0xFFu ];
-        assert(bv.boolean == true);
-        bv.value = [ 0x00u ];
-        assert(bv.boolean == false);
-        bv.value = [ 0x01u, 0x00u ];
-        assertThrown!ASN1ValueSizeException(bv.boolean);
-        bv.value = [];
-        assertThrown!ASN1ValueSizeException(bv.boolean);
+        CERElement cv = new CERElement();
+        cv.value = [ 0xFFu ];
+        assert(cv.boolean == true);
+        cv.value = [ 0x00u ];
+        assert(cv.boolean == false);
+        cv.value = [ 0x01u, 0x00u ];
+        assertThrown!ASN1ValueSizeException(cv.boolean);
+        cv.value = [];
+        assertThrown!ASN1ValueSizeException(cv.boolean);
+        cv.value = [ 0x01u ];
+        assertThrown!ASN1ValueInvalidException(cv.boolean);
     }
 
     /**
@@ -380,8 +333,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 debugInformationText ~ reportBugsText
             );
 
+        // REVIEW: Does this need to apply to BER as well?
         /* NOTE:
-            Because the BER INTEGER is stored in two's complement form, you 
+            Because the CER INTEGER is stored in two's complement form, you 
             can't just apppend 0x00u to the big end of it until it is as long
             as T in bytes, then cast to T. Instead, you have to first determine
             if the encoded integer is negative or positive. If it is negative,
@@ -391,7 +345,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
             The line immediately below this determines whether the padding byte
             should be 0xFF or 0x00 based on the most significant bit of the 
-            most significant byte (which, since BER encodes big-endian, will
+            most significant byte (which, since CER encodes big-endian, will
             always be the first byte). If set (1), the number is negative, and
             hence, the padding byte should be 0xFF. If not, it is positive,
             and the padding byte should be 0x00.
@@ -426,99 +380,265 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             reverse(ub);
         }
-        this.value = ub[0 .. $];
+    
+        /*
+            An INTEGER must be encoded on the fewest number of bytes than can
+            encode it. The loops below identify how many bytes can be 
+            truncated from the start of the INTEGER, with one loop for positive
+            and another loop for negative numbers. 
+        */
+        ptrdiff_t startOfNonPadding = 0;
+        if (value >= 0)
+        {
+            for (ptrdiff_t i = 0; i < ub.length-1; i++)
+            {
+                if (ub[i] == 0x00 && ((ub[i+1] & 0x80) == 0x00)) 
+                    startOfNonPadding++;
+            }
+        }
+        else
+        {
+            for (ptrdiff_t i = 0; i < ub.length-1; i++)
+            {
+                if (ub[i] == 0xFF && ((ub[i+1] & 0x80) == 0x80)) 
+                    startOfNonPadding++;
+            }
+        }
+
+        this.value = ub[startOfNonPadding .. $];
     }
 
     /**
-        Encodes an array of $(D bool)s representing a string of bits.
+        Decodes an array of $(D bool)s representing a string of bits.
 
-        In Basic Encoding Rules, the first byte is an unsigned
+        In Canonical Encoding Rules, the first byte is an unsigned
         integral byte indicating the number of unused bits at the end of
-        the BIT STRING. The unused bits can be anything.
+        the BIT STRING. The unused bits must be zeroed.
 
         Returns: an array of booleans.
         Throws:
             ASN1ValueInvalidException = if the first byte has a value greater
                 than seven.
     */
-    override public @property
+    override public @property @system
     bool[] bitString() const
+    in
     {
-        if (this.value.length == 0u)
-            throw new ASN1ValueTooSmallException
-            (
-                "This exception was thrown because you attempted to decode a " ~
-                "BIT STRING that was encoded on zero bytes. A BIT STRING " ~
-                "requires at least one byte to encode the length. " 
-                ~ notWhatYouMeantText ~ forMoreInformationText ~ 
-                debugInformationText ~ reportBugsText
-            );
-        
-        if (this.value[0] > 0x07u)
-            throw new ASN1ValueInvalidException
-            (
-                "In Basic Encoding Rules, the first byte of the encoded " ~
-                "binary value (after the type and length bytes, of course) " ~ 
-                "is used to indicate how many unused bits there are at the " ~
-                "end of the BIT STRING. Since everything is encoded in bytes " ~
-                "in Basic Encoding Rules, but a BIT STRING may not " ~
-                "necessarily encode a number of bits, divisible by eight " ~
-                "there may be bits at the end of the BIT STRING that will " ~
-                "need to be identified as padding instead of meaningful data." ~
-                "Since a byte is eight bits, the largest number that the " ~
-                "first byte should encode is 7, since, if you have eight " ~
-                "unused bits or more, you may as well truncate an entire " ~
-                "byte from the encoded data. This exception was thrown because " ~
-                "you attempted to decode a BIT STRING whose first byte " ~
-                "had a value greater than seven. The value was: " ~ 
-                text(this.value[0]) ~ ". " ~ notWhatYouMeantText ~ 
-                forMoreInformationText ~ debugInformationText ~ reportBugsText
-            );
-        
-        bool[] ret;
-        for (ptrdiff_t i = 1; i < this.value.length; i++)
+        // If the blank constructor ever stops producing an EOC, 
+        // this method must change.
+        CERElement test = new CERElement();
+        assert(test.type == 0x00u);
+        assert(test.length == 0u);
+    }
+    body
+    {
+        if (this.value.length <= 1000u)
         {
-            ret ~= [
-                (this.value[i] & 0b1000_0000u ? true : false),
-                (this.value[i] & 0b0100_0000u ? true : false),
-                (this.value[i] & 0b0010_0000u ? true : false),
-                (this.value[i] & 0b0001_0000u ? true : false),
-                (this.value[i] & 0b0000_1000u ? true : false),
-                (this.value[i] & 0b0000_0100u ? true : false),
-                (this.value[i] & 0b0000_0010u ? true : false),
-                (this.value[i] & 0b0000_0001u ? true : false)
-            ];
+            if (this.value.length == 0u)
+                throw new ASN1ValueTooSmallException
+                (
+                    "This exception was thrown because you attempted to decode a " ~
+                    "BIT STRING that was encoded on zero bytes. A BIT STRING " ~
+                    "requires at least one byte to encode the length. " 
+                    ~ notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+
+            if (this.value[0] > 0x07u)
+                throw new ASN1ValueInvalidException
+                (
+                    "In Canonical Encoding Rules, the first byte of the encoded " ~
+                    "binary value (after the type and length bytes, of course) " ~ 
+                    "is used to indicate how many unused bits there are at the " ~
+                    "end of the BIT STRING. Since everything is encoded in bytes " ~
+                    "in Canonical Encoding Rules, but a BIT STRING may not " ~
+                    "necessarily encode a number of bits, divisible by eight " ~
+                    "there may be bits at the end of the BIT STRING that will " ~
+                    "need to be identified as padding instead of meaningful data." ~
+                    "Since a byte is eight bits, the largest number that the " ~
+                    "first byte should encode is 7, since, if you have eight " ~
+                    "unused bits or more, you may as well truncate an entire " ~
+                    "byte from the encoded data. This exception was thrown because " ~
+                    "you attempted to decode a BIT STRING whose first byte " ~
+                    "had a value greater than seven. The value was: " ~ 
+                    text(this.value[0]) ~ ". " ~ notWhatYouMeantText ~ 
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
+            
+            bool[] ret;
+            for (ptrdiff_t i = 1; i < this.value.length; i++)
+            {
+                ret ~= [
+                    (this.value[i] & 0b1000_0000u ? true : false),
+                    (this.value[i] & 0b0100_0000u ? true : false),
+                    (this.value[i] & 0b0010_0000u ? true : false),
+                    (this.value[i] & 0b0001_0000u ? true : false),
+                    (this.value[i] & 0b0000_1000u ? true : false),
+                    (this.value[i] & 0b0000_0100u ? true : false),
+                    (this.value[i] & 0b0000_0010u ? true : false),
+                    (this.value[i] & 0b0000_0001u ? true : false)
+                ];
+            }
+            ret.length -= this.value[0];
+            return ret;
         }
-        ret.length -= this.value[0];
-        return ret;
+        else
+        {
+            bool[] ret;
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+            for (size_t p = 0u; p < primitives.length; p++)
+            {
+                if (primitives[p].length == 0u)
+                    throw new ASN1ValueTooSmallException
+                    (
+                        "This exception was thrown because you attempted to decode a " ~
+                        "BIT STRING that was encoded on zero bytes. A BIT STRING " ~
+                        "requires at least one byte to encode the length. " 
+                        ~ notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                if (primitives[p].value[0] > 0x07u)
+                    throw new ASN1ValueInvalidException
+                    (
+                        "In Canonical Encoding Rules, the first byte of the encoded " ~
+                        "binary value (after the type and length bytes, of course) " ~ 
+                        "is used to indicate how many unused bits there are at the " ~
+                        "end of the BIT STRING. Since everything is encoded in bytes " ~
+                        "in Canonical Encoding Rules, but a BIT STRING may not " ~
+                        "necessarily encode a number of bits, divisible by eight " ~
+                        "there may be bits at the end of the BIT STRING that will " ~
+                        "need to be identified as padding instead of meaningful data." ~
+                        "Since a byte is eight bits, the largest number that the " ~
+                        "first byte should encode is 7, since, if you have eight " ~
+                        "unused bits or more, you may as well truncate an entire " ~
+                        "byte from the encoded data. This exception was thrown because " ~
+                        "you attempted to decode a BIT STRING whose first byte " ~
+                        "had a value greater than seven. The value was: " ~ 
+                        text(this.value[0]) ~ ". " ~ notWhatYouMeantText ~ 
+                        forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    );
+                
+                bool[] pret;
+                for (ptrdiff_t i = 1; i < primitives[p].value.length; i++)
+                {
+                    pret ~= [
+                        (primitives[p].value[i] & 0b1000_0000u ? true : false),
+                        (primitives[p].value[i] & 0b0100_0000u ? true : false),
+                        (primitives[p].value[i] & 0b0010_0000u ? true : false),
+                        (primitives[p].value[i] & 0b0001_0000u ? true : false),
+                        (primitives[p].value[i] & 0b0000_1000u ? true : false),
+                        (primitives[p].value[i] & 0b0000_0100u ? true : false),
+                        (primitives[p].value[i] & 0b0000_0010u ? true : false),
+                        (primitives[p].value[i] & 0b0000_0001u ? true : false)
+                    ];
+                }
+                pret.length -= primitives[p].value[0];
+                ret ~= pret;
+            }
+            return ret;
+        }
     }
 
     /**
         Encodes an array of $(D bool)s representing a string of bits.
 
-        In Basic Encoding Rules, the first byte is an unsigned
+        In Canonical Encoding Rules, the first byte is an unsigned
         integral byte indicating the number of unused bits at the end of
-        the BIT STRING. The unused bits can be anything.
+        the BIT STRING. The unused bits must be zeroed.
     */
-    override public @property
+    override public @property @system
     void bitString(bool[] value)
     {
-        if (value == []) // FIXME: Or, if there are no 1-bits
+        ubyte[] ub;
+        ub.length = ((value.length / 8u) + (value.length % 8u ? 1u : 0u));
+        
+        // FIXME: Copy this over to the other codecs. This is way better.
+        for (size_t i = 0u; i < value.length; i++)
         {
-            this.value = [ 0x00u ];
-            return;
+            if (value[i] == false) continue;
+            ub[(i/8u)] |= (0b1000_0000u >> (i % 8u));
         }
-        // REVIEW: I feel like there is a better way to do this...
-        this.value = [ cast(ubyte) (8u - (value.length % 8u)) ];
-        if (this.value[0] == 0x08u) this.value[0] = 0x00u;
 
-        ptrdiff_t i = 0;
-        while (i < value.length)
+        if (ub.length <= 999u)
         {
-            if (!(i % 8u)) this.value ~= 0x00u;
-            this.value[$-1] |= ((value[i] ? 0b1000_0000u : 0b0000_0000u) >> (i % 8u));
-            i++;
+            this.value = [ cast(ubyte) (8u - (value.length % 8u)) ] ~ ub;
+            if (this.value[0] == 0x08u) this.value[0] = 0x00u;
         }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+999u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = [ cast(ubyte) 0u ] ~ ub[i .. i+999u];
+                primitives ~= x;
+                i += 999u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = ([ cast(ubyte) 0u ] ~ ub[i .. $]);
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        bool[] data;
+        data.length = 289u;
+        for (size_t i = 0u; i < data.length; i++)
+        {
+            data[i] = cast(bool) (i % 3);
+        }
+        CERElement el = new CERElement();
+        el.bitString = data;
+        assert(el.bitString == data);
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            bool[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = cast(bool) (i % 3);
+            }
+            CERElement el = new CERElement();
+            el.bitString = data;
+            assert(el.bitString == data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
 
     /**
@@ -526,19 +646,121 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
         Returns: an unsigned byte array.
     */
-    override public @property @safe
+    override public @property @system
     ubyte[] octetString() const
     {
-        return this.value.dup;
+        if (this.value.length <= 1000u)
+        {
+            return this.value.dup;
+        }
+        else
+        {
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "an OCTET STRING encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length OCTET STRING did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually an OCTET STRING, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the OCTET STRING just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+
+            Appender!(ubyte[]) ret = appender!(ubyte[])();
+            foreach (p; primitives)
+            {
+                ret.put(p.value);
+            }            
+            return ret.data;
+        }
     }
 
     /**
         Encodes an OCTET STRING from an unsigned byte array.
     */
-    override public @property @safe
+    override public @property @system
     void octetString(ubyte[] value)
+    in
     {
-        this.value = value;
+        // If the blank constructor ever stops producing an EOC, 
+        // this method must change.
+        CERElement test = new CERElement();
+        assert(test.type == 0x00u);
+        assert(test.length == 0u);
+    }
+    body
+    {
+        if (value.length <= 1000u)
+        {
+            this.value = value;
+        }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+1000u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = value[i .. i+1000u];
+                primitives ~= x;
+                i += 1000u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = value[i .. $];
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            ubyte[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = (i % 9u);
+            }
+            CERElement el = new CERElement();
+            el.octetString = data;
+            assert(el.octetString == data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
 
     /**
@@ -705,22 +927,68 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     string objectDescriptor() const
     {
-        foreach (character; this.value)
-        {
-            if ((!character.isGraphical) && (character != ' '))
+        if (this.value.length <= 1000u)
+        {        
+            foreach (character; this.value)
             {
+                if ((!character.isGraphical) && (character != ' '))
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you tried to decode " ~
+                        "an ObjectDescriptor that contained a character that " ~
+                        "is not graphical (a character whose ASCII encoding " ~
+                        "is outside of the range 0x20 to 0x7E). The offending " ~
+                        "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                        forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    );
+            }
+            return cast(string) this.value;
+        }
+        else
+        {
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
-                    "This exception was thrown because you tried to decode " ~
-                    "an ObjectDescriptor that contained a character that " ~
-                    "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E). The offending " ~
-                    "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    "This exception was thrown because you attempted to decode " ~
+                    "an ObjectDescriptor encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length ObjectDescriptor did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually an ObjectDescriptor, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the ObjectDescriptor just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
                 );
+
+            Appender!(string) ret = appender!(string)();
+            foreach (p; primitives)
+            {
+                foreach (character; p.value)
+                {
+                    if ((!character.isGraphical) && (character != ' '))
+                        throw new ASN1ValueInvalidException
+                        (
+                            "This exception was thrown because you tried to decode " ~
+                            "an ObjectDescriptor that contained a character that " ~
+                            "is not graphical (a character whose ASCII encoding " ~
+                            "is outside of the range 0x20 to 0x7E). The offending " ~
+                            "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                            forMoreInformationText ~ debugInformationText ~ reportBugsText
+                        );
+                }
+                ret.put(cast(string) p.value);
             }
+            return ret.data;
         }
-        return cast(string) this.value;
     }
 
     /**
@@ -753,7 +1021,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         foreach (character; value)
         {
             if ((!character.isGraphical) && (character != ' '))
-            {
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you tried to decode " ~
@@ -763,9 +1030,67 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
-            }
         }
-        this.value = cast(ubyte[]) value;
+        
+        if (value.length <= 1000u)
+        {
+            this.value = cast(ubyte[]) value;
+        }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+1000u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = cast(ubyte[]) value[i .. i+1000u];
+                primitives ~= x;
+                i += 1000u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = cast(ubyte[]) value[i .. $];
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            char[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = ((i % 0x20u) + 0x41u);
+            }
+            CERElement el = new CERElement();
+            el.objectDescriptor = cast(string) data;
+            assert(el.objectDescriptor == cast(string) data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
 
     /**
@@ -808,128 +1133,117 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     External external() const
     {
-        BERElement[] bvs = this.sequence;
-        if (bvs.length < 2 || bvs.length > 3)
+        CERElement[] cvs = this.sequence;
+        if (cvs.length < 2 || cvs.length > 3)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an EXTERNAL that contained too many or too few elements. " ~
-                "An EXTERNAL should have either 2 or 3 elements." ~
+                "An EXTERNAL should have either two or three elements: " ~
+                "identification, an optional data-value-descriptor, and " ~
+                "a data-value, in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         External ext = External();
-
-        foreach (bv; bvs)
+        if (cvs[0].type == 0x80u)
         {
-            switch (bv.type)
+            ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+            CERElement identificationElement = new CERElement(cvs[0].value);
+            /* NOTE:
+                'syntax' is the only permitted CHOICE for EXTERNAL's identification, 
+                when using Canonical Encoding Rules (CER).
+            */
+            if (identificationElement.type == 0x80u) 
             {
-                case (0x80u): // identification
-                {
-                    BERElement identificationBV = new BERElement(bv.value);
-                    switch(identificationBV.type)
-                    {
-                        case (0x80u): // syntax
-                        {
-                            identification.syntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x81u): // presentation-context-id
-                        {
-                            identification.presentationContextID = identificationBV.integer!long;
-                            break;
-                        }
-                        case (0x82u): // context-negotiation
-                        {
-                            // REVIEW: Should this be split off into a separate function?
-                            ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-                            BERElement[] cns = identificationBV.sequence;
-                            if (cns.length != 2)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an EXTERNAL that had " ~
-                                    "too many elements within the context-" ~
-                                    "negotiation element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-                            
-                            foreach (cn; cns)
-                            {
-                                switch (cn.type)
-                                {
-                                    case (0x80u): // presentation-context-id
-                                    {
-                                        contextNegotiation.presentationContextID = cn.integer!long;
-                                        break;
-                                    }
-                                    case (0x81u): // transfer-syntax
-                                    {
-                                        contextNegotiation.transferSyntax = cn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        (
-                                            "This exception was thrown because " ~
-                                            "you attempted to decode an EXTERNAL " ~
-                                            "that had an undefined context-specific " ~
-                                            "type tag within the context-" ~
-                                            "negotiation element." ~ 
-                                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                                            debugInformationText ~ reportBugsText
-                                        );
-                                    }
-                                }
-                            }
-                            identification.contextNegotiation = contextNegotiation;
-                            break;
-                        }
-                        default:
-                        {
-                            throw new ASN1InvalidIndexException
-                            (
-                                "This exception was thrown because you attempted " ~
-                                "to decode an EXTERNAL whose identification " ~
-                                "CHOICE is not recognized by the specification. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
-                                debugInformationText ~ reportBugsText
-                            );
-                        }
-                    }
-                    ext.identification = identification;
-                    break;
-                }
-                case (0x81u): // data-value-descriptor
-                {
-                    ext.dataValueDescriptor = bv.objectDescriptor;
-                    break;
-                }
-                case (0x82u): // data-value
-                {
-                    ext.dataValue = bv.octetString;
-                    break;
-                }
-                default:
-                {
-                    throw new ASN1InvalidIndexException
-                    (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EXTERNAL that contained an element whose " ~
-                        "context-specific type is not specified by the " ~
-                        "definition of the EXTERNAL data type." ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
-                        debugInformationText ~ reportBugsText
-                    );
-                }
+                identification.syntax = identificationElement.objectIdentifier;
             }
+            else
+            {
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "an EXTERNAL whose CHOICE of identification was something " ~
+                    "other than `syntax`. When using Canonical Encoding " ~
+                    "Rules (CER), `syntax` is the only permitted CHOICE of " ~
+                    "identification. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+            }
+            ext.identification = identification;
         }
-        return ext;
+        else
+        {
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an EXTERNAL whose elements were not exactly in the order " ~
+                "they appear in the specification. Canonical Encoding " ~
+                "Rules (CER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of EXTERNAL, means that identification " ~
+                "must appear first, then data-value. The problem in your case " ~
+                "is that the first encoded element was not identification, as " ~
+                "indicated by a context-specific type tag of 0x80. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+        }
+
+        if (cvs[1].type == 0x81u) // Next tag is the data-value-descriptor
+        {
+            ext.dataValueDescriptor = cvs[1].objectDescriptor;
+        }
+        else if (cvs[1].type == 0x82u) // Next tag is the data-value-descriptor
+        {
+            ext.dataValue = cvs[1].octetString;
+            return ext;
+        }
+        else
+        {
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an EXTERNAL whose elements were not exactly in the order " ~
+                "they appear in the specification, or entirely omitted the " ~
+                " mandatory data-value field, as indicated by a context-" ~
+                "specific type tag of 0x82. Canonical Encoding " ~
+                "Rules (CER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of EXTERNAL, means that identification " ~
+                "must appear first, then the optional data-value descriptor, " ~
+                "then the data-value. The problem in your case " ~
+                "is that the second encoded element was not the data-value-" ~
+                "descriptor or a data-value, as would be indicated by a context-" ~
+                "specific type tag of either 0x81 or 0x82 respectively. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+        }
+
+        if (cvs[2].type == 0x82u)
+        {
+            ext.dataValue = cvs[2].octetString;
+            return ext;
+        }
+        else
+        {
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an EXTERNAL whose last element was not the data-value field, " ~ 
+                "as indicated by a context-specific type tag of 0x82. " ~
+                "Canonical Encoding Rules (CER) specify that the encoded " ~
+                "elements of any constructed type must appear in the order of " ~
+                "their specification, which, in the case of EXTERNAL, means that " ~
+                "identification must appear first, then the optional data-value " ~
+                "descriptor, then the data-value. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+        }
     }
 
     /**
@@ -963,52 +1277,44 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     void external(External value)
     {
-        BERElement identification = new BERElement();
+        CERElement identification = new CERElement();
         identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
-        BERElement identificationValue = new BERElement();
-        if (!(value.identification.syntax.isNull))
+        CERElement identificationValue = new CERElement();
+        if (value.identification.syntax.isNull)
         {
-            identificationValue.type = 0x80u;
-            identificationValue.objectIdentifier = value.identification.syntax;
-        }
-        else if (!(value.identification.contextNegotiation.isNull))
-        {
-            BERElement presentationContextID = new BERElement();
-            presentationContextID.type = 0x80u;
-            presentationContextID.integer = value.identification.contextNegotiation.presentationContextID;
-            
-            BERElement transferSyntax = new BERElement();
-            transferSyntax.type = 0x81u;
-            transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
-            
-            identificationValue.type = 0x82u;
-            identificationValue.sequence = [ presentationContextID, transferSyntax ];
-        }
-        else // it must be the presentationContextID INTEGER
-        {
-            identificationValue.type = 0x81u;
-            identificationValue.integer!long = value.identification.presentationContextID;
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to encode " ~
+                "an EXTERNAL that used a CHOICE of identification other than " ~
+                "syntax. Canonical Encoding Rules (CER) requires that " ~
+                "EXTERNALs may only use `syntax` as their CHOICE of " ~
+                "identification. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
         }
 
+        identificationValue.type = 0x80u;
+        identificationValue.objectIdentifier = value.identification.syntax;
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
         identification.value = cast(ubyte[]) identificationValue;
 
-        BERElement dataValueDescriptor = new BERElement();
+        CERElement dataValueDescriptor = new CERElement();
         dataValueDescriptor.type = 0x81u; // Primitive ObjectDescriptor
         dataValueDescriptor.objectDescriptor = value.dataValueDescriptor;
 
-        BERElement dataValue = new BERElement();
+        CERElement dataValue = new CERElement();
         dataValue.type = 0x82u;
         dataValue.octetString = value.dataValue;
 
         this.sequence = [ identification, dataValueDescriptor, dataValue ];
     }
 
-    /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished 
-        Encoding Rules (DER) does not permit EXTERNALs to use an identification
-        CHOICE of presentation-context-id or context-negotiation
+    /*
+        Since a CER-encoded EXTERNAL can only use the syntax field for
+        the CHOICE of identification, this unit test ensures that an
+        exception if thrown if an alternative identification is supplied.
     */
     @system
     unittest
@@ -1021,46 +1327,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         input.dataValueDescriptor = "external";
         input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
 
-        BERElement el = new BERElement();
-        el.external = input;
-        External output = el.external;
-        assert(output.identification.presentationContextID == 27L);
-        assert(output.dataValueDescriptor == "external");
-        assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
+        CERElement el = new CERElement();
+        assertThrown!ASN1ValueInvalidException(el.external = input);
     }
 
-    /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished 
-        Encoding Rules (DER) does not permit EXTERNALs to use an identification
-        CHOICE of presentation-context-id or context-negotiation
+    /* REVIEW:
+        I have not seen it confirmed in the specification that you can use
+        base-8 or base-16 for CER-encoded REALs. It seems like that would
+        be a problem, since with base-2, the expectation is that the mantissa 
+        is 0 or odd. I have looked at the Dubuisson book and X.690.
     */
-    @system
-    unittest
-    {
-        ASN1ContextNegotiation cn = ASN1ContextNegotiation();
-        cn.presentationContextID = 27L;
-        cn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 39);
-
-        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
-        id.contextNegotiation = cn;
-
-        External input = External();
-        input.identification = id;
-        input.dataValueDescriptor = "blap";
-        input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
-
-        BERElement el = new BERElement();
-        el.external = input;
-        External output = el.external;
-        assert(output.identification.contextNegotiation.presentationContextID == 27L);
-        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
-        assert(output.dataValueDescriptor == "blap");
-        assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
-
-        // Assert that accessor does not mutate state
-        assert(el.external == el.external);
-    }
-
     /**
         Decodes a float or double. This can never decode directly to a
         real type, because of the way it works.
@@ -1071,7 +1347,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         recommand against encoding or decoding REALs if you do not have
         to; try using INTEGER instead.
 
-        For the BER-encoded REAL, a value of 0x40 means "positive infinity,"
+        For the CER-encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1111,7 +1387,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 are set, which would indicate an invalid base.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1: 
             Communication between Heterogeneous Systems, Morgan Kaufmann, 
             2001, pp. 400–402.
     */
@@ -1150,7 +1426,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
                 immutable string mantissaTooBigExceptionText = 
                     "This exception was thrown because the mantissa encoded by " ~
-                    "a Basic Encoding Rules-encoded REAL could not fit in " ~
+                    "a Canonical Encoding Rules-encoded REAL could not fit in " ~
                     "to a 64-bit signed integer (long). This might indicate that " ~
                     "what you tried to decode was not actually a REAL at all. " ~
                     "For more information, see the ASN.1 library documentation, " ~
@@ -1428,6 +1704,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         }
     }
 
+    /* REVIEW:
+        I have not seen it confirmed in the specification that you can use
+        base-8 or base-16 for CER-encoded REALs. It seems like that would
+        be a problem, since with base-2, the expectation is that the mantissa 
+        is 0 or odd. I have looked at the Dubuisson book and X.690.
+    */
     /**
         Encodes a float or double. This can never decode directly to a
         real type, because of the way it works.
@@ -1438,7 +1720,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         recommand against encoding or decoding REALs if you do not have
         to; try using INTEGER instead.
 
-        For the BER-encoded REAL, a value of 0x40 means "positive infinity,"
+        For the CER-encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1471,7 +1753,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 in an arithmetic overflow of a signed short.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1: 
             Communication between Heterogeneous Systems, Morgan Kaufmann, 
             2001, pp. 400–402.
     */
@@ -1520,77 +1802,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             import std.format : formattedWrite;
             Appender!string writer = appender!string();
 
+            // FIXME: This is not exactly to specification....
             // REVIEW: Change the format strings to have the best precision for those types.
-            switch (this.base10RealNumericalRepresentation)
+            static if (is(T == double))
             {
-                case (ASN1Base10RealNumericalRepresentation.nr1):
-                {
-                    static if (is(T == double))
-                    {
-                        writer.formattedWrite!"%g"(value);
-                    }
-                    static if (is(T == float))
-                    {
-                        writer.formattedWrite!"%g"(value);
-                    }
-                    break;
-                }
-                case (ASN1Base10RealNumericalRepresentation.nr2):
-                {                    
-                    static if (is(T == double))
-                    {
-                        writer.formattedWrite!"%.12f"(value);
-                    }
-                    static if (is(T == float))
-                    {
-                        writer.formattedWrite!"%.6f"(value);
-                    }
-                    break;
-                }
-                case (ASN1Base10RealNumericalRepresentation.nr3):
-                {
-                    switch (this.base10RealExponentCharacter)
-                    {
-                        case (ASN1Base10RealExponentCharacter.lowercaseE):
-                        {
-                            static if (is(T == double))
-                            {
-                                writer.formattedWrite!"%.12e"(value);
-                            }
-                            static if (is(T == float))
-                            {
-                                writer.formattedWrite!"%.6e"(value);
-                            }
-                            break;
-                        }
-                        case (ASN1Base10RealExponentCharacter.uppercaseE):
-                        {
-                            static if (is(T == double))
-                            {
-                                writer.formattedWrite!"%.12E"(value);
-                            }
-                            static if (is(T == float))
-                            {
-                                writer.formattedWrite!"%.6E"(value);
-                            }
-                            break;
-                        }
-                        default:
-                        {
-                            assert(0, "Invalid ASN1Base10RealExponentCharacter state.");
-                        }
-                    }
-                    break;
-                }
-                default:
-                {
-                    assert(0, "Invalid ASN1Base10RealNumericalRepresentation state emerged!");
-                }
+                writer.formattedWrite!"%.12E"(value);
+            }
+            static if (is(T == float))
+            {
+                writer.formattedWrite!"%.6E"(value);
             }
 
             this.value = 
-                cast(ubyte[]) [ (cast(ubyte) 0u | cast(ubyte) this.base10RealNumericalRepresentation) ] ~ 
-                ((this.base10RealShouldShowPlusSignIfPositive && (writer.data[0] != '-')) ? cast(ubyte[]) ['+'] : []) ~
+                cast(ubyte[]) [ (cast(ubyte) 0u | cast(ubyte) ASN1Base10RealNumericalRepresentation.nr3) ] ~ 
                 cast(ubyte[]) writer.data;
             
             return;
@@ -1754,6 +1978,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             exponent++;
         }
 
+        // If the significand is even and we're using Base-2 encoding, make it odd or 0
+        // REVIEW: You might have a precision problem here, since significand is a FP type.
+        if (base == ASN1RealEncodingBase.base2 && !(significand % 2) && significand != 0)
+        {
+            significand /= 2.0;
+            exponent++;
+        }
+
         ubyte[] exponentBytes;
         exponentBytes.length = short.sizeof;
         *cast(short *)exponentBytes.ptr = exponent;
@@ -1808,14 +2040,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     @system
     unittest
     {
-        BERElement.realEncodingBase = ASN1RealEncodingBase.base8;
+        CERElement.realEncodingBase = ASN1RealEncodingBase.base8;
         for (int i = -100; i < 100; i++)
         {
             // Alternating negative and positive floating point numbers exploring extreme values
             immutable float f = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
             immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
-            BERElement elf = new BERElement();
-            BERElement eld = new BERElement();
+            CERElement elf = new CERElement();
+            CERElement eld = new CERElement();
             elf.realType!float = f;
             eld.realType!double = d;
             assert(approxEqual(elf.realType!float, f));
@@ -1823,21 +2055,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             assert(approxEqual(eld.realType!float, d));
             assert(approxEqual(eld.realType!double, d));
         }
-        BERElement.realEncodingBase = ASN1RealEncodingBase.base2;
+        CERElement.realEncodingBase = ASN1RealEncodingBase.base2;
     }
 
     // Tests of Base-16 Encoding
     @system
     unittest
     {
-        BERElement.realEncodingBase = ASN1RealEncodingBase.base16;
+        CERElement.realEncodingBase = ASN1RealEncodingBase.base16;
         for (int i = -10; i < 10; i++)
         {
             // Alternating negative and positive floating point numbers exploring extreme values
             immutable float f = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
             immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
-            BERElement elf = new BERElement();
-            BERElement eld = new BERElement();
+            CERElement elf = new CERElement();
+            CERElement eld = new CERElement();
             elf.realType!float = f;
             eld.realType!double = d;
             assert(approxEqual(elf.realType!float, f));
@@ -1845,224 +2077,69 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             assert(approxEqual(eld.realType!float, d));
             assert(approxEqual(eld.realType!double, d));
         }
-        BERElement.realEncodingBase = ASN1RealEncodingBase.base2;
+        CERElement.realEncodingBase = ASN1RealEncodingBase.base2;
     }
 
-    // Testing Base-10 (Character-Encoded) REALs - NR1
+    // Testing Base-10 (Character-Encoded) REALs
     @system
     unittest
     {
-        BERElement bv = new BERElement();
+        CERElement cv = new CERElement();
         realEncodingBase = ASN1RealEncodingBase.base10;
-        bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr1;
-        bv.base10RealShouldShowPlusSignIfPositive = false;
 
         // Decimal + trailing zeros are not added if not necessary.
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "22");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "22");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-
-        // Plus sign appears before positive numbers.
-        bv.base10RealShouldShowPlusSignIfPositive = true;
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+22");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+22");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
+        cv.realType!float = 22.0;
+        assert(cast(string) (cv.value[1 .. $]) == "2.200000E+01");
+        assert(approxEqual(cv.realType!float, 22.0));
+        assert(approxEqual(cv.realType!double, 22.0));
+        cv.realType!double = 22.0;
+        assert(cast(string) (cv.value[1 .. $]) == "2.200000000000E+01");
+        assert(approxEqual(cv.realType!float, 22.0));
+        assert(approxEqual(cv.realType!double, 22.0));
 
         // Decimal + trailing zeros are added if necessary.
-        bv.realType!float = 22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+22.123");
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
-        bv.realType!double = 22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+22.123");
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
+        cv.realType!float = 22.123;
+        assert(cast(string) (cv.value[1 .. $]) == "2.212300E+01");
+        assert(approxEqual(cv.realType!float, 22.123));
+        assert(approxEqual(cv.realType!double, 22.123));
+        cv.realType!double = 22.123;
+        assert(cast(string) (cv.value[1 .. $]) == "2.212300000000E+01");
+        assert(approxEqual(cv.realType!float, 22.123));
+        assert(approxEqual(cv.realType!double, 22.123));
         
         // Negative numbers are encoded correctly.
-        bv.realType!float = -22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-22.123");
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
-        bv.realType!double = -22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-22.123");
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
+        cv.realType!float = -22.123;
+        assert(cast(string) (cv.value[1 .. $]) == "-2.212300E+01");
+        assert(approxEqual(cv.realType!float, -22.123));
+        assert(approxEqual(cv.realType!double, -22.123));
+        cv.realType!double = -22.123;
+        assert(cast(string) (cv.value[1 .. $]) == "-2.212300000000E+01");
+        assert(approxEqual(cv.realType!float, -22.123));
+        assert(approxEqual(cv.realType!double, -22.123));
 
         // Small positive numbers are encoded correctly.
-        bv.realType!float = 0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+0.123");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
-        bv.realType!double = 0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+0.123");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
+        cv.realType!float = 0.123;     
+        assert(cast(string) (cv.value[1 .. $]) == "1.230000E-01");
+        assert(approxEqual(cv.realType!float, 0.123));
+        assert(approxEqual(cv.realType!double, 0.123));
+        cv.realType!double = 0.123;
+        assert(cast(string) (cv.value[1 .. $]) == "1.230000000000E-01");
+        assert(approxEqual(cv.realType!float, 0.123));
+        assert(approxEqual(cv.realType!double, 0.123));
 
         // Small negative numbers are encoded correctly.
-        bv.realType!float = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-0.123");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
-        bv.realType!double = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-0.123");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
-    }
-
-    // Testing Base-10 (Character-Encoded) REALs - NR2
-    @system
-    unittest
-    {
-        BERElement bv = new BERElement();
-        realEncodingBase = ASN1RealEncodingBase.base10;
-        bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr2;
-        bv.base10RealShouldShowPlusSignIfPositive = false;
-
-        // Decimal + trailing zeros are not added if not necessary.
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "22.000000");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "22.000000000000");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-
-        // Plus sign appears before positive numbers.
-        bv.base10RealShouldShowPlusSignIfPositive = true;
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+22.000000");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+22.000000000000");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-
-        // Decimal + trailing zeros are added if necessary.
-        bv.realType!float = 22.123;
-        // assert(cast(string) (bv.value[1 .. $]) == "+22.123000"); // Precision problem
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
-        bv.realType!double = 22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+22.123000000000");
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
-        
-        // Negative numbers are encoded correctly.
-        bv.realType!float = -22.123;
-        // assert(cast(string) (bv.value[1 .. $]) == "-22.123000"); // Precision problem
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
-        bv.realType!double = -22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-22.123000000000");
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
-
-        // Small positive numbers are encoded correctly.
-        bv.realType!float = 0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+0.123000");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
-        bv.realType!double = 0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+0.123000000000");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
-
-        // Small negative numbers are encoded correctly.
-        bv.realType!float = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-0.123000");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
-        bv.realType!double = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-0.123000000000");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
-    }
-
-    // Testing Base-10 (Character-Encoded) REALs - NR3
-    @system
-    unittest
-    {
-        BERElement bv = new BERElement();
-        realEncodingBase = ASN1RealEncodingBase.base10;
-        bv.base10RealNumericalRepresentation = ASN1Base10RealNumericalRepresentation.nr3;
-        bv.base10RealShouldShowPlusSignIfPositive = false;
-
-        // Decimal + trailing zeros are not added if not necessary.
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "2.200000E+01");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "2.200000000000E+01");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-
-        // Plus sign appears before positive numbers.
-        bv.base10RealShouldShowPlusSignIfPositive = true;
-        bv.realType!float = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+2.200000E+01");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-        bv.realType!double = 22.0;
-        assert(cast(string) (bv.value[1 .. $]) == "+2.200000000000E+01");
-        assert(approxEqual(bv.realType!float, 22.0));
-        assert(approxEqual(bv.realType!double, 22.0));
-
-        // Decimal + trailing zeros are added if necessary.
-        bv.realType!float = 22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+2.212300E+01");
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
-        bv.realType!double = 22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+2.212300000000E+01");
-        assert(approxEqual(bv.realType!float, 22.123));
-        assert(approxEqual(bv.realType!double, 22.123));
-        
-        // Negative numbers are encoded correctly.
-        bv.realType!float = -22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-2.212300E+01");
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
-        bv.realType!double = -22.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-2.212300000000E+01");
-        assert(approxEqual(bv.realType!float, -22.123));
-        assert(approxEqual(bv.realType!double, -22.123));
-
-        // Small positive numbers are encoded correctly.
-        bv.realType!float = 0.123;     
-        assert(cast(string) (bv.value[1 .. $]) == "+1.230000E-01");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
-        bv.realType!double = 0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "+1.230000000000E-01");
-        assert(approxEqual(bv.realType!float, 0.123));
-        assert(approxEqual(bv.realType!double, 0.123));
-
-        // Small negative numbers are encoded correctly.
-        bv.realType!float = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-1.230000E-01");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
-        bv.realType!double = -0.123;
-        assert(cast(string) (bv.value[1 .. $]) == "-1.230000000000E-01");
-        assert(approxEqual(bv.realType!float, -0.123));
-        assert(approxEqual(bv.realType!double, -0.123));
+        cv.realType!float = -0.123;
+        assert(cast(string) (cv.value[1 .. $]) == "-1.230000E-01");
+        assert(approxEqual(cv.realType!float, -0.123));
+        assert(approxEqual(cv.realType!double, -0.123));
+        cv.realType!double = -0.123;
+        assert(cast(string) (cv.value[1 .. $]) == "-1.230000000000E-01");
+        assert(approxEqual(cv.realType!float, -0.123));
+        assert(approxEqual(cv.realType!double, -0.123));
     }
 
     /**
-        Decodes an integer from an ENUMERATED type. In BER, an ENUMERATED
+        Decodes an integer from an ENUMERATED type. In CER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
 
         Returns: any chosen signed integral type
@@ -2091,7 +2168,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             );
 
         /* NOTE:
-            Because the BER ENUMERATED is stored in two's complement form, you 
+            Because the CER ENUMERATED is stored in two's complement form, you 
             can't just apppend 0x00u to the big end of it until it is as long
             as T in bytes, then cast to T. Instead, you have to first determine
             if the encoded integer is negative or positive. If it is negative,
@@ -2101,7 +2178,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
             The line immediately below this determines whether the padding byte
             should be 0xFF or 0x00 based on the most significant bit of the 
-            most significant byte (which, since BER encodes big-endian, will
+            most significant byte (which, since CER encodes big-endian, will
             always be the first byte). If set (1), the number is negative, and
             hence, the padding byte should be 0xFF. If not, it is positive,
             and the padding byte should be 0x00.
@@ -2118,7 +2195,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
 
     /**
-        Encodes an ENUMERATED type from an integer. In BER, an ENUMERATED
+        Encodes an ENUMERATED type from an integer. In CER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
     */
     public @property @system
@@ -2164,6 +2241,23 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 
+        In Canonical Encoding Rules, the identification CHOICE cannot be
+        presentation-context-id, nor context-negotiation. Also, the elements
+        must appear in the exact order of the specification. With these 
+        constraints in mind, the specification effectively becomes:
+
+        $(I
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification [0] CHOICE {
+                    syntaxes [0] SEQUENCE {
+                        abstract [0] OBJECT IDENTIFIER,
+                        transfer [1] OBJECT IDENTIFIER },
+                    syntax [1] OBJECT IDENTIFIER,
+                    transfer-syntax [4] OBJECT IDENTIFIER,
+                    fixed [5] NULL },
+                data-value [2] OCTET STRING }
+        )
+
         Throws:
             ASN1SizeException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
@@ -2180,8 +2274,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     EmbeddedPDV embeddedPresentationDataValue() const
     {
-        BERElement[] bvs = this.sequence;
-        if (bvs.length != 2)
+        CERElement[] cvs = this.sequence;
+        if (cvs.length != 2)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
@@ -2192,175 +2286,93 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 debugInformationText ~ reportBugsText
             );
 
+        if (cvs[0].type != 0x80u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an EMBEDDED PDV whose elements were not exactly in the order " ~
+                "they appear in the specification. Canonical Encoding " ~
+                "Rules (CER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of EMBEDDED PDV, means that identification " ~
+                "must appear first, then data-value. The problem in your case " ~
+                "is that the first encoded element was not identification, as " ~
+                "indicated by a context-specific type tag of 0x80." ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        if (cvs[1].type != 0x82u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an EMBEDDED PDV whose elements were not exactly in the order " ~
+                "they appear in the specification. Canonical Encoding " ~
+                "Rules (CER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of EMBEDDED PDV, means that identification " ~
+                "must appear first, then data-value. The problem in your case " ~
+                "is that the second encoded element was not data-value, as " ~
+                "indicated by a context-specific type tag of 0x82." ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        EmbeddedPDV pcv = EmbeddedPDV();
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
-        EmbeddedPDV pdv = EmbeddedPDV();
-
-        foreach (bv; bvs)
+        CERElement identificationElement = new CERElement(cvs[0].value);
+        switch (identificationElement.type)
         {
-            switch (bv.type)
+            case (0x80u): // syntaxes
             {
-                case (0x80u): // identification
-                {
-                    BERElement identificationBV = new BERElement(bv.value);
-                    switch (identificationBV.type)
-                    {
-                        case (0x80u): // syntaxes
-                        {
-                            ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
-                            BERElement[] syns = identificationBV.sequence;
-                            if (syns.length != 2)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an EMBEDDED PDV that had " ~
-                                    "too many elements within the syntaxes" ~
-                                    "element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-
-                            foreach (syn; syns)
-                            {
-                                switch (syn.type)
-                                {
-                                    case (0x80u): // abstract
-                                    {
-                                        syntaxes.abstractSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    case (0x81): // transfer
-                                    {
-                                        syntaxes.transferSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        ("Invalid EMBEDDED PDV.identification.syntaxes tag.");
-                                    }
-                                }
-                            }
-                            identification.syntaxes = syntaxes;
-                            break;
-                        }
-                        case (0x81u): // syntax
-                        {
-                            identification.syntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x82u): // presentation-context-id
-                        {
-                            identification.presentationContextID = identificationBV.integer!long;
-                            break;
-                        }
-                        case (0x83u): // context-negotiation
-                        {
-                            // REVIEW: Should this be split off into a separate function?
-                            ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-                            BERElement[] cns = identificationBV.sequence;
-                            if (cns.length != 2)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an EMBEDDED PDV that had " ~
-                                    "too many elements within the context-" ~
-                                    "negotiation element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-                            
-                            foreach (cn; cns)
-                            {
-                                switch (cn.type)
-                                {
-                                    case (0x80u): // presentation-context-id
-                                    {
-                                        contextNegotiation.presentationContextID = cn.integer!long;
-                                        break;
-                                    }
-                                    case (0x81u): // transfer-syntax
-                                    {
-                                        contextNegotiation.transferSyntax = cn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        (
-                                            "This exception was thrown because " ~
-                                            "you attempted to decode an EMBEDDED PDV " ~
-                                            "that had an undefined context-specific " ~
-                                            "type tag within the context-" ~
-                                            "negotiation element." ~ 
-                                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                                            debugInformationText ~ reportBugsText
-                                        );
-                                    }
-                                }
-                            }
-                            identification.contextNegotiation = contextNegotiation;
-                            break;
-                        }
-                        case (0x84u): // transfer-syntax
-                        {
-                            identification.transferSyntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x85u): // fixed
-                        {
-                            identification.fixed = true;
-                            break;
-                        }
-                        default:
-                        {
-                            throw new ASN1InvalidIndexException
-                            (
-                                "This exception was thrown because you attempted " ~
-                                "to decode an EMBEDDED PDV whose identification " ~
-                                "CHOICE is not recognized by the specification. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
-                                debugInformationText ~ reportBugsText
-                            );
-                        }
-                    }
-                    pdv.identification = identification;
-                    break;
-                }
-                case (0x81u): // data-value-descriptor
-                {
-                    throw new ASN1ValueInvalidException
+                ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
+                CERElement[] syns = identificationElement.sequence;
+                if (syns.length != 2)
+                    throw new ASN1ValueTooBigException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV that contained a data-value-" ~
-                        "descriptor, which is forbidden from inclusion by " ~
-                        "specification." ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
-                        debugInformationText ~ reportBugsText                        
-                    );
-                    break;
-                }
-                case (0x82u): // data-value
-                {
-                    pdv.dataValue = bv.octetString;
-                    break;
-                }
-                default:
-                {
-                    throw new ASN1InvalidIndexException
-                    (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV that contained an element whose " ~
-                        "context-specific type is not specified by the " ~
-                        "definition of the EMBEDDED PDV data type." ~
+                        "This exception was thrown because you " ~
+                        "attempted to decode an EMBEDDED PDV that had " ~
+                        "too many elements within the syntaxes" ~
+                        "element, which is supposed to " ~
+                        "have only two elements. " ~ 
                         notWhatYouMeantText ~ forMoreInformationText ~ 
                         debugInformationText ~ reportBugsText
                     );
-                }
+                syntaxes.abstractSyntax = syns[0].objectIdentifier;
+                syntaxes.transferSyntax = syns[1].objectIdentifier;
+                identification.syntaxes = syntaxes;
+                break;
+            }
+            case (0x81u): // syntax
+            {
+                identification.syntax = identificationElement.objectIdentifier;
+                break;
+            }
+            case (0x84u): // transfer-syntax
+            {
+                identification.transferSyntax = identificationElement.objectIdentifier;
+                break;
+            }
+            case (0x85u): // fixed
+            {
+                identification.fixed = true;
+                break;
+            }
+            default:
+            {
+                throw new ASN1InvalidIndexException
+                (
+                    "This exception was thrown because you attempted " ~
+                    "to decode an EMBEDDED PDV whose identification " ~
+                    "CHOICE is not recognized by the specification. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
             }
         }
-        return pdv;
+        pcv.identification = identification;
+        pcv.dataValue = cvs[1].octetString;
+        return pcv;
     }
 
     /**
@@ -2392,6 +2404,30 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 
+        In Canonical Encoding Rules, the identification CHOICE cannot be
+        presentation-context-id, nor context-negotiation. Also, the elements
+        must appear in the exact order of the specification. With these 
+        constraints in mind, the specification effectively becomes:
+
+        $(I
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification [0] CHOICE {
+                    syntaxes [0] SEQUENCE {
+                        abstract [0] OBJECT IDENTIFIER,
+                        transfer [1] OBJECT IDENTIFIER },
+                    syntax [1] OBJECT IDENTIFIER,
+                    transfer-syntax [4] OBJECT IDENTIFIER,
+                    fixed [5] NULL },
+                data-value [2] OCTET STRING }
+        )
+
+        If the supplied identification for the EmbeddedPDV is a 
+        presentation-context-id or a context-negotiation, no exception will be
+        thrown; the identification will be set to fixed silently.
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 5.
+
         Throws:
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
@@ -2399,17 +2435,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     void embeddedPresentationDataValue(EmbeddedPDV value)
     {
-        BERElement identification = new BERElement();
+        CERElement identification = new CERElement();
         identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
-        BERElement identificationValue = new BERElement();
+        CERElement identificationValue = new CERElement();
         if (!(value.identification.syntaxes.isNull))
         {
-            BERElement abstractSyntax = new BERElement();
+            CERElement abstractSyntax = new CERElement();
             abstractSyntax.type = 0x80u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
-            BERElement transferSyntax = new BERElement();
+            CERElement transferSyntax = new CERElement();
             transferSyntax.type = 0x81u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
@@ -2421,39 +2457,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             identificationValue.type = 0x81u;
             identificationValue.objectIdentifier = value.identification.syntax;
         }
-        else if (!(value.identification.contextNegotiation.isNull))
-        {
-            BERElement presentationContextID = new BERElement();
-            presentationContextID.type = 0x80u;
-            presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
-            
-            BERElement transferSyntax = new BERElement();
-            transferSyntax.type = 0x81u;
-            transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
-            
-            identificationValue.type = 0x83u;
-            identificationValue.sequence = [ presentationContextID, transferSyntax ];
-        }
         else if (!(value.identification.transferSyntax.isNull))
         {
             identificationValue.type = 0x84u;
             identificationValue.objectIdentifier = value.identification.transferSyntax;
         }
-        else if (value.identification.fixed)
+        else // Default to fixed
         {
             identificationValue.type = 0x85u;
             identificationValue.value = [];
-        }
-        else // it must be the presentationContextID INTEGER
-        {
-            identificationValue.type = 0x82u;
-            identificationValue.integer!long = value.identification.presentationContextID;
         }
 
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
         identification.value = cast(ubyte[]) identificationValue;
 
-        BERElement dataValue = new BERElement();
+        CERElement dataValue = new CERElement();
         dataValue.type = 0x82u;
         dataValue.octetString = value.dataValue;
 
@@ -2461,8 +2479,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
 
     /* NOTE:
-        This unit test had to be moved out of ASN1Element because DER and CER
+        This unit test had to be moved out of ASN1Element because CER and CER
         do not support encoding of presentation-context-id in EMBEDDED PDV.
+
+        This unit test ensures that, if you attempt to create an EMBEDDED PDV
+        with presentation-context-id as the CHOICE of identification, the 
+        encoded EMBEDDED PDV's identification defaults to fixed.
     */
     @system
     unittest
@@ -2474,17 +2496,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         input.identification = id;
         input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
 
-        BERElement el = new BERElement();
+        CERElement el = new CERElement();
         el.type = 0x08u;
         el.embeddedPDV = input;
         EmbeddedPDV output = el.embeddedPDV;
-        assert(output.identification.presentationContextID == 27L);
+        assert(output.identification.fixed == true);
         assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
     }
 
     /* NOTE:
-        This unit test had to be moved out of ASN1Element because DER and CER
+        This unit test had to be moved out of ASN1Element because CER and CER
         do not support encoding of context-negotiation in EMBEDDED PDV.
+
+        This unit test ensures that, if you attempt to create an EMBEDDED PDV
+        with context-negotiation as the CHOICE of identification, the 
+        encoded EMBEDDED PDV's identification defaults to fixed.
     */
     @system
     unittest
@@ -2500,11 +2526,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         input.identification = id;
         input.dataValue = [ 0x13u, 0x15u, 0x17u, 0x19u ];
 
-        BERElement el = new BERElement();
+        CERElement el = new CERElement();
         el.embeddedPDV = input;
         EmbeddedPDV output = el.embeddedPDV;
-        assert(output.identification.contextNegotiation.presentationContextID == 27L);
-        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.identification.fixed == true);
         assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
     }
 
@@ -2517,16 +2542,109 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     string unicodeTransformationFormat8String() const
     {
-        return cast(string) this.value;
+        if (this.value.length <= 1000u)
+        {
+            return cast(string) this.value;
+        }
+        else
+        {
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "an OCTET STRING encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length OCTET STRING did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually an OCTET STRING, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the OCTET STRING just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+
+            Appender!(string) ret = appender!(string)();
+            foreach (p; primitives)
+            {
+                ret.put(cast(string) p.value);
+            }            
+            return ret.data;
+        }
     }
 
     /**
         Encodes a UTF-8 string to bytes. No checks are performed.
     */
-    override public @property @system nothrow
+    override public @property @system
     void unicodeTransformationFormat8String(string value)
     {
-        this.value = cast(ubyte[]) value;
+        if (value.length <= 1000u)
+        {
+            this.value = cast(ubyte[]) value;
+        }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+1000u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = cast(ubyte[]) value[i .. i+1000u];
+                primitives ~= x;
+                i += 1000u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = cast(ubyte[]) value[i .. $];
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            char[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = cast(char) ((i % 0x10) + 0x41);
+            }
+            CERElement el = new CERElement();
+            el.utf8String = cast(string) data;
+            assert(el.utf8String == cast(string) data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
 
     /**
@@ -2633,9 +2751,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
 
     /**
-        Decodes a sequence of BERElements.
+        Decodes a sequence of CERElements.
 
-        Returns: an array of BERElements.
+        Returns: an array of CERElements.
         Throws:
             ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
@@ -2643,33 +2761,33 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 indicated by the length tag.
     */
     override public @property @system
-    BERElement[] sequence() const
+    CERElement[] sequence() const
     {
         ubyte[] data = this.value.dup;
-        BERElement[] result;
+        CERElement[] result;
         while (data.length > 0u)
-            result ~= new BERElement(data);
+            result ~= new CERElement(data);
         return result;
     }
 
     /**
-        Encodes a sequence of BERElements.
+        Encodes a sequence of CERElements.
     */
     override public @property @system
-    void sequence(BERElement[] value)
+    void sequence(CERElement[] value)
     {
         ubyte[] result;
-        foreach (bv; value)
+        foreach (cv; value)
         {
-            result ~= cast(ubyte[]) bv;
+            result ~= cast(ubyte[]) cv;
         }
         this.value = result;
     }
 
     /**
-        Decodes a set of BERElements.
+        Decodes a set of CERElements.
 
-        Returns: an array of BERElements.
+        Returns: an array of CERElements.
         Throws:
             ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
@@ -2677,25 +2795,25 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 indicated by the length tag.
     */
     override public @property @system
-    BERElement[] set() const
+    CERElement[] set() const
     {
         ubyte[] data = this.value.dup;
-        BERElement[] result;
+        CERElement[] result;
         while (data.length > 0u)
-            result ~= new BERElement(data);
+            result ~= new CERElement(data);
         return result;
     }
 
     /**
-        Encodes a set of BERElements.
+        Encodes a set of CERElements.
     */
     override public @property @system
-    void set(BERElement[] value)
+    void set(CERElement[] value)
     {
         ubyte[] result;
-        foreach (bv; value)
+        foreach (cv; value)
         {
-            result ~= cast(ubyte[]) bv;
+            result ~= cast(ubyte[]) cv;
         }
         this.value = result;
     }
@@ -2712,19 +2830,66 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     string numericString() const
     {
-        foreach (character; this.value)
+        if (this.value.length <= 1000u)
+        {        
+            foreach (character; this.value)
+            {
+                if (!canFind(numericStringCharacters, character))
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you tried to decode " ~
+                        "a NumericString that contained a character that " ~
+                        "is not numeric or space. The offending character is '" ~
+                        character ~ "'. " ~ notWhatYouMeantText ~
+                        forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    );
+            }
+            return cast(string) this.value;
+        }
+        else
         {
-            if (!canFind(numericStringCharacters, character))
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
-                    "This exception was thrown because you tried to decode " ~
-                    "a NumericString that contained a character that " ~
-                    "is not numeric or space. The offending character is '" ~
-                    character ~ "'. " ~ notWhatYouMeantText ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    "This exception was thrown because you attempted to decode " ~
+                    "an OCTET STRING encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length OCTET STRING did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually an OCTET STRING, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the OCTET STRING just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
                 );
+
+            Appender!(string) ret = appender!(string)();
+            foreach (p; primitives)
+            {
+                foreach (character; p.value)
+                {
+                    if (!canFind(numericStringCharacters, character))
+                        throw new ASN1ValueInvalidException
+                        (
+                            "This exception was thrown because you tried to decode " ~
+                            "a NumericString that contained a character that " ~
+                            "is not numeric or space. The offending character is '" ~
+                            character ~ "'. " ~ notWhatYouMeantText ~
+                            forMoreInformationText ~ debugInformationText ~ reportBugsText
+                        );
+                }
+                ret.put(cast(string) p.value);
+            }
+            return ret.data;
         }
-        return cast(string) this.value;
     }
 
     /**
@@ -2750,7 +2915,66 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        
+        if (value.length <= 1000u)
+        {
+            this.value = cast(ubyte[]) value;
+        }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+1000u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = cast(ubyte[]) value[i .. i+1000u];
+                primitives ~= x;
+                i += 1000u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = cast(ubyte[]) value[i .. $];
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            char[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = cast(char) ((i % 0x09) + 0x30);
+            }
+            CERElement el = new CERElement();
+            el.numericString = cast(string) data;
+            assert(el.numericString == cast(string) data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
 
     /**
@@ -2768,19 +2992,69 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     string printableString() const
     {
-        foreach (character; this.value)
+        if (this.value.length <= 1000u)
+        {        
+            foreach (character; this.value)
+            {
+                if (!canFind(printableStringCharacters, character))
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you tried to decode " ~
+                        "a PrintableString that contained a character that " ~
+                        "is not considered 'printable' by the specification. " ~
+                        "The encoding of the offending character is '" ~ text(cast(ubyte) character) ~ "'. " ~
+                        "The allowed characters are: " ~ printableStringCharacters ~ " " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+            }
+            return cast(string) this.value;
+        }
+        else
         {
-            if (!canFind(printableStringCharacters, character))
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
-                    "This exception was thrown because you tried to decode " ~
-                    "a PrintableString that contained a character that " ~
-                    "is not considered 'printable' by the specification. " ~
-                    "The offending character is '" ~ character ~ "'. " ~
-                    "The allowed characters are: " ~ printableStringCharacters ~ " " ~
+                    "This exception was thrown because you attempted to decode " ~
+                    "an PrintableString encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length PrintableString did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually an PrintableString, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the PrintableString just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
+
+            Appender!(string) ret = appender!(string)();
+            foreach (p; primitives)
+            {
+                foreach (character; p.value)
+                {
+                    if (!canFind(printableStringCharacters, character))
+                        throw new ASN1ValueInvalidException
+                        (
+                            "This exception was thrown because you tried to decode " ~
+                            "a PrintableString that contained a character that " ~
+                            "is not considered 'printable' by the specification. " ~
+                            "The encoding of the offending character is '" ~ text(cast(ubyte) character) ~ "'. " ~
+                            "The allowed characters are: " ~ printableStringCharacters ~ " " ~
+                            notWhatYouMeantText ~ forMoreInformationText ~ 
+                            debugInformationText ~ reportBugsText
+                        );
+                }
+                ret.put(cast(string) p.value);
+            }
+            return ret.data;
         }
         return cast(string) this.value;
     }
@@ -2807,12 +3081,71 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     "This exception was thrown because you tried to encode " ~
                     "a PrintableString that contained a character that " ~
                     "is not considered 'printable' by the specification. " ~
-                    "The offending character is '" ~ character ~ "'. " ~
+                    "The encoding of the offending character is '" ~ text(cast(ubyte) character) ~ "'. " ~
                     "The allowed characters are: " ~ printableStringCharacters ~ " " ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        
+        if (value.length <= 1000u)
+        {
+            this.value = cast(ubyte[]) value;
+        }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+1000u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = cast(ubyte[]) value[i .. i+1000u];
+                primitives ~= x;
+                i += 1000u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = cast(ubyte[]) value[i .. $];
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            char[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = cast(char) ((i % 0x10) + 0x41);
+            }
+            CERElement el = new CERElement();
+            el.printableString = cast(string) data;
+            assert(el.printableString == cast(string) data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
    
     /**
@@ -2820,21 +3153,114 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
         Returns: an unsigned byte array, where each byte is a T.61 character.
     */
-    override public @property @safe nothrow
+    override public @property @system
     ubyte[] teletexString() const
     {
         // TODO: Validation.
-        return this.value.dup;
+        if (this.value.length <= 1000u)
+        {
+            return this.value.dup;
+        }
+        else
+        {
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a TeletexString encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length TeletexString did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually a TeletexString, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the TeletexString just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+
+            Appender!(ubyte[]) ret = appender!(ubyte[])();
+            foreach (p; primitives)
+            {
+                ret.put(p.value);
+            }            
+            return ret.data;
+        }
     }
 
     /**
         Literally just sets the value bytes.
     */
-    override public @property @safe nothrow
+    override public @property @system
     void teletexString(ubyte[] value)
     {
         // TODO: Validation.
-        this.value = value;
+        if (value.length <= 1000u)
+        {
+            this.value = cast(ubyte[]) value;
+        }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+1000u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = value[i .. i+1000u];
+                primitives ~= x;
+                i += 1000u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = value[i .. $];
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            ubyte[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = (i % 9u);
+            }
+            CERElement el = new CERElement();
+            el.teletexString = data;
+            assert(el.teletexString == data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
 
     /**
@@ -2842,21 +3268,114 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
         Returns: an unsigned byte array.
     */
-    override public @property @safe nothrow
+    override public @property @system
     ubyte[] videotexString() const
     {
         // TODO: Validation.
-        return this.value.dup;
+        if (this.value.length <= 1000u)
+        {
+            return this.value.dup;
+        }
+        else
+        {
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a VideotexString encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length VideotexString did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually a VideotexString, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the VideotexString just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+
+            Appender!(ubyte[]) ret = appender!(ubyte[])();
+            foreach (p; primitives)
+            {
+                ret.put(p.value);
+            }            
+            return ret.data;
+        }
     }
 
     /**
         Literally just sets the value bytes.
     */
-    override public @property @safe nothrow
+    override public @property @system
     void videotexString(ubyte[] value)
     {
         // TODO: Validation.
-        this.value = value;
+        if (value.length <= 1000u)
+        {
+            this.value = cast(ubyte[]) value;
+        }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+1000u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = value[i .. i+1000u];
+                primitives ~= x;
+                i += 1000u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = value[i .. $];
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            ubyte[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = (i % 9u);
+            }
+            CERElement el = new CERElement();
+            el.videotexString = data;
+            assert(el.videotexString == data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
 
     /**
@@ -2886,20 +3405,67 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     string internationalAlphabetNumber5String() const
     {
-        string ret = cast(string) this.value;
-        foreach (character; ret)
+        if (this.value.length <= 1000u)
+        {        
+            foreach (character; this.value)
+            {
+                if (!character.isASCII)
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you tried to decode " ~
+                        "an IA5String that contained a character that " ~
+                        "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+            }
+            return cast(string) this.value;
+        }
+        else
         {
-            if (!character.isASCII)
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
-                    "This exception was thrown because you tried to decode " ~
-                    "an IA5String that contained a character that " ~
-                    "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                    "This exception was thrown because you attempted to decode " ~
+                    "an IA5String encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length IA5String did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually an IA5String, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the IA5String just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
+
+            Appender!(string) ret = appender!(string)();
+            foreach (p; primitives)
+            {
+                foreach (character; p.value)
+                {
+                    if (!character.isASCII)
+                        throw new ASN1ValueInvalidException
+                        (
+                            "This exception was thrown because you tried to decode " ~
+                            "an IA5String that contained a character that " ~
+                            "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                            notWhatYouMeantText ~ forMoreInformationText ~ 
+                            debugInformationText ~ reportBugsText
+                        );
+                }
+                ret.put(cast(string) p.value);
+            }
+            return ret.data;
         }
-        return ret;
+        return cast(string) this.value;
     }
 
     /**
@@ -2939,13 +3505,72 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
-    } 
+        
+        if (value.length <= 1000u)
+        {
+            this.value = cast(ubyte[]) value;
+        }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+1000u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = cast(ubyte[]) value[i .. i+1000u];
+                primitives ~= x;
+                i += 1000u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = cast(ubyte[]) value[i .. $];
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            char[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = cast(char) ((i % 0x40) + 0x30);
+            }
+            CERElement el = new CERElement();
+            el.ia5String = cast(string) data;
+            assert(el.ia5String == cast(string) data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
+    }
 
     /**
         Decodes a DateTime.
         
-        The BER-encoded value is just the ASCII character representation of
+        The CER-encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 
         An UTC Timestamp looks like: 
@@ -2986,7 +3611,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /**
         Encodes a DateTime.
         
-        The BER-encoded value is just the ASCII character representation of
+        The CER-encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 
         An UTC Timestamp looks like: 
@@ -2998,7 +3623,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         See_Also:
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
-    override public @property @system nothrow
+    override public @property @system
     void coordinatedUniversalTime(DateTime value)
     {
         import std.string : replace;
@@ -3009,7 +3634,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /**
         Decodes a DateTime.
 
-        The BER-encoded value is just the ASCII character representation of
+        The CER-encoded value is just the ASCII character representation of
         the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html, 
         ISO 8601)-formatted timestamp.
 
@@ -3043,7 +3668,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     /**
         Encodes a DateTime.
 
-        The BER-encoded value is just the ASCII character representation of
+        The CER-encoded value is just the ASCII character representation of
         the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html, 
         ISO 8601)-formatted timestamp.
 
@@ -3054,7 +3679,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             $(LI 19851106210627.3-0500)
         )
     */
-    override public @property @system nothrow
+    override public @property @system
     void generalizedTime(DateTime value)
     {
         import std.string : replace;
@@ -3084,21 +3709,69 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     string graphicString() const
     {
-        string ret = cast(string) this.value;
-        foreach (character; ret)
+        if (this.value.length <= 1000u)
+        {        
+            foreach (character; this.value)
+            {
+                if (!character.isGraphical && character != ' ')
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you tried to decode " ~
+                        "a GraphicString that contained a character that " ~
+                        "is not graphical (a character whose ASCII encoding " ~
+                        "is outside of the range 0x20 to 0x7E). The offending " ~
+                        "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                        forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    );
+            }
+            return cast(string) this.value;
+        }
+        else
         {
-            if (!character.isGraphical && character != ' ')
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
-                    "This exception was thrown because you tried to decode " ~
-                    "a GraphicString that contained a character that " ~
-                    "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E). The offending " ~
-                    "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    "This exception was thrown because you attempted to decode " ~
+                    "an GraphicString encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length GraphicString did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually an GraphicString, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the GraphicString just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
                 );
+
+            Appender!(string) ret = appender!(string)();
+            foreach (p; primitives)
+            {
+                foreach (character; p.value)
+                {
+                    if (!character.isGraphical && character != ' ')
+                        throw new ASN1ValueInvalidException
+                        (
+                            "This exception was thrown because you tried to decode " ~
+                            "a GraphicString that contained a character that " ~
+                            "is not graphical (a character whose ASCII encoding " ~
+                            "is outside of the range 0x20 to 0x7E). The offending " ~
+                            "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                            forMoreInformationText ~ debugInformationText ~ reportBugsText
+                        );
+                }
+                ret.put(cast(string) p.value);
+            }
+            return ret.data;
         }
-        return ret;
+        return cast(string) this.value;
     }
 
     /**
@@ -3135,7 +3808,66 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+
+        if (value.length <= 1000u)
+        {
+            this.value = cast(ubyte[]) value;
+        }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+1000u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = cast(ubyte[]) value[i .. i+1000u];
+                primitives ~= x;
+                i += 1000u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = cast(ubyte[]) value[i .. $];
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            char[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = cast(char) ((i % 0x40) + 0x20);
+            }
+            CERElement el = new CERElement();
+            el.graphicString = cast(string) data;
+            assert(el.graphicString == cast(string) data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
 
     /**
@@ -3151,21 +3883,69 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     string visibleString() const
     {
-        string ret = cast(string) this.value;
-        foreach (character; ret)
+        if (this.value.length <= 1000u)
+        {        
+            foreach (character; this.value)
+            {
+                if (!character.isGraphical && character != ' ')
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you tried to decode " ~
+                        "a VisibleString that contained a character that " ~
+                        "is not graphical (a character whose ASCII encoding " ~
+                        "is outside of the range 0x20 to 0x7E). The offending " ~
+                        "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                        forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    );
+            }
+            return cast(string) this.value;
+        }
+        else
         {
-            if (!character.isGraphical && character != ' ')
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
-                    "This exception was thrown because you tried to decode " ~
-                    "a VisibleString that contained a character that " ~
-                    "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E) or space. The offending " ~
-                    "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    "This exception was thrown because you attempted to decode " ~
+                    "a VisibleString encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length VisibleString did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually an VisibleString, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the VisibleString just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
                 );
+
+            Appender!(string) ret = appender!(string)();
+            foreach (p; primitives)
+            {
+                foreach (character; p.value)
+                {
+                    if (!character.isGraphical && character != ' ')
+                        throw new ASN1ValueInvalidException
+                        (
+                            "This exception was thrown because you tried to decode " ~
+                            "a VisibleString that contained a character that " ~
+                            "is not graphical (a character whose ASCII encoding " ~
+                            "is outside of the range 0x20 to 0x7E) or space. The offending " ~
+                            "character is '" ~ character ~ "'. " ~ notWhatYouMeantText ~
+                            forMoreInformationText ~ debugInformationText ~ reportBugsText
+                        );
+                }
+                ret.put(cast(string) p.value);
+            }
+            return ret.data;
         }
-        return ret;
+        return cast(string) this.value;
     }
 
     /**
@@ -3193,7 +3973,66 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+
+        if (value.length <= 1000u)
+        {
+            this.value = cast(ubyte[]) value;
+        }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+1000u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = cast(ubyte[]) value[i .. i+1000u];
+                primitives ~= x;
+                i += 1000u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = cast(ubyte[]) value[i .. $];
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            char[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = cast(char) ((i % 0x40) + 0x20);
+            }
+            CERElement el = new CERElement();
+            el.visibleString = cast(string) data;
+            assert(el.visibleString == cast(string) data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
 
     /**
@@ -3206,27 +4045,74 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             ASN1ValueInvalidException = if any enecoded character is not ASCII.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1: 
             Communication between Heterogeneous Systems, Morgan Kaufmann, 
             2001, p. 182.
     */
     override public @property @system
     string generalString() const
     {
-        string ret = cast(string) this.value;
-        foreach (character; ret)
+        if (this.value.length <= 1000u)
+        {        
+            foreach (character; this.value)
+            {
+                if (!character.isASCII)
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you tried to decode " ~
+                        "an GeneralString that contained a character that " ~
+                        "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+            }
+            return cast(string) this.value;
+        }
+        else
         {
-            if (!character.isASCII)
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
-                    "This exception was thrown because you tried to decode " ~
-                    "an GeneralString that contained a character that " ~
-                    "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                    "This exception was thrown because you attempted to decode " ~
+                    "a GeneralString encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length GeneralString did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually an GeneralString, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the GeneralString just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
+
+            Appender!(string) ret = appender!(string)();
+            foreach (p; primitives)
+            {
+                foreach (character; p.value)
+                {
+                    if (!character.isASCII)
+                        throw new ASN1ValueInvalidException
+                        (
+                            "This exception was thrown because you tried to decode " ~
+                            "an GeneralString that contained a character that " ~
+                            "is not ASCII. The offending character is '" ~ character ~ "'. " ~
+                            notWhatYouMeantText ~ forMoreInformationText ~ 
+                            debugInformationText ~ reportBugsText
+                        );
+                }
+                ret.put(cast(string) p.value);
+            }
+            return ret.data;
         }
-        return ret;
+        return cast(string) this.value;
     }
 
     /**
@@ -3238,7 +4124,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             ASN1ValueInvalidException = if any enecoded character is not ASCII.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
+            Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1: 
             Communication between Heterogeneous Systems, Morgan Kaufmann, 
             2001, p. 182.
     */
@@ -3256,7 +4142,66 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+
+        if (value.length <= 1000u)
+        {
+            this.value = cast(ubyte[]) value;
+        }
+        else
+        {
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+1000u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                x.value = cast(ubyte[]) value[i .. i+1000u];
+                primitives ~= x;
+                i += 1000u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            y.value = cast(ubyte[]) value[i .. $];
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+        }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            char[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = cast(char) ((i % 0x40) + 0x20);
+            }
+            CERElement el = new CERElement();
+            el.generalString = cast(string) data;
+            assert(el.generalString == cast(string) data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
 
     /**
@@ -3269,12 +4214,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     */
     override public @property @system
     dstring universalString() const
+    in
     {
-        version (BigEndian)
-        {
-            return cast(dstring) this.value;
-        }
-        else version (LittleEndian)
+        assert(dchar.sizeof == 4u);
+    }
+    body
+    {
+        if (this.value.length == 0u) return ""d;
+        if (this.value.length <= 1000u)
         {
             if (this.value.length % 4u)
                 throw new ASN1ValueInvalidException
@@ -3286,23 +4233,95 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     debugInformationText ~ reportBugsText
                 );
 
-            dstring ret;
-            ptrdiff_t i = 0;
-            while (i < this.value.length-3)
+            version (BigEndian)
             {
-                ubyte[] character;
-                character.length = 4u;
-                character[3] = this.value[i++];
-                character[2] = this.value[i++];
-                character[1] = this.value[i++];
-                character[0] = this.value[i++];
-                ret ~= (*cast(dchar *) character.ptr);
+                return cast(dstring) this.value;
             }
-            return ret;
+            else version (LittleEndian)
+            {
+                dstring ret;
+                size_t i = 0u;
+                while (i < this.value.length-3u)
+                {
+                    ubyte[] character;
+                    character.length = 4u;
+                    character[3] = this.value[i++];
+                    character[2] = this.value[i++];
+                    character[1] = this.value[i++];
+                    character[0] = this.value[i++];
+                    ret ~= (*cast(dchar *) character.ptr);
+                }
+                return ret;
+            }
+            else
+            {
+                static assert(0, "Could not determine endianness!");
+            }
         }
         else
         {
-            static assert(0, "Could not determine endianness!");
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a UniversalString encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length UniversalString did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually an UniversalString, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the UniversalString just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+
+            Appender!(dstring) ret = appender!(dstring)();
+            for (size_t p = 0u; p < primitives.length-1; p++) // Skip the last element, because it is an EOC
+            {
+                if (primitives[p].value.length % 4u)
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you tried to decode " ~
+                        "a UniversalString that contained a number of bytes that " ~
+                        "is not divisible by four. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                version (BigEndian)
+                {
+                    ret.put(cast(dstring) primitives[p].value);
+                }
+                else version (LittleEndian)
+                {
+                    dstring segment;
+                    ptrdiff_t i = 0;
+                    while (i < primitives[p].value.length-3)
+                    {
+                        ubyte[] character;
+                        character.length = 4u;
+                        character[3] = primitives[p].value[i++];
+                        character[2] = primitives[p].value[i++];
+                        character[1] = primitives[p].value[i++];
+                        character[0] = primitives[p].value[i++];
+                        segment ~= (*cast(dchar *) character.ptr);
+                    }
+                    ret.put(segment);
+                }
+                else
+                {
+                    static assert(0, "Could not determine endianness!");
+                }
+            }
+            return ret.data;
         }
     }
 
@@ -3311,24 +4330,119 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     */
     override public @property @system
     void universalString(dstring value)
+    in
     {
-        version (BigEndian)
+        assert(dchar.sizeof == 4u);
+    }
+    body
+    {
+        if (value.length <= 250u)
         {
-            this.value = cast(ubyte[]) value;
-        }
-        else version (LittleEndian)
-        {
-            foreach(character; value)
+            version (BigEndian)
             {
-                ubyte[] charBytes = cast(ubyte[]) *cast(char[4] *) &character;
-                reverse(charBytes);
-                this.value ~= charBytes;
+                this.value = cast(ubyte[]) value;
+            }
+            else version (LittleEndian)
+            {
+                foreach (character; value)
+                {
+                    ubyte[] charBytes = cast(ubyte[]) *cast(char[4] *) &character;
+                    reverse(charBytes);
+                    this.value ~= charBytes;
+                }
+            }
+            else
+            {
+                static assert(0, "Could not determine endianness!");
             }
         }
         else
         {
-            static assert(0, "Could not determine endianness!");
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+250u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                version (BigEndian)
+                {
+                    x.value = cast(ubyte[]) value[i .. i+250u];
+                }
+                else version (LittleEndian)
+                {
+                    foreach (character; value[i .. i+250u])
+                    {
+                        ubyte[] charBytes = cast(ubyte[]) *cast(char[4] *) &character;
+                        reverse(charBytes);
+                        x.value ~= charBytes;
+                    }
+                }
+                else
+                {
+                    static assert(0, "Could not determine endianness!");
+                }
+                primitives ~= x;
+                i += 250u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            version (BigEndian)
+            {
+                y.value = cast(ubyte[]) value[i .. $];
+            }
+            else version (LittleEndian)
+            {
+                foreach (character; value[i .. $])
+                {
+                    ubyte[] charBytes = cast(ubyte[]) *cast(char[4] *) &character;
+                    reverse(charBytes);
+                    y.value ~= charBytes;
+                }
+            }
+            else
+            {
+                static assert(0, "Could not determine endianness!");
+            }
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
+    }
+
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            dchar[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = cast(dchar) ((i % 0x60u) + 0x20u);
+            }
+            CERElement el = new CERElement();
+            el.universalString = cast(dstring) data;
+            assert(el.universalString == cast(dstring) data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
     }
 
     /**
@@ -3373,179 +4487,104 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     CharacterString characterString() const
     {
-        BERElement[] bvs = this.sequence;
-        if (bvs.length < 2u || bvs.length > 3u)
+        CERElement[] cvs = this.sequence;
+        if (cvs.length != 2)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
-                "a CharacterString that contained too many or too few elements. " ~
-                "A CharacterString should have either 2 or 3 elements. " ~
+                "an CharacterString that contained too many or too few elements. " ~
+                "An CharacterString should have exactly two elements: " ~
+                "identification and string-value, in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+        if (cvs[0].type != 0x80u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an CharacterString whose elements were not exactly in the order " ~
+                "they appear in the specification. Canonical Encoding " ~
+                "Rules (CER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of CharacterString, means that identification " ~
+                "must appear first, then string-value. The problem in your case " ~
+                "is that the first encoded element was not identification, as " ~
+                "indicated by a context-specific type tag of 0x80." ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        if (cvs[1].type != 0x81u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because, you attempted to decode " ~
+                "an CharacterString whose elements were not exactly in the order " ~
+                "they appear in the specification. Canonical Encoding " ~
+                "Rules (CER) specify that the encoded elements of any " ~
+                "constructed type must appear in the order of their specification, " ~
+                "which, in the case of CharacterString, means that identification " ~
+                "must appear first, then string-value. The problem in your case " ~
+                "is that the second encoded element was not string-value, as " ~
+                "indicated by a context-specific type tag of 0x81." ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
         CharacterString cs = CharacterString();
-
-        foreach (bv; bvs)
+        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+        CERElement identificationElement = new CERElement(cvs[0].value);
+        switch (identificationElement.type)
         {
-            switch (bv.type)
+            case (0x80u): // syntaxes
             {
-                case (0x80u): // identification
-                {
-                    BERElement identificationBV = new BERElement(bv.value);
-                    switch (identificationBV.type)
-                    {
-                        case (0x80u): // syntaxes
-                        {
-                            ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
-                            BERElement[] syns = identificationBV.sequence;
-                            if (syns.length != 2u)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an CharacterString that had " ~
-                                    "too many elements within the syntaxes" ~
-                                    "element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-
-                            foreach (syn; syns)
-                            {
-                                switch (syn.type)
-                                {
-                                    case (0x80u): // abstract
-                                    {
-                                        syntaxes.abstractSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    case (0x81): // transfer
-                                    {
-                                        syntaxes.transferSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        (
-                                            "This exception was thrown because " ~
-                                            "you attempted to decode a CharacterString " ~
-                                            "that had an undefined context-specific " ~
-                                            "type tag within the syntaxes element. " ~
-                                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                                            debugInformationText ~ reportBugsText
-                                        );
-                                    }
-                                }
-                            }
-                            identification.syntaxes = syntaxes;
-                            break;
-                        }
-                        case (0x81u): // syntax
-                        {
-                            identification.syntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x82u): // presentation-context-id
-                        {
-                            identification.presentationContextID = identificationBV.integer!long;
-                            break;
-                        }
-                        case (0x83u): // context-negotiation
-                        {
-                            // REVIEW: Should this be split off into a separate function?
-                            ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-                            BERElement[] cns = identificationBV.sequence;
-                            if (cns.length != 2u)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an CharacterString that had " ~
-                                    "too many elements within the context-" ~
-                                    "negotiation element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-                            
-                            foreach (cn; cns)
-                            {
-                                switch (cn.type)
-                                {
-                                    case (0x80u): // presentation-context-id
-                                    {
-                                        contextNegotiation.presentationContextID = cn.integer!long;
-                                        break;
-                                    }
-                                    case (0x81u): // transfer-syntax
-                                    {
-                                        contextNegotiation.transferSyntax = cn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        (
-                                            "This exception was thrown because " ~
-                                            "you attempted to decode a CharacterString " ~
-                                            "that had an undefined context-specific " ~
-                                            "type tag within the context-" ~
-                                            "negotiation element." ~ 
-                                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                                            debugInformationText ~ reportBugsText
-                                        );
-                                    }
-                                }
-                            }
-                            identification.contextNegotiation = contextNegotiation;
-                            break;
-                        }
-                        case (0x84u): // transfer-syntax
-                        {
-                            identification.transferSyntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x85u): // fixed
-                        {
-                            identification.fixed = true;
-                            break;
-                        }
-                        default:
-                        {
-                            throw new ASN1InvalidIndexException
-                            (
-                                "This exception was thrown because you attempted " ~
-                                "to decode a CharacterString whose identification " ~
-                                "CHOICE is not recognized by the specification. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
-                                debugInformationText ~ reportBugsText
-                            );
-                        }
-                    }
-                    cs.identification = identification;
-                    break;
-                }
-                case (0x81u): // string-value
-                {
-                    cs.stringValue = bv.octetString;
-                    break;
-                }
-                default:
-                {
-                    throw new ASN1InvalidIndexException
+                ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
+                CERElement[] syns = identificationElement.sequence;
+                if (syns.length != 2)
+                    throw new ASN1ValueTooBigException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString that contained an element whose " ~
-                        "context-specific type is not specified by the " ~
-                        "definition of the CharacterString data type. " ~
+                        "This exception was thrown because you " ~
+                        "attempted to decode an EMBEDDED PDV that had " ~
+                        "too many elements within the syntaxes" ~
+                        "element, which is supposed to " ~
+                        "have only two elements. " ~ 
                         notWhatYouMeantText ~ forMoreInformationText ~ 
                         debugInformationText ~ reportBugsText
                     );
-                }
+                syntaxes.abstractSyntax = syns[0].objectIdentifier;
+                syntaxes.transferSyntax = syns[1].objectIdentifier;
+                identification.syntaxes = syntaxes;
+                break;
+            }
+            case (0x81u): // syntax
+            {
+                identification.syntax = identificationElement.objectIdentifier;
+                break;
+            }
+            case (0x84u): // transfer-syntax
+            {
+                identification.transferSyntax = identificationElement.objectIdentifier;
+                break;
+            }
+            case (0x85u): // fixed
+            {
+                identification.fixed = true;
+                break;
+            }
+            default:
+            {
+                throw new ASN1InvalidIndexException
+                (
+                    "This exception was thrown because you attempted " ~
+                    "to decode an CharacterString whose identification " ~
+                    "CHOICE is not recognized by the specification. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
             }
         }
+        cs.identification = identification;
+        cs.stringValue = cvs[1].octetString;
         return cs;
     }
 
@@ -3576,21 +4615,20 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
     */
-    // REVIEW: Is this nothrow?
     override public @property @system
     void characterString(CharacterString value)
     {
-        BERElement identification = new BERElement();
+        CERElement identification = new CERElement();
         identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
-        BERElement identificationValue = new BERElement();
+        CERElement identificationValue = new CERElement();
         if (!(value.identification.syntaxes.isNull))
         {
-            BERElement abstractSyntax = new BERElement();
+            CERElement abstractSyntax = new CERElement();
             abstractSyntax.type = 0x80u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
-            BERElement transferSyntax = new BERElement();
+            CERElement transferSyntax = new CERElement();
             transferSyntax.type = 0x81u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
@@ -3602,39 +4640,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             identificationValue.type = 0x81u;
             identificationValue.objectIdentifier = value.identification.syntax;
         }
-        else if (!(value.identification.contextNegotiation.isNull))
-        {
-            BERElement presentationContextID = new BERElement();
-            presentationContextID.type = 0x80u;
-            presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
-            
-            BERElement transferSyntax = new BERElement();
-            transferSyntax.type = 0x81u;
-            transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
-            
-            identificationValue.type = 0x83u;
-            identificationValue.sequence = [ presentationContextID, transferSyntax ];
-        }
         else if (!(value.identification.transferSyntax.isNull))
         {
             identificationValue.type = 0x84u;
             identificationValue.objectIdentifier = value.identification.transferSyntax;
         }
-        else if (value.identification.fixed)
+        else // Default to fixed
         {
             identificationValue.type = 0x85u;
             identificationValue.value = [];
-        }
-        else // it must be the presentationContextID INTEGER
-        {
-            identificationValue.type = 0x82u;
-            identificationValue.integer!long = value.identification.presentationContextID;
         }
 
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
         identification.value = cast(ubyte[]) identificationValue;
 
-        BERElement stringValue = new BERElement();
+        CERElement stringValue = new CERElement();
         stringValue.type = 0x81u;
         stringValue.octetString = value.stringValue;
 
@@ -3642,32 +4662,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
 
     /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished 
-        Encoding Rules (DER) does not permit CharacterStrings to use an identification
-        CHOICE of presentation-context-id or context-negotiation
-    */
-    @system
-    unittest
-    {
-        ASN1ContextSwitchingTypeID id = ASN1ContextSwitchingTypeID();
-        id.presentationContextID = 27L;
+        This unit test had to be moved out of ASN1Element because CER and CER
+        do not support encoding of context-negotiation in CharacterString.
 
-        CharacterString input = CharacterString();
-        input.identification = id;
-        input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
-
-        BERElement el = new BERElement();
-        el.type = 0x08u;
-        el.characterString = input;
-        CharacterString output = el.characterString;
-        assert(output.identification.presentationContextID == 27L);
-        assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
-    }
-    
-    /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished 
-        Encoding Rules (DER) does not permit CharacterStrings to use an identification
-        CHOICE of presentation-context-id or context-negotiation
+        This unit test ensures that, if you attempt to create a CharacterString
+        with context-negotiation as the CHOICE of identification, the 
+        encoded CharacterString's identification defaults to fixed.
     */
     @system
     unittest
@@ -3683,11 +4683,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         input.identification = id;
         input.stringValue = [ 'H', 'E', 'N', 'L', 'O' ];
 
-        BERElement el = new BERElement();
+        CERElement el = new CERElement();
         el.characterString = input;
         CharacterString output = el.characterString;
-        assert(output.identification.contextNegotiation.presentationContextID == 27L);
-        assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.identification.fixed == true);
         assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
     }
 
@@ -3701,12 +4700,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     */
     override public @property @system
     wstring basicMultilingualPlaneString() const
+    in
     {
-        version (BigEndian)
-        {
-            return cast(wstring) this.value;
-        }
-        else version (LittleEndian)
+        assert(wchar.sizeof == 2u);
+    }
+    body
+    {
+        if (this.value.length == 0u) return ""w;
+        if (this.value.length <= 1000u)
         {
             if (this.value.length % 2u)
                 throw new ASN1ValueInvalidException
@@ -3718,21 +4719,91 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     debugInformationText ~ reportBugsText
                 );
 
-            wstring ret;
-            ptrdiff_t i = 0;
-            while (i < this.value.length-1)
+            version (BigEndian)
             {
-                ubyte[] character;
-                character.length = 2u;
-                character[1] = this.value[i++];
-                character[0] = this.value[i++];
-                ret ~= (*cast(wchar *) character.ptr);
+                return cast(wstring) this.value;
             }
-            return ret;
+            else version (LittleEndian)
+            {
+                wstring ret;
+                size_t i = 0u;
+                while (i < this.value.length-1u)
+                {
+                    ubyte[] character;
+                    character.length = 2u;
+                    character[1] = this.value[i++];
+                    character[0] = this.value[i++];
+                    ret ~= (*cast(wchar *) character.ptr);
+                }
+                return ret;
+            }
+            else
+            {
+                static assert(0, "Could not determine endianness!");
+            }
         }
         else
         {
-            static assert(0, "Could not determine endianness!");
+            ubyte[] value = this.value.dup;
+            CERElement[] primitives;
+            while (value.length > 0)
+            {
+                primitives ~= new CERElement(value);
+            }
+
+            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a BMPString encoded via Canonical Encoding Rules (CER) " ~
+                    "in constructed form with indefinite length. The encoded " ~
+                    "indefinite-length BMPString did not end with an END " ~
+                    "OF CONTENT element. This could happen because you attempted " ~
+                    "to decode an element that was not actually an BMPString, " ~
+                    "or you may be using the wrong codec for the protocol you " ~
+                    "are dealing with, or, the BMPString just may be quite large " ~
+                    "and you may have not received it entirely yet. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+
+            Appender!(wstring) ret = appender!(wstring)();
+            for (size_t p = 0u; p < primitives.length-1; p++) // Skip the last element, because it is an EOC
+            {
+                if (primitives[p].value.length % 2u)
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you tried to decode " ~
+                        "a UniversalString that contained a number of bytes that " ~
+                        "is not divisible by four. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                version (BigEndian)
+                {
+                    ret.put(cast(wstring) primitives[p].value);
+                }
+                else version (LittleEndian)
+                {
+                    dstring segment;
+                    size_t i = 0u;
+                    while (i < primitives[p].value.length-1u)
+                    {
+                        ubyte[] character;
+                        character.length = 2u;
+                        character[1] = primitives[p].value[i++];
+                        character[0] = primitives[p].value[i++];
+                        segment ~= (*cast(wchar *) character.ptr);
+                    }
+                    ret.put(segment);
+                }
+                else
+                {
+                    static assert(0, "Could not determine endianness!");
+                }
+            }
+            return ret.data;
         }
     }
 
@@ -3741,28 +4812,123 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     */
     override public @property @system
     void basicMultilingualPlaneString(wstring value)
+    in
     {
-        version (BigEndian)
+        assert(wchar.sizeof == 2u);
+    }
+    body
+    {
+        if (value.length <= 500u)
         {
-            this.value = cast(ubyte[]) value;
-        }
-        else version (LittleEndian)
-        {
-            foreach(character; value)
+            version (BigEndian)
             {
-                ubyte[] charBytes = cast(ubyte[]) *cast(char[2] *) &character;
-                reverse(charBytes);
-                this.value ~= charBytes;
+                this.value = cast(ubyte[]) value;
+            }
+            else version (LittleEndian)
+            {
+                foreach (character; value)
+                {
+                    ubyte[] charBytes = cast(ubyte[]) *cast(char[2] *) &character;
+                    reverse(charBytes);
+                    this.value ~= charBytes;
+                }
+            }
+            else
+            {
+                static assert(0, "Could not determine endianness!");
             }
         }
         else
         {
-            static assert(0, "Could not determine endianness!");
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            CERElement[] primitives;
+            size_t i = 0u;
+            while (i+500u < value.length)
+            {
+                CERElement x = new CERElement();
+                x.type = (this.type & 0b1101_1111u);
+                version (BigEndian)
+                {
+                    x.value = cast(ubyte[]) value[i .. i+500u];
+                }
+                else version (LittleEndian)
+                {
+                    foreach (character; value[i .. i+500u])
+                    {
+                        ubyte[] charBytes = cast(ubyte[]) *cast(char[2] *) &character;
+                        reverse(charBytes);
+                        x.value ~= charBytes;
+                    }
+                }
+                else
+                {
+                    static assert(0, "Could not determine endianness!");
+                }
+                primitives ~= x;
+                i += 500u;
+            }
+            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
+
+            CERElement y = new CERElement();
+            y.type = (this.type & 0b1101_1111u);
+            version (BigEndian)
+            {
+                y.value = cast(ubyte[]) value[i .. $];
+            }
+            else version (LittleEndian)
+            {
+                foreach (character; value[i .. $])
+                {
+                    ubyte[] charBytes = cast(ubyte[]) *cast(char[2] *) &character;
+                    reverse(charBytes);
+                    y.value ~= charBytes;
+                }
+            }
+            else
+            {
+                static assert(0, "Could not determine endianness!");
+            }
+            primitives ~= y;
+
+            CERElement z = new CERElement();
+            primitives ~= z;
+
+            this.sequence = primitives;
+            this.type |= 0b0010_0000u;
+            this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
 
+    @system
+    unittest
+    {
+        void test(size_t length)
+        {
+            wchar[] data;
+            data.length = length;
+            for (size_t i = 0u; i < data.length; i++)
+            {
+                data[i] = cast(wchar) ((i % 0x60u) + 0x20u);
+            }
+            CERElement el = new CERElement();
+            el.bmpString = cast(wstring) data;
+            assert(el.bmpString == cast(wstring) data);
+        }
+        test(0u);
+        test(1u);
+        test(8u);
+        test(127u);
+        test(128u);
+        test(129u);
+        test(192u);
+        test(999u);
+        test(1000u);
+        test(1001u);
+        test(2017u);
+    }
+
     /**
-        Creates an EndOfContent BER Value.
+        Creates an EndOfContent CER Value.
     */
     public @safe @nogc nothrow
     this()
@@ -3772,14 +4938,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
 
     /**
-        Creates a BERElement from the supplied bytes, inferring that the first
+        Creates a CERElement from the supplied bytes, inferring that the first
         byte is the type tag. The supplied ubyte[] array is "chomped" by
-        reference, so the original array will grow shorter as BERElements are
+        reference, so the original array will grow shorter as CERElements are
         generated. 
 
         Throws:
             ASN1ValueTooSmallException = if the bytes supplied are fewer than
-                two (one or zero, in other words), such that no valid BERElement
+                two (one or zero, in other words), such that no valid CERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive null
                 octets) cannot be found, or if the value is encoded in fewer
@@ -3792,15 +4958,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Example:
         ---
         // Decoding looks like:
-        BERElement[] result;
+        CERElement[] result;
         while (bytes.length > 0)
-            result ~= new BERElement(bytes);
+            result ~= new CERElement(bytes);
 
         // Encoding looks like:
         ubyte[] result;
-        foreach (bv; bervalues)
+        foreach (cv; bervalues)
         {
-            result ~= cast(ubyte[]) bv;
+            result ~= cast(ubyte[]) cv;
         }
         ---
     */
@@ -3809,7 +4975,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     {
         if (bytes.length < 2u)
             throw new ASN1ValueTooSmallException
-            ("BER-encoded value terminated prematurely.");
+            ("CER-encoded value terminated prematurely.");
         
         this.type = bytes[0];
         
@@ -3821,13 +4987,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             {
                 if (numberOfLengthOctets == 0x7Fu) // Reserved
                     throw new ASN1InvalidLengthException
-                    ("A BER-encoded length byte of 0xFF is reserved.");
+                    ("A CER-encoded length byte of 0xFF is reserved.");
 
                 // Definite Long, if it has made it this far
 
                 if (numberOfLengthOctets > size_t.sizeof)
                     throw new ASN1ValueTooBigException
-                    ("BER-encoded value is too big to decode.");
+                    ("CER-encoded value is too big to decode.");
 
                 ubyte[] lengthBytes;
                 lengthBytes.length = size_t.sizeof;
@@ -3858,7 +5024,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
                 if (indexOfEndOfContent == 0u)
                     throw new ASN1ValueTooSmallException
-                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERElement.");
+                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded CERElement.");
 
                 this.value = bytes[2 .. indexOfEndOfContent];
                 bytes = bytes[indexOfEndOfContent+2u .. $];
@@ -3870,7 +5036,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
             if (length > (bytes.length-2))
                 throw new ASN1ValueTooSmallException
-                ("BER-encoded value terminated prematurely.");
+                ("CER-encoded value terminated prematurely.");
 
             this.value = bytes[2 .. 2+length].dup;
             bytes = bytes[2+length .. $];
@@ -3878,14 +5044,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     }
 
     /**
-        Creates a BERElement from the supplied bytes, inferring that the first
+        Creates a CERElement from the supplied bytes, inferring that the first
         byte is the type tag. The supplied ubyte[] array is read, starting
         from the index specified by $(D bytesRead), and increments 
         $(D bytesRead) by the number of bytes read.
 
         Throws:
             ASN1ValueTooSmallException = if the bytes supplied are fewer than
-                two (one or zero, in other words), such that no valid BERElement
+                two (one or zero, in other words), such that no valid CERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive null
                 octets) cannot be found, or if the value is encoded in fewer
@@ -3898,16 +5064,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Example:
         ---
         // Decoding looks like:
-        BERElement[] result;
+        CERElement[] result;
         size_t i = 0u;
         while (i < bytes.length)
-            result ~= new BERElement(i, bytes);
+            result ~= new CERElement(i, bytes);
 
         // Encoding looks like:
         ubyte[] result;
-        foreach (bv; bervalues)
+        foreach (cv; bervalues)
         {
-            result ~= cast(ubyte[]) bv;
+            result ~= cast(ubyte[]) cv;
         }
         ---
     */
@@ -3916,7 +5082,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     {
         if (bytes.length < (bytesRead + 2u))
             throw new ASN1ValueTooSmallException
-            ("BER-encoded value terminated prematurely.");
+            ("CER-encoded value terminated prematurely.");
         
         this.type = bytes[bytesRead];
 
@@ -3928,13 +5094,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             {
                 if (numberOfLengthOctets == 0x7Fu) // Reserved
                     throw new ASN1InvalidLengthException
-                    ("A BER-encoded length byte of 0xFF is reserved.");
+                    ("A CER-encoded length byte of 0xFF is reserved.");
 
                 // Definite Long, if it has made it this far
 
                 if (numberOfLengthOctets > size_t.sizeof)
                     throw new ASN1ValueTooBigException
-                    ("BER-encoded value is too big to decode.");
+                    ("CER-encoded value is too big to decode.");
 
                 ubyte[] lengthBytes;
                 lengthBytes.length = size_t.sizeof;
@@ -3965,7 +5131,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
                 if (indexOfEndOfContent == 0u)
                     throw new ASN1ValueTooSmallException
-                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERElement.");
+                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded CERElement.");
 
                 this.value = bytes[bytesRead+2u .. indexOfEndOfContent];
                 bytesRead = (indexOfEndOfContent + 2u); // +2 for the EOC octets
@@ -3977,7 +5143,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
             if ((length+bytesRead) > (bytes.length-2u))
                 throw new ASN1ValueTooSmallException
-                ("BER-encoded value terminated prematurely.");
+                ("CER-encoded value terminated prematurely.");
 
             this.value = bytes[bytesRead+2u .. bytesRead+length+2u].dup;
             bytesRead += (2u + length);
@@ -4122,15 +5288,14 @@ unittest
     ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
     ubyte[] dataOD = [ 0x07u, 0x05u, 'H', 'N', 'E', 'L', 'O' ];
     ubyte[] dataExternal = [ 
-        0x08u, 0x1Cu, 0x80u, 0x0Au, 0x81u, 0x08u, 0x00u, 0x00u, 
-        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x1Bu, 0x81u, 0x08u, 
-        0x65u, 0x78u, 0x74u, 0x65u, 0x72u, 0x6Eu, 0x61u, 0x6Cu, 
-        0x82u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
+        0x08u, 0x18u, 0x80u, 0x06u, 0x80u, 0x04u, 0x29u, 0x06u, 
+        0x04u, 0x01u, 0x81u, 0x08u, 0x65u, 0x78u, 0x74u, 0x65u, 
+        0x72u, 0x6Eu, 0x61u, 0x6Cu, 0x82u, 0x04u, 0x01u, 0x02u, 
+        0x03u, 0x04u ];
     ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
     ubyte[] dataEnum = [ 0x0Au, 0x08u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0xFFu ];
     ubyte[] dataEmbeddedPDV = [ 
-        0x0Bu, 0x12u, 0x80u, 0x0Au, 0x82u, 0x08u, 0x00u, 0x00u, 
-        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x1Bu, 0x82u, 0x04u, 
+        0x0Bu, 0x0Au, 0x80u, 0x02u, 0x85u, 0x00u, 0x82u, 0x04u, 
         0x01u, 0x02u, 0x03u, 0x04u ];
     ubyte[] dataUTF8 = [ 0x0Cu, 0x05u, 'H', 'E', 'N', 'L', 'O' ];
     ubyte[] dataROID = [ 0x0Du, 0x03u, 0x06u, 0x04u, 0x01u ];
@@ -4154,9 +5319,9 @@ unittest
         0x00u, 0x00u, 0x00u, 0x64u 
     ]; // Big-endian "abcd"
     ubyte[] dataCharacter = [ 
-        0x1Du, 0x13u, 0x80u, 0x0Au, 0x82u, 0x08u, 0x00u, 0x00u, 
-        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x3Fu, 0x81u, 0x05u, 
-        0x48u, 0x45u, 0x4Eu, 0x4Cu, 0x4Fu ];
+        0x1Du, 0x0Fu, 0x80u, 0x06u, 0x81u, 0x04u, 0x29u, 0x06u, 
+        0x04u, 0x01u, 0x81u, 0x05u, 0x48u, 0x45u, 0x4Eu, 0x4Cu, 
+        0x4Fu ];
     ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"
 
     // Combine it all
@@ -4189,11 +5354,11 @@ unittest
         dataCharacter ~
         dataBMP;
 
-    BERElement[] result;
+    CERElement[] result;
 
     size_t i = 0u;
     while (i < data.length)
-        result ~= new BERElement(i, data);
+        result ~= new CERElement(i, data);
 
     // Pre-processing
     External x = result[8].external;
@@ -4207,11 +5372,11 @@ unittest
     assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
     assert(result[6].objectIdentifier == new OID(OIDNode(0x01u), OIDNode(0x03u), OIDNode(0x06u), OIDNode(0x04u), OIDNode(0x01u)));
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
-    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((x.identification.syntax == new OID(1u, 1u, 6u, 4u, 1u)) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
     assert(result[10].enumerated!long == 255L);
-    assert((m.identification.presentationContextID == 27L) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((m.identification.fixed == true) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier == [ OIDNode(6), OIDNode(4), OIDNode(1) ]);
     assert(result[14].numericString == "8675309");
@@ -4225,11 +5390,11 @@ unittest
     assert(result[22].visibleString == "PowerThirst");
     assert(result[23].generalString == "PowerThirst");
     assert(result[24].universalString == "abcd"d);
-    assert((c.identification.presentationContextID == 63L) && (c.stringValue == "HENLO"w));
+    assert((c.identification.syntax == new OID(1u, 1u, 6u, 4u, 1u)) && (c.stringValue == "HENLO"w));
 
     result = [];
     while (data.length > 0)
-        result ~= new BERElement(data);
+        result ~= new CERElement(data);
 
     // Pre-processing
     x = result[8].external;
@@ -4243,11 +5408,11 @@ unittest
     assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
     assert(result[6].objectIdentifier == new OID(OIDNode(0x01u), OIDNode(0x03u), OIDNode(0x06u), OIDNode(0x04u), OIDNode(0x01u)));
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
-    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((x.identification.syntax == new OID(1u, 1u, 6u, 4u, 1u)) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
     assert(result[10].enumerated!long == 255L);
-    assert((x.identification.presentationContextID == 27L) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((m.identification.fixed == true) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier == [ OIDNode(6), OIDNode(4), OIDNode(1) ]);
     assert(result[14].numericString == "8675309");
@@ -4261,7 +5426,7 @@ unittest
     assert(result[22].visibleString == "PowerThirst");
     assert(result[23].generalString == "PowerThirst");
     assert(result[24].universalString == "abcd"d);
-    assert((c.identification.presentationContextID == 63L) && (c.stringValue == "HENLO"w));
+    assert((c.identification.syntax == new OID(1u, 1u, 6u, 4u, 1u)) && (c.stringValue == "HENLO"w));
 }
 
 // Test of definite-long encoding
@@ -4286,10 +5451,10 @@ unittest
 
     data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
 
-    BERElement[] result;
+    CERElement[] result;
     size_t i = 0u;
     while (i < data.length)
-        result ~= new BERElement(i, data);
+        result ~= new CERElement(i, data);
         
     assert(result.length == 3);
     assert(result[0].utf8String[0 .. 5] == "AMREN");
@@ -4298,7 +5463,7 @@ unittest
 
     result = [];
     while (data.length > 0)
-        result ~= new BERElement(data);
+        result ~= new CERElement(data);
         
     assert(result.length == 3);
     assert(result[0].utf8String[0 .. 5] == "AMREN");
@@ -4306,7 +5471,7 @@ unittest
     assert(result[2].utf8String[$-2] == '!');
 }
 
-// Test of indefinite-length encoding
+// // Test that indefinite-length encoding throws an exception.
 @system
 unittest
 {
@@ -4328,11 +5493,11 @@ unittest
     ];
 
     data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
-
-    BERElement[] result;
+    
+    CERElement[] result;
     size_t i = 0u;
     while (i < data.length)
-        result ~= new BERElement(i, data);
+        result ~= new CERElement(i, data);
         
     assert(result.length == 3);
     assert(result[0].utf8String[0 .. 5] == "AMREN");
@@ -4341,7 +5506,7 @@ unittest
 
     result = [];
     while (data.length > 0)
-        result ~= new BERElement(data);
+        result ~= new CERElement(data);
 
     assert(result.length == 3);
     assert(result[0].utf8String[0 .. 5] == "AMREN");

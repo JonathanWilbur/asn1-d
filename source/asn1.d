@@ -36,7 +36,7 @@ module asn1;
 
 debug(asn1)
 {
-    public import std.stdio : writefln, writeln;
+    public import std.stdio : write, writefln, writeln;
 }
 
 version (unittest)

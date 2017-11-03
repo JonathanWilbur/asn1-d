@@ -352,7 +352,7 @@ class AbstractSyntaxNotation1Element(Element)
     abstract public @property
     void octetString(ubyte[] value);
 
-    @safe
+    @system
     unittest
     {
         Element el = new Element();
@@ -1218,7 +1218,7 @@ class AbstractSyntaxNotation1Element(Element)
     abstract public @property
     void teletexString(ubyte[] value);
 
-    @safe
+    @system
     unittest
     {
         Element el = new Element();
@@ -1235,7 +1235,7 @@ class AbstractSyntaxNotation1Element(Element)
     abstract public @property
     void videotexString(ubyte[] value);
 
-    @safe
+    @system
     unittest
     {
         Element el = new Element();

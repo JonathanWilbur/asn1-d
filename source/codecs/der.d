@@ -3360,8 +3360,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     public @system
     this(ref ubyte[] bytes)
     {
-        import std.string : indexOf;
-
         if (bytes.length < 2u)
             throw new ASN1ValueTooSmallException
             ("DER-encoded value terminated prematurely.");
@@ -3384,29 +3382,15 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     throw new ASN1ValueTooBigException
                     ("DER-encoded value is too big to decode.");
 
-                version (D_LP64)
-                {
-                    ubyte[] lengthBytes = [ 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u ];
-                }
-                else // FIXME: This *assumes* that the computer must be 32-bit!
-                {
-                    ubyte[] lengthBytes = [ 0x00u, 0x00u, 0x00u, 0x00u ];
-                }
+                ubyte[] lengthBytes;
+                lengthBytes.length = size_t.sizeof;
                 
-                version (LittleEndian)
+                // REVIEW: I sense that there is a simpler loop that would work.
+                for (ubyte i = numberOfLengthOctets; i > 0u; i--)
                 {
-                    for (ubyte i = numberOfLengthOctets; i > 0u; i--)
-                    {
-                        lengthBytes[i-1] = bytes[1+i];
-                    }
+                    lengthBytes[size_t.sizeof-i] = bytes[2+numberOfLengthOctets-i];
                 }
-                version (BigEndian)
-                {
-                    for (ubyte i = 0x00u; i < numberOfLengthOctets; i++)
-                    {
-                        lengthBytes[i-1] = bytes[1+i];
-                    }
-                }
+                version (LittleEndian) reverse(lengthBytes);
 
                 size_t startOfValue = (2u + numberOfLengthOctets);
                 size_t length = *cast(size_t *) lengthBytes.ptr;
@@ -3474,8 +3458,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     public @system
     this(ref size_t bytesRead, ref ubyte[] bytes)
     {
-        import std.string : indexOf;
-
         if (bytes.length < (bytesRead + 2u))
             throw new ASN1ValueTooSmallException
             ("DER-encoded value terminated prematurely.");
@@ -3498,29 +3480,15 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     throw new ASN1ValueTooBigException
                     ("DER-encoded value is too big to decode.");
 
-                version (D_LP64)
-                {
-                    ubyte[] lengthBytes = [ 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u ];
-                }
-                else // FIXME: This *assumes* that the computer must be 32-bit!
-                {
-                    ubyte[] lengthBytes = [ 0x00u, 0x00u, 0x00u, 0x00u ];
-                }
+                ubyte[] lengthBytes;
+                lengthBytes.length = size_t.sizeof;
                 
-                version (LittleEndian)
+                // REVIEW: I sense that there is a simpler loop that would work.
+                for (ubyte i = numberOfLengthOctets; i > 0u; i--)
                 {
-                    for (ubyte i = numberOfLengthOctets; i > 0u; i--)
-                    {
-                        lengthBytes[i-1] = bytes[bytesRead+1+i];
-                    }
+                    lengthBytes[size_t.sizeof-i] = bytes[bytesRead+2+numberOfLengthOctets-i];
                 }
-                version (BigEndian)
-                {
-                    for (ubyte i = 0x00u; i < numberOfLengthOctets; i++)
-                    {
-                        lengthBytes[i-1] = bytes[bytesRead+1+i];
-                    }
-                }
+                version (LittleEndian) reverse(lengthBytes);
 
                 size_t startOfValue = (bytesRead + 2 + numberOfLengthOctets);
                 size_t length = *cast(size_t *) lengthBytes.ptr;
