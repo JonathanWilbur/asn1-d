@@ -20,11 +20,12 @@ It is similar to [Google's Protocol Buffers](https://developers.google.com/proto
 
 ASN.1 is used in, or required by, multiple technologies, including:
 
-* [X.509 Certificates](http://www.itu.int/rec/T-REC-X.509-201610-I/en), used in [SSL/TLS](https://tools.ietf.org/html/rfc5246), are encoded in ASN.1's Distinguished Encoding Rules
-* [LDAP](https://www.ietf.org/rfc/rfc4511.txt) and [X.500](http://www.itu.int/rec/T-REC-X.500-201610-I/en) messages are encoded in ASN.1's Basic Encoding Rules
-* The [magnetic stripes](https://www.iso.org/standard/43317.html) on the back of your credit card use some ASN.1 variant.
-* Microsoft's [Remote Desktop Protocol](https://msdn.microsoft.com/en-us/library/mt242409.aspx) uses ASN.1's Packed Encoding Rules.
-* [Simple Network Management Protocol](https://www.ietf.org/rfc/rfc1157.txt) (SNMP) uses ASN.1's Basic Encoding Rules
+* [X.509 Certificates](http://www.itu.int/rec/T-REC-X.509-201610-I/en), used in [SSL/TLS](https://tools.ietf.org/html/rfc5246)
+* [Lightweight Directory Access Protocol (LDAP)](https://www.ietf.org/rfc/rfc4511.txt)
+* [X.500](http://www.itu.int/rec/T-REC-X.500-201610-I/en)
+* The [magnetic stripes](https://www.iso.org/standard/43317.html) on credit cards and debit cards
+* Microsoft's [Remote Desktop Protocol](https://msdn.microsoft.com/en-us/library/mt242409.aspx)
+* [Simple Network Management Protocol (SNMP)](https://www.ietf.org/rfc/rfc1157.txt) 
 * [Common Management Information Protocol (CMIP)](http://www.itu.int/rec/T-REC-X.711/en)
 * [Signalling System Number 7 (SS7)](http://www.itu.int/rec/T-REC-Q.700-199303-I/en), used to make most phone calls on the Public Switched Telephone Network (PSTN).
 * [H.323](http://www.itu.int/rec/T-REC-H.323-200912-I/en) Video conferencing
@@ -34,7 +35,7 @@ ASN.1 is used in, or required by, multiple technologies, including:
   * [Authentication Contexts for Biometrics (ACBio)](https://www.iso.org/standard/41531.html)
 * [Computer Supported Telecommunications Applications (CSTA)](https://www.ecma-international.org/activities/Communications/TG11/cstaIII.htm)
 * [Dedicated Short Range Communications (SAE J2735)](http://standards.sae.org/j2735_200911/)
-* Cellular telephony (GSM, , UMTS, LTE)
+* Cellular telephony:
   * [Global System for Mobile Communications (GSM)](http://www.ttfn.net/techno/smartcards/gsm11-11.pdf)
   * [Global Packet Radio Service (GPRS) / Enhanced Data Rates for Global Evolution (EDGE)](http://www.3gpp.org/technologies/keywords-acronyms/102-gprs-edge)
   * [Universal Mobile Telecommunications System (UTMS)](http://www.3gpp.org/DynaReport/25-series.htm)
