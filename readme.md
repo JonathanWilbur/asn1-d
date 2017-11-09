@@ -5,9 +5,6 @@
 * License: [MIT License](https://mit-license.org/)
 * Version: [1.0.0-beta](http://semver.org/)
 
-**This library is not complete. It is uploaded here so the public can track my
-progress on it and so that, if I get hit by a bus, my code survives.**
-
 ## What is ASN.1?
 
 ASN.1 stands for *Abstract Syntax Notation*. ASN.1 was first specified in 
@@ -21,25 +18,29 @@ It is similar to [Google's Protocol Buffers](https://developers.google.com/proto
 
 ## Why ASN.1?
 
-ASN.1 is used in multiple technologies, including:
+ASN.1 is used in, or required by, multiple technologies, including:
 
-* X.509 Certificates, used in SSL/TLS, are encoded in ASN.1's Distinguished Encoding Rules
-* LDAP and X.500 messages are encoded in ASN.1's Basic Encoding Rules
-* The magnetic stripes on the back of your credit card use some ASN.1 variant.
-* Microsoft's Remote Desktop Protocol uses ASN.1's Packed Encoding Rules.
-* Simple Network Management Protocol (SNMP) uses ASN.1's Basic Encoding Rules
-* CMIP?
-* Signalling System Number 7 (SS7), used to make most phone calls on the Public Switched Telephone Network (PSTN).
-* H.323 Video conferencing
-* BIP, CBEFF, and ACBio Biometrics
-* PBX control (CSTA)
-* Intelligent transportation (SAE J2735)
-* Cellular telephony (GSM, GPRS/EDGE, UMTS, LTE)
+* [X.509 Certificates](http://www.itu.int/rec/T-REC-X.509-201610-I/en), used in [SSL/TLS](https://tools.ietf.org/html/rfc5246), are encoded in ASN.1's Distinguished Encoding Rules
+* [LDAP](https://www.ietf.org/rfc/rfc4511.txt) and [X.500](http://www.itu.int/rec/T-REC-X.500-201610-I/en) messages are encoded in ASN.1's Basic Encoding Rules
+* The [magnetic stripes](https://www.iso.org/standard/43317.html) on the back of your credit card use some ASN.1 variant.
+* Microsoft's [Remote Desktop Protocol](https://msdn.microsoft.com/en-us/library/mt242409.aspx) uses ASN.1's Packed Encoding Rules.
+* [Simple Network Management Protocol](https://www.ietf.org/rfc/rfc1157.txt) (SNMP) uses ASN.1's Basic Encoding Rules
+* [Common Management Information Protocol (CMIP)](http://www.itu.int/rec/T-REC-X.711/en)
+* [Signalling System Number 7 (SS7)](http://www.itu.int/rec/T-REC-Q.700-199303-I/en), used to make most phone calls on the Public Switched Telephone Network (PSTN).
+* [H.323](http://www.itu.int/rec/T-REC-H.323-200912-I/en) Video conferencing
+* Biometrics Protocols:
+  * [BioAPI Interworking Protocol](https://www.iso.org/standard/43611.html)
+  * [Common Biometric Exchange Formats Framework (CBEFF)](http://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir6529-a.pdf)
+  * [Authentication Contexts for Biometrics (ACBio)](https://www.iso.org/standard/41531.html)
+* [Computer Supported Telecommunications Applications (CSTA)](https://www.ecma-international.org/activities/Communications/TG11/cstaIII.htm)
+* [Dedicated Short Range Communications (SAE J2735)](http://standards.sae.org/j2735_200911/)
+* Cellular telephony (GSM, , UMTS, LTE)
+  * [Global System for Mobile Communications (GSM)](http://www.ttfn.net/techno/smartcards/gsm11-11.pdf)
+  * [Global Packet Radio Service (GPRS) / Enhanced Data Rates for Global Evolution (EDGE)](http://www.3gpp.org/technologies/keywords-acronyms/102-gprs-edge)
+  * [Universal Mobile Telecommunications System (UTMS)](http://www.3gpp.org/DynaReport/25-series.htm)
+  * [Long-Term Evolution (LTE)](http://www.3gpp.org/technologies/keywords-acronyms/98-lte)
 
 Source for some of these: [PyASN1](http://pyasn1.sourceforge.net/)
-
-So, before we even begin to develop new TLS, LDAP, or RDP libraries in the
-D programming language, it is important that we get a grasp of ASN.1 first.
 
 ## Structure
 
@@ -282,6 +283,10 @@ If you have any great ideas, let me know.
 The codecs are intended to be `final` classes, but due to 
 [this bug](https://issues.dlang.org/show_bug.cgi?id=17909) I found, it cannot
 be until that bug is resolved.
+
+## Special Thanks
+
+[Ilya Tingof](https://stackoverflow.com/users/1175029/ilya-etingof) ([@etingof](https://github.com/etingof)), who answered several questions of mine on StackOverflow, and who authored [PyASN1](http://pyasn1.sourceforge.net/).
 
 ## See Also
 
