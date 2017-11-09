@@ -2,8 +2,8 @@
 
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
-* License: [ISC License](https://opensource.org/licenses/ISC)
-* Version: [1.0.0-alpha.4](http://semver.org/)
+* License: [MIT License](https://mit-license.org/)
+* Version: [1.0.0-beta](http://semver.org/)
 
 **This library is not complete. It is uploaded here so the public can track my
 progress on it and so that, if I get hit by a bus, my code survives.**
@@ -23,7 +23,7 @@ It is similar to [Google's Protocol Buffers](https://developers.google.com/proto
 
 ASN.1 is used in multiple technologies, including:
 
-* SSL/TLS messages are encoded in ASN.1's Distinguished Encoding Rules
+* X.509 Certificates, used in SSL/TLS, are encoded in ASN.1's Distinguished Encoding Rules
 * LDAP and X.500 messages are encoded in ASN.1's Basic Encoding Rules
 * The magnetic stripes on the back of your credit card use some ASN.1 variant.
 * Microsoft's Remote Desktop Protocol uses ASN.1's Packed Encoding Rules.
@@ -113,8 +113,8 @@ Here is an example of encoding with Basic Encoding Rules, using the
 
 ```d
 BERElement el = new BERElement();
-el.type = 0x02u; // "2" means this is an INTEGER
-el.integer = 1433; // Now the data is encoded.
+el.typeTag = ASN1UniversalType.integer;
+el.integer!long = 1433; // Now the data is encoded.
 writefln("%(%02X %)", cast(ubyte[]) el); // Writes the encoded bytes to the terminal.
 ```
 
@@ -132,38 +132,14 @@ I hope to be done with this library before the end of 2017. When it is
 complete, it will contain several codecs, and everything will be unit-tested 
 and reviewed for security and performance.
 
-### 1.0.0-alpha Development
-
-Pre-alpha development was completed on October 26th, 2017. 
-Version 1.0.0-alpha development will consist entirely of creating these codecs:
-
-- [x] Fixes
-  - [x] Incorrect encoding / decoding of `EmbeddedPDV` (Should not include `data-value-descriptor`)
-  - [x] Make `context-negotiation` and `syntaxes` constructed
-  - [x] Add `else version` instead of two back-to-back `version`s for `LittleEndian` and `BigEndian`
-  - [x] Make `toBytes()` the return value for `opCast(ubyte[])` instead of duplicating code.
-  - [x] Test Definite Long encoding when the length is encoded on more than one byte.
-  - [x] ~~Contracts~~ Static assertions for `sizeof` `char`, `wchar`, and `dchar`. (Contracts would be duplicated a lot.)
-  - [x] ~~CER codec should throw exception if non-constructed elements large than 1000 bytes are encountered.~~ (I decided against implementing this because it is too complicated, and whether it throws an exception is contingent upon what the type is, which would not really be easily extensible for any non-universal type. It will be the user's responsibility to check that the CER element is encoded in constructed form for all types that require it.)
-  - [x] "The offending character is ?" sometimes screws up terminal output...
-  - [x] Checks for % 4 or % 2 for `UniversalString` and `BMPString` only occur in `LittleEndian` builds
-  - [x] Test all zero-length strings
-- [x] Distinguished Encoding Rules (DER)
-  - [x] Ensure that context-switching types require elements in the specified order.
-- [x] Basic Encoding Rules (BER)
-- [x] Canonical Encoding Rules (CER)
-- [x] Mutators for `primitive`, `constructed`, `applicationSpecific`, etc.
-- [x] Documentation
-  - [x] Use
-  - [x] Structure
-- [ ] Release with MIT License instead
-
-Version 1.0.0-alpha is expected to be released around November 12th, 2017.
-
 ### 1.0.0-beta Development
 
-Version 1.0.0-beta is expected to be released around November 30th, 2017.
+Version 1.0.0-beta was released on November 8th, 2017.
 
+- [ ] Properties for member `type`
+  - [ ] `typeClass` (Just rename `tagClass`.)
+  - [ ] `typeConstruction` (Just rename `construction`.)
+  - [ ] `typeNumber`
 - [ ] Command Line Tools
   - [ ] `encode-der`
   - [ ] `encode-ber`
@@ -179,7 +155,7 @@ Version 1.0.0-beta is expected to be released around November 30th, 2017.
   - [ ] Linux
 - [ ] Comparison Testing with
   - [ ] [PyASN1](http://pyasn1.sourceforge.net)
-  - [ ] @YuryStrozhevsky's [ASN1 BER Codec](https://github.com/YuryStrozhevsky/C-plus-plus-ASN.1-2008-coder-decoder)
+  - [ ] [@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN1 BER Codec](https://github.com/YuryStrozhevsky/C-plus-plus-ASN.1-2008-coder-decoder)
 - [ ] Field Testing
   - [ ] Reading X.509 Certificates
   - [ ] Creating a Session with [OpenLDAP Server](http://www.openldap.org)
@@ -188,7 +164,7 @@ Version 1.0.0-beta is expected to be released around November 30th, 2017.
   - [ ] Do something with BIP Biometrics 
   - [ ] Do something with CBEFF Biometrics
   - [ ] Do something with ACBio Biometrics
-  - [ ] @YuryStrozhevsky's [ASN1 Test Suite](https://github.com/YuryStrozhevsky/ASN1-2008-free-test-suite)
+  - [ ] [@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN1 Test Suite](https://github.com/YuryStrozhevsky/ASN1-2008-free-test-suite)
 - [ ] Build Version Testing
   - [ ] `-noboundscheck`
 - [ ] Review by one security firm

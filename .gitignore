@@ -7,7 +7,7 @@ build/libraries/*
 build/logs/*
 build/objects/*
 rubbish/
-documentation/
+documentation/restricted/
 .vscode/
 asn1
 
@@ -44,3 +44,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Ignore PDFs so I don't infringe on intellectual property
+*.pdf
