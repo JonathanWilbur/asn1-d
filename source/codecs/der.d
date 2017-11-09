@@ -134,72 +134,88 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
     static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
 
-    /**
-        Whether the value is one of the universally-defined data types, which
-        are:
+    /** 
+        Returns the tag class of the element. Though you could directly get the
+        class yourself, you should still use this property instead; not doing
+        so is a good way to introduce bugs into your program.
 
-        $(TABLE
-            $(TR $(TH Type)                 $(TH Construction)      $(TH Hexadecimal Value))
-            $(TR $(TD End-of-Content)       $(TD Primitive)         $(TD 0x00))
-            $(TR $(TD BOOLEAN)	            $(TD Primitive)         $(TD 0x01))
-            $(TR $(TD INTEGER)	            $(TD Primitive)         $(TD 0x02))
-            $(TR $(TD BIT STRING)           $(TD Both)              $(TD 0x03))
-            $(TR $(TD OCTET STRING)         $(TD Both)              $(TD 0x04))
-            $(TR $(TD NULL)                 $(TD Primitive)         $(TD 0x05))
-            $(TR $(TD OBJECT IDENTIFIER)	$(TD Primitive)         $(TD 0x06))
-            $(TR $(TD Object Descriptor)    $(TD Both)              $(TD 0x07))
-            $(TR $(TD EXTERNAL)	            $(TD Constructed)       $(TD 0x08))
-            $(TR $(TD REAL)            	    $(TD Primitive)         $(TD 0x09))
-            $(TR $(TD ENUMERATED)	        $(TD Primitive)         $(TD 0x0A))
-            $(TR $(TD EMBEDDED PDV)	        $(TD Constructed)       $(TD 0x0B))
-            $(TR $(TD UTF8String)	        $(TD Both)              $(TD 0x0C))
-            $(TR $(TD RELATIVE-OID)	        $(TD Primitive)         $(TD 0x0D))
-            $(TR $(TD SEQUENCE)	            $(TD Constructed)       $(TD 0x10))
-            $(TR $(TD SET)	                $(TD Constructed)       $(TD 0x11))
-            $(TR $(TD NumericString)	    $(TD Both)              $(TD 0x12))
-            $(TR $(TD PrintableString)	    $(TD Both)              $(TD 0x13))
-            $(TR $(TD T61String)	        $(TD Both)              $(TD 0x14))
-            $(TR $(TD VideotexString)	    $(TD Both)              $(TD 0x15))
-            $(TR $(TD IA5String)	        $(TD Both)              $(TD 0x16))
-            $(TR $(TD UTCTime)	            $(TD Both)              $(TD 0x17))
-            $(TR $(TD GeneralizedTime)	    $(TD Both)              $(TD 0x18))
-            $(TR $(TD GraphicString)	    $(TD Both)              $(TD 0x19))
-            $(TR $(TD VisibleString)	    $(TD Both)              $(TD 0x1A))
-            $(TR $(TD GeneralString)	    $(TD Both)              $(TD 0x1B))
-            $(TR $(TD UniversalString)	    $(TD Both)              $(TD 0x1C))
-            $(TR $(TD CHARACTER STRING)	    $(TD Both)              $(TD 0x1D))
-            $(TR $(TD BMPString)	        $(TD Both)              $(TD 0x1E))
-        )
+        Returns: the tag class of the element.
     */
-    final public @property nothrow
-    bool universal() const
+    final public @property nothrow @safe
+    ASN1TagClass tagClass() const
     {
-        return ((this.type & 0xC) == 0x00);
+        switch (this.type & 0b1100_0000u)
+        {
+            case (0b0000_0000u):
+            {
+                return ASN1TagClass.universal;
+            }
+            case (0b0100_0000u):
+            {
+                return ASN1TagClass.application;
+            }
+            case (0b1000_0000u):
+            {
+                return ASN1TagClass.contextSpecific;
+            }
+            case (0b1100_0000u):
+            {
+                return ASN1TagClass.privatelyDefined;
+            }
+            default:
+            {
+                assert(0, "Impossible tag class appeared!");
+            }
+        }
     }
 
-    /**
-        Whether the type is application-specific.
+    /** 
+        Sets the tag class of the element. Though you could directly set the
+        class yourself, you should still use this property instead; not doing
+        so is a good way to introduce bugs into your program.
     */
-    final public @property nothrow
-    bool applicationSpecific() const
+    final public @property nothrow @safe
+    void tagClass(ASN1TagClass value)
     {
-        return ((this.type & 0xC) == 0x40);
+        this.type |= cast(ubyte) value;
     }
 
-    /**
-        Whether the type tag specifies an index within a SEQUENCE or CHOICE.
+    /** 
+        Returns the construction of the element. Though you could directly get 
+        the construction yourself, you should still use this property instead; 
+        not doing so is a good way to introduce bugs into your program.
+
+        Returns: the tag class of the element.
     */
-    final public @property nothrow
-    bool contextSpecific() const
+    final public @property nothrow @safe
+    ASN1Construction construction() const
     {
-        return ((this.type & 0xC) == 0x80);
+        switch (this.type & 0b0010_0000u)
+        {
+            case (0b0000_0000u):
+            {
+                return ASN1Construction.primitive;
+            }
+            case (0b0010_0000u):
+            {
+                return ASN1Construction.constructed;
+            }
+            default:
+            {
+                assert(0, "Impossible tag class appeared!");
+            }
+        }
     }
 
-    /// I don't know what this even means.
-    final public @property nothrow
-    bool privatelySpecific() const
+    /** 
+        Sets the construction of the element. Though you could directly set 
+        the construction yourself, you should still use this property instead; 
+        not doing so is a good way to introduce bugs into your program.
+    */
+    final public @property nothrow @safe
+    void construction(ASN1Construction value)
     {
-        return ((this.type & 0xC) == 0x40);
+        this.type |= cast(ubyte) value;
     }
 
     // public ASN1TypeTag type;
@@ -3780,4 +3796,54 @@ unittest
     size_t i = 0u;
     assertThrown!ASN1InvalidLengthException(new DERElement(i, data));
     assertThrown!ASN1InvalidLengthException(new DERElement(data));
+}
+
+/*
+    Test of OCTET STRING encoding on 500 bytes (+4 for type and length tags)
+
+    The number 500 was specifically selected for this test because CER
+    uses 1000 as the threshold after which OCTET STRING must be represented
+    as a constructed sequence of definite-length-encoded OCTET STRINGS, 
+    followed by an EOC element, but 500 is also big enough to require
+    the length to be encoded on two octets in definite-long form.
+*/
+@system
+unittest
+{
+    ubyte[] test;
+    test.length = 504u;
+    test[0] = cast(ubyte) ASN1UniversalType.octetString;
+    test[1] = 0b1000_0010u; // Length is encoded on next two octets
+    test[2] = 0x01u; // Most significant byte of length
+    test[3] = 0xF4u; // Least significant byte of length
+    test[4] = 0x0Au; // First byte of the encoded value
+    test[5 .. $-1] = 0x0Bu;
+    test[$-1] = 0x0Cu;
+
+    DERElement el;
+    assertNotThrown!Exception(el = new DERElement(test));
+    ubyte[] output = el.octetString;
+    assert(output.length == 500u);
+    assert(output[0] == 0x0Au);
+    assert(output[1] == 0x0Bu);
+    assert(output[$-2] == 0x0Bu);
+    assert(output[$-1] == 0x0Cu);
+}
+
+// Assert all single-byte encodings do not decode successfully.
+@system
+unittest
+{
+    for (ubyte i = 0x00u; i < ubyte.max; i++)
+    {
+        ubyte[] data = [i];
+        assertThrown!Exception(new DERElement(data));
+    }
+
+    size_t index;
+    for (ubyte i = 0x00u; i < ubyte.max; i++)
+    {
+        ubyte[] data = [i];
+        assertThrown!Exception(new DERElement(index, data));
+    }
 }

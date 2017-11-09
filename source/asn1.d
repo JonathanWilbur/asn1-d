@@ -42,7 +42,7 @@ debug(asn1)
 version (unittest)
 {
     public import core.exception : AssertError, RangeError;
-    public import std.exception : assertThrown;
+    public import std.exception : assertNotThrown, assertThrown;
     public import std.math : approxEqual;
 }
 
@@ -64,7 +64,7 @@ class AbstractSyntaxNotation1Exception : Exception
 
 ///
 public alias ASN1TagClass = AbstractSyntaxNotation1TagClass;
-//
+///
 public
 enum AbstractSyntaxNotation1TagClass : ubyte
 {
@@ -86,7 +86,46 @@ enum AbstractSyntaxNotation1Construction : ubyte
 
 ///
 public alias ASN1UniversalType = AbstractSyntaxNotation1UniversalType;
-///
+/**
+    The data types, as well as their permitted construction and numeric
+    identifiers, according to the 
+    $(LINK2 http://www.itu.int/en/pages/default.aspx, 
+    International Telecommunications Union)'s
+    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
+
+    $(TABLE
+        $(TR $(TH Type)                 $(TH Construction)      $(TH Hexadecimal Value))
+        $(TR $(TD End-of-Content)       $(TD Primitive)         $(TD 0x00))
+        $(TR $(TD BOOLEAN)	            $(TD Primitive)         $(TD 0x01))
+        $(TR $(TD INTEGER)	            $(TD Primitive)         $(TD 0x02))
+        $(TR $(TD BIT STRING)           $(TD Both)              $(TD 0x03))
+        $(TR $(TD OCTET STRING)         $(TD Both)              $(TD 0x04))
+        $(TR $(TD NULL)                 $(TD Primitive)         $(TD 0x05))
+        $(TR $(TD OBJECT IDENTIFIER)	$(TD Primitive)         $(TD 0x06))
+        $(TR $(TD Object Descriptor)    $(TD Both)              $(TD 0x07))
+        $(TR $(TD EXTERNAL)	            $(TD Constructed)       $(TD 0x08))
+        $(TR $(TD REAL)            	    $(TD Primitive)         $(TD 0x09))
+        $(TR $(TD ENUMERATED)	        $(TD Primitive)         $(TD 0x0A))
+        $(TR $(TD EMBEDDED PDV)	        $(TD Constructed)       $(TD 0x0B))
+        $(TR $(TD UTF8String)	        $(TD Both)              $(TD 0x0C))
+        $(TR $(TD RELATIVE-OID)	        $(TD Primitive)         $(TD 0x0D))
+        $(TR $(TD SEQUENCE)	            $(TD Constructed)       $(TD 0x10))
+        $(TR $(TD SET)	                $(TD Constructed)       $(TD 0x11))
+        $(TR $(TD NumericString)	    $(TD Both)              $(TD 0x12))
+        $(TR $(TD PrintableString)	    $(TD Both)              $(TD 0x13))
+        $(TR $(TD T61String)	        $(TD Both)              $(TD 0x14))
+        $(TR $(TD VideotexString)	    $(TD Both)              $(TD 0x15))
+        $(TR $(TD IA5String)	        $(TD Both)              $(TD 0x16))
+        $(TR $(TD UTCTime)	            $(TD Both)              $(TD 0x17))
+        $(TR $(TD GeneralizedTime)	    $(TD Both)              $(TD 0x18))
+        $(TR $(TD GraphicString)	    $(TD Both)              $(TD 0x19))
+        $(TR $(TD VisibleString)	    $(TD Both)              $(TD 0x1A))
+        $(TR $(TD GeneralString)	    $(TD Both)              $(TD 0x1B))
+        $(TR $(TD UniversalString)	    $(TD Both)              $(TD 0x1C))
+        $(TR $(TD CHARACTER STRING)	    $(TD Both)              $(TD 0x1D))
+        $(TR $(TD BMPString)	        $(TD Both)              $(TD 0x1E))
+    )
+*/
 public
 enum AbstractSyntaxNotation1UniversalType : ubyte
 {
