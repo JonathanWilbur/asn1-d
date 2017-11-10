@@ -142,7 +142,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Returns: the tag class of the element.
     */
     final public @property nothrow @safe
-    ASN1TagClass tagClass() const
+    ASN1TagClass typeClass() const
     {
         switch (this.type & 0b1100_0000u)
         {
@@ -175,7 +175,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         so is a good way to introduce bugs into your program.
     */
     final public @property nothrow @safe
-    void tagClass(ASN1TagClass value)
+    void typeClass(ASN1TagClass value)
     {
         this.type |= cast(ubyte) value;
     }
@@ -188,7 +188,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Returns: the tag class of the element.
     */
     final public @property nothrow @safe
-    ASN1Construction construction() const
+    ASN1Construction typeConstruction() const
     {
         switch (this.type & 0b0010_0000u)
         {
@@ -213,12 +213,48 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         not doing so is a good way to introduce bugs into your program.
     */
     final public @property nothrow @safe
-    void construction(ASN1Construction value)
+    void typeConstruction(ASN1Construction value)
     {
         this.type |= cast(ubyte) value;
     }
 
-    // public ASN1TypeTag type;
+    /** 
+        Returns the type number of the element. Though you could directly get 
+        the number yourself, you should still use this property instead; 
+        not doing so is a good way to introduce bugs into your program.
+
+        Returns: the type number associated with this element.
+    */
+    final public @property nothrow @safe
+    T typeNumber(T)() const
+    if (isIntegral!T && isUnsigned!T)
+    {
+        return cast(T) (this.type & 0b0001_1111u);
+    }
+
+    /** 
+        Sets the type number of the element. Though you could directly set 
+        the number yourself, you should still use this property instead; 
+        not doing so is a good way to introduce bugs into your program.
+    */
+    final public @property @safe
+    void typeNumber(T)(T value)
+    if (isIntegral!T && isUnsigned!T)
+    {
+        if (value > 31u)
+            throw new ASN1CodecException
+            (
+                "This exception was thrown because you attempted to assign a " ~
+                "value greater than 31 to the type number of a BER-encoded " ~
+                "ASN.1 element. Since the type tag reserves only five bits " ~
+                "for encoding the type number, the valid range of type numbers " ~
+                "is strictly between 0 and 31, inclusively."
+            );
+        
+        this.type |= ((cast(ubyte) value) & 0b0001_1111u);
+    }
+
+    /// The type tag of this element
     public ubyte type;
 
     /// The length of the value in octets

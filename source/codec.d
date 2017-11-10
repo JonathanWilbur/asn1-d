@@ -20,7 +20,7 @@ public import std.datetime.systime : SysTime;
 public import std.datetime.timezone : TimeZone, UTC;
 private import std.exception : basicExceptionCtors;
 public import std.math : isNaN, log2;
-public import std.traits : isIntegral, isSigned;
+public import std.traits : isIntegral, isSigned, isUnsigned;
 
 ///
 public alias ASN1CodecException = AbstractSyntaxNotation1CodecException;
@@ -379,8 +379,40 @@ class AbstractSyntaxNotation1Element(Element)
         Element el = new Element();
         el.objectIdentifier = new OID(OIDNode(1u), OIDNode(30u), OIDNode(256u), OIDNode(623485u), OIDNode(8u));
         assert(el.objectIdentifier == new OID(OIDNode(1u), OIDNode(30u), OIDNode(256u), OIDNode(623485u), OIDNode(8u)));
-        el.objectIdentifier = new OID(1, 3, 6, 4, 0, 256, 70000, 39);
-        assert(el.objectIdentifier.numericArray == [ 1, 3, 6, 4, 0, 256, 70000, 39 ]);
+
+        size_t[] sensitiveValues = [
+            0,
+            1,
+            2, // First even
+            3, // First odd greater than 1
+            7, // Number of bits in each byte that encode the number
+            8, // Number of bits in a byte
+            127, // Largest number that can encode on a single OID byte
+            128, // 127+1
+            70000 // A large number that takes three bytes to encode
+        ];
+
+        for (size_t x = 0u; x < 3; x++)
+        {
+            for (size_t y = 0u; y < 40u; y++)
+            {
+                foreach (z; sensitiveValues)
+                {
+                    el.objectIdentifier = new OID(x, y, 6, 4, z);
+                    assert(el.objectIdentifier.numericArray == [ x, y, 6, 4, z ]);
+                    el.objectIdentifier = new OID(x, y, 6, 4, z, 0);
+                    assert(el.objectIdentifier.numericArray == [ x, y, 6, 4, z, 0 ]);
+                    el.objectIdentifier = new OID(x, y, 6, 4, z, 1);
+                    assert(el.objectIdentifier.numericArray == [ x, y, 6, 4, z, 1 ]);
+                    el.objectIdentifier = new OID(OIDNode(x), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z));
+                    assert(el.objectIdentifier == new OID(OIDNode(x), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z)));
+                    el.objectIdentifier = new OID(OIDNode(x), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z), OIDNode(0));
+                    assert(el.objectIdentifier == new OID(OIDNode(x), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z), OIDNode(0)));
+                    el.objectIdentifier = new OID(OIDNode(x), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z), OIDNode(1));
+                    assert(el.objectIdentifier == new OID(OIDNode(x), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z), OIDNode(1)));
+                }
+            }
+        }
 
         // Assert that accessor does not mutate state
         assert(el.objectIdentifier == el.objectIdentifier);
@@ -632,6 +664,9 @@ class AbstractSyntaxNotation1Element(Element)
             E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2, 
             LOG2E, LOG2T, LOG10E, SQRT2, SQRT1_2;
 
+        immutable real SQRT_2_OVER_2 = (SQRT2 / 2.0);
+        immutable real GOLDEN_RATIO = ((1.0 + sqrt(5)) / 2.0);
+
         Element el = new Element();
 
         // Tests floats
@@ -665,6 +700,10 @@ class AbstractSyntaxNotation1Element(Element)
         assert(approxEqual(el.realType!float, cast(float) SQRT2));
         el.realType!float = cast(float) SQRT1_2;
         assert(approxEqual(el.realType!float, cast(float) SQRT1_2));
+        el.realType!float = cast(float) SQRT_2_OVER_2;
+        assert(approxEqual(el.realType!float, cast(float) SQRT_2_OVER_2));
+        el.realType!float = cast(float) GOLDEN_RATIO;
+        assert(approxEqual(el.realType!float, cast(float) GOLDEN_RATIO));
 
         // Tests doubles
         el.realType!double = cast(double) E;
@@ -697,6 +736,10 @@ class AbstractSyntaxNotation1Element(Element)
         assert(approxEqual(el.realType!double, cast(double) SQRT2));
         el.realType!double = cast(double) SQRT1_2;
         assert(approxEqual(el.realType!double, cast(double) SQRT1_2));
+        el.realType!double = cast(double) SQRT_2_OVER_2;
+        assert(approxEqual(el.realType!double, cast(double) SQRT_2_OVER_2));
+        el.realType!double = cast(double) GOLDEN_RATIO;
+        assert(approxEqual(el.realType!double, cast(double) GOLDEN_RATIO));
     }
 
     @system

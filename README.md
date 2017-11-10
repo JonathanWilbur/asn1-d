@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta](http://semver.org/)
+* Version: [1.0.0-beta.1](http://semver.org/)
 
 ## What is ASN.1?
 
@@ -24,7 +24,7 @@ ASN.1 is used in, or required by, multiple technologies, including:
 * [Lightweight Directory Access Protocol (LDAP)](https://www.ietf.org/rfc/rfc4511.txt)
 * [X.500](http://www.itu.int/rec/T-REC-X.500-201610-I/en)
 * The [magnetic stripes](https://www.iso.org/standard/43317.html) on credit cards and debit cards
-* Microsoft's [Remote Desktop Protocol](https://msdn.microsoft.com/en-us/library/mt242409.aspx)
+* Microsoft's [Remote Desktop Protocol (RDP)](https://msdn.microsoft.com/en-us/library/mt242409.aspx)
 * [Simple Network Management Protocol (SNMP)](https://www.ietf.org/rfc/rfc1157.txt) 
 * [Common Management Information Protocol (CMIP)](http://www.itu.int/rec/T-REC-X.711/en)
 * [Signalling System Number 7 (SS7)](http://www.itu.int/rec/T-REC-Q.700-199303-I/en), used to make most phone calls on the Public Switched Telephone Network (PSTN).
@@ -138,42 +138,48 @@ and reviewed for security and performance.
 
 Version 1.0.0-beta was released on November 8th, 2017.
 
-- [ ] Properties for member `type`
-  - [ ] `typeClass` (Just rename `tagClass`.)
-  - [ ] `typeConstruction` (Just rename `construction`.)
-  - [ ] `typeNumber`
+- [ ] Either do something with `valueContainsDoubleNull()` or make it public
+- [x] Properties for member `type`
+  - [x] `typeClass` (Just rename `tagClass`.)
+  - [x] `typeConstruction` (Just rename `construction`.)
+  - [x] `typeNumber`
 - [ ] Command Line Tools
   - [ ] `encode-der`
   - [ ] `encode-ber`
   - [ ] `encode-cer`
-  - [ ] `decode-der`
-  - [ ] `decode-ber`
-  - [ ] `decode-cer`
+  - [x] `decode-der`
+  - [x] `decode-ber`
+  - [x] `decode-cer`
 - [ ] Fuzz testing (Sending random bytes to a decoder to get something unexpected)
+  - [ ] Ensure `RangeError` is never thrown. (If it is thrown, it means that there are vulnerabilities if compiled with `-noboundscheck` flag.)
 - [x] Test that all one-byte elements throw exceptions
+- [x] Test an OID with a node with a values 127, 128, and 0.
+- [ ] Test even more significant mathematical values with `realType()`:
+  - [x] `sqrt(2)/2`
+  - [x] The golden ratio
+  - [ ] Everything [here](https://en.wikipedia.org/wiki/Mathematical_constant)
+  - [ ] `max` of every integral type
+  - [ ] `min` of every integral type
 - [ ] Cross-Platform Testing
   - [ ] Windows
-  - [ ] Mac OS X
-  - [ ] Linux
+  - [x] Mac OS X
+  - [x] Linux
 - [ ] Comparison Testing with
   - [ ] [PyASN1](http://pyasn1.sourceforge.net)
   - [ ] [@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN1 BER Codec](https://github.com/YuryStrozhevsky/C-plus-plus-ASN.1-2008-coder-decoder)
 - [ ] Field Testing
-  - [ ] Reading X.509 Certificates
+  - [x] Reading X.509 Certificates
   - [ ] Creating a Session with [OpenLDAP Server](http://www.openldap.org)
   - [ ] Do something with SNMP
   - [ ] Do something with H.323 Video conferencing
   - [ ] Do something with BIP Biometrics 
   - [ ] Do something with CBEFF Biometrics
   - [ ] Do something with ACBio Biometrics
-  - [ ] [@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN1 Test Suite](https://github.com/YuryStrozhevsky/ASN1-2008-free-test-suite)
-- [ ] Build Version Testing
-  - [ ] `-noboundscheck`
+  - [x] ~~[@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN1 Test Suite](https://github.com/YuryStrozhevsky/ASN1-2008-free-test-suite)~~
 - [ ] Review by one security firm
 - [ ] Review for HeartBleed-like vulnerabilities
 - [ ] Review of all ASN.1-related CVEs
 - [ ] Review that character-encoded `REAL`s are strictly conformant to ISO 6093 (Maybe even make an ISO 6093 Library...)
-- [ ] Indefinite-Length Encoding
 
 ### 1.0.0 Release
 

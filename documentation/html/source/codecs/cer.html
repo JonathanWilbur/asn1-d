@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>codecs.der</title>
+    <title>codecs.cer</title>
     <style type="text/css" media="screen">
       html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
       blockquote, pre, a, abbr, address, cite, code, del, dfn, em, figure,
@@ -463,18 +463,18 @@
   <body id="ddoc_main" class="ddoc dlang">
     <div class="content_wrapper">
       <article class="module">
-        <h1 class="module_name">codecs.der</h1>
+        <h1 class="module_name">codecs.cer</h1>
         <section id="module_content"><section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Distinguished Encoding Rules (DER) is a standard for encoding ASN.1 data.
-    DER is often used for cryptgraphically-signed data, such as X.509
-    certificates, because DER's defining feature is that there is only one way
+    Canonical Encoding Rules (CER) is a standard for encoding ASN.1 data.
+    CER is often used for cryptgraphically-signed data, such as X.509
+    certificates, because CER's defining feature is that there is only one way
     to encode each data type, which means that two encodings of the same data
-    could not have different cryptographic signatures. For this reason, DER
+    could not have different cryptographic signatures. For this reason, CER
     is generally regarded as the most secure encoding standard for ASN.1.
     Like Basic Encoding Rules (BER), Canonical Encoding Rules (CER), and
-    Packed Encoding Rules (PER), Distinguished Encoding Rules is a
+    Packed Encoding Rules (PER), Canonical Encoding Rules is a
     specification created by the
     <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>,
     and specified in
@@ -504,7 +504,8 @@
         <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
 
   </p>
-</div><div class="ddoc_see_also">
+</div>
+<div class="ddoc_see_also">
   <h4>See Also</h4>
   <p class="para">
     <a href="https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One">The Wikipedia Page on ASN.1</a>
@@ -521,7 +522,7 @@
   <li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DERElement" id="DERElement"><code class="code">DERElement</code></a>
+  <a href="#CERElement" id="CERElement"><code class="code">CERElement</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -530,7 +531,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DERElement"></span>alias <code class="code">DERElement</code> = DistinguishedEncodingRulesElement;
+            <span class="ddoc_anchor" id="CERElement"></span>alias <code class="code">CERElement</code> = CanonicalEncodingRulesElement;
 
           </code>
         </p>
@@ -546,7 +547,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement" id="DistinguishedEncodingRulesElement"><code class="code">DistinguishedEncodingRulesElement</code></a>
+  <a href="#CanonicalEncodingRulesElement" id="CanonicalEncodingRulesElement"><code class="code">CanonicalEncodingRulesElement</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -555,7 +556,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement"></span>class <code class="code">DistinguishedEncodingRulesElement</code>: <span class="ddoc_psuper_symbol">codec.ASN1Element!(<code class="code">DistinguishedEncodingRulesElement</code>).AbstractSyntaxNotation1Element</span>;
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement"></span>class <code class="code">CanonicalEncodingRulesElement</code>: <span class="ddoc_psuper_symbol">codec.ASN1Element!(<code class="code">CanonicalEncodingRulesElement</code>).AbstractSyntaxNotation1Element</span>;
 
           </code>
         </p>
@@ -567,58 +568,65 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    The unit of encoding and decoding for Distinguished Encoding Rules DER.
+    The unit of encoding and decoding for Canonical Encoding Rules CER.
 
   </p>
 </div>
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-        There are three parts to an encoded DER Value:
+        There are three parts to an encoded CER Value:
 <br><br>
+
     <ul>        <li>A Type Tag, which specifies what data type is encoded</li>
         <li>A Length Tag, which specifies how many subsequent bytes encode the data</li>
         <li>The Encoded Value</li>
     </ul>
 <br><br>
+
     They appear in the binary encoding in that order, and as such, the encoding
     scheme is sometimes described as "TLV," which stands for Type-Length-Value.
 <br><br>
+
     This class provides a properties for getting and setting bit fields of
     the type tag, but most of it is functionality for encoding data per
     the specification.
 <br><br>
+
     As an example, this is what encoding a simple INTEGER looks like:
 <br><br>
+
 
 <section class="code_listing">
   <div class="code_sample">
     <div class="dlang">
       <ol class="code_lines">
-        <li><code class="code">DERElement dv = <span class="keyword">new</span> DERElement();
-dv.type = 0x02u; <span class="comment">// "2" means this is an INTEGER
-</span>dv.integer = 1433; <span class="comment">// Now the data is encoded.
-</span>transmit(<span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) dv); <span class="comment">// transmit() is a made-up function.
+        <li><code class="code">CERElement cv = <span class="keyword">new</span> CERElement();
+cv.type = 0x02u; <span class="comment">// "2" means this is an INTEGER
+</span>cv.integer = 1433; <span class="comment">// Now the data is encoded.
+</span>transmit(<span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) cv); <span class="comment">// transmit() is a made-up function.
 </span></code></li>
       </ol>
     </div>
   </div>
 </section>
 <br><br>
+
     And this is what decoding looks like:
 <br><br>
+
 
 <section class="code_listing">
   <div class="code_sample">
     <div class="dlang">
       <ol class="code_lines">
         <li><code class="code"><span class="keyword">ubyte</span>[] data = receive(); <span class="comment">// receive() is a made-up function.
-</span>DERElement dv2 = <span class="keyword">new</span> DERElement(data);
+</span>CERElement cv2 = <span class="keyword">new</span> CERElement(data);
 
 <span class="keyword">long</span> x;
-<span class="keyword">if</span> (dv.type == 0x02u) <span class="comment">// it is an INTEGER
+<span class="keyword">if</span> (cv.type == 0x02u) <span class="comment">// it is an INTEGER
 </span>{
-    x = dv.integer;
+    x = cv.integer;
 }
 <span class="comment">// Now x is 1433!
 </span></code></li>
@@ -635,7 +643,7 @@ dv.type = 0x02u; <span class="comment">// "2" means this is an INTEGER
   <li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.LengthEncodingPreference" id="DistinguishedEncodingRulesElement.LengthEncodingPreference"><code class="code">LengthEncodingPreference</code></a>
+  <a href="#CanonicalEncodingRulesElement.LengthEncodingPreference" id="CanonicalEncodingRulesElement.LengthEncodingPreference"><code class="code">LengthEncodingPreference</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -644,7 +652,7 @@ dv.type = 0x02u; <span class="comment">// "2" means this is an INTEGER
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.LengthEncodingPreference"></span>enum <code class="code">LengthEncodingPreference</code>: ubyte;
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.LengthEncodingPreference"></span>enum <code class="code">LengthEncodingPreference</code>: ubyte;
 
           </code>
         </p>
@@ -660,7 +668,7 @@ dv.type = 0x02u; <span class="comment">// "2" means this is an INTEGER
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.lengthEncodingPreference" id="DistinguishedEncodingRulesElement.lengthEncodingPreference"><code class="code">lengthEncodingPreference</code></a>
+  <a href="#CanonicalEncodingRulesElement.lengthEncodingPreference" id="CanonicalEncodingRulesElement.lengthEncodingPreference"><code class="code">lengthEncodingPreference</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -669,7 +677,7 @@ dv.type = 0x02u; <span class="comment">// "2" means this is an INTEGER
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.lengthEncodingPreference"></span>LengthEncodingPreference <code class="code">lengthEncodingPreference</code>;
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.lengthEncodingPreference"></span>LengthEncodingPreference <code class="code">lengthEncodingPreference</code>;
 
           </code>
         </p>
@@ -697,7 +705,7 @@ dv.type = 0x02u; <span class="comment">// "2" means this is an INTEGER
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.base10RealShouldShowPlusSignIfPositive" id="DistinguishedEncodingRulesElement.base10RealShouldShowPlusSignIfPositive"><code class="code">base10RealShouldShowPlusSignIfPositive</code></a>
+  <a href="#CanonicalEncodingRulesElement.realEncodingBase" id="CanonicalEncodingRulesElement.realEncodingBase"><code class="code">realEncodingBase</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -706,161 +714,7 @@ dv.type = 0x02u; <span class="comment">// "2" means this is an INTEGER
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.base10RealShouldShowPlusSignIfPositive"></span>static bool <code class="code">base10RealShouldShowPlusSignIfPositive</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Whether the base 10 / character-encoded representation of a REAL
-        should prepend a plus sign if the value is positive.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.base10RealDecimalSeparator" id="DistinguishedEncodingRulesElement.base10RealDecimalSeparator"><code class="code">base10RealDecimalSeparator</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.base10RealDecimalSeparator"></span>static ASN1Base10RealDecimalSeparator <code class="code">base10RealDecimalSeparator</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Whether a comma or a period is used to separate the whole and
-        fractional components of the base 10 / character-encoded representation
-        of a REAL.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.base10RealExponentCharacter" id="DistinguishedEncodingRulesElement.base10RealExponentCharacter"><code class="code">base10RealExponentCharacter</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.base10RealExponentCharacter"></span>static ASN1Base10RealExponentCharacter <code class="code">base10RealExponentCharacter</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Whether a capital or lowercase E is used to separate the significand
-        from the exponent in the base 10 / character-encoded representation
-        of a REAL.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.base10RealNumericalRepresentation" id="DistinguishedEncodingRulesElement.base10RealNumericalRepresentation"><code class="code">base10RealNumericalRepresentation</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.base10RealNumericalRepresentation"></span>static ASN1Base10RealNumericalRepresentation <code class="code">base10RealNumericalRepresentation</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    The standardized string representations of floating point numbers, as
-        specified in <a href="https://www.iso.org/standard/12285.html">ISO 6093</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    <table>            <tr><th>Representation</th> <th>Description</th> <th>Examples</th></tr>
-            <tr><td>NR1</td> <td>Implicit decimal point</td> <td>"3", "-1", "+1000"</td></tr>
-            <tr><td>NR2</td> <td>Explicit decimal</td> <td>"3.0", "-1.3", "-.3"</td></tr>
-            <tr><td>NR3</td> <td>Explicit exponent</td> <td>"3.0E1", "123E+100"</td></tr>
-        </table>
-
-
-  </p>
-</div>
-<div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Citation:</span>
-Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
-            Heterogeneous Systems, Morgan Kaufmann, 2001, p. 143.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.realEncodingBase" id="DistinguishedEncodingRulesElement.realEncodingBase"><code class="code">realEncodingBase</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realEncodingBase"></span>static ASN1RealEncodingBase <code class="code">realEncodingBase</code>;
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.realEncodingBase"></span>static ASN1RealEncodingBase <code class="code">realEncodingBase</code>;
 
           </code>
         </p>
@@ -883,7 +737,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.universal" id="DistinguishedEncodingRulesElement.universal"><code class="code">universal</code></a>
+  <a href="#CanonicalEncodingRulesElement.typeClass" id="CanonicalEncodingRulesElement.typeClass"><code class="code">typeClass</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -892,7 +746,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.universal"></span>final const nothrow @property bool <code class="code">universal</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.typeClass"></span>final const nothrow @property @safe ASN1TagClass <code class="code">typeClass</code>();
 
           </code>
         </p>
@@ -904,45 +758,16 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Whether the value is one of the universally-defined data types, which
-        are:
+    Returns the tag class of the element. Though you could directly get the
+        class yourself, you should still use this property instead; not doing
+        so is a good way to introduce bugs into your program.
 
   </p>
 </div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
   <p class="para">
-    <table>            <tr><th>Type</th>                 <th>Construction</th>      <th>Hexadecimal Value</th></tr>
-            <tr><td>End-of-Content</td>       <td>Primitive</td>         <td>0x00</td></tr>
-            <tr><td>BOOLEAN</td>	            <td>Primitive</td>         <td>0x01</td></tr>
-            <tr><td>INTEGER</td>	            <td>Primitive</td>         <td>0x02</td></tr>
-            <tr><td>BIT STRING</td>           <td>Both</td>              <td>0x03</td></tr>
-            <tr><td>OCTET STRING</td>         <td>Both</td>              <td>0x04</td></tr>
-            <tr><td>NULL</td>                 <td>Primitive</td>         <td>0x05</td></tr>
-            <tr><td>OBJECT IDENTIFIER</td>	<td>Primitive</td>         <td>0x06</td></tr>
-            <tr><td>Object Descriptor</td>    <td>Both</td>              <td>0x07</td></tr>
-            <tr><td>EXTERNAL</td>	            <td>Constructed</td>       <td>0x08</td></tr>
-            <tr><td>REAL</td>            	    <td>Primitive</td>         <td>0x09</td></tr>
-            <tr><td>ENUMERATED</td>	        <td>Primitive</td>         <td>0x0A</td></tr>
-            <tr><td>EMBEDDED PDV</td>	        <td>Constructed</td>       <td>0x0B</td></tr>
-            <tr><td>UTF8String</td>	        <td>Both</td>              <td>0x0C</td></tr>
-            <tr><td>RELATIVE-OID</td>	        <td>Primitive</td>         <td>0x0D</td></tr>
-            <tr><td>SEQUENCE</td>	            <td>Constructed</td>       <td>0x10</td></tr>
-            <tr><td>SET</td>	                <td>Constructed</td>       <td>0x11</td></tr>
-            <tr><td>NumericString</td>	    <td>Both</td>              <td>0x12</td></tr>
-            <tr><td>PrintableString</td>	    <td>Both</td>              <td>0x13</td></tr>
-            <tr><td>T61String</td>	        <td>Both</td>              <td>0x14</td></tr>
-            <tr><td>VideotexString</td>	    <td>Both</td>              <td>0x15</td></tr>
-            <tr><td>IA5String</td>	        <td>Both</td>              <td>0x16</td></tr>
-            <tr><td>UTCTime</td>	            <td>Both</td>              <td>0x17</td></tr>
-            <tr><td>GeneralizedTime</td>	    <td>Both</td>              <td>0x18</td></tr>
-            <tr><td>GraphicString</td>	    <td>Both</td>              <td>0x19</td></tr>
-            <tr><td>VisibleString</td>	    <td>Both</td>              <td>0x1A</td></tr>
-            <tr><td>GeneralString</td>	    <td>Both</td>              <td>0x1B</td></tr>
-            <tr><td>UniversalString</td>	    <td>Both</td>              <td>0x1C</td></tr>
-            <tr><td>CHARACTER STRING</td>	    <td>Both</td>              <td>0x1D</td></tr>
-            <tr><td>BMPString</td>	        <td>Both</td>              <td>0x1E</td></tr>
-        </table>
+    the tag class of the element.
   </p>
 </div>
 
@@ -953,7 +778,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.applicationSpecific" id="DistinguishedEncodingRulesElement.applicationSpecific"><code class="code">applicationSpecific</code></a>
+  <a href="#CanonicalEncodingRulesElement.typeClass" id="CanonicalEncodingRulesElement.typeClass"><code class="code">typeClass</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -962,7 +787,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.applicationSpecific"></span>final const nothrow @property bool <code class="code">applicationSpecific</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.typeClass.2"></span>final nothrow @property @safe void <code class="code">typeClass</code>(ASN1TagClass <code class="code">value</code>);
 
           </code>
         </p>
@@ -974,7 +799,9 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Whether the type is application-specific.
+    Sets the tag class of the element. Though you could directly set the
+        class yourself, you should still use this property instead; not doing
+        so is a good way to introduce bugs into your program.
   </p>
 </div>
 
@@ -985,7 +812,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.contextSpecific" id="DistinguishedEncodingRulesElement.contextSpecific"><code class="code">contextSpecific</code></a>
+  <a href="#CanonicalEncodingRulesElement.typeConstruction" id="CanonicalEncodingRulesElement.typeConstruction"><code class="code">typeConstruction</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -994,7 +821,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.contextSpecific"></span>final const nothrow @property bool <code class="code">contextSpecific</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.typeConstruction"></span>final const nothrow @property @safe ASN1Construction <code class="code">typeConstruction</code>();
 
           </code>
         </p>
@@ -1006,7 +833,16 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Whether the type tag specifies an index within a SEQUENCE or CHOICE.
+    Returns the construction of the element. Though you could directly get
+        the construction yourself, you should still use this property instead;
+        not doing so is a good way to introduce bugs into your program.
+
+  </p>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    the tag class of the element.
   </p>
 </div>
 
@@ -1017,7 +853,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.privatelySpecific" id="DistinguishedEncodingRulesElement.privatelySpecific"><code class="code">privatelySpecific</code></a>
+  <a href="#CanonicalEncodingRulesElement.typeConstruction" id="CanonicalEncodingRulesElement.typeConstruction"><code class="code">typeConstruction</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1026,7 +862,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.privatelySpecific"></span>final const nothrow @property bool <code class="code">privatelySpecific</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.typeConstruction.2"></span>final nothrow @property @safe void <code class="code">typeConstruction</code>(ASN1Construction <code class="code">value</code>);
 
           </code>
         </p>
@@ -1038,7 +874,9 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    I don't know what this even means.
+    Sets the construction of the element. Though you could directly set
+        the construction yourself, you should still use this property instead;
+        not doing so is a good way to introduce bugs into your program.
   </p>
 </div>
 
@@ -1049,7 +887,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.length" id="DistinguishedEncodingRulesElement.length"><code class="code">length</code></a>
+  <a href="#CanonicalEncodingRulesElement.typeNumber" id="CanonicalEncodingRulesElement.typeNumber"><code class="code">typeNumber</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1058,7 +896,114 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.length"></span>final const nothrow @property @safe size_t <code class="code">length</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.typeNumber"></span>final const nothrow @property @safe T <code class="code">typeNumber</code>(T)() if (isIntegral!T &amp;&amp; isUnsigned!T);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Returns the type number of the element. Though you could directly get
+        the number yourself, you should still use this property instead;
+        not doing so is a good way to introduce bugs into your program.
+
+  </p>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    the type number associated with this element.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#CanonicalEncodingRulesElement.typeNumber" id="CanonicalEncodingRulesElement.typeNumber"><code class="code">typeNumber</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.typeNumber.2"></span>final @property @safe void <code class="code">typeNumber</code>(T)(T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isUnsigned!T);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Sets the type number of the element. Though you could directly set
+        the number yourself, you should still use this property instead;
+        not doing so is a good way to introduce bugs into your program.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#CanonicalEncodingRulesElement.type" id="CanonicalEncodingRulesElement.type"><code class="code">type</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.type"></span>ubyte <code class="code">type</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The <code class="code">type</code> tag of this element
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#CanonicalEncodingRulesElement.length" id="CanonicalEncodingRulesElement.length"><code class="code">length</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.length"></span>final const nothrow @property @safe size_t <code class="code">length</code>();
 
           </code>
         </p>
@@ -1081,7 +1026,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.value" id="DistinguishedEncodingRulesElement.value"><code class="code">value</code></a>
+  <a href="#CanonicalEncodingRulesElement.value" id="CanonicalEncodingRulesElement.value"><code class="code">value</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1090,7 +1035,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.value"></span>ubyte[] <code class="code">value</code>;
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.value"></span>ubyte[] <code class="code">value</code>;
 
           </code>
         </p>
@@ -1113,7 +1058,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.boolean" id="DistinguishedEncodingRulesElement.boolean"><code class="code">boolean</code></a>
+  <a href="#CanonicalEncodingRulesElement.boolean" id="CanonicalEncodingRulesElement.boolean"><code class="code">boolean</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1122,7 +1067,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.boolean"></span>const @property @safe bool <code class="code">boolean</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.boolean"></span>const @property @safe bool <code class="code">boolean</code>();
 
           </code>
         </p>
@@ -1159,8 +1104,10 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
   <p class="para">
     ASN1ValueSizeException = if the encoded value is anything other
                 than exactly 1 byte in size.
+            ASN1ValueInvalidException = if the encoded byte is not 0xFF or 0x00
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1168,7 +1115,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.boolean" id="DistinguishedEncodingRulesElement.boolean"><code class="code">boolean</code></a>
+  <a href="#CanonicalEncodingRulesElement.boolean" id="CanonicalEncodingRulesElement.boolean"><code class="code">boolean</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1177,7 +1124,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.boolean.2"></span>nothrow @property @safe void <code class="code">boolean</code>(bool <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.boolean.2"></span>nothrow @property @safe void <code class="code">boolean</code>(bool <code class="code">value</code>);
 
           </code>
         </p>
@@ -1208,17 +1155,17 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
   <div class="code_sample">
     <div class="dlang">
       <ol class="code_lines">
-        <li><code class="code">DERElement bv = <span class="keyword">new</span> DERElement();
-bv.<span class="param">value</span> = [ 0x01u ];
-<span class="keyword">assert</span>(bv.<span class="psymbol">boolean</span> == <span class="keyword">true</span>);
-bv.<span class="param">value</span> = [ 0xFFu ];
-<span class="keyword">assert</span>(bv.<span class="psymbol">boolean</span> == <span class="keyword">true</span>);
-bv.<span class="param">value</span> = [ 0x00u ];
-<span class="keyword">assert</span>(bv.<span class="psymbol">boolean</span> == <span class="keyword">false</span>);
-bv.<span class="param">value</span> = [ 0x01u, 0x00u ];
-assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
-bv.<span class="param">value</span> = [];
-assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
+        <li><code class="code">CERElement cv = <span class="keyword">new</span> CERElement();
+cv.<span class="param">value</span> = [ 0xFFu ];
+<span class="keyword">assert</span>(cv.<span class="psymbol">boolean</span> == <span class="keyword">true</span>);
+cv.<span class="param">value</span> = [ 0x00u ];
+<span class="keyword">assert</span>(cv.<span class="psymbol">boolean</span> == <span class="keyword">false</span>);
+cv.<span class="param">value</span> = [ 0x01u, 0x00u ];
+assertThrown!ASN1ValueSizeException(cv.<span class="psymbol">boolean</span>);
+cv.<span class="param">value</span> = [];
+assertThrown!ASN1ValueSizeException(cv.<span class="psymbol">boolean</span>);
+cv.<span class="param">value</span> = [ 0x01u ];
+assertThrown!ASN1ValueInvalidException(cv.<span class="psymbol">boolean</span>);
 </code></li>
       </ol>
     </div>
@@ -1234,7 +1181,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.integer" id="DistinguishedEncodingRulesElement.integer"><code class="code">integer</code></a>
+  <a href="#CanonicalEncodingRulesElement.integer" id="CanonicalEncodingRulesElement.integer"><code class="code">integer</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1243,7 +1190,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.integer"></span>const @property @system T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.integer"></span>const @property @system T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
 
           </code>
         </p>
@@ -1282,6 +1229,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
                 to a signed integral type.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1289,7 +1237,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.integer" id="DistinguishedEncodingRulesElement.integer"><code class="code">integer</code></a>
+  <a href="#CanonicalEncodingRulesElement.integer" id="CanonicalEncodingRulesElement.integer"><code class="code">integer</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1298,7 +1246,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.integer.2"></span>nothrow @property @system void <code class="code">integer</code>(T)(T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.integer.2"></span>nothrow @property @system void <code class="code">integer</code>(T)(T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
 
           </code>
         </p>
@@ -1329,7 +1277,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.bitString" id="DistinguishedEncodingRulesElement.bitString"><code class="code">bitString</code></a>
+  <a href="#CanonicalEncodingRulesElement.bitString" id="CanonicalEncodingRulesElement.bitString"><code class="code">bitString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1338,7 +1286,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.bitString"></span>const @property bool[] <code class="code">bitString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.bitString"></span>const @property @system bool[] <code class="code">bitString</code>();
 
           </code>
         </p>
@@ -1354,6 +1302,16 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 
   </p>
 </div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    In Canonical Encoding Rules, the first byte is an unsigned
+        integral byte indicating the number of unused bits at the end of
+        the BIT STRING. The unused bits must be zeroed.
+
+
+  </p>
+</div>
 <div class="ddoc_returns">
   <h4>Return Value</h4>
   <p class="para">
@@ -1364,9 +1322,11 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if
+    ASN1ValueInvalidException = if the first byte has a value greater
+                than seven.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1374,7 +1334,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.octetString" id="DistinguishedEncodingRulesElement.octetString"><code class="code">octetString</code></a>
+  <a href="#CanonicalEncodingRulesElement.bitString" id="CanonicalEncodingRulesElement.bitString"><code class="code">bitString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1383,7 +1343,48 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.octetString"></span>const @property @safe ubyte[] <code class="code">octetString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.bitString.2"></span>@property @system void <code class="code">bitString</code>(bool[] <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes an array of s representing a string of bits.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    In Canonical Encoding Rules, the first byte is an unsigned
+        integral byte indicating the number of unused bits at the end of
+        the BIT STRING. The unused bits must be zeroed.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#CanonicalEncodingRulesElement.octetString" id="CanonicalEncodingRulesElement.octetString"><code class="code">octetString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.octetString"></span>const @property @system ubyte[] <code class="code">octetString</code>();
 
           </code>
         </p>
@@ -1413,7 +1414,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.octetString" id="DistinguishedEncodingRulesElement.octetString"><code class="code">octetString</code></a>
+  <a href="#CanonicalEncodingRulesElement.octetString" id="CanonicalEncodingRulesElement.octetString"><code class="code">octetString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1422,7 +1423,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.octetString.2"></span>@property @safe void <code class="code">octetString</code>(ubyte[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.octetString.2"></span>@property @system void <code class="code">octetString</code>(ubyte[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -1445,7 +1446,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.objectIdentifier" id="DistinguishedEncodingRulesElement.objectIdentifier"><code class="code">objectIdentifier</code></a>
+  <a href="#CanonicalEncodingRulesElement.objectIdentifier" id="CanonicalEncodingRulesElement.objectIdentifier"><code class="code">objectIdentifier</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1454,7 +1455,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectIdentifier"></span>const @property @system OID <code class="code">objectIdentifier</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectIdentifier"></span>const @property @system OID <code class="code">objectIdentifier</code>();
 
           </code>
         </p>
@@ -1495,12 +1496,14 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
                 decode to a size_t.
 
   </p>
-</div><div class="ddoc_standards">
+</div>
+<div class="ddoc_standards">
   <h4>Standards</h4>
   <p class="para">
     <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1508,7 +1511,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.objectIdentifier" id="DistinguishedEncodingRulesElement.objectIdentifier"><code class="code">objectIdentifier</code></a>
+  <a href="#CanonicalEncodingRulesElement.objectIdentifier" id="CanonicalEncodingRulesElement.objectIdentifier"><code class="code">objectIdentifier</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1517,7 +1520,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectIdentifier.2"></span>@property @system void <code class="code">objectIdentifier</code>(OID <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectIdentifier.2"></span>@property @system void <code class="code">objectIdentifier</code>(OID <code class="code">value</code>);
 
           </code>
         </p>
@@ -1555,6 +1558,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
     <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1562,7 +1566,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.objectDescriptor" id="DistinguishedEncodingRulesElement.objectDescriptor"><code class="code">objectDescriptor</code></a>
+  <a href="#CanonicalEncodingRulesElement.objectDescriptor" id="CanonicalEncodingRulesElement.objectDescriptor"><code class="code">objectDescriptor</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1571,7 +1575,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectDescriptor"></span>const @property @system string <code class="code">objectDescriptor</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectDescriptor"></span>const @property @system string <code class="code">objectDescriptor</code>();
 
           </code>
         </p>
@@ -1586,15 +1590,15 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
     Decodes an ObjectDescriptor, which is a string consisting of only
         graphical characters. In fact, ObjectDescriptor is actually implicitly
         just a GraphicString! The formal specification for an ObjectDescriptor
-        is:
 
   </p>
 </div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
+<div class="ddoc_section">
   <p class="para">
-    <i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+    <span class="ddoc_section_h">is:</span>
+<i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
 <br><br>
+
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
@@ -1627,6 +1631,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 outside of 0x20 to 0x7E.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1634,7 +1639,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.objectDescriptor" id="DistinguishedEncodingRulesElement.objectDescriptor"><code class="code">objectDescriptor</code></a>
+  <a href="#CanonicalEncodingRulesElement.objectDescriptor" id="CanonicalEncodingRulesElement.objectDescriptor"><code class="code">objectDescriptor</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1643,7 +1648,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectDescriptor.2"></span>@property @system void <code class="code">objectDescriptor</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectDescriptor.2"></span>@property @system void <code class="code">objectDescriptor</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -1658,15 +1663,15 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
     Encodes an ObjectDescriptor, which is a string consisting of only
         graphical characters. In fact, ObjectDescriptor is actually implicitly
         just a GraphicString! The formal specification for an ObjectDescriptor
-        is:
 
   </p>
 </div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
+<div class="ddoc_section">
   <p class="para">
-    <i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+    <span class="ddoc_section_h">is:</span>
+<i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
 <br><br>
+
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
@@ -1693,6 +1698,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 characters or DELETE.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1700,7 +1706,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.external" id="DistinguishedEncodingRulesElement.external"><code class="code">external</code></a>
+  <a href="#CanonicalEncodingRulesElement.external" id="CanonicalEncodingRulesElement.external"><code class="code">external</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1709,7 +1715,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.external"></span>const @property @system External <code class="code">external</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.external"></span>const @property @system External <code class="code">external</code>();
 
           </code>
         </p>
@@ -1732,6 +1738,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
   <p class="para">
     The specification defines EXTERNAL as:
 <br><br>
+
         <i>            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER,
@@ -1743,6 +1750,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 data-value OCTET STRING }
         </i>
 <br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
 
@@ -1772,6 +1780,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1779,7 +1788,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.external" id="DistinguishedEncodingRulesElement.external"><code class="code">external</code></a>
+  <a href="#CanonicalEncodingRulesElement.external" id="CanonicalEncodingRulesElement.external"><code class="code">external</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1788,7 +1797,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.external.2"></span>@property @system void <code class="code">external</code>(External <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.external.2"></span>@property @system void <code class="code">external</code>(External <code class="code">value</code>);
 
           </code>
         </p>
@@ -1811,6 +1820,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
   <p class="para">
     The specification defines EXTERNAL as:
 <br><br>
+
         <i>            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER,
@@ -1822,6 +1832,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 data-<code class="code">value</code> OCTET STRING }
         </i>
 <br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
 
@@ -1836,6 +1847,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 invalid characters.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1843,7 +1855,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.realType" id="DistinguishedEncodingRulesElement.realType"><code class="code">realType</code></a>
+  <a href="#CanonicalEncodingRulesElement.realType" id="CanonicalEncodingRulesElement.realType"><code class="code">realType</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1852,7 +1864,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realType"></span>const @property @system T <code class="code">realType</code>(T)() if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.realType"></span>const @property @system T <code class="code">realType</code>(T)() if (is(T == float) || is(T == double));
 
           </code>
         </p>
@@ -1878,7 +1890,8 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         recommand against encoding or decoding REALs if you do not have
         to; try using INTEGER instead.
 <br><br>
-        For the DER-encoded REAL, a value of 0x40 means "positive infinity,"
+
+        For the CER-encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1886,6 +1899,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         representation conforms to
         <a href="">ISO 6093</a> Numeric Representation 1, 2, or 3 respectively.
 <br><br>
+
         If the first bit is set, then the first byte is an "information block"
         that describes the binary encoding of the REAL on the subsequent bytes.
         If bit 6 is set, the value is negative; if clear, the value is
@@ -1924,10 +1938,11 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
+Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
             Communication between Heterogeneous Systems, Morgan Kaufmann,
             2001, pp. 400–402.
   </p>
@@ -1940,7 +1955,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.realType" id="DistinguishedEncodingRulesElement.realType"><code class="code">realType</code></a>
+  <a href="#CanonicalEncodingRulesElement.realType" id="CanonicalEncodingRulesElement.realType"><code class="code">realType</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1949,7 +1964,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realType.2"></span>@property @system void <code class="code">realType</code>(T)(T <code class="code">value</code>) if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.realType.2"></span>@property @system void <code class="code">realType</code>(T)(T <code class="code">value</code>) if (is(T == float) || is(T == double));
 
           </code>
         </p>
@@ -1975,7 +1990,8 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
         recommand against encoding or decoding REALs if you do not have
         to; try using INTEGER instead.
 <br><br>
-        For the DER-encoded REAL, a <code class="code">value</code> of 0x40 means "positive infinity,"
+
+        For the CER-encoded REAL, a <code class="code">value</code> of 0x40 means "positive infinity,"
         a <code class="code">value</code> of 0x41 means "negative infinity." An empty <code class="code">value</code> means
         exactly zero. A <code class="code">value</code> whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1983,6 +1999,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
         representation conforms to
         <a href="">ISO 6093</a> Numeric Representation 1, 2, or 3 respectively.
 <br><br>
+
         If the first bit is set, then the first byte is an "information block"
         that describes the binary encoding of the REAL on the subsequent bytes.
         If bit 6 is set, the <code class="code">value</code> is negative; if clear, the <code class="code">value</code> is
@@ -2014,10 +2031,11 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
+Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
             Communication between Heterogeneous Systems, Morgan Kaufmann,
             2001, pp. 400–402.
   </p>
@@ -2030,7 +2048,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.enumerated" id="DistinguishedEncodingRulesElement.enumerated"><code class="code">enumerated</code></a>
+  <a href="#CanonicalEncodingRulesElement.enumerated" id="CanonicalEncodingRulesElement.enumerated"><code class="code">enumerated</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2039,7 +2057,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.enumerated"></span>const @property @system T <code class="code">enumerated</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.enumerated"></span>const @property @system T <code class="code">enumerated</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
 
           </code>
         </p>
@@ -2051,7 +2069,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Decodes an integer from an ENUMERATED type. In DER, an ENUMERATED
+    Decodes an integer from an ENUMERATED type. In CER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
 
   </p>
@@ -2070,6 +2088,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 to a signed integral type.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2077,7 +2096,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.enumerated" id="DistinguishedEncodingRulesElement.enumerated"><code class="code">enumerated</code></a>
+  <a href="#CanonicalEncodingRulesElement.enumerated" id="CanonicalEncodingRulesElement.enumerated"><code class="code">enumerated</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2086,7 +2105,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.enumerated.2"></span>@property @system void <code class="code">enumerated</code>(T)(T <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.enumerated.2"></span>@property @system void <code class="code">enumerated</code>(T)(T <code class="code">value</code>);
 
           </code>
         </p>
@@ -2098,7 +2117,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Encodes an ENUMERATED type from an integer. In DER, an ENUMERATED
+    Encodes an ENUMERATED type from an integer. In CER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
   </p>
 </div>
@@ -2110,7 +2129,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.embeddedPresentationDataValue" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
+  <a href="#CanonicalEncodingRulesElement.embeddedPresentationDataValue" id="CanonicalEncodingRulesElement.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2119,7 +2138,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue"></span>const @property @system EmbeddedPDV <code class="code">embeddedPresentationDataValue</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.embeddedPresentationDataValue"></span>const @property @system EmbeddedPDV <code class="code">embeddedPresentationDataValue</code>();
 
           </code>
         </p>
@@ -2142,6 +2161,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <p class="para">
     The specification defines EMBEDDED PDV as:
 <br><br>
+
         <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -2159,8 +2179,27 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
             (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
         </i>
 <br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
+<br><br>
+
+        In Canonical Encoding Rules, the identification CHOICE cannot be
+        presentation-context-id, nor context-negotiation. Also, the elements
+        must appear in the exact order of the specification. With these
+        constraints in mind, the specification effectively becomes:
+<br><br>
+
+        <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification [0] CHOICE {
+                    syntaxes [0] SEQUENCE {
+                        abstract [0] OBJECT IDENTIFIER,
+                        transfer [1] OBJECT IDENTIFIER },
+                    syntax [1] OBJECT IDENTIFIER,
+                    transfer-syntax [4] OBJECT IDENTIFIER,
+                    fixed [5] NULL },
+                data-value [2] OCTET STRING }
+        </i>
 
 
   </p>
@@ -2181,6 +2220,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2188,7 +2228,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.embeddedPresentationDataValue" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
+  <a href="#CanonicalEncodingRulesElement.embeddedPresentationDataValue" id="CanonicalEncodingRulesElement.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2197,7 +2237,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue.2"></span>@property @system void <code class="code">embeddedPresentationDataValue</code>(EmbeddedPDV <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.embeddedPresentationDataValue.2"></span>@property @system void <code class="code">embeddedPresentationDataValue</code>(EmbeddedPDV <code class="code">value</code>);
 
           </code>
         </p>
@@ -2220,6 +2260,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <p class="para">
     The specification defines EMBEDDED PDV as:
 <br><br>
+
         <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -2237,6 +2278,34 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
             (WITH COMPONENTS { ... , data-<code class="code">value</code>-descriptor ABSENT })
         </i>
 <br><br>
+
+        This assumes AUTOMATIC TAGS, so all of the identification choices
+        will be context-specific and numbered from 0 to 5.
+<br><br>
+
+        In Canonical Encoding Rules, the identification CHOICE cannot be
+        presentation-context-id, nor context-negotiation. Also, the elements
+        must appear in the exact order of the specification. With these
+        constraints in mind, the specification effectively becomes:
+<br><br>
+
+        <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification [0] CHOICE {
+                    syntaxes [0] SEQUENCE {
+                        abstract [0] OBJECT IDENTIFIER,
+                        transfer [1] OBJECT IDENTIFIER },
+                    syntax [1] OBJECT IDENTIFIER,
+                    transfer-syntax [4] OBJECT IDENTIFIER,
+                    fixed [5] NULL },
+                data-<code class="code">value</code> [2] OCTET STRING }
+        </i>
+<br><br>
+
+        If the supplied identification for the EmbeddedPDV is a
+        presentation-context-id or a context-negotiation, no exception will be
+        thrown; the identification will be set to fixed silently.
+<br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 
@@ -2250,6 +2319,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 invalid characters.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2257,7 +2327,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.unicodeTransformationFormat8String" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
+  <a href="#CanonicalEncodingRulesElement.unicodeTransformationFormat8String" id="CanonicalEncodingRulesElement.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2266,7 +2336,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String"></span>const @property @system string <code class="code">unicodeTransformationFormat8String</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.unicodeTransformationFormat8String"></span>const @property @system string <code class="code">unicodeTransformationFormat8String</code>();
 
           </code>
         </p>
@@ -2288,6 +2358,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     UTF8Exception if it does not decode correctly.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2295,7 +2366,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.unicodeTransformationFormat8String" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
+  <a href="#CanonicalEncodingRulesElement.unicodeTransformationFormat8String" id="CanonicalEncodingRulesElement.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2304,7 +2375,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String.2"></span>nothrow @property @system void <code class="code">unicodeTransformationFormat8String</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.unicodeTransformationFormat8String.2"></span>@property @system void <code class="code">unicodeTransformationFormat8String</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2327,7 +2398,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.relativeObjectIdentifier" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
+  <a href="#CanonicalEncodingRulesElement.relativeObjectIdentifier" id="CanonicalEncodingRulesElement.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2336,7 +2407,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier"></span>const @property @system OIDNode[] <code class="code">relativeObjectIdentifier</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.relativeObjectIdentifier"></span>const @property @system OIDNode[] <code class="code">relativeObjectIdentifier</code>();
 
           </code>
         </p>
@@ -2372,6 +2443,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2379,7 +2451,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.relativeObjectIdentifier" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
+  <a href="#CanonicalEncodingRulesElement.relativeObjectIdentifier" id="CanonicalEncodingRulesElement.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2388,7 +2460,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier.2"></span>nothrow @property @system void <code class="code">relativeObjectIdentifier</code>(OIDNode[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.relativeObjectIdentifier.2"></span>nothrow @property @system void <code class="code">relativeObjectIdentifier</code>(OIDNode[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2424,6 +2496,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2431,7 +2504,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.sequence" id="DistinguishedEncodingRulesElement.sequence"><code class="code">sequence</code></a>
+  <a href="#CanonicalEncodingRulesElement.sequence" id="CanonicalEncodingRulesElement.sequence"><code class="code">sequence</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2440,7 +2513,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.sequence"></span>const @property @system DERElement[] <code class="code">sequence</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.sequence"></span>const @property @system CERElement[] <code class="code">sequence</code>();
 
           </code>
         </p>
@@ -2452,14 +2525,14 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Decodes a <code class="code">sequence</code> of DERElements.
+    Decodes a <code class="code">sequence</code> of CERElements.
 
   </p>
 </div>
 <div class="ddoc_returns">
   <h4>Return Value</h4>
   <p class="para">
-    an array of DERElements.
+    an array of CERElements.
 
   </p>
 </div>
@@ -2472,6 +2545,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 indicated by the length tag.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2479,7 +2553,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.sequence" id="DistinguishedEncodingRulesElement.sequence"><code class="code">sequence</code></a>
+  <a href="#CanonicalEncodingRulesElement.sequence" id="CanonicalEncodingRulesElement.sequence"><code class="code">sequence</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2488,7 +2562,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.sequence.2"></span>@property @system void <code class="code">sequence</code>(DERElement[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.sequence.2"></span>@property @system void <code class="code">sequence</code>(CERElement[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2500,7 +2574,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Encodes a <code class="code">sequence</code> of DERElements.
+    Encodes a <code class="code">sequence</code> of CERElements.
   </p>
 </div>
 
@@ -2511,7 +2585,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.set" id="DistinguishedEncodingRulesElement.set"><code class="code">set</code></a>
+  <a href="#CanonicalEncodingRulesElement.set" id="CanonicalEncodingRulesElement.set"><code class="code">set</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2520,7 +2594,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.set"></span>const @property @system DERElement[] <code class="code">set</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.set"></span>const @property @system CERElement[] <code class="code">set</code>();
 
           </code>
         </p>
@@ -2532,14 +2606,14 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Decodes a <code class="code">set</code> of DERElements.
+    Decodes a <code class="code">set</code> of CERElements.
 
   </p>
 </div>
 <div class="ddoc_returns">
   <h4>Return Value</h4>
   <p class="para">
-    an array of DERElements.
+    an array of CERElements.
 
   </p>
 </div>
@@ -2552,6 +2626,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 indicated by the length tag.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2559,7 +2634,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.set" id="DistinguishedEncodingRulesElement.set"><code class="code">set</code></a>
+  <a href="#CanonicalEncodingRulesElement.set" id="CanonicalEncodingRulesElement.set"><code class="code">set</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2568,7 +2643,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.set.2"></span>@property @system void <code class="code">set</code>(DERElement[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.set.2"></span>@property @system void <code class="code">set</code>(CERElement[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2580,7 +2655,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Encodes a <code class="code">set</code> of DERElements.
+    Encodes a <code class="code">set</code> of CERElements.
   </p>
 </div>
 
@@ -2591,7 +2666,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.numericString" id="DistinguishedEncodingRulesElement.numericString"><code class="code">numericString</code></a>
+  <a href="#CanonicalEncodingRulesElement.numericString" id="CanonicalEncodingRulesElement.numericString"><code class="code">numericString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2600,7 +2675,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.numericString"></span>const @property @system string <code class="code">numericString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.numericString"></span>const @property @system string <code class="code">numericString</code>();
 
           </code>
         </p>
@@ -2631,6 +2706,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 space is encoded.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2638,7 +2714,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.numericString" id="DistinguishedEncodingRulesElement.numericString"><code class="code">numericString</code></a>
+  <a href="#CanonicalEncodingRulesElement.numericString" id="CanonicalEncodingRulesElement.numericString"><code class="code">numericString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2647,7 +2723,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.numericString.2"></span>@property @system void <code class="code">numericString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.numericString.2"></span>@property @system void <code class="code">numericString</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2671,6 +2747,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 space is supplied.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2678,7 +2755,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.printableString" id="DistinguishedEncodingRulesElement.printableString"><code class="code">printableString</code></a>
+  <a href="#CanonicalEncodingRulesElement.printableString" id="CanonicalEncodingRulesElement.printableString"><code class="code">printableString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2687,7 +2764,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.printableString"></span>const @property @system string <code class="code">printableString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.printableString"></span>const @property @system string <code class="code">printableString</code>();
 
           </code>
         </p>
@@ -2721,6 +2798,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 encoded.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2728,7 +2806,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.printableString" id="DistinguishedEncodingRulesElement.printableString"><code class="code">printableString</code></a>
+  <a href="#CanonicalEncodingRulesElement.printableString" id="CanonicalEncodingRulesElement.printableString"><code class="code">printableString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2737,7 +2815,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.printableString.2"></span>@property @system void <code class="code">printableString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.printableString.2"></span>@property @system void <code class="code">printableString</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2764,6 +2842,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 supplied.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2771,7 +2850,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.teletexString" id="DistinguishedEncodingRulesElement.teletexString"><code class="code">teletexString</code></a>
+  <a href="#CanonicalEncodingRulesElement.teletexString" id="CanonicalEncodingRulesElement.teletexString"><code class="code">teletexString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2780,7 +2859,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.teletexString"></span>const nothrow @property @safe ubyte[] <code class="code">teletexString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.teletexString"></span>const @property @system ubyte[] <code class="code">teletexString</code>();
 
           </code>
         </p>
@@ -2810,7 +2889,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.teletexString" id="DistinguishedEncodingRulesElement.teletexString"><code class="code">teletexString</code></a>
+  <a href="#CanonicalEncodingRulesElement.teletexString" id="CanonicalEncodingRulesElement.teletexString"><code class="code">teletexString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2819,7 +2898,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.teletexString.2"></span>nothrow @property @safe void <code class="code">teletexString</code>(ubyte[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.teletexString.2"></span>@property @system void <code class="code">teletexString</code>(ubyte[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2842,7 +2921,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.videotexString" id="DistinguishedEncodingRulesElement.videotexString"><code class="code">videotexString</code></a>
+  <a href="#CanonicalEncodingRulesElement.videotexString" id="CanonicalEncodingRulesElement.videotexString"><code class="code">videotexString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2851,7 +2930,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.videotexString"></span>const nothrow @property @safe ubyte[] <code class="code">videotexString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.videotexString"></span>const @property @system ubyte[] <code class="code">videotexString</code>();
 
           </code>
         </p>
@@ -2881,7 +2960,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.videotexString" id="DistinguishedEncodingRulesElement.videotexString"><code class="code">videotexString</code></a>
+  <a href="#CanonicalEncodingRulesElement.videotexString" id="CanonicalEncodingRulesElement.videotexString"><code class="code">videotexString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2890,7 +2969,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.videotexString.2"></span>nothrow @property @safe void <code class="code">videotexString</code>(ubyte[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.videotexString.2"></span>@property @system void <code class="code">videotexString</code>(ubyte[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2913,7 +2992,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.internationalAlphabetNumber5String" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
+  <a href="#CanonicalEncodingRulesElement.internationalAlphabetNumber5String" id="CanonicalEncodingRulesElement.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2922,7 +3001,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String"></span>const @property @system string <code class="code">internationalAlphabetNumber5String</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.internationalAlphabetNumber5String"></span>const @property @system string <code class="code">internationalAlphabetNumber5String</code>();
 
           </code>
         </p>
@@ -2944,6 +3023,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     IA5String differs from ASCII ever so slightly: IA5 is international,
         leaving 10 characters up to be locale-specific:
 <br><br>
+
         <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
             <tr><td>0x40</td> <td>@</td></tr>
             <tr><td>0x5B</td> <td>[</td></tr>
@@ -2973,6 +3053,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     ASN1ValueInvalidException = if any enecoded character is not ASCII.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2980,7 +3061,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.internationalAlphabetNumber5String" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
+  <a href="#CanonicalEncodingRulesElement.internationalAlphabetNumber5String" id="CanonicalEncodingRulesElement.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2989,7 +3070,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String.2"></span>@property @system void <code class="code">internationalAlphabetNumber5String</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.internationalAlphabetNumber5String.2"></span>@property @system void <code class="code">internationalAlphabetNumber5String</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -3011,6 +3092,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     IA5String differs from ASCII ever so slightly: IA5 is international,
         leaving 10 characters up to be locale-specific:
 <br><br>
+
         <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
             <tr><td>0x40</td> <td>@</td></tr>
             <tr><td>0x5B</td> <td>[</td></tr>
@@ -3033,6 +3115,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     ASN1ValueInvalidException = if any enecoded character is not ASCII.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3040,7 +3123,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.coordinatedUniversalTime" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
+  <a href="#CanonicalEncodingRulesElement.coordinatedUniversalTime" id="CanonicalEncodingRulesElement.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3049,7 +3132,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime"></span>const @property @system DateTime <code class="code">coordinatedUniversalTime</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.coordinatedUniversalTime"></span>const @property @system DateTime <code class="code">coordinatedUniversalTime</code>();
 
           </code>
         </p>
@@ -3068,14 +3151,16 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    The DER-encoded value is just the ASCII character representation of
+    The CER-encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 <br><br>
+
         An UTC Timestamp looks like:
         <ul>            <li>9912312359Z</li>
             <li>991231235959+0200</li>
         </ul>
 <br><br>
+
         If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,
         meaning that the date refers to the first 80 years of the century, this
         assumes we are talking about the 21st century and prepend '20' when
@@ -3099,6 +3184,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     DateTimeException = if string cannot be decoded to a DateTime
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3106,7 +3192,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.coordinatedUniversalTime" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
+  <a href="#CanonicalEncodingRulesElement.coordinatedUniversalTime" id="CanonicalEncodingRulesElement.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3115,7 +3201,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime.2"></span>nothrow @property @system void <code class="code">coordinatedUniversalTime</code>(DateTime <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.coordinatedUniversalTime.2"></span>@property @system void <code class="code">coordinatedUniversalTime</code>(DateTime <code class="code">value</code>);
 
           </code>
         </p>
@@ -3134,9 +3220,10 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    The DER-encoded <code class="code">value</code> is just the ASCII character representation of
+    The CER-encoded <code class="code">value</code> is just the ASCII character representation of
         the UTC-formatted timestamp.
 <br><br>
+
         An UTC Timestamp looks like:
         <ul>            <li>9912312359Z</li>
             <li>991231235959+0200</li>
@@ -3159,7 +3246,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.generalizedTime" id="DistinguishedEncodingRulesElement.generalizedTime"><code class="code">generalizedTime</code></a>
+  <a href="#CanonicalEncodingRulesElement.generalizedTime" id="CanonicalEncodingRulesElement.generalizedTime"><code class="code">generalizedTime</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3168,7 +3255,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalizedTime"></span>const @property @system DateTime <code class="code">generalizedTime</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalizedTime"></span>const @property @system DateTime <code class="code">generalizedTime</code>();
 
           </code>
         </p>
@@ -3187,9 +3274,10 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    The DER-encoded value is just the ASCII character representation of
+    The CER-encoded value is just the ASCII character representation of
         the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">        ISO 8601</a>-formatted timestamp.
 <br><br>
+
         An ISO-8601 Timestamp looks like:
         <ul>            <li>19851106210627.3</li>
             <li>19851106210627.3Z</li>
@@ -3205,6 +3293,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     DateTimeException = if string cannot be decoded to a DateTime
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3212,7 +3301,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.generalizedTime" id="DistinguishedEncodingRulesElement.generalizedTime"><code class="code">generalizedTime</code></a>
+  <a href="#CanonicalEncodingRulesElement.generalizedTime" id="CanonicalEncodingRulesElement.generalizedTime"><code class="code">generalizedTime</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3221,7 +3310,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalizedTime.2"></span>nothrow @property @system void <code class="code">generalizedTime</code>(DateTime <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalizedTime.2"></span>@property @system void <code class="code">generalizedTime</code>(DateTime <code class="code">value</code>);
 
           </code>
         </p>
@@ -3240,9 +3329,10 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    The DER-encoded <code class="code">value</code> is just the ASCII character representation of
+    The CER-encoded <code class="code">value</code> is just the ASCII character representation of
         the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">        ISO 8601</a>-formatted timestamp.
 <br><br>
+
         An ISO-8601 Timestamp looks like:
         <ul>            <li>19851106210627.3</li>
             <li>19851106210627.3Z</li>
@@ -3258,7 +3348,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.graphicString" id="DistinguishedEncodingRulesElement.graphicString"><code class="code">graphicString</code></a>
+  <a href="#CanonicalEncodingRulesElement.graphicString" id="CanonicalEncodingRulesElement.graphicString"><code class="code">graphicString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3267,7 +3357,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.graphicString"></span>const @property @system string <code class="code">graphicString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.graphicString"></span>const @property @system string <code class="code">graphicString</code>();
 
           </code>
         </p>
@@ -3318,6 +3408,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 (including space) is encoded.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3325,7 +3416,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.graphicString" id="DistinguishedEncodingRulesElement.graphicString"><code class="code">graphicString</code></a>
+  <a href="#CanonicalEncodingRulesElement.graphicString" id="CanonicalEncodingRulesElement.graphicString"><code class="code">graphicString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3334,7 +3425,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.graphicString.2"></span>@property @system void <code class="code">graphicString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.graphicString.2"></span>@property @system void <code class="code">graphicString</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -3378,6 +3469,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 (including space) is supplied.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3385,7 +3477,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.visibleString" id="DistinguishedEncodingRulesElement.visibleString"><code class="code">visibleString</code></a>
+  <a href="#CanonicalEncodingRulesElement.visibleString" id="CanonicalEncodingRulesElement.visibleString"><code class="code">visibleString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3394,7 +3486,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.visibleString"></span>const @property @system string <code class="code">visibleString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.visibleString"></span>const @property @system string <code class="code">visibleString</code>();
 
           </code>
         </p>
@@ -3426,6 +3518,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 (including space) is encoded.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3433,7 +3526,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.visibleString" id="DistinguishedEncodingRulesElement.visibleString"><code class="code">visibleString</code></a>
+  <a href="#CanonicalEncodingRulesElement.visibleString" id="CanonicalEncodingRulesElement.visibleString"><code class="code">visibleString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3442,7 +3535,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.visibleString.2"></span>@property @system void <code class="code">visibleString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.visibleString.2"></span>@property @system void <code class="code">visibleString</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -3467,6 +3560,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 (including space) is supplied.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3474,7 +3568,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.generalString" id="DistinguishedEncodingRulesElement.generalString"><code class="code">generalString</code></a>
+  <a href="#CanonicalEncodingRulesElement.generalString" id="CanonicalEncodingRulesElement.generalString"><code class="code">generalString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3483,7 +3577,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalString"></span>const @property @system string <code class="code">generalString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalString"></span>const @property @system string <code class="code">generalString</code>();
 
           </code>
         </p>
@@ -3521,10 +3615,11 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
+Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
             Communication between Heterogeneous Systems, Morgan Kaufmann,
             2001, p. 182.
   </p>
@@ -3537,7 +3632,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.generalString" id="DistinguishedEncodingRulesElement.generalString"><code class="code">generalString</code></a>
+  <a href="#CanonicalEncodingRulesElement.generalString" id="CanonicalEncodingRulesElement.generalString"><code class="code">generalString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3546,7 +3641,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalString.2"></span>@property @system void <code class="code">generalString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalString.2"></span>@property @system void <code class="code">generalString</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -3577,10 +3672,11 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
+Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
             Communication between Heterogeneous Systems, Morgan Kaufmann,
             2001, p. 182.
   </p>
@@ -3593,7 +3689,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.universalString" id="DistinguishedEncodingRulesElement.universalString"><code class="code">universalString</code></a>
+  <a href="#CanonicalEncodingRulesElement.universalString" id="CanonicalEncodingRulesElement.universalString"><code class="code">universalString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3602,7 +3698,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.universalString"></span>const @property @system dstring <code class="code">universalString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.universalString"></span>const @property @system dstring <code class="code">universalString</code>();
 
           </code>
         </p>
@@ -3632,6 +3728,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 divisible by four.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3639,7 +3736,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.universalString" id="DistinguishedEncodingRulesElement.universalString"><code class="code">universalString</code></a>
+  <a href="#CanonicalEncodingRulesElement.universalString" id="CanonicalEncodingRulesElement.universalString"><code class="code">universalString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3648,7 +3745,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.universalString.2"></span>@property @system void <code class="code">universalString</code>(dstring <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.universalString.2"></span>@property @system void <code class="code">universalString</code>(dstring <code class="code">value</code>);
 
           </code>
         </p>
@@ -3671,7 +3768,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.characterString" id="DistinguishedEncodingRulesElement.characterString"><code class="code">characterString</code></a>
+  <a href="#CanonicalEncodingRulesElement.characterString" id="CanonicalEncodingRulesElement.characterString"><code class="code">characterString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3680,7 +3777,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.characterString"></span>const @property @system CharacterString <code class="code">characterString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.characterString"></span>const @property @system CharacterString <code class="code">characterString</code>();
 
           </code>
         </p>
@@ -3703,6 +3800,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <p class="para">
     The specification defines CHARACTER as:
 <br><br>
+
         <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -3718,6 +3816,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 string-value OCTET STRING }
         </i>
 <br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 
@@ -3745,6 +3844,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3752,7 +3852,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.characterString" id="DistinguishedEncodingRulesElement.characterString"><code class="code">characterString</code></a>
+  <a href="#CanonicalEncodingRulesElement.characterString" id="CanonicalEncodingRulesElement.characterString"><code class="code">characterString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3761,7 +3861,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.characterString.2"></span>@property @system void <code class="code">characterString</code>(CharacterString <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.characterString.2"></span>@property @system void <code class="code">characterString</code>(CharacterString <code class="code">value</code>);
 
           </code>
         </p>
@@ -3784,6 +3884,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <p class="para">
     The specification defines CHARACTER as:
 <br><br>
+
         <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -3799,6 +3900,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 string-<code class="code">value</code> OCTET STRING }
         </i>
 <br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
   </p>
@@ -3811,7 +3913,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.basicMultilingualPlaneString" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
+  <a href="#CanonicalEncodingRulesElement.basicMultilingualPlaneString" id="CanonicalEncodingRulesElement.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3820,7 +3922,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString"></span>const @property @system wstring <code class="code">basicMultilingualPlaneString</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.basicMultilingualPlaneString"></span>const @property @system wstring <code class="code">basicMultilingualPlaneString</code>();
 
           </code>
         </p>
@@ -3850,6 +3952,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 divisible by two.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3857,7 +3960,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.basicMultilingualPlaneString" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
+  <a href="#CanonicalEncodingRulesElement.basicMultilingualPlaneString" id="CanonicalEncodingRulesElement.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3866,7 +3969,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString.2"></span>@property @system void <code class="code">basicMultilingualPlaneString</code>(wstring <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.basicMultilingualPlaneString.2"></span>@property @system void <code class="code">basicMultilingualPlaneString</code>(wstring <code class="code">value</code>);
 
           </code>
         </p>
@@ -3889,7 +3992,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.this" id="DistinguishedEncodingRulesElement.this"><code class="code">this</code></a>
+  <a href="#CanonicalEncodingRulesElement.this" id="CanonicalEncodingRulesElement.this"><code class="code">this</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3898,7 +4001,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this"></span>nothrow @nogc @safe this();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.this"></span>nothrow @nogc @safe this();
 
           </code>
         </p>
@@ -3910,7 +4013,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Creates an EndOfContent DER Value.
+    Creates an EndOfContent CER Value.
   </p>
 </div>
 
@@ -3921,7 +4024,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.this" id="DistinguishedEncodingRulesElement.this"><code class="code">this</code></a>
+  <a href="#CanonicalEncodingRulesElement.this" id="CanonicalEncodingRulesElement.this"><code class="code">this</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3930,7 +4033,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this.2"></span>@system this(ref ubyte[] <code class="code">bytes</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.this.2"></span>@system this(ref ubyte[] <code class="code">bytes</code>);
 
           </code>
         </p>
@@ -3942,9 +4045,9 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Creates a DERElement from the supplied <code class="code">bytes</code>, inferring that the first
+    Creates a CERElement from the supplied <code class="code">bytes</code>, inferring that the first
         byte is the type tag. The supplied ubyte[] array is "chomped" by
-        reference, so the original array will grow shorter as DERElements are
+        reference, so the original array will grow shorter as CERElements are
         generated.
 
   </p>
@@ -3953,7 +4056,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <h4>Throws</h4>
   <p class="para">
     ASN1ValueTooSmallException = if the <code class="code">bytes</code> supplied are fewer than
-                two (one or zero, in other words), such that no valid DERElement
+                two (one or zero, in other words), such that no valid CERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive <code class="code">null</code>
                 octets) cannot be found, or if the value is encoded in fewer
@@ -3965,7 +4068,8 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Example:</span>
 
@@ -3974,15 +4078,15 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     <div class="dlang">
       <ol class="code_lines">
         <li><code class="code"><span class="comment">// Decoding looks like:
-</span>DERElement[] result;
+</span>CERElement[] result;
 <span class="keyword">while</span> (<span class="param">bytes</span>.length &gt; 0)
-    result ~= <span class="keyword">new</span> DERElement(<span class="param">bytes</span>);
+    result ~= <span class="keyword">new</span> CERElement(<span class="param">bytes</span>);
 
 <span class="comment">// Encoding looks like:
 </span><span class="keyword">ubyte</span>[] result;
-<span class="keyword">foreach</span> (bv; bervalues)
+<span class="keyword">foreach</span> (cv; bervalues)
 {
-    result ~= <span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) bv;
+    result ~= <span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) cv;
 }
 </code></li>
       </ol>
@@ -4000,7 +4104,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.this" id="DistinguishedEncodingRulesElement.this"><code class="code">this</code></a>
+  <a href="#CanonicalEncodingRulesElement.this" id="CanonicalEncodingRulesElement.this"><code class="code">this</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -4009,7 +4113,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this.3"></span>@system this(ref size_t <code class="code">bytesRead</code>, ref ubyte[] <code class="code">bytes</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.this.3"></span>@system this(ref size_t <code class="code">bytesRead</code>, ref ubyte[] <code class="code">bytes</code>);
 
           </code>
         </p>
@@ -4021,7 +4125,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Creates a DERElement from the supplied <code class="code">bytes</code>, inferring that the first
+    Creates a CERElement from the supplied <code class="code">bytes</code>, inferring that the first
         byte is the type tag. The supplied ubyte[] array is read, starting
         from the index specified by , and increments
          by the number of <code class="code">bytes</code> read.
@@ -4032,7 +4136,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <h4>Throws</h4>
   <p class="para">
     ASN1ValueTooSmallException = if the <code class="code">bytes</code> supplied are fewer than
-                two (one or zero, in other words), such that no valid DERElement
+                two (one or zero, in other words), such that no valid CERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive <code class="code">null</code>
                 octets) cannot be found, or if the value is encoded in fewer
@@ -4044,7 +4148,8 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Example:</span>
 
@@ -4053,16 +4158,16 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     <div class="dlang">
       <ol class="code_lines">
         <li><code class="code"><span class="comment">// Decoding looks like:
-</span>DERElement[] result;
+</span>CERElement[] result;
 size_t i = 0u;
 <span class="keyword">while</span> (i &lt; <span class="param">bytes</span>.length)
-    result ~= <span class="keyword">new</span> DERElement(i, <span class="param">bytes</span>);
+    result ~= <span class="keyword">new</span> CERElement(i, <span class="param">bytes</span>);
 
 <span class="comment">// Encoding looks like:
 </span><span class="keyword">ubyte</span>[] result;
-<span class="keyword">foreach</span> (bv; bervalues)
+<span class="keyword">foreach</span> (cv; bervalues)
 {
-    result ~= <span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) bv;
+    result ~= <span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) cv;
 }
 </code></li>
       </ol>
@@ -4080,7 +4185,7 @@ size_t i = 0u;
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.toBytes" id="DistinguishedEncodingRulesElement.toBytes"><code class="code">toBytes</code></a>
+  <a href="#CanonicalEncodingRulesElement.toBytes" id="CanonicalEncodingRulesElement.toBytes"><code class="code">toBytes</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -4089,7 +4194,7 @@ size_t i = 0u;
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.toBytes"></span>const @property @system ubyte[] <code class="code">toBytes</code>();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.toBytes"></span>const nothrow @property @system ubyte[] <code class="code">toBytes</code>();
 
           </code>
         </p>
@@ -4130,7 +4235,7 @@ size_t i = 0u;
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.opCast" id="DistinguishedEncodingRulesElement.opCast"><code class="code">opCast</code></a>
+  <a href="#CanonicalEncodingRulesElement.opCast" id="CanonicalEncodingRulesElement.opCast"><code class="code">opCast</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -4139,7 +4244,7 @@ size_t i = 0u;
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.opCast"></span>nothrow @system ubyte[] <code class="code">opCast</code>(T = ubyte[])();
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.opCast"></span>nothrow @system ubyte[] <code class="code">opCast</code>(T = ubyte[])();
 
           </code>
         </p>

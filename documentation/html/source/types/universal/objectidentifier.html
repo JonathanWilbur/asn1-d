@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>asn1</title>
+    <title>types.universal.objectidentifier</title>
     <style type="text/css" media="screen">
       html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
       blockquote, pre, a, abbr, address, cite, code, del, dfn, em, figure,
@@ -463,75 +463,15 @@
   <body id="ddoc_main" class="ddoc dlang">
     <div class="content_wrapper">
       <article class="module">
-        <h1 class="module_name">asn1</h1>
-        <section id="module_content"><section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Abstract Syntax Notation 1 is a high-level syntax specification created
-    by the <a href="http://www.itu.int/en/pages/default.aspx">    International Telecommunications Union</a> in
-    <a href="https://www.itu.int/rec/T-REC-X.680/en">    X.680 - Abstract Syntax Notation One (ASN.1)</a>, that
-    abstractly defines data structures and protocol data units used by
-    programs and protocols. It defines an extensible system of data types,
-    modules, and data structures.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    While described abstractly by ASN.1, the specified protocol data units
-    and data structures can be encoded via various encoding schemes, such as
-    the Basic Encoding Rules (BER), which are defined in the
-    <a href="http://www.itu.int/en/pages/default.aspx">    International Telecommunications Union</a>'s
-    <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>.
-    These encoding schemes uniformly relay data between systems that
-    can differ in endianness, bit-width, byte-size, operating system,
-    machine architecture, and so on.
-<br><br>
-    The encoding schemata that inherit from ASN.1 are used widely in protocols
-    such as TLS, LDAP, SNMP, RDP, and many more.
-
-
-  </p>
-</div>
-<div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Author:</span>
-<a href="http://jonathan.wilbur.space">Jonathan M. Wilbur</a>
-            <a href="mailto:jonathan@wilbur.space">jonathan@wilbur.space</a>
-
-  </p>
-</div>
-<div class="ddoc_license">
-  <h4>License</h4>
-  <p class="para">
-    
-
-  </p>
-</div>
-<div class="ddoc_standards">
-  <h4>Standards</h4>
-  <p class="para">
-    <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680 - Abstract Syntax Notation One (ASN.1)</a>
-
-  </p>
-</div><div class="ddoc_see_also">
-  <h4>See Also</h4>
-  <p class="para">
-    <a href="https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One">The Wikipedia Page on ASN.1</a>
-        <a href="https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf">ASN.1 By Simple Words</a>
-        <a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">ASN.1: Communication Between Heterogeneous Systems</a>
-  </p>
-</div>
-
-</section>
+        <h1 class="module_name">types.universal.objectidentifier</h1>
+        <section id="module_content">
 <section class="section ddoc_module_members_section">
   <div class="ddoc_module_members">
     <ul class="ddoc_members">
   <li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#ASN1Exception" id="ASN1Exception"><code class="code">ASN1Exception</code></a>
+  <a href="#OIDException" id="OIDException"><code class="code">OIDException</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -540,7 +480,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ASN1Exception"></span>alias <code class="code">ASN1Exception</code> = AbstractSyntaxNotation1Exception;
+            <span class="ddoc_anchor" id="OIDException"></span>alias <code class="code">OIDException</code> = ObjectIdentifierException;
 
           </code>
         </p>
@@ -556,7 +496,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Exception" id="AbstractSyntaxNotation1Exception"><code class="code">AbstractSyntaxNotation1Exception</code></a>
+  <a href="#ObjectIDException" id="ObjectIDException"><code class="code">ObjectIDException</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -565,7 +505,107 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Exception"></span>class <code class="code">AbstractSyntaxNotation1Exception</code>: <span class="ddoc_psuper_symbol">object.Exception</span>;
+            <span class="ddoc_anchor" id="ObjectIDException"></span>alias <code class="code">ObjectIDException</code> = ObjectIdentifierException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifierException" id="ObjectIdentifierException"><code class="code">ObjectIdentifierException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifierException"></span>class <code class="code">ObjectIdentifierException</code>: <span class="ddoc_psuper_symbol">asn1.AbstractSyntaxNotation1Exception</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#OID" id="OID"><code class="code">OID</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="OID"></span>alias <code class="code">OID</code> = ObjectIdentifier;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectID" id="ObjectID"><code class="code">ObjectID</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectID"></span>alias <code class="code">ObjectID</code> = ObjectIdentifier;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier" id="ObjectIdentifier"><code class="code">ObjectIdentifier</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier"></span>class <code class="code">ObjectIdentifier</code>;
 
           </code>
         </p>
@@ -577,7 +617,39 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    A Generic Exception from which all other ASN.1 Exceptions will inherit.
+    A class for Object Identifiers, that supports object descriptors and various
+    output formatting.
+  </p>
+</div>
+
+</section>
+<ul class="ddoc_members">
+  <li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.length" id="ObjectIdentifier.length"><code class="code">length</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.length"></span>const @property @safe size_t <code class="code">length</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    the number of nodes in the OID.
   </p>
 </div>
 
@@ -588,7 +660,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#ASN1TagClass" id="ASN1TagClass"><code class="code">ASN1TagClass</code></a>
+  <a href="#ObjectIdentifier.this" id="ObjectIdentifier.this"><code class="code">this</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -597,407 +669,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ASN1TagClass"></span>alias <code class="code">ASN1TagClass</code> = AbstractSyntaxNotation1TagClass;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1Construction" id="ASN1Construction"><code class="code">ASN1Construction</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1Construction"></span>alias <code class="code">ASN1Construction</code> = AbstractSyntaxNotation1Construction;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Construction" id="AbstractSyntaxNotation1Construction"><code class="code">AbstractSyntaxNotation1Construction</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Construction"></span>enum <code class="code">AbstractSyntaxNotation1Construction</code>: ubyte;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1UniversalType" id="ASN1UniversalType"><code class="code">ASN1UniversalType</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1UniversalType"></span>alias <code class="code">ASN1UniversalType</code> = AbstractSyntaxNotation1UniversalType;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1UniversalType" id="AbstractSyntaxNotation1UniversalType"><code class="code">AbstractSyntaxNotation1UniversalType</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1UniversalType"></span>enum <code class="code">AbstractSyntaxNotation1UniversalType</code>: ubyte;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1LengthEncoding" id="ASN1LengthEncoding"><code class="code">ASN1LengthEncoding</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1LengthEncoding"></span>alias <code class="code">ASN1LengthEncoding</code> = AbstractSyntaxNotation1LengthEncoding;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1LengthEncoding" id="AbstractSyntaxNotation1LengthEncoding"><code class="code">AbstractSyntaxNotation1LengthEncoding</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthEncoding"></span>enum <code class="code">AbstractSyntaxNotation1LengthEncoding</code>: ubyte;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1RealEncodingBase" id="ASN1RealEncodingBase"><code class="code">ASN1RealEncodingBase</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1RealEncodingBase"></span>alias <code class="code">ASN1RealEncodingBase</code> = AbstractSyntaxNotation1RealEncodingBase;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1RealEncodingBase" id="AbstractSyntaxNotation1RealEncodingBase"><code class="code">AbstractSyntaxNotation1RealEncodingBase</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1RealEncodingBase"></span>enum <code class="code">AbstractSyntaxNotation1RealEncodingBase</code>: ubyte;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1RealEncodingScale" id="ASN1RealEncodingScale"><code class="code">ASN1RealEncodingScale</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1RealEncodingScale"></span>alias <code class="code">ASN1RealEncodingScale</code> = AbstractSyntaxNotation1RealEncodingScale;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1RealEncodingScale" id="AbstractSyntaxNotation1RealEncodingScale"><code class="code">AbstractSyntaxNotation1RealEncodingScale</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1RealEncodingScale"></span>enum <code class="code">AbstractSyntaxNotation1RealEncodingScale</code>: ubyte;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1RealExponentEncoding" id="ASN1RealExponentEncoding"><code class="code">ASN1RealExponentEncoding</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1RealExponentEncoding"></span>alias <code class="code">ASN1RealExponentEncoding</code> = AbstractSyntaxNotation1RealExponentEncoding;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1RealExponentEncoding" id="AbstractSyntaxNotation1RealExponentEncoding"><code class="code">AbstractSyntaxNotation1RealExponentEncoding</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1RealExponentEncoding"></span>enum <code class="code">AbstractSyntaxNotation1RealExponentEncoding</code>: ubyte;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1SpecialRealValue" id="ASN1SpecialRealValue"><code class="code">ASN1SpecialRealValue</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1SpecialRealValue"></span>alias <code class="code">ASN1SpecialRealValue</code> = AbstractSyntaxNotation1SpecialRealValue;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1SpecialRealValue" id="AbstractSyntaxNotation1SpecialRealValue"><code class="code">AbstractSyntaxNotation1SpecialRealValue</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1SpecialRealValue"></span>enum <code class="code">AbstractSyntaxNotation1SpecialRealValue</code>: ubyte;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1Base10RealNumericalRepresentation" id="ASN1Base10RealNumericalRepresentation"><code class="code">ASN1Base10RealNumericalRepresentation</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1Base10RealNumericalRepresentation"></span>alias <code class="code">ASN1Base10RealNumericalRepresentation</code> = AbstractSyntaxNotation1Base10RealNumericalRepresentation;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Base10RealNumericalRepresentation" id="AbstractSyntaxNotation1Base10RealNumericalRepresentation"><code class="code">AbstractSyntaxNotation1Base10RealNumericalRepresentation</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Base10RealNumericalRepresentation"></span>enum <code class="code">AbstractSyntaxNotation1Base10RealNumericalRepresentation</code>: ubyte;
+            <span class="ddoc_anchor" id="ObjectIdentifier.this"></span>@system this(size_t[] <code class="code">numbers</code>...);
 
           </code>
         </p>
@@ -1009,29 +681,45 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    The standardized string representations of floating point numbers, as
-    specified in <a href="https://www.iso.org/standard/12285.html">ISO 6093</a>.
+    Constructor for an Object Identifier
 
   </p>
 </div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    <table>        <tr><th>Representation</th> <th>Description</th> <th>Examples</th></tr>
-        <tr><td>NR1</td> <td>Implicit decimal point</td> <td>"3", "-1", "+1000"</td></tr>
-        <tr><td>NR2</td> <td>Explicit decimal</td> <td>"3.0", "-1.3", "-.3"</td></tr>
-        <tr><td>NR3</td> <td>Explicit exponent</td> <td>"3.0E1", "123E+100"</td></tr>
-    </table>
+<div class="ddoc_params">
+  <h4>Parameters</h4>
+  <table cellspacing="0" cellpadding="5" border="0" class="graybox">
+    <tbody>
+      <tr class="ddoc_param_row">
+  <td scope="ddoc_param_id">
+  <code class="code">
+    <em class="term">size_t[] <code class="code">numbers</code></em>
+  </code>
+</td>
+<td>
+  <div class="ddoc_param_desc">
+    <p class="para">
+      an array of unsigned integer representing the Object Identifier
+    </p>
+  </div>
+</td>
+</tr>
 
+    </tbody>
+  </table>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    An OID object
 
   </p>
 </div>
-<div class="ddoc_section">
+<div class="ddoc_throws">
+  <h4>Throws</h4>
   <p class="para">
-    <span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Character String Types.” ASN.1:
-            Communication between Heterogeneous Systems, Morgan
-            Kaufmann, 2001, p. 143.
+    OIDException = if fewer than three <code class="code">numbers</code> are provided, or if the
+                first number is not 0, 1, or 2, or if the second number is
+                greater than 39.
   </p>
 </div>
 
@@ -1042,7 +730,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#ASN1Base10RealDecimalSeparator" id="ASN1Base10RealDecimalSeparator"><code class="code">ASN1Base10RealDecimalSeparator</code></a>
+  <a href="#ObjectIdentifier.this" id="ObjectIdentifier.this"><code class="code">this</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1051,107 +739,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ASN1Base10RealDecimalSeparator"></span>alias <code class="code">ASN1Base10RealDecimalSeparator</code> = AbstractSyntaxNotation1Base10RealDecimalSeparator;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Base10RealDecimalSeparator" id="AbstractSyntaxNotation1Base10RealDecimalSeparator"><code class="code">AbstractSyntaxNotation1Base10RealDecimalSeparator</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Base10RealDecimalSeparator"></span>enum <code class="code">AbstractSyntaxNotation1Base10RealDecimalSeparator</code>: char;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1Base10RealExponentCharacter" id="ASN1Base10RealExponentCharacter"><code class="code">ASN1Base10RealExponentCharacter</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1Base10RealExponentCharacter"></span>alias <code class="code">ASN1Base10RealExponentCharacter</code> = AbstractSyntaxNotation1Base10RealExponentCharacter;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Base10RealExponentCharacter" id="AbstractSyntaxNotation1Base10RealExponentCharacter"><code class="code">AbstractSyntaxNotation1Base10RealExponentCharacter</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Base10RealExponentCharacter"></span>enum <code class="code">AbstractSyntaxNotation1Base10RealExponentCharacter</code>: char;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#numericStringCharacters" id="numericStringCharacters"><code class="code">numericStringCharacters</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="numericStringCharacters"></span>immutable string <code class="code">numericStringCharacters</code>;
+            <span class="ddoc_anchor" id="ObjectIdentifier.this.2"></span>@safe this(immutable OIDNode[] <code class="code">nodes</code>...);
 
           </code>
         </p>
@@ -1163,7 +751,45 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    The acceptable characters for a NumericString
+    Constructor for an Object Identifier
+
+  </p>
+</div>
+<div class="ddoc_params">
+  <h4>Parameters</h4>
+  <table cellspacing="0" cellpadding="5" border="0" class="graybox">
+    <tbody>
+      <tr class="ddoc_param_row">
+  <td scope="ddoc_param_id">
+  <code class="code">
+    <em class="term">OIDNode[] <code class="code">nodes</code></em>
+  </code>
+</td>
+<td>
+  <div class="ddoc_param_desc">
+    <p class="para">
+      An array of OIDNodes
+    </p>
+  </div>
+</td>
+</tr>
+
+    </tbody>
+  </table>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    An OID object
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    OIDException = if fewer than three <code class="code">nodes</code> are provided, or if the
+                first node is not 0, 1, or 2, or if the second node is greater
+                than 39.
   </p>
 </div>
 
@@ -1174,7 +800,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#printableStringCharacters" id="printableStringCharacters"><code class="code">printableStringCharacters</code></a>
+  <a href="#ObjectIdentifier.opIndex" id="ObjectIdentifier.opIndex"><code class="code">opIndex</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1183,7 +809,513 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="printableStringCharacters"></span>immutable string <code class="code">printableStringCharacters</code>;
+            <span class="ddoc_anchor" id="ObjectIdentifier.opIndex"></span>const @safe OIDNode <code class="code">opIndex</code>(ptrdiff_t <code class="code">index</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    the OIDNode at the specified <code class="code">index</code>.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    RangeError = if invalid <code class="code">index</code> specified.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.opSlice" id="ObjectIdentifier.opSlice"><code class="code">opSlice</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.opSlice"></span>const @system OIDNode[] <code class="code">opSlice</code>(ptrdiff_t <code class="code">index1</code>, ptrdiff_t <code class="code">index2</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    a range of OIDNodes from the OID.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    RangeError = if invalid indices are specified.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.opDollar" id="ObjectIdentifier.opDollar"><code class="code">opDollar</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.opDollar"></span>const nothrow @safe size_t <code class="code">opDollar</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    the length of the OID.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.descriptor" id="ObjectIdentifier.descriptor"><code class="code">descriptor</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.descriptor"></span>const @safe string <code class="code">descriptor</code>(size_t <code class="code">index</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    The <code class="code">descriptor</code> at the specified <code class="code">index</code>.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    RangeError = if invalid <code class="code">index</code> specified.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.numbers" id="ObjectIdentifier.numbers"><code class="code">numbers</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.numbers"></span>alias <code class="code">numbers</code> = numericArray;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.numericArray" id="ObjectIdentifier.numericArray"><code class="code">numericArray</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.numericArray"></span>const nothrow @property @safe size_t[] <code class="code">numericArray</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    an array of s representing the dot-delimited sequence of
+            integers that constitute the numeric OID.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.asn1Notation" id="ObjectIdentifier.asn1Notation"><code class="code">asn1Notation</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.asn1Notation"></span>alias <code class="code">asn1Notation</code> = abstractSyntaxNotation1Notation;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.abstractSyntaxNotation1Notation" id="ObjectIdentifier.abstractSyntaxNotation1Notation"><code class="code">abstractSyntaxNotation1Notation</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.abstractSyntaxNotation1Notation"></span>const nothrow @property @safe string <code class="code">abstractSyntaxNotation1Notation</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    the OID in ASN.1 Notation
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.dotNotation" id="ObjectIdentifier.dotNotation"><code class="code">dotNotation</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.dotNotation"></span>const nothrow @property @safe string <code class="code">dotNotation</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    the OID as a dot-delimited string, where all nodes with descriptors
+            are represented as descriptors instead of numbers
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.iriNotation" id="ObjectIdentifier.iriNotation"><code class="code">iriNotation</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.iriNotation"></span>alias <code class="code">iriNotation</code> = internationalizedResourceIdentifierNotation;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.uriNotation" id="ObjectIdentifier.uriNotation"><code class="code">uriNotation</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.uriNotation"></span>alias <code class="code">uriNotation</code> = internationalizedResourceIdentifierNotation;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.uniformResourceIdentifierNotation" id="ObjectIdentifier.uniformResourceIdentifierNotation"><code class="code">uniformResourceIdentifierNotation</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.uniformResourceIdentifierNotation"></span>alias <code class="code">uniformResourceIdentifierNotation</code> = internationalizedResourceIdentifierNotation;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.internationalizedResourceIdentifierNotation" id="ObjectIdentifier.internationalizedResourceIdentifierNotation"><code class="code">internationalizedResourceIdentifierNotation</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.internationalizedResourceIdentifierNotation"></span>const @property @system string <code class="code">internationalizedResourceIdentifierNotation</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    the OID as a forward-slash-delimited string (as one might expect in
+            a URI / IRI path), where all nodes with descriptors are represented
+            as descriptors instead of numbers
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.urnNotation" id="ObjectIdentifier.urnNotation"><code class="code">urnNotation</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.urnNotation"></span>alias <code class="code">urnNotation</code> = uniformResourceNameNotation;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.uniformResourceNameNotation" id="ObjectIdentifier.uniformResourceNameNotation"><code class="code">uniformResourceNameNotation</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.uniformResourceNameNotation"></span>const nothrow @property @safe string <code class="code">uniformResourceNameNotation</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    the OID as a URN, where all nodes of the OID are translated to a
+            segment in the URN path, and where all nodes are represented as
+            numbers regardless of whether or not they have a descriptor
+
+  </p>
+</div>
+<div class="ddoc_see_also">
+  <h4>See Also</h4>
+  <p class="para">
+    <a href="https://www.ietf.org/rfc/rfc3061.txt">RFC 3061</a>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.toString" id="ObjectIdentifier.toString"><code class="code">toString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.toString"></span>@property string <code class="code">toString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifier.toHash" id="ObjectIdentifier.toHash"><code class="code">toHash</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifier.toHash"></span>const nothrow @trusted size_t <code class="code">toHash</code>();
 
           </code>
         </p>
@@ -1195,21 +1327,24 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    The acceptable characters for a printableString.
+    An override so that associative arrays can use an OIDNode as a
+        key.
 
   </p>
 </div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
   <p class="para">
-    The sorting of letters below is a slight optimization:
-    they are sorted in order of decreasing frequency in the English
-    language, so that canFind will usually have to iterate through
-    fewer letters before finding a match.
+    A size_t that represents a hash of the OIDNode
   </p>
 </div>
 
 </section>
+
+</div>
+
+</li>
+</ul>
 
 </div>
 

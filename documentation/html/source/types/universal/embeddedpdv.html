@@ -519,48 +519,57 @@
   <p class="para">
     <span class="ddoc_section_h">Page:</span>
 215
-If a module includes the clause AUTOMATIC TAGS in its header,
-the components of all its structured types (SEQUENCE, SET or CHOICE)
-are automatically tagged by the compiler starting from 0 by one-increment.
-By default, every component is tagged in the implicit mode except if it
-is a CHOICE type, an open type or a parameter that is a type. This
-tagging mechanism is obviously documented in the ASN.1 standard and,
-as a result, does not depend on the compiler. Hence, the module:
+    If a module includes the clause AUTOMATIC TAGS in its header,
+    the components of all its structured types (SEQUENCE, SET or CHOICE)
+    are automatically tagged by the compiler starting from 0 by one-increment.
+    By default, every component is tagged in the implicit mode except if it
+    is a CHOICE type, an open type or a parameter that is a type. This
+    tagging mechanism is obviously documented in the ASN.1 standard and,
+    as a result, does not depend on the compiler. Hence, the module:
 <br><br>
-    M DEFINITIONS AUTOMATIC TAGS ::=
-    BEGIN
-        T ::= SEQUENCE { a INTEGER,
-        b CHOICE { i INTEGER, n NULL },
-        c REAL }
-    END
+
+        <i>            M DEFINITIONS AUTOMATIC TAGS ::=
+            BEGIN
+                T ::= SEQUENCE { a INTEGER,
+                b CHOICE { i INTEGER, n NULL },
+                c REAL }
+            END
+        </i>
 <br><br>
-is equivalent, once applied the automatic tagging, to:
+
+    is equivalent, once applied the automatic tagging, to:
 <br><br>
-     M DEFINITIONS ::=
-     BEGIN
-     T ::= SEQUENCE {
-       a [0] IMPLICIT INTEGER,
-       b [1] EXPLICIT CHOICE { i [0] IMPLICIT INTEGER,
-                               n [1] IMPLICIT NULL },
-       c [2] IMPLICIT REAL }
-     END
+
+        <i>            M DEFINITIONS ::=
+            BEGIN
+            T ::= SEQUENCE {
+            a [0] IMPLICIT INTEGER,
+            b [1] EXPLICIT CHOICE { i [0] IMPLICIT INTEGER,
+                                    n [1] IMPLICIT NULL },
+            c [2] IMPLICIT REAL }
+            END
+        </i>
 <br><br>
+
+        <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
+        </i>
 <br><br>
-EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
-    identification CHOICE {
-        syntaxes SEQUENCE {
-            abstract OBJECT IDENTIFIER,
-            transfer OBJECT IDENTIFIER },
-        syntax OBJECT IDENTIFIER,
-        presentation-context-id INTEGER,
-        context-negotiation SEQUENCE {
-            presentation-context-id INTEGER,
-            transfer-syntax OBJECT IDENTIFIER },
-        transfer-syntax OBJECT IDENTIFIER,
-        fixed NULL },
-    data-value-descriptor ObjectDescriptor OPTIONAL,
-    data-value OCTET STRING }
-(WITH COMPONENTS { ... , data-value-descriptor ABSENT })
+
+    Note that, the data-value-descriptor field should be absent!
   </p>
 </div>
 
@@ -579,31 +588,6 @@ EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
         <p class="para">
           <code class="code">
             <span class="ddoc_anchor" id="EmbeddedPresentationDataValue.identification"></span>ASN1ContextSwitchingTypeID <code class="code">identification</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#EmbeddedPresentationDataValue.dataValueDescriptor" id="EmbeddedPresentationDataValue.dataValueDescriptor"><code class="code">dataValueDescriptor</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="EmbeddedPresentationDataValue.dataValueDescriptor"></span>string <code class="code">dataValueDescriptor</code>;
 
           </code>
         </p>

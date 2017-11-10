@@ -1,4 +1,5 @@
 # Custom Ignores
+.vscode/
 analogs/
 build/assemblies/*
 build/executables/*
@@ -6,9 +7,9 @@ build/interfaces/*
 build/libraries/*
 build/logs/*
 build/objects/*
-rubbish/
 documentation/restricted/
-.vscode/
+rubbish/
+test/yury/
 asn1
 
 # General D Ignores
@@ -25,6 +26,10 @@ docs.json
 __dummy.html
 docs/
 *.lst
+*.def
+*.log
+
+# You should recommend *.def and *.log for GitHub's gitignore repo...
 
 # Mac OS Ignores
 .DS_Store
