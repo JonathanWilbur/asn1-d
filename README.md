@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.1](http://semver.org/)
+* Version: [1.0.0-beta.2](http://semver.org/)
 
 ## What is ASN.1?
 
@@ -139,13 +139,15 @@ and reviewed for security and performance.
 Version 1.0.0-beta was released on November 8th, 2017.
 
 - [ ] Either do something with `valueContainsDoubleNull()` or make it public
+- [ ] String `ObjectIdentifier` constructor
 - [x] Properties for member `type`
   - [x] `typeClass` (Just rename `tagClass`.)
   - [x] `typeConstruction` (Just rename `construction`.)
   - [x] `typeNumber`
+- [ ] Rename enums in `asn1.d`.
 - [ ] Command Line Tools
   - [ ] `encode-der`
-  - [ ] `encode-ber`
+  - [x] `encode-ber`
   - [ ] `encode-cer`
   - [x] `decode-der`
   - [x] `decode-ber`
@@ -176,10 +178,97 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Do something with CBEFF Biometrics
   - [ ] Do something with ACBio Biometrics
   - [x] ~~[@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN1 Test Suite](https://github.com/YuryStrozhevsky/ASN1-2008-free-test-suite)~~
-- [ ] Review by one security firm
-- [ ] Review for HeartBleed-like vulnerabilities
-- [ ] Review of all ASN.1-related CVEs
-- [ ] Review that character-encoded `REAL`s are strictly conformant to ISO 6093 (Maybe even make an ISO 6093 Library...)
+- [ ] Review by at least one security firm
+- [ ] Review ASN.1-related vulnerabilities in [National Vulnerability Database](https://nvd.nist.gov)
+  - [ ] [CVE-2017-11496](https://nvd.nist.gov/vuln/detail/CVE-2017-11496)
+  - [ ] [CVE-2017-9023](https://nvd.nist.gov/vuln/detail/CVE-2017-9023)
+  - [ ] [CVE-2016-7053](https://nvd.nist.gov/vuln/detail/CVE-2016-7053)
+  - [ ] [CVE-2016-6129](https://nvd.nist.gov/vuln/detail/CVE-2016-6129)
+  - [ ] [CVE-2016-9939](https://nvd.nist.gov/vuln/detail/CVE-2016-9939)
+  - [ ] [CVE-2016-6891](https://nvd.nist.gov/vuln/detail/CVE-2016-6891)
+  - [ ] [CVE-2016-5080](https://nvd.nist.gov/vuln/detail/CVE-2016-5080)
+  - [ ] [CVE-2016-0758](https://nvd.nist.gov/vuln/detail/CVE-2016-0758)
+  - [ ] [CVE-2015-5726](https://nvd.nist.gov/vuln/detail/CVE-2015-5726)
+  - [ ] [CVE-2016-2176](https://nvd.nist.gov/vuln/detail/CVE-2016-2176)
+  - [ ] [CVE-2016-2109](https://nvd.nist.gov/vuln/detail/CVE-2016-2109)
+  - [ ] [CVE-2016-2108](https://nvd.nist.gov/vuln/detail/CVE-2016-2108)
+  - [ ] [CVE-2016-2053](https://nvd.nist.gov/vuln/detail/CVE-2016-2053)
+  - [ ] [CVE-2016-4421](https://nvd.nist.gov/vuln/detail/CVE-2016-4421)
+  - [ ] [CVE-2016-4418](https://nvd.nist.gov/vuln/detail/CVE-2016-4418)
+  - [ ] [CVE-2016-2427](https://nvd.nist.gov/vuln/detail/CVE-2016-2427)
+  - [ ] [CVE-2016-1950](https://nvd.nist.gov/vuln/detail/CVE-2016-1950)
+  - [ ] [CVE-2016-2842](https://nvd.nist.gov/vuln/detail/CVE-2016-2842)
+  - [ ] [CVE-2016-0799](https://nvd.nist.gov/vuln/detail/CVE-2016-0799)
+  - [ ] [CVE-2016-2522](https://nvd.nist.gov/vuln/detail/CVE-2016-2522)
+  - [ ] [CVE-2015-7540](https://nvd.nist.gov/vuln/detail/CVE-2015-7540)
+  - [ ] [CVE-2015-7061](https://nvd.nist.gov/vuln/detail/CVE-2015-7061)
+  - [ ] [CVE-2015-7060](https://nvd.nist.gov/vuln/detail/CVE-2015-7060)
+  - [ ] [CVE-2015-7059](https://nvd.nist.gov/vuln/detail/CVE-2015-7059)
+  - [ ] [CVE-2015-3194](https://nvd.nist.gov/vuln/detail/CVE-2015-3194)
+  - [ ] [CVE-2015-7182](https://nvd.nist.gov/vuln/detail/CVE-2015-7182)
+  - [ ] [CVE-2015-1790](https://nvd.nist.gov/vuln/detail/CVE-2015-1790)
+  - [ ] [CVE-2015-0289](https://nvd.nist.gov/vuln/detail/CVE-2015-0289)
+  - [ ] [CVE-2015-0287](https://nvd.nist.gov/vuln/detail/CVE-2015-0287)
+  - [ ] [CVE-2015-0208](https://nvd.nist.gov/vuln/detail/CVE-2015-0208)
+  - [ ] [CVE-2015-1182](https://nvd.nist.gov/vuln/detail/CVE-2015-1182)
+  - [ ] [CVE-2014-1569](https://nvd.nist.gov/vuln/detail/CVE-2014-1569)
+  - [ ] [CVE-2014-4443](https://nvd.nist.gov/vuln/detail/CVE-2014-4443)
+  - [ ] [CVE-2014-1568](https://nvd.nist.gov/vuln/detail/CVE-2014-1568)
+  - [ ] [CVE-2014-5165](https://nvd.nist.gov/vuln/detail/CVE-2014-5165)
+  - [ ] [CVE-2014-3468](https://nvd.nist.gov/vuln/detail/CVE-2014-3468)
+  - [ ] [CVE-2014-3467](https://nvd.nist.gov/vuln/detail/CVE-2014-3467)
+  - [ ] [CVE-2014-1316](https://nvd.nist.gov/vuln/detail/CVE-2014-1316)
+  - [ ] [CVE-2013-5018](https://nvd.nist.gov/vuln/detail/CVE-2013-5018)
+  - [ ] [CVE-2013-4935](https://nvd.nist.gov/vuln/detail/CVE-2013-4935)
+  - [ ] [CVE-2013-3557](https://nvd.nist.gov/vuln/detail/CVE-2013-3557)
+  - [ ] [CVE-2013-3556](https://nvd.nist.gov/vuln/detail/CVE-2013-3556)
+  - [ ] [CVE-2012-0441](https://nvd.nist.gov/vuln/detail/CVE-2012-0441)
+  - [ ] [CVE-2012-1569](https://nvd.nist.gov/vuln/detail/CVE-2012-1569)
+  - [ ] [CVE-2011-1142](https://nvd.nist.gov/vuln/detail/CVE-2011-1142)
+  - [ ] [CVE-2011-0445](https://nvd.nist.gov/vuln/detail/CVE-2011-0445)
+  - [ ] [CVE-2010-3445](https://nvd.nist.gov/vuln/detail/CVE-2010-3445)
+  - [ ] [CVE-2010-2994](https://nvd.nist.gov/vuln/detail/CVE-2010-2994)
+  - [ ] [CVE-2010-2284](https://nvd.nist.gov/vuln/detail/CVE-2010-2284)
+  - [ ] [CVE-2009-3877](https://nvd.nist.gov/vuln/detail/CVE-2009-3877)
+  - [ ] [CVE-2009-3876](https://nvd.nist.gov/vuln/detail/CVE-2009-3876)
+  - [ ] [CVE-2009-2511](https://nvd.nist.gov/vuln/detail/CVE-2009-2511)
+  - [ ] [CVE-2009-2661](https://nvd.nist.gov/vuln/detail/CVE-2009-2661)
+  - [ ] [CVE-2009-2185](https://nvd.nist.gov/vuln/detail/CVE-2009-2185)
+  - [ ] [CVE-2009-0847](https://nvd.nist.gov/vuln/detail/CVE-2009-0847)
+  - [ ] [CVE-2009-0846](https://nvd.nist.gov/vuln/detail/CVE-2009-0846)
+  - [ ] [CVE-2009-0789](https://nvd.nist.gov/vuln/detail/CVE-2009-0789)
+  - [ ] [CVE-2008-2952](https://nvd.nist.gov/vuln/detail/CVE-2008-2952)
+  - [ ] [CVE-2008-1673](https://nvd.nist.gov/vuln/detail/CVE-2008-1673)
+  - [ ] [CVE-2006-3894](https://nvd.nist.gov/vuln/detail/CVE-2006-3894)
+  - [ ] [CVE-2006-6836](https://nvd.nist.gov/vuln/detail/CVE-2006-6836)
+  - [ ] [CVE-2006-2937](https://nvd.nist.gov/vuln/detail/CVE-2006-2937)
+  - [ ] [CVE-2006-1939](https://nvd.nist.gov/vuln/detail/CVE-2006-1939)
+  - [ ] [CVE-2006-0645](https://nvd.nist.gov/vuln/detail/CVE-2006-0645)
+  - [ ] [CVE-2005-1730](https://nvd.nist.gov/vuln/detail/CVE-2005-1730)
+  - [ ] [CVE-2005-1935](https://nvd.nist.gov/vuln/detail/CVE-2005-1935)
+  - [ ] [CVE-2004-2344](https://nvd.nist.gov/vuln/detail/CVE-2004-2344)
+  - [ ] [CVE-2004-2644](https://nvd.nist.gov/vuln/detail/CVE-2004-2644)
+  - [ ] [CVE-2004-2645](https://nvd.nist.gov/vuln/detail/CVE-2004-2645)
+  - [ ] [CVE-2004-0642](https://nvd.nist.gov/vuln/detail/CVE-2004-0642)
+  - [ ] [CVE-2004-0644](https://nvd.nist.gov/vuln/detail/CVE-2004-0644)
+  - [ ] [CVE-2004-0699](https://nvd.nist.gov/vuln/detail/CVE-2004-0699)
+  - [ ] [CVE-2004-0123](https://nvd.nist.gov/vuln/detail/CVE-2004-0123)
+  - [ ] [CVE-2003-0818](https://nvd.nist.gov/vuln/detail/CVE-2003-0818)
+  - [ ] [CVE-2005-1247](https://nvd.nist.gov/vuln/detail/CVE-2005-1247)
+  - [ ] [CVE-2003-1005](https://nvd.nist.gov/vuln/detail/CVE-2003-1005)
+  - [ ] [CVE-2003-0564](https://nvd.nist.gov/vuln/detail/CVE-2003-0564)
+  - [ ] [CVE-2003-0565](https://nvd.nist.gov/vuln/detail/CVE-2003-0565)
+  - [ ] [CVE-2003-0851](https://nvd.nist.gov/vuln/detail/CVE-2003-0851)
+  - [ ] [CVE-2003-0543](https://nvd.nist.gov/vuln/detail/CVE-2003-0543)
+  - [ ] [CVE-2003-0544](https://nvd.nist.gov/vuln/detail/CVE-2003-0544)
+  - [ ] [CVE-2003-0545](https://nvd.nist.gov/vuln/detail/CVE-2003-0545)
+  - [ ] [CVE-2003-0430](https://nvd.nist.gov/vuln/detail/CVE-2003-0430)
+  - [ ] [CVE-2002-0036](https://nvd.nist.gov/vuln/detail/CVE-2002-0036)
+  - [ ] [CVE-2002-0353](https://nvd.nist.gov/vuln/detail/CVE-2002-0353)
+- [ ] Review that character-encoded `REAL`s are strictly conformant to [ISO 6093](https://www.iso.org/standard/12285.html) (Maybe even make an ISO 6093 Library...)
+- [ ] Build Scripts
+  - [ ] Add `chmod +x` to the build scripts for all executables
+  - [ ] Create dynamically-linked libraries as well
 
 ### 1.0.0 Release
 
@@ -188,7 +277,6 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [ ] [Publish an RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
 - [ ] [Publish an APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
 - [ ] Configure [Travis CI](https://travis-ci.org)
-- [ ] Dynamically-linked libraries
 - [ ] Create `man(1)` (executables) and `man(3)` (Library calls) pages
 - [ ] Create Wikipedia pages for each codec
 

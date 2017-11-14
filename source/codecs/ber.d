@@ -1455,11 +1455,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
                 scale = ((this.value[0] & 0b_0000_1100u) >> 2);
 
+                /*
+                    For some reason that I have yet to discover, you must
+                    cast the exponent to T. If you do not, specifically
+                    any usage of realType!T() outside of this library will
+                    produce a "floating point exception 8" message and
+                    crash. For some reason, all of the tests pass within
+                    this library without doing this.
+                */
                 return (
                     ((this.value[0] & 0b_0100_0000u) ? -1.0 : 1.0) *
                     cast(long) mantissa * // Mantissa MUST be cast to a long
                     2^^scale *
-                    (cast(T) base)^^exponent // base needs to be cast
+                    (cast(T) base)^^(cast(T) exponent) // base needs to be cast
                 );
             }
             default:
@@ -1839,6 +1847,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         this.value = (infoByte ~ exponentBytes ~ significandBytes);
     }
 
+    @system
+    unittest
+    {
+        writeln("fuckin unittest");
+        BERElement el = new BERElement();
+        el.realType!float = 1.0;
+        writefln("UT between float: %(%02X %)", el.value);
+        assert(approxEqual(el.realType!float, 1.0));
+        assert(approxEqual(el.realType!double, 1.0));
+        el.realType!double = 1.0;
+        writefln("UT between double: %(%02X %)", el.value);
+        assert(approxEqual(el.realType!float, 1.0));
+        assert(approxEqual(el.realType!double, 1.0));
+    }
+
     // Tests of Base-8 Encoding
     @system
     unittest
@@ -2094,6 +2117,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         assert(cast(string) (bv.value[1 .. $]) == "-1.230000000000E-01");
         assert(approxEqual(bv.realType!float, -0.123));
         assert(approxEqual(bv.realType!double, -0.123));
+    }
+
+    // Just sets it back. This unittest must come last.
+    @system
+    unittest
+    {
+        BERElement.realEncodingBase = ASN1RealEncodingBase.base2;
     }
 
     /**
@@ -4383,4 +4413,19 @@ unittest
         ubyte[] data = [i];
         assertThrown!Exception(new BERElement(index, data));
     }
+}
+
+@system
+unittest
+{
+    writeln("fuckin unittest");
+    BERElement el = new BERElement();
+    el.realType!float = 1.0;
+    writefln("UT between float: %(%02X %)", el.value);
+    assert(approxEqual(el.realType!float, 1.0));
+    assert(approxEqual(el.realType!double, 1.0));
+    el.realType!double = 1.0;
+    writefln("UT between double: %(%02X %)", el.value);
+    assert(approxEqual(el.realType!float, 1.0));
+    assert(approxEqual(el.realType!double, 1.0));
 }

@@ -570,12 +570,18 @@ class AbstractSyntaxNotation1Element(Element)
         double d = 0.00583;
         Element elf = new Element();
         Element eld = new Element();
+        writeln("Testing: ", typeof(elf).stringof, " : ", typeof(this).stringof);
         elf.realType!float = f;
         eld.realType!double = d;
+        writeln("x0");
         assert(approxEqual(elf.realType!float, f));
+        writeln("x1");
         assert(approxEqual(elf.realType!double, f));
+        writeln("x2");
         assert(approxEqual(eld.realType!float, d));
+        writeln("x3");
         assert(approxEqual(eld.realType!double, d));
+        writeln("x4");
 
         // Assert that accessor does not mutate state
         assert(approxEqual(elf.realType!double, elf.realType!double));
@@ -662,10 +668,10 @@ class AbstractSyntaxNotation1Element(Element)
     {
         import std.math : 
             E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2, 
-            LOG2E, LOG2T, LOG10E, SQRT2, SQRT1_2;
+            LOG2E, LOG2T, LOG10E, SQRT2, SQRT1_2, sqrt;
 
         immutable real SQRT_2_OVER_2 = (SQRT2 / 2.0);
-        immutable real GOLDEN_RATIO = ((1.0 + sqrt(5)) / 2.0);
+        immutable real GOLDEN_RATIO = ((1.0 + sqrt(5.0)) / 2.0);
 
         Element el = new Element();
 

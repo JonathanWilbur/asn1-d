@@ -20,9 +20,9 @@ dmd \
 -Xf./documentation/asn1.json \
 -lib \
 -cov \
--O \
 -profile \
--release
+-release \
+-O
 
 # Build decode-ber
 dmd \
@@ -31,8 +31,8 @@ dmd \
  ./source/tools/decode_ber.d \
  -L./build/libraries/asn1.lib \
  -of./build/executables/decode-ber \
- -O \
- -release
+ -release \
+ -O
 
 # Build decode-cer
 dmd \
@@ -41,8 +41,8 @@ dmd \
  ./source/tools/decode_cer.d \
  -L./build/libraries/asn1.lib \
  -of./build/executables/decode-cer \
- -O \
- -release
+ -release \
+ -O
 
 # Build decode-der
 dmd \
@@ -51,8 +51,18 @@ dmd \
  ./source/tools/decode_der.d \
  -L./build/libraries/asn1.lib \
  -of./build/executables/decode-der \
- -O \
- -release
+ -release \
+ -O
+
+# Build encode-ber
+dmd \
+ -I./build/interfaces/source/ \
+ -I./build/interfaces/source/codecs \
+ ./source/tools/encode_ber.d \
+ -L./build/libraries/asn1.lib \
+ -of./build/executables/encode-ber \
+ -release \
+ -O
 
 # Delete object files that get created.
 # Yes, I tried -o- already. It does not create the executable either.

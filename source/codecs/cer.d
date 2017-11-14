@@ -1731,11 +1731,19 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
 
                 scale = ((this.value[0] & 0b_0000_1100u) >> 2);
 
+                /*
+                    For some reason that I have yet to discover, you must
+                    cast the exponent to T. If you do not, specifically
+                    any usage of realType!T() outside of this library will
+                    produce a "floating point exception 8" message and
+                    crash. For some reason, all of the tests pass within
+                    this library without doing this.
+                */
                 return (
                     ((this.value[0] & 0b_0100_0000u) ? -1.0 : 1.0) *
                     cast(long) mantissa * // Mantissa MUST be cast to a long
                     2^^scale *
-                    (cast(T) base)^^exponent // base needs to be cast
+                    (cast(T) base)^^(cast(T) exponent) // base needs to be cast
                 );
             }
             default:

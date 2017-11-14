@@ -20,7 +20,6 @@ ubyte[] data = [];
 
 int main(string[] args)
 {
-
     enum ReturnValue : int
     {
         success = 0,
@@ -41,8 +40,8 @@ int main(string[] args)
 
     /*
         Option ideas:
-        -t  TCP port
-        -u  UDP port
+        There should ultimately be no options. Input should only be
+        taken from stdin.
     */
     // NOTE: '-h' and '--help' are reserved.
     try

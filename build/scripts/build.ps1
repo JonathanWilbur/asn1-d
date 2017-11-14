@@ -58,6 +58,16 @@ dmd `
  -O `
  -release
 
+# Build encode-ber
+dmd `
+ -I".\\build\\interfaces\\source" `
+ -I".\\build\\interfaces\\source\\codecs" `
+ .\source\tools\encode_ber.d `
+ -L".\\build\\libraries\\asn1.lib" `
+ -of".\\build\\executables\\encode-ber" `
+ -O `
+ -release
+
 # Delete object files that get created.
 # Yes, I tried -o- already. It does not create the executable either.
 Remove-Item -path .\build\executables\* -include *.o

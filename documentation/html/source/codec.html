@@ -749,7 +749,6 @@
     </ul>
   </p>
 </div>
-
 </section>
 
 </div>
@@ -813,13 +812,11 @@
   <p class="para">
     For example, if:
 <br><br>
-
     TheQuestion := [APPLICATION 5] CHOICE {
         toBe [0] NULL,
         notToBe [1] NULL
     }
 <br><br>
-
     This exception should be thrown if TheQuestion were to be decoded from the
     BER-encoded byte sequence: <code class="code">0x65 0x02 0x83 0x00</code>, because
     the third byte specifies a third choice in TheQuestion, but there is no
@@ -1252,15 +1249,15 @@
     Decodes an ObjectDescriptor, which is a string consisting of only
         graphical characters. In fact, ObjectDescriptor is actually implicitly
         just a GraphicString! The formal specification for an ObjectDescriptor
+        is:
 
   </p>
 </div>
-<div class="ddoc_section">
+<div class="ddoc_description">
+  <h4>Discussion</h4>
   <p class="para">
-    <span class="ddoc_section_h">is:</span>
-<i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+    <i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
 <br><br>
-
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
@@ -1307,15 +1304,15 @@
     Encodes an ObjectDescriptor, which is a string consisting of only
         graphical characters. In fact, ObjectDescriptor is actually implicitly
         just a GraphicString! The formal specification for an ObjectDescriptor
+        is:
 
   </p>
 </div>
-<div class="ddoc_section">
+<div class="ddoc_description">
+  <h4>Discussion</h4>
   <p class="para">
-    <span class="ddoc_section_h">is:</span>
-<i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+    <i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
 <br><br>
-
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
@@ -1370,7 +1367,6 @@
   <p class="para">
     The specification defines EXTERNAL as:
 <br><br>
-
         <i>        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
             identification CHOICE {
                 syntax OBJECT IDENTIFIER,
@@ -1382,7 +1378,6 @@
             data-value OCTET STRING }
         </i>
 <br><br>
-
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
   </p>
@@ -1427,7 +1422,6 @@
   <p class="para">
     The specification defines EXTERNAL as:
 <br><br>
-
         <i>        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
             identification CHOICE {
                 syntax OBJECT IDENTIFIER,
@@ -1439,7 +1433,6 @@
             data-<code class="code">value</code> OCTET STRING }
         </i>
 <br><br>
-
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
   </p>
@@ -1520,12 +1513,18 @@
 <span class="keyword">double</span> d = 0.00583;
 Element elf = <span class="keyword">new</span> Element();
 Element eld = <span class="keyword">new</span> Element();
+writeln(<span class="string_literal">"Testing: "</span>, <span class="keyword">typeof</span>(elf).stringof, <span class="string_literal">" : "</span>, <span class="keyword">typeof</span>(<span class="keyword">this</span>).stringof);
 elf.<span class="psymbol">realType</span>!<span class="keyword">float</span> = f;
 eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = d;
+writeln(<span class="string_literal">"x0"</span>);
 <span class="keyword">assert</span>(approxEqual(elf.<span class="psymbol">realType</span>!<span class="keyword">float</span>, f));
+writeln(<span class="string_literal">"x1"</span>);
 <span class="keyword">assert</span>(approxEqual(elf.<span class="psymbol">realType</span>!<span class="keyword">double</span>, f));
+writeln(<span class="string_literal">"x2"</span>);
 <span class="keyword">assert</span>(approxEqual(eld.<span class="psymbol">realType</span>!<span class="keyword">float</span>, d));
+writeln(<span class="string_literal">"x3"</span>);
 <span class="keyword">assert</span>(approxEqual(eld.<span class="psymbol">realType</span>!<span class="keyword">double</span>, d));
+writeln(<span class="string_literal">"x4"</span>);
 
 <span class="comment">// Assert that accessor does not mutate state
 </span><span class="keyword">assert</span>(approxEqual(elf.<span class="psymbol">realType</span>!<span class="keyword">double</span>, elf.<span class="psymbol">realType</span>!<span class="keyword">double</span>));
@@ -1665,7 +1664,6 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
   <p class="para">
     The specification defines EMBEDDED PDV as:
 <br><br>
-
         <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -1683,7 +1681,6 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
             (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
         </i>
 <br><br>
-
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
   </p>
@@ -1728,7 +1725,6 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
   <p class="para">
     The specification defines EMBEDDED PDV as:
 <br><br>
-
         <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -1746,7 +1742,6 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
             (WITH COMPONENTS { ... , data-<code class="code">value</code>-descriptor ABSENT })
         </i>
 <br><br>
-
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
   </p>
@@ -2957,7 +2952,6 @@ Thanks to StackOverflow user
   <p class="para">
     The specification defines CHARACTER as:
 <br><br>
-
         <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -2973,7 +2967,6 @@ Thanks to StackOverflow user
                 string-value OCTET STRING }
         </i>
 <br><br>
-
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
   </p>
@@ -3018,7 +3011,6 @@ Thanks to StackOverflow user
   <p class="para">
     The specification defines CHARACTER as:
 <br><br>
-
         <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -3034,7 +3026,6 @@ Thanks to StackOverflow user
                 string-<code class="code">value</code> OCTET STRING }
         </i>
 <br><br>
-
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
   </p>
