@@ -139,16 +139,16 @@ and reviewed for security and performance.
 Version 1.0.0-beta was released on November 8th, 2017.
 
 - [ ] Either do something with `valueContainsDoubleNull()` or make it public
-- [ ] String `ObjectIdentifier` constructor
+- [x] String `ObjectIdentifier` constructor
 - [x] Properties for member `type`
   - [x] `typeClass` (Just rename `tagClass`.)
   - [x] `typeConstruction` (Just rename `construction`.)
   - [x] `typeNumber`
 - [ ] Rename enums in `asn1.d`.
 - [ ] Command Line Tools
-  - [ ] `encode-der`
-  - [x] `encode-ber`
-  - [ ] `encode-cer`
+  - [ ] `encode-der` (Blocked because of design problems with `std.getopt`. See note below this list.)
+  - [ ] `encode-ber` (Blocked because of design problems with `std.getopt`. See note below this list.)
+  - [ ] `encode-cer` (Blocked because of design problems with `std.getopt`. See note below this list.)
   - [x] `decode-der`
   - [x] `decode-ber`
   - [x] `decode-cer`
@@ -269,6 +269,33 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [ ] Build Scripts
   - [ ] Add `chmod +x` to the build scripts for all executables
   - [ ] Create dynamically-linked libraries as well
+- [ ] Libraries (Intended to split off into independent modules once I figure out good packaging, distribution, and build processes for them)
+  - [ ] `cli` (An alternative to `std.getopt`. See note below.)
+  - [ ] `teletex`
+  - [ ] `videotex`
+  - [ ] `bin2text`
+    - [ ] `Base2`
+    - [ ] `Base8`
+    - [ ] `Base10`?
+    - [ ] `Base16`
+    - [ ] `Base64`
+
+Note:
+
+I tried to make command-line tools with `std.getopt`, but I ran into a problem: 
+`std.getopt` does not execute the callbacks associated with options in the order
+that they are received. In other words, when calling `encode-ber -n -o 1.2.3.4 -n`, 
+The encoded output will contain two adjacent `NULL`s, then an `OBJECT IDENTIFIER`,
+rather than a `NULL`, `OBJECT IDENTIFIER`, then `NULL` in that exact order.
+
+Even though the command-line utility really should not be used for serious,
+ongoing production use, I cannot rightfully release it with such a subtle, 
+yet fatal, idiosyncrasy. Somebody would surely employ it in a production
+environment without knowing this nuance and end up shooting themselves in
+the foot.
+
+With that said, I am going to have to create my own command-line options module,
+which I may break off into a separate library at some point.
 
 ### 1.0.0 Release
 

@@ -527,6 +527,7 @@
     tagging mechanism is obviously documented in the ASN.1 standard and,
     as a result, does not depend on the compiler. Hence, the module:
 <br><br>
+
         <i>            M DEFINITIONS AUTOMATIC TAGS ::=
             BEGIN
                 T ::= SEQUENCE { a INTEGER,
@@ -535,8 +536,10 @@
             END
         </i>
 <br><br>
+
     is equivalent, once applied the automatic tagging, to:
 <br><br>
+
         <i>            M DEFINITIONS ::=
             BEGIN
             T ::= SEQUENCE {
@@ -547,6 +550,7 @@
             END
         </i>
 <br><br>
+
         <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -564,6 +568,7 @@
             (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
         </i>
 <br><br>
+
     Note that, the data-value-descriptor field should be absent!
   </p>
 </div>

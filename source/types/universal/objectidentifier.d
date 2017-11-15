@@ -108,6 +108,52 @@ public class ObjectIdentifier
         this.nodes = nodes;
     }
 
+    /**
+        Constructor for an Object Identifier
+        
+        Params:
+            nodes = An array of OIDNodes
+        Returns: An OID object
+        Throws:
+            OIDException = if fewer than three nodes are provided, or if the
+                first node is not 0, 1, or 2, or if the second node is greater
+                than 39.
+    */
+    public
+    this (string str)
+    {
+        import std.array : split;
+        import std.conv : to;
+        string[] segments = str.split(".");
+        uint[] numbers;
+        numbers.length = segments.length;
+
+        for (size_t i = 0u; i < segments.length; i++)
+        {
+            numbers[i] = segments[i].to!uint;
+        }
+
+        if (numbers.length < 3u)
+            throw new OIDException
+            ("At least three nodes must be provided to ObjectIdenifier constructor.");
+
+        if ((numbers[0] != 0) && (numbers[0] != 1) && (numbers[0] != 2))
+            throw new OIDException
+            ("First object identifier node number can only be 0, 1, or 2.");
+
+        if (numbers[1] > 39)
+            throw new OIDException
+            ("Second object identifier node number cannot be greater than 39.");
+
+        Appender!(OIDNode[]) nodes = appender!(OIDNode[]);
+        foreach (number; numbers)
+        {
+            nodes.put(OIDNode(number));
+        }
+
+        this.nodes = cast(immutable (OIDNode[])) nodes.data;
+    }
+
     override public @system
     bool opEquals(Object other) const
     {

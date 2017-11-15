@@ -518,7 +518,8 @@
         <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
 
   </p>
-</div><div class="ddoc_see_also">
+</div>
+<div class="ddoc_see_also">
   <h4>See Also</h4>
   <p class="para">
     <a href="https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One">The Wikipedia Page on ASN.1</a>
@@ -590,20 +591,25 @@
   <p class="para">
         There are three parts to an encoded BER Value:
 <br><br>
+
     <ul>        <li>A Type Tag, which specifies what data type is encoded</li>
         <li>A Length Tag, which specifies how many subsequent bytes encode the data</li>
         <li>The Encoded Value</li>
     </ul>
 <br><br>
+
     They appear in the binary encoding in that order, and as such, the encoding
     scheme is sometimes described as "TLV," which stands for Type-Length-Value.
 <br><br>
+
     This class provides a properties for getting and setting bit fields of
     the type tag, but most of it is functionality for encoding data per
     the specification.
 <br><br>
+
     As an example, this is what encoding a simple INTEGER looks like:
 <br><br>
+
 
 <section class="code_listing">
   <div class="code_sample">
@@ -619,8 +625,10 @@ bv.type = 0x02u; <span class="comment">// "2" means this is an INTEGER
   </div>
 </section>
 <br><br>
+
     And this is what decoding looks like:
 <br><br>
+
 
 <section class="code_listing">
   <div class="code_sample">
@@ -1266,6 +1274,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
                 than exactly 1 byte in size.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1387,6 +1396,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
                 to a signed integral type.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1483,6 +1493,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
                 than seven.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1652,12 +1663,14 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
                 decode to a size_t.
 
   </p>
-</div><div class="ddoc_standards">
+</div>
+<div class="ddoc_standards">
   <h4>Standards</h4>
   <p class="para">
     <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1712,6 +1725,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
     <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1743,15 +1757,15 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
     Decodes an ObjectDescriptor, which is a string consisting of only
         graphical characters. In fact, ObjectDescriptor is actually implicitly
         just a GraphicString! The formal specification for an ObjectDescriptor
-        is:
 
   </p>
 </div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
+<div class="ddoc_section">
   <p class="para">
-    <i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+    <span class="ddoc_section_h">is:</span>
+<i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
 <br><br>
+
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
@@ -1784,6 +1798,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 outside of 0x20 to 0x7E.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1815,15 +1830,15 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
     Encodes an ObjectDescriptor, which is a string consisting of only
         graphical characters. In fact, ObjectDescriptor is actually implicitly
         just a GraphicString! The formal specification for an ObjectDescriptor
-        is:
 
   </p>
 </div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
+<div class="ddoc_section">
   <p class="para">
-    <i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+    <span class="ddoc_section_h">is:</span>
+<i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
 <br><br>
+
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
@@ -1850,6 +1865,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 characters or DELETE.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1889,6 +1905,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
   <p class="para">
     The specification defines EXTERNAL as:
 <br><br>
+
         <i>            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER,
@@ -1900,6 +1917,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 data-value OCTET STRING }
         </i>
 <br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
 
@@ -1929,6 +1947,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
   </p>
 </div>
+
 </section>
 
 </div>
@@ -1968,6 +1987,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
   <p class="para">
     The specification defines EXTERNAL as:
 <br><br>
+
         <i>            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER,
@@ -1979,6 +1999,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 data-<code class="code">value</code> OCTET STRING }
         </i>
 <br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
 
@@ -1993,6 +2014,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 invalid characters.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2035,6 +2057,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         recommand against encoding or decoding REALs if you do not have
         to; try using INTEGER instead.
 <br><br>
+
         For the BER-encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
@@ -2043,6 +2066,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         representation conforms to
         <a href="">ISO 6093</a> Numeric Representation 1, 2, or 3 respectively.
 <br><br>
+
         If the first bit is set, then the first byte is an "information block"
         that describes the binary encoding of the REAL on the subsequent bytes.
         If bit 6 is set, the value is negative; if clear, the value is
@@ -2081,7 +2105,8 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Citations:</span>
 Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
@@ -2132,6 +2157,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
         recommand against encoding or decoding REALs if you do not have
         to; try using INTEGER instead.
 <br><br>
+
         For the BER-encoded REAL, a <code class="code">value</code> of 0x40 means "positive infinity,"
         a <code class="code">value</code> of 0x41 means "negative infinity." An empty <code class="code">value</code> means
         exactly zero. A <code class="code">value</code> whose first byte starts with two cleared bits
@@ -2140,6 +2166,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
         representation conforms to
         <a href="">ISO 6093</a> Numeric Representation 1, 2, or 3 respectively.
 <br><br>
+
         If the first bit is set, then the first byte is an "information block"
         that describes the binary encoding of the REAL on the subsequent bytes.
         If bit 6 is set, the <code class="code">value</code> is negative; if clear, the <code class="code">value</code> is
@@ -2171,7 +2198,8 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Citations:</span>
 Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
@@ -2227,6 +2255,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 to a signed integral type.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2299,6 +2328,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
   <p class="para">
     The specification defines EMBEDDED PDV as:
 <br><br>
+
         <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -2316,6 +2346,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
             (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
         </i>
 <br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 
@@ -2338,6 +2369,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2377,6 +2409,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
   <p class="para">
     The specification defines EMBEDDED PDV as:
 <br><br>
+
         <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -2394,6 +2427,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
             (WITH COMPONENTS { ... , data-<code class="code">value</code>-descriptor ABSENT })
         </i>
 <br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 
@@ -2407,6 +2441,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 invalid characters.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2445,6 +2480,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     UTF8Exception if it does not decode correctly.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2529,6 +2565,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2581,6 +2618,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2629,6 +2667,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 indicated by the length tag.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2709,6 +2748,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 indicated by the length tag.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2788,6 +2828,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 space is encoded.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2828,6 +2869,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 space is supplied.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2878,6 +2920,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 encoded.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -2921,6 +2964,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 supplied.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3101,6 +3145,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     IA5String differs from ASCII ever so slightly: IA5 is international,
         leaving 10 characters up to be locale-specific:
 <br><br>
+
         <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
             <tr><td>0x40</td> <td>@</td></tr>
             <tr><td>0x5B</td> <td>[</td></tr>
@@ -3130,6 +3175,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     ASN1ValueInvalidException = if any enecoded character is not ASCII.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3168,6 +3214,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     IA5String differs from ASCII ever so slightly: IA5 is international,
         leaving 10 characters up to be locale-specific:
 <br><br>
+
         <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
             <tr><td>0x40</td> <td>@</td></tr>
             <tr><td>0x5B</td> <td>[</td></tr>
@@ -3190,6 +3237,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     ASN1ValueInvalidException = if any enecoded character is not ASCII.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3228,11 +3276,13 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     The BER-encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 <br><br>
+
         An UTC Timestamp looks like:
         <ul>            <li>9912312359Z</li>
             <li>991231235959+0200</li>
         </ul>
 <br><br>
+
         If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,
         meaning that the date refers to the first 80 years of the century, this
         assumes we are talking about the 21st century and prepend '20' when
@@ -3256,6 +3306,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     DateTimeException = if string cannot be decoded to a DateTime
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3294,6 +3345,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     The BER-encoded <code class="code">value</code> is just the ASCII character representation of
         the UTC-formatted timestamp.
 <br><br>
+
         An UTC Timestamp looks like:
         <ul>            <li>9912312359Z</li>
             <li>991231235959+0200</li>
@@ -3347,6 +3399,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     The BER-encoded value is just the ASCII character representation of
         the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">        ISO 8601</a>-formatted timestamp.
 <br><br>
+
         An ISO-8601 Timestamp looks like:
         <ul>            <li>19851106210627.3</li>
             <li>19851106210627.3Z</li>
@@ -3362,6 +3415,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     DateTimeException = if string cannot be decoded to a DateTime
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3400,6 +3454,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     The BER-encoded <code class="code">value</code> is just the ASCII character representation of
         the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">        ISO 8601</a>-formatted timestamp.
 <br><br>
+
         An ISO-8601 Timestamp looks like:
         <ul>            <li>19851106210627.3</li>
             <li>19851106210627.3Z</li>
@@ -3475,6 +3530,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 (including space) is encoded.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3535,6 +3591,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 (including space) is supplied.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3583,6 +3640,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 (including space) is encoded.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3624,6 +3682,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 (including space) is supplied.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3678,7 +3737,8 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Citations:</span>
 Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
@@ -3734,7 +3794,8 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Citations:</span>
 Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
@@ -3789,6 +3850,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 divisible by four.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3860,6 +3922,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
   <p class="para">
     The specification defines CHARACTER as:
 <br><br>
+
         <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -3875,6 +3938,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 string-value OCTET STRING }
         </i>
 <br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 
@@ -3902,6 +3966,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
   </p>
 </div>
+
 </section>
 
 </div>
@@ -3941,6 +4006,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
   <p class="para">
     The specification defines CHARACTER as:
 <br><br>
+
         <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -3956,6 +4022,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 string-<code class="code">value</code> OCTET STRING }
         </i>
 <br><br>
+
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
   </p>
@@ -4007,6 +4074,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
                 divisible by two.
   </p>
 </div>
+
 </section>
 
 </div>
@@ -4122,7 +4190,8 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Example:</span>
 
@@ -4201,7 +4270,8 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
 
 
   </p>
-</div><div class="ddoc_section">
+</div>
+<div class="ddoc_section">
   <p class="para">
     <span class="ddoc_section_h">Example:</span>
 

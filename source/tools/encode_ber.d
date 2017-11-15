@@ -15,13 +15,14 @@ import std.utf : UTFException;
 
 ASN1TagClass tagClass = ASN1TagClass.universal;
 ASN1Construction construction = ASN1Construction.primitive;
+uint tagNumber = uint.max;
 ubyte[] encodedData;
 
 alias encodeEOC = encodeEndOfContent;
 void encodeEndOfContent (string option)
 {
     BERElement element = new BERElement();
-    element.typeNumber = 0u;
+    element.typeNumber = ((tagNumber == uint.max) ? 0u : tagNumber);
     element.typeClass = tagClass;
     element.typeConstruction = construction;
     encodedData ~= element.toBytes;
@@ -112,7 +113,7 @@ void encodeOctetString (string option, string value)
     encodedData ~= element.toBytes;
 }
 
-void encodeNull (string option, string value)
+void encodeNull (string option)
 {
     BERElement element = new BERElement();
     element.typeNumber = 5u;
@@ -125,7 +126,19 @@ alias encodeOID = encodeObjectIdentifier;
 alias encodeObjectID = encodeObjectIdentifier;
 void encodeObjectIdentifier (string option, string value)
 {
-    // TODO: Create string constructor for OIDs.
+    BERElement element = new BERElement();
+    element.typeNumber = 6u;
+    element.typeClass = tagClass;
+    element.typeConstruction = construction;
+    try
+    {
+        element.objectIdentifier = new ObjectIdentifier(value);
+    }
+    catch (OIDException e)
+    {
+        stderr.rawWrite(e.msg);
+    }
+    encodedData ~= element.toBytes;
 }
 
 alias encodeOD = encodeObjectDescriptor;
@@ -228,7 +241,29 @@ alias encodeRelativeOID = encodeRelativeObjectIdentifier;
 alias encodeRelativeObjectID = encodeRelativeObjectIdentifier;
 void encodeRelativeObjectIdentifier (string option, string value)
 {
+    import std.array : split;
+    BERElement element = new BERElement();
+    element.typeNumber = 13u;
+    element.typeClass = tagClass;
+    element.typeConstruction = construction;
 
+    string[] segments = value.split(".");
+    uint[] numbers;
+    numbers.length = segments.length;
+
+    for (size_t i = 0u; i < segments.length; i++)
+    {
+        numbers[i] = segments[i].to!uint;
+    }
+
+    Appender!(OIDNode[]) nodes = appender!(OIDNode[]);
+    foreach (number; numbers)
+    {
+        nodes.put(OIDNode(number));
+    }
+
+    element.relativeObjectIdentifier = nodes.data;
+    encodedData ~= element.toBytes;
 }
 
 void encodeSequence (string option, string value)
@@ -571,6 +606,10 @@ int main(string[] args)
         GetoptResult getOptResult = getopt(
             args,
             std.getopt.config.caseSensitive,
+            std.getopt.config.passThrough,
+            "class|tag-class", &tagClass,
+            "construction", &construction,
+            "number|tag-number", &tagNumber,
             "b|bool|boolean", &encodeBoolean,
             "B|bmp|bmp-string", &encodeBMPString,
             "C|cs|character-string", &encodeCharacterString,
@@ -583,8 +622,8 @@ int main(string[] args)
             "m|embedded|pdv|embedded-pdv", &encodeEmbeddedPDV,
             "n|null", &encodeNull,
             "N|num|numeric|numeric-string", &encodeNumericString,
-            // "o|oid|object-id|object-identifier", &encodeOID,
-            // "O|roid|relative-oid|relative-object-id|relative-object-identifier",
+            "o|oid|object-id|object-identifier", &encodeOID,
+            "O|roid|relative-oid|relative-object-id|relative-object-identifier", &encodeRelativeOID,
             "P|printable|printable-string", &encodePrintableString,
             "q|t61|ttex|teletex|teletex-string", &encodeTeletexString,
             "Q|vtex|videotex|videotex-string", &encodeVideotexString,
@@ -599,9 +638,7 @@ int main(string[] args)
             "x|ext|external", &encodeExternal,
             "z|eoc|end-of-content", &encodeEndOfContent,
             "1|bit|bit-string", &encodeBitString,
-            "8|oct|octet-string", &encodeOctetString,
-            "class|tag-class", &tagClass,
-            "construction", &construction
+            "8|oct|octet-string", &encodeOctetString
         );
 
         if (getOptResult.helpWanted)
