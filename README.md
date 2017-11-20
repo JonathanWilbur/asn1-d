@@ -138,6 +138,7 @@ and reviewed for security and performance.
 
 Version 1.0.0-beta was released on November 8th, 2017.
 
+- [ ] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
 - [ ] Either do something with `valueContainsDoubleNull()` or make it public
 - [x] String `ObjectIdentifier` constructor
 - [x] Properties for member `type`
@@ -280,7 +281,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [ ] `Base16`
     - [ ] `Base64`
 
-Note:
+#### Note
 
 I tried to make command-line tools with `std.getopt`, but I ran into a problem: 
 `std.getopt` does not execute the callbacks associated with options in the order
@@ -294,8 +295,14 @@ yet fatal, idiosyncrasy. Somebody would surely employ it in a production
 environment without knowing this nuance and end up shooting themselves in
 the foot.
 
-With that said, I am going to have to create my own command-line options module,
-which I may break off into a separate library at some point.
+##### Update (November 20th, 2017)
+
+I have created my own command-line parsing library; however, I have also found
+[Jason White](https://github.com/jasonwhite)'s [Darg](https://github.com/jasonwhite/darg)
+to be a viable alternative. At the moment, I have to choose between the two.
+
+Upon doing so, development should resume. I expect the command-line tools to
+be done by the end of this week.
 
 ### 1.0.0 Release
 

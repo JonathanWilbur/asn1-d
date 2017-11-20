@@ -16,7 +16,7 @@
     Author: 
         $(LINK2 http://jonathan.wilbur.space, Jonathan M. Wilbur) 
             $(LINK2 mailto:jonathan@wilbur.space, jonathan@wilbur.space)
-    License: $(https://opensource.org/licenses/ISC, ISC License)
+    License: $(LINK2 https://mit-license.org/, MIT License)
     Standards:
         $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1))
         $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
