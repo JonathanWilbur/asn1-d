@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.2](http://semver.org/)
+* Version: [1.0.0-beta.3](http://semver.org/)
 
 ## What is ASN.1?
 
@@ -138,7 +138,12 @@ and reviewed for security and performance.
 
 Version 1.0.0-beta was released on November 8th, 2017.
 
-- [ ] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
+- [ ] `Makefile` build script
+- [x] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
+- [ ] Configure `.vscode`
+  - [ ] `tasks.json`
+  - [ ] `launch.json`?
+- [ ] Configure `dub.json`
 - [ ] Either do something with `valueContainsDoubleNull()` or make it public
 - [x] String `ObjectIdentifier` constructor
 - [x] Properties for member `type`
@@ -147,9 +152,10 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `typeNumber`
 - [ ] Rename enums in `asn1.d`.
 - [ ] Command Line Tools
-  - [ ] `encode-der` (Blocked because of design problems with `std.getopt`. See note below this list.)
-  - [ ] `encode-ber` (Blocked because of design problems with `std.getopt`. See note below this list.)
-  - [ ] `encode-cer` (Blocked because of design problems with `std.getopt`. See note below this list.)
+  - [ ] Create a template mixin or something to reduce duplication between decoders.
+  - [x] `encode-der`
+  - [x] `encode-ber`
+  - [x] `encode-cer`
   - [x] `decode-der`
   - [x] `decode-ber`
   - [x] `decode-cer`
@@ -271,7 +277,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Add `chmod +x` to the build scripts for all executables
   - [ ] Create dynamically-linked libraries as well
 - [ ] Libraries (Intended to split off into independent modules once I figure out good packaging, distribution, and build processes for them)
-  - [ ] `cli` (An alternative to `std.getopt`. See note below.)
+  - [x] `cli` ([GitHub Page](https://github.com/JonathanWilbur/cli-d))
   - [ ] `teletex`
   - [ ] `videotex`
   - [ ] `bin2text`
