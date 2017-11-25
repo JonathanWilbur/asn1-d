@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.3](http://semver.org/)
+* Version: [1.0.0-beta.4](http://semver.org/)
 
 ## What is ASN.1?
 
@@ -14,7 +14,8 @@ ASN.1 messages can be encoded in one of several encoding/decoding standards.
 It provides a system of types that are extensible, and can presumably describe 
 every protocol. You can think of it as a protocol for describing other protocols 
 as well as a family of standards for encoding and decoding said protocols. 
-It is similar to [Google's Protocol Buffers](https://developers.google.com/protocol-buffers/).
+It is similar to Google's [Protocol Buffers](https://developers.google.com/protocol-buffers/), 
+or Sun Microsystems' [External Data Representation (XDR)](https://tools.ietf.org/html/rfc1014).
 
 ## Why ASN.1?
 
@@ -25,12 +26,12 @@ ASN.1 is used in, or required by, multiple technologies, including:
 * [X.500](http://www.itu.int/rec/T-REC-X.500-201610-I/en)
 * The [magnetic stripes](https://www.iso.org/standard/43317.html) on credit cards and debit cards
 * Microsoft's [Remote Desktop Protocol (RDP)](https://msdn.microsoft.com/en-us/library/mt242409.aspx)
-* [Simple Network Management Protocol (SNMP)](https://www.ietf.org/rfc/rfc1157.txt) 
+* [Simple Network Management Protocol (SNMP)](https://www.ietf.org/rfc/rfc1157.txt)
 * [Common Management Information Protocol (CMIP)](http://www.itu.int/rec/T-REC-X.711/en)
 * [Signalling System Number 7 (SS7)](http://www.itu.int/rec/T-REC-Q.700-199303-I/en), used to make most phone calls on the Public Switched Telephone Network (PSTN).
 * [H.323](http://www.itu.int/rec/T-REC-H.323-200912-I/en) Video conferencing
 * Biometrics Protocols:
-  * [BioAPI Interworking Protocol](https://www.iso.org/standard/43611.html)
+  * [BioAPI Interworking Protocol (BIP)](https://www.iso.org/standard/43611.html)
   * [Common Biometric Exchange Formats Framework (CBEFF)](http://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir6529-a.pdf)
   * [Authentication Contexts for Biometrics (ACBio)](https://www.iso.org/standard/41531.html)
 * [Computer Supported Telecommunications Applications (CSTA)](https://www.ecma-international.org/activities/Communications/TG11/cstaIII.htm)
@@ -42,6 +43,9 @@ ASN.1 is used in, or required by, multiple technologies, including:
   * [Long-Term Evolution (LTE)](http://www.3gpp.org/technologies/keywords-acronyms/98-lte)
 
 Source for some of these: [PyASN1](http://pyasn1.sourceforge.net/)
+
+If you look in the `asn1` directory of WireShark's source code, you'll see all
+of the protocols that use ASN.1.
 
 ## Structure
 
@@ -138,7 +142,6 @@ and reviewed for security and performance.
 
 Version 1.0.0-beta was released on November 8th, 2017.
 
-- [ ] `Makefile` build script
 - [x] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
 - [ ] Configure `.vscode`
   - [ ] `tasks.json`
@@ -150,7 +153,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `typeClass` (Just rename `tagClass`.)
   - [x] `typeConstruction` (Just rename `construction`.)
   - [x] `typeNumber`
-- [ ] Rename enums in `asn1.d`.
+- [ ] Rename `enum`s in `asn1.d`.
 - [ ] Command Line Tools
   - [ ] Create a template mixin or something to reduce duplication between decoders.
   - [x] `encode-der`
@@ -159,8 +162,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `decode-der`
   - [x] `decode-ber`
   - [x] `decode-cer`
-- [ ] Fuzz testing (Sending random bytes to a decoder to get something unexpected)
-  - [ ] Ensure `RangeError` is never thrown. (If it is thrown, it means that there are vulnerabilities if compiled with `-noboundscheck` flag.)
+- [ ] Fuzz testing to ensure `RangeError` is never thrown. If it is thrown, it means that there are vulnerabilities if compiled with `-boundscheck=off` flag. Google's [OSS-Fuzz](https://github.com/google/oss-fuzz) tool looks like a pretty promising way to test this.
 - [x] Test that all one-byte elements throw exceptions
 - [x] Test an OID with a node with a values 127, 128, and 0.
 - [ ] Test even more significant mathematical values with `realType()`:
@@ -175,23 +177,23 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Linux
 - [ ] Comparison Testing with
   - [ ] [PyASN1](http://pyasn1.sourceforge.net)
-  - [ ] [@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN1 BER Codec](https://github.com/YuryStrozhevsky/C-plus-plus-ASN.1-2008-coder-decoder)
+  - [ ] [@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN.1 BER Codec](https://github.com/YuryStrozhevsky/C-plus-plus-ASN.1-2008-coder-decoder)
 - [ ] Field Testing
-  - [x] Reading X.509 Certificates
+  - [x] Reading [X.509 Certificates](http://www.itu.int/rec/T-REC-X.509-201610-I/en)
   - [ ] Creating a Session with [OpenLDAP Server](http://www.openldap.org)
-  - [ ] Do something with SNMP
-  - [ ] Do something with H.323 Video conferencing
-  - [ ] Do something with BIP Biometrics 
-  - [ ] Do something with CBEFF Biometrics
-  - [ ] Do something with ACBio Biometrics
-  - [x] ~~[@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN1 Test Suite](https://github.com/YuryStrozhevsky/ASN1-2008-free-test-suite)~~
+  - [ ] Read an [SNMP](https://www.ietf.org/rfc/rfc1157.txt) packet
+  - [ ] Read an [H.323](http://www.itu.int/rec/T-REC-H.323-200912-I/en) packet
+  - [ ] Do something with [BioAPI Interworking Protocol (BIP)](https://www.iso.org/standard/43611.html)
+  - [ ] Do something with [Common Biometric Exchange Formats Framework (CBEFF)](http://nvlpubs.nist.gov/nistpubs/Legacy/IR/nistir6529-a.pdf)
+  - [ ] Do something with [Authentication Contexts for Biometrics (ACBio)](https://www.iso.org/standard/41531.html)
+  - [x] ~~[@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN.1 Test Suite](https://github.com/YuryStrozhevsky/ASN1-2008-free-test-suite)~~
 - [ ] Review by at least one security firm
 - [ ] Review ASN.1-related vulnerabilities in [National Vulnerability Database](https://nvd.nist.gov)
   - [ ] [CVE-2017-11496](https://nvd.nist.gov/vuln/detail/CVE-2017-11496)
   - [ ] [CVE-2017-9023](https://nvd.nist.gov/vuln/detail/CVE-2017-9023)
   - [ ] [CVE-2016-7053](https://nvd.nist.gov/vuln/detail/CVE-2016-7053)
   - [ ] [CVE-2016-6129](https://nvd.nist.gov/vuln/detail/CVE-2016-6129)
-  - [ ] [CVE-2016-9939](https://nvd.nist.gov/vuln/detail/CVE-2016-9939)
+  - [x] [CVE-2016-9939](https://nvd.nist.gov/vuln/detail/CVE-2016-9939)
   - [ ] [CVE-2016-6891](https://nvd.nist.gov/vuln/detail/CVE-2016-6891)
   - [ ] [CVE-2016-5080](https://nvd.nist.gov/vuln/detail/CVE-2016-5080)
   - [ ] [CVE-2016-0758](https://nvd.nist.gov/vuln/detail/CVE-2016-0758)
@@ -202,15 +204,15 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] [CVE-2016-2053](https://nvd.nist.gov/vuln/detail/CVE-2016-2053)
   - [ ] [CVE-2016-4421](https://nvd.nist.gov/vuln/detail/CVE-2016-4421)
   - [ ] [CVE-2016-4418](https://nvd.nist.gov/vuln/detail/CVE-2016-4418)
-  - [ ] [CVE-2016-2427](https://nvd.nist.gov/vuln/detail/CVE-2016-2427)
+  - [x] ~~[CVE-2016-2427](https://nvd.nist.gov/vuln/detail/CVE-2016-2427)~~
   - [ ] [CVE-2016-1950](https://nvd.nist.gov/vuln/detail/CVE-2016-1950)
   - [ ] [CVE-2016-2842](https://nvd.nist.gov/vuln/detail/CVE-2016-2842)
   - [ ] [CVE-2016-0799](https://nvd.nist.gov/vuln/detail/CVE-2016-0799)
   - [ ] [CVE-2016-2522](https://nvd.nist.gov/vuln/detail/CVE-2016-2522)
   - [ ] [CVE-2015-7540](https://nvd.nist.gov/vuln/detail/CVE-2015-7540)
-  - [ ] [CVE-2015-7061](https://nvd.nist.gov/vuln/detail/CVE-2015-7061)
-  - [ ] [CVE-2015-7060](https://nvd.nist.gov/vuln/detail/CVE-2015-7060)
-  - [ ] [CVE-2015-7059](https://nvd.nist.gov/vuln/detail/CVE-2015-7059)
+  - [x] ~~[CVE-2015-7061](https://nvd.nist.gov/vuln/detail/CVE-2015-7061)~~
+  - [x] ~~[CVE-2015-7060](https://nvd.nist.gov/vuln/detail/CVE-2015-7060)~~
+  - [x] ~~[CVE-2015-7059](https://nvd.nist.gov/vuln/detail/CVE-2015-7059)~~
   - [ ] [CVE-2015-3194](https://nvd.nist.gov/vuln/detail/CVE-2015-3194)
   - [ ] [CVE-2015-7182](https://nvd.nist.gov/vuln/detail/CVE-2015-7182)
   - [ ] [CVE-2015-1790](https://nvd.nist.gov/vuln/detail/CVE-2015-1790)
@@ -219,7 +221,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] [CVE-2015-0208](https://nvd.nist.gov/vuln/detail/CVE-2015-0208)
   - [ ] [CVE-2015-1182](https://nvd.nist.gov/vuln/detail/CVE-2015-1182)
   - [ ] [CVE-2014-1569](https://nvd.nist.gov/vuln/detail/CVE-2014-1569)
-  - [ ] [CVE-2014-4443](https://nvd.nist.gov/vuln/detail/CVE-2014-4443)
+  - [x] ~~[CVE-2014-4443](https://nvd.nist.gov/vuln/detail/CVE-2014-4443)~~
   - [ ] [CVE-2014-1568](https://nvd.nist.gov/vuln/detail/CVE-2014-1568)
   - [ ] [CVE-2014-5165](https://nvd.nist.gov/vuln/detail/CVE-2014-5165)
   - [ ] [CVE-2014-3468](https://nvd.nist.gov/vuln/detail/CVE-2014-3468)
@@ -230,39 +232,39 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] [CVE-2013-3557](https://nvd.nist.gov/vuln/detail/CVE-2013-3557)
   - [ ] [CVE-2013-3556](https://nvd.nist.gov/vuln/detail/CVE-2013-3556)
   - [ ] [CVE-2012-0441](https://nvd.nist.gov/vuln/detail/CVE-2012-0441)
-  - [ ] [CVE-2012-1569](https://nvd.nist.gov/vuln/detail/CVE-2012-1569)
+  - [x] [CVE-2012-1569](https://nvd.nist.gov/vuln/detail/CVE-2012-1569)
   - [ ] [CVE-2011-1142](https://nvd.nist.gov/vuln/detail/CVE-2011-1142)
   - [ ] [CVE-2011-0445](https://nvd.nist.gov/vuln/detail/CVE-2011-0445)
   - [ ] [CVE-2010-3445](https://nvd.nist.gov/vuln/detail/CVE-2010-3445)
   - [ ] [CVE-2010-2994](https://nvd.nist.gov/vuln/detail/CVE-2010-2994)
   - [ ] [CVE-2010-2284](https://nvd.nist.gov/vuln/detail/CVE-2010-2284)
-  - [ ] [CVE-2009-3877](https://nvd.nist.gov/vuln/detail/CVE-2009-3877)
-  - [ ] [CVE-2009-3876](https://nvd.nist.gov/vuln/detail/CVE-2009-3876)
-  - [ ] [CVE-2009-2511](https://nvd.nist.gov/vuln/detail/CVE-2009-2511)
+  - [x] ~~[CVE-2009-3877](https://nvd.nist.gov/vuln/detail/CVE-2009-3877)~~
+  - [x] ~~[CVE-2009-3876](https://nvd.nist.gov/vuln/detail/CVE-2009-3876)~~
+  - [x] ~~[CVE-2009-2511](https://nvd.nist.gov/vuln/detail/CVE-2009-2511)~~
   - [ ] [CVE-2009-2661](https://nvd.nist.gov/vuln/detail/CVE-2009-2661)
   - [ ] [CVE-2009-2185](https://nvd.nist.gov/vuln/detail/CVE-2009-2185)
   - [ ] [CVE-2009-0847](https://nvd.nist.gov/vuln/detail/CVE-2009-0847)
-  - [ ] [CVE-2009-0846](https://nvd.nist.gov/vuln/detail/CVE-2009-0846)
+  - [x] [CVE-2009-0846](https://nvd.nist.gov/vuln/detail/CVE-2009-0846)
   - [ ] [CVE-2009-0789](https://nvd.nist.gov/vuln/detail/CVE-2009-0789)
   - [ ] [CVE-2008-2952](https://nvd.nist.gov/vuln/detail/CVE-2008-2952)
   - [ ] [CVE-2008-1673](https://nvd.nist.gov/vuln/detail/CVE-2008-1673)
-  - [ ] [CVE-2006-3894](https://nvd.nist.gov/vuln/detail/CVE-2006-3894)
-  - [ ] [CVE-2006-6836](https://nvd.nist.gov/vuln/detail/CVE-2006-6836)
+  - [x] ~~[CVE-2006-3894](https://nvd.nist.gov/vuln/detail/CVE-2006-3894)~~
+  - [x] ~~[CVE-2006-6836](https://nvd.nist.gov/vuln/detail/CVE-2006-6836)~~
   - [ ] [CVE-2006-2937](https://nvd.nist.gov/vuln/detail/CVE-2006-2937)
-  - [ ] [CVE-2006-1939](https://nvd.nist.gov/vuln/detail/CVE-2006-1939)
+  - [x] ~~[CVE-2006-1939](https://nvd.nist.gov/vuln/detail/CVE-2006-1939)~~
   - [ ] [CVE-2006-0645](https://nvd.nist.gov/vuln/detail/CVE-2006-0645)
   - [ ] [CVE-2005-1730](https://nvd.nist.gov/vuln/detail/CVE-2005-1730)
-  - [ ] [CVE-2005-1935](https://nvd.nist.gov/vuln/detail/CVE-2005-1935)
-  - [ ] [CVE-2004-2344](https://nvd.nist.gov/vuln/detail/CVE-2004-2344)
-  - [ ] [CVE-2004-2644](https://nvd.nist.gov/vuln/detail/CVE-2004-2644)
-  - [ ] [CVE-2004-2645](https://nvd.nist.gov/vuln/detail/CVE-2004-2645)
+  - [x] ~~[CVE-2005-1935](https://nvd.nist.gov/vuln/detail/CVE-2005-1935)~~
+  - [x] ~~[CVE-2004-2344](https://nvd.nist.gov/vuln/detail/CVE-2004-2344)~~
+  - [x] ~~[CVE-2004-2644](https://nvd.nist.gov/vuln/detail/CVE-2004-2644)~~
+  - [x] ~~[CVE-2004-2645](https://nvd.nist.gov/vuln/detail/CVE-2004-2645)~~
   - [ ] [CVE-2004-0642](https://nvd.nist.gov/vuln/detail/CVE-2004-0642)
   - [ ] [CVE-2004-0644](https://nvd.nist.gov/vuln/detail/CVE-2004-0644)
   - [ ] [CVE-2004-0699](https://nvd.nist.gov/vuln/detail/CVE-2004-0699)
-  - [ ] [CVE-2004-0123](https://nvd.nist.gov/vuln/detail/CVE-2004-0123)
-  - [ ] [CVE-2003-0818](https://nvd.nist.gov/vuln/detail/CVE-2003-0818)
-  - [ ] [CVE-2005-1247](https://nvd.nist.gov/vuln/detail/CVE-2005-1247)
-  - [ ] [CVE-2003-1005](https://nvd.nist.gov/vuln/detail/CVE-2003-1005)
+  - [x] ~~[CVE-2004-0123](https://nvd.nist.gov/vuln/detail/CVE-2004-0123)~~
+  - [x] ~~[CVE-2003-0818](https://nvd.nist.gov/vuln/detail/CVE-2003-0818)~~
+  - [x] ~~[CVE-2005-1247](https://nvd.nist.gov/vuln/detail/CVE-2005-1247)~~
+  - [x] ~~[CVE-2003-1005](https://nvd.nist.gov/vuln/detail/CVE-2003-1005)~~
   - [ ] [CVE-2003-0564](https://nvd.nist.gov/vuln/detail/CVE-2003-0564)
   - [ ] [CVE-2003-0565](https://nvd.nist.gov/vuln/detail/CVE-2003-0565)
   - [ ] [CVE-2003-0851](https://nvd.nist.gov/vuln/detail/CVE-2003-0851)
@@ -272,53 +274,44 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] [CVE-2003-0430](https://nvd.nist.gov/vuln/detail/CVE-2003-0430)
   - [ ] [CVE-2002-0036](https://nvd.nist.gov/vuln/detail/CVE-2002-0036)
   - [ ] [CVE-2002-0353](https://nvd.nist.gov/vuln/detail/CVE-2002-0353)
-- [ ] Review that character-encoded `REAL`s are strictly conformant to [ISO 6093](https://www.iso.org/standard/12285.html) (Maybe even make an ISO 6093 Library...)
+
+- Documentation
+  - [ ] `compliance.md`
+    - [ ] Review that character-encoded `REAL`s are strictly conformant to [ISO 6093](https://www.iso.org/standard/12285.html) (Maybe even make an ISO 6093 Library...)
+  - [ ] `usage.md`
+    - [ ] Security Advice
+  - [ ] `contributing.md`
+  - [ ] `security.md`
+    - [ ] Review by a Security Firm
+    - [ ] Fuzz Testing Results
+    - [ ] CVE Review
+  - [ ] `tools.md`
 - [ ] Build Scripts
   - [ ] Add `chmod +x` to the build scripts for all executables
   - [ ] Create dynamically-linked libraries as well
-- [ ] Libraries (Intended to split off into independent modules once I figure out good packaging, distribution, and build processes for them)
-  - [x] `cli` ([GitHub Page](https://github.com/JonathanWilbur/cli-d))
-  - [ ] `teletex`
-  - [ ] `videotex`
-  - [ ] `bin2text`
-    - [ ] `Base2`
-    - [ ] `Base8`
-    - [ ] `Base10`?
-    - [ ] `Base16`
-    - [ ] `Base64`
-
-#### Note
-
-I tried to make command-line tools with `std.getopt`, but I ran into a problem: 
-`std.getopt` does not execute the callbacks associated with options in the order
-that they are received. In other words, when calling `encode-ber -n -o 1.2.3.4 -n`, 
-The encoded output will contain two adjacent `NULL`s, then an `OBJECT IDENTIFIER`,
-rather than a `NULL`, `OBJECT IDENTIFIER`, then `NULL` in that exact order.
-
-Even though the command-line utility really should not be used for serious,
-ongoing production use, I cannot rightfully release it with such a subtle, 
-yet fatal, idiosyncrasy. Somebody would surely employ it in a production
-environment without knowing this nuance and end up shooting themselves in
-the foot.
-
-##### Update (November 20th, 2017)
-
-I have created my own command-line parsing library; however, I have also found
-[Jason White](https://github.com/jasonwhite)'s [Darg](https://github.com/jasonwhite/darg)
-to be a viable alternative. At the moment, I have to choose between the two.
-
-Upon doing so, development should resume. I expect the command-line tools to
-be done by the end of this week.
+  - [ ] [GNU Make](https://www.gnu.org/software/make/) `Makefile`
+- [ ] Figure out how to parse negative numbers from the command-line (`-1.0` gets interpreted as a command...)
+- [ ] Instructions on installing and linking `cli.lib`.
 
 ### 1.0.0 Release
 
 - [ ] Publish a [Dub package](https://code.dlang.org) for it
-- [ ] Share it on [the Dlang Subreddit](https://www.reddit.com/r/dlang/)
-- [ ] [Publish an RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
-- [ ] [Publish an APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
+- [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
+- [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
+- [ ] Publish a [Brew package](https://docs.brew.sh)
+
 - [ ] Configure [Travis CI](https://travis-ci.org)
 - [ ] Create `man(1)` (executables) and `man(3)` (Library calls) pages
 - [ ] Create Wikipedia pages for each codec
+- [ ] Add signatures with [my GPG key](http://jonathan.wilbur.space/downloads/jonathan@wilbur.space.gpg.pub)
+- [ ] Marketing
+  - [ ] "The ASN.1 Tour"
+    - [ ] Tampa Hackerspace
+    - [ ] Iron Yard
+    - [ ] Gainesville Hackerspace
+  - [ ] Share it on the [Dlang Subreddit](https://www.reddit.com/r/dlang/)
+  - [ ] Share it on the [Dlang Blog](https://forum.dlang.org/group/announce)
+
 
 ### 1.1.0 Release
 
@@ -392,7 +385,7 @@ The following codecs will be added:
 
 ### 2.0.0 Release
 
-- [ ] Teletex (T61String) validation
+- [ ] Teletex (T61String) validation (WireShark has an implementation.)
 - [ ] Videotex validation
 - [ ] Included Source Signature
 - [ ] Build System
@@ -400,6 +393,16 @@ The following codecs will be added:
   - [ ] Makefile
   - [ ] Compiled D Executable
   - [ ] Support `gdc` and `ldc` compilation
+- [ ] Libraries (Intended to split off into independent modules once I figure out good packaging, distribution, and build processes for them)
+  - [x] `cli` ([GitHub Page](https://github.com/JonathanWilbur/cli-d))
+  - [ ] `teletex`
+  - [ ] `videotex`
+  - [ ] `bin2text`
+    - [ ] `Base2`
+    - [ ] `Base8`
+    - [ ] `Base10`?
+    - [ ] `Base16`
+    - [ ] `Base64`
 
 ## Suggestions
 
@@ -421,7 +424,8 @@ be until that bug is resolved.
 
 ## Special Thanks
 
-[Ilya Tingof](https://stackoverflow.com/users/1175029/ilya-etingof) ([@etingof](https://github.com/etingof)), who answered several questions of mine on StackOverflow, and who authored [PyASN1](http://pyasn1.sourceforge.net/).
+* [Ilya Tingof](https://stackoverflow.com/users/1175029/ilya-etingof) ([@etingof](https://github.com/etingof)), who answered several questions of mine on StackOverflow, and who authored [PyASN1](http://pyasn1.sourceforge.net/).
+* [@YuryStrozhevsky](https://github.com/YuryStrozhevsky) for his [ASN.1 BER Codec](https://github.com/YuryStrozhevsky/C-plus-plus-ASN.1-2008-coder-decoder) and his [@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN.1 Test Suite](https://github.com/YuryStrozhevsky/ASN1-2008-free-test-suite)
 
 ## See Also
 
@@ -429,9 +433,12 @@ be until that bug is resolved.
 [International Telecommunications Union](http://www.itu.int/en/pages/default.aspx).
 * [X.690 - ASN.1 encoding rules](http://www.itu.int/rec/T-REC-X.690/en), published by the
 [International Telecommunications Union](http://www.itu.int/en/pages/default.aspx).
+* [ASN.1: Communication Between Heterogeneous Systems](http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF) by Olivier Dubuisson
 
 ## Contact Me
 
 If you would like to suggest fixes or improvements on this library, please just
-comment on this on GitHub. If you would like to contact me for other reasons,
-please email me at [jonathan@wilbur.space](mailto:jonathan@wilbur.space). :boar:
+[leave an issue on this GitHub page](https://github.com/JonathanWilbur/asn1-d/issues). If you would like to contact me for other reasons,
+please email me at [jonathan@wilbur.space](mailto:jonathan@wilbur.space)
+([My GPG Key](http://jonathan.wilbur.space/downloads/jonathan@wilbur.space.gpg.pub))
+([My TLS Certificate](http://jonathan.wilbur.space/downloads/jonathan@wilbur.space.chain.pem)). :boar:
