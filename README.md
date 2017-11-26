@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.4](http://semver.org/)
+* Version: [1.0.0-beta.5](http://semver.org/)
 
 ## What is ASN.1?
 
@@ -189,13 +189,13 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] ~~[@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN.1 Test Suite](https://github.com/YuryStrozhevsky/ASN1-2008-free-test-suite)~~
 - [ ] Review by at least one security firm
 - [ ] Review ASN.1-related vulnerabilities in [National Vulnerability Database](https://nvd.nist.gov)
-  - [ ] [CVE-2017-11496](https://nvd.nist.gov/vuln/detail/CVE-2017-11496)
+  - [x] ~~[CVE-2017-11496](https://nvd.nist.gov/vuln/detail/CVE-2017-11496)~~
   - [ ] [CVE-2017-9023](https://nvd.nist.gov/vuln/detail/CVE-2017-9023)
   - [ ] [CVE-2016-7053](https://nvd.nist.gov/vuln/detail/CVE-2016-7053)
   - [ ] [CVE-2016-6129](https://nvd.nist.gov/vuln/detail/CVE-2016-6129)
   - [x] [CVE-2016-9939](https://nvd.nist.gov/vuln/detail/CVE-2016-9939)
   - [ ] [CVE-2016-6891](https://nvd.nist.gov/vuln/detail/CVE-2016-6891)
-  - [ ] [CVE-2016-5080](https://nvd.nist.gov/vuln/detail/CVE-2016-5080)
+  - [x] ~~[CVE-2016-5080](https://nvd.nist.gov/vuln/detail/CVE-2016-5080)~~
   - [ ] [CVE-2016-0758](https://nvd.nist.gov/vuln/detail/CVE-2016-0758)
   - [ ] [CVE-2015-5726](https://nvd.nist.gov/vuln/detail/CVE-2015-5726)
   - [ ] [CVE-2016-2176](https://nvd.nist.gov/vuln/detail/CVE-2016-2176)
@@ -217,7 +217,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] [CVE-2015-7182](https://nvd.nist.gov/vuln/detail/CVE-2015-7182)
   - [ ] [CVE-2015-1790](https://nvd.nist.gov/vuln/detail/CVE-2015-1790)
   - [ ] [CVE-2015-0289](https://nvd.nist.gov/vuln/detail/CVE-2015-0289)
-  - [ ] [CVE-2015-0287](https://nvd.nist.gov/vuln/detail/CVE-2015-0287)
+  - [x] [CVE-2015-0287](https://nvd.nist.gov/vuln/detail/CVE-2015-0287)
   - [ ] [CVE-2015-0208](https://nvd.nist.gov/vuln/detail/CVE-2015-0208)
   - [ ] [CVE-2015-1182](https://nvd.nist.gov/vuln/detail/CVE-2015-1182)
   - [ ] [CVE-2014-1569](https://nvd.nist.gov/vuln/detail/CVE-2014-1569)
@@ -275,7 +275,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] [CVE-2002-0036](https://nvd.nist.gov/vuln/detail/CVE-2002-0036)
   - [ ] [CVE-2002-0353](https://nvd.nist.gov/vuln/detail/CVE-2002-0353)
 
-- Documentation
+- [ ] Documentation
   - [ ] `compliance.md`
     - [ ] Review that character-encoded `REAL`s are strictly conformant to [ISO 6093](https://www.iso.org/standard/12285.html) (Maybe even make an ISO 6093 Library...)
   - [ ] `usage.md`

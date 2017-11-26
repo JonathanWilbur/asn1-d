@@ -2,7 +2,16 @@
 
 ## Security Review by A Security Firm
 
+I would like to get an actual security firm to review this code for free, which
+I recognize is probably not going to happen. If I can't get one for free, I 
+would at least like to get a price quote, so I could start a crowdfunding
+campaign
+
 ## Fuzz Testing
+
+I plan to do fuzz testing on all possible one to three byte values at least.
+
+The results of this testing will go here.
 
 ## CVE Review
 
@@ -14,7 +23,9 @@ _Note: "Ethereal" referenced in the early 2000s CVEs below refers to the old nam
 
 ### CVE-2017-11496
 
-I can't find any information on this one.
+> Stack buffer overflow in hasplms in Gemalto ACC (Admin Control Center), all versions ranging from HASP SRM 2.10 to Sentinel LDK 7.50, allows remote attackers to execute arbitrary code via malformed ASN.1 streams in V2C and similar input files.
+
+Closed source. Skipping.
 
 ### CVE-2017-9023
 
@@ -44,9 +55,10 @@ I need to review [OpenSSL's Test for this vulnerability](https://github.com/open
 
 ### CVE-2016-6129
 
-Review [this GitHub commit](https://github.com/libtom/libtomcrypt/commit/5eb9743410ce4657e9d54fef26a2ee31a1b5dd0).
+> The `rsa_verify_hash_ex` function in `rsa_verify_hash.c` in LibTomCrypt, as used in OP-TEE before 2.2.0, does not validate that the message length is equal to the ASN.1 encoded data length, which makes it easier for remote attackers to forge RSA signatures or public certificates by leveraging a Bleichenbacher signature forgery attack.
 
-Review the [Bleichenbacher's CCA Attack](https://crypto.stackexchange.com/questions/12688/can-you-explain-bleichenbachers-cca-attack-on-pkcs1-v1-5#12706).
+The answer is really simple: make sure the encoded length is equal to the 
+actual length of the encoded data.
 
 ### CVE-2016-9939
 
@@ -56,21 +68,34 @@ Does not apply, because the memory allocation is handled by the runtime.
 
 ### CVE-2016-6891
 
-MatrixSSL before 3.8.6 allows remote attackers to cause a denial of service (out-of-bounds read) via a crafted ASN.1 Bit Field primitive in an X.509 certificate.
+> MatrixSSL before 3.8.6 allows remote attackers to cause a denial of service (out-of-bounds read) via a crafted ASN.1 Bit Field primitive in an X.509 certificate.
 
-Review the changes in [MatrixSSL 3.8.6](https://github.com/matrixssl/matrixssl/blob/3-8-6-open/CHANGES.md).
+The [CHANGES.md](https://github.com/matrixssl/matrixssl/blob/3-8-6-open/CHANGES.md) 
+leaves a note about this issue:
+
+> Critical parsing bug for X.509 certificates Security Researcher Craig Young reported two issues related to X.509 certificate parsing. An error in parsing a maliciously formatted Subject Alt Name field in a certificate could cause a crash due to a write beyond buffer and subsequent free of an unallocated block of memory. An error in parsing a maliciously formatted ASN.1 Bit Field primitive could cause a crash due to a memory read beyond allocated memory.
+
+There is almost no information on where this bug is in the source code. I cannot find any significant changes to `subjectAltName` parsing between MatrixSSL versions 3.8.4 and 3.8.6.
 
 ### CVE-2016-5080
 
 > Integer overflow in the rtxMemHeapAlloc function in asn1rt_a.lib in Objective Systems ASN1C for C/C++ before 7.0.2 allows context-dependent attackers to execute arbitrary code or cause a denial of service (heap-based buffer overflow), on a system running an application compiled by ASN1C, via crafted ASN.1 data.
 
-There is a LOT of details out there on this one. I need to review this.
+Closed source software. Skipping.
 
 ### CVE-2016-0758
 
 > Integer overflow in `lib/asn1_decoder.c` in the Linux kernel before 4.6 allows local users to gain privileges via crafted ASN.1 data.
 
 I need to review this [Linux Diff](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=23c8a812dc3c621009e4f0e5342aa4e2ede1ceaa).
+
+This is another integer overflow when parsing length:
+
+- [ ] Ensure the length value cannot overflow or underflow.
+
+Also, I just thought of this:
+
+- [ ] De-duplicate code where length | lengthOfLength is extracted from length tag.
 
 ### CVE-2015-5726
 
@@ -80,71 +105,233 @@ From the [Botan Security Advisory](https://botan.randombit.net/security.html):
 
 > The BER decoder would crash due to reading from offset 0 of an empty vector if it encountered a `BIT STRING` which did not contain any data at all. This can be used to easily crash applications reading untrusted ASN.1 data, but does not seem exploitable for code execution.
 
+They did not validate that the `BIT STRING` in question has at least one byte.
+
+- [ ] Write unit tests to ensure that all `BIT STRING`s throw if length < 3.
+
+Really, I want to write unit tests that test all combinations of two bytes for
+every type that requires at least three to make sure that they throw exceptions.
+
 ### CVE-2016-2176
 
 > The `X509_NAME_oneline` function in `crypto/x509/x509_obj.c` in OpenSSL before 1.0.1t and 1.0.2 before 1.0.2h allows remote attackers to obtain sensitive information from process stack memory or cause a denial of service (buffer over-read) via crafted EBCDIC ASN.1 data.
 
-Review the [Git commit that fixed it](https://git.openssl.org/?p=openssl.git;a=commit;h=2919516136a4227d9e6d8f2fe66ef976aaf8c561).
+The [fixing commit](https://git.openssl.org/?p=openssl.git;a=commit;h=2919516136a4227d9e6d8f2fe66ef976aaf8c561) reads:
+
+> ASN1 Strings that are over 1024 bytes can cause an overread in applications using the `X509_NAME_oneline()` function on EBCDIC systems. This could result in arbitrary stack data being returned in the buffer.
+
+The commit diff does not show it, but that's because the EBCDIC buffer is fixed at 1024 `char`s:
+
+```c
+char ebcdic_buf[1024];
+```
+
+Having said that, the diff reads:
+
+```diff
+-            ascii2ebcdic(ebcdic_buf, q, (num > sizeof ebcdic_buf)
+-                         ? sizeof ebcdic_buf : num);
++            if (num > (int)sizeof(ebcdic_buf))
++                num = sizeof(ebcdic_buf);
++            ascii2ebcdic(ebcdic_buf, q, num);
+```
+
+Basically, what the code above is doing is truncating the input from `q` into 
+`ebcdic_buf` to the number of bytes indicated in the third argument to 
+`ascii2ebcdic`. However, the the length of the data in the buffer still needs
+to be used later in the code. In the earlier version of the code, the correct
+amount of bytes are copied into `ebcdic_buf`, but `num` is still a value 
+greater than 1024, meaning that the subsequent code will read `num` bytes 
+from the buffer that is supposed to max out at 1024 bytes.
+
+I don't think there is a lesson to learn here. This was just plain stupid.
+Maybe if the developers did not give their variables stupid ambiguous names
+like `num`, maybe they would be able to keep track of the significance of their
+variables one hundred lines South of where they are declared.
 
 ### CVE-2016-2109
 
 > The `asn1_d2i_read_bio` function in `crypto/asn1/a_d2i_fp.c` in the ASN.1 `BIO` implementation in OpenSSL before 1.0.1t and 1.0.2 before 1.0.2h allows remote attackers to cause a denial of service (memory consumption) via a short invalid encoding.
 
-Review the [Git commit that fixed it](https://git.openssl.org/?p=openssl.git;a=commitdiff;h=c62981390d6cf9e3d612c489b8b77c2913b25807;hp=ddc606c914e72e770dbe8293a65585b7c3017bba).
+This [git commit](https://git.openssl.org/?p=openssl.git;a=commitdiff;h=c62981390d6cf9e3d612c489b8b77c2913b25807;hp=ddc606c914e72e770dbe8293a65585b7c3017bba) 
+description describes the problem by describing the solution:
+
+> If the ASN.1 BIO is presented with a large length field read it in chunks of increasing size checking for EOF on each read. This prevents small files allocating excessive amounts of data.
+
+This one pretty much speaks for itself, but it is definitely worth reviewing my
+code for potential denial-of-service conditions like this.
+
+- [ ] Review `.length = *` for potential memory consumption DoS attacks.
+- [ ] Try to exhaust memory by supplying the decoder with "false giants."
 
 ### CVE-2016-2108
 
 > The ASN.1 implementation in OpenSSL before 1.0.1o and 1.0.2 before 1.0.2c allows remote attackers to execute arbitrary code or cause a denial of service (buffer underflow and memory corruption) via an `ANY` field in crafted serialized data, aka the "negative zero" issue.
 
-Review the [Git commit that fixed it](https://git.openssl.org/?p=openssl.git;a=commitdiff;h=3661bb4e7934668bd99ca777ea8b30eedfafa871;hp=e697a4c3d7d2267e9d82d88dbfa5084475794cb3).
+The [fixing git commit](https://git.openssl.org/?p=openssl.git;a=commitdiff;h=3661bb4e7934668bd99ca777ea8b30eedfafa871;hp=e697a4c3d7d2267e9d82d88dbfa5084475794cb3)
+describes the problem like so:
+
+> Fix bug where `i2c_ASN1_INTEGER` mishandles zero if it is marked as negative.
+
+I am having a hard time understanding how this bug comes about, not in the 
+least due to the abundance of meaningless variable names that litter the source
+of OpenSSL. But nevertheless, I don't think there should be any problems with
+my code encountering "negative zero," because, unlike this dumbass boomer code,
+my code does not break off the state of the encoded data into a separate 
+variable that is liable to deviate from the state of the encoded data.
+
+But it would be worth a review.
+
+- [ ] Aggressively test all variations of encoding zero.
 
 ### CVE-2016-2053
 
 > The `asn1_ber_decoder` function in `lib/asn1_decoder.c` in the Linux kernel before 4.3 allows attackers to cause a denial of service (panic) via an ASN.1 BER file that lacks a public key, leading to mishandling by the `public_key_verify_signature` function in `crypto/asymmetric_keys/public_key.c`.
 
-Review the [Git commit that fixed it](https://github.com/torvalds/linux/commit/0d62e9dd6da45bbf0f33a8617afc5fe774c8f45f).
+This does not really apply to my code, because my code does not parse ASN.1
+data structures, per se, but rather, just parses the encoded data for a single
+element. The ASN.1 implementation in the Linux Kernel operates on an entirely
+different principle than my codec.
 
 ### CVE-2016-4421
 
 > `epan/dissectors/packet-ber.c` in the ASN.1 BER dissector in Wireshark 1.12.x before 1.12.10 and 2.x before 2.0.2 allows remote attackers to cause a denial of service (deep recursion, stack consumption, and application crash) via a packet that specifies deeply nested data.
 
-Review the [issues page](https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11822).
+Again, I don't believe this applies to this library, because this library 
+performs no recursion. Developers who use this library will perform recursion.
+However, I will include a note to developers.
+
+- [ ] Leave note to developers about avoiding recursion problems.
 
 ### CVE-2016-4418
 
 > `epan/dissectors/packet-ber.c` in the ASN.1 BER dissector in Wireshark 1.12.x before 1.12.10 and 2.x before 2.0.2 allows remote attackers to cause a denial of service (buffer over-read and application crash) via a crafted packet that triggers an empty set.
 
-Review the [issues page](https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=12106).
+This is a problem with parsing ASN.1, rather than encoding or decoding. So this 
+entirely does not apply to my library.
 
 ### CVE-2016-1950
 
 > Heap-based buffer overflow in Mozilla Network Security Services (NSS) before 3.19.2.3 and 3.20.x and 3.21.x before 3.21.1, as used in Mozilla Firefox before 45.0 and Firefox ESR 38.x before 38.7, allows remote attackers to execute arbitrary code via crafted ASN.1 data in an X.509 certificate.
 
-Go through this [nasty bug page](https://bugzilla.mozilla.org/show_bug.cgi?id=1245528).
+The problem appears to be that the developers overwrite the `len` member of a 
+`struct` representing an ASN.1 element, which normally represents the number
+of bytes of encoded data, with the length in _bits_ of encoded data. Later on,
+when the length field is used with the assumption that it still refers to 
+bytes, which causes all kinds of errors. Further, the conversion from bits to
+bytes and vice versa introduces problems with overflow as well.
+
+On the [Bugzilla page](https://bugzilla.mozilla.org/show_bug.cgi?id=1245528), David Keeler comments:
+
+> Ryan, this is another ASN.1 decoding bug, this time with `BIT STRING`. I had a quick look at the history of changes around where the bug is, and unless I'm missing some context, this has been present since it was written (or at least imported into mercurial).
+> Basically, `sec_asn1d_parse_leaf` wasn't treating the length of the output SECItem for `BIT STRING`s as bits, so it would write past the end of allocated memory. At the same time, the bytes-to-bits conversion in `sec_asn1d_parse_more_bit_string` was unnecessary (and indeed, incorrect).
+
+It looks like this code only gets triggered when the decoder encounters a 
+constructed `BIT STRING`, which, in the case of an X.509 certificate, occurs in 
+the `subjectPublicKey` and `signatureValue` fields. (There are probably more;
+those are just the ones that I know of.) The out-of-bounds memory access occurs 
+when the substrings of the constructed `BIT STRING` are finally assembled into 
+a single `BIT STRING`.
+
+This does not really relate to my code, since my code does not assemble 
+substrings (although, I _might_ change that), but if it did, I would _never_
+give `length` a precarious double-meaning that it was given by the developers
+that wrote this terrible code.
+
+That said:
+
+- [ ] Specifically note that `length` will **always** refer to bytes in the encoded value; never bits or characters or elements or anything else, and reference this CVE.
+
+Maybe:
+
+- [ ] Make `bitStringLength`, `bmpStringLength`, and `universalStringLength` methods to prevent developers from doing dumb stuff like this.
 
 ### CVE-2016-2842
 
 > The `doapr_outch` function in `crypto/bio/b_print.c` in OpenSSL 1.0.1 before 1.0.1s and 1.0.2 before 1.0.2g does not verify that a certain memory allocation succeeds, which allows remote attackers to cause a denial of service (out-of-bounds write or memory consumption) or possibly have unspecified other impact via a long string, as demonstrated by a large amount of ASN.1 data, a different vulnerability than CVE-2016-0799.
 
-Review this [beast of a diff](https://git.openssl.org/?p=openssl.git;a=commitdiff;h=578b956fe741bf8e84055547b1e83c28dd902c73;hp=259b664f950c2ba66fbf4b0fe5281327904ead21).
+As this 
+[diff](https://git.openssl.org/?p=openssl.git;a=commitdiff;h=578b956fe741bf8e84055547b1e83c28dd902c73;hp=259b664f950c2ba66fbf4b0fe5281327904ead21) 
+shows: this was fixed by giving `doapr_outch` an `int` return value, with 0 
+indicating success. Else where in the code, you have changes like this: 
+
+```diff
++                if(!doapr_outch(sbuffer, buffer, &currlen, maxlen, ch))
++                    return 0;
+```
+
+As noted in the description:
+
+> Additionally the internal |doapr_outch| function can attempt to write to
+> an OOB memory location (at an offset from the NULL pointer) in the event of
+> a memory allocation failure. In 1.0.2 and below this could be caused where
+> the size of a buffer to be allocated is greater than INT_MAX. E.g. this
+> could be in processing a very long "%s" format string. Memory leaks can also
+> occur.
+
+Though I don't manually manage memory in D, it would be a wise idea to:
+
+- [ ] Test gigantic elements, where `.length` is `int.max` or larger.
+- [ ] Add code for handling failed memory allocations.
+- [ ] Create a compile-time immutable maximum element size, such as `int.max` (but still test larger sizes anyway), and document the reasoning.
 
 ### CVE-2016-0799
 
 > The `fmtstr` function in `crypto/bio/b_print.c` in OpenSSL 1.0.1 before 1.0.1s and 1.0.2 before 1.0.2g improperly calculates string lengths, which allows remote attackers to cause a denial of service (overflow and out-of-bounds read) or possibly have unspecified other impact via a long string, as demonstrated by a large amount of ASN.1 data, a different vulnerability than CVE-2016-2842.
 
-Review this [diff](https://git.openssl.org/?p=openssl.git;a=commitdiff;h=578b956fe741bf8e84055547b1e83c28dd902c73;hp=259b664f950c2ba66fbf4b0fe5281327904ead21).
+It looks like this issue was fixed by this part of the
+[diff](https://git.openssl.org/?p=openssl.git;a=commitdiff;h=578b956fe741bf8e84055547b1e83c28dd902c73;hp=259b664f950c2ba66fbf4b0fe5281327904ead21):
+
+```diff
+-    int padlen, strln;
++    int padlen;
++    size_t strln;
+     int cnt = 0;
+ 
+     if (value == 0)
+         value = "<NULL>";
+-    for (strln = 0; value[strln]; ++strln) ;
++
++    strln = strlen(value);
++    if (strln > INT_MAX)
++        strln = INT_MAX;
++
+     padlen = min - strln;
+-    if (padlen < 0)
++    if (min < 0 || padlen < 0)
+         padlen = 0;
+```
+
+You can see that `strln` used to be an `int`. They changed this, because
+if a supplied string contained greater than `INT_MAX` bytes, it would overflow
+and become a `INT_MIN` (a negative number). When calculating `padlen`, 
+subtracting a negative number from `min` gives an even larger number for 
+`padlen`, which is used to calculate how many trailing spaces to append to the
+formatted string. This can be leveraged to produce giant demands on memory.
+
+Once again, this means that I need to:
+
+- [ ] Test gigantic elements, where `.length` is `int.max` or larger.
+- [ ] Add code for handling failed memory allocations.
+- [ ] Create a compile-time immutable maximum element size, such as `int.max` (but still test larger sizes anyway), and document the reasoning.
 
 ### CVE-2016-2522
 
 > The `dissect_ber_constrained_bitstring` function in `epan/dissectors/packet-ber.c` in the ASN.1 BER dissector in Wireshark 2.0.x before 2.0.2 does not verify that a certain length is nonzero, which allows remote attackers to cause a denial of service (out-of-bounds read and application crash) via a crafted packet.
 
-Review this [diff](https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blobdiff;f=epan/dissectors/packet-ber.c;h=319353f4187a2139dad594798f8b5b67ce6c2fde;hp=c049a5184010396a26058151fc504cf1160903a0;hb=9b2f3f7c5c9205381cb72e42b66e97d8ed3abf63;hpb=5d4a71a1a22aedc0a3ab9e81a627cf37e7d58e7f).
+This one is really straight-forward. A `BIT STRING` must always have at least 
+one byte of encoded data. The code here did not check that this first byte
+exists before attempting to access it, thereby reading out of bounds.
+
+- [ ] Throw an exception if a `BIT STRING` does not have at least one byte.
+- [ ] Create unittests for the minimum size of all types.
 
 ### CVE-2015-7540
 
 > The LDAP server in the AD domain controller in Samba 4.x before 4.1.22 does not check return values to ensure successful ASN.1 memory allocation, which allows remote attackers to cause a denial of service (memory consumption and daemon crash) via crafted packets.
 
-Review this [diff](https://git.samba.org/?p=samba.git;a=commit;h=530d50a1abdcdf4d1775652d4c456c1274d83d8d) and this [diff](https://git.samba.org/?p=samba.git;a=commit;h=9d989c9dd7a5b92d0c5d65287935471b83b6e884).
+This one is also really straight-forward: they did not handle errors in 
+allocating memory. The end.
 
 ### CVE-2015-7061
 
@@ -164,7 +351,13 @@ Ditto
 
 > `crypto/rsa/rsa_ameth.c` in OpenSSL 1.0.1 before 1.0.1q and 1.0.2 before 1.0.2e allows remote attackers to cause a denial of service (`NULL` pointer dereference and application crash) via an RSA PSS ASN.1 signature that lacks a mask generation function parameter.
 
-Review this [git commit](https://git.openssl.org/?p=openssl.git;a=commitdiff;h=c394a488942387246653833359a5c94b5832674e;hp=d73cc256c8e256c32ed959456101b73ba9842f72).
+This one is really simple:
+
+```diff
+-    if (alg == NULL)
++    if (alg == NULL || alg->parameter == NULL)
+         return NULL;
+```
 
 Though this library has nothing to do with RSA key exchange, problems with null
 pointers could still happen. A review of the context-switching types should be
@@ -174,33 +367,41 @@ sufficient.
 
 > Heap-based buffer overflow in the ASN.1 decoder in Mozilla Network Security Services (NSS) before 3.19.2.1 and 3.20.x before 3.20.1, as used in Firefox before 42.0 and Firefox ESR 38.x before 38.4 and other products, allows remote attackers to cause a denial of service (application crash) or possibly execute arbitrary code via crafted OCTET STRING data.
 
-Review this [bug page](https://bugzilla.mozilla.org/show_bug.cgi?id=1202868).
+The [Bugzilla page](https://bugzilla.mozilla.org/show_bug.cgi?id=1202868)'s 
+title is descriptive enough:
 
-This one definitely needs to be reviewed.
+> ASN.1 decoder heap overflow when decoding constructed OCTET STRING that 
+> mixes indefinite and definite length encodings
+
+This one is irrelevant to my library, because my library does not recurse 
+(decode elements within other elements automatically). However, this may
+change in future versions. For now, I do not have to do anything about this,
+but it would be a good idea to leave a note for developers, and to keep this
+in mind if I ever do decide to recursively decode.
 
 ### CVE-2015-1790
 
-> The `PKCS7_dataDecodefunction` in `crypto/pkcs7/pk7_doit.c` in OpenSSL before 0.9.8zg, 1.0.0 before 1.0.0s, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via a PKCS#7 blob that uses ASN.1 encoding and lacks inner `EncryptedContent` data.
+> The `PKCS7_dataDecodefunction` in `crypto/pkcs7/pk7_doit.c` in OpenSSL before 0.9.8zg, 1.0.0 before 1.0.0s, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b allows remote attackers to cause a denial of service (`NULL` pointer dereference and application crash) via a PKCS#7 blob that uses ASN.1 encoding and lacks inner `EncryptedContent` data.
 
-Review this [GitHub diff](https://github.com/openssl/openssl/commit/59302b600e8d5b77ef144e447bb046fd7ab72686).
+This is a result of not checking that a pointer is null. This does not really
+have any implications for my library. Moving on.
 
 ### CVE-2015-0289
 
-> The PKCS#7 implementation in OpenSSL before 0.9.8zf, 1.0.0 before 1.0.0r, 1.0.1 before 1.0.1m, and 1.0.2 before 1.0.2a does not properly handle a lack of outer `ContentInfo`, which allows attackers to cause a denial of service (NULL pointer dereference and application crash) by leveraging an application that processes arbitrary PKCS#7 data and providing malformed data with ASN.1 encoding, related to `crypto/pkcs7/pk7_doit.c` and `crypto/pkcs7/pk7_lib.c`.
+> The PKCS#7 implementation in OpenSSL before 0.9.8zf, 1.0.0 before 1.0.0r, 1.0.1 before 1.0.1m, and 1.0.2 before 1.0.2a does not properly handle a lack of outer `ContentInfo`, which allows attackers to cause a denial of service (`NULL` pointer dereference and application crash) by leveraging an application that processes arbitrary PKCS#7 data and providing malformed data with ASN.1 encoding, related to `crypto/pkcs7/pk7_doit.c` and `crypto/pkcs7/pk7_lib.c`.
 
-Review this [diff](https://git.openssl.org/?p=openssl.git;a=commitdiff;h=c0334c2c92dd1bc3ad8138ba6e74006c3631b0f9;hp=c3c7fb07dc975dc3c9de0eddb7d8fd79fc9c67c1).
+Ditto.
 
 ### CVE-2015-0287
 
 > The `ASN1_item_ex_d2i` function in `crypto/asn1/tasn_dec.c` in OpenSSL before 0.9.8zf, 1.0.0 before 1.0.0r, 1.0.1 before 1.0.1m, and 1.0.2 before 1.0.2a does not reinitialize `CHOICE` and `ADB` data structures, which might allow attackers to cause a denial of service (invalid write operation and memory corruption) by leveraging an application that relies on ASN.1 structure reuse.
 
-Review this [diff](https://git.openssl.org/?p=openssl.git;a=blobdiff;f=crypto/asn1/tasn_dec.c;h=7fd336a402268b3e32bea77d331bf66b2f061f2a;hp=4595664409c9b91118e0ac0dee35ddfc670edfe3;hb=b717b083073b6cacc0a5e2397b661678aff7ae7f;hpb=819418110b6fff4a7b96f01a5d68f71df3e3b736).
+I don't entirely understand this bug, but it sounds like the developers just 
+did not check that a pointer is not null. Nothing for me to do about this.
 
 ### CVE-2015-0208
 
-> The ASN.1 signature-verification implementation in the rsa_item_verify function in crypto/rsa/rsa_ameth.c in OpenSSL 1.0.2 before 1.0.2a allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via crafted RSA PSS parameters to an endpoint that uses the certificate-verification feature.
-
-[diff](https://git.openssl.org/?p=openssl.git;a=commitdiff;h=4b22cce3812052fe64fc3f6d58d8cc884e3cb834;hp=b717b083073b6cacc0a5e2397b661678aff7ae7f).
+> The ASN.1 signature-verification implementation in the `rsa_item_verify` function in `crypto/rsa/rsa_ameth.c` in OpenSSL 1.0.2 before 1.0.2a allows remote attackers to cause a denial of service (`NULL` pointer dereference and application crash) via crafted RSA PSS parameters to an endpoint that uses the certificate-verification feature.
 
 Once again, just reviewing the context-switching types should be sufficient.
 
@@ -208,7 +409,14 @@ Once again, just reviewing the context-switching types should be sufficient.
 
 > The `asn1_get_sequence_of` function in `library/asn1parse.c` in PolarSSL 1.0 through 1.2.12 and 1.3.x through 1.3.9 does not properly initialize a pointer in the `asn1_sequence` linked list, which allows remote attackers to cause a denial of service (crash) or possibly execute arbitrary code via a crafted ASN.1 sequence in a certificate.
 
-Review.
+The problem here is that PolarSSL does zero out the bytes of the buffer where 
+the next item in the `SEQUENCE` is going to go, so when it is allocated, it is
+allocated with fields pre-filled with junk data.
+
+I don't think this will be relevant for my library, since I don't manually
+initialize pointers, so I won't need to `memset` anything.
+
+- [ ] Ensure that any members of any classes or structs start off with their `.init` values.
 
 ### CVE-2014-1569
 
@@ -218,6 +426,12 @@ Review this [bug page](https://bugzilla.mozilla.org/show_bug.cgi?id=1064670).
 
 `integer` and `enum` already check for this, but it might not hurt to look into
 additional measures to ensure that DER does not encode invalid-length data.
+
+- [ ] Throw exception in DER Codec if `NULL` ever has any value bytes.
+- [ ] Ensure there are no leading `NULL` bytes in DER Codec for `INTEGER` and `ENUMERATED`
+- [ ] Ensure all padding bits in `BIT STRING` are zeroed.
+
+_Note: According to the Bugzilla page, it looks like some old X.509 certificates are not technically DER-compliant: they often pad their `INTEGER`s._
 
 ### CVE-2014-4443
 
