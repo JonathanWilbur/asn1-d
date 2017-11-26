@@ -3,7 +3,9 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.5](http://semver.org/)
+* Version: [1.0.0-beta.6](http://semver.org/)
+
+**Expected Version 1.0.0 Release Date: December 31st, 2017**
 
 ## What is ASN.1?
 
@@ -142,6 +144,8 @@ and reviewed for security and performance.
 
 Version 1.0.0-beta was released on November 8th, 2017.
 
+**Expected Version 1.0.0 Release Date: December 31st, 2017**
+
 - [x] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
 - [ ] Configure `.vscode`
   - [ ] `tasks.json`
@@ -188,20 +192,21 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Do something with [Authentication Contexts for Biometrics (ACBio)](https://www.iso.org/standard/41531.html)
   - [x] ~~[@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN.1 Test Suite](https://github.com/YuryStrozhevsky/ASN1-2008-free-test-suite)~~
 - [ ] Review by at least one security firm
-- [ ] Review ASN.1-related vulnerabilities in [National Vulnerability Database](https://nvd.nist.gov)
+- [ ] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) Review 
+      in [National Vulnerability Database](https://nvd.nist.gov)
   - [x] ~~[CVE-2017-11496](https://nvd.nist.gov/vuln/detail/CVE-2017-11496)~~
   - [ ] [CVE-2017-9023](https://nvd.nist.gov/vuln/detail/CVE-2017-9023)
   - [ ] [CVE-2016-7053](https://nvd.nist.gov/vuln/detail/CVE-2016-7053)
   - [ ] [CVE-2016-6129](https://nvd.nist.gov/vuln/detail/CVE-2016-6129)
   - [x] [CVE-2016-9939](https://nvd.nist.gov/vuln/detail/CVE-2016-9939)
-  - [ ] [CVE-2016-6891](https://nvd.nist.gov/vuln/detail/CVE-2016-6891)
+  - [x] ~~[CVE-2016-6891](https://nvd.nist.gov/vuln/detail/CVE-2016-6891)~~
   - [x] ~~[CVE-2016-5080](https://nvd.nist.gov/vuln/detail/CVE-2016-5080)~~
   - [ ] [CVE-2016-0758](https://nvd.nist.gov/vuln/detail/CVE-2016-0758)
   - [ ] [CVE-2015-5726](https://nvd.nist.gov/vuln/detail/CVE-2015-5726)
-  - [ ] [CVE-2016-2176](https://nvd.nist.gov/vuln/detail/CVE-2016-2176)
+  - [x] [CVE-2016-2176](https://nvd.nist.gov/vuln/detail/CVE-2016-2176)
   - [ ] [CVE-2016-2109](https://nvd.nist.gov/vuln/detail/CVE-2016-2109)
   - [ ] [CVE-2016-2108](https://nvd.nist.gov/vuln/detail/CVE-2016-2108)
-  - [ ] [CVE-2016-2053](https://nvd.nist.gov/vuln/detail/CVE-2016-2053)
+  - [x] [CVE-2016-2053](https://nvd.nist.gov/vuln/detail/CVE-2016-2053)
   - [ ] [CVE-2016-4421](https://nvd.nist.gov/vuln/detail/CVE-2016-4421)
   - [ ] [CVE-2016-4418](https://nvd.nist.gov/vuln/detail/CVE-2016-4418)
   - [x] ~~[CVE-2016-2427](https://nvd.nist.gov/vuln/detail/CVE-2016-2427)~~
@@ -215,8 +220,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] ~~[CVE-2015-7059](https://nvd.nist.gov/vuln/detail/CVE-2015-7059)~~
   - [ ] [CVE-2015-3194](https://nvd.nist.gov/vuln/detail/CVE-2015-3194)
   - [ ] [CVE-2015-7182](https://nvd.nist.gov/vuln/detail/CVE-2015-7182)
-  - [ ] [CVE-2015-1790](https://nvd.nist.gov/vuln/detail/CVE-2015-1790)
-  - [ ] [CVE-2015-0289](https://nvd.nist.gov/vuln/detail/CVE-2015-0289)
+  - [x] [CVE-2015-1790](https://nvd.nist.gov/vuln/detail/CVE-2015-1790)
+  - [x] [CVE-2015-0289](https://nvd.nist.gov/vuln/detail/CVE-2015-0289)
   - [x] [CVE-2015-0287](https://nvd.nist.gov/vuln/detail/CVE-2015-0287)
   - [ ] [CVE-2015-0208](https://nvd.nist.gov/vuln/detail/CVE-2015-0208)
   - [ ] [CVE-2015-1182](https://nvd.nist.gov/vuln/detail/CVE-2015-1182)
@@ -225,12 +230,12 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] [CVE-2014-1568](https://nvd.nist.gov/vuln/detail/CVE-2014-1568)
   - [ ] [CVE-2014-5165](https://nvd.nist.gov/vuln/detail/CVE-2014-5165)
   - [ ] [CVE-2014-3468](https://nvd.nist.gov/vuln/detail/CVE-2014-3468)
-  - [ ] [CVE-2014-3467](https://nvd.nist.gov/vuln/detail/CVE-2014-3467)
-  - [ ] [CVE-2014-1316](https://nvd.nist.gov/vuln/detail/CVE-2014-1316)
+  - [x] ~~[CVE-2014-3467](https://nvd.nist.gov/vuln/detail/CVE-2014-3467)~~
+  - [x] ~~[CVE-2014-1316](https://nvd.nist.gov/vuln/detail/CVE-2014-1316)~~
   - [ ] [CVE-2013-5018](https://nvd.nist.gov/vuln/detail/CVE-2013-5018)
   - [ ] [CVE-2013-4935](https://nvd.nist.gov/vuln/detail/CVE-2013-4935)
-  - [ ] [CVE-2013-3557](https://nvd.nist.gov/vuln/detail/CVE-2013-3557)
-  - [ ] [CVE-2013-3556](https://nvd.nist.gov/vuln/detail/CVE-2013-3556)
+  - [x] ~~[CVE-2013-3557](https://nvd.nist.gov/vuln/detail/CVE-2013-3557)~~
+  - [x] [CVE-2013-3556](https://nvd.nist.gov/vuln/detail/CVE-2013-3556)
   - [ ] [CVE-2012-0441](https://nvd.nist.gov/vuln/detail/CVE-2012-0441)
   - [x] [CVE-2012-1569](https://nvd.nist.gov/vuln/detail/CVE-2012-1569)
   - [ ] [CVE-2011-1142](https://nvd.nist.gov/vuln/detail/CVE-2011-1142)
@@ -242,50 +247,57 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] ~~[CVE-2009-3876](https://nvd.nist.gov/vuln/detail/CVE-2009-3876)~~
   - [x] ~~[CVE-2009-2511](https://nvd.nist.gov/vuln/detail/CVE-2009-2511)~~
   - [ ] [CVE-2009-2661](https://nvd.nist.gov/vuln/detail/CVE-2009-2661)
-  - [ ] [CVE-2009-2185](https://nvd.nist.gov/vuln/detail/CVE-2009-2185)
-  - [ ] [CVE-2009-0847](https://nvd.nist.gov/vuln/detail/CVE-2009-0847)
+  - [x] [CVE-2009-2185](https://nvd.nist.gov/vuln/detail/CVE-2009-2185)
+  - [x] [CVE-2009-0847](https://nvd.nist.gov/vuln/detail/CVE-2009-0847)
   - [x] [CVE-2009-0846](https://nvd.nist.gov/vuln/detail/CVE-2009-0846)
   - [ ] [CVE-2009-0789](https://nvd.nist.gov/vuln/detail/CVE-2009-0789)
-  - [ ] [CVE-2008-2952](https://nvd.nist.gov/vuln/detail/CVE-2008-2952)
+  - [x] ~~[CVE-2008-2952](https://nvd.nist.gov/vuln/detail/CVE-2008-2952)~~
   - [ ] [CVE-2008-1673](https://nvd.nist.gov/vuln/detail/CVE-2008-1673)
   - [x] ~~[CVE-2006-3894](https://nvd.nist.gov/vuln/detail/CVE-2006-3894)~~
   - [x] ~~[CVE-2006-6836](https://nvd.nist.gov/vuln/detail/CVE-2006-6836)~~
-  - [ ] [CVE-2006-2937](https://nvd.nist.gov/vuln/detail/CVE-2006-2937)
+  - [x] ~~[CVE-2006-2937](https://nvd.nist.gov/vuln/detail/CVE-2006-2937)~~
   - [x] ~~[CVE-2006-1939](https://nvd.nist.gov/vuln/detail/CVE-2006-1939)~~
   - [ ] [CVE-2006-0645](https://nvd.nist.gov/vuln/detail/CVE-2006-0645)
   - [ ] [CVE-2005-1730](https://nvd.nist.gov/vuln/detail/CVE-2005-1730)
   - [x] ~~[CVE-2005-1935](https://nvd.nist.gov/vuln/detail/CVE-2005-1935)~~
   - [x] ~~[CVE-2004-2344](https://nvd.nist.gov/vuln/detail/CVE-2004-2344)~~
-  - [x] ~~[CVE-2004-2644](https://nvd.nist.gov/vuln/detail/CVE-2004-2644)~~
-  - [x] ~~[CVE-2004-2645](https://nvd.nist.gov/vuln/detail/CVE-2004-2645)~~
-  - [ ] [CVE-2004-0642](https://nvd.nist.gov/vuln/detail/CVE-2004-0642)
+  - [x] [CVE-2004-2644](https://nvd.nist.gov/vuln/detail/CVE-2004-2644)
+  - [x] [CVE-2004-2645](https://nvd.nist.gov/vuln/detail/CVE-2004-2645)
+  - [x] [CVE-2004-0642](https://nvd.nist.gov/vuln/detail/CVE-2004-0642)
   - [ ] [CVE-2004-0644](https://nvd.nist.gov/vuln/detail/CVE-2004-0644)
-  - [ ] [CVE-2004-0699](https://nvd.nist.gov/vuln/detail/CVE-2004-0699)
+  - [x] ~~[CVE-2004-0699](https://nvd.nist.gov/vuln/detail/CVE-2004-0699)~~
   - [x] ~~[CVE-2004-0123](https://nvd.nist.gov/vuln/detail/CVE-2004-0123)~~
   - [x] ~~[CVE-2003-0818](https://nvd.nist.gov/vuln/detail/CVE-2003-0818)~~
   - [x] ~~[CVE-2005-1247](https://nvd.nist.gov/vuln/detail/CVE-2005-1247)~~
   - [x] ~~[CVE-2003-1005](https://nvd.nist.gov/vuln/detail/CVE-2003-1005)~~
   - [ ] [CVE-2003-0564](https://nvd.nist.gov/vuln/detail/CVE-2003-0564)
-  - [ ] [CVE-2003-0565](https://nvd.nist.gov/vuln/detail/CVE-2003-0565)
+  - [x] ~~[CVE-2003-0565](https://nvd.nist.gov/vuln/detail/CVE-2003-0565)~~
   - [ ] [CVE-2003-0851](https://nvd.nist.gov/vuln/detail/CVE-2003-0851)
   - [ ] [CVE-2003-0543](https://nvd.nist.gov/vuln/detail/CVE-2003-0543)
   - [ ] [CVE-2003-0544](https://nvd.nist.gov/vuln/detail/CVE-2003-0544)
-  - [ ] [CVE-2003-0545](https://nvd.nist.gov/vuln/detail/CVE-2003-0545)
-  - [ ] [CVE-2003-0430](https://nvd.nist.gov/vuln/detail/CVE-2003-0430)
+  - [x] [CVE-2003-0545](https://nvd.nist.gov/vuln/detail/CVE-2003-0545)
+  - [x] [CVE-2003-0430](https://nvd.nist.gov/vuln/detail/CVE-2003-0430)
   - [ ] [CVE-2002-0036](https://nvd.nist.gov/vuln/detail/CVE-2002-0036)
-  - [ ] [CVE-2002-0353](https://nvd.nist.gov/vuln/detail/CVE-2002-0353)
-
+  - [x] ~~[CVE-2002-0353](https://nvd.nist.gov/vuln/detail/CVE-2002-0353)~~
 - [ ] Documentation
+  - [ ] `build.md`
   - [ ] `compliance.md`
     - [ ] Review that character-encoded `REAL`s are strictly conformant to [ISO 6093](https://www.iso.org/standard/12285.html) (Maybe even make an ISO 6093 Library...)
-  - [ ] `usage.md`
+    - [ ] Create a checklist for every bullet point of X.690.
+    - [ ] Comparison Tests
+      - [ ] [@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN.1 BER Codec](https://github.com/YuryStrozhevsky/C-plus-plus-ASN.1-2008-coder-decoder)
+      - [ ] [PyASN1](http://pyasn1.sourceforge.net)
+  - [ ] `library.md`
     - [ ] Security Advice
   - [ ] `contributing.md`
   - [ ] `security.md`
     - [ ] Review by a Security Firm
     - [ ] Fuzz Testing Results
-    - [ ] CVE Review
+    - [ ] [National Vulnerability Database](https://nvd.nist.gov) Common Vulnerability and Exploit (CVE) Review
   - [ ] `tools.md`
+  - [ ] `roadmap.md`
+  - [ ] `releases.csv` (Version, Date, LOC, SLOC, Signature)
+  - [ ] `users.md` / `users.csv`
 - [ ] Build Scripts
   - [ ] Add `chmod +x` to the build scripts for all executables
   - [ ] Create dynamically-linked libraries as well
@@ -299,7 +311,6 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
 - [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
 - [ ] Publish a [Brew package](https://docs.brew.sh)
-
 - [ ] Configure [Travis CI](https://travis-ci.org)
 - [ ] Create `man(1)` (executables) and `man(3)` (Library calls) pages
 - [ ] Create Wikipedia pages for each codec
@@ -311,7 +322,9 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [ ] Gainesville Hackerspace
   - [ ] Share it on the [Dlang Subreddit](https://www.reddit.com/r/dlang/)
   - [ ] Share it on the [Dlang Blog](https://forum.dlang.org/group/announce)
-
+  - [ ] Suggestions for Inclusions in D Libraries
+    - [ ] [Botan](https://github.com/etcimon/botan)
+    - [ ] [ldap](https://github.com/WebFreak001/ldap)
 
 ### 1.1.0 Release
 
