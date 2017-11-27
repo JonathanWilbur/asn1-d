@@ -83,7 +83,7 @@ public alias DERElement = DistinguishedEncodingRulesElement;
     https://issues.dlang.org/show_bug.cgi?id=17909
 */
 public
-class DistinguishedEncodingRulesElement : ASN1BinaryElement!DERElement
+class DistinguishedEncodingRulesElement : ASN1Element!DERElement
 {
     // Constants used to save CPU cycles
     private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()

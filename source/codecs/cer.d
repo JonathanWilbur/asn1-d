@@ -83,7 +83,7 @@ public alias CERElement = CanonicalEncodingRulesElement;
     https://issues.dlang.org/show_bug.cgi?id=17909
 */
 public
-class CanonicalEncodingRulesElement : ASN1BinaryElement!CERElement
+class CanonicalEncodingRulesElement : ASN1Element!CERElement
 {
     // Constants used to save CPU cycles
     private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()

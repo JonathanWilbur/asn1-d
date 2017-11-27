@@ -112,29 +112,50 @@ class AbstractSyntaxNotation1InvalidLengthException : ASN1CodecException
     mixin basicExceptionCtors; 
 }
 
-/* NOTE: 
-    Eventually some of the functionality in ASN1Element will need to be pushed
-    down into an ASN1BinaryElement class.
-*/
-
 ///
 public alias ASN1Element = AbstractSyntaxNotation1Element;
 ///
-public
-class AbstractSyntaxNotation1Element
-{
-
-}
-
-///
-public alias ASN1BinaryElement = AbstractSyntaxNotation1BinaryElement;
-///
 abstract public
-class AbstractSyntaxNotation1BinaryElement(Element) : ASN1Element
+class AbstractSyntaxNotation1Element(Element)
 {
     static assert(is(Element : typeof(this)), "Tried to instantiate " ~ typeof(this).stringof ~ " with type parameter " ~ Element.stringof);
 
-    public size_t tagNumber = 0u;
+    // static if 
+    // (
+    //     is(Element = BERElement) ||
+    //     is(Element = CERElement) ||
+    //     is(Element = DERElement)
+    // )
+    // {
+    //     public ASN1TagClass tagClass;
+    //     public ASN1Construction construction;
+    //     public size_t tagNumber;
+
+    //     public @property @safe nothrow
+    //     size_t length() const
+    //     {
+    //         return this.value.length;
+    //     }
+
+    //     /*
+    //         I have been on the fence about this for a while now: I don't want 
+    //         developers directly setting the bytes of the value. I know that making
+    //         value a public member means that some idiot somewhere is going to 
+    //         bypass all of the methods I made and just directly set values himself,
+    //         resulting in some catastrophic bug in a major library or program 
+    //         somewhere.
+
+    //         But on the other hand, if I make value a private member, and readable
+    //         only via property, then the same idiot that would have directly set
+    //         value could just directly set the value using the octetString method.
+
+    //         So either way, I can't stop anybody from doing something dumb with this
+    //         code. As Ron White says: you can't fix stupid. So value is going to be
+    //         a public member. But don't touch it.
+    //     */
+    //     public ubyte[] value;
+    // }
+    // TODO: else static if for JERElement, XERElement, CXERElement, and EXERElement.
 
     /// Decodes a boolean
     abstract public @property
@@ -1840,26 +1861,4 @@ class AbstractSyntaxNotation1BinaryElement(Element) : ASN1Element
         assert(el.bmpString == el.bmpString);
     }
     
-}
-
-///
-public alias ASN1TextElement = AbstractSyntaxNotation1TextElement;
-///
-abstract public
-class AbstractSyntaxNotation1TextElement(Element) : ASN1Element
-{
-    string _tagName;
-    
-    public @property
-    string tagName()
-    {
-        return this._tagName;
-    }
-
-    public @property
-    void tagName(string value)
-    {
-        // TODO: Validation
-        this._tagName = value;
-    }
 }

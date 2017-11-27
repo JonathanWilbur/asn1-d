@@ -91,7 +91,7 @@ public alias BERElement = BasicEncodingRulesElement;
     https://issues.dlang.org/show_bug.cgi?id=17909
 */
 public
-class BasicEncodingRulesElement : ASN1BinaryElement!BERElement
+class BasicEncodingRulesElement : ASN1Element!BERElement
 {
     // Constants used to save CPU cycles
     private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()
