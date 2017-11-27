@@ -901,7 +901,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ASN1Element"></span>alias <code class="code">ASN1Element</code> = AbstractSyntaxNotation1Element(Element);
+            <span class="ddoc_anchor" id="ASN1Element"></span>alias <code class="code">ASN1Element</code> = AbstractSyntaxNotation1Element;
 
           </code>
         </p>
@@ -926,7 +926,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element"></span>class <code class="code">AbstractSyntaxNotation1Element</code>(Element);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element"></span>class <code class="code">AbstractSyntaxNotation1Element</code>;
 
           </code>
         </p>
@@ -935,19 +935,14 @@
   </section>
 </div>
 <div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    An abstract class from which both ASN1BinaryCodec and ASN1TextCodec will inherit.
-  </p>
+  
+
 </div>
 
-</section>
-<ul class="ddoc_members">
-  <li class="ddoc_member">
+</li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.boolean" id="AbstractSyntaxNotation1Element.boolean"><code class="code">boolean</code></a>
+  <a href="#ASN1BinaryElement" id="ASN1BinaryElement"><code class="code">ASN1BinaryElement</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -956,7 +951,55 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.boolean"></span>abstract const @property bool <code class="code">boolean</code>();
+            <span class="ddoc_anchor" id="ASN1BinaryElement"></span>alias <code class="code">ASN1BinaryElement</code> = AbstractSyntaxNotation1BinaryElement(Element);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1BinaryElement" id="AbstractSyntaxNotation1BinaryElement"><code class="code">AbstractSyntaxNotation1BinaryElement</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement"></span>class <code class="code">AbstractSyntaxNotation1BinaryElement</code>(Element): ASN1Element;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+<ul class="ddoc_members">
+  <li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1BinaryElement.boolean" id="AbstractSyntaxNotation1BinaryElement.boolean"><code class="code">boolean</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.boolean"></span>abstract const @property bool <code class="code">boolean</code>();
 
           </code>
         </p>
@@ -979,7 +1022,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.boolean" id="AbstractSyntaxNotation1Element.boolean"><code class="code">boolean</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.boolean" id="AbstractSyntaxNotation1BinaryElement.boolean"><code class="code">boolean</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -988,7 +1031,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.boolean.2"></span>abstract @property void <code class="code">boolean</code>(bool <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.boolean.2"></span>abstract @property void <code class="code">boolean</code>(bool <code class="code">value</code>);
 
           </code>
         </p>
@@ -1011,7 +1054,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.integer" id="AbstractSyntaxNotation1Element.integer"><code class="code">integer</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.integer" id="AbstractSyntaxNotation1BinaryElement.integer"><code class="code">integer</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1020,7 +1063,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.integer"></span>abstract const @property T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.integer"></span>abstract const @property T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
 
           </code>
         </p>
@@ -1043,7 +1086,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.integer" id="AbstractSyntaxNotation1Element.integer"><code class="code">integer</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.integer" id="AbstractSyntaxNotation1BinaryElement.integer"><code class="code">integer</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1052,7 +1095,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.integer.2"></span>abstract @property void <code class="code">integer</code>(T)(T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.integer.2"></span>abstract @property void <code class="code">integer</code>(T)(T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
 
           </code>
         </p>
@@ -1075,7 +1118,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.octetString" id="AbstractSyntaxNotation1Element.octetString"><code class="code">octetString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.octetString" id="AbstractSyntaxNotation1BinaryElement.octetString"><code class="code">octetString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1084,7 +1127,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.octetString"></span>abstract const @property ubyte[] <code class="code">octetString</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.octetString"></span>abstract const @property ubyte[] <code class="code">octetString</code>();
 
           </code>
         </p>
@@ -1107,7 +1150,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.octetString" id="AbstractSyntaxNotation1Element.octetString"><code class="code">octetString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.octetString" id="AbstractSyntaxNotation1BinaryElement.octetString"><code class="code">octetString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1116,7 +1159,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.octetString.2"></span>abstract @property void <code class="code">octetString</code>(ubyte[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.octetString.2"></span>abstract @property void <code class="code">octetString</code>(ubyte[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -1139,7 +1182,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.oid" id="AbstractSyntaxNotation1Element.oid"><code class="code">oid</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.oid" id="AbstractSyntaxNotation1BinaryElement.oid"><code class="code">oid</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1148,7 +1191,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.oid"></span>alias <code class="code">oid</code> = objectIdentifier;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.oid"></span>alias <code class="code">oid</code> = objectIdentifier;
 
           </code>
         </p>
@@ -1164,7 +1207,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.objectIdentifier" id="AbstractSyntaxNotation1Element.objectIdentifier"><code class="code">objectIdentifier</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.objectIdentifier" id="AbstractSyntaxNotation1BinaryElement.objectIdentifier"><code class="code">objectIdentifier</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1173,7 +1216,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectIdentifier"></span>abstract const @property OID <code class="code">objectIdentifier</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.objectIdentifier"></span>abstract const @property OID <code class="code">objectIdentifier</code>();
 
           </code>
         </p>
@@ -1196,7 +1239,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.objectIdentifier" id="AbstractSyntaxNotation1Element.objectIdentifier"><code class="code">objectIdentifier</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.objectIdentifier" id="AbstractSyntaxNotation1BinaryElement.objectIdentifier"><code class="code">objectIdentifier</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1205,7 +1248,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectIdentifier.2"></span>abstract @property void <code class="code">objectIdentifier</code>(OID <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.objectIdentifier.2"></span>abstract @property void <code class="code">objectIdentifier</code>(OID <code class="code">value</code>);
 
           </code>
         </p>
@@ -1228,7 +1271,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.objectDescriptor" id="AbstractSyntaxNotation1Element.objectDescriptor"><code class="code">objectDescriptor</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.objectDescriptor" id="AbstractSyntaxNotation1BinaryElement.objectDescriptor"><code class="code">objectDescriptor</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1237,7 +1280,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectDescriptor"></span>abstract const @property string <code class="code">objectDescriptor</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.objectDescriptor"></span>abstract const @property string <code class="code">objectDescriptor</code>();
 
           </code>
         </p>
@@ -1283,7 +1326,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.objectDescriptor" id="AbstractSyntaxNotation1Element.objectDescriptor"><code class="code">objectDescriptor</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.objectDescriptor" id="AbstractSyntaxNotation1BinaryElement.objectDescriptor"><code class="code">objectDescriptor</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1292,7 +1335,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectDescriptor.2"></span>abstract @property void <code class="code">objectDescriptor</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.objectDescriptor.2"></span>abstract @property void <code class="code">objectDescriptor</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -1338,7 +1381,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.external" id="AbstractSyntaxNotation1Element.external"><code class="code">external</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.external" id="AbstractSyntaxNotation1BinaryElement.external"><code class="code">external</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1347,7 +1390,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.external"></span>abstract const @property External <code class="code">external</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.external"></span>abstract const @property External <code class="code">external</code>();
 
           </code>
         </p>
@@ -1395,7 +1438,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.external" id="AbstractSyntaxNotation1Element.external"><code class="code">external</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.external" id="AbstractSyntaxNotation1BinaryElement.external"><code class="code">external</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1404,7 +1447,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.external.2"></span>abstract @property void <code class="code">external</code>(External <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.external.2"></span>abstract @property void <code class="code">external</code>(External <code class="code">value</code>);
 
           </code>
         </p>
@@ -1452,7 +1495,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.realType" id="AbstractSyntaxNotation1Element.realType"><code class="code">realType</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.realType" id="AbstractSyntaxNotation1BinaryElement.realType"><code class="code">realType</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1461,7 +1504,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.realType"></span>abstract const @property T <code class="code">realType</code>(T)() if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.realType"></span>abstract const @property T <code class="code">realType</code>(T)() if (is(T == float) || is(T == double));
 
           </code>
         </p>
@@ -1484,7 +1527,7 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.realType" id="AbstractSyntaxNotation1Element.realType"><code class="code">realType</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.realType" id="AbstractSyntaxNotation1BinaryElement.realType"><code class="code">realType</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1493,7 +1536,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.realType.2"></span>abstract @property void <code class="code">realType</code>(T)(T <code class="code">value</code>) if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.realType.2"></span>abstract @property void <code class="code">realType</code>(T)(T <code class="code">value</code>) if (is(T == float) || is(T == double));
 
           </code>
         </p>
@@ -1544,7 +1587,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.enumerated" id="AbstractSyntaxNotation1Element.enumerated"><code class="code">enumerated</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.enumerated" id="AbstractSyntaxNotation1BinaryElement.enumerated"><code class="code">enumerated</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1553,7 +1596,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.enumerated"></span>abstract const @property T <code class="code">enumerated</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.enumerated"></span>abstract const @property T <code class="code">enumerated</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
 
           </code>
         </p>
@@ -1576,7 +1619,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.enumerated" id="AbstractSyntaxNotation1Element.enumerated"><code class="code">enumerated</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.enumerated" id="AbstractSyntaxNotation1BinaryElement.enumerated"><code class="code">enumerated</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1585,7 +1628,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.enumerated.2"></span>abstract @property void <code class="code">enumerated</code>(T)(T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.enumerated.2"></span>abstract @property void <code class="code">enumerated</code>(T)(T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
 
           </code>
         </p>
@@ -1608,7 +1651,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.embeddedPDV" id="AbstractSyntaxNotation1Element.embeddedPDV"><code class="code">embeddedPDV</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.embeddedPDV" id="AbstractSyntaxNotation1BinaryElement.embeddedPDV"><code class="code">embeddedPDV</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1617,7 +1660,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.embeddedPDV"></span>alias <code class="code">embeddedPDV</code> = embeddedPresentationDataValue;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.embeddedPDV"></span>alias <code class="code">embeddedPDV</code> = embeddedPresentationDataValue;
 
           </code>
         </p>
@@ -1633,7 +1676,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.embeddedPresentationDataValue" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue" id="AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1642,7 +1685,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue"></span>abstract const @property EmbeddedPDV <code class="code">embeddedPresentationDataValue</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue"></span>abstract const @property EmbeddedPDV <code class="code">embeddedPresentationDataValue</code>();
 
           </code>
         </p>
@@ -1696,7 +1739,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.embeddedPresentationDataValue" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue" id="AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1705,7 +1748,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue.2"></span>abstract @property void <code class="code">embeddedPresentationDataValue</code>(EmbeddedPDV <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue.2"></span>abstract @property void <code class="code">embeddedPresentationDataValue</code>(EmbeddedPDV <code class="code">value</code>);
 
           </code>
         </p>
@@ -1759,7 +1802,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.utf8String" id="AbstractSyntaxNotation1Element.utf8String"><code class="code">utf8String</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.utf8String" id="AbstractSyntaxNotation1BinaryElement.utf8String"><code class="code">utf8String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1768,7 +1811,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.utf8String"></span>alias <code class="code">utf8String</code> = unicodeTransformationFormat8String;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.utf8String"></span>alias <code class="code">utf8String</code> = unicodeTransformationFormat8String;
 
           </code>
         </p>
@@ -1784,7 +1827,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.unicodeTransformationFormat8String" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String" id="AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1793,7 +1836,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"></span>abstract const @property string <code class="code">unicodeTransformationFormat8String</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String"></span>abstract const @property string <code class="code">unicodeTransformationFormat8String</code>();
 
           </code>
         </p>
@@ -1816,7 +1859,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.unicodeTransformationFormat8String" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String" id="AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1825,7 +1868,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String.2"></span>abstract @property void <code class="code">unicodeTransformationFormat8String</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String.2"></span>abstract @property void <code class="code">unicodeTransformationFormat8String</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -1848,7 +1891,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.roid" id="AbstractSyntaxNotation1Element.roid"><code class="code">roid</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.roid" id="AbstractSyntaxNotation1BinaryElement.roid"><code class="code">roid</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1857,7 +1900,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.roid"></span>alias <code class="code">roid</code> = relativeObjectIdentifier;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.roid"></span>alias <code class="code">roid</code> = relativeObjectIdentifier;
 
           </code>
         </p>
@@ -1873,7 +1916,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.relativeOID" id="AbstractSyntaxNotation1Element.relativeOID"><code class="code">relativeOID</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.relativeOID" id="AbstractSyntaxNotation1BinaryElement.relativeOID"><code class="code">relativeOID</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1882,7 +1925,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.relativeOID"></span>alias <code class="code">relativeOID</code> = relativeObjectIdentifier;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.relativeOID"></span>alias <code class="code">relativeOID</code> = relativeObjectIdentifier;
 
           </code>
         </p>
@@ -1898,7 +1941,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.relativeObjectIdentifier" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier" id="AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1907,7 +1950,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier"></span>abstract const @property OIDNode[] <code class="code">relativeObjectIdentifier</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier"></span>abstract const @property OIDNode[] <code class="code">relativeObjectIdentifier</code>();
 
           </code>
         </p>
@@ -1930,7 +1973,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.relativeObjectIdentifier" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier" id="AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1939,7 +1982,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier.2"></span>abstract @property void <code class="code">relativeObjectIdentifier</code>(OIDNode[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier.2"></span>abstract @property void <code class="code">relativeObjectIdentifier</code>(OIDNode[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -1962,7 +2005,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.sequence" id="AbstractSyntaxNotation1Element.sequence"><code class="code">sequence</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.sequence" id="AbstractSyntaxNotation1BinaryElement.sequence"><code class="code">sequence</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1971,7 +2014,7 @@ eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = 
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.sequence"></span>abstract const @property Element[] <code class="code">sequence</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.sequence"></span>abstract const @property Element[] <code class="code">sequence</code>();
 
           </code>
         </p>
@@ -2004,7 +2047,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.sequence" id="AbstractSyntaxNotation1Element.sequence"><code class="code">sequence</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.sequence" id="AbstractSyntaxNotation1BinaryElement.sequence"><code class="code">sequence</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2013,7 +2056,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.sequence.2"></span>abstract @property void <code class="code">sequence</code>(Element[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.sequence.2"></span>abstract @property void <code class="code">sequence</code>(Element[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2046,7 +2089,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.set" id="AbstractSyntaxNotation1Element.set"><code class="code">set</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.set" id="AbstractSyntaxNotation1BinaryElement.set"><code class="code">set</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2055,7 +2098,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.set"></span>abstract const @property Element[] <code class="code">set</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.set"></span>abstract const @property Element[] <code class="code">set</code>();
 
           </code>
         </p>
@@ -2088,7 +2131,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.set" id="AbstractSyntaxNotation1Element.set"><code class="code">set</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.set" id="AbstractSyntaxNotation1BinaryElement.set"><code class="code">set</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2097,7 +2140,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.set.2"></span>abstract @property void <code class="code">set</code>(Element[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.set.2"></span>abstract @property void <code class="code">set</code>(Element[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2130,7 +2173,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.numericString" id="AbstractSyntaxNotation1Element.numericString"><code class="code">numericString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.numericString" id="AbstractSyntaxNotation1BinaryElement.numericString"><code class="code">numericString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2139,7 +2182,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.numericString"></span>abstract const @property string <code class="code">numericString</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.numericString"></span>abstract const @property string <code class="code">numericString</code>();
 
           </code>
         </p>
@@ -2163,7 +2206,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.numericString" id="AbstractSyntaxNotation1Element.numericString"><code class="code">numericString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.numericString" id="AbstractSyntaxNotation1BinaryElement.numericString"><code class="code">numericString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2172,7 +2215,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.numericString.2"></span>abstract @property void <code class="code">numericString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.numericString.2"></span>abstract @property void <code class="code">numericString</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2196,7 +2239,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.printableString" id="AbstractSyntaxNotation1Element.printableString"><code class="code">printableString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.printableString" id="AbstractSyntaxNotation1BinaryElement.printableString"><code class="code">printableString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2205,7 +2248,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.printableString"></span>abstract const @property string <code class="code">printableString</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.printableString"></span>abstract const @property string <code class="code">printableString</code>();
 
           </code>
         </p>
@@ -2230,7 +2273,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.printableString" id="AbstractSyntaxNotation1Element.printableString"><code class="code">printableString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.printableString" id="AbstractSyntaxNotation1BinaryElement.printableString"><code class="code">printableString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2239,7 +2282,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.printableString.2"></span>abstract @property void <code class="code">printableString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.printableString.2"></span>abstract @property void <code class="code">printableString</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2264,7 +2307,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.t61String" id="AbstractSyntaxNotation1Element.t61String"><code class="code">t61String</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.t61String" id="AbstractSyntaxNotation1BinaryElement.t61String"><code class="code">t61String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2273,7 +2316,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.t61String"></span>alias <code class="code">t61String</code> = teletexString;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.t61String"></span>alias <code class="code">t61String</code> = teletexString;
 
           </code>
         </p>
@@ -2289,7 +2332,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.teletexString" id="AbstractSyntaxNotation1Element.teletexString"><code class="code">teletexString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.teletexString" id="AbstractSyntaxNotation1BinaryElement.teletexString"><code class="code">teletexString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2298,7 +2341,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.teletexString"></span>abstract const @property ubyte[] <code class="code">teletexString</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.teletexString"></span>abstract const @property ubyte[] <code class="code">teletexString</code>();
 
           </code>
         </p>
@@ -2321,7 +2364,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.teletexString" id="AbstractSyntaxNotation1Element.teletexString"><code class="code">teletexString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.teletexString" id="AbstractSyntaxNotation1BinaryElement.teletexString"><code class="code">teletexString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2330,7 +2373,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.teletexString.2"></span>abstract @property void <code class="code">teletexString</code>(ubyte[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.teletexString.2"></span>abstract @property void <code class="code">teletexString</code>(ubyte[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2353,7 +2396,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.ia5String" id="AbstractSyntaxNotation1Element.ia5String"><code class="code">ia5String</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.ia5String" id="AbstractSyntaxNotation1BinaryElement.ia5String"><code class="code">ia5String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2362,7 +2405,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.ia5String"></span>alias <code class="code">ia5String</code> = internationalAlphabetNumber5String;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.ia5String"></span>alias <code class="code">ia5String</code> = internationalAlphabetNumber5String;
 
           </code>
         </p>
@@ -2378,7 +2421,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.internationalAlphabetNumber5String" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String" id="AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2387,7 +2430,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"></span>abstract const @property string <code class="code">internationalAlphabetNumber5String</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String"></span>abstract const @property string <code class="code">internationalAlphabetNumber5String</code>();
 
           </code>
         </p>
@@ -2410,7 +2453,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.internationalAlphabetNumber5String" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String" id="AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2419,7 +2462,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String.2"></span>abstract @property void <code class="code">internationalAlphabetNumber5String</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String.2"></span>abstract @property void <code class="code">internationalAlphabetNumber5String</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2442,7 +2485,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.utc" id="AbstractSyntaxNotation1Element.utc"><code class="code">utc</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.utc" id="AbstractSyntaxNotation1BinaryElement.utc"><code class="code">utc</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2451,7 +2494,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.utc"></span>alias <code class="code">utc</code> = coordinatedUniversalTime;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.utc"></span>alias <code class="code">utc</code> = coordinatedUniversalTime;
 
           </code>
         </p>
@@ -2467,7 +2510,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.utcTime" id="AbstractSyntaxNotation1Element.utcTime"><code class="code">utcTime</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.utcTime" id="AbstractSyntaxNotation1BinaryElement.utcTime"><code class="code">utcTime</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2476,7 +2519,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.utcTime"></span>alias <code class="code">utcTime</code> = coordinatedUniversalTime;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.utcTime"></span>alias <code class="code">utcTime</code> = coordinatedUniversalTime;
 
           </code>
         </p>
@@ -2492,7 +2535,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.coordinatedUniversalTime" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime" id="AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2501,7 +2544,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime"></span>abstract const @property DateTime <code class="code">coordinatedUniversalTime</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime"></span>abstract const @property DateTime <code class="code">coordinatedUniversalTime</code>();
 
           </code>
         </p>
@@ -2524,7 +2567,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.coordinatedUniversalTime" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime" id="AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2533,7 +2576,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime.2"></span>abstract @property void <code class="code">coordinatedUniversalTime</code>(DateTime <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime.2"></span>abstract @property void <code class="code">coordinatedUniversalTime</code>(DateTime <code class="code">value</code>);
 
           </code>
         </p>
@@ -2556,7 +2599,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.generalizedTime" id="AbstractSyntaxNotation1Element.generalizedTime"><code class="code">generalizedTime</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.generalizedTime" id="AbstractSyntaxNotation1BinaryElement.generalizedTime"><code class="code">generalizedTime</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2565,7 +2608,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalizedTime"></span>abstract const @property DateTime <code class="code">generalizedTime</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.generalizedTime"></span>abstract const @property DateTime <code class="code">generalizedTime</code>();
 
           </code>
         </p>
@@ -2588,7 +2631,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.generalizedTime" id="AbstractSyntaxNotation1Element.generalizedTime"><code class="code">generalizedTime</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.generalizedTime" id="AbstractSyntaxNotation1BinaryElement.generalizedTime"><code class="code">generalizedTime</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2597,7 +2640,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalizedTime.2"></span>abstract @property void <code class="code">generalizedTime</code>(DateTime <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.generalizedTime.2"></span>abstract @property void <code class="code">generalizedTime</code>(DateTime <code class="code">value</code>);
 
           </code>
         </p>
@@ -2620,7 +2663,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.graphicString" id="AbstractSyntaxNotation1Element.graphicString"><code class="code">graphicString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.graphicString" id="AbstractSyntaxNotation1BinaryElement.graphicString"><code class="code">graphicString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2629,7 +2672,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.graphicString"></span>deprecated abstract const @property string <code class="code">graphicString</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.graphicString"></span>deprecated abstract const @property string <code class="code">graphicString</code>();
 
           </code>
         </p>
@@ -2662,7 +2705,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.graphicString" id="AbstractSyntaxNotation1Element.graphicString"><code class="code">graphicString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.graphicString" id="AbstractSyntaxNotation1BinaryElement.graphicString"><code class="code">graphicString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2671,7 +2714,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.graphicString.2"></span>deprecated abstract @property void <code class="code">graphicString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.graphicString.2"></span>deprecated abstract @property void <code class="code">graphicString</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2704,7 +2747,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.iso646String" id="AbstractSyntaxNotation1Element.iso646String"><code class="code">iso646String</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.iso646String" id="AbstractSyntaxNotation1BinaryElement.iso646String"><code class="code">iso646String</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2713,7 +2756,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.iso646String"></span>alias <code class="code">iso646String</code> = visibleString;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.iso646String"></span>alias <code class="code">iso646String</code> = visibleString;
 
           </code>
         </p>
@@ -2729,7 +2772,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.visibleString" id="AbstractSyntaxNotation1Element.visibleString"><code class="code">visibleString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.visibleString" id="AbstractSyntaxNotation1BinaryElement.visibleString"><code class="code">visibleString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2738,7 +2781,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.visibleString"></span>abstract const @property string <code class="code">visibleString</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.visibleString"></span>abstract const @property string <code class="code">visibleString</code>();
 
           </code>
         </p>
@@ -2763,7 +2806,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.visibleString" id="AbstractSyntaxNotation1Element.visibleString"><code class="code">visibleString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.visibleString" id="AbstractSyntaxNotation1BinaryElement.visibleString"><code class="code">visibleString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2772,7 +2815,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.visibleString.2"></span>abstract @property void <code class="code">visibleString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.visibleString.2"></span>abstract @property void <code class="code">visibleString</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2797,7 +2840,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.generalString" id="AbstractSyntaxNotation1Element.generalString"><code class="code">generalString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.generalString" id="AbstractSyntaxNotation1BinaryElement.generalString"><code class="code">generalString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2806,7 +2849,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalString"></span>deprecated abstract @property string <code class="code">generalString</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.generalString"></span>deprecated abstract @property string <code class="code">generalString</code>();
 
           </code>
         </p>
@@ -2829,7 +2872,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.generalString" id="AbstractSyntaxNotation1Element.generalString"><code class="code">generalString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.generalString" id="AbstractSyntaxNotation1BinaryElement.generalString"><code class="code">generalString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2838,7 +2881,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalString.2"></span>deprecated abstract @property void <code class="code">generalString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.generalString.2"></span>deprecated abstract @property void <code class="code">generalString</code>(string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2861,7 +2904,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.universalString" id="AbstractSyntaxNotation1Element.universalString"><code class="code">universalString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.universalString" id="AbstractSyntaxNotation1BinaryElement.universalString"><code class="code">universalString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2870,7 +2913,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.universalString"></span>abstract const @property dstring <code class="code">universalString</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.universalString"></span>abstract const @property dstring <code class="code">universalString</code>();
 
           </code>
         </p>
@@ -2893,7 +2936,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.universalString" id="AbstractSyntaxNotation1Element.universalString"><code class="code">universalString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.universalString" id="AbstractSyntaxNotation1BinaryElement.universalString"><code class="code">universalString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2902,7 +2945,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.universalString.2"></span>abstract @property void <code class="code">universalString</code>(dstring <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.universalString.2"></span>abstract @property void <code class="code">universalString</code>(dstring <code class="code">value</code>);
 
           </code>
         </p>
@@ -2925,7 +2968,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.characterString" id="AbstractSyntaxNotation1Element.characterString"><code class="code">characterString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.characterString" id="AbstractSyntaxNotation1BinaryElement.characterString"><code class="code">characterString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2934,7 +2977,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.characterString"></span>abstract const @property CharacterString <code class="code">characterString</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.characterString"></span>abstract const @property CharacterString <code class="code">characterString</code>();
 
           </code>
         </p>
@@ -2986,7 +3029,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.characterString" id="AbstractSyntaxNotation1Element.characterString"><code class="code">characterString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.characterString" id="AbstractSyntaxNotation1BinaryElement.characterString"><code class="code">characterString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -2995,7 +3038,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.characterString.2"></span>abstract @property void <code class="code">characterString</code>(CharacterString <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.characterString.2"></span>abstract @property void <code class="code">characterString</code>(CharacterString <code class="code">value</code>);
 
           </code>
         </p>
@@ -3047,7 +3090,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.bmpString" id="AbstractSyntaxNotation1Element.bmpString"><code class="code">bmpString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.bmpString" id="AbstractSyntaxNotation1BinaryElement.bmpString"><code class="code">bmpString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3056,7 +3099,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.bmpString"></span>alias <code class="code">bmpString</code> = basicMultilingualPlaneString;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.bmpString"></span>alias <code class="code">bmpString</code> = basicMultilingualPlaneString;
 
           </code>
         </p>
@@ -3072,7 +3115,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.basicMultilingualPlaneString" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString" id="AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3081,7 +3124,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString"></span>abstract const @property wstring <code class="code">basicMultilingualPlaneString</code>();
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString"></span>abstract const @property wstring <code class="code">basicMultilingualPlaneString</code>();
 
           </code>
         </p>
@@ -3104,7 +3147,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.basicMultilingualPlaneString" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
+  <a href="#AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString" id="AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3113,7 +3156,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString.2"></span>abstract @property void <code class="code">basicMultilingualPlaneString</code>(wstring <code class="code">value</code>);
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString.2"></span>abstract @property void <code class="code">basicMultilingualPlaneString</code>(wstring <code class="code">value</code>);
 
           </code>
         </p>
@@ -3141,7 +3184,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#ASN1BinaryElement" id="ASN1BinaryElement"><code class="code">ASN1BinaryElement</code></a>
+  <a href="#ASN1TextElement" id="ASN1TextElement"><code class="code">ASN1TextElement</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3150,7 +3193,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ASN1BinaryElement"></span>alias <code class="code">ASN1BinaryElement</code> = AbstractSyntaxNotation1BinaryElement(Element);
+            <span class="ddoc_anchor" id="ASN1TextElement"></span>alias <code class="code">ASN1TextElement</code> = AbstractSyntaxNotation1TextElement(Element);
 
           </code>
         </p>
@@ -3166,7 +3209,7 @@ Thanks to StackOverflow user
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1BinaryElement" id="AbstractSyntaxNotation1BinaryElement"><code class="code">AbstractSyntaxNotation1BinaryElement</code></a>
+  <a href="#AbstractSyntaxNotation1TextElement" id="AbstractSyntaxNotation1TextElement"><code class="code">AbstractSyntaxNotation1TextElement</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -3175,7 +3218,7 @@ Thanks to StackOverflow user
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1BinaryElement"></span>class <code class="code">AbstractSyntaxNotation1BinaryElement</code>(Element): ASN1Element;
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TextElement"></span>class <code class="code">AbstractSyntaxNotation1TextElement</code>(Element): ASN1Element;
 
           </code>
         </p>

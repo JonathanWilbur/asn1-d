@@ -119,11 +119,22 @@ class AbstractSyntaxNotation1InvalidLengthException : ASN1CodecException
 
 ///
 public alias ASN1Element = AbstractSyntaxNotation1Element;
-/// An abstract class from which both ASN1BinaryCodec and ASN1TextCodec will inherit.
+///
+public
+class AbstractSyntaxNotation1Element
+{
+
+}
+
+///
+public alias ASN1BinaryElement = AbstractSyntaxNotation1BinaryElement;
+///
 abstract public
-class AbstractSyntaxNotation1Element(Element)
+class AbstractSyntaxNotation1BinaryElement(Element) : ASN1Element
 {
     static assert(is(Element : typeof(this)), "Tried to instantiate " ~ typeof(this).stringof ~ " with type parameter " ~ Element.stringof);
+
+    public size_t tagNumber = 0u;
 
     /// Decodes a boolean
     abstract public @property
@@ -1831,12 +1842,24 @@ class AbstractSyntaxNotation1Element(Element)
     
 }
 
-// REVIEW: Should the setters return booleans indicating success instead of throwing errors?
 ///
-public alias ASN1BinaryElement = AbstractSyntaxNotation1BinaryElement;
+public alias ASN1TextElement = AbstractSyntaxNotation1TextElement;
 ///
 abstract public
-class AbstractSyntaxNotation1BinaryElement(Element) : ASN1Element
+class AbstractSyntaxNotation1TextElement(Element) : ASN1Element
 {
+    string _tagName;
+    
+    public @property
+    string tagName()
+    {
+        return this._tagName;
+    }
 
+    public @property
+    void tagName(string value)
+    {
+        // TODO: Validation
+        this._tagName = value;
+    }
 }

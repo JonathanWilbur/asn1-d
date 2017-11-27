@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.6](http://semver.org/)
+* Version: [1.0.0-beta.7](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -30,7 +30,8 @@ ASN.1 is used in, or required by, multiple technologies, including:
 * Microsoft's [Remote Desktop Protocol (RDP)](https://msdn.microsoft.com/en-us/library/mt242409.aspx)
 * [Simple Network Management Protocol (SNMP)](https://www.ietf.org/rfc/rfc1157.txt)
 * [Common Management Information Protocol (CMIP)](http://www.itu.int/rec/T-REC-X.711/en)
-* [Signalling System Number 7 (SS7)](http://www.itu.int/rec/T-REC-Q.700-199303-I/en), used to make most phone calls on the Public Switched Telephone Network (PSTN).
+* [Signalling System Number 7 (SS7)](http://www.itu.int/rec/T-REC-Q.700-199303-I/en), 
+  used to make most phone calls on the Public Switched Telephone Network (PSTN).
 * [H.323](http://www.itu.int/rec/T-REC-H.323-200912-I/en) Video conferencing
 * Biometrics Protocols:
   * [BioAPI Interworking Protocol (BIP)](https://www.iso.org/standard/43611.html)
@@ -147,6 +148,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
 - [x] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
+- [ ] `ObjectIdentifier` constants
 - [ ] Configure `.vscode`
   - [ ] `tasks.json`
   - [ ] `launch.json`?
@@ -331,9 +333,9 @@ Version 1.0.0-beta was released on November 8th, 2017.
 
 The following codecs will be added:
 
-- [ ] Aligned Packed Encoding Rules (PER)
+- [ ] [Aligned Packed Encoding Rules (PER)](http://www.itu.int/rec/T-REC-X.691-201508-I)
 - [ ] Unaligned Packed Encoding Rules (UPER)
-- [ ] Canonical Packed Encoding Rules (CPER)
+- [ ] [Canonical Packed Encoding Rules (CPER)](http://www.itu.int/rec/T-REC-X.696-201508-I)
 - [ ] Command-Line Tools
   - [ ] `encode-per`
   - [ ] `encode-uper`
@@ -349,10 +351,10 @@ Remote Desktop Protocol library.
 
 The following codecs will be added:
 
-- [ ] JSON Encoding Rules (JER)
-- [ ] XML Encoding Rules (XER)
-- [ ] Canonical XML Encoding Rules (CXER)
-- [ ] Extended XML Encoding Rules (EXER)
+- [ ] [JSON Encoding Rules (JER)](http://www.itu.int/rec/T-REC-X.697-201710-P)
+- [ ] [XML Encoding Rules (XER)](http://www.itu.int/rec/T-REC-X.693-201508-I/en)
+- [ ] [Canonical XML Encoding Rules (CXER)](http://www.itu.int/rec/T-REC-X.693-201508-I/en)
+- [ ] [Extended XML Encoding Rules (EXER)](http://www.itu.int/rec/T-REC-X.693-201508-I/en)
 - [ ] Command-Line Tools
   - [ ] `encode-xer`
   - [ ] `encode-cxer`
@@ -367,8 +369,8 @@ The following codecs will be added:
 
 The following codecs will be added:
 
-- [ ] Octet Encoding Rules (OER)
-- [ ] Canonical Octet Encoding Rules (COER)
+- [ ] [Octet Encoding Rules (OER)](http://www.itu.int/rec/T-REC-X.696-201508-I)
+- [ ] [Canonical Octet Encoding Rules (COER)](http://www.itu.int/rec/T-REC-X.696-201508-I)
 - [ ] Command-Line Tools
   - [ ] `encode-oer`
   - [ ] `encode-coer`

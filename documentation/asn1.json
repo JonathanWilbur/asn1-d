@@ -1155,14 +1155,30 @@
     "kind" : "alias",
     "comment" : "\n",
     "line" : 121,
+    "char" : 8,
+    "deco" : "C5codec30AbstractSyntaxNotation1Element"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1Element",
+    "kind" : "class",
+    "comment" : "\n",
+    "line" : 124,
+    "char" : 1,
+    "members" : []
+   },
+   {
+    "name" : "ASN1BinaryElement",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 130,
     "char" : 8
    },
    {
     "kind" : "template",
-    "comment" : "An abstract class from which both ASN1BinaryCodec and ASN1TextCodec will inherit.\n",
-    "line" : 124,
+    "comment" : "\n",
+    "line" : 133,
     "char" : 1,
-    "name" : "AbstractSyntaxNotation1Element",
+    "name" : "AbstractSyntaxNotation1BinaryElement",
     "parameters" : [
      {
       "name" : "Element",
@@ -1171,16 +1187,24 @@
     ],
     "members" : [
      {
-      "name" : "AbstractSyntaxNotation1Element",
+      "name" : "AbstractSyntaxNotation1BinaryElement",
       "kind" : "class",
-      "line" : 124,
+      "line" : 133,
       "char" : 1,
       "members" : [
+       {
+        "name" : "tagNumber",
+        "kind" : "variable",
+        "line" : 138,
+        "char" : 19,
+        "type" : "size_t",
+        "init" : "0u"
+       },
        {
         "name" : "boolean",
         "kind" : "function",
         "comment" : "Decodes a boolean\n",
-        "line" : 130,
+        "line" : 142,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1191,7 +1215,7 @@
         "name" : "boolean",
         "kind" : "function",
         "comment" : "Encodes a boolean\n",
-        "line" : 134,
+        "line" : 146,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1205,20 +1229,20 @@
         ]
        },
        {
-        "name" : "__unittestL137_1",
+        "name" : "__unittestL149_1",
         "kind" : "function",
-        "line" : 137,
+        "line" : 149,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 150,
+        "endline" : 162,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Decodes an integer\n",
-        "line" : 151,
+        "line" : 163,
         "char" : 7,
         "name" : "integer",
         "parameters" : [
@@ -1232,7 +1256,7 @@
          {
           "name" : "integer",
           "kind" : "function",
-          "line" : 151,
+          "line" : 163,
           "char" : 7,
           "storageClass" : [
            "abstract"
@@ -1244,7 +1268,7 @@
        {
         "kind" : "template",
         "comment" : "Encodes an integer\n",
-        "line" : 155,
+        "line" : 167,
         "char" : 10,
         "name" : "integer",
         "parameters" : [
@@ -1258,7 +1282,7 @@
          {
           "name" : "integer",
           "kind" : "function",
-          "line" : 155,
+          "line" : 167,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -1274,20 +1298,20 @@
         ]
        },
        {
-        "name" : "__unittestL158_2",
+        "name" : "__unittestL170_2",
         "kind" : "function",
-        "line" : 158,
+        "line" : 170,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 329,
+        "endline" : 341,
         "endchar" : 5
        },
        {
         "name" : "bitString",
         "kind" : "function",
-        "line" : 330,
+        "line" : 342,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1297,7 +1321,7 @@
        {
         "name" : "bitString",
         "kind" : "function",
-        "line" : 333,
+        "line" : 345,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1311,21 +1335,21 @@
         ]
        },
        {
-        "name" : "__unittestL336_3",
+        "name" : "__unittestL348_3",
         "kind" : "function",
-        "line" : 336,
+        "line" : 348,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 353,
+        "endline" : 365,
         "endchar" : 5
        },
        {
         "name" : "octetString",
         "kind" : "function",
         "comment" : "Decodes a ubyte[] array\n",
-        "line" : 354,
+        "line" : 366,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -1336,7 +1360,7 @@
         "name" : "octetString",
         "kind" : "function",
         "comment" : "Encodes a ubyte[] array\n",
-        "line" : 358,
+        "line" : 370,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1350,21 +1374,21 @@
         ]
        },
        {
-        "name" : "__unittestL361_4",
+        "name" : "__unittestL373_4",
         "kind" : "function",
-        "line" : 361,
+        "line" : 373,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 372,
+        "endline" : 384,
         "endchar" : 5
        },
        {
         "name" : "oid",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 372,
+        "line" : 384,
         "char" : 12,
         "type" : "objectIdentifier"
        },
@@ -1372,7 +1396,7 @@
         "name" : "objectIdentifier",
         "kind" : "function",
         "comment" : "Decodes an Object Identifier\n",
-        "line" : 375,
+        "line" : 387,
         "char" : 9,
         "storageClass" : [
          "abstract"
@@ -1383,7 +1407,7 @@
         "name" : "objectIdentifier",
         "kind" : "function",
         "comment" : "Encodes an Object Identifier\n",
-        "line" : 379,
+        "line" : 391,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1397,21 +1421,21 @@
         ]
        },
        {
-        "name" : "__unittestL382_5",
+        "name" : "__unittestL394_5",
         "kind" : "function",
-        "line" : 382,
+        "line" : 394,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 444,
+        "endline" : 456,
         "endchar" : 5
        },
        {
         "name" : "objectDescriptor",
         "kind" : "function",
         "comment" : "        Decodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n",
-        "line" : 445,
+        "line" : 457,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1422,7 +1446,7 @@
         "name" : "objectDescriptor",
         "kind" : "function",
         "comment" : "        Encodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n",
-        "line" : 466,
+        "line" : 478,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1436,21 +1460,21 @@
         ]
        },
        {
-        "name" : "__unittestL469_6",
+        "name" : "__unittestL481_6",
         "kind" : "function",
-        "line" : 469,
+        "line" : 481,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 514,
+        "endline" : 526,
         "endchar" : 5
        },
        {
         "name" : "external",
         "kind" : "function",
         "comment" : "        Decodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK2 https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n",
-        "line" : 515,
+        "line" : 527,
         "char" : 14,
         "storageClass" : [
          "abstract"
@@ -1461,7 +1485,7 @@
         "name" : "external",
         "kind" : "function",
         "comment" : "        Encodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK2 https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n",
-        "line" : 541,
+        "line" : 553,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1475,20 +1499,20 @@
         ]
        },
        {
-        "name" : "__unittestL544_7",
+        "name" : "__unittestL556_7",
         "kind" : "function",
-        "line" : 544,
+        "line" : 556,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 563,
+        "endline" : 575,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Encodes a floating-point number\n",
-        "line" : 564,
+        "line" : 576,
         "char" : 7,
         "name" : "realType",
         "parameters" : [
@@ -1502,7 +1526,7 @@
          {
           "name" : "realType",
           "kind" : "function",
-          "line" : 564,
+          "line" : 576,
           "char" : 7,
           "storageClass" : [
            "abstract"
@@ -1514,7 +1538,7 @@
        {
         "kind" : "template",
         "comment" : "Encodes a floating-point number\n",
-        "line" : 568,
+        "line" : 580,
         "char" : 10,
         "name" : "realType",
         "parameters" : [
@@ -1528,7 +1552,7 @@
          {
           "name" : "realType",
           "kind" : "function",
-          "line" : 568,
+          "line" : 580,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -1544,76 +1568,76 @@
         ]
        },
        {
-        "name" : "__unittestL572_8",
+        "name" : "__unittestL584_8",
         "kind" : "function",
         "comment" : "\n",
-        "line" : 572,
+        "line" : 584,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 590,
+        "endline" : 602,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL591_9",
+        "name" : "__unittestL603_9",
         "kind" : "function",
-        "line" : 591,
+        "line" : 603,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 665,
+        "endline" : 677,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL666_10",
+        "name" : "__unittestL678_10",
         "kind" : "function",
-        "line" : 666,
+        "line" : 678,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 752,
+        "endline" : 764,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL753_11",
+        "name" : "__unittestL765_11",
         "kind" : "function",
-        "line" : 753,
+        "line" : 765,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 809,
+        "endline" : 821,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL810_12",
+        "name" : "__unittestL822_12",
         "kind" : "function",
-        "line" : 810,
+        "line" : 822,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 910,
+        "endline" : 922,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL911_13",
+        "name" : "__unittestL923_13",
         "kind" : "function",
-        "line" : 911,
+        "line" : 923,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 930,
+        "endline" : 942,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Encodes an integer that represents an ENUMERATED value\n",
-        "line" : 931,
+        "line" : 943,
         "char" : 7,
         "name" : "enumerated",
         "parameters" : [
@@ -1627,7 +1651,7 @@
          {
           "name" : "enumerated",
           "kind" : "function",
-          "line" : 931,
+          "line" : 943,
           "char" : 7,
           "storageClass" : [
            "abstract"
@@ -1639,7 +1663,7 @@
        {
         "kind" : "template",
         "comment" : "Decodes an integer that represents an ENUMERATED value\n",
-        "line" : 935,
+        "line" : 947,
         "char" : 10,
         "name" : "enumerated",
         "parameters" : [
@@ -1653,7 +1677,7 @@
          {
           "name" : "enumerated",
           "kind" : "function",
-          "line" : 935,
+          "line" : 947,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -1669,21 +1693,21 @@
         ]
        },
        {
-        "name" : "__unittestL938_14",
+        "name" : "__unittestL950_14",
         "kind" : "function",
-        "line" : 938,
+        "line" : 950,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1110,
+        "endline" : 1122,
         "endchar" : 5
        },
        {
         "name" : "embeddedPDV",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1110,
+        "line" : 1122,
         "char" : 12,
         "type" : "embeddedPresentationDataValue"
        },
@@ -1691,7 +1715,7 @@
         "name" : "embeddedPresentationDataValue",
         "kind" : "function",
         "comment" : "        Decodes an EMBEDDED PDV, which is a constructed data type, defined in\n            the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EMBEDDED PDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1141,
+        "line" : 1153,
         "char" : 17,
         "storageClass" : [
          "abstract"
@@ -1702,7 +1726,7 @@
         "name" : "embeddedPresentationDataValue",
         "kind" : "function",
         "comment" : "        Encodes an EMBEDDED PDV, which is a constructed data type, defined in\n            the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EMBEDDED PDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1173,
+        "line" : 1185,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1716,54 +1740,54 @@
         ]
        },
        {
-        "name" : "__unittestL1176_15",
+        "name" : "__unittestL1188_15",
         "kind" : "function",
-        "line" : 1176,
+        "line" : 1188,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1200,
+        "endline" : 1212,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1201_16",
+        "name" : "__unittestL1213_16",
         "kind" : "function",
-        "line" : 1201,
+        "line" : 1213,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1217,
+        "endline" : 1229,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1218_17",
+        "name" : "__unittestL1230_17",
         "kind" : "function",
-        "line" : 1218,
+        "line" : 1230,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1234,
+        "endline" : 1246,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1235_18",
+        "name" : "__unittestL1247_18",
         "kind" : "function",
-        "line" : 1235,
+        "line" : 1247,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1252,
+        "endline" : 1264,
         "endchar" : 5
        },
        {
         "name" : "utf8String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1252,
+        "line" : 1264,
         "char" : 12,
         "type" : "unicodeTransformationFormat8String"
        },
@@ -1771,7 +1795,7 @@
         "name" : "unicodeTransformationFormat8String",
         "kind" : "function",
         "comment" : "Decodes a UTF-8 String\n",
-        "line" : 1255,
+        "line" : 1267,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1782,7 +1806,7 @@
         "name" : "unicodeTransformationFormat8String",
         "kind" : "function",
         "comment" : "Encodes a UTF-8 String\n",
-        "line" : 1259,
+        "line" : 1271,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1796,21 +1820,21 @@
         ]
        },
        {
-        "name" : "__unittestL1262_19",
+        "name" : "__unittestL1274_19",
         "kind" : "function",
-        "line" : 1262,
+        "line" : 1274,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1275,
+        "endline" : 1287,
         "endchar" : 5
        },
        {
         "name" : "roid",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1275,
+        "line" : 1287,
         "char" : 12,
         "type" : "relativeObjectIdentifier"
        },
@@ -1818,7 +1842,7 @@
         "name" : "relativeOID",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1277,
+        "line" : 1289,
         "char" : 12,
         "type" : "relativeObjectIdentifier"
        },
@@ -1826,7 +1850,7 @@
         "name" : "relativeObjectIdentifier",
         "kind" : "function",
         "comment" : "Decodes a portion of an Object Identifier\n",
-        "line" : 1280,
+        "line" : 1292,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -1837,7 +1861,7 @@
         "name" : "relativeObjectIdentifier",
         "kind" : "function",
         "comment" : "Encodes a porition of an Object Identifier\n",
-        "line" : 1284,
+        "line" : 1296,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1851,21 +1875,21 @@
         ]
        },
        {
-        "name" : "__unittestL1287_20",
+        "name" : "__unittestL1299_20",
         "kind" : "function",
-        "line" : 1287,
+        "line" : 1299,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1313,
+        "endline" : 1325,
         "endchar" : 5
        },
        {
         "name" : "sequence",
         "kind" : "function",
         "comment" : "        Decodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1314,
+        "line" : 1326,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -1876,7 +1900,7 @@
         "name" : "sequence",
         "kind" : "function",
         "comment" : "        Encodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1326,
+        "line" : 1338,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1893,7 +1917,7 @@
         "name" : "set",
         "kind" : "function",
         "comment" : "        Decodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1338,
+        "line" : 1350,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -1904,7 +1928,7 @@
         "name" : "set",
         "kind" : "function",
         "comment" : "        Encodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1350,
+        "line" : 1362,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1921,7 +1945,7 @@
         "name" : "numericString",
         "kind" : "function",
         "comment" : "        Decodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n",
-        "line" : 1357,
+        "line" : 1369,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1932,7 +1956,7 @@
         "name" : "numericString",
         "kind" : "function",
         "comment" : "        Encodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n",
-        "line" : 1364,
+        "line" : 1376,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1946,21 +1970,21 @@
         ]
        },
        {
-        "name" : "__unittestL1367_21",
+        "name" : "__unittestL1379_21",
         "kind" : "function",
-        "line" : 1367,
+        "line" : 1379,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1388,
+        "endline" : 1400,
         "endchar" : 5
        },
        {
         "name" : "printableString",
         "kind" : "function",
         "comment" : "        Decodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n",
-        "line" : 1389,
+        "line" : 1401,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1971,7 +1995,7 @@
         "name" : "printableString",
         "kind" : "function",
         "comment" : "        Encodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n",
-        "line" : 1397,
+        "line" : 1409,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1985,21 +2009,21 @@
         ]
        },
        {
-        "name" : "__unittestL1400_22",
+        "name" : "__unittestL1412_22",
         "kind" : "function",
-        "line" : 1400,
+        "line" : 1412,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1422,
+        "endline" : 1434,
         "endchar" : 5
        },
        {
         "name" : "t61String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1422,
+        "line" : 1434,
         "char" : 12,
         "type" : "teletexString"
        },
@@ -2007,7 +2031,7 @@
         "name" : "teletexString",
         "kind" : "function",
         "comment" : "Decodes bytes representing the T.61 Character Set\n",
-        "line" : 1425,
+        "line" : 1437,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -2018,7 +2042,7 @@
         "name" : "teletexString",
         "kind" : "function",
         "comment" : "Encodes bytes representing the T.61 Character Set\n",
-        "line" : 1429,
+        "line" : 1441,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2032,20 +2056,20 @@
         ]
        },
        {
-        "name" : "__unittestL1432_23",
+        "name" : "__unittestL1444_23",
         "kind" : "function",
-        "line" : 1432,
+        "line" : 1444,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1444,
+        "endline" : 1456,
         "endchar" : 5
        },
        {
         "name" : "videotexString",
         "kind" : "function",
-        "line" : 1445,
+        "line" : 1457,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -2055,7 +2079,7 @@
        {
         "name" : "videotexString",
         "kind" : "function",
-        "line" : 1448,
+        "line" : 1460,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2069,21 +2093,21 @@
         ]
        },
        {
-        "name" : "__unittestL1451_24",
+        "name" : "__unittestL1463_24",
         "kind" : "function",
-        "line" : 1451,
+        "line" : 1463,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1464,
+        "endline" : 1476,
         "endchar" : 5
        },
        {
         "name" : "ia5String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1464,
+        "line" : 1476,
         "char" : 12,
         "type" : "internationalAlphabetNumber5String"
        },
@@ -2091,7 +2115,7 @@
         "name" : "internationalAlphabetNumber5String",
         "kind" : "function",
         "comment" : "Decodes a string of ASCII characters\n",
-        "line" : 1467,
+        "line" : 1479,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2102,7 +2126,7 @@
         "name" : "internationalAlphabetNumber5String",
         "kind" : "function",
         "comment" : "Encodes a string of ASCII characters\n",
-        "line" : 1471,
+        "line" : 1483,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2116,21 +2140,21 @@
         ]
        },
        {
-        "name" : "__unittestL1474_25",
+        "name" : "__unittestL1486_25",
         "kind" : "function",
-        "line" : 1474,
+        "line" : 1486,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1488,
+        "endline" : 1500,
         "endchar" : 5
        },
        {
         "name" : "utc",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1488,
+        "line" : 1500,
         "char" : 12,
         "type" : "coordinatedUniversalTime"
        },
@@ -2138,7 +2162,7 @@
         "name" : "utcTime",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1490,
+        "line" : 1502,
         "char" : 12,
         "type" : "coordinatedUniversalTime"
        },
@@ -2146,7 +2170,7 @@
         "name" : "coordinatedUniversalTime",
         "kind" : "function",
         "comment" : "Decodes a DateTime\n",
-        "line" : 1493,
+        "line" : 1505,
         "char" : 14,
         "storageClass" : [
          "abstract"
@@ -2157,7 +2181,7 @@
         "name" : "coordinatedUniversalTime",
         "kind" : "function",
         "comment" : "Encodes a DateTime\n",
-        "line" : 1497,
+        "line" : 1509,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2171,21 +2195,21 @@
         ]
        },
        {
-        "name" : "__unittestL1500_26",
+        "name" : "__unittestL1512_26",
         "kind" : "function",
-        "line" : 1500,
+        "line" : 1512,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1511,
+        "endline" : 1523,
         "endchar" : 5
        },
        {
         "name" : "generalizedTime",
         "kind" : "function",
         "comment" : "Decodes a DateTime\n",
-        "line" : 1512,
+        "line" : 1524,
         "char" : 14,
         "storageClass" : [
          "abstract"
@@ -2196,7 +2220,7 @@
         "name" : "generalizedTime",
         "kind" : "function",
         "comment" : "Encodes a DateTime\n",
-        "line" : 1516,
+        "line" : 1528,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2210,21 +2234,21 @@
         ]
        },
        {
-        "name" : "__unittestL1519_27",
+        "name" : "__unittestL1531_27",
         "kind" : "function",
-        "line" : 1519,
+        "line" : 1531,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1541,
+        "endline" : 1553,
         "endchar" : 5
        },
        {
         "name" : "graphicString",
         "kind" : "function",
         "comment" : "        Decodes an ASCII string that contains only characters between and\n        including 0x20 and 0x75.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n",
-        "line" : 1543,
+        "line" : 1555,
         "char" : 12,
         "storageClass" : [
          "abstract",
@@ -2236,7 +2260,7 @@
         "name" : "graphicString",
         "kind" : "function",
         "comment" : "        Encodes an ASCII string that contains only characters between and\n        including 0x20 and 0x75.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n",
-        "line" : 1559,
+        "line" : 1571,
         "char" : 10,
         "storageClass" : [
          "abstract",
@@ -2251,21 +2275,21 @@
         ]
        },
        {
-        "name" : "__unittestL1562_28",
+        "name" : "__unittestL1574_28",
         "kind" : "function",
-        "line" : 1562,
+        "line" : 1574,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1585,
+        "endline" : 1597,
         "endchar" : 5
        },
        {
         "name" : "iso646String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1585,
+        "line" : 1597,
         "char" : 12,
         "type" : "visibleString"
        },
@@ -2273,7 +2297,7 @@
         "name" : "visibleString",
         "kind" : "function",
         "comment" : "        Decodes a string that only contains characters between and including\n        0x20 and 0x7E. (Honestly, I don't know how this differs from\n        GraphicalString.)\n",
-        "line" : 1592,
+        "line" : 1604,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2284,7 +2308,7 @@
         "name" : "visibleString",
         "kind" : "function",
         "comment" : "        Encodes a string that only contains characters between and including\n        0x20 and 0x7E. (Honestly, I don't know how this differs from\n        GraphicalString.)\n",
-        "line" : 1600,
+        "line" : 1612,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2298,21 +2322,21 @@
         ]
        },
        {
-        "name" : "__unittestL1603_29",
+        "name" : "__unittestL1615_29",
         "kind" : "function",
-        "line" : 1603,
+        "line" : 1615,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1626,
+        "endline" : 1638,
         "endchar" : 5
        },
        {
         "name" : "generalString",
         "kind" : "function",
         "comment" : "Decodes a string containing only ASCII characters.\n",
-        "line" : 1628,
+        "line" : 1640,
         "char" : 12,
         "storageClass" : [
          "abstract",
@@ -2324,7 +2348,7 @@
         "name" : "generalString",
         "kind" : "function",
         "comment" : "Encodes a string containing only ASCII characters.\n",
-        "line" : 1633,
+        "line" : 1645,
         "char" : 10,
         "storageClass" : [
          "abstract",
@@ -2339,21 +2363,21 @@
         ]
        },
        {
-        "name" : "__unittestL1636_30",
+        "name" : "__unittestL1648_30",
         "kind" : "function",
-        "line" : 1636,
+        "line" : 1648,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1650,
+        "endline" : 1662,
         "endchar" : 5
        },
        {
         "name" : "universalString",
         "kind" : "function",
         "comment" : "Decodes a string of UTF-32 characters\n",
-        "line" : 1651,
+        "line" : 1663,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -2364,7 +2388,7 @@
         "name" : "universalString",
         "kind" : "function",
         "comment" : "Encodes a string of UTF-32 characters\n",
-        "line" : 1655,
+        "line" : 1667,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2378,21 +2402,21 @@
         ]
        },
        {
-        "name" : "__unittestL1658_31",
+        "name" : "__unittestL1670_31",
         "kind" : "function",
-        "line" : 1658,
+        "line" : 1670,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1697,
+        "endline" : 1709,
         "endchar" : 5
        },
        {
         "name" : "characterString",
         "kind" : "function",
         "comment" : "        Decodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1698,
+        "line" : 1710,
         "char" : 21,
         "storageClass" : [
          "abstract"
@@ -2403,7 +2427,7 @@
         "name" : "characterString",
         "kind" : "function",
         "comment" : "        Encodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1728,
+        "line" : 1740,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2417,54 +2441,54 @@
         ]
        },
        {
-        "name" : "__unittestL1731_32",
+        "name" : "__unittestL1743_32",
         "kind" : "function",
-        "line" : 1731,
+        "line" : 1743,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1755,
+        "endline" : 1767,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1756_33",
+        "name" : "__unittestL1768_33",
         "kind" : "function",
-        "line" : 1756,
+        "line" : 1768,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1772,
+        "endline" : 1784,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1773_34",
+        "name" : "__unittestL1785_34",
         "kind" : "function",
-        "line" : 1773,
+        "line" : 1785,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1789,
+        "endline" : 1801,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1790_35",
+        "name" : "__unittestL1802_35",
         "kind" : "function",
-        "line" : 1790,
+        "line" : 1802,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1810,
+        "endline" : 1822,
         "endchar" : 5
        },
        {
         "name" : "bmpString",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1810,
+        "line" : 1822,
         "char" : 12,
         "type" : "basicMultilingualPlaneString"
        },
@@ -2472,7 +2496,7 @@
         "name" : "basicMultilingualPlaneString",
         "kind" : "function",
         "comment" : "Decodes a string of UTF-16 characters\n",
-        "line" : 1813,
+        "line" : 1825,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -2483,7 +2507,7 @@
         "name" : "basicMultilingualPlaneString",
         "kind" : "function",
         "comment" : "Encodes a string of UTF-16 characters\n",
-        "line" : 1817,
+        "line" : 1829,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2497,14 +2521,14 @@
         ]
        },
        {
-        "name" : "__unittestL1820_36",
+        "name" : "__unittestL1832_36",
         "kind" : "function",
-        "line" : 1820,
+        "line" : 1832,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1832,
+        "endline" : 1844,
         "endchar" : 1
        }
       ]
@@ -2512,18 +2536,18 @@
     ]
    },
    {
-    "name" : "ASN1BinaryElement",
+    "name" : "ASN1TextElement",
     "kind" : "alias",
     "comment" : "\n",
-    "line" : 1836,
+    "line" : 1847,
     "char" : 8
    },
    {
     "kind" : "template",
     "comment" : "\n",
-    "line" : 1839,
+    "line" : 1850,
     "char" : 1,
-    "name" : "AbstractSyntaxNotation1BinaryElement",
+    "name" : "AbstractSyntaxNotation1TextElement",
     "parameters" : [
      {
       "name" : "Element",
@@ -2532,11 +2556,43 @@
     ],
     "members" : [
      {
-      "name" : "AbstractSyntaxNotation1BinaryElement",
+      "name" : "AbstractSyntaxNotation1TextElement",
       "kind" : "class",
-      "line" : 1839,
+      "line" : 1850,
       "char" : 1,
-      "members" : []
+      "members" : [
+       {
+        "name" : "_tagName",
+        "kind" : "variable",
+        "line" : 1852,
+        "char" : 12,
+        "type" : "string"
+       },
+       {
+        "name" : "tagName",
+        "kind" : "function",
+        "line" : 1855,
+        "char" : 12,
+        "type" : "@property string()",
+        "endline" : 1858,
+        "endchar" : 5
+       },
+       {
+        "name" : "tagName",
+        "kind" : "function",
+        "line" : 1861,
+        "char" : 10,
+        "type" : "@property void(string value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "string"
+         }
+        ],
+        "endline" : 1865,
+        "endchar" : 5
+       }
+      ]
      }
     ]
    }
@@ -3618,7 +3674,7 @@
     "comment" : "    The unit of encoding and decoding for Basic Encoding Rules BER.\n\n    There are three parts to an encoded BER Value:\n\n    $(UL\n        $(LI A Type Tag, which specifies what data type is encoded)\n        $(LI A Length Tag, which specifies how many subsequent bytes encode the data)\n        $(LI The Encoded Value)\n    )\n\n    They appear in the binary encoding in that order, and as such, the encoding\n    scheme is sometimes described as \"TLV,\" which stands for Type-Length-Value.\n\n    This class provides a properties for getting and setting bit fields of\n    the type tag, but most of it is functionality for encoding data per\n    the specification.\n\n    As an example, this is what encoding a simple INTEGER looks like:\n\n    ---\n    BERElement bv = new BERElement();\n    bv.type = 0x02u; // \"2\" means this is an INTEGER\n    bv.integer = 1433; // Now the data is encoded.\n    transmit(cast(ubyte[]) bv); // transmit() is a made-up function.\n    ---\n\n    And this is what decoding looks like:\n\n    ---\n    ubyte[] data = receive(); // receive() is a made-up function.\n    BERElement bv2 = new BERElement(data);\n\n    long x;\n    if (bv.type == 0x02u) // it is an INTEGER\n    {\n        x = bv.integer;\n    }\n    // Now x is 1433!\n    ---\n",
     "line" : 94,
     "char" : 1,
-    "base" : "codec.ASN1Element!(codecs.ber.BasicEncodingRulesElement).AbstractSyntaxNotation1Element",
+    "base" : "codec.ASN1BinaryElement!(codecs.ber.BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement",
     "members" : [
      {
       "name" : "maxUintAsReal",
@@ -3632,7 +3688,7 @@
       "deco" : "ye",
       "originalType" : "real",
       "init" : "4.29497e+09L",
-      "offset" : 16
+      "offset" : 32
      },
      {
       "name" : "maxLongAsReal",
@@ -3646,7 +3702,7 @@
       "deco" : "ye",
       "originalType" : "real",
       "init" : "9.22337e+18L",
-      "offset" : 32
+      "offset" : 48
      },
      {
       "name" : "logBaseTwoOfTen",
@@ -3660,7 +3716,7 @@
       "deco" : "ye",
       "originalType" : "real",
       "init" : "3.32193L",
-      "offset" : 48
+      "offset" : 64
      },
      {
       "name" : "notWhatYouMeantText",
@@ -3673,7 +3729,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"It is highly likely that what you attempted to decode was not the data type that you thought it was. Most likely, one of the following scenarios occurred: (1) you did not write this program to the exact specification of the protocol, or (2) someone is attempting to hack this program (review the HeartBleed bug), or (3) the client sent valid data that was just too big to decode. \"",
-      "offset" : 64
+      "offset" : 80
      },
      {
       "name" : "forMoreInformationText",
@@ -3686,7 +3742,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"For more information on the specific method or property that originated this exception, see the documentation associated with this ASN.1 library. For more information on ASN.1's data types in general, see the International Telecommunications Union's X.680 specification, which can be found at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf. For more information on how those data types are supposed to be encoded using Basic Encoding Rules, Canonical Encoding Rules, or Distinguished Encoding Rules, see the International Telecommunications Union's X.690 specification, which can be found at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf. \"",
-      "offset" : 80
+      "offset" : 96
      },
      {
       "name" : "debugInformationText",
@@ -3699,7 +3755,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"If reviewing the documentation does not help, you may want to run the ASN.1 library in debug mode. To do this, compile the source code for this library with the `-debug=asn1` flag (if you are compiling with `dmd`). This will display information to the console that may help you diagnose any issues. \"",
-      "offset" : 96
+      "offset" : 112
      },
      {
       "name" : "reportBugsText",
@@ -3712,7 +3768,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"If none of the steps above helped, and you believe that you have discovered a bug, please create an issue on the GitHub page's Issues section at: https://github.com/JonathanWilbur/asn1-d/issues. \"",
-      "offset" : 112
+      "offset" : 128
      },
      {
       "name" : "LengthEncodingPreference",
@@ -3746,7 +3802,7 @@
       "char" : 37,
       "deco" : "E6codecs3ber25BasicEncodingRulesElement24LengthEncodingPreference",
       "init" : "cast(LengthEncodingPreference)cast(ubyte)0u",
-      "offset" : 128
+      "offset" : 144
      },
      {
       "name" : "base10RealShouldShowPlusSignIfPositive",
@@ -3949,7 +4005,7 @@
       "line" : 317,
       "char" : 18,
       "deco" : "h",
-      "offset" : 129
+      "offset" : 145
      },
      {
       "name" : "length",
@@ -3972,7 +4028,7 @@
       "line" : 327,
       "char" : 20,
       "deco" : "Ah",
-      "offset" : 136
+      "offset" : 152
      },
      {
       "name" : "boolean",
@@ -3987,7 +4043,7 @@
       "endline" : 355,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.boolean"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.boolean"
       ]
      },
      {
@@ -4009,7 +4065,7 @@
       "endline" : 367,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.boolean"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.boolean"
       ]
      },
      {
@@ -4093,7 +4149,7 @@
       "endline" : 520,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.bitString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.bitString"
       ]
      },
      {
@@ -4115,7 +4171,7 @@
       "endline" : 548,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.bitString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.bitString"
       ]
      },
      {
@@ -4131,7 +4187,7 @@
       "endline" : 559,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.octetString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.octetString"
       ]
      },
      {
@@ -4153,7 +4209,7 @@
       "endline" : 568,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.octetString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.octetString"
       ]
      },
      {
@@ -4170,7 +4226,7 @@
       "endline" : 652,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.objectIdentifier"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectIdentifier"
       ],
       "out" : {
        "name" : "__ensure",
@@ -4212,7 +4268,7 @@
       "endline" : 705,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.objectIdentifier"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectIdentifier"
       ],
       "in" : {
        "name" : "__require",
@@ -4237,7 +4293,7 @@
       "endline" : 750,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.objectDescriptor"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectDescriptor"
       ]
      },
      {
@@ -4259,7 +4315,7 @@
       "endline" : 795,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.objectDescriptor"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectDescriptor"
       ]
      },
      {
@@ -4275,7 +4331,7 @@
       "endline" : 959,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.external"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.external"
       ]
      },
      {
@@ -4297,7 +4353,7 @@
       "endline" : 1032,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.external"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.external"
       ]
      },
      {
@@ -4524,7 +4580,7 @@
       "endline" : 2402,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.embeddedPresentationDataValue"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue"
       ]
      },
      {
@@ -4547,7 +4603,7 @@
       "endline" : 2499,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.embeddedPresentationDataValue"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue"
       ]
      },
      {
@@ -4585,7 +4641,7 @@
       "endline" : 2559,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String"
       ]
      },
      {
@@ -4607,7 +4663,7 @@
       "endline" : 2568,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String"
       ]
      },
      {
@@ -4624,7 +4680,7 @@
       "endline" : 2631,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier"
       ]
      },
      {
@@ -4647,7 +4703,7 @@
       "endline" : 2671,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier"
       ]
      },
      {
@@ -4664,7 +4720,7 @@
       "endline" : 2691,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.sequence"
       ]
      },
      {
@@ -4687,7 +4743,7 @@
       "endline" : 2705,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.sequence"
       ]
      },
      {
@@ -4704,7 +4760,7 @@
       "endline" : 2725,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.set"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.set"
       ]
      },
      {
@@ -4727,7 +4783,7 @@
       "endline" : 2739,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.set"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.set"
       ]
      },
      {
@@ -4743,7 +4799,7 @@
       "endline" : 2766,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.numericString"
       ]
      },
      {
@@ -4765,7 +4821,7 @@
       "endline" : 2792,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.numericString"
       ]
      },
      {
@@ -4781,7 +4837,7 @@
       "endline" : 2824,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.printableString"
       ]
      },
      {
@@ -4803,7 +4859,7 @@
       "endline" : 2854,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.printableString"
       ]
      },
      {
@@ -4819,7 +4875,7 @@
       "endline" : 2866,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.teletexString"
       ]
      },
      {
@@ -4841,7 +4897,7 @@
       "endline" : 2876,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.teletexString"
       ]
      },
      {
@@ -4857,7 +4913,7 @@
       "endline" : 2888,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.videotexString"
       ]
      },
      {
@@ -4879,7 +4935,7 @@
       "endline" : 2898,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.videotexString"
       ]
      },
      {
@@ -4895,7 +4951,7 @@
       "endline" : 2941,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String"
       ]
      },
      {
@@ -4917,7 +4973,7 @@
       "endline" : 2981,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String"
       ]
      },
      {
@@ -4933,7 +4989,7 @@
       "endline" : 3022,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime"
       ]
      },
      {
@@ -4955,7 +5011,7 @@
       "endline" : 3045,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime"
       ]
      },
      {
@@ -4971,7 +5027,7 @@
       "endline" : 3079,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalizedTime"
       ]
      },
      {
@@ -4993,7 +5049,7 @@
       "endline" : 3101,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalizedTime"
       ]
      },
      {
@@ -5009,7 +5065,7 @@
       "endline" : 3140,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.graphicString"
       ]
      },
      {
@@ -5031,7 +5087,7 @@
       "endline" : 3177,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.graphicString"
       ]
      },
      {
@@ -5047,7 +5103,7 @@
       "endline" : 3207,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.visibleString"
       ]
      },
      {
@@ -5069,7 +5125,7 @@
       "endline" : 3235,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.visibleString"
       ]
      },
      {
@@ -5085,7 +5141,7 @@
       "endline" : 3268,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalString"
       ]
      },
      {
@@ -5107,7 +5163,7 @@
       "endline" : 3298,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalString"
       ]
      },
      {
@@ -5123,7 +5179,7 @@
       "endline" : 3346,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.universalString"
       ]
      },
      {
@@ -5145,7 +5201,7 @@
       "endline" : 3371,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.universalString"
       ]
      },
      {
@@ -5161,7 +5217,7 @@
       "endline" : 3589,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.characterString"
       ]
      },
      {
@@ -5183,7 +5239,7 @@
       "endline" : 3681,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.characterString"
       ]
      },
      {
@@ -5221,7 +5277,7 @@
       "endline" : 3777,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString"
       ]
      },
      {
@@ -5243,7 +5299,7 @@
       "endline" : 3802,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
+       "codec.ASN1BinaryElement!(BasicEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString"
       ]
      },
      {
@@ -5441,7 +5497,7 @@
     "comment" : "    The unit of encoding and decoding for Canonical Encoding Rules CER.\n\n    There are three parts to an encoded CER Value:\n\n    $(UL\n        $(LI A Type Tag, which specifies what data type is encoded)\n        $(LI A Length Tag, which specifies how many subsequent bytes encode the data)\n        $(LI The Encoded Value)\n    )\n\n    They appear in the binary encoding in that order, and as such, the encoding\n    scheme is sometimes described as \"TLV,\" which stands for Type-Length-Value.\n\n    This class provides a properties for getting and setting bit fields of\n    the type tag, but most of it is functionality for encoding data per\n    the specification.\n\n    As an example, this is what encoding a simple INTEGER looks like:\n\n    ---\n    CERElement cv = new CERElement();\n    cv.type = 0x02u; // \"2\" means this is an INTEGER\n    cv.integer = 1433; // Now the data is encoded.\n    transmit(cast(ubyte[]) cv); // transmit() is a made-up function.\n    ---\n\n    And this is what decoding looks like:\n\n    ---\n    ubyte[] data = receive(); // receive() is a made-up function.\n    CERElement cv2 = new CERElement(data);\n\n    long x;\n    if (cv.type == 0x02u) // it is an INTEGER\n    {\n        x = cv.integer;\n    }\n    // Now x is 1433!\n    ---\n",
     "line" : 86,
     "char" : 1,
-    "base" : "codec.ASN1Element!(codecs.cer.CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element",
+    "base" : "codec.ASN1BinaryElement!(codecs.cer.CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement",
     "members" : [
      {
       "name" : "maxUintAsReal",
@@ -5455,7 +5511,7 @@
       "deco" : "ye",
       "originalType" : "real",
       "init" : "4.29497e+09L",
-      "offset" : 16
+      "offset" : 32
      },
      {
       "name" : "maxLongAsReal",
@@ -5469,7 +5525,7 @@
       "deco" : "ye",
       "originalType" : "real",
       "init" : "9.22337e+18L",
-      "offset" : 32
+      "offset" : 48
      },
      {
       "name" : "logBaseTwoOfTen",
@@ -5483,7 +5539,7 @@
       "deco" : "ye",
       "originalType" : "real",
       "init" : "3.32193L",
-      "offset" : 48
+      "offset" : 64
      },
      {
       "name" : "notWhatYouMeantText",
@@ -5496,7 +5552,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"It is highly likely that what you attempted to decode was not the data type that you thought it was. Most likely, one of the following scenarios occurred: (1) you did not write this program to the exact specification of the protocol, or (2) someone is attempting to hack this program (review the HeartBleed bug), or (3) the client sent valid data that was just too big to decode. \"",
-      "offset" : 64
+      "offset" : 80
      },
      {
       "name" : "forMoreInformationText",
@@ -5509,7 +5565,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"For more information on the specific method or property that originated this exception, see the documentation associated with this ASN.1 library. For more information on ASN.1's data types in general, see the International Telecommunications Union's X.680 specification, which can be found at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf. For more information on how those data types are supposed to be encoded using Canonical Encoding Rules, Canonical Encoding Rules, or Canonical Encoding Rules, see the International Telecommunications Union's X.690 specification, which can be found at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf. \"",
-      "offset" : 80
+      "offset" : 96
      },
      {
       "name" : "debugInformationText",
@@ -5522,7 +5578,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"If reviewing the documentation does not help, you may want to run the ASN.1 library in debug mode. To do this, compile the source code for this library with the `-debug=asn1` flag (if you are compiling with `dmd`). This will display information to the console that may help you diagnose any issues. \"",
-      "offset" : 96
+      "offset" : 112
      },
      {
       "name" : "reportBugsText",
@@ -5535,7 +5591,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"If none of the steps above helped, and you believe that you have discovered a bug, please create an issue on the GitHub page's Issues section at: https://github.com/JonathanWilbur/asn1-d/issues. \"",
-      "offset" : 112
+      "offset" : 128
      },
      {
       "name" : "LengthEncodingPreference",
@@ -5569,7 +5625,7 @@
       "char" : 37,
       "deco" : "E6codecs3cer29CanonicalEncodingRulesElement24LengthEncodingPreference",
       "init" : "cast(LengthEncodingPreference)cast(ubyte)0u",
-      "offset" : 128
+      "offset" : 144
      },
      {
       "name" : "realEncodingBase",
@@ -5721,7 +5777,7 @@
       "line" : 269,
       "char" : 18,
       "deco" : "h",
-      "offset" : 129
+      "offset" : 145
      },
      {
       "name" : "length",
@@ -5744,7 +5800,7 @@
       "line" : 279,
       "char" : 20,
       "deco" : "Ah",
-      "offset" : 136
+      "offset" : 152
      },
      {
       "name" : "boolean",
@@ -5759,7 +5815,7 @@
       "endline" : 326,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.boolean"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.boolean"
       ]
      },
      {
@@ -5781,7 +5837,7 @@
       "endline" : 338,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.boolean"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.boolean"
       ]
      },
      {
@@ -5865,7 +5921,7 @@
       "endline" : 590,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.bitString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.bitString"
       ],
       "in" : {
        "name" : "__require",
@@ -5896,7 +5952,7 @@
       "endline" : 644,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.bitString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.bitString"
       ]
      },
      {
@@ -5934,7 +5990,7 @@
       "endline" : 732,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.octetString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.octetString"
       ]
      },
      {
@@ -5956,7 +6012,7 @@
       "endline" : 780,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.octetString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.octetString"
       ],
       "in" : {
        "name" : "__require",
@@ -5993,7 +6049,7 @@
       "endline" : 892,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.objectIdentifier"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectIdentifier"
       ],
       "out" : {
        "name" : "__ensure",
@@ -6035,7 +6091,7 @@
       "endline" : 945,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.objectIdentifier"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectIdentifier"
       ],
       "in" : {
        "name" : "__require",
@@ -6060,7 +6116,7 @@
       "endline" : 1036,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.objectDescriptor"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectDescriptor"
       ]
      },
      {
@@ -6082,7 +6138,7 @@
       "endline" : 1110,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.objectDescriptor"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectDescriptor"
       ]
      },
      {
@@ -6109,7 +6165,7 @@
       "endline" : 1291,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.external"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.external"
       ]
      },
      {
@@ -6131,7 +6187,7 @@
       "endline" : 1356,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.external"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.external"
       ]
      },
      {
@@ -6303,7 +6359,7 @@
       "endline" : 2413,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.embeddedPresentationDataValue"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue"
       ]
      },
      {
@@ -6326,7 +6382,7 @@
       "endline" : 2516,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.embeddedPresentationDataValue"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue"
       ]
      },
      {
@@ -6364,7 +6420,7 @@
       "endline" : 2618,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String"
       ]
      },
      {
@@ -6386,7 +6442,7 @@
       "endline" : 2657,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String"
       ]
      },
      {
@@ -6414,7 +6470,7 @@
       "endline" : 2748,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier"
       ]
      },
      {
@@ -6437,7 +6493,7 @@
       "endline" : 2788,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier"
       ]
      },
      {
@@ -6454,7 +6510,7 @@
       "endline" : 2808,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.sequence"
       ]
      },
      {
@@ -6477,7 +6533,7 @@
       "endline" : 2822,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.sequence"
       ]
      },
      {
@@ -6494,7 +6550,7 @@
       "endline" : 2842,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.set"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.set"
       ]
      },
      {
@@ -6517,7 +6573,7 @@
       "endline" : 2856,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.set"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.set"
       ]
      },
      {
@@ -6533,7 +6589,7 @@
       "endline" : 2930,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.numericString"
       ]
      },
      {
@@ -6555,7 +6611,7 @@
       "endline" : 2987,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.numericString"
       ]
      },
      {
@@ -6582,7 +6638,7 @@
       "endline" : 3097,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.printableString"
       ]
      },
      {
@@ -6604,7 +6660,7 @@
       "endline" : 3158,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.printableString"
       ]
      },
      {
@@ -6631,7 +6687,7 @@
       "endline" : 3233,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.teletexString"
       ]
      },
      {
@@ -6653,7 +6709,7 @@
       "endline" : 3273,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.teletexString"
       ]
      },
      {
@@ -6680,7 +6736,7 @@
       "endline" : 3348,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.videotexString"
       ]
      },
      {
@@ -6702,7 +6758,7 @@
       "endline" : 3388,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.videotexString"
       ]
      },
      {
@@ -6729,7 +6785,7 @@
       "endline" : 3506,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String"
       ]
      },
      {
@@ -6751,7 +6807,7 @@
       "endline" : 3577,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String"
       ]
      },
      {
@@ -6778,7 +6834,7 @@
       "endline" : 3646,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime"
       ]
      },
      {
@@ -6800,7 +6856,7 @@
       "endline" : 3669,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime"
       ]
      },
      {
@@ -6816,7 +6872,7 @@
       "endline" : 3703,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalizedTime"
       ]
      },
      {
@@ -6838,7 +6894,7 @@
       "endline" : 3725,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalizedTime"
       ]
      },
      {
@@ -6854,7 +6910,7 @@
       "endline" : 3812,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.graphicString"
       ]
      },
      {
@@ -6876,7 +6932,7 @@
       "endline" : 3880,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.graphicString"
       ]
      },
      {
@@ -6903,7 +6959,7 @@
       "endline" : 3986,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.visibleString"
       ]
      },
      {
@@ -6925,7 +6981,7 @@
       "endline" : 4045,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.visibleString"
       ]
      },
      {
@@ -6952,7 +7008,7 @@
       "endline" : 4153,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalString"
       ]
      },
      {
@@ -6974,7 +7030,7 @@
       "endline" : 4214,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalString"
       ]
      },
      {
@@ -7001,7 +7057,7 @@
       "endline" : 4358,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.universalString"
       ]
      },
      {
@@ -7023,7 +7079,7 @@
       "endline" : 4445,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.universalString"
       ]
      },
      {
@@ -7050,7 +7106,7 @@
       "endline" : 4616,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.characterString"
       ]
      },
      {
@@ -7072,7 +7128,7 @@
       "endline" : 4689,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.characterString"
       ]
      },
      {
@@ -7099,7 +7155,7 @@
       "endline" : 4830,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString"
       ]
      },
      {
@@ -7121,7 +7177,7 @@
       "endline" : 4917,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
+       "codec.ASN1BinaryElement!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString"
       ]
      },
      {
@@ -7319,7 +7375,7 @@
     "comment" : "    The unit of encoding and decoding for Distinguished Encoding Rules DER.\n\n    There are three parts to an encoded DER Value:\n\n    $(UL\n        $(LI A Type Tag, which specifies what data type is encoded)\n        $(LI A Length Tag, which specifies how many subsequent bytes encode the data)\n        $(LI The Encoded Value)\n    )\n\n    They appear in the binary encoding in that order, and as such, the encoding\n    scheme is sometimes described as \"TLV,\" which stands for Type-Length-Value.\n\n    This class provides a properties for getting and setting bit fields of\n    the type tag, but most of it is functionality for encoding data per\n    the specification.\n\n    As an example, this is what encoding a simple INTEGER looks like:\n\n    ---\n    DERElement dv = new DERElement();\n    dv.type = 0x02u; // \"2\" means this is an INTEGER\n    dv.integer = 1433; // Now the data is encoded.\n    transmit(cast(ubyte[]) dv); // transmit() is a made-up function.\n    ---\n\n    And this is what decoding looks like:\n\n    ---\n    ubyte[] data = receive(); // receive() is a made-up function.\n    DERElement dv2 = new DERElement(data);\n\n    long x;\n    if (dv.type == 0x02u) // it is an INTEGER\n    {\n        x = dv.integer;\n    }\n    // Now x is 1433!\n    ---\n",
     "line" : 86,
     "char" : 1,
-    "base" : "codec.ASN1Element!(codecs.der.DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element",
+    "base" : "codec.ASN1BinaryElement!(codecs.der.DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement",
     "members" : [
      {
       "name" : "maxUintAsReal",
@@ -7333,7 +7389,7 @@
       "deco" : "ye",
       "originalType" : "real",
       "init" : "4.29497e+09L",
-      "offset" : 16
+      "offset" : 32
      },
      {
       "name" : "maxLongAsReal",
@@ -7347,7 +7403,7 @@
       "deco" : "ye",
       "originalType" : "real",
       "init" : "9.22337e+18L",
-      "offset" : 32
+      "offset" : 48
      },
      {
       "name" : "logBaseTwoOfTen",
@@ -7361,7 +7417,7 @@
       "deco" : "ye",
       "originalType" : "real",
       "init" : "3.32193L",
-      "offset" : 48
+      "offset" : 64
      },
      {
       "name" : "notWhatYouMeantText",
@@ -7374,7 +7430,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"It is highly likely that what you attempted to decode was not the data type that you thought it was. Most likely, one of the following scenarios occurred: (1) you did not write this program to the exact specification of the protocol, or (2) someone is attempting to hack this program (review the HeartBleed bug), or (3) the client sent valid data that was just too big to decode. \"",
-      "offset" : 64
+      "offset" : 80
      },
      {
       "name" : "forMoreInformationText",
@@ -7387,7 +7443,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"For more information on the specific method or property that originated this exception, see the documentation associated with this ASN.1 library. For more information on ASN.1's data types in general, see the International Telecommunications Union's X.680 specification, which can be found at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf. For more information on how those data types are supposed to be encoded using Distinguished Encoding Rules, Canonical Encoding Rules, or Distinguished Encoding Rules, see the International Telecommunications Union's X.690 specification, which can be found at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf. \"",
-      "offset" : 80
+      "offset" : 96
      },
      {
       "name" : "debugInformationText",
@@ -7400,7 +7456,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"If reviewing the documentation does not help, you may want to run the ASN.1 library in debug mode. To do this, compile the source code for this library with the `-debug=asn1` flag (if you are compiling with `dmd`). This will display information to the console that may help you diagnose any issues. \"",
-      "offset" : 96
+      "offset" : 112
      },
      {
       "name" : "reportBugsText",
@@ -7413,7 +7469,7 @@
       "deco" : "yAa",
       "originalType" : "string",
       "init" : "\"If none of the steps above helped, and you believe that you have discovered a bug, please create an issue on the GitHub page's Issues section at: https://github.com/JonathanWilbur/asn1-d/issues. \"",
-      "offset" : 112
+      "offset" : 128
      },
      {
       "name" : "LengthEncodingPreference",
@@ -7589,7 +7645,7 @@
       "line" : 258,
       "char" : 18,
       "deco" : "h",
-      "offset" : 128
+      "offset" : 144
      },
      {
       "name" : "length",
@@ -7612,7 +7668,7 @@
       "line" : 268,
       "char" : 20,
       "deco" : "Ah",
-      "offset" : 136
+      "offset" : 152
      },
      {
       "name" : "boolean",
@@ -7627,7 +7683,7 @@
       "endline" : 315,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.boolean"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.boolean"
       ]
      },
      {
@@ -7649,7 +7705,7 @@
       "endline" : 327,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.boolean"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.boolean"
       ]
      },
      {
@@ -7733,7 +7789,7 @@
       "endline" : 506,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.bitString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.bitString"
       ]
      },
      {
@@ -7755,7 +7811,7 @@
       "endline" : 534,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.bitString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.bitString"
       ]
      },
      {
@@ -7771,7 +7827,7 @@
       "endline" : 545,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.octetString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.octetString"
       ]
      },
      {
@@ -7793,7 +7849,7 @@
       "endline" : 554,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.octetString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.octetString"
       ]
      },
      {
@@ -7810,7 +7866,7 @@
       "endline" : 638,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.objectIdentifier"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectIdentifier"
       ],
       "out" : {
        "name" : "__ensure",
@@ -7852,7 +7908,7 @@
       "endline" : 691,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.objectIdentifier"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectIdentifier"
       ],
       "in" : {
        "name" : "__require",
@@ -7877,7 +7933,7 @@
       "endline" : 736,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.objectDescriptor"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectDescriptor"
       ]
      },
      {
@@ -7899,7 +7955,7 @@
       "endline" : 781,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.objectDescriptor"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.objectDescriptor"
       ]
      },
      {
@@ -7915,7 +7971,7 @@
       "endline" : 934,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.external"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.external"
       ]
      },
      {
@@ -7937,7 +7993,7 @@
       "endline" : 999,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.external"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.external"
       ]
      },
      {
@@ -8109,7 +8165,7 @@
       "endline" : 2056,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.embeddedPresentationDataValue"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue"
       ]
      },
      {
@@ -8132,7 +8188,7 @@
       "endline" : 2159,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.embeddedPresentationDataValue"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.embeddedPresentationDataValue"
       ]
      },
      {
@@ -8170,7 +8226,7 @@
       "endline" : 2226,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String"
       ]
      },
      {
@@ -8192,7 +8248,7 @@
       "endline" : 2235,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.unicodeTransformationFormat8String"
       ]
      },
      {
@@ -8209,7 +8265,7 @@
       "endline" : 2298,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier"
       ]
      },
      {
@@ -8232,7 +8288,7 @@
       "endline" : 2338,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.relativeObjectIdentifier"
       ]
      },
      {
@@ -8249,7 +8305,7 @@
       "endline" : 2358,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.sequence"
       ]
      },
      {
@@ -8272,7 +8328,7 @@
       "endline" : 2372,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.sequence"
       ]
      },
      {
@@ -8289,7 +8345,7 @@
       "endline" : 2392,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.set"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.set"
       ]
      },
      {
@@ -8312,7 +8368,7 @@
       "endline" : 2406,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.set"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.set"
       ]
      },
      {
@@ -8328,7 +8384,7 @@
       "endline" : 2433,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.numericString"
       ]
      },
      {
@@ -8350,7 +8406,7 @@
       "endline" : 2459,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.numericString"
       ]
      },
      {
@@ -8366,7 +8422,7 @@
       "endline" : 2491,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.printableString"
       ]
      },
      {
@@ -8388,7 +8444,7 @@
       "endline" : 2521,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.printableString"
       ]
      },
      {
@@ -8404,7 +8460,7 @@
       "endline" : 2533,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.teletexString"
       ]
      },
      {
@@ -8426,7 +8482,7 @@
       "endline" : 2543,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.teletexString"
       ]
      },
      {
@@ -8442,7 +8498,7 @@
       "endline" : 2555,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.videotexString"
       ]
      },
      {
@@ -8464,7 +8520,7 @@
       "endline" : 2565,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.videotexString"
       ]
      },
      {
@@ -8480,7 +8536,7 @@
       "endline" : 2608,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String"
       ]
      },
      {
@@ -8502,7 +8558,7 @@
       "endline" : 2648,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.internationalAlphabetNumber5String"
       ]
      },
      {
@@ -8518,7 +8574,7 @@
       "endline" : 2689,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime"
       ]
      },
      {
@@ -8540,7 +8596,7 @@
       "endline" : 2712,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.coordinatedUniversalTime"
       ]
      },
      {
@@ -8556,7 +8612,7 @@
       "endline" : 2746,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalizedTime"
       ]
      },
      {
@@ -8578,7 +8634,7 @@
       "endline" : 2768,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalizedTime"
       ]
      },
      {
@@ -8594,7 +8650,7 @@
       "endline" : 2807,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.graphicString"
       ]
      },
      {
@@ -8616,7 +8672,7 @@
       "endline" : 2844,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.graphicString"
       ]
      },
      {
@@ -8632,7 +8688,7 @@
       "endline" : 2874,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.visibleString"
       ]
      },
      {
@@ -8654,7 +8710,7 @@
       "endline" : 2902,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.visibleString"
       ]
      },
      {
@@ -8670,7 +8726,7 @@
       "endline" : 2935,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalString"
       ]
      },
      {
@@ -8692,7 +8748,7 @@
       "endline" : 2965,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.generalString"
       ]
      },
      {
@@ -8708,7 +8764,7 @@
       "endline" : 3013,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.universalString"
       ]
      },
      {
@@ -8730,7 +8786,7 @@
       "endline" : 3038,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.universalString"
       ]
      },
      {
@@ -8746,7 +8802,7 @@
       "endline" : 3181,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.characterString"
       ]
      },
      {
@@ -8768,7 +8824,7 @@
       "endline" : 3254,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.characterString"
       ]
      },
      {
@@ -8795,7 +8851,7 @@
       "endline" : 3329,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString"
       ]
      },
      {
@@ -8817,7 +8873,7 @@
       "endline" : 3354,
       "endchar" : 5,
       "overrides" : [
-       "codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
+       "codec.ASN1BinaryElement!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1BinaryElement.basicMultilingualPlaneString"
       ]
      },
      {
