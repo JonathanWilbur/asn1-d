@@ -28,7 +28,6 @@ mkdir -p ./build/maps
 mkdir -p ./build/objects
 mkdir -p ./build/scripts
 
-# Build the ASN.1 Library (static)
 echo -n "Building the ASN.1 Library (static)... "
 if dmd \
  ./source/asn1.d \
@@ -77,8 +76,9 @@ do
     if dmd \
      -I./build/interfaces/source \
      -I./build/interfaces/source/codecs \
-     ./source/tools/${DECODER} \
      -L./build/libraries/asn1.lib \
+     ./source/tools/decoder_mixin.d \
+     ./source/tools/${DECODER} \
      -of./build/executables/${EXECUTABLE} \
      -inline \
      -release \

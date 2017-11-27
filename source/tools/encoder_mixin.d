@@ -75,9 +75,9 @@ mixin template Encoder(Element)
     void encodeEndOfContent (string option)
     {
         Element element = new Element();
-        element.typeNumber = ((tagNumber == uint.max) ? 0u : tagNumber);
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = ((tagNumber == uint.max) ? 0u : tagNumber);
+        element.tagClass = tagClass;
+        element.construction = construction;
         encodedData ~= element.toBytes;
     }
 
@@ -86,9 +86,9 @@ mixin template Encoder(Element)
         import std.algorithm.iteration : each;
         value.each!((ref a) => a.toLower);
         Element element = new Element();
-        element.typeNumber = 1u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 1u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         switch (value)
         {
             case "true" : case "t" : case "1" :
@@ -113,9 +113,9 @@ mixin template Encoder(Element)
     void encodeInteger (string value)
     {
         Element element = new Element();
-        element.typeNumber = 2u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 2u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.integer!long = value.to!long;
@@ -148,9 +148,9 @@ mixin template Encoder(Element)
             }
         }
         Element element = new Element();
-        element.typeNumber = 3u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 3u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         element.bitString = bits;
         encodedData ~= element.toBytes;
     }
@@ -158,9 +158,9 @@ mixin template Encoder(Element)
     void encodeOctetString (string value)
     {
         Element element = new Element();
-        element.typeNumber = 4u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 4u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         element.octetString = getBinaryInput(value);
         encodedData ~= element.toBytes;
     }
@@ -168,9 +168,9 @@ mixin template Encoder(Element)
     void encodeNull (string option)
     {
         Element element = new Element();
-        element.typeNumber = 5u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 5u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         encodedData ~= element.toBytes;
     }
 
@@ -179,9 +179,9 @@ mixin template Encoder(Element)
     void encodeObjectIdentifier (string value)
     {
         Element element = new Element();
-        element.typeNumber = 6u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 6u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.objectIdentifier = new ObjectIdentifier(value);
@@ -197,9 +197,9 @@ mixin template Encoder(Element)
     void encodeObjectDescriptor (string value)
     {
         Element element = new Element();
-        element.typeNumber = 7u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 7u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.objectDescriptor = value;
@@ -215,9 +215,9 @@ mixin template Encoder(Element)
     void encodeExternal (string value)
     {
         Element element = new Element();
-        element.typeNumber = 8u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 8u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         element.value = getBinaryInput(value);
         encodedData ~= element.toBytes;
     }
@@ -225,9 +225,9 @@ mixin template Encoder(Element)
     void encodeReal (string value)
     {
         Element element = new Element();
-        element.typeNumber = 9u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 9u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.realType!double = value.to!double;
@@ -243,9 +243,9 @@ mixin template Encoder(Element)
     void encodeEnumerated (string value)
     {
         Element element = new Element();
-        element.typeNumber = 10u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 10u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.enumerated!long = value.to!long;
@@ -262,9 +262,9 @@ mixin template Encoder(Element)
     void encodeEmbeddedPresentationDataValue (string value)
     {
         Element element = new Element();
-        element.typeNumber = 11u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 11u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         element.value = getBinaryInput(value);
         encodedData ~= element.toBytes;
     }
@@ -273,9 +273,9 @@ mixin template Encoder(Element)
     void encodeUnicodeTransformationFormat8String (string value)
     {
         Element element = new Element();
-        element.typeNumber = 12u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 12u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.utf8String = value;        
@@ -295,9 +295,9 @@ mixin template Encoder(Element)
     {
         import std.array : split;
         Element element = new Element();
-        element.typeNumber = 13u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 13u;
+        element.tagClass = tagClass;
+        element.construction = construction;
 
         string[] segments = value.split(".");
         uint[] numbers;
@@ -321,9 +321,9 @@ mixin template Encoder(Element)
     void encodeSequence (string value)
     {
         Element element = new Element();
-        element.typeNumber = 16u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 16u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         element.value = getBinaryInput(value);
         encodedData ~= element.toBytes;
     }
@@ -331,9 +331,9 @@ mixin template Encoder(Element)
     void encodeSet (string value)
     {
         Element element = new Element();
-        element.typeNumber = 17u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 17u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         element.value = getBinaryInput(value);
         encodedData ~= element.toBytes;
     }
@@ -341,9 +341,9 @@ mixin template Encoder(Element)
     void encodeNumericString (string value)
     {
         Element element = new Element();
-        element.typeNumber = 18u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 18u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.numericString = value;
@@ -359,9 +359,9 @@ mixin template Encoder(Element)
     void encodePrintableString (string value)
     {
         Element element = new Element();
-        element.typeNumber = 19u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 19u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.printableString = value;
@@ -378,9 +378,9 @@ mixin template Encoder(Element)
     void encodeTeletexString (string value)
     {
         Element element = new Element();
-        element.typeNumber = 20u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 20u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         element.value = getBinaryInput(value);
         encodedData ~= element.toBytes;
     }
@@ -388,9 +388,9 @@ mixin template Encoder(Element)
     void encodeVideotexString (string value)
     {
         Element element = new Element();
-        element.typeNumber = 21u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 21u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         element.value = getBinaryInput(value);
         encodedData ~= element.toBytes;
     }
@@ -399,9 +399,9 @@ mixin template Encoder(Element)
     void encodeInternationalAlphabet5String (string value)
     {
         Element element = new Element();
-        element.typeNumber = 22u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 22u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.ia5String = value;
@@ -418,9 +418,9 @@ mixin template Encoder(Element)
     void encodeCoordinatedUniversalTime (string value)
     {
         Element element = new Element();
-        element.typeNumber = 23u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 23u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.utcTime = DateTime.fromISOString(value);
@@ -436,9 +436,9 @@ mixin template Encoder(Element)
     void encodeGeneralizedTime (string value)
     {
         Element element = new Element();
-        element.typeNumber = 24u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 24u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.generalizedTime = DateTime.fromISOString(value);
@@ -454,9 +454,9 @@ mixin template Encoder(Element)
     void encodeGraphicString (string value)
     {
         Element element = new Element();
-        element.typeNumber = 25u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 25u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.graphicString = value;
@@ -472,9 +472,9 @@ mixin template Encoder(Element)
     void encodeVisibleString (string value)
     {
         Element element = new Element();
-        element.typeNumber = 26u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 26u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.visibleString = value;
@@ -490,9 +490,9 @@ mixin template Encoder(Element)
     void encodeGeneralString (string value)
     {
         Element element = new Element();
-        element.typeNumber = 27u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 27u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.generalString = value;
@@ -508,9 +508,9 @@ mixin template Encoder(Element)
     void encodeUniversalString (string value)
     {
         Element element = new Element();
-        element.typeNumber = 28u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 28u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.universalString = cast(dstring) value;
@@ -526,9 +526,9 @@ mixin template Encoder(Element)
     void encodeCharacterString (string value)
     {
         Element element = new Element();
-        element.typeNumber = 29u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 29u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         element.value = getBinaryInput(value);
         encodedData ~= element.toBytes;
     }
@@ -537,9 +537,9 @@ mixin template Encoder(Element)
     void encodeBasicMultilingualPlaneString (string value)
     {
         Element element = new Element();
-        element.typeNumber = 30u;
-        element.typeClass = tagClass;
-        element.typeConstruction = construction;
+        element.tagNumber = 30u;
+        element.tagClass = tagClass;
+        element.construction = construction;
         try
         {
             element.bmpString = cast(wstring) value;

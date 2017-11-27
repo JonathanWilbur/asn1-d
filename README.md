@@ -151,15 +151,15 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] `tasks.json`
   - [ ] `launch.json`?
 - [ ] Configure `dub.json`
-- [ ] Either do something with `valueContainsDoubleNull()` or make it public
+- [x] Either do something with `valueContainsDoubleNull()` or make it public
 - [x] String `ObjectIdentifier` constructor
 - [x] Properties for member `type`
   - [x] `typeClass` (Just rename `tagClass`.)
   - [x] `typeConstruction` (Just rename `construction`.)
   - [x] `typeNumber`
-- [ ] Rename `enum`s in `asn1.d`.
-- [ ] Command Line Tools
-  - [ ] Create a template mixin or something to reduce duplication between decoders.
+- [x] Rename `enum`s in `asn1.d`.
+- [x] Command Line Tools
+  - [x] Create a template mixin or something to reduce duplication between decoders.
   - [x] `encode-der`
   - [x] `encode-ber`
   - [x] `encode-cer`
@@ -169,12 +169,12 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [ ] Fuzz testing to ensure `RangeError` is never thrown. If it is thrown, it means that there are vulnerabilities if compiled with `-boundscheck=off` flag. Google's [OSS-Fuzz](https://github.com/google/oss-fuzz) tool looks like a pretty promising way to test this.
 - [x] Test that all one-byte elements throw exceptions
 - [x] Test an OID with a node with a values 127, 128, and 0.
-- [ ] Test even more significant mathematical values with `realType()`:
+- [x] Test even more significant mathematical values with `realType()`:
   - [x] `sqrt(2)/2`
   - [x] The golden ratio
-  - [ ] Everything [here](https://en.wikipedia.org/wiki/Mathematical_constant)
-  - [ ] `max` of every integral type
-  - [ ] `min` of every integral type
+  - [x] Everything [here](https://en.wikipedia.org/wiki/Mathematical_constant)
+  - [x] `max` of every integral type
+  - [x] `min` of every integral type
 - [ ] Cross-Platform Testing
   - [ ] Windows
   - [x] Mac OS X
@@ -302,6 +302,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Add `chmod +x` to the build scripts for all executables
   - [ ] Create dynamically-linked libraries as well
   - [ ] [GNU Make](https://www.gnu.org/software/make/) `Makefile`
+  - [ ] Generate a `.def` file for Windows?
 - [ ] Figure out how to parse negative numbers from the command-line (`-1.0` gets interpreted as a command...)
 - [ ] Instructions on installing and linking `cli.lib`.
 

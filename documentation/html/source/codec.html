@@ -1520,18 +1520,12 @@
 <span class="keyword">double</span> d = 0.00583;
 Element elf = <span class="keyword">new</span> Element();
 Element eld = <span class="keyword">new</span> Element();
-writeln(<span class="string_literal">"Testing: "</span>, <span class="keyword">typeof</span>(elf).stringof, <span class="string_literal">" : "</span>, <span class="keyword">typeof</span>(<span class="keyword">this</span>).stringof);
 elf.<span class="psymbol">realType</span>!<span class="keyword">float</span> = f;
 eld.<span class="psymbol">realType</span>!<span class="keyword">double</span> = d;
-writeln(<span class="string_literal">"x0"</span>);
 <span class="keyword">assert</span>(approxEqual(elf.<span class="psymbol">realType</span>!<span class="keyword">float</span>, f));
-writeln(<span class="string_literal">"x1"</span>);
 <span class="keyword">assert</span>(approxEqual(elf.<span class="psymbol">realType</span>!<span class="keyword">double</span>, f));
-writeln(<span class="string_literal">"x2"</span>);
 <span class="keyword">assert</span>(approxEqual(eld.<span class="psymbol">realType</span>!<span class="keyword">float</span>, d));
-writeln(<span class="string_literal">"x3"</span>);
 <span class="keyword">assert</span>(approxEqual(eld.<span class="psymbol">realType</span>!<span class="keyword">double</span>, d));
-writeln(<span class="string_literal">"x4"</span>);
 
 <span class="comment">// Assert that accessor does not mutate state
 </span><span class="keyword">assert</span>(approxEqual(elf.<span class="psymbol">realType</span>!<span class="keyword">double</span>, elf.<span class="psymbol">realType</span>!<span class="keyword">double</span>));

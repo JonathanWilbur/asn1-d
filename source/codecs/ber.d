@@ -201,7 +201,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Returns: the tag class of the element.
     */
     final public @property nothrow @safe
-    ASN1TagClass typeClass() const
+    ASN1TagClass tagClass() const
     {
         switch (this.type & 0b1100_0000u)
         {
@@ -234,7 +234,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         so is a good way to introduce bugs into your program.
     */
     final public @property nothrow @safe
-    void typeClass(ASN1TagClass value)
+    void tagClass(ASN1TagClass value)
     {
         this.type |= cast(ubyte) value;
     }
@@ -247,7 +247,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Returns: the tag class of the element.
     */
     final public @property nothrow @safe
-    ASN1Construction typeConstruction() const
+    ASN1Construction construction() const
     {
         switch (this.type & 0b0010_0000u)
         {
@@ -272,7 +272,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         not doing so is a good way to introduce bugs into your program.
     */
     final public @property nothrow @safe
-    void typeConstruction(ASN1Construction value)
+    void construction(ASN1Construction value)
     {
         this.type |= cast(ubyte) value;
     }
@@ -285,7 +285,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Returns: the type number associated with this element.
     */
     final public @property nothrow @safe
-    T typeNumber(T)() const
+    T tagNumber(T)() const
     if (isIntegral!T && isUnsigned!T)
     {
         return cast(T) (this.type & 0b0001_1111u);
@@ -297,7 +297,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         not doing so is a good way to introduce bugs into your program.
     */
     final public @property @safe
-    void typeNumber(T)(T value)
+    void tagNumber(T)(T value)
     if (isIntegral!T && isUnsigned!T)
     {
         if (value > 31u)
@@ -325,24 +325,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
 
     /// The octets of the encoded value.
     public ubyte[] value;
-
-    /*
-        Returns true if the value octets contain two consecutive 0x00u bytes.
-
-        The intent of this is to be used for indefinite-length encoding, which
-        cannot contain two consecutive null octets as the value.
-    */
-    private @property
-    bool valueContainsDoubleNull()
-    {
-        if (this.value.length < 2u) return false;
-        for (size_t i = 1; i < this.value.length; i++)
-        {
-            if (this.value[i] == 0x00u && this.value[i-1] == 0x00u)
-                return true;
-        }
-        return false;
-    }
 
     /**
         Decodes a boolean.
@@ -1850,14 +1832,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     @system
     unittest
     {
-        writeln("fuckin unittest");
         BERElement el = new BERElement();
         el.realType!float = 1.0;
-        writefln("UT between float: %(%02X %)", el.value);
         assert(approxEqual(el.realType!float, 1.0));
         assert(approxEqual(el.realType!double, 1.0));
         el.realType!double = 1.0;
-        writefln("UT between double: %(%02X %)", el.value);
         assert(approxEqual(el.realType!float, 1.0));
         assert(approxEqual(el.realType!double, 1.0));
     }
@@ -4418,14 +4397,11 @@ unittest
 @system
 unittest
 {
-    writeln("fuckin unittest");
     BERElement el = new BERElement();
     el.realType!float = 1.0;
-    writefln("UT between float: %(%02X %)", el.value);
     assert(approxEqual(el.realType!float, 1.0));
     assert(approxEqual(el.realType!double, 1.0));
     el.realType!double = 1.0;
-    writefln("UT between double: %(%02X %)", el.value);
     assert(approxEqual(el.realType!float, 1.0));
     assert(approxEqual(el.realType!double, 1.0));
 }

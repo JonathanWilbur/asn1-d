@@ -142,7 +142,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Returns: the tag class of the element.
     */
     final public @property nothrow @safe
-    ASN1TagClass typeClass() const
+    ASN1TagClass tagClass() const
     {
         switch (this.type & 0b1100_0000u)
         {
@@ -175,7 +175,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         so is a good way to introduce bugs into your program.
     */
     final public @property nothrow @safe
-    void typeClass(ASN1TagClass value)
+    void tagClass(ASN1TagClass value)
     {
         this.type |= cast(ubyte) value;
     }
@@ -188,7 +188,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Returns: the tag class of the element.
     */
     final public @property nothrow @safe
-    ASN1Construction typeConstruction() const
+    ASN1Construction construction() const
     {
         switch (this.type & 0b0010_0000u)
         {
@@ -213,7 +213,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         not doing so is a good way to introduce bugs into your program.
     */
     final public @property nothrow @safe
-    void typeConstruction(ASN1Construction value)
+    void construction(ASN1Construction value)
     {
         this.type |= cast(ubyte) value;
     }
@@ -226,7 +226,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Returns: the type number associated with this element.
     */
     final public @property nothrow @safe
-    T typeNumber(T)() const
+    T tagNumber(T)() const
     if (isIntegral!T && isUnsigned!T)
     {
         return cast(T) (this.type & 0b0001_1111u);
@@ -238,7 +238,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         not doing so is a good way to introduce bugs into your program.
     */
     final public @property @safe
-    void typeNumber(T)(T value)
+    void tagNumber(T)(T value)
     if (isIntegral!T && isUnsigned!T)
     {
         if (value > 31u)
