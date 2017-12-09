@@ -54,7 +54,7 @@ public alias DERElement = DistinguishedEncodingRulesElement;
 
     ---
     DERElement dv = new DERElement();
-    dv.type = 0x02u; // "2" means this is an INTEGER
+    dv.tagNumber = 0x02u; // "2" means this is an INTEGER
     dv.integer = 1433; // Now the data is encoded.
     transmit(cast(ubyte[]) dv); // transmit() is a made-up function.
     ---
@@ -66,7 +66,7 @@ public alias DERElement = DistinguishedEncodingRulesElement;
     DERElement dv2 = new DERElement(data);
 
     long x;
-    if (dv.type == 0x02u) // it is an INTEGER
+    if (dv.tagNumber == 0x02u) // it is an INTEGER
     {
         x = dv.integer;
     }
@@ -144,7 +144,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     final public @property nothrow @safe
     ASN1TagClass tagClass() const
     {
-        switch (this.type & 0b1100_0000u)
+        switch (this.tagNumber & 0b1100_0000u)
         {
             case (0b0000_0000u):
             {
@@ -177,7 +177,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     final public @property nothrow @safe
     void tagClass(ASN1TagClass value)
     {
-        this.type |= cast(ubyte) value;
+        this.tagNumber |= cast(ubyte) value;
     }
 
     /** 
@@ -190,7 +190,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     final public @property nothrow @safe
     ASN1Construction construction() const
     {
-        switch (this.type & 0b0010_0000u)
+        switch (this.tagNumber & 0b0010_0000u)
         {
             case (0b0000_0000u):
             {
@@ -215,7 +215,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     final public @property nothrow @safe
     void construction(ASN1Construction value)
     {
-        this.type |= cast(ubyte) value;
+        this.tagNumber |= cast(ubyte) value;
     }
 
     /** 
@@ -229,7 +229,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     T tagNumber(T)() const
     if (isIntegral!T && isUnsigned!T)
     {
-        return cast(T) (this.type & 0b0001_1111u);
+        return cast(T) (this.tagNumber & 0b0001_1111u);
     }
 
     /** 
@@ -251,7 +251,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 "is strictly between 0 and 31, inclusively."
             );
         
-        this.type |= ((cast(ubyte) value) & 0b0001_1111u);
+        this.tagNumber |= ((cast(ubyte) value) & 0b0001_1111u);
     }
 
     /// The type tag of this element
@@ -834,7 +834,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             );
 
         External ext = External();
-        if (dvs[0].type == 0x80u)
+        if (dvs[0].tagNumber == 0x80u)
         {
             ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
             DERElement identificationElement = new DERElement(dvs[0].value);
@@ -842,7 +842,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 'syntax' is the only permitted CHOICE for EXTERNAL's identification, 
                 when using Distinguished Encoding Rules (DER).
             */
-            if (identificationElement.type == 0x80u) 
+            if (identificationElement.tagNumber == 0x80u) 
             {
                 identification.syntax = identificationElement.objectIdentifier;
             }
@@ -879,11 +879,11 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             );
         }
 
-        if (dvs[1].type == 0x81u) // Next tag is the data-value-descriptor
+        if (dvs[1].tagNumber == 0x81u) // Next tag is the data-value-descriptor
         {
             ext.dataValueDescriptor = dvs[1].objectDescriptor;
         }
-        else if (dvs[1].type == 0x82u) // Next tag is the data-value-descriptor
+        else if (dvs[1].tagNumber == 0x82u) // Next tag is the data-value-descriptor
         {
             ext.dataValue = dvs[1].octetString;
             return ext;
@@ -910,7 +910,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             );
         }
 
-        if (dvs[2].type == 0x82u)
+        if (dvs[2].tagNumber == 0x82u)
         {
             ext.dataValue = dvs[2].octetString;
             return ext;
@@ -965,7 +965,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     void external(External value)
     {
         DERElement identification = new DERElement();
-        identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
+        identification.tagNumber = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
         DERElement identificationValue = new DERElement();
         if (value.identification.syntax.isNull)
@@ -982,17 +982,17 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             );
         }
 
-        identificationValue.type = 0x80u;
+        identificationValue.tagNumber = 0x80u;
         identificationValue.objectIdentifier = value.identification.syntax;
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
         identification.value = cast(ubyte[]) identificationValue;
 
         DERElement dataValueDescriptor = new DERElement();
-        dataValueDescriptor.type = 0x81u; // Primitive ObjectDescriptor
+        dataValueDescriptor.tagNumber = 0x81u; // Primitive ObjectDescriptor
         dataValueDescriptor.objectDescriptor = value.dataValueDescriptor;
 
         DERElement dataValue = new DERElement();
-        dataValue.type = 0x82u;
+        dataValue.tagNumber = 0x82u;
         dataValue.octetString = value.dataValue;
 
         this.sequence = [ identification, dataValueDescriptor, dataValue ];
@@ -1966,7 +1966,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 debugInformationText ~ reportBugsText
             );
 
-        if (dvs[0].type != 0x80u)
+        if (dvs[0].tagNumber != 0x80u)
             throw new ASN1ValueInvalidException
             (
                 "This exception was thrown because, you attempted to decode " ~
@@ -1982,7 +1982,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 debugInformationText ~ reportBugsText
             );
 
-        if (dvs[1].type != 0x82u)
+        if (dvs[1].tagNumber != 0x82u)
             throw new ASN1ValueInvalidException
             (
                 "This exception was thrown because, you attempted to decode " ~
@@ -2001,7 +2001,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         EmbeddedPDV pdv = EmbeddedPDV();
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         DERElement identificationElement = new DERElement(dvs[0].value);
-        switch (identificationElement.type)
+        switch (identificationElement.tagNumber)
         {
             case (0xA0u): // syntaxes
             {
@@ -2116,35 +2116,35 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     void embeddedPresentationDataValue(EmbeddedPDV value)
     {
         DERElement identification = new DERElement();
-        identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
+        identification.tagNumber = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
         DERElement identificationValue = new DERElement();
         if (!(value.identification.syntaxes.isNull))
         {
             DERElement abstractSyntax = new DERElement();
-            abstractSyntax.type = 0x80u;
+            abstractSyntax.tagNumber = 0x80u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
             DERElement transferSyntax = new DERElement();
-            transferSyntax.type = 0x81u;
+            transferSyntax.tagNumber = 0x81u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
-            identificationValue.type = 0xA0u;
+            identificationValue.tagNumber = 0xA0u;
             identificationValue.sequence = [ abstractSyntax, transferSyntax ];
         }
         else if (!(value.identification.syntax.isNull))
         {
-            identificationValue.type = 0x81u;
+            identificationValue.tagNumber = 0x81u;
             identificationValue.objectIdentifier = value.identification.syntax;
         }
         else if (!(value.identification.transferSyntax.isNull))
         {
-            identificationValue.type = 0x84u;
+            identificationValue.tagNumber = 0x84u;
             identificationValue.objectIdentifier = value.identification.transferSyntax;
         }
         else // Default to fixed
         {
-            identificationValue.type = 0x85u;
+            identificationValue.tagNumber = 0x85u;
             identificationValue.value = [];
         }
 
@@ -2152,7 +2152,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         identification.value = cast(ubyte[]) identificationValue;
 
         DERElement dataValue = new DERElement();
-        dataValue.type = 0x82u;
+        dataValue.tagNumber = 0x82u;
         dataValue.octetString = value.dataValue;
 
         this.sequence = [ identification, dataValue ];
@@ -2177,7 +2177,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
 
         DERElement el = new DERElement();
-        el.type = 0x08u;
+        el.tagNumber = 0x08u;
         el.embeddedPDV = input;
         EmbeddedPDV output = el.embeddedPDV;
         assert(output.identification.fixed == true);
@@ -3091,7 +3091,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 debugInformationText ~ reportBugsText
             );
 
-        if (dvs[0].type != 0x80u)
+        if (dvs[0].tagNumber != 0x80u)
             throw new ASN1ValueInvalidException
             (
                 "This exception was thrown because, you attempted to decode " ~
@@ -3107,7 +3107,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 debugInformationText ~ reportBugsText
             );
 
-        if (dvs[1].type != 0x81u)
+        if (dvs[1].tagNumber != 0x81u)
             throw new ASN1ValueInvalidException
             (
                 "This exception was thrown because, you attempted to decode " ~
@@ -3126,7 +3126,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         CharacterString cs = CharacterString();
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         DERElement identificationElement = new DERElement(dvs[0].value);
-        switch (identificationElement.type)
+        switch (identificationElement.tagNumber)
         {
             case (0x80u): // syntaxes
             {
@@ -3211,35 +3211,35 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     void characterString(CharacterString value)
     {
         DERElement identification = new DERElement();
-        identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
+        identification.tagNumber = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
         DERElement identificationValue = new DERElement();
         if (!(value.identification.syntaxes.isNull))
         {
             DERElement abstractSyntax = new DERElement();
-            abstractSyntax.type = 0x80u;
+            abstractSyntax.tagNumber = 0x80u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
             DERElement transferSyntax = new DERElement();
-            transferSyntax.type = 0x81u;
+            transferSyntax.tagNumber = 0x81u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
-            identificationValue.type = 0x80u;
+            identificationValue.tagNumber = 0x80u;
             identificationValue.sequence = [ abstractSyntax, transferSyntax ];
         }
         else if (!(value.identification.syntax.isNull))
         {
-            identificationValue.type = 0x81u;
+            identificationValue.tagNumber = 0x81u;
             identificationValue.objectIdentifier = value.identification.syntax;
         }
         else if (!(value.identification.transferSyntax.isNull))
         {
-            identificationValue.type = 0x84u;
+            identificationValue.tagNumber = 0x84u;
             identificationValue.objectIdentifier = value.identification.transferSyntax;
         }
         else // Default to fixed
         {
-            identificationValue.type = 0x85u;
+            identificationValue.tagNumber = 0x85u;
             identificationValue.value = [];
         }
 
@@ -3247,7 +3247,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         identification.value = cast(ubyte[]) identificationValue;
 
         DERElement stringValue = new DERElement();
-        stringValue.type = 0x81u;
+        stringValue.tagNumber = 0x81u;
         stringValue.octetString = value.stringValue;
 
         this.sequence = [ identification, stringValue ];
@@ -3359,7 +3359,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     public @safe @nogc nothrow
     this()
     {
-        this.type = 0x00;
+        this.tagNumber = 0x00;
         this.value = [];
     }
 
@@ -3403,7 +3403,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             throw new ASN1ValueTooSmallException
             ("DER-encoded value terminated prematurely.");
         
-        this.type = bytes[0];
+        this.tagNumber = bytes[0];
         
         // Length
         if (bytes[1] & 0x80u)
@@ -3501,7 +3501,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             throw new ASN1ValueTooSmallException
             ("DER-encoded value terminated prematurely.");
         
-        this.type = bytes[bytesRead];
+        this.tagNumber = bytes[bytesRead];
 
         // Length
         if (bytes[bytesRead+1] & 0x80u)
@@ -3596,7 +3596,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             }
         }
 
-        return ([ this.type ] ~ lengthOctets ~ this.value);
+        return ([ this.tagNumber ] ~ lengthOctets ~ this.value);
     }
 
     /**
@@ -3777,7 +3777,7 @@ unittest
 unittest
 {
     ubyte[] data = [ // 192 characters of boomer-posting
-        0x0Cu, 0x81u, 0xC0, 
+        0x0Cu, 0x81u, 0xC0u, 
         'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
         'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
         'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 

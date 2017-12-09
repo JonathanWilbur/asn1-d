@@ -54,7 +54,7 @@ public alias CERElement = CanonicalEncodingRulesElement;
 
     ---
     CERElement cv = new CERElement();
-    cv.type = 0x02u; // "2" means this is an INTEGER
+    cv.tagNumber = 0x02u; // "2" means this is an INTEGER
     cv.integer = 1433; // Now the data is encoded.
     transmit(cast(ubyte[]) cv); // transmit() is a made-up function.
     ---
@@ -66,7 +66,7 @@ public alias CERElement = CanonicalEncodingRulesElement;
     CERElement cv2 = new CERElement(data);
 
     long x;
-    if (cv.type == 0x02u) // it is an INTEGER
+    if (cv.tagNumber == 0x02u) // it is an INTEGER
     {
         x = cv.integer;
     }
@@ -155,7 +155,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     final public @property nothrow @safe
     ASN1TagClass tagClass() const
     {
-        switch (this.type & 0b1100_0000u)
+        switch (this.tagNumber & 0b1100_0000u)
         {
             case (0b0000_0000u):
             {
@@ -188,7 +188,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     final public @property nothrow @safe
     void tagClass(ASN1TagClass value)
     {
-        this.type |= cast(ubyte) value;
+        this.tagNumber |= cast(ubyte) value;
     }
 
     /** 
@@ -201,7 +201,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     final public @property nothrow @safe
     ASN1Construction construction() const
     {
-        switch (this.type & 0b0010_0000u)
+        switch (this.tagNumber & 0b0010_0000u)
         {
             case (0b0000_0000u):
             {
@@ -226,7 +226,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     final public @property nothrow @safe
     void construction(ASN1Construction value)
     {
-        this.type |= cast(ubyte) value;
+        this.tagNumber |= cast(ubyte) value;
     }
 
     /** 
@@ -240,7 +240,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     T tagNumber(T)() const
     if (isIntegral!T && isUnsigned!T)
     {
-        return cast(T) (this.type & 0b0001_1111u);
+        return cast(T) (this.tagNumber & 0b0001_1111u);
     }
 
     /** 
@@ -262,7 +262,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 "is strictly between 0 and 31, inclusively."
             );
         
-        this.type |= ((cast(ubyte) value) & 0b0001_1111u);
+        this.tagNumber |= ((cast(ubyte) value) & 0b0001_1111u);
     }
 
     /// The type tag of this element
@@ -471,7 +471,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         // If the blank constructor ever stops producing an EOC, 
         // this method must change.
         CERElement test = new CERElement();
-        assert(test.type == 0x00u);
+        assert(test.tagNumber == 0x00u);
         assert(test.length == 0u);
     }
     body
@@ -622,7 +622,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+999u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = [ cast(ubyte) 0u ] ~ ub[i .. i+999u];
                 primitives ~= x;
                 i += 999u;
@@ -630,7 +630,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = ([ cast(ubyte) 0u ] ~ ub[i .. $]);
             primitives ~= y;
 
@@ -638,7 +638,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -706,7 +706,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -741,7 +741,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         // If the blank constructor ever stops producing an EOC, 
         // this method must change.
         CERElement test = new CERElement();
-        assert(test.type == 0x00u);
+        assert(test.tagNumber == 0x00u);
         assert(test.length == 0u);
     }
     body
@@ -758,7 +758,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
@@ -766,7 +766,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = value[i .. $];
             primitives ~= y;
 
@@ -774,7 +774,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -997,7 +997,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -1088,7 +1088,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
@@ -1096,7 +1096,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -1104,7 +1104,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -1191,7 +1191,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             );
 
         External ext = External();
-        if (cvs[0].type == 0x80u)
+        if (cvs[0].tagNumber == 0x80u)
         {
             ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
             CERElement identificationElement = new CERElement(cvs[0].value);
@@ -1199,7 +1199,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 'syntax' is the only permitted CHOICE for EXTERNAL's identification, 
                 when using Canonical Encoding Rules (CER).
             */
-            if (identificationElement.type == 0x80u) 
+            if (identificationElement.tagNumber == 0x80u) 
             {
                 identification.syntax = identificationElement.objectIdentifier;
             }
@@ -1236,11 +1236,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             );
         }
 
-        if (cvs[1].type == 0x81u) // Next tag is the data-value-descriptor
+        if (cvs[1].tagNumber == 0x81u) // Next tag is the data-value-descriptor
         {
             ext.dataValueDescriptor = cvs[1].objectDescriptor;
         }
-        else if (cvs[1].type == 0x82u) // Next tag is the data-value-descriptor
+        else if (cvs[1].tagNumber == 0x82u) // Next tag is the data-value-descriptor
         {
             ext.dataValue = cvs[1].octetString;
             return ext;
@@ -1267,7 +1267,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             );
         }
 
-        if (cvs[2].type == 0x82u)
+        if (cvs[2].tagNumber == 0x82u)
         {
             ext.dataValue = cvs[2].octetString;
             return ext;
@@ -1322,7 +1322,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     void external(External value)
     {
         CERElement identification = new CERElement();
-        identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
+        identification.tagNumber = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
         CERElement identificationValue = new CERElement();
         if (value.identification.syntax.isNull)
@@ -1339,17 +1339,17 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             );
         }
 
-        identificationValue.type = 0x80u;
+        identificationValue.tagNumber = 0x80u;
         identificationValue.objectIdentifier = value.identification.syntax;
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
         identification.value = cast(ubyte[]) identificationValue;
 
         CERElement dataValueDescriptor = new CERElement();
-        dataValueDescriptor.type = 0x81u; // Primitive ObjectDescriptor
+        dataValueDescriptor.tagNumber = 0x81u; // Primitive ObjectDescriptor
         dataValueDescriptor.objectDescriptor = value.dataValueDescriptor;
 
         CERElement dataValue = new CERElement();
-        dataValue.type = 0x82u;
+        dataValue.tagNumber = 0x82u;
         dataValue.octetString = value.dataValue;
 
         this.sequence = [ identification, dataValueDescriptor, dataValue ];
@@ -2323,7 +2323,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 debugInformationText ~ reportBugsText
             );
 
-        if (cvs[0].type != 0x80u)
+        if (cvs[0].tagNumber != 0x80u)
             throw new ASN1ValueInvalidException
             (
                 "This exception was thrown because, you attempted to decode " ~
@@ -2339,7 +2339,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 debugInformationText ~ reportBugsText
             );
 
-        if (cvs[1].type != 0x82u)
+        if (cvs[1].tagNumber != 0x82u)
             throw new ASN1ValueInvalidException
             (
                 "This exception was thrown because, you attempted to decode " ~
@@ -2358,7 +2358,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         EmbeddedPDV pdv = EmbeddedPDV();
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         CERElement identificationElement = new CERElement(cvs[0].value);
-        switch (identificationElement.type)
+        switch (identificationElement.tagNumber)
         {
             case (0xA0u): // syntaxes
             {
@@ -2473,35 +2473,35 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     void embeddedPresentationDataValue(EmbeddedPDV value)
     {
         CERElement identification = new CERElement();
-        identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
+        identification.tagNumber = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
         CERElement identificationValue = new CERElement();
         if (!(value.identification.syntaxes.isNull))
         {
             CERElement abstractSyntax = new CERElement();
-            abstractSyntax.type = 0x80u;
+            abstractSyntax.tagNumber = 0x80u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
             CERElement transferSyntax = new CERElement();
-            transferSyntax.type = 0x81u;
+            transferSyntax.tagNumber = 0x81u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
-            identificationValue.type = 0xA0u;
+            identificationValue.tagNumber = 0xA0u;
             identificationValue.sequence = [ abstractSyntax, transferSyntax ];
         }
         else if (!(value.identification.syntax.isNull))
         {
-            identificationValue.type = 0x81u;
+            identificationValue.tagNumber = 0x81u;
             identificationValue.objectIdentifier = value.identification.syntax;
         }
         else if (!(value.identification.transferSyntax.isNull))
         {
-            identificationValue.type = 0x84u;
+            identificationValue.tagNumber = 0x84u;
             identificationValue.objectIdentifier = value.identification.transferSyntax;
         }
         else // Default to fixed
         {
-            identificationValue.type = 0x85u;
+            identificationValue.tagNumber = 0x85u;
             identificationValue.value = [];
         }
 
@@ -2509,7 +2509,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         identification.value = cast(ubyte[]) identificationValue;
 
         CERElement dataValue = new CERElement();
-        dataValue.type = 0x82u;
+        dataValue.tagNumber = 0x82u;
         dataValue.octetString = value.dataValue;
 
         this.sequence = [ identification, dataValue ];
@@ -2534,7 +2534,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
 
         CERElement el = new CERElement();
-        el.type = 0x08u;
+        el.tagNumber = 0x08u;
         el.embeddedPDV = input;
         EmbeddedPDV output = el.embeddedPDV;
         assert(output.identification.fixed == true);
@@ -2592,7 +2592,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -2635,7 +2635,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
@@ -2643,7 +2643,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -2651,7 +2651,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -2892,7 +2892,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -2965,7 +2965,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
@@ -2973,7 +2973,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -2981,7 +2981,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -3056,7 +3056,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -3136,7 +3136,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
@@ -3144,7 +3144,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -3152,7 +3152,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -3207,7 +3207,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -3251,7 +3251,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
@@ -3259,7 +3259,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = value[i .. $];
             primitives ~= y;
 
@@ -3267,7 +3267,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -3322,7 +3322,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -3366,7 +3366,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
@@ -3374,7 +3374,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = value[i .. $];
             primitives ~= y;
 
@@ -3382,7 +3382,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -3467,7 +3467,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -3555,7 +3555,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
@@ -3563,7 +3563,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -3571,7 +3571,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -3772,7 +3772,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -3858,7 +3858,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
@@ -3866,7 +3866,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -3874,7 +3874,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -3946,7 +3946,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -4023,7 +4023,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
@@ -4031,7 +4031,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -4039,7 +4039,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -4114,7 +4114,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -4192,7 +4192,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
@@ -4200,7 +4200,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -4208,7 +4208,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -4299,7 +4299,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -4391,7 +4391,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+250u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 version (BigEndian)
                 {
                     x.value = cast(ubyte[]) value[i .. i+250u];
@@ -4415,7 +4415,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             version (BigEndian)
             {
                 y.value = cast(ubyte[]) value[i .. $];
@@ -4439,7 +4439,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -4526,7 +4526,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 debugInformationText ~ reportBugsText
             );
 
-        if (cvs[0].type != 0x80u)
+        if (cvs[0].tagNumber != 0x80u)
             throw new ASN1ValueInvalidException
             (
                 "This exception was thrown because, you attempted to decode " ~
@@ -4542,7 +4542,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 debugInformationText ~ reportBugsText
             );
 
-        if (cvs[1].type != 0x81u)
+        if (cvs[1].tagNumber != 0x81u)
             throw new ASN1ValueInvalidException
             (
                 "This exception was thrown because, you attempted to decode " ~
@@ -4561,7 +4561,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         CharacterString cs = CharacterString();
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         CERElement identificationElement = new CERElement(cvs[0].value);
-        switch (identificationElement.type)
+        switch (identificationElement.tagNumber)
         {
             case (0xA0u): // syntaxes
             {
@@ -4646,35 +4646,35 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     void characterString(CharacterString value)
     {
         CERElement identification = new CERElement();
-        identification.type = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
+        identification.tagNumber = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
 
         CERElement identificationValue = new CERElement();
         if (!(value.identification.syntaxes.isNull))
         {
             CERElement abstractSyntax = new CERElement();
-            abstractSyntax.type = 0x80u;
+            abstractSyntax.tagNumber = 0x80u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
             CERElement transferSyntax = new CERElement();
-            transferSyntax.type = 0x81u;
+            transferSyntax.tagNumber = 0x81u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
-            identificationValue.type = 0xA0u;
+            identificationValue.tagNumber = 0xA0u;
             identificationValue.sequence = [ abstractSyntax, transferSyntax ];
         }
         else if (!(value.identification.syntax.isNull))
         {
-            identificationValue.type = 0x81u;
+            identificationValue.tagNumber = 0x81u;
             identificationValue.objectIdentifier = value.identification.syntax;
         }
         else if (!(value.identification.transferSyntax.isNull))
         {
-            identificationValue.type = 0x84u;
+            identificationValue.tagNumber = 0x84u;
             identificationValue.objectIdentifier = value.identification.transferSyntax;
         }
         else // Default to fixed
         {
-            identificationValue.type = 0x85u;
+            identificationValue.tagNumber = 0x85u;
             identificationValue.value = [];
         }
 
@@ -4682,7 +4682,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         identification.value = cast(ubyte[]) identificationValue;
 
         CERElement stringValue = new CERElement();
-        stringValue.type = 0x81u;
+        stringValue.tagNumber = 0x81u;
         stringValue.octetString = value.stringValue;
 
         this.sequence = [ identification, stringValue ];
@@ -4773,7 +4773,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 primitives ~= new CERElement(value);
             }
 
-            if (primitives[$-1].type != 0x00u && primitives[$-1].length != 0u)
+            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -4863,7 +4863,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             while (i+500u < value.length)
             {
                 CERElement x = new CERElement();
-                x.type = (this.type & 0b1101_1111u);
+                x.tagNumber = (this.tagNumber & 0b1101_1111u);
                 version (BigEndian)
                 {
                     x.value = cast(ubyte[]) value[i .. i+500u];
@@ -4887,7 +4887,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.type = (this.type & 0b1101_1111u);
+            y.tagNumber = (this.tagNumber & 0b1101_1111u);
             version (BigEndian)
             {
                 y.value = cast(ubyte[]) value[i .. $];
@@ -4911,7 +4911,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             primitives ~= z;
 
             this.sequence = primitives;
-            this.type |= 0b0010_0000u;
+            this.tagNumber |= 0b0010_0000u;
             this.lengthEncodingPreference = LengthEncodingPreference.definite;
         }
     }
@@ -4950,7 +4950,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     public @safe @nogc nothrow
     this()
     {
-        this.type = 0x00;
+        this.tagNumber = 0x00;
         this.value = [];
     }
 
@@ -4994,7 +4994,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             throw new ASN1ValueTooSmallException
             ("CER-encoded value terminated prematurely.");
         
-        this.type = bytes[0];
+        this.tagNumber = bytes[0];
         
         // Length
         if (bytes[1] & 0x80u)
@@ -5101,7 +5101,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             throw new ASN1ValueTooSmallException
             ("CER-encoded value terminated prematurely.");
         
-        this.type = bytes[bytesRead];
+        this.tagNumber = bytes[bytesRead];
 
         // Length
         if (bytes[bytesRead+1] & 0x80u)
@@ -5221,7 +5221,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             }
         }
         return (
-            [ this.type ] ~ 
+            [ this.tagNumber ] ~ 
             lengthOctets ~ 
             this.value ~ 
             (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00u, 0x00u ] : cast(ubyte[]) [])
@@ -5406,7 +5406,7 @@ unittest
 unittest
 {
     ubyte[] data = [ // 192 characters of boomer-posting
-        0x0Cu, 0x81u, 0xC0, 
+        0x0Cu, 0x81u, 0xC0u, 
         'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
         'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
         'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 

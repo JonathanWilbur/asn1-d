@@ -7,9 +7,13 @@ public
 struct ASN1ContextNegotiation
 {
     ///
-    public long presentationContextID = 0L;
+    public ptrdiff_t presentationContextID = 0u;
     ///
     public ObjectIdentifier transferSyntax;
+
+    // To use the terms of the pre-1994 EXTERNAL definition:
+    public alias directReference = transferSyntax;
+    public alias indirectReference = presentationContextID;
 }
 
 ///
@@ -35,13 +39,17 @@ struct ASN1ContextSwitchingTypeIdentification
     ///
     public Nullable!ObjectIdentifier syntax;
     ///
-    public long presentationContextID = 0L;
+    public size_t presentationContextID = 0u; // REVIEW: Change to ptrdiff_t
     ///
     public Nullable!ASN1ContextNegotiation contextNegotiation;
     ///
     public Nullable!ObjectIdentifier transferSyntax;
     ///
     public bool fixed;
+
+    // To use the terms of the pre-1994 EXTERNAL definition:
+    public alias directReference = syntax;
+    public alias indirectReference = presentationContextID;
 }
 
 /*

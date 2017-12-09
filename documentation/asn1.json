@@ -1007,15 +1007,15 @@
     ]
    },
    {
-    "name" : "ASN1ValueSizeException",
+    "name" : "ASN1TagException",
     "kind" : "alias",
     "comment" : "\n",
     "line" : 35,
     "char" : 8,
-    "deco" : "C5codec41AbstractSyntaxNotation1ValueSizeException"
+    "deco" : "C5codec35AbstractSyntaxNotation1TagException"
    },
    {
-    "name" : "AbstractSyntaxNotation1ValueSizeException",
+    "name" : "AbstractSyntaxNotation1TagException",
     "kind" : "class",
     "comment" : "\n",
     "line" : 38,
@@ -1031,20 +1031,20 @@
     ]
    },
    {
-    "name" : "ASN1ValueTooBigException",
+    "name" : "ASN1ValueSizeException",
     "kind" : "alias",
     "comment" : "\n",
     "line" : 44,
     "char" : 8,
-    "deco" : "C5codec43AbstractSyntaxNotation1ValueTooBigException"
+    "deco" : "C5codec41AbstractSyntaxNotation1ValueSizeException"
    },
    {
-    "name" : "AbstractSyntaxNotation1ValueTooBigException",
+    "name" : "AbstractSyntaxNotation1ValueSizeException",
     "kind" : "class",
     "comment" : "\n",
     "line" : 47,
     "char" : 1,
-    "base" : "codec.AbstractSyntaxNotation1ValueSizeException",
+    "base" : "codec.AbstractSyntaxNotation1CodecException",
     "members" : [
      {
       "name" : "basicExceptionCtors!()",
@@ -1055,15 +1055,15 @@
     ]
    },
    {
-    "name" : "ASN1ValueTooSmallException",
+    "name" : "ASN1ValueTooBigException",
     "kind" : "alias",
     "comment" : "\n",
     "line" : 53,
     "char" : 8,
-    "deco" : "C5codec45AbstractSyntaxNotation1ValueTooSmallException"
+    "deco" : "C5codec43AbstractSyntaxNotation1ValueTooBigException"
    },
    {
-    "name" : "AbstractSyntaxNotation1ValueTooSmallException",
+    "name" : "AbstractSyntaxNotation1ValueTooBigException",
     "kind" : "class",
     "comment" : "\n",
     "line" : 56,
@@ -1079,10 +1079,34 @@
     ]
    },
    {
-    "name" : "ASN1ValueInvalidException",
+    "name" : "ASN1ValueTooSmallException",
     "kind" : "alias",
     "comment" : "\n",
     "line" : 62,
+    "char" : 8,
+    "deco" : "C5codec45AbstractSyntaxNotation1ValueTooSmallException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1ValueTooSmallException",
+    "kind" : "class",
+    "comment" : "\n",
+    "line" : 65,
+    "char" : 1,
+    "base" : "codec.AbstractSyntaxNotation1ValueSizeException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 67,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ValueInvalidException",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 71,
     "char" : 8,
     "deco" : "C5codec44AbstractSyntaxNotation1ValueInvalidException"
    },
@@ -1090,14 +1114,14 @@
     "name" : "AbstractSyntaxNotation1ValueInvalidException",
     "kind" : "class",
     "comment" : "    Thrown when an encoded value, or a decoded value (attempting to be encoded)\n    takes on a value that the codec cannot encode or decode.\n\n    Examples:\n    $(UL\n        $(LI When a DER codec detects a BOOLEAN encoded in a byte other than 0xFF or 0x00)\n        $(LI When a BER codec finds an invalid character in a string)\n    )\n",
-    "line" : 74,
+    "line" : 83,
     "char" : 1,
     "base" : "codec.AbstractSyntaxNotation1CodecException",
     "members" : [
      {
       "name" : "basicExceptionCtors!()",
       "kind" : "mixin",
-      "line" : 76,
+      "line" : 85,
       "char" : 5
      }
     ]
@@ -1106,7 +1130,7 @@
     "name" : "ASN1InvalidIndexException",
     "kind" : "alias",
     "comment" : "\n",
-    "line" : 80,
+    "line" : 89,
     "char" : 8,
     "deco" : "C5codec44AbstractSyntaxNotation1InvalidIndexException"
    },
@@ -1114,14 +1138,14 @@
     "name" : "AbstractSyntaxNotation1InvalidIndexException",
     "kind" : "class",
     "comment" : "    An exception thrown when a member of a CHOICE or SEQUENCE is given a\n    context-specific index that is not defined for that CHOICE or SEQUENCE.\n\n    For example, if:\n\n    TheQuestion := [APPLICATION 5] CHOICE {\n        toBe [0] NULL,\n        notToBe [1] NULL\n    }\n\n    This exception should be thrown if TheQuestion were to be decoded from the\n    BER-encoded byte sequence: $(D_INLINECODE 0x65 0x02 0x83 0x00), because\n    the third byte specifies a third choice in TheQuestion, but there is no\n    choice #3 in TheQuestion--there is only choice #0 and #1.\n",
-    "line" : 98,
+    "line" : 107,
     "char" : 1,
     "base" : "codec.AbstractSyntaxNotation1CodecException",
     "members" : [
      {
       "name" : "basicExceptionCtors!()",
       "kind" : "mixin",
-      "line" : 100,
+      "line" : 109,
       "char" : 5
      }
     ]
@@ -1130,7 +1154,7 @@
     "name" : "ASN1InvalidLengthException",
     "kind" : "alias",
     "comment" : "\n",
-    "line" : 104,
+    "line" : 113,
     "char" : 8,
     "deco" : "C5codec45AbstractSyntaxNotation1InvalidLengthException"
    },
@@ -1138,14 +1162,14 @@
     "name" : "AbstractSyntaxNotation1InvalidLengthException",
     "kind" : "class",
     "comment" : "    Thrown if an invalid length encoding is encountered, such as when a length byte\n    of 0xFF--which is reserved--is encountered in BER encoding.\n",
-    "line" : 110,
+    "line" : 119,
     "char" : 1,
     "base" : "codec.AbstractSyntaxNotation1CodecException",
     "members" : [
      {
       "name" : "basicExceptionCtors!()",
       "kind" : "mixin",
-      "line" : 112,
+      "line" : 121,
       "char" : 5
      }
     ]
@@ -1154,13 +1178,13 @@
     "name" : "ASN1Element",
     "kind" : "alias",
     "comment" : "\n",
-    "line" : 116,
+    "line" : 125,
     "char" : 8
    },
    {
     "kind" : "template",
     "comment" : "\n",
-    "line" : 119,
+    "line" : 128,
     "char" : 1,
     "name" : "AbstractSyntaxNotation1Element",
     "parameters" : [
@@ -1173,14 +1197,14 @@
      {
       "name" : "AbstractSyntaxNotation1Element",
       "kind" : "class",
-      "line" : 119,
+      "line" : 128,
       "char" : 1,
       "members" : [
        {
         "name" : "boolean",
         "kind" : "function",
         "comment" : "Decodes a boolean\n",
-        "line" : 162,
+        "line" : 134,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1191,7 +1215,7 @@
         "name" : "boolean",
         "kind" : "function",
         "comment" : "Encodes a boolean\n",
-        "line" : 166,
+        "line" : 138,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1205,20 +1229,20 @@
         ]
        },
        {
-        "name" : "__unittestL169_1",
+        "name" : "__unittest___source_codec_d_141_0",
         "kind" : "function",
-        "line" : 169,
+        "line" : 141,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 182,
+        "endline" : 154,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Decodes an integer\n",
-        "line" : 183,
+        "line" : 155,
         "char" : 7,
         "name" : "integer",
         "parameters" : [
@@ -1232,7 +1256,7 @@
          {
           "name" : "integer",
           "kind" : "function",
-          "line" : 183,
+          "line" : 155,
           "char" : 7,
           "storageClass" : [
            "abstract"
@@ -1244,7 +1268,7 @@
        {
         "kind" : "template",
         "comment" : "Encodes an integer\n",
-        "line" : 187,
+        "line" : 159,
         "char" : 10,
         "name" : "integer",
         "parameters" : [
@@ -1258,7 +1282,7 @@
          {
           "name" : "integer",
           "kind" : "function",
-          "line" : 187,
+          "line" : 159,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -1274,20 +1298,20 @@
         ]
        },
        {
-        "name" : "__unittestL190_2",
+        "name" : "__unittest___source_codec_d_162_0",
         "kind" : "function",
-        "line" : 190,
+        "line" : 162,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 361,
+        "endline" : 333,
         "endchar" : 5
        },
        {
         "name" : "bitString",
         "kind" : "function",
-        "line" : 362,
+        "line" : 334,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1297,7 +1321,7 @@
        {
         "name" : "bitString",
         "kind" : "function",
-        "line" : 365,
+        "line" : 337,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1311,21 +1335,21 @@
         ]
        },
        {
-        "name" : "__unittestL368_3",
+        "name" : "__unittest___source_codec_d_340_0",
         "kind" : "function",
-        "line" : 368,
+        "line" : 340,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 385,
+        "endline" : 357,
         "endchar" : 5
        },
        {
         "name" : "octetString",
         "kind" : "function",
         "comment" : "Decodes a ubyte[] array\n",
-        "line" : 386,
+        "line" : 358,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -1336,7 +1360,7 @@
         "name" : "octetString",
         "kind" : "function",
         "comment" : "Encodes a ubyte[] array\n",
-        "line" : 390,
+        "line" : 362,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1350,21 +1374,21 @@
         ]
        },
        {
-        "name" : "__unittestL393_4",
+        "name" : "__unittest___source_codec_d_365_0",
         "kind" : "function",
-        "line" : 393,
+        "line" : 365,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 404,
+        "endline" : 376,
         "endchar" : 5
        },
        {
         "name" : "oid",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 404,
+        "line" : 376,
         "char" : 12,
         "type" : "objectIdentifier"
        },
@@ -1372,7 +1396,7 @@
         "name" : "objectIdentifier",
         "kind" : "function",
         "comment" : "Decodes an Object Identifier\n",
-        "line" : 407,
+        "line" : 379,
         "char" : 9,
         "storageClass" : [
          "abstract"
@@ -1383,7 +1407,7 @@
         "name" : "objectIdentifier",
         "kind" : "function",
         "comment" : "Encodes an Object Identifier\n",
-        "line" : 411,
+        "line" : 383,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1397,21 +1421,21 @@
         ]
        },
        {
-        "name" : "__unittestL414_5",
+        "name" : "__unittest___source_codec_d_386_0",
         "kind" : "function",
-        "line" : 414,
+        "line" : 386,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 476,
+        "endline" : 448,
         "endchar" : 5
        },
        {
         "name" : "objectDescriptor",
         "kind" : "function",
         "comment" : "        Decodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n",
-        "line" : 477,
+        "line" : 449,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1422,7 +1446,7 @@
         "name" : "objectDescriptor",
         "kind" : "function",
         "comment" : "        Encodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n",
-        "line" : 498,
+        "line" : 470,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1436,21 +1460,21 @@
         ]
        },
        {
-        "name" : "__unittestL501_6",
+        "name" : "__unittest___source_codec_d_473_0",
         "kind" : "function",
-        "line" : 501,
+        "line" : 473,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 546,
+        "endline" : 518,
         "endchar" : 5
        },
        {
         "name" : "external",
         "kind" : "function",
         "comment" : "        Decodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK2 https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n",
-        "line" : 547,
+        "line" : 519,
         "char" : 14,
         "storageClass" : [
          "abstract"
@@ -1461,7 +1485,7 @@
         "name" : "external",
         "kind" : "function",
         "comment" : "        Encodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK2 https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n",
-        "line" : 573,
+        "line" : 545,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1475,20 +1499,20 @@
         ]
        },
        {
-        "name" : "__unittestL576_7",
+        "name" : "__unittest___source_codec_d_548_0",
         "kind" : "function",
-        "line" : 576,
+        "line" : 548,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 595,
+        "endline" : 567,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Encodes a floating-point number\n",
-        "line" : 596,
+        "line" : 568,
         "char" : 7,
         "name" : "realType",
         "parameters" : [
@@ -1502,7 +1526,7 @@
          {
           "name" : "realType",
           "kind" : "function",
-          "line" : 596,
+          "line" : 568,
           "char" : 7,
           "storageClass" : [
            "abstract"
@@ -1514,7 +1538,7 @@
        {
         "kind" : "template",
         "comment" : "Encodes a floating-point number\n",
-        "line" : 600,
+        "line" : 572,
         "char" : 10,
         "name" : "realType",
         "parameters" : [
@@ -1528,7 +1552,7 @@
          {
           "name" : "realType",
           "kind" : "function",
-          "line" : 600,
+          "line" : 572,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -1544,76 +1568,76 @@
         ]
        },
        {
-        "name" : "__unittestL604_8",
+        "name" : "__unittest___source_codec_d_576_0",
         "kind" : "function",
         "comment" : "\n",
-        "line" : 604,
+        "line" : 576,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 622,
+        "endline" : 594,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL623_9",
+        "name" : "__unittest___source_codec_d_595_0",
         "kind" : "function",
-        "line" : 623,
+        "line" : 595,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 697,
+        "endline" : 669,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL698_10",
+        "name" : "__unittest___source_codec_d_670_0",
         "kind" : "function",
-        "line" : 698,
+        "line" : 670,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 784,
+        "endline" : 756,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL785_11",
+        "name" : "__unittest___source_codec_d_757_0",
         "kind" : "function",
-        "line" : 785,
+        "line" : 757,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 841,
+        "endline" : 813,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL842_12",
+        "name" : "__unittest___source_codec_d_814_0",
         "kind" : "function",
-        "line" : 842,
+        "line" : 814,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 942,
+        "endline" : 914,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL943_13",
+        "name" : "__unittest___source_codec_d_915_0",
         "kind" : "function",
-        "line" : 943,
+        "line" : 915,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 962,
+        "endline" : 934,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Encodes an integer that represents an ENUMERATED value\n",
-        "line" : 963,
+        "line" : 935,
         "char" : 7,
         "name" : "enumerated",
         "parameters" : [
@@ -1627,7 +1651,7 @@
          {
           "name" : "enumerated",
           "kind" : "function",
-          "line" : 963,
+          "line" : 935,
           "char" : 7,
           "storageClass" : [
            "abstract"
@@ -1639,7 +1663,7 @@
        {
         "kind" : "template",
         "comment" : "Decodes an integer that represents an ENUMERATED value\n",
-        "line" : 967,
+        "line" : 939,
         "char" : 10,
         "name" : "enumerated",
         "parameters" : [
@@ -1653,7 +1677,7 @@
          {
           "name" : "enumerated",
           "kind" : "function",
-          "line" : 967,
+          "line" : 939,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -1669,21 +1693,21 @@
         ]
        },
        {
-        "name" : "__unittestL970_14",
+        "name" : "__unittest___source_codec_d_942_0",
         "kind" : "function",
-        "line" : 970,
+        "line" : 942,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1142,
+        "endline" : 1114,
         "endchar" : 5
        },
        {
         "name" : "embeddedPDV",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1142,
+        "line" : 1114,
         "char" : 12,
         "type" : "embeddedPresentationDataValue"
        },
@@ -1691,7 +1715,7 @@
         "name" : "embeddedPresentationDataValue",
         "kind" : "function",
         "comment" : "        Decodes an EMBEDDED PDV, which is a constructed data type, defined in\n            the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EMBEDDED PDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1173,
+        "line" : 1145,
         "char" : 17,
         "storageClass" : [
          "abstract"
@@ -1702,7 +1726,7 @@
         "name" : "embeddedPresentationDataValue",
         "kind" : "function",
         "comment" : "        Encodes an EMBEDDED PDV, which is a constructed data type, defined in\n            the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EMBEDDED PDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1205,
+        "line" : 1177,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1716,54 +1740,54 @@
         ]
        },
        {
-        "name" : "__unittestL1208_15",
+        "name" : "__unittest___source_codec_d_1180_0",
         "kind" : "function",
-        "line" : 1208,
+        "line" : 1180,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1232,
+        "endline" : 1204,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1233_16",
+        "name" : "__unittest___source_codec_d_1205_0",
         "kind" : "function",
-        "line" : 1233,
+        "line" : 1205,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1249,
+        "endline" : 1221,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1250_17",
+        "name" : "__unittest___source_codec_d_1222_0",
         "kind" : "function",
-        "line" : 1250,
+        "line" : 1222,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1266,
+        "endline" : 1238,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1267_18",
+        "name" : "__unittest___source_codec_d_1239_0",
         "kind" : "function",
-        "line" : 1267,
+        "line" : 1239,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1284,
+        "endline" : 1256,
         "endchar" : 5
        },
        {
         "name" : "utf8String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1284,
+        "line" : 1256,
         "char" : 12,
         "type" : "unicodeTransformationFormat8String"
        },
@@ -1771,7 +1795,7 @@
         "name" : "unicodeTransformationFormat8String",
         "kind" : "function",
         "comment" : "Decodes a UTF-8 String\n",
-        "line" : 1287,
+        "line" : 1259,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1782,7 +1806,7 @@
         "name" : "unicodeTransformationFormat8String",
         "kind" : "function",
         "comment" : "Encodes a UTF-8 String\n",
-        "line" : 1291,
+        "line" : 1263,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1796,21 +1820,21 @@
         ]
        },
        {
-        "name" : "__unittestL1294_19",
+        "name" : "__unittest___source_codec_d_1266_0",
         "kind" : "function",
-        "line" : 1294,
+        "line" : 1266,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1307,
+        "endline" : 1279,
         "endchar" : 5
        },
        {
         "name" : "roid",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1307,
+        "line" : 1279,
         "char" : 12,
         "type" : "relativeObjectIdentifier"
        },
@@ -1818,7 +1842,7 @@
         "name" : "relativeOID",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1309,
+        "line" : 1281,
         "char" : 12,
         "type" : "relativeObjectIdentifier"
        },
@@ -1826,7 +1850,7 @@
         "name" : "relativeObjectIdentifier",
         "kind" : "function",
         "comment" : "Decodes a portion of an Object Identifier\n",
-        "line" : 1312,
+        "line" : 1284,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -1837,7 +1861,7 @@
         "name" : "relativeObjectIdentifier",
         "kind" : "function",
         "comment" : "Encodes a porition of an Object Identifier\n",
-        "line" : 1316,
+        "line" : 1288,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1851,21 +1875,21 @@
         ]
        },
        {
-        "name" : "__unittestL1319_20",
+        "name" : "__unittest___source_codec_d_1291_0",
         "kind" : "function",
-        "line" : 1319,
+        "line" : 1291,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1345,
+        "endline" : 1317,
         "endchar" : 5
        },
        {
         "name" : "sequence",
         "kind" : "function",
         "comment" : "        Decodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1346,
+        "line" : 1318,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -1876,7 +1900,7 @@
         "name" : "sequence",
         "kind" : "function",
         "comment" : "        Encodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1358,
+        "line" : 1330,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1893,7 +1917,7 @@
         "name" : "set",
         "kind" : "function",
         "comment" : "        Decodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1370,
+        "line" : 1342,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -1904,7 +1928,7 @@
         "name" : "set",
         "kind" : "function",
         "comment" : "        Encodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1382,
+        "line" : 1354,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1921,7 +1945,7 @@
         "name" : "numericString",
         "kind" : "function",
         "comment" : "        Decodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n",
-        "line" : 1389,
+        "line" : 1361,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1932,7 +1956,7 @@
         "name" : "numericString",
         "kind" : "function",
         "comment" : "        Encodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n",
-        "line" : 1396,
+        "line" : 1368,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1946,21 +1970,21 @@
         ]
        },
        {
-        "name" : "__unittestL1399_21",
+        "name" : "__unittest___source_codec_d_1371_0",
         "kind" : "function",
-        "line" : 1399,
+        "line" : 1371,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1420,
+        "endline" : 1392,
         "endchar" : 5
        },
        {
         "name" : "printableString",
         "kind" : "function",
         "comment" : "        Decodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n",
-        "line" : 1421,
+        "line" : 1393,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1971,7 +1995,7 @@
         "name" : "printableString",
         "kind" : "function",
         "comment" : "        Encodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n",
-        "line" : 1429,
+        "line" : 1401,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1985,21 +2009,21 @@
         ]
        },
        {
-        "name" : "__unittestL1432_22",
+        "name" : "__unittest___source_codec_d_1404_0",
         "kind" : "function",
-        "line" : 1432,
+        "line" : 1404,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1454,
+        "endline" : 1426,
         "endchar" : 5
        },
        {
         "name" : "t61String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1454,
+        "line" : 1426,
         "char" : 12,
         "type" : "teletexString"
        },
@@ -2007,7 +2031,7 @@
         "name" : "teletexString",
         "kind" : "function",
         "comment" : "Decodes bytes representing the T.61 Character Set\n",
-        "line" : 1457,
+        "line" : 1429,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -2018,7 +2042,7 @@
         "name" : "teletexString",
         "kind" : "function",
         "comment" : "Encodes bytes representing the T.61 Character Set\n",
-        "line" : 1461,
+        "line" : 1433,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2032,20 +2056,20 @@
         ]
        },
        {
-        "name" : "__unittestL1464_23",
+        "name" : "__unittest___source_codec_d_1436_0",
         "kind" : "function",
-        "line" : 1464,
+        "line" : 1436,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1476,
+        "endline" : 1448,
         "endchar" : 5
        },
        {
         "name" : "videotexString",
         "kind" : "function",
-        "line" : 1477,
+        "line" : 1449,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -2055,7 +2079,7 @@
        {
         "name" : "videotexString",
         "kind" : "function",
-        "line" : 1480,
+        "line" : 1452,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2069,21 +2093,21 @@
         ]
        },
        {
-        "name" : "__unittestL1483_24",
+        "name" : "__unittest___source_codec_d_1455_0",
         "kind" : "function",
-        "line" : 1483,
+        "line" : 1455,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1496,
+        "endline" : 1468,
         "endchar" : 5
        },
        {
         "name" : "ia5String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1496,
+        "line" : 1468,
         "char" : 12,
         "type" : "internationalAlphabetNumber5String"
        },
@@ -2091,7 +2115,7 @@
         "name" : "internationalAlphabetNumber5String",
         "kind" : "function",
         "comment" : "Decodes a string of ASCII characters\n",
-        "line" : 1499,
+        "line" : 1471,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2102,7 +2126,7 @@
         "name" : "internationalAlphabetNumber5String",
         "kind" : "function",
         "comment" : "Encodes a string of ASCII characters\n",
-        "line" : 1503,
+        "line" : 1475,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2116,21 +2140,21 @@
         ]
        },
        {
-        "name" : "__unittestL1506_25",
+        "name" : "__unittest___source_codec_d_1478_0",
         "kind" : "function",
-        "line" : 1506,
+        "line" : 1478,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1520,
+        "endline" : 1492,
         "endchar" : 5
        },
        {
         "name" : "utc",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1520,
+        "line" : 1492,
         "char" : 12,
         "type" : "coordinatedUniversalTime"
        },
@@ -2138,7 +2162,7 @@
         "name" : "utcTime",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1522,
+        "line" : 1494,
         "char" : 12,
         "type" : "coordinatedUniversalTime"
        },
@@ -2146,7 +2170,7 @@
         "name" : "coordinatedUniversalTime",
         "kind" : "function",
         "comment" : "Decodes a DateTime\n",
-        "line" : 1525,
+        "line" : 1497,
         "char" : 14,
         "storageClass" : [
          "abstract"
@@ -2157,7 +2181,7 @@
         "name" : "coordinatedUniversalTime",
         "kind" : "function",
         "comment" : "Encodes a DateTime\n",
-        "line" : 1529,
+        "line" : 1501,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2171,21 +2195,21 @@
         ]
        },
        {
-        "name" : "__unittestL1532_26",
+        "name" : "__unittest___source_codec_d_1504_0",
         "kind" : "function",
-        "line" : 1532,
+        "line" : 1504,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1543,
+        "endline" : 1515,
         "endchar" : 5
        },
        {
         "name" : "generalizedTime",
         "kind" : "function",
         "comment" : "Decodes a DateTime\n",
-        "line" : 1544,
+        "line" : 1516,
         "char" : 14,
         "storageClass" : [
          "abstract"
@@ -2196,7 +2220,7 @@
         "name" : "generalizedTime",
         "kind" : "function",
         "comment" : "Encodes a DateTime\n",
-        "line" : 1548,
+        "line" : 1520,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2210,21 +2234,21 @@
         ]
        },
        {
-        "name" : "__unittestL1551_27",
+        "name" : "__unittest___source_codec_d_1523_0",
         "kind" : "function",
-        "line" : 1551,
+        "line" : 1523,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1573,
+        "endline" : 1545,
         "endchar" : 5
        },
        {
         "name" : "graphicString",
         "kind" : "function",
         "comment" : "        Decodes an ASCII string that contains only characters between and\n        including 0x20 and 0x75.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n",
-        "line" : 1575,
+        "line" : 1547,
         "char" : 12,
         "storageClass" : [
          "abstract",
@@ -2236,7 +2260,7 @@
         "name" : "graphicString",
         "kind" : "function",
         "comment" : "        Encodes an ASCII string that contains only characters between and\n        including 0x20 and 0x75.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n",
-        "line" : 1591,
+        "line" : 1563,
         "char" : 10,
         "storageClass" : [
          "abstract",
@@ -2251,21 +2275,21 @@
         ]
        },
        {
-        "name" : "__unittestL1594_28",
+        "name" : "__unittest___source_codec_d_1566_0",
         "kind" : "function",
-        "line" : 1594,
+        "line" : 1566,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1617,
+        "endline" : 1589,
         "endchar" : 5
        },
        {
         "name" : "iso646String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1617,
+        "line" : 1589,
         "char" : 12,
         "type" : "visibleString"
        },
@@ -2273,7 +2297,7 @@
         "name" : "visibleString",
         "kind" : "function",
         "comment" : "        Decodes a string that only contains characters between and including\n        0x20 and 0x7E. (Honestly, I don't know how this differs from\n        GraphicalString.)\n",
-        "line" : 1624,
+        "line" : 1596,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2284,7 +2308,7 @@
         "name" : "visibleString",
         "kind" : "function",
         "comment" : "        Encodes a string that only contains characters between and including\n        0x20 and 0x7E. (Honestly, I don't know how this differs from\n        GraphicalString.)\n",
-        "line" : 1632,
+        "line" : 1604,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2298,21 +2322,21 @@
         ]
        },
        {
-        "name" : "__unittestL1635_29",
+        "name" : "__unittest___source_codec_d_1607_0",
         "kind" : "function",
-        "line" : 1635,
+        "line" : 1607,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1658,
+        "endline" : 1630,
         "endchar" : 5
        },
        {
         "name" : "generalString",
         "kind" : "function",
         "comment" : "Decodes a string containing only ASCII characters.\n",
-        "line" : 1660,
+        "line" : 1632,
         "char" : 12,
         "storageClass" : [
          "abstract",
@@ -2324,7 +2348,7 @@
         "name" : "generalString",
         "kind" : "function",
         "comment" : "Encodes a string containing only ASCII characters.\n",
-        "line" : 1665,
+        "line" : 1637,
         "char" : 10,
         "storageClass" : [
          "abstract",
@@ -2339,21 +2363,21 @@
         ]
        },
        {
-        "name" : "__unittestL1668_30",
+        "name" : "__unittest___source_codec_d_1640_0",
         "kind" : "function",
-        "line" : 1668,
+        "line" : 1640,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1682,
+        "endline" : 1654,
         "endchar" : 5
        },
        {
         "name" : "universalString",
         "kind" : "function",
         "comment" : "Decodes a string of UTF-32 characters\n",
-        "line" : 1683,
+        "line" : 1655,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -2364,7 +2388,7 @@
         "name" : "universalString",
         "kind" : "function",
         "comment" : "Encodes a string of UTF-32 characters\n",
-        "line" : 1687,
+        "line" : 1659,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2378,21 +2402,21 @@
         ]
        },
        {
-        "name" : "__unittestL1690_31",
+        "name" : "__unittest___source_codec_d_1662_0",
         "kind" : "function",
-        "line" : 1690,
+        "line" : 1662,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1729,
+        "endline" : 1701,
         "endchar" : 5
        },
        {
         "name" : "characterString",
         "kind" : "function",
         "comment" : "        Decodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1730,
+        "line" : 1702,
         "char" : 21,
         "storageClass" : [
          "abstract"
@@ -2403,7 +2427,7 @@
         "name" : "characterString",
         "kind" : "function",
         "comment" : "        Encodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1760,
+        "line" : 1732,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2417,54 +2441,54 @@
         ]
        },
        {
-        "name" : "__unittestL1763_32",
+        "name" : "__unittest___source_codec_d_1735_0",
         "kind" : "function",
-        "line" : 1763,
+        "line" : 1735,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1787,
+        "endline" : 1759,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1788_33",
+        "name" : "__unittest___source_codec_d_1760_0",
         "kind" : "function",
-        "line" : 1788,
+        "line" : 1760,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1804,
+        "endline" : 1776,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1805_34",
+        "name" : "__unittest___source_codec_d_1777_0",
         "kind" : "function",
-        "line" : 1805,
+        "line" : 1777,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1821,
+        "endline" : 1793,
         "endchar" : 5
        },
        {
-        "name" : "__unittestL1822_35",
+        "name" : "__unittest___source_codec_d_1794_0",
         "kind" : "function",
-        "line" : 1822,
+        "line" : 1794,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1842,
+        "endline" : 1814,
         "endchar" : 5
        },
        {
         "name" : "bmpString",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1842,
+        "line" : 1814,
         "char" : 12,
         "type" : "basicMultilingualPlaneString"
        },
@@ -2472,7 +2496,7 @@
         "name" : "basicMultilingualPlaneString",
         "kind" : "function",
         "comment" : "Decodes a string of UTF-16 characters\n",
-        "line" : 1845,
+        "line" : 1817,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -2483,7 +2507,7 @@
         "name" : "basicMultilingualPlaneString",
         "kind" : "function",
         "comment" : "Encodes a string of UTF-16 characters\n",
-        "line" : 1849,
+        "line" : 1821,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2497,14 +2521,14 @@
         ]
        },
        {
-        "name" : "__unittestL1852_36",
+        "name" : "__unittest___source_codec_d_1824_0",
         "kind" : "function",
-        "line" : 1852,
+        "line" : 1824,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1864,
+        "endline" : 1836,
         "endchar" : 1
        }
       ]
@@ -2645,7 +2669,7 @@
       "comment" : "\n",
       "line" : 34,
       "char" : 54,
-      "deco" : "S3std8typecons71__T8NullableTS5types14identification32ASN1ContextSwitchingTypeSyntaxesZ8Nullable",
+      "deco" : "S3std8typecons__T8NullableTS5types14identification32ASN1ContextSwitchingTypeSyntaxesZQCq",
       "originalType" : "Nullable!ASN1ContextSwitchingTypeSyntaxes",
       "offset" : 0
      },
@@ -2655,7 +2679,7 @@
       "comment" : "\n",
       "line" : 36,
       "char" : 38,
-      "deco" : "S3std8typecons67__T8NullableTC5types9universal16objectidentifier16ObjectIdentifierZ8Nullable",
+      "deco" : "S3std8typecons__T8NullableTC5types9universal16objectidentifier16ObjectIdentifierZQCm",
       "originalType" : "Nullable!ObjectIdentifier",
       "offset" : 24
      },
@@ -2675,7 +2699,7 @@
       "comment" : "\n",
       "line" : 40,
       "char" : 44,
-      "deco" : "S3std8typecons61__T8NullableTS5types14identification22ASN1ContextNegotiationZ8Nullable",
+      "deco" : "S3std8typecons__T8NullableTS5types14identification22ASN1ContextNegotiationZQCg",
       "originalType" : "Nullable!ASN1ContextNegotiation",
       "offset" : 48
      },
@@ -2685,7 +2709,7 @@
       "comment" : "\n",
       "line" : 42,
       "char" : 38,
-      "deco" : "S3std8typecons67__T8NullableTC5types9universal16objectidentifier16ObjectIdentifierZ8Nullable",
+      "deco" : "S3std8typecons__T8NullableTC5types9universal16objectidentifier16ObjectIdentifierZQCm",
       "originalType" : "Nullable!ObjectIdentifier",
       "offset" : 72
      },
@@ -2791,7 +2815,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL27_37",
+      "name" : "__unittest___source_types_oidtype_d_27_0",
       "kind" : "function",
       "comment" : "\n",
       "line" : 27,
@@ -2834,7 +2858,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL55_38",
+      "name" : "__unittest___source_types_oidtype_d_55_1",
       "kind" : "function",
       "comment" : "\n",
       "line" : 55,
@@ -2884,7 +2908,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL120_39",
+      "name" : "__unittest___source_types_oidtype_d_120_2",
       "kind" : "function",
       "line" : 120,
       "char" : 5,
@@ -3191,7 +3215,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL40_40",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_40_0",
       "kind" : "function",
       "line" : 40,
       "char" : 5,
@@ -3224,7 +3248,7 @@
       "comment" : "        Constructor for an Object Identifier\n\n        Params:\n            nodes = An array of OIDNodes\n        Returns: An OID object\n        Throws:\n            OIDException = if fewer than three nodes are provided, or if the\n                first node is not 0, 1, or 2, or if the second node is greater\n                than 39.\n",
       "line" : 94,
       "char" : 5,
-      "deco" : "FNfyAS5types7oidtype20ObjectIdentifierNodeXC5types9universal16objectidentifier16ObjectIdentifier",
+      "deco" : "FNfyAS5types7oidtype20ObjectIdentifierNodeXCQBm9universal16objectidentifier16ObjectIdentifier",
       "originalType" : "@safe (immutable OIDNode[] nodes...)",
       "parameters" : [
        {
@@ -3274,7 +3298,7 @@
       ]
      },
      {
-      "name" : "__unittestL171_41",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_171_1",
       "kind" : "function",
       "line" : 171,
       "char" : 5,
@@ -3302,7 +3326,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL194_42",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_194_2",
       "kind" : "function",
       "line" : 194,
       "char" : 5,
@@ -3362,7 +3386,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL232_43",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_232_3",
       "kind" : "function",
       "line" : 232,
       "char" : 5,
@@ -3391,7 +3415,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL259_44",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_259_4",
       "kind" : "function",
       "line" : 259,
       "char" : 5,
@@ -3419,7 +3443,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL290_45",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_290_5",
       "kind" : "function",
       "line" : 290,
       "char" : 5,
@@ -3440,7 +3464,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL326_46",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_326_6",
       "kind" : "function",
       "line" : 326,
       "char" : 5,
@@ -3482,7 +3506,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL370_47",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_370_7",
       "kind" : "function",
       "line" : 370,
       "char" : 5,
@@ -3510,7 +3534,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL404_48",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_404_8",
       "kind" : "function",
       "line" : 404,
       "char" : 5,
@@ -3586,7 +3610,7 @@
    {
     "name" : "BasicEncodingRulesElement",
     "kind" : "class",
-    "comment" : "    The unit of encoding and decoding for Basic Encoding Rules BER.\n\n    There are three parts to an encoded BER Value:\n\n    $(UL\n        $(LI A Type Tag, which specifies what data type is encoded)\n        $(LI A Length Tag, which specifies how many subsequent bytes encode the data)\n        $(LI The Encoded Value)\n    )\n\n    They appear in the binary encoding in that order, and as such, the encoding\n    scheme is sometimes described as \"TLV,\" which stands for Type-Length-Value.\n\n    This class provides a properties for getting and setting bit fields of\n    the type tag, but most of it is functionality for encoding data per\n    the specification.\n\n    As an example, this is what encoding a simple INTEGER looks like:\n\n    ---\n    BERElement bv = new BERElement();\n    bv.type = 0x02u; // \"2\" means this is an INTEGER\n    bv.integer = 1433; // Now the data is encoded.\n    transmit(cast(ubyte[]) bv); // transmit() is a made-up function.\n    ---\n\n    And this is what decoding looks like:\n\n    ---\n    ubyte[] data = receive(); // receive() is a made-up function.\n    BERElement bv2 = new BERElement(data);\n\n    long x;\n    if (bv.type == 0x02u) // it is an INTEGER\n    {\n        x = bv.integer;\n    }\n    // Now x is 1433!\n    ---\n",
+    "comment" : "    The unit of encoding and decoding for Basic Encoding Rules BER.\n\n    There are three parts to an encoded BER Value:\n\n    $(UL\n        $(LI A Type Tag, which specifies what data type is encoded)\n        $(LI A Length Tag, which specifies how many subsequent bytes encode the data)\n        $(LI The Encoded Value)\n    )\n\n    They appear in the binary encoding in that order, and as such, the encoding\n    scheme is sometimes described as \"TLV,\" which stands for Type-Length-Value.\n\n    This class provides a properties for getting and setting bit fields of\n    the type tag, but most of it is functionality for encoding data per\n    the specification.\n\n    As an example, this is what encoding a simple INTEGER looks like:\n\n    ---\n    BERElement bv = new BERElement();\n    bv.tagNumber = 0x02u; // \"2\" means this is an INTEGER\n    bv.integer = 1433; // Now the data is encoded.\n    transmit(cast(ubyte[]) bv); // transmit() is a made-up function.\n    ---\n\n    And this is what decoding looks like:\n\n    ---\n    ubyte[] data = receive(); // receive() is a made-up function.\n    BERElement bv2 = new BERElement(data);\n\n    long x;\n    if (bv.tagNumber == 0x02u) // it is an INTEGER\n    {\n        x = bv.integer;\n    }\n    // Now x is 1433!\n    ---\n",
     "line" : 94,
     "char" : 1,
     "base" : "codec.ASN1Element!(codecs.ber.BasicEncodingRulesElement).AbstractSyntaxNotation1Element",
@@ -3785,177 +3809,60 @@
      },
      {
       "name" : "tagClass",
-      "kind" : "function",
-      "comment" : "\n        Returns the tag class of the element. Though you could directly get the\n        class yourself, you should still use this property instead; not doing\n        so is a good way to introduce bugs into your program.\n\n        Returns: the tag class of the element.\n",
-      "line" : 204,
-      "char" : 18,
-      "storageClass" : [
-       "final"
-      ],
-      "deco" : "xFNbNdNfZE4asn131AbstractSyntaxNotation1TagClass",
-      "originalType" : "const nothrow @property @safe ASN1TagClass()",
-      "endline" : 229,
-      "endchar" : 5
-     },
-     {
-      "name" : "tagClass",
-      "kind" : "function",
-      "comment" : "\n        Sets the tag class of the element. Though you could directly set the\n        class yourself, you should still use this property instead; not doing\n        so is a good way to introduce bugs into your program.\n",
-      "line" : 237,
-      "char" : 10,
-      "storageClass" : [
-       "final"
-      ],
-      "deco" : "FNbNdNfE4asn131AbstractSyntaxNotation1TagClassZv",
-      "originalType" : "nothrow @property @safe void(ASN1TagClass value)",
-      "parameters" : [
-       {
-        "name" : "value",
-        "deco" : "E4asn131AbstractSyntaxNotation1TagClass"
-       }
-      ],
-      "endline" : 240,
-      "endchar" : 5
-     },
-     {
-      "name" : "construction",
-      "kind" : "function",
-      "comment" : "\n        Returns the construction of the element. Though you could directly get\n        the construction yourself, you should still use this property instead;\n        not doing so is a good way to introduce bugs into your program.\n\n        Returns: the tag class of the element.\n",
-      "line" : 250,
-      "char" : 22,
-      "storageClass" : [
-       "final"
-      ],
-      "deco" : "xFNbNdNfZE4asn135AbstractSyntaxNotation1Construction",
-      "originalType" : "const nothrow @property @safe ASN1Construction()",
-      "endline" : 267,
-      "endchar" : 5
-     },
-     {
-      "name" : "construction",
-      "kind" : "function",
-      "comment" : "\n        Sets the construction of the element. Though you could directly set\n        the construction yourself, you should still use this property instead;\n        not doing so is a good way to introduce bugs into your program.\n",
-      "line" : 275,
-      "char" : 10,
-      "storageClass" : [
-       "final"
-      ],
-      "deco" : "FNbNdNfE4asn135AbstractSyntaxNotation1ConstructionZv",
-      "originalType" : "nothrow @property @safe void(ASN1Construction value)",
-      "parameters" : [
-       {
-        "name" : "value",
-        "deco" : "E4asn135AbstractSyntaxNotation1Construction"
-       }
-      ],
-      "endline" : 278,
-      "endchar" : 5
-     },
-     {
-      "kind" : "template",
-      "comment" : "\n        Returns the type number of the element. Though you could directly get\n        the number yourself, you should still use this property instead;\n        not doing so is a good way to introduce bugs into your program.\n\n        Returns: the type number associated with this element.\n",
-      "line" : 288,
-      "char" : 7,
-      "name" : "tagNumber",
-      "parameters" : [
-       {
-        "name" : "T",
-        "kind" : "type"
-       }
-      ],
-      "constraint" : "isIntegral!T && isUnsigned!T",
-      "members" : [
-       {
-        "name" : "tagNumber",
-        "kind" : "function",
-        "line" : 288,
-        "char" : 7,
-        "storageClass" : [
-         "final"
-        ],
-        "type" : "const nothrow @property @safe T()",
-        "endline" : 292,
-        "endchar" : 5
-       }
-      ]
-     },
-     {
-      "kind" : "template",
-      "comment" : "\n        Sets the type number of the element. Though you could directly set\n        the number yourself, you should still use this property instead;\n        not doing so is a good way to introduce bugs into your program.\n",
-      "line" : 300,
-      "char" : 10,
-      "name" : "tagNumber",
-      "parameters" : [
-       {
-        "name" : "T",
-        "kind" : "type"
-       }
-      ],
-      "constraint" : "isIntegral!T && isUnsigned!T",
-      "members" : [
-       {
-        "name" : "tagNumber",
-        "kind" : "function",
-        "line" : 300,
-        "char" : 10,
-        "storageClass" : [
-         "final"
-        ],
-        "type" : "@property @safe void(T value)",
-        "parameters" : [
-         {
-          "name" : "value",
-          "type" : "T"
-         }
-        ],
-        "endline" : 314,
-        "endchar" : 5
-       }
-      ]
-     },
-     {
-      "name" : "type",
       "kind" : "variable",
-      "comment" : "The type tag of this element\n",
-      "line" : 317,
-      "char" : 18,
-      "deco" : "h",
+      "line" : 196,
+      "char" : 25,
+      "deco" : "E4asn131AbstractSyntaxNotation1TagClass",
+      "originalType" : "ASN1TagClass",
       "offset" : 129
+     },
+     {
+      "name" : "construction",
+      "kind" : "variable",
+      "line" : 197,
+      "char" : 29,
+      "deco" : "E4asn135AbstractSyntaxNotation1Construction",
+      "originalType" : "ASN1Construction",
+      "offset" : 130
+     },
+     {
+      "name" : "tagNumber",
+      "kind" : "variable",
+      "line" : 198,
+      "char" : 19,
+      "deco" : "m",
+      "originalType" : "size_t",
+      "offset" : 136
      },
      {
       "name" : "length",
       "kind" : "function",
-      "comment" : "The length of the value in octets\n",
-      "line" : 321,
+      "line" : 201,
       "char" : 12,
-      "storageClass" : [
-       "final"
-      ],
       "deco" : "xFNbNdNfZm",
       "originalType" : "const nothrow @property @safe size_t()",
-      "endline" : 324,
+      "endline" : 204,
       "endchar" : 5
      },
      {
       "name" : "value",
       "kind" : "variable",
-      "comment" : "The octets of the encoded value.\n",
-      "line" : 327,
+      "line" : 222,
       "char" : 20,
       "deco" : "Ah",
-      "offset" : 136
+      "offset" : 144
      },
      {
       "name" : "boolean",
       "kind" : "function",
       "comment" : "        Decodes a boolean.\n\n        Any non-zero value will be interpreted as TRUE. Only zero will be\n        interpreted as FALSE.\n\n        Returns: a boolean\n        Throws:\n            ASN1ValueSizeException = if the encoded value is anything other\n                than exactly 1 byte in size.\n",
-      "line" : 341,
+      "line" : 236,
       "char" : 10,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdNfZb",
-      "endline" : 355,
+      "endline" : 250,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.boolean"
@@ -3965,7 +3872,7 @@
       "name" : "boolean",
       "kind" : "function",
       "comment" : "        Encodes a boolean.\n\n        Any non-zero value will be interpreted as TRUE. Only zero will be\n        interpreted as FALSE.\n",
-      "line" : 364,
+      "line" : 259,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -3977,28 +3884,28 @@
         "deco" : "b"
        }
       ],
-      "endline" : 367,
+      "endline" : 262,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.boolean"
       ]
      },
      {
-      "name" : "__unittestL371_49",
+      "name" : "__unittest___source_codecs_ber_d_266_0",
       "kind" : "function",
       "comment" : "\n",
-      "line" : 371,
+      "line" : 266,
       "char" : 5,
       "storageClass" : [
        "@safe"
       ],
-      "endline" : 397,
+      "endline" : 292,
       "endchar" : 5
      },
      {
       "kind" : "template",
       "comment" : "        Decodes a signed integer.\n\n        Bytes are stored in big-endian order, where the bytes represent\n        the two's complement encoding of the integer.\n\n        Returns: any chosen signed integral type\n        Throws:\n            ASN1ValueTooBigException = if the value is too big to decode\n                to a signed integral type.\n",
-      "line" : 398,
+      "line" : 293,
       "char" : 7,
       "name" : "integer",
       "parameters" : [
@@ -4012,10 +3919,10 @@
        {
         "name" : "integer",
         "kind" : "function",
-        "line" : 398,
+        "line" : 293,
         "char" : 7,
         "type" : "const @property @system T()",
-        "endline" : 439,
+        "endline" : 334,
         "endchar" : 5
        }
       ]
@@ -4023,7 +3930,7 @@
      {
       "kind" : "template",
       "comment" : "        Encodes an integer.\n\n        Bytes are stored in big-endian order, where the bytes represent\n        the two's complement encoding of the integer.\n",
-      "line" : 448,
+      "line" : 343,
       "char" : 10,
       "name" : "integer",
       "parameters" : [
@@ -4037,7 +3944,7 @@
        {
         "name" : "integer",
         "kind" : "function",
-        "line" : 448,
+        "line" : 343,
         "char" : 10,
         "type" : "nothrow @property @system void(T value)",
         "parameters" : [
@@ -4046,7 +3953,7 @@
           "type" : "T"
          }
         ],
-        "endline" : 456,
+        "endline" : 351,
         "endchar" : 5
        }
       ]
@@ -4055,13 +3962,13 @@
       "name" : "bitString",
       "kind" : "function",
       "comment" : "        Encodes an array of $(D bool)s representing a string of bits.\n\n        In Basic Encoding Rules, the first byte is an unsigned\n        integral byte indicating the number of unused bits at the end of\n        the BIT STRING. The unused bits can be anything.\n\n        Returns: an array of booleans.\n        Throws:\n            ASN1ValueInvalidException = if the first byte has a value greater\n                than seven.\n",
-      "line" : 471,
+      "line" : 366,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAb",
-      "endline" : 520,
+      "endline" : 415,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.bitString"
@@ -4071,7 +3978,7 @@
       "name" : "bitString",
       "kind" : "function",
       "comment" : "        Encodes an array of $(D bool)s representing a string of bits.\n\n        In Basic Encoding Rules, the first byte is an unsigned\n        integral byte indicating the number of unused bits at the end of\n        the BIT STRING. The unused bits can be anything.\n",
-      "line" : 530,
+      "line" : 425,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4083,7 +3990,7 @@
         "deco" : "Ab"
        }
       ],
-      "endline" : 548,
+      "endline" : 443,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.bitString"
@@ -4093,13 +4000,13 @@
       "name" : "octetString",
       "kind" : "function",
       "comment" : "        Decodes an OCTET STRING into an unsigned byte array.\n\n        Returns: an unsigned byte array.\n",
-      "line" : 556,
+      "line" : 451,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdNfZAh",
-      "endline" : 559,
+      "endline" : 454,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.octetString"
@@ -4109,7 +4016,7 @@
       "name" : "octetString",
       "kind" : "function",
       "comment" : "        Encodes an OCTET STRING from an unsigned byte array.\n",
-      "line" : 565,
+      "line" : 460,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4121,7 +4028,7 @@
         "deco" : "Ah"
        }
       ],
-      "endline" : 568,
+      "endline" : 463,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.octetString"
@@ -4131,14 +4038,14 @@
       "name" : "objectIdentifier",
       "kind" : "function",
       "comment" : "        Decodes an OBJECT IDENTIFIER.\n        See source/types/universal/objectidentifier.d for information about\n        the ObjectIdentifier class (aliased as \"OID\").\n\n        The encoded OBJECT IDENTIFIER's first byte contains the first number\n        of the OID multiplied by 40 and added to the second number of the OID.\n        The subsequent bytes have all the remaining number encoded in base-128\n        on the least significant 7 bits of each byte. For these bytes, the most\n        significant bit is set if the next byte continues the encoding of the\n        current OID number. In other words, the bytes encoding each number\n        always end with a byte whose most significant bit is cleared.\n\n        Throws:\n            ASN1ValueTooSmallException = if an attempt is made to decode\n                an Object Identifier from zero bytes.\n            ASN1ValueTooBigException = if a single OID number is too big to\n                decode to a size_t.\n        Standards:\n            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
-      "line" : 592,
+      "line" : 487,
       "char" : 9,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZC5types9universal16objectidentifier16ObjectIdentifier",
       "originalType" : "const @property @system OID()",
-      "endline" : 652,
+      "endline" : 547,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.objectIdentifier"
@@ -4146,7 +4053,7 @@
       "out" : {
        "name" : "__ensure",
        "kind" : "function",
-       "line" : 594,
+       "line" : 489,
        "char" : 5,
        "deco" : "FKxC5types9universal16objectidentifier16ObjectIdentifierZv",
        "originalType" : "@system void(ref const ObjectIdentifier value)",
@@ -4159,7 +4066,7 @@
          ]
         }
        ],
-       "endline" : 594,
+       "endline" : 489,
        "endchar" : 5
       }
      },
@@ -4167,7 +4074,7 @@
       "name" : "objectIdentifier",
       "kind" : "function",
       "comment" : "        Encodes an OBJECT IDENTIFIER.\n        See source/types/universal/objectidentifier.d for information about\n        the ObjectIdentifier class (aliased as \"OID\").\n\n        The encoded OBJECT IDENTIFIER's first byte contains the first number\n        of the OID multiplied by 40 and added to the second number of the OID.\n        The subsequent bytes have all the remaining number encoded in base-128\n        on the least significant 7 bits of each byte. For these bytes, the most\n        significant bit is set if the next byte continues the encoding of the\n        current OID number. In other words, the bytes encoding each number\n        always end with a byte whose most significant bit is cleared.\n\n        Standards:\n            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
-      "line" : 671,
+      "line" : 566,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4180,7 +4087,7 @@
         "deco" : "C5types9universal16objectidentifier16ObjectIdentifier"
        }
       ],
-      "endline" : 705,
+      "endline" : 600,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.objectIdentifier"
@@ -4188,10 +4095,10 @@
       "in" : {
        "name" : "__require",
        "kind" : "function",
-       "line" : 673,
+       "line" : 568,
        "char" : 5,
        "type" : "@system void()",
-       "endline" : 673,
+       "endline" : 568,
        "endchar" : 5
       }
      },
@@ -4199,13 +4106,13 @@
       "name" : "objectDescriptor",
       "kind" : "function",
       "comment" : "        Decodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Citations:\n            Dubuisson, Olivier. “Character String Types.” ASN.1:\n                Communication between Heterogeneous Systems, Morgan\n                Kaufmann, 2001, pp. 175-178.\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n        Returns: a string.\n        Throws:\n            ASN1ValueInvalidException = if the encoded value contains any bytes\n                outside of 0x20 to 0x7E.\n",
-      "line" : 732,
+      "line" : 627,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 750,
+      "endline" : 645,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.objectDescriptor"
@@ -4215,7 +4122,7 @@
       "name" : "objectDescriptor",
       "kind" : "function",
       "comment" : "        Encodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Citations:\n            Dubuisson, Olivier. “Character String Types.” ASN.1:\n                Communication between Heterogeneous Systems, Morgan\n                Kaufmann, 2001, pp. 175-178.\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n        Throws:\n            ASN1ValueInvalidException = if the string value contains any\n                character outside of 0x20 to 0x7E, which means any control\n                characters or DELETE.\n",
-      "line" : 777,
+      "line" : 672,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4227,7 +4134,7 @@
         "deco" : "Aya"
        }
       ],
-      "endline" : 795,
+      "endline" : 690,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.objectDescriptor"
@@ -4237,13 +4144,13 @@
       "name" : "external",
       "kind" : "function",
       "comment" : "        Decodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK2 https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER } },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n\n        Returns: an External, defined in types.universal.external.\n        Throws:\n            ASN1SizeException = if encoded EmbeddedPDV has too few or too many\n                elements, or if syntaxes or context-negotiation element has\n                too few or too many elements.\n            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.\n            ASN1ValueInvalidException = if encoded ObjectDescriptor contains\n                invalid characters.\n            ASN1InvalidIndexException = if encoded value selects a choice for\n                identification or uses an unspecified index for an element in\n                syntaxes or context-negotiation, or if an unspecified element\n                of EMBEDDED PDV itself is referenced by an out-of-range\n                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)\n",
-      "line" : 835,
+      "line" : 730,
       "char" : 14,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS5types9universal8external8External",
-      "endline" : 959,
+      "endline" : 854,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.external"
@@ -4253,7 +4160,7 @@
       "name" : "external",
       "kind" : "function",
       "comment" : "        Encodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK2 https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER } },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n\n        Throws:\n            ASN1ValueTooBigException = if encoded INTEGER is too large to decode\n            ASN1ValueInvalidException = if encoded ObjectDescriptor contains\n                invalid characters.\n",
-      "line" : 990,
+      "line" : 885,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4265,38 +4172,38 @@
         "deco" : "S5types9universal8external8External"
        }
       ],
-      "endline" : 1032,
+      "endline" : 927,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.external"
       ]
      },
      {
-      "name" : "__unittestL1040_50",
+      "name" : "__unittest___source_codecs_ber_d_935_0",
       "kind" : "function",
-      "line" : 1040,
+      "line" : 935,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 1063,
+      "endline" : 958,
       "endchar" : 5
      },
      {
-      "name" : "__unittestL1064_51",
+      "name" : "__unittest___source_codecs_ber_d_959_0",
       "kind" : "function",
-      "line" : 1064,
+      "line" : 959,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 1144,
+      "endline" : 1039,
       "endchar" : 5
      },
      {
       "kind" : "template",
       "comment" : "        Decodes a float or double. This can never decode directly to a\n        real type, because of the way it works.\n\n        This is admittedly a pretty slow function, so I would recommend\n        avoiding it, if possible. Also, because it is so complex, it is\n        highly likely to have bugs, so for that reason as well, I highly\n        recommand against encoding or decoding REALs if you do not have\n        to; try using INTEGER instead.\n\n        For the BER-encoded REAL, a value of 0x40 means \"positive infinity,\"\n        a value of 0x41 means \"negative infinity.\" An empty value means\n        exactly zero. A value whose first byte starts with two cleared bits\n        encodes the real as a string of characters, where the latter nybble\n        takes on values of 0x1, 0x2, or 0x3 to indicate that the string\n        representation conforms to\n        $(LINK2 , ISO 6093) Numeric Representation 1, 2, or 3 respectively.\n\n        If the first bit is set, then the first byte is an \"information block\"\n        that describes the binary encoding of the REAL on the subsequent bytes.\n        If bit 6 is set, the value is negative; if clear, the value is\n        positive. Bits 4 and 5 determine the base, with a value of 0 indicating\n        a base of 2, a value of 1 indicating a base of 8, and a value of 2\n        indicating a base of 16. Bits 2 and 3 indicates that the value should\n        be scaled by 1, 2, 4, or 8 for values of 1, 2, 3, or 4 respectively.\n        Bits 0 and 1 determine how the exponent is encoded, with 0 indicating\n        that the exponent is encoded as a signed byte on the second byte of\n        the value, with 1 indicating that the exponent is encoded as a signed\n        short on the subsequent two bytes, with 2 indicating that the exponent\n        is encoded as a three-byte signed integer on the subsequent three\n        bytes, and with 4 indicating that the subsequent byte encodes the\n        unsigned length of the exponent on the following bytes. The remaining\n        bytes encode an unsigned integer, N, such that mantissa is equal to\n        sign * N * 2^scale.\n\n        Throws:\n            ConvException = if character-encoding cannot be converted to\n                the selected floating-point type, T.\n            ConvOverflowException = if the character-encoding encodes a\n                number that is too big for the selected floating-point\n                type to express.\n            ASN1ValueTooSmallException = if the binary-encoding contains fewer\n                bytes than the information byte purports.\n            ASN1ValueTooBigException = if the binary-encoded mantissa is too\n                big to be expressed by an unsigned long integer.\n            ASN1ValueInvalidException = if both bits indicating the base in the\n                information byte of a binary-encoded REAL's information byte\n                are set, which would indicate an invalid base.\n\n        Citations:\n            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:\n            Communication between Heterogeneous Systems, Morgan Kaufmann,\n            2001, pp. 400–402.\n",
-      "line" : 1145,
+      "line" : 1040,
       "char" : 7,
       "name" : "realType",
       "parameters" : [
@@ -4310,10 +4217,10 @@
        {
         "name" : "realType",
         "kind" : "function",
-        "line" : 1145,
+        "line" : 1040,
         "char" : 7,
         "type" : "const @property @system T()",
-        "endline" : 1460,
+        "endline" : 1355,
         "endchar" : 5
        }
       ]
@@ -4321,7 +4228,7 @@
      {
       "kind" : "template",
       "comment" : "        Encodes a float or double. This can never decode directly to a\n        real type, because of the way it works.\n\n        This is admittedly a pretty slow function, so I would recommend\n        avoiding it, if possible. Also, because it is so complex, it is\n        highly likely to have bugs, so for that reason as well, I highly\n        recommand against encoding or decoding REALs if you do not have\n        to; try using INTEGER instead.\n\n        For the BER-encoded REAL, a value of 0x40 means \"positive infinity,\"\n        a value of 0x41 means \"negative infinity.\" An empty value means\n        exactly zero. A value whose first byte starts with two cleared bits\n        encodes the real as a string of characters, where the latter nybble\n        takes on values of 0x1, 0x2, or 0x3 to indicate that the string\n        representation conforms to\n        $(LINK2 , ISO 6093) Numeric Representation 1, 2, or 3 respectively.\n\n        If the first bit is set, then the first byte is an \"information block\"\n        that describes the binary encoding of the REAL on the subsequent bytes.\n        If bit 6 is set, the value is negative; if clear, the value is\n        positive. Bits 4 and 5 determine the base, with a value of 0 indicating\n        a base of 2, a value of 1 indicating a base of 8, and a value of 2\n        indicating a base of 16. Bits 2 and 3 indicates that the value should\n        be scaled by 1, 2, 4, or 8 for values of 1, 2, 3, or 4 respectively.\n        Bits 0 and 1 determine how the exponent is encoded, with 0 indicating\n        that the exponent is encoded as a signed byte on the second byte of\n        the value, with 1 indicating that the exponent is encoded as a signed\n        short on the subsequent two bytes, with 2 indicating that the exponent\n        is encoded as a three-byte signed integer on the subsequent three\n        bytes, and with 4 indicating that the subsequent byte encodes the\n        unsigned length of the exponent on the following bytes. The remaining\n        bytes encode an unsigned integer, N, such that mantissa is equal to\n        sign * N * 2^scale.\n\n        Throws:\n            ASN1ValueInvalidException = if an attempt to encode NaN is made.\n            ASN1ValueTooSmallException = if an attempt to encode would result\n                in an arithmetic underflow of a signed short.\n            ASN1ValueTooBigException = if an attempt to encode would result\n                in an arithmetic overflow of a signed short.\n\n        Citations:\n            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:\n            Communication between Heterogeneous Systems, Morgan Kaufmann,\n            2001, pp. 400–402.\n",
-      "line" : 1510,
+      "line" : 1405,
       "char" : 10,
       "name" : "realType",
       "parameters" : [
@@ -4335,7 +4242,7 @@
        {
         "name" : "realType",
         "kind" : "function",
-        "line" : 1510,
+        "line" : 1405,
         "char" : 10,
         "type" : "@property @system void(T value)",
         "parameters" : [
@@ -4344,92 +4251,92 @@
           "type" : "T"
          }
         ],
-        "endline" : 1830,
+        "endline" : 1725,
         "endchar" : 5
        }
       ]
      },
      {
-      "name" : "__unittestL1833_52",
+      "name" : "__unittest___source_codecs_ber_d_1728_0",
       "kind" : "function",
-      "line" : 1833,
+      "line" : 1728,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 1845,
+      "endline" : 1740,
       "endchar" : 5
      },
      {
-      "name" : "__unittestL1846_53",
+      "name" : "__unittest___source_codecs_ber_d_1741_0",
       "kind" : "function",
-      "line" : 1846,
+      "line" : 1741,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 1867,
+      "endline" : 1762,
       "endchar" : 5
      },
      {
-      "name" : "__unittestL1868_54",
+      "name" : "__unittest___source_codecs_ber_d_1763_0",
       "kind" : "function",
-      "line" : 1868,
+      "line" : 1763,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 1889,
+      "endline" : 1784,
       "endchar" : 5
      },
      {
-      "name" : "__unittestL1890_55",
+      "name" : "__unittest___source_codecs_ber_d_1785_0",
       "kind" : "function",
-      "line" : 1890,
+      "line" : 1785,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 1960,
+      "endline" : 1855,
       "endchar" : 5
      },
      {
-      "name" : "__unittestL1961_56",
+      "name" : "__unittest___source_codecs_ber_d_1856_0",
       "kind" : "function",
-      "line" : 1961,
+      "line" : 1856,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 2031,
+      "endline" : 1926,
       "endchar" : 5
      },
      {
-      "name" : "__unittestL2032_57",
+      "name" : "__unittest___source_codecs_ber_d_1927_0",
       "kind" : "function",
-      "line" : 2032,
+      "line" : 1927,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 2102,
+      "endline" : 1997,
       "endchar" : 5
      },
      {
-      "name" : "__unittestL2103_58",
+      "name" : "__unittest___source_codecs_ber_d_1998_0",
       "kind" : "function",
-      "line" : 2103,
+      "line" : 1998,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 2117,
+      "endline" : 2012,
       "endchar" : 5
      },
      {
       "kind" : "template",
       "comment" : "        Decodes an integer from an ENUMERATED type. In BER, an ENUMERATED\n        type is encoded the exact same way that an INTEGER is.\n\n        Returns: any chosen signed integral type\n        Throws:\n            ASN1ValueTooBigException = if the value is too big to decode\n                to a signed integral type.\n",
-      "line" : 2118,
+      "line" : 2013,
       "char" : 7,
       "name" : "enumerated",
       "parameters" : [
@@ -4443,10 +4350,10 @@
        {
         "name" : "enumerated",
         "kind" : "function",
-        "line" : 2118,
+        "line" : 2013,
         "char" : 7,
         "type" : "const @property @system T()",
-        "endline" : 2159,
+        "endline" : 2054,
         "endchar" : 5
        }
       ]
@@ -4454,7 +4361,7 @@
      {
       "kind" : "template",
       "comment" : "        Encodes an ENUMERATED type from an integer. In BER, an ENUMERATED\n        type is encoded the exact same way that an INTEGER is.\n",
-      "line" : 2166,
+      "line" : 2061,
       "char" : 10,
       "name" : "enumerated",
       "parameters" : [
@@ -4467,7 +4374,7 @@
        {
         "name" : "enumerated",
         "kind" : "function",
-        "line" : 2166,
+        "line" : 2061,
         "char" : 10,
         "type" : "@property @system void(T value)",
         "parameters" : [
@@ -4476,7 +4383,7 @@
           "type" : "T"
          }
         ],
-        "endline" : 2173,
+        "endline" : 2068,
         "endchar" : 5
        }
       ]
@@ -4485,14 +4392,14 @@
       "name" : "embeddedPresentationDataValue",
       "kind" : "function",
       "comment" : "\n        Decodes an EMBEDDED PDV, which is a constructed data type, defined in\n            the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EMBEDDED PDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n\n        Throws:\n            ASN1SizeException = if encoded EmbeddedPDV has too few or too many\n                elements, or if syntaxes or context-negotiation element has\n                too few or too many elements.\n            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.\n            ASN1ValueInvalidException = if encoded ObjectDescriptor contains\n                invalid characters.\n            ASN1InvalidIndexException = if encoded value selects a choice for\n                identification or uses an unspecified index for an element in\n                syntaxes or context-negotiation, or if an unspecified element\n                of EMBEDDED PDV itself is referenced by an out-of-range\n                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)\n",
-      "line" : 2219,
+      "line" : 2114,
       "char" : 17,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS5types9universal11embeddedpdv29EmbeddedPresentationDataValue",
       "originalType" : "const @property @system EmbeddedPDV()",
-      "endline" : 2402,
+      "endline" : 2297,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.embeddedPresentationDataValue"
@@ -4502,7 +4409,7 @@
       "name" : "embeddedPresentationDataValue",
       "kind" : "function",
       "comment" : "        Encodes an EMBEDDED PDV, which is a constructed data type, defined in\n            the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EMBEDDED PDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n\n        Throws:\n            ASN1ValueInvalidException = if encoded ObjectDescriptor contains\n                invalid characters.\n",
-      "line" : 2438,
+      "line" : 2333,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4515,45 +4422,45 @@
         "deco" : "S5types9universal11embeddedpdv29EmbeddedPresentationDataValue"
        }
       ],
-      "endline" : 2499,
+      "endline" : 2394,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.embeddedPresentationDataValue"
       ]
      },
      {
-      "name" : "__unittestL2506_59",
+      "name" : "__unittest___source_codecs_ber_d_2401_0",
       "kind" : "function",
-      "line" : 2506,
+      "line" : 2401,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 2527,
+      "endline" : 2422,
       "endchar" : 5
      },
      {
-      "name" : "__unittestL2528_60",
+      "name" : "__unittest___source_codecs_ber_d_2423_0",
       "kind" : "function",
-      "line" : 2528,
+      "line" : 2423,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 2555,
+      "endline" : 2450,
       "endchar" : 5
      },
      {
       "name" : "unicodeTransformationFormat8String",
       "kind" : "function",
       "comment" : "        Decodes the value to UTF-8 characters.\n\n        Throws:\n            UTF8Exception if it does not decode correctly.\n",
-      "line" : 2556,
+      "line" : 2451,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 2559,
+      "endline" : 2454,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"
@@ -4563,7 +4470,7 @@
       "name" : "unicodeTransformationFormat8String",
       "kind" : "function",
       "comment" : "        Encodes a UTF-8 string to bytes. No checks are performed.\n",
-      "line" : 2565,
+      "line" : 2460,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4575,7 +4482,7 @@
         "deco" : "Aya"
        }
       ],
-      "endline" : 2568,
+      "endline" : 2463,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"
@@ -4585,14 +4492,14 @@
       "name" : "relativeObjectIdentifier",
       "kind" : "function",
       "comment" : "        Decodes a RELATIVE OBJECT IDENTIFIER.\n        See source/types/universal/objectidentifier.d for information about\n        the ObjectIdentifier class (aliased as \"OID\").\n\n        The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128\n        on the least significant 7 bits of each byte. For these bytes, the most\n        significant bit is set if the next byte continues the encoding of the\n        current OID number. In other words, the bytes encoding each number\n        always end with a byte whose most significant bit is cleared.\n\n        Standards:\n            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
-      "line" : 2586,
+      "line" : 2481,
       "char" : 15,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAS5types7oidtype20ObjectIdentifierNode",
       "originalType" : "const @property @system OIDNode[]()",
-      "endline" : 2631,
+      "endline" : 2526,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
@@ -4602,7 +4509,7 @@
       "name" : "relativeObjectIdentifier",
       "kind" : "function",
       "comment" : "        Encodes a RELATIVE OBJECT IDENTIFIER.\n        See source/types/universal/objectidentifier.d for information about\n        the ObjectIdentifier class (aliased as \"OID\").\n\n        The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128\n        on the least significant 7 bits of each byte. For these bytes, the most\n        significant bit is set if the next byte continues the encoding of the\n        current OID number. In other words, the bytes encoding each number\n        always end with a byte whose most significant bit is cleared.\n\n        Standards:\n            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
-      "line" : 2648,
+      "line" : 2543,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4615,7 +4522,7 @@
         "deco" : "AS5types7oidtype20ObjectIdentifierNode"
        }
       ],
-      "endline" : 2671,
+      "endline" : 2566,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
@@ -4625,14 +4532,14 @@
       "name" : "sequence",
       "kind" : "function",
       "comment" : "        Decodes a sequence of BERElements.\n\n        Returns: an array of BERElements.\n        Throws:\n            ASN1ValueSizeException = if long definite-length is too big to be\n                decoded to an unsigned integral type.\n            ASN1ValueTooSmallException = if there are fewer value bytes than\n                indicated by the length tag.\n",
-      "line" : 2684,
+      "line" : 2579,
       "char" : 18,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAC6codecs3ber25BasicEncodingRulesElement",
       "originalType" : "const @property @system BERElement[]()",
-      "endline" : 2691,
+      "endline" : 2586,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
@@ -4642,7 +4549,7 @@
       "name" : "sequence",
       "kind" : "function",
       "comment" : "        Encodes a sequence of BERElements.\n",
-      "line" : 2697,
+      "line" : 2592,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4655,7 +4562,7 @@
         "deco" : "AC6codecs3ber25BasicEncodingRulesElement"
        }
       ],
-      "endline" : 2705,
+      "endline" : 2600,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
@@ -4665,14 +4572,14 @@
       "name" : "set",
       "kind" : "function",
       "comment" : "        Decodes a set of BERElements.\n\n        Returns: an array of BERElements.\n        Throws:\n            ASN1ValueSizeException = if long definite-length is too big to be\n                decoded to an unsigned integral type.\n            ASN1ValueTooSmallException = if there are fewer value bytes than\n                indicated by the length tag.\n",
-      "line" : 2718,
+      "line" : 2613,
       "char" : 18,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAC6codecs3ber25BasicEncodingRulesElement",
       "originalType" : "const @property @system BERElement[]()",
-      "endline" : 2725,
+      "endline" : 2620,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.set"
@@ -4682,7 +4589,7 @@
       "name" : "set",
       "kind" : "function",
       "comment" : "        Encodes a set of BERElements.\n",
-      "line" : 2731,
+      "line" : 2626,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4695,7 +4602,7 @@
         "deco" : "AC6codecs3ber25BasicEncodingRulesElement"
        }
       ],
-      "endline" : 2739,
+      "endline" : 2634,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.set"
@@ -4705,13 +4612,13 @@
       "name" : "numericString",
       "kind" : "function",
       "comment" : "        Decodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n\n        Returns: a string.\n        Throws:\n            ASN1ValueInvalidException = if any character other than 0-9 or\n                space is encoded.\n",
-      "line" : 2751,
+      "line" : 2646,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 2766,
+      "endline" : 2661,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
@@ -4721,7 +4628,7 @@
       "name" : "numericString",
       "kind" : "function",
       "comment" : "        Encodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n\n        Throws:\n            ASN1ValueInvalidException = if any character other than 0-9 or\n                space is supplied.\n",
-      "line" : 2777,
+      "line" : 2672,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4733,7 +4640,7 @@
         "deco" : "Aya"
        }
       ],
-      "endline" : 2792,
+      "endline" : 2687,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
@@ -4743,13 +4650,13 @@
       "name" : "printableString",
       "kind" : "function",
       "comment" : "        Decodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n\n        Returns: a string.\n        Throws:\n            ASN1ValueInvalidException = if any character other than a-z, A-Z,\n                0-9, space, apostrophe, parentheses, comma, minus, plus,\n                period, forward slash, colon, equals, or question mark are\n                encoded.\n",
-      "line" : 2807,
+      "line" : 2702,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 2824,
+      "endline" : 2719,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
@@ -4759,7 +4666,7 @@
       "name" : "printableString",
       "kind" : "function",
       "comment" : "        Encodes a string that may only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n\n        Throws:\n            ASN1ValueInvalidException = if any character other than a-z, A-Z,\n                0-9, space, apostrophe, parentheses, comma, minus, plus,\n                period, forward slash, colon, equals, or question mark are\n                supplied.\n",
-      "line" : 2838,
+      "line" : 2733,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4771,7 +4678,7 @@
         "deco" : "Aya"
        }
       ],
-      "endline" : 2854,
+      "endline" : 2749,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
@@ -4781,13 +4688,13 @@
       "name" : "teletexString",
       "kind" : "function",
       "comment" : "        Literally just returns the value bytes.\n\n        Returns: an unsigned byte array, where each byte is a T.61 character.\n",
-      "line" : 2862,
+      "line" : 2757,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNbNdNfZAh",
-      "endline" : 2866,
+      "endline" : 2761,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
@@ -4797,7 +4704,7 @@
       "name" : "teletexString",
       "kind" : "function",
       "comment" : "        Literally just sets the value bytes.\n",
-      "line" : 2872,
+      "line" : 2767,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4809,7 +4716,7 @@
         "deco" : "Ah"
        }
       ],
-      "endline" : 2876,
+      "endline" : 2771,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
@@ -4819,13 +4726,13 @@
       "name" : "videotexString",
       "kind" : "function",
       "comment" : "        Literally just returns the value bytes.\n\n        Returns: an unsigned byte array.\n",
-      "line" : 2884,
+      "line" : 2779,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNbNdNfZAh",
-      "endline" : 2888,
+      "endline" : 2783,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
@@ -4835,7 +4742,7 @@
       "name" : "videotexString",
       "kind" : "function",
       "comment" : "        Literally just sets the value bytes.\n",
-      "line" : 2894,
+      "line" : 2789,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4847,7 +4754,7 @@
         "deco" : "Ah"
        }
       ],
-      "endline" : 2898,
+      "endline" : 2793,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
@@ -4857,13 +4764,13 @@
       "name" : "internationalAlphabetNumber5String",
       "kind" : "function",
       "comment" : "        Decodes a string that only contains ASCII characters.\n\n        IA5String differs from ASCII ever so slightly: IA5 is international,\n        leaving 10 characters up to be locale-specific:\n\n        $(TABLE\n            $(TR $(TH Byte) $(TH ASCII Character))\n            $(TR $(TD 0x40) $(TD @))\n            $(TR $(TD 0x5B) $(TD [))\n            $(TR $(TD 0x5C) $(TD \\))\n            $(TR $(TD 0x5D) $(TD ]))\n            $(TR $(TD 0x5E) $(TD ^))\n            $(TR $(TD 0x60) $(TD `))\n            $(TR $(TD 0x7B) $(TD {))\n            $(TR $(TD 0x7C) $(TD /))\n            $(TR $(TD 0x7D) $(TD }))\n            $(TR $(TD 0x7E) $(TD ~))\n        )\n\n        Returns: a string.\n        Throws:\n            ASN1ValueInvalidException = if any enecoded character is not ASCII.\n",
-      "line" : 2925,
+      "line" : 2820,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 2941,
+      "endline" : 2836,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
@@ -4873,7 +4780,7 @@
       "name" : "internationalAlphabetNumber5String",
       "kind" : "function",
       "comment" : "        Encodes a string that may only contain ASCII characters.\n\n        IA5String differs from ASCII ever so slightly: IA5 is international,\n        leaving 10 characters up to be locale-specific:\n\n        $(TABLE\n            $(TR $(TH Byte) $(TH ASCII Character))\n            $(TR $(TD 0x40) $(TD @))\n            $(TR $(TD 0x5B) $(TD [))\n            $(TR $(TD 0x5C) $(TD \\))\n            $(TR $(TD 0x5D) $(TD ]))\n            $(TR $(TD 0x5E) $(TD ^))\n            $(TR $(TD 0x60) $(TD `))\n            $(TR $(TD 0x7B) $(TD {))\n            $(TR $(TD 0x7C) $(TD /))\n            $(TR $(TD 0x7D) $(TD }))\n            $(TR $(TD 0x7E) $(TD ~))\n        )\n\n        Throws:\n            ASN1ValueInvalidException = if any enecoded character is not ASCII.\n",
-      "line" : 2967,
+      "line" : 2862,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4885,7 +4792,7 @@
         "deco" : "Aya"
        }
       ],
-      "endline" : 2981,
+      "endline" : 2876,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
@@ -4895,13 +4802,13 @@
       "name" : "coordinatedUniversalTime",
       "kind" : "function",
       "comment" : "        Decodes a DateTime.\n\n        The BER-encoded value is just the ASCII character representation of\n        the UTC-formatted timestamp.\n\n        An UTC Timestamp looks like:\n        $(UL\n            $(LI 9912312359Z)\n            $(LI 991231235959+0200)\n        )\n\n        If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,\n        meaning that the date refers to the first 80 years of the century, this\n        assumes we are talking about the 21st century and prepend '20' when\n        creating the ISO Date String. Otherwise, it assumes we are talking\n        about the 20th century, and prepend '19' when creating the string.\n\n        See_Also:\n            $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)\n\n        Throws:\n            DateTimeException = if string cannot be decoded to a DateTime\n",
-      "line" : 3008,
+      "line" : 2903,
       "char" : 14,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS3std8datetime4date8DateTime",
-      "endline" : 3022,
+      "endline" : 2917,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
@@ -4911,7 +4818,7 @@
       "name" : "coordinatedUniversalTime",
       "kind" : "function",
       "comment" : "        Encodes a DateTime.\n\n        The BER-encoded value is just the ASCII character representation of\n        the UTC-formatted timestamp.\n\n        An UTC Timestamp looks like:\n        $(UL\n            $(LI 9912312359Z)\n            $(LI 991231235959+0200)\n        )\n\n        See_Also:\n            $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)\n",
-      "line" : 3040,
+      "line" : 2935,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4923,7 +4830,7 @@
         "deco" : "S3std8datetime4date8DateTime"
        }
       ],
-      "endline" : 3045,
+      "endline" : 2940,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
@@ -4933,13 +4840,13 @@
       "name" : "generalizedTime",
       "kind" : "function",
       "comment" : "        Decodes a DateTime.\n\n        The BER-encoded value is just the ASCII character representation of\n        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,\n        ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI 19851106210627.3)\n            $(LI 19851106210627.3Z)\n            $(LI 19851106210627.3-0500)\n        )\n\n        Throws:\n            DateTimeException = if string cannot be decoded to a DateTime\n",
-      "line" : 3065,
+      "line" : 2960,
       "char" : 14,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS3std8datetime4date8DateTime",
-      "endline" : 3079,
+      "endline" : 2974,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
@@ -4949,7 +4856,7 @@
       "name" : "generalizedTime",
       "kind" : "function",
       "comment" : "        Encodes a DateTime.\n\n        The BER-encoded value is just the ASCII character representation of\n        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,\n        ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI 19851106210627.3)\n            $(LI 19851106210627.3Z)\n            $(LI 19851106210627.3-0500)\n        )\n",
-      "line" : 3096,
+      "line" : 2991,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4961,7 +4868,7 @@
         "deco" : "S3std8datetime4date8DateTime"
        }
       ],
-      "endline" : 3101,
+      "endline" : 2996,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
@@ -4971,13 +4878,13 @@
       "name" : "graphicString",
       "kind" : "function",
       "comment" : "        Decodes an ASCII string that contains only characters between and\n        including 0x20 and 0x75.\n\n        Deprecated, according to page 182 of the Dubuisson book.\n\n        Citations:\n            Dubuisson, Olivier. “Character String Types.” ASN.1:\n                Communication between Heterogeneous Systems, Morgan\n                Kaufmann, 2001, pp. 175-178.\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n        Returns: a string.\n        Throws:\n            ASN1ValueInvalidException = if any non-graphical character\n                (including space) is encoded.\n",
-      "line" : 3123,
+      "line" : 3018,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3140,
+      "endline" : 3035,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
@@ -4987,7 +4894,7 @@
       "name" : "graphicString",
       "kind" : "function",
       "comment" : "        Encodes an ASCII string that may contain only characters between and\n        including 0x20 and 0x75.\n\n        Deprecated, according to page 182 of the Dubuisson book.\n\n        Citations:\n            Dubuisson, Olivier. “Character String Types.” ASN.1:\n                Communication between Heterogeneous Systems, Morgan\n                Kaufmann, 2001, pp. 175-178.\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n        Throws:\n            ASN1ValueInvalidException = if any non-graphical character\n                (including space) is supplied.\n",
-      "line" : 3161,
+      "line" : 3056,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4999,7 +4906,7 @@
         "deco" : "Aya"
        }
       ],
-      "endline" : 3177,
+      "endline" : 3072,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
@@ -5009,13 +4916,13 @@
       "name" : "visibleString",
       "kind" : "function",
       "comment" : "        Decodes a string that only contains characters between and including\n        0x20 and 0x7E. (Honestly, I don't know how this differs from\n        GraphicalString.)\n\n        Returns: a string.\n        Throws:\n            ASN1ValueInvalidException = if any non-graphical character\n                (including space) is encoded.\n",
-      "line" : 3190,
+      "line" : 3085,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3207,
+      "endline" : 3102,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
@@ -5025,7 +4932,7 @@
       "name" : "visibleString",
       "kind" : "function",
       "comment" : "        Encodes a string that only contains characters between and including\n        0x20 and 0x7E. (Honestly, I don't know how this differs from\n        GraphicalString.)\n\n        Throws:\n            ASN1ValueInvalidException = if any non-graphical character\n                (including space) is supplied.\n",
-      "line" : 3219,
+      "line" : 3114,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -5037,7 +4944,7 @@
         "deco" : "Aya"
        }
       ],
-      "endline" : 3235,
+      "endline" : 3130,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
@@ -5047,13 +4954,13 @@
       "name" : "generalString",
       "kind" : "function",
       "comment" : "        Decodes a string containing only ASCII characters.\n\n        Deprecated, according to page 182 of the Dubuisson book.\n\n        Returns: a string.\n        Throws:\n            ASN1ValueInvalidException = if any enecoded character is not ASCII.\n\n        Citations:\n            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:\n            Communication between Heterogeneous Systems, Morgan Kaufmann,\n            2001, p. 182.\n",
-      "line" : 3252,
+      "line" : 3147,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3268,
+      "endline" : 3163,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
@@ -5063,7 +4970,7 @@
       "name" : "generalString",
       "kind" : "function",
       "comment" : "        Encodes a string containing only ASCII characters.\n\n        Deprecated, according to page 182 of the Dubuisson book.\n\n        Throws:\n            ASN1ValueInvalidException = if any enecoded character is not ASCII.\n\n        Citations:\n            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:\n            Communication between Heterogeneous Systems, Morgan Kaufmann,\n            2001, p. 182.\n",
-      "line" : 3284,
+      "line" : 3179,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -5075,7 +4982,7 @@
         "deco" : "Aya"
        }
       ],
-      "endline" : 3298,
+      "endline" : 3193,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
@@ -5085,13 +4992,13 @@
       "name" : "universalString",
       "kind" : "function",
       "comment" : "        Decodes a dstring of UTF-32 characters.\n\n        Returns: a string of UTF-32 characters.\n        Throws:\n            ASN1ValueInvalidException = if the encoded bytes is not evenly\n                divisible by four.\n",
-      "line" : 3309,
+      "line" : 3204,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAyw",
-      "endline" : 3346,
+      "endline" : 3241,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
@@ -5101,7 +5008,7 @@
       "name" : "universalString",
       "kind" : "function",
       "comment" : "        Encodes a dstring of UTF-32 characters.\n",
-      "line" : 3352,
+      "line" : 3247,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -5113,7 +5020,7 @@
         "deco" : "Ayw"
        }
       ],
-      "endline" : 3371,
+      "endline" : 3266,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
@@ -5123,13 +5030,13 @@
       "name" : "characterString",
       "kind" : "function",
       "comment" : "        Decodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n\n        Returns: an instance of types.universal.CharacterString.\n        Throws:\n            ASN1SizeException = if encoded CharacterString has too few or too many\n                elements, or if syntaxes or context-negotiation element has\n                too few or too many elements.\n            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.\n            ASN1InvalidIndexException = if encoded value selects a choice for\n                identification or uses an unspecified index for an element in\n                syntaxes or context-negotiation, or if an unspecified element\n                of CharacterString itself is referenced by an out-of-range\n                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)\n",
-      "line" : 3413,
+      "line" : 3308,
       "char" : 21,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS5types9universal15characterstring15CharacterString",
-      "endline" : 3589,
+      "endline" : 3484,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
@@ -5139,7 +5046,7 @@
       "name" : "characterString",
       "kind" : "function",
       "comment" : "        Encodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-      "line" : 3620,
+      "line" : 3515,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -5151,45 +5058,45 @@
         "deco" : "S5types9universal15characterstring15CharacterString"
        }
       ],
-      "endline" : 3681,
+      "endline" : 3576,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
       ]
      },
      {
-      "name" : "__unittestL3689_61",
+      "name" : "__unittest___source_codecs_ber_d_3584_0",
       "kind" : "function",
-      "line" : 3689,
+      "line" : 3584,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3711,
+      "endline" : 3606,
       "endchar" : 5
      },
      {
-      "name" : "__unittestL3712_62",
+      "name" : "__unittest___source_codecs_ber_d_3607_0",
       "kind" : "function",
-      "line" : 3712,
+      "line" : 3607,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3741,
+      "endline" : 3636,
       "endchar" : 5
      },
      {
       "name" : "basicMultilingualPlaneString",
       "kind" : "function",
       "comment" : "        Decodes a wstring of UTF-16 characters.\n\n        Returns: an immutable array of UTF-16 characters.\n        Throws:\n            ASN1ValueInvalidException = if the encoded bytes is not evenly\n                divisible by two.\n",
-      "line" : 3742,
+      "line" : 3637,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAyu",
-      "endline" : 3777,
+      "endline" : 3672,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
@@ -5199,7 +5106,7 @@
       "name" : "basicMultilingualPlaneString",
       "kind" : "function",
       "comment" : "        Encodes a wstring of UTF-16 characters.\n",
-      "line" : 3783,
+      "line" : 3678,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -5211,7 +5118,7 @@
         "deco" : "Ayu"
        }
       ],
-      "endline" : 3802,
+      "endline" : 3697,
       "endchar" : 5,
       "overrides" : [
        "codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
@@ -5221,18 +5128,18 @@
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates an EndOfContent BER Value.\n",
-      "line" : 3808,
+      "line" : 3703,
       "char" : 5,
       "deco" : "FNbNiNfZC6codecs3ber25BasicEncodingRulesElement",
       "originalType" : "nothrow @nogc @safe ()",
-      "endline" : 3812,
+      "endline" : 3707,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates a BERElement from the supplied bytes, inferring that the first\n        byte is the type tag. The supplied ubyte[] array is \"chomped\" by\n        reference, so the original array will grow shorter as BERElements are\n        generated.\n\n        Throws:\n            ASN1ValueTooSmallException = if the bytes supplied are fewer than\n                two (one or zero, in other words), such that no valid BERElement\n                can be decoded, or if the length is encoded in indefinite\n                form, but the END OF CONTENT octets (two consecutive null\n                octets) cannot be found, or if the value is encoded in fewer\n                octets than indicated by the length byte.\n            ASN1InvalidLengthException = if the length byte is set to 0xFF,\n                which is reserved.\n            ASN1ValueTooBigException = if the length cannot be represented by\n                the largest unsigned integer.\n\n        Example:\n        ---\n        // Decoding looks like:\n        BERElement[] result;\n        while (bytes.length > 0)\n            result ~= new BERElement(bytes);\n\n        // Encoding looks like:\n        ubyte[] result;\n        foreach (bv; bervalues)\n        {\n            result ~= cast(ubyte[]) bv;\n        }\n        ---\n",
-      "line" : 3848,
+      "line" : 3743,
       "char" : 5,
       "deco" : "FKAhZC6codecs3ber25BasicEncodingRulesElement",
       "originalType" : "@system (ref ubyte[] bytes)",
@@ -5245,14 +5152,14 @@
         ]
        }
       ],
-      "endline" : 3918,
+      "endline" : 3883,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates a BERElement from the supplied bytes, inferring that the first\n        byte is the type tag. The supplied ubyte[] array is read, starting\n        from the index specified by $(D bytesRead), and increments\n        $(D bytesRead) by the number of bytes read.\n\n        Throws:\n            ASN1ValueTooSmallException = if the bytes supplied are fewer than\n                two (one or zero, in other words), such that no valid BERElement\n                can be decoded, or if the length is encoded in indefinite\n                form, but the END OF CONTENT octets (two consecutive null\n                octets) cannot be found, or if the value is encoded in fewer\n                octets than indicated by the length byte.\n            ASN1InvalidLengthException = if the length byte is set to 0xFF,\n                which is reserved.\n            ASN1ValueTooBigException = if the length cannot be represented by\n                the largest unsigned integer.\n\n        Example:\n        ---\n        // Decoding looks like:\n        BERElement[] result;\n        size_t i = 0u;\n        while (i < bytes.length)\n            result ~= new BERElement(i, bytes);\n\n        // Encoding looks like:\n        ubyte[] result;\n        foreach (bv; bervalues)\n        {\n            result ~= cast(ubyte[]) bv;\n        }\n        ---\n",
-      "line" : 3955,
+      "line" : 3920,
       "char" : 5,
       "deco" : "FKmKAhZC6codecs3ber25BasicEncodingRulesElement",
       "originalType" : "@system (ref size_t bytesRead, ref ubyte[] bytes)",
@@ -5272,23 +5179,23 @@
         ]
        }
       ],
-      "endline" : 4025,
+      "endline" : 4036,
       "endchar" : 5
      },
      {
       "name" : "toBytes",
       "kind" : "function",
       "comment" : "        This differs from $(D_INLINECODE this.value) in that\n        $(D_INLINECODE this.value) only returns the value octets, whereas\n        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D_INLINECODE this.opCast!(ubyte[])()).\n\n        Returns: type tag, length tag, and value, all concatenated as a ubyte array.\n",
-      "line" : 4038,
+      "line" : 4049,
       "char" : 13,
       "deco" : "xFNbNdZAh",
-      "endline" : 4086,
+      "endline" : 4154,
       "endchar" : 5
      },
      {
       "kind" : "template",
       "comment" : "        This differs from $(D_INLINECODE this.value) in that\n        $(D_INLINECODE this.value) only returns the value octets, whereas\n        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D_INLINECODE this.toBytes()).\n\n        Returns: type tag, length tag, and value, all concatenated as a ubyte array.\n",
-      "line" : 4099,
+      "line" : 4167,
       "char" : 13,
       "name" : "opCast",
       "parameters" : [
@@ -5302,10 +5209,10 @@
        {
         "name" : "opCast",
         "kind" : "function",
-        "line" : 4099,
+        "line" : 4167,
         "char" : 13,
         "type" : "nothrow @system ubyte[]()",
-        "endline" : 4102,
+        "endline" : 4170,
         "endchar" : 5
        }
       ]
@@ -5313,69 +5220,69 @@
     ]
    },
    {
-    "name" : "__unittestL4108_63",
+    "name" : "__unittest___source_codecs_ber_d_4176_14",
     "kind" : "function",
-    "line" : 4108,
+    "line" : 4176,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4263,
+    "endline" : 4331,
     "endchar" : 1
    },
    {
-    "name" : "__unittestL4264_64",
+    "name" : "__unittest___source_codecs_ber_d_4332_15",
     "kind" : "function",
-    "line" : 4264,
+    "line" : 4332,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4305,
+    "endline" : 4373,
     "endchar" : 1
    },
    {
-    "name" : "__unittestL4306_65",
+    "name" : "__unittest___source_codecs_ber_d_4374_16",
     "kind" : "function",
-    "line" : 4306,
+    "line" : 4374,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4356,
+    "endline" : 4424,
     "endchar" : 1
    },
    {
-    "name" : "__unittestL4357_66",
+    "name" : "__unittest___source_codecs_ber_d_4425_17",
     "kind" : "function",
-    "line" : 4357,
+    "line" : 4425,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4380,
+    "endline" : 4448,
     "endchar" : 1
    },
    {
-    "name" : "__unittestL4381_67",
+    "name" : "__unittest___source_codecs_ber_d_4449_18",
     "kind" : "function",
-    "line" : 4381,
+    "line" : 4449,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4397,
+    "endline" : 4465,
     "endchar" : 1
    },
    {
-    "name" : "__unittestL4398_68",
+    "name" : "__unittest___source_codecs_ber_d_4466_19",
     "kind" : "function",
-    "line" : 4398,
+    "line" : 4466,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4407,
+    "endline" : 4475,
     "endchar" : 2
    }
   ]
@@ -5756,7 +5663,7 @@
       ]
      },
      {
-      "name" : "__unittestL342_69",
+      "name" : "__unittest___source_codecs_cer_d_342_0",
       "kind" : "function",
       "comment" : "\n",
       "line" : 342,
@@ -5871,7 +5778,7 @@
       ]
      },
      {
-      "name" : "__unittestL647_70",
+      "name" : "__unittest___source_codecs_cer_d_647_0",
       "kind" : "function",
       "line" : 647,
       "char" : 5,
@@ -5882,7 +5789,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL661_71",
+      "name" : "__unittest___source_codecs_cer_d_661_0",
       "kind" : "function",
       "line" : 661,
       "char" : 5,
@@ -5940,7 +5847,7 @@
       }
      },
      {
-      "name" : "__unittestL783_72",
+      "name" : "__unittest___source_codecs_cer_d_783_0",
       "kind" : "function",
       "line" : 783,
       "char" : 5,
@@ -6057,7 +5964,7 @@
       ]
      },
      {
-      "name" : "__unittestL1113_73",
+      "name" : "__unittest___source_codecs_cer_d_1113_0",
       "kind" : "function",
       "line" : 1113,
       "char" : 5,
@@ -6106,7 +6013,7 @@
       ]
      },
      {
-      "name" : "__unittestL1364_74",
+      "name" : "__unittest___source_codecs_cer_d_1364_0",
       "kind" : "function",
       "line" : 1364,
       "char" : 5,
@@ -6173,7 +6080,7 @@
       ]
      },
      {
-      "name" : "__unittestL2084_75",
+      "name" : "__unittest___source_codecs_cer_d_2084_0",
       "kind" : "function",
       "line" : 2084,
       "char" : 5,
@@ -6184,7 +6091,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL2106_76",
+      "name" : "__unittest___source_codecs_cer_d_2106_0",
       "kind" : "function",
       "line" : 2106,
       "char" : 5,
@@ -6195,7 +6102,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL2128_77",
+      "name" : "__unittest___source_codecs_cer_d_2128_0",
       "kind" : "function",
       "line" : 2128,
       "char" : 5,
@@ -6301,7 +6208,7 @@
       ]
      },
      {
-      "name" : "__unittestL2527_78",
+      "name" : "__unittest___source_codecs_cer_d_2527_0",
       "kind" : "function",
       "line" : 2527,
       "char" : 5,
@@ -6312,7 +6219,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL2553_79",
+      "name" : "__unittest___source_codecs_cer_d_2553_0",
       "kind" : "function",
       "line" : 2553,
       "char" : 5,
@@ -6361,7 +6268,7 @@
       ]
      },
      {
-      "name" : "__unittestL2660_80",
+      "name" : "__unittest___source_codecs_cer_d_2660_0",
       "kind" : "function",
       "line" : 2660,
       "char" : 5,
@@ -6530,7 +6437,7 @@
       ]
      },
      {
-      "name" : "__unittestL2990_81",
+      "name" : "__unittest___source_codecs_cer_d_2990_0",
       "kind" : "function",
       "line" : 2990,
       "char" : 5,
@@ -6579,7 +6486,7 @@
       ]
      },
      {
-      "name" : "__unittestL3161_82",
+      "name" : "__unittest___source_codecs_cer_d_3161_0",
       "kind" : "function",
       "line" : 3161,
       "char" : 5,
@@ -6628,7 +6535,7 @@
       ]
      },
      {
-      "name" : "__unittestL3276_83",
+      "name" : "__unittest___source_codecs_cer_d_3276_0",
       "kind" : "function",
       "line" : 3276,
       "char" : 5,
@@ -6677,7 +6584,7 @@
       ]
      },
      {
-      "name" : "__unittestL3391_84",
+      "name" : "__unittest___source_codecs_cer_d_3391_0",
       "kind" : "function",
       "line" : 3391,
       "char" : 5,
@@ -6726,7 +6633,7 @@
       ]
      },
      {
-      "name" : "__unittestL3580_85",
+      "name" : "__unittest___source_codecs_cer_d_3580_0",
       "kind" : "function",
       "line" : 3580,
       "char" : 5,
@@ -6851,7 +6758,7 @@
       ]
      },
      {
-      "name" : "__unittestL3883_86",
+      "name" : "__unittest___source_codecs_cer_d_3883_0",
       "kind" : "function",
       "line" : 3883,
       "char" : 5,
@@ -6900,7 +6807,7 @@
       ]
      },
      {
-      "name" : "__unittestL4048_87",
+      "name" : "__unittest___source_codecs_cer_d_4048_0",
       "kind" : "function",
       "line" : 4048,
       "char" : 5,
@@ -6949,7 +6856,7 @@
       ]
      },
      {
-      "name" : "__unittestL4217_88",
+      "name" : "__unittest___source_codecs_cer_d_4217_0",
       "kind" : "function",
       "line" : 4217,
       "char" : 5,
@@ -6998,7 +6905,7 @@
       ]
      },
      {
-      "name" : "__unittestL4448_89",
+      "name" : "__unittest___source_codecs_cer_d_4448_0",
       "kind" : "function",
       "line" : 4448,
       "char" : 5,
@@ -7047,7 +6954,7 @@
       ]
      },
      {
-      "name" : "__unittestL4700_90",
+      "name" : "__unittest___source_codecs_cer_d_4700_0",
       "kind" : "function",
       "line" : 4700,
       "char" : 5,
@@ -7096,7 +7003,7 @@
       ]
      },
      {
-      "name" : "__unittestL4920_91",
+      "name" : "__unittest___source_codecs_cer_d_4920_0",
       "kind" : "function",
       "line" : 4920,
       "char" : 5,
@@ -7202,7 +7109,7 @@
     ]
    },
    {
-    "name" : "__unittestL5251_92",
+    "name" : "__unittest___source_codecs_cer_d_5251_23",
     "kind" : "function",
     "line" : 5251,
     "char" : 1,
@@ -7213,7 +7120,7 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittestL5406_93",
+    "name" : "__unittest___source_codecs_cer_d_5406_24",
     "kind" : "function",
     "line" : 5406,
     "char" : 1,
@@ -7224,7 +7131,7 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittestL5448_94",
+    "name" : "__unittest___source_codecs_cer_d_5448_25",
     "kind" : "function",
     "line" : 5448,
     "char" : 1,
@@ -7235,7 +7142,7 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittestL5499_95",
+    "name" : "__unittest___source_codecs_cer_d_5499_26",
     "kind" : "function",
     "line" : 5499,
     "char" : 1,
@@ -7246,7 +7153,7 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittestL5523_96",
+    "name" : "__unittest___source_codecs_cer_d_5523_27",
     "kind" : "function",
     "line" : 5523,
     "char" : 1,
@@ -7624,7 +7531,7 @@
       ]
      },
      {
-      "name" : "__unittestL331_97",
+      "name" : "__unittest___source_codecs_der_d_331_0",
       "kind" : "function",
       "comment" : "\n",
       "line" : 331,
@@ -7912,7 +7819,7 @@
       ]
      },
      {
-      "name" : "__unittestL1007_98",
+      "name" : "__unittest___source_codecs_der_d_1007_0",
       "kind" : "function",
       "line" : 1007,
       "char" : 5,
@@ -7979,7 +7886,7 @@
       ]
      },
      {
-      "name" : "__unittestL1727_99",
+      "name" : "__unittest___source_codecs_der_d_1727_0",
       "kind" : "function",
       "line" : 1727,
       "char" : 5,
@@ -7990,7 +7897,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL1749_100",
+      "name" : "__unittest___source_codecs_der_d_1749_0",
       "kind" : "function",
       "line" : 1749,
       "char" : 5,
@@ -8001,7 +7908,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL1771_101",
+      "name" : "__unittest___source_codecs_der_d_1771_0",
       "kind" : "function",
       "line" : 1771,
       "char" : 5,
@@ -8107,7 +8014,7 @@
       ]
      },
      {
-      "name" : "__unittestL2170_102",
+      "name" : "__unittest___source_codecs_der_d_2170_0",
       "kind" : "function",
       "line" : 2170,
       "char" : 5,
@@ -8118,7 +8025,7 @@
       "endchar" : 5
      },
      {
-      "name" : "__unittestL2196_103",
+      "name" : "__unittest___source_codecs_der_d_2196_0",
       "kind" : "function",
       "line" : 2196,
       "char" : 5,
@@ -8743,7 +8650,7 @@
       ]
      },
      {
-      "name" : "__unittestL3265_104",
+      "name" : "__unittest___source_codecs_der_d_3265_0",
       "kind" : "function",
       "line" : 3265,
       "char" : 5,
@@ -8887,7 +8794,7 @@
     ]
    },
    {
-    "name" : "__unittestL3622_105",
+    "name" : "__unittest___source_codecs_der_d_3622_8",
     "kind" : "function",
     "line" : 3622,
     "char" : 1,
@@ -8898,7 +8805,7 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittestL3777_106",
+    "name" : "__unittest___source_codecs_der_d_3777_9",
     "kind" : "function",
     "line" : 3777,
     "char" : 1,
@@ -8909,7 +8816,7 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittestL3819_107",
+    "name" : "__unittest___source_codecs_der_d_3819_10",
     "kind" : "function",
     "line" : 3819,
     "char" : 1,
@@ -8920,7 +8827,7 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittestL3855_108",
+    "name" : "__unittest___source_codecs_der_d_3855_11",
     "kind" : "function",
     "line" : 3855,
     "char" : 1,
@@ -8931,7 +8838,7 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittestL3879_109",
+    "name" : "__unittest___source_codecs_der_d_3879_12",
     "kind" : "function",
     "line" : 3879,
     "char" : 1,

@@ -34,7 +34,7 @@
 */
 module asn1;
 
-debug(asn1)
+debug (asn1)
 {
     public import std.stdio : write, writefln, writeln;
 }

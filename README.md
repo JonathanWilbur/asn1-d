@@ -25,6 +25,7 @@ ASN.1 is used in, or required by, multiple technologies, including:
 
 * [X.509 Certificates](http://www.itu.int/rec/T-REC-X.509-201610-I/en), used in [SSL/TLS](https://tools.ietf.org/html/rfc5246)
 * [Lightweight Directory Access Protocol (LDAP)](https://www.ietf.org/rfc/rfc4511.txt)
+* [X.400]()
 * [X.500](http://www.itu.int/rec/T-REC-X.500-201610-I/en)
 * The [magnetic stripes](https://www.iso.org/standard/43317.html) on credit cards and debit cards
 * Microsoft's [Remote Desktop Protocol (RDP)](https://msdn.microsoft.com/en-us/library/mt242409.aspx)
@@ -148,11 +149,30 @@ Version 1.0.0-beta was released on November 8th, 2017.
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
 - [x] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
+- [ ] Fix constructors to accept `const` variations.
 - [ ] `ObjectIdentifier` constants
+- [ ] OID / ROID codec properties
+  - [ ] Explanatory comments
+  - [ ] Proper unsigned number formatting
+  - [ ] Review again for endianness (It doesn't look right.)
+  - [ ] Review for performance (I believe it could be done a faster way.)
+  - [ ] Review that un-terminating components do not crash program.
+- [ ] Review code for anything that could be made `const` or `immutable`
+- [ ] Redo Context-Switching Types
+  - [x] Make them actually work
+  - [x] Make them use the right tag classes (`UNIVERSAL`, not `CONTEXT`)
+  - [ ] Document your research into this (Page 413 of the Dubuisson book, and format of X.509 certificates)
+  - [x] Support the pre-1994 `EXTERNAL`
+  - [ ] Deprecate `EXTERNAL`
+  - [ ] Document all of the fields in excruciating detail
+- [ ] Improve exception messages
+- [ ] De-duplicate decoding code (private `fromBytes()` method called by constructor)
+- [ ] Use either the term `byte` or `octet` consistently for variable names
 - [ ] Configure `.vscode`
   - [ ] `tasks.json`
   - [ ] `launch.json`?
 - [ ] Configure `dub.json`
+- [ ] Make `enum`s in `asn1.d` `immutable`, if possible.
 - [x] Either do something with `valueContainsDoubleNull()` or make it public
 - [x] String `ObjectIdentifier` constructor
 - [x] Properties for member `type`
@@ -289,8 +309,20 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [ ] Comparison Tests
       - [ ] [@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN.1 BER Codec](https://github.com/YuryStrozhevsky/C-plus-plus-ASN.1-2008-coder-decoder)
       - [ ] [PyASN1](http://pyasn1.sourceforge.net)
+  - [ ] `asn1.md`
+    - [ ] What the different classes are for
+    - [ ] What it means to be primitive or constructed
+    - [ ] "Don't use ASN.1 unless you absolutely MUST use ASN.1."
   - [ ] `library.md`
+    - [ ] Class Hierarchy
+    - [ ] Exception Hierarchy
     - [ ] Security Advice
+    - [ ] How to encode and decode
+      - [ ] `ANY`
+      - [ ] `CHOICE`
+      - [ ] `INSTANCE OF`
+      - [ ] `SET OF`
+      - [ ] `SEQUENCE OF`
   - [ ] `contributing.md`
   - [ ] `security.md`
     - [ ] Review by a Security Firm
@@ -300,6 +332,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] `roadmap.md`
   - [ ] `releases.csv` (Version, Date, LOC, SLOC, Signature)
   - [ ] `users.md` / `users.csv`
+  - [ ] `man` Pages
 - [ ] Build Scripts
   - [ ] Add `chmod +x` to the build scripts for all executables
   - [ ] Create dynamically-linked libraries as well
@@ -307,6 +340,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Generate a `.def` file for Windows?
 - [ ] Figure out how to parse negative numbers from the command-line (`-1.0` gets interpreted as a command...)
 - [ ] Instructions on installing and linking `cli.lib`.
+- [ ] If I were to just `alias` `AbstractSyntaxNotation1` to `ASN1`, would it apply to `AbstractSyntaxNotation1*`?
 
 ### 1.0.0 Release
 
