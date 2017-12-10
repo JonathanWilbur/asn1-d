@@ -726,8 +726,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 of EMBEDDED PDV itself is referenced by an out-of-range 
                 context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
 
-
-
         EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
             direct-reference  OBJECT IDENTIFIER OPTIONAL,
             indirect-reference  INTEGER OPTIONAL,
@@ -741,8 +739,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     External external() const
     {
         const BERElement[] components = this.sequence;
-        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
         External ext = External();
+        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
 
         if (components.length < 2u || components.length > 4u)
             throw new ASN1ValueSizeException
@@ -761,24 +759,42 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         foreach (component; components[0 .. $-1])
         {
             if (component.tagClass != ASN1TagClass.universal)
-                throw new ASN1ValueInvalidException
+                throw new ASN1TagException
                 (
-                    "Invalid tag class."
+                    "This exception was thrown because you attempted to decode " ~
+                    "an EXTERNAL whose components were not of the correct tag " ~
+                    "class. When using Basic Encoding Rules, all but the last " ~
+                    "component of the encoded EXTERNAL must be of UNIVERSAL " ~
+                    "class. The last component must be of CONTEXT SPECIFIC " ~
+                    "class. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
                 );
         }
 
         // The last tag must be context-specific class
         if (components[$-1].tagClass != ASN1TagClass.contextSpecific)
-            throw new ASN1ValueInvalidException
+            throw new ASN1TagException
             (
-                "Invalid tag class."
+                "This exception was thrown because you attempted to decode " ~
+                "an EXTERNAL whose last component was not of the correct tag " ~
+                "class. When using Basic Encoding Rules, all but the last " ~
+                "component of the encoded EXTERNAL must be of UNIVERSAL " ~
+                "class. The last component must be of CONTEXT SPECIFIC " ~
+                "class. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
             );
 
         // The first component should always be primitive
         if (components[0].construction != ASN1Construction.primitive)
             throw new ASN1ValueInvalidException
             (
-                "Invalid tag construction."
+                "This exception was thrown because you attempted to decode " ~
+                "an EXTERNAL whose first element was not primitively " ~
+                "constructed. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
             );
 
         // REVIEW: A faster way to do this is to AND components[0] with 0b0000_0010u
@@ -789,7 +805,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         )
             throw new ASN1ValueInvalidException
             (
-                "Invalid tag number."
+                "This exception was thrown because you attempted to decode " ~
+                "an EXTERNAL whose first component was not an INTEGER or " ~
+                "OBJECT IDENTIFIER. The first component of an EXTERNAL " ~
+                "must be either an OBJECT IDENTIFIER or an INTEGER if it is " ~ 
+                "encoded using Basic Encoding Rules. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
             );
 
         switch (components.length)
@@ -813,7 +835,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     if (components[1].construction != ASN1Construction.primitive)
                         throw new ASN1ValueInvalidException
                         (
-                            "Invalid tag construction."
+                            "This exception was thrown because you attempted to " ~
+                            "decode an EXTERNAL whose second element out of " ~
+                            "three was primitively constructed. Whether it is " ~
+                            "an OBJECT IDENTIFIER or an ObjectDescriptor, it " ~
+                            "must be primitively constructed. " ~
+                            notWhatYouMeantText ~ forMoreInformationText ~ 
+                            debugInformationText ~ reportBugsText
                         );
                     
                     identification.contextNegotiation = ASN1ContextNegotiation(
@@ -846,7 +874,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 else
                     throw new ASN1ValueInvalidException
                     (
-                        "Invalid sequence."
+                        "This exception was thrown because you attempted to decode " ~
+                        "an EXTERNAL whose middle component was neither an OBJECT " ~
+                        "IDENTIFIER, INTEGER, nor ObjectDescriptor. This middle " ~
+                        "component of the three must be one of those types. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
                     );
                 break;
             }
@@ -856,17 +889,30 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 (
                     components[0].tagNumber != ASN1UniversalType.objectIdentifier &&
                     components[1].tagNumber != ASN1UniversalType.integer &&
-                    components[1].tagNumber != ASN1UniversalType.objectDescriptor
+                    components[2].tagNumber != ASN1UniversalType.objectDescriptor
                 )
                     throw new ASN1ValueInvalidException
                     (
-                        "Invalid sequence."
+                        "This exception was thrown because you attempted to decode " ~
+                        "an external whose components were either misordered or " ~
+                        "not of the correct type. When encoding an EXTERNAL using " ~
+                        "the Basic Encoding Rules, and encoding context-" ~
+                        "negotiation, and encoding a data-value-descriptor, " ~
+                        "the resulting EXTERNAL should contain four components, " ~
+                        "and the first three should have the types OBJECT " ~
+                        "IDENTIFIER, INTEGER, and ObjectDescriptor in that order. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
                     );
 
                 if (components[1].construction != ASN1Construction.primitive)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1TagException
                     (
-                        "Invalid tag construction."
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EXTERNAL whose second element was not " ~
+                        "primitively constructed, despite being INTEGER type. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
                     );
                 
                 identification.contextNegotiation = ASN1ContextNegotiation(
@@ -909,8 +955,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 ext.encoding = ASN1ExternalEncodingChoice.octetAligned;
                 if (components[$-1].construction == ASN1Construction.primitive)
                 {
-                    // ubyte[] bytes = components[$-1].value.dup;
-                    // BERElement octetAligned = new BERElement(bytes);
                     ext.dataValue = components[$-1].value.dup;
                 }
                 else
@@ -922,13 +966,30 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         if (substring.tagNumber != 1u)
                             throw new ASN1TagException
                             (
-                                "Invalid tag number."
+                                "This exception was thrown because you attempted " ~
+                                "to decode an EXTERNAL whose data-value was " ~
+                                "constructed and contained an encoded primitive " ~
+                                "that did not share the same tag number of its " ~
+                                "constructed parent. " ~
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
                             );
 
                         if (substring.construction != ASN1Construction.primitive)
                             throw new ASN1ValueInvalidException
                             (
-                                "Construction recursion too deep for EXTERNAL."
+                                // "Construction recursion too deep for EXTERNAL. "
+                                "This exception was thrown because you attempted " ~
+                                "to decode an EXTERNAL whose data-value component " ~
+                                "was constructed from elements that were " ~
+                                "themselves constructed. Though this is not " ~
+                                "technically illegitimate for an ASN.1 encoding, " ~
+                                "it is not supported by this library, because it " ~
+                                "has proven to be a source of denial-of-service " ~
+                                "bugs involving depply nested constructed " ~ 
+                                "elements. If you believe you will need this " ~
+                                "functionality, contact the author of this " ~
+                                "library, Jonathan M. Wilbur. " ~ reportBugsText
                             );
 
                         octetAligned.put(substring.octetString);
@@ -955,13 +1016,30 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         if (substring.tagNumber != 1u)
                             throw new ASN1TagException
                             (
-                                "Invalid tag number."
+                                "This exception was thrown because you attempted " ~
+                                "to decode an EXTERNAL whose data-value was " ~
+                                "constructed and contained an encoded primitive " ~
+                                "that did not share the same tag number of its " ~
+                                "constructed parent. " ~
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
                             );
 
                         if (substring.construction != ASN1Construction.primitive)
                             throw new ASN1ValueInvalidException
                             (
-                                "Construction recursion too deep for EXTERNAL."
+                                // "Construction recursion too deep for EXTERNAL. "
+                                "This exception was thrown because you attempted " ~
+                                "to decode an EXTERNAL whose data-value component " ~
+                                "was constructed from elements that were " ~
+                                "themselves constructed. Though this is not " ~
+                                "technically illegitimate for an ASN.1 encoding, " ~
+                                "it is not supported by this library, because it " ~
+                                "has proven to be a source of denial-of-service " ~
+                                "bugs involving depply nested constructed " ~ 
+                                "elements. If you believe you will need this " ~
+                                "functionality, contact the author of this " ~
+                                "library, Jonathan M. Wilbur. " ~ reportBugsText
                             );
 
                         arbitrary.put(substring.bitString);
@@ -980,118 +1058,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 );
             }
         }
+
         ext.dataValue = components[$-1].value.dup;
         ext.identification = identification;
         return ext;
-
-        // foreach (bv; bvs)
-        // {
-        //     switch (bv.tagNumber)
-        //     {
-        //         case (0x80u): // identification
-        //         {
-        //             BERElement identificationBV = new BERElement(bv.value);
-        //             switch(identificationBV.tagNumber)
-        //             {
-        //                 case (0x80u): // syntax
-        //                 {
-        //                     identification.syntax = identificationBV.objectIdentifier;
-        //                     break;
-        //                 }
-        //                 case (0x81u): // presentation-context-id
-        //                 {
-        //                     identification.presentationContextID = identificationBV.integer!long;
-        //                     break;
-        //                 }
-        //                 case (0xA2u): // context-negotiation
-        //                 {
-        //                     // REVIEW: Should this be split off into a separate function?
-        //                     ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-        //                     BERElement[] cns = identificationBV.sequence;
-        //                     if (cns.length != 2)
-        //                         throw new ASN1ValueTooBigException
-        //                         (
-        //                             "This exception was thrown because you " ~
-        //                             "attempted to decode an EXTERNAL that had " ~
-        //                             "too many elements within the context-" ~
-        //                             "negotiation element, which is supposed to " ~
-        //                             "have only two elements. " ~ 
-        //                             notWhatYouMeantText ~ forMoreInformationText ~ 
-        //                             debugInformationText ~ reportBugsText
-        //                         );
-                            
-        //                     foreach (cn; cns)
-        //                     {
-        //                         switch (cn.tagNumber)
-        //                         {
-        //                             case (0x80u): // presentation-context-id
-        //                             {
-        //                                 contextNegotiation.presentationContextID = cn.integer!long;
-        //                                 break;
-        //                             }
-        //                             case (0x81u): // transfer-syntax
-        //                             {
-        //                                 contextNegotiation.transferSyntax = cn.objectIdentifier;
-        //                                 break;
-        //                             }
-        //                             default:
-        //                             {
-        //                                 throw new ASN1InvalidIndexException
-        //                                 (
-        //                                     "This exception was thrown because " ~
-        //                                     "you attempted to decode an EXTERNAL " ~
-        //                                     "that had an undefined context-specific " ~
-        //                                     "type tag within the context-" ~
-        //                                     "negotiation element." ~ 
-        //                                     notWhatYouMeantText ~ forMoreInformationText ~ 
-        //                                     debugInformationText ~ reportBugsText
-        //                                 );
-        //                             }
-        //                         }
-        //                     }
-        //                     identification.contextNegotiation = contextNegotiation;
-        //                     break;
-        //                 }
-        //                 default:
-        //                 {
-        //                     throw new ASN1InvalidIndexException
-        //                     (
-        //                         "This exception was thrown because you attempted " ~
-        //                         "to decode an EXTERNAL whose identification " ~
-        //                         "CHOICE is not recognized by the specification. " ~
-        //                         notWhatYouMeantText ~ forMoreInformationText ~ 
-        //                         debugInformationText ~ reportBugsText
-        //                     );
-        //                 }
-        //             }
-        //             ext.identification = identification;
-        //             break;
-        //         }
-        //         case (0x81u): // data-value-descriptor
-        //         {
-        //             ext.dataValueDescriptor = bv.objectDescriptor;
-        //             break;
-        //         }
-        //         case (0x82u): // data-value
-        //         {
-        //             ext.dataValue = bv.octetString;
-        //             break;
-        //         }
-        //         default:
-        //         {
-        //             throw new ASN1InvalidIndexException
-        //             (
-        //                 "This exception was thrown because you attempted to " ~
-        //                 "decode an EXTERNAL that contained an element whose " ~
-        //                 "context-specific type is not specified by the " ~
-        //                 "definition of the EXTERNAL data type." ~
-        //                 notWhatYouMeantText ~ forMoreInformationText ~ 
-        //                 debugInformationText ~ reportBugsText
-        //             );
-        //         }
-        //     }
-        // }
-        // return ext;
     }
 
     /**
@@ -2340,7 +2310,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         this.value = ub[0 .. $];
     }
 
-    ///
     /**
         Decodes an EMBEDDED PDV, which is a constructed data type, defined in 
             the $(LINK2 https://www.itu.int, 
@@ -2386,186 +2355,204 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     EmbeddedPDV embeddedPresentationDataValue() const
     {
-        BERElement[] components = this.sequence;
-        if (components.length < 2u || components.length > 3u)
+        const BERElement[] components = this.sequence;
+        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+
+        if (components.length != 2u)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an EMBEDDED PDV that contained too many or too few elements. " ~
-                "An EMBEDDED PDV should have either two or three elements: " ~
-                "identification, an optional data-value-descriptor, and data-value, in that order. " ~
+                "An EMBEDDED PDV should have only two elements: " ~
+                "an identification CHOICE, and a data-value OCTET STRING, " ~
+                "in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
-        EmbeddedPDV pdv = EmbeddedPDV();
+        if
+        (
+            components[0].tagClass != ASN1TagClass.contextSpecific ||
+            components[1].tagClass != ASN1TagClass.contextSpecific
+        )
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode an " ~
+                "EMBEDDED PDV that contained a tag that was not of CONTEXT-" ~
+                "SPECIFIC class. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
 
-        foreach (bv; components)
+        /* NOTE:
+            See page 224 of Dubuisson, item 11:
+            It sounds like, even if you have an ABSENT constraint applied,
+            all automatically-tagged items still have the same numbers as
+            though the constrained component were PRESENT.
+        */
+        if (components[0].tagNumber != 0u || components[1].tagNumber != 2u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode an " ~
+                "EMBEDDED PDV that contained a tag that was not of CONTEXT-" ~
+                "SPECIFIC class. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        ubyte[] bytes = components[0].value.dup;
+        const BERElement identificationChoice = new BERElement(bytes);
+        switch (identificationChoice.tagNumber)
         {
-            switch (bv.tagNumber)
+            case (0u): // syntaxes
             {
-                case (0x80u): // identification
-                {
-                    BERElement identificationBV = new BERElement(bv.value);
-                    switch (identificationBV.tagNumber)
-                    {
-                        case (0xA0u): // syntaxes
-                        {
-                            ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
-                            BERElement[] syns = identificationBV.sequence;
-                            if (syns.length != 2)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an EMBEDDED PDV that had " ~
-                                    "too many elements within the syntaxes" ~
-                                    "element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
+                const BERElement[] syntaxesComponents = identificationChoice.sequence;
 
-                            foreach (syn; syns)
-                            {
-                                switch (syn.tagNumber)
-                                {
-                                    case (0x80u): // abstract
-                                    {
-                                        syntaxes.abstractSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    case (0x81): // transfer
-                                    {
-                                        syntaxes.transferSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        ("Invalid EMBEDDED PDV.identification.syntaxes tag.");
-                                    }
-                                }
-                            }
-                            identification.syntaxes = syntaxes;
-                            break;
-                        }
-                        case (0x81u): // syntax
-                        {
-                            identification.syntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x82u): // presentation-context-id
-                        {
-                            identification.presentationContextID = identificationBV.integer!long;
-                            break;
-                        }
-                        case (0xA3u): // context-negotiation
-                        {
-                            // REVIEW: Should this be split off into a separate function?
-                            ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-                            BERElement[] cns = identificationBV.sequence;
-                            if (cns.length != 2)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an EMBEDDED PDV that had " ~
-                                    "too many elements within the context-" ~
-                                    "negotiation element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-                            
-                            foreach (cn; cns)
-                            {
-                                switch (cn.tagNumber)
-                                {
-                                    case (0x80u): // presentation-context-id
-                                    {
-                                        contextNegotiation.presentationContextID = cn.integer!long;
-                                        break;
-                                    }
-                                    case (0x81u): // transfer-syntax
-                                    {
-                                        contextNegotiation.transferSyntax = cn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        (
-                                            "This exception was thrown because " ~
-                                            "you attempted to decode an EMBEDDED PDV " ~
-                                            "that had an undefined context-specific " ~
-                                            "type tag within the context-" ~
-                                            "negotiation element." ~ 
-                                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                                            debugInformationText ~ reportBugsText
-                                        );
-                                    }
-                                }
-                            }
-                            identification.contextNegotiation = contextNegotiation;
-                            break;
-                        }
-                        case (0x84u): // transfer-syntax
-                        {
-                            identification.transferSyntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x85u): // fixed
-                        {
-                            identification.fixed = true;
-                            break;
-                        }
-                        default:
-                        {
-                            throw new ASN1InvalidIndexException
-                            (
-                                "This exception was thrown because you attempted " ~
-                                "to decode an EMBEDDED PDV whose identification " ~
-                                "CHOICE is not recognized by the specification. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
-                                debugInformationText ~ reportBugsText
-                            );
-                        }
-                    }
-                    pdv.identification = identification;
-                    break;
-                }
-                case (0x81u): // data-value-descriptor
-                {
+                if (syntaxesComponents.length != 2u)
                     throw new ASN1ValueInvalidException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV that contained a data-value-" ~
-                        "descriptor, which is forbidden from inclusion by " ~
-                        "specification." ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
-                        debugInformationText ~ reportBugsText                        
-                    );
-                    break;
-                }
-                case (0x82u): // data-value
-                {
-                    pdv.dataValue = bv.octetString;
-                    break;
-                }
-                default:
-                {
-                    throw new ASN1InvalidIndexException
-                    (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV that contained an element whose " ~
-                        "context-specific type is not specified by the " ~
-                        "definition of the EMBEDDED PDV data type." ~
+                        "decode an EMBEDDED PDV whose syntaxes component " ~
+                        "contained an invalid number of elements. The " ~
+                        "syntaxes component should contain abstract and transfer " ~
+                        "syntax OBJECT IDENTIFIERS, in that order. " ~
                         notWhatYouMeantText ~ forMoreInformationText ~ 
                         debugInformationText ~ reportBugsText
                     );
-                }
+
+                if
+                (
+                    syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific ||
+                    syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EMBEDDED PDV whose syntaxes contained a " ~ 
+                        "component whose tag class was not CONTEXT-SPECIFIC. " ~
+                        "All elements of the syntaxes component MUST be of " ~
+                        "CONTEXT-SPECIFIC class. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                if
+                (
+                    syntaxesComponents[0].tagNumber != 0u ||
+                    syntaxesComponents[1].tagNumber != 1u
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EMBEDDED PDV whose syntaxes component " ~ 
+                        "contained a component whose tag number was not correct. " ~
+                        "The tag numbers of the syntaxes component " ~
+                        "must be 0 and 1, in that order. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                identification.syntaxes  = ASN1ContextSwitchingTypeSyntaxes(
+                    syntaxesComponents[0].objectIdentifier,
+                    syntaxesComponents[1].objectIdentifier
+                );
+
+                break;
+            }
+            case (1u): // syntax
+            {
+                identification.syntax = identificationChoice.objectIdentifier;
+                break;
+            }
+            case (2u): // presentation-context-id
+            {
+                identification.presentationContextID = identificationChoice.integer!ptrdiff_t;
+                break;
+            }
+            case (3u): // context-negotiation
+            {
+                const BERElement[] contextNegotiationComponents = identificationChoice.sequence;
+
+                if (contextNegotiationComponents.length != 2u)
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EMBEDDED PDV whose context-negotiation " ~
+                        "contained an invalid number of elements. The " ~
+                        "context-negotiation component should contain a " ~
+                        "presentation-context-id INTEGER and transfer-syntax " ~
+                        "OBJECT IDENTIFIER in that order. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                if
+                (
+                    contextNegotiationComponents[0].tagClass != ASN1TagClass.contextSpecific ||
+                    contextNegotiationComponents[1].tagClass != ASN1TagClass.contextSpecific
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EMBEDDED PDV whose context-negotiation " ~ 
+                        "contained a component whose tag class was not CONTEXT-" ~
+                        "SPECIFIC. All elements of the context-negotiation " ~
+                        "component MUST be of CONTEXT-SPECIFIC class." ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                if
+                (
+                    contextNegotiationComponents[0].tagNumber != 0u ||
+                    contextNegotiationComponents[1].tagNumber != 1u
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EMBEDDED PDV whose context-negotiation " ~ 
+                        "contained a component whose tag number was not correct. " ~
+                        "The tag numbers of the context-negotiation component " ~
+                        "must be 0 and 1, in that order. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                identification.contextNegotiation  = ASN1ContextNegotiation(
+                    contextNegotiationComponents[0].integer!ptrdiff_t,
+                    contextNegotiationComponents[1].objectIdentifier
+                );
+                
+                break;
+            }
+            case (4u): // transfer-syntax
+            {
+                identification.transferSyntax = identificationChoice.objectIdentifier;
+                break;
+            }
+            case (5u): // fixed
+            {
+                identification.fixed = true;
+                break;
+            }
+            default:
+            {
+                throw new ASN1TagException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "an EMBEDDED PDV whose identification CHOICE has a tag " ~
+                    "not recognized by the specification of the EMBEDDED PDV. " ~
+                    "The EMBEDDED PDV accepts identification CHOICEs with tag " ~
+                    "numbers from 0 to 5. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
             }
         }
+
+        EmbeddedPDV pdv = EmbeddedPDV();
+        pdv.identification = identification;
+        pdv.dataValue = components[1].octetString;
         return pdv;
     }
 
@@ -2606,61 +2593,68 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     void embeddedPresentationDataValue(EmbeddedPDV value)
     {
         BERElement identification = new BERElement();
-        identification.tagNumber = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
+        identification.tagClass = ASN1TagClass.contextSpecific;
+        identification.tagNumber = 0u; // CHOICE is EXPLICIT, even with automatic tagging.
 
-        BERElement identificationValue = new BERElement();
+        BERElement identificationChoice = new BERElement();
+        identificationChoice.tagClass = ASN1TagClass.contextSpecific;
         if (!(value.identification.syntaxes.isNull))
         {
             BERElement abstractSyntax = new BERElement();
-            abstractSyntax.tagNumber = 0x80u;
+            abstractSyntax.tagClass = ASN1TagClass.contextSpecific;
+            abstractSyntax.tagNumber = 0u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
             BERElement transferSyntax = new BERElement();
-            transferSyntax.tagNumber = 0x81u;
+            transferSyntax.tagClass = ASN1TagClass.contextSpecific;
+            transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
-            identificationValue.tagNumber = 0xA0u;
-            identificationValue.sequence = [ abstractSyntax, transferSyntax ];
+            identificationChoice.tagNumber = 0u;
+            identificationChoice.sequence = [ abstractSyntax, transferSyntax ];
         }
         else if (!(value.identification.syntax.isNull))
         {
-            identificationValue.tagNumber = 0x81u;
-            identificationValue.objectIdentifier = value.identification.syntax;
+            identificationChoice.tagNumber = 1u;
+            identificationChoice.objectIdentifier = value.identification.syntax;
         }
         else if (!(value.identification.contextNegotiation.isNull))
         {
             BERElement presentationContextID = new BERElement();
-            presentationContextID.tagNumber = 0x80u;
+            presentationContextID.tagClass = ASN1TagClass.contextSpecific;
+            presentationContextID.tagNumber = 0u;
             presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
             
             BERElement transferSyntax = new BERElement();
-            transferSyntax.tagNumber = 0x81u;
+            transferSyntax.tagClass = ASN1TagClass.contextSpecific;
+            transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
             
-            identificationValue.tagNumber = 0xA3u;
-            identificationValue.sequence = [ presentationContextID, transferSyntax ];
+            identificationChoice.tagNumber = 3u;
+            identificationChoice.sequence = [ presentationContextID, transferSyntax ];
         }
         else if (!(value.identification.transferSyntax.isNull))
         {
-            identificationValue.tagNumber = 0x84u;
-            identificationValue.objectIdentifier = value.identification.transferSyntax;
+            identificationChoice.tagNumber = 4u;
+            identificationChoice.objectIdentifier = value.identification.transferSyntax;
         }
         else if (value.identification.fixed)
         {
-            identificationValue.tagNumber = 0x85u;
-            identificationValue.value = [];
+            identificationChoice.tagNumber = 5u;
+            identificationChoice.value = [];
         }
         else // it must be the presentationContextID INTEGER
         {
-            identificationValue.tagNumber = 0x82u;
-            identificationValue.integer!long = value.identification.presentationContextID;
+            identificationChoice.tagNumber = 2u;
+            identificationChoice.integer!ptrdiff_t = value.identification.presentationContextID;
         }
 
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
-        identification.value = cast(ubyte[]) identificationValue;
+        identification.value = cast(ubyte[]) identificationChoice;
 
         BERElement dataValue = new BERElement();
-        dataValue.tagNumber = 0x82u;
+        dataValue.tagClass = ASN1TagClass.contextSpecific;
+        dataValue.tagNumber = 2u;
         dataValue.octetString = value.dataValue;
 
         this.sequence = [ identification, dataValue ];
@@ -3580,179 +3574,204 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     override public @property @system
     CharacterString characterString() const
     {
-        BERElement[] bvs = this.sequence;
-        if (bvs.length < 2u || bvs.length > 3u)
+        const BERElement[] components = this.sequence;
+        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+
+        if (components.length != 2u)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "a CharacterString that contained too many or too few elements. " ~
-                "A CharacterString should have either 2 or 3 elements. " ~
+                "A CharacterString should have only two elements: " ~
+                "an identification CHOICE, and a data-value OCTET STRING, " ~
+                "in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
-        CharacterString cs = CharacterString();
+        if
+        (
+            components[0].tagClass != ASN1TagClass.contextSpecific ||
+            components[1].tagClass != ASN1TagClass.contextSpecific
+        )
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode an " ~
+                "CharacterString that contained a tag that was not of CONTEXT-" ~
+                "SPECIFIC class. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
 
-        foreach (bv; bvs)
+        /* NOTE:
+            See page 224 of Dubuisson, item 11:
+            It sounds like, even if you have an ABSENT constraint applied,
+            all automatically-tagged items still have the same numbers as
+            though the constrained component were PRESENT.
+        */
+        if (components[0].tagNumber != 0u || components[1].tagNumber != 2u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode an " ~
+                "CharacterString that contained a tag that was not of CONTEXT-" ~
+                "SPECIFIC class. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        ubyte[] bytes = components[0].value.dup;
+        const BERElement identificationChoice = new BERElement(bytes);
+        switch (identificationChoice.tagNumber)
         {
-            switch (bv.tagNumber)
+            case (0u): // syntaxes
             {
-                case (0x80u): // identification
-                {
-                    BERElement identificationBV = new BERElement(bv.value);
-                    switch (identificationBV.tagNumber)
-                    {
-                        case (0xA0u): // syntaxes
-                        {
-                            ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
-                            BERElement[] syns = identificationBV.sequence;
-                            if (syns.length != 2u)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an CharacterString that had " ~
-                                    "too many elements within the syntaxes" ~
-                                    "element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
+                const BERElement[] syntaxesComponents = identificationChoice.sequence;
 
-                            foreach (syn; syns)
-                            {
-                                switch (syn.tagNumber)
-                                {
-                                    case (0x80u): // abstract
-                                    {
-                                        syntaxes.abstractSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    case (0x81): // transfer
-                                    {
-                                        syntaxes.transferSyntax = syn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        (
-                                            "This exception was thrown because " ~
-                                            "you attempted to decode a CharacterString " ~
-                                            "that had an undefined context-specific " ~
-                                            "type tag within the syntaxes element. " ~
-                                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                                            debugInformationText ~ reportBugsText
-                                        );
-                                    }
-                                }
-                            }
-                            identification.syntaxes = syntaxes;
-                            break;
-                        }
-                        case (0x81u): // syntax
-                        {
-                            identification.syntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x82u): // presentation-context-id
-                        {
-                            identification.presentationContextID = identificationBV.integer!long;
-                            break;
-                        }
-                        case (0xA3u): // context-negotiation
-                        {
-                            // REVIEW: Should this be split off into a separate function?
-                            ASN1ContextNegotiation contextNegotiation = ASN1ContextNegotiation();
-                            BERElement[] cns = identificationBV.sequence;
-                            if (cns.length != 2u)
-                                throw new ASN1ValueTooBigException
-                                (
-                                    "This exception was thrown because you " ~
-                                    "attempted to decode an CharacterString that had " ~
-                                    "too many elements within the context-" ~
-                                    "negotiation element, which is supposed to " ~
-                                    "have only two elements. " ~ 
-                                    notWhatYouMeantText ~ forMoreInformationText ~ 
-                                    debugInformationText ~ reportBugsText
-                                );
-                            
-                            foreach (cn; cns)
-                            {
-                                switch (cn.tagNumber)
-                                {
-                                    case (0x80u): // presentation-context-id
-                                    {
-                                        contextNegotiation.presentationContextID = cn.integer!long;
-                                        break;
-                                    }
-                                    case (0x81u): // transfer-syntax
-                                    {
-                                        contextNegotiation.transferSyntax = cn.objectIdentifier;
-                                        break;
-                                    }
-                                    default:
-                                    {
-                                        throw new ASN1InvalidIndexException
-                                        (
-                                            "This exception was thrown because " ~
-                                            "you attempted to decode a CharacterString " ~
-                                            "that had an undefined context-specific " ~
-                                            "type tag within the context-" ~
-                                            "negotiation element." ~ 
-                                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                                            debugInformationText ~ reportBugsText
-                                        );
-                                    }
-                                }
-                            }
-                            identification.contextNegotiation = contextNegotiation;
-                            break;
-                        }
-                        case (0x84u): // transfer-syntax
-                        {
-                            identification.transferSyntax = identificationBV.objectIdentifier;
-                            break;
-                        }
-                        case (0x85u): // fixed
-                        {
-                            identification.fixed = true;
-                            break;
-                        }
-                        default:
-                        {
-                            throw new ASN1InvalidIndexException
-                            (
-                                "This exception was thrown because you attempted " ~
-                                "to decode a CharacterString whose identification " ~
-                                "CHOICE is not recognized by the specification. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
-                                debugInformationText ~ reportBugsText
-                            );
-                        }
-                    }
-                    cs.identification = identification;
-                    break;
-                }
-                case (0x81u): // string-value
-                {
-                    cs.stringValue = bv.octetString;
-                    break;
-                }
-                default:
-                {
-                    throw new ASN1InvalidIndexException
+                if (syntaxesComponents.length != 2u)
+                    throw new ASN1ValueInvalidException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString that contained an element whose " ~
-                        "context-specific type is not specified by the " ~
-                        "definition of the CharacterString data type. " ~
+                        "decode an CharacterString whose syntaxes component " ~
+                        "contained an invalid number of elements. The " ~
+                        "syntaxes component should contain abstract and transfer " ~
+                        "syntax OBJECT IDENTIFIERS, in that order. " ~
                         notWhatYouMeantText ~ forMoreInformationText ~ 
                         debugInformationText ~ reportBugsText
                     );
-                }
+
+                if
+                (
+                    syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific ||
+                    syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a CharacterString whose syntaxes contained a " ~ 
+                        "component whose tag class was not CONTEXT-SPECIFIC. " ~
+                        "All elements of the syntaxes component MUST be of " ~
+                        "CONTEXT-SPECIFIC class. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                if
+                (
+                    syntaxesComponents[0].tagNumber != 0u ||
+                    syntaxesComponents[1].tagNumber != 1u
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a CharacterString whose syntaxes component " ~ 
+                        "contained a component whose tag number was not correct. " ~
+                        "The tag numbers of the syntaxes component " ~
+                        "must be 0 and 1, in that order. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                identification.syntaxes  = ASN1ContextSwitchingTypeSyntaxes(
+                    syntaxesComponents[0].objectIdentifier,
+                    syntaxesComponents[1].objectIdentifier
+                );
+
+                break;
+            }
+            case (1u): // syntax
+            {
+                identification.syntax = identificationChoice.objectIdentifier;
+                break;
+            }
+            case (2u): // presentation-context-id
+            {
+                identification.presentationContextID = identificationChoice.integer!ptrdiff_t;
+                break;
+            }
+            case (3u): // context-negotiation
+            {
+                const BERElement[] contextNegotiationComponents = identificationChoice.sequence;
+
+                if (contextNegotiationComponents.length != 2u)
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a CharacterString whose context-negotiation " ~
+                        "contained an invalid number of elements. The " ~
+                        "context-negotiation component should contain a " ~
+                        "presentation-context-id INTEGER and transfer-syntax " ~
+                        "OBJECT IDENTIFIER in that order. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                if
+                (
+                    contextNegotiationComponents[0].tagClass != ASN1TagClass.contextSpecific ||
+                    contextNegotiationComponents[1].tagClass != ASN1TagClass.contextSpecific
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a CharacterString whose context-negotiation " ~ 
+                        "contained a component whose tag class was not CONTEXT-" ~
+                        "SPECIFIC. All elements of the context-negotiation " ~
+                        "component MUST be of CONTEXT-SPECIFIC class." ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                if
+                (
+                    contextNegotiationComponents[0].tagNumber != 0u ||
+                    contextNegotiationComponents[1].tagNumber != 1u
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a CharacterString whose context-negotiation " ~ 
+                        "contained a component whose tag number was not correct. " ~
+                        "The tag numbers of the context-negotiation component " ~
+                        "must be 0 and 1, in that order. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                identification.contextNegotiation  = ASN1ContextNegotiation(
+                    contextNegotiationComponents[0].integer!ptrdiff_t,
+                    contextNegotiationComponents[1].objectIdentifier
+                );
+                
+                break;
+            }
+            case (4u): // transfer-syntax
+            {
+                identification.transferSyntax = identificationChoice.objectIdentifier;
+                break;
+            }
+            case (5u): // fixed
+            {
+                identification.fixed = true;
+                break;
+            }
+            default:
+            {
+                throw new ASN1TagException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a CharacterString whose identification CHOICE has a tag " ~
+                    "not recognized by the specification of the CharacterString. " ~
+                    "The CharacterString accepts identification CHOICEs with tag " ~
+                    "numbers from 0 to 5. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
             }
         }
+
+        CharacterString cs = CharacterString();
+        cs.identification = identification;
+        cs.stringValue = components[1].octetString;
         return cs;
     }
 
@@ -3783,66 +3802,72 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
     */
-    // REVIEW: Is this nothrow?
     override public @property @system
     void characterString(CharacterString value)
     {
         BERElement identification = new BERElement();
-        identification.tagNumber = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
+        identification.tagClass = ASN1TagClass.contextSpecific;
+        identification.tagNumber = 0u; // CHOICE is EXPLICIT, even with automatic tagging.
 
-        BERElement identificationValue = new BERElement();
+        BERElement identificationChoice = new BERElement();
+        identificationChoice.tagClass = ASN1TagClass.contextSpecific;
         if (!(value.identification.syntaxes.isNull))
         {
             BERElement abstractSyntax = new BERElement();
-            abstractSyntax.tagNumber = 0x80u;
+            abstractSyntax.tagClass = ASN1TagClass.contextSpecific;
+            abstractSyntax.tagNumber = 0u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
             BERElement transferSyntax = new BERElement();
-            transferSyntax.tagNumber = 0x81u;
+            transferSyntax.tagClass = ASN1TagClass.contextSpecific;
+            transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
-            identificationValue.tagNumber = 0xA0u;
-            identificationValue.sequence = [ abstractSyntax, transferSyntax ];
+            identificationChoice.tagNumber = 0u;
+            identificationChoice.sequence = [ abstractSyntax, transferSyntax ];
         }
         else if (!(value.identification.syntax.isNull))
         {
-            identificationValue.tagNumber = 0x81u;
-            identificationValue.objectIdentifier = value.identification.syntax;
+            identificationChoice.tagNumber = 1u;
+            identificationChoice.objectIdentifier = value.identification.syntax;
         }
         else if (!(value.identification.contextNegotiation.isNull))
         {
             BERElement presentationContextID = new BERElement();
-            presentationContextID.tagNumber = 0x80u;
+            presentationContextID.tagClass = ASN1TagClass.contextSpecific;
+            presentationContextID.tagNumber = 0u;
             presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
             
             BERElement transferSyntax = new BERElement();
-            transferSyntax.tagNumber = 0x81u;
+            transferSyntax.tagClass = ASN1TagClass.contextSpecific;
+            transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
             
-            identificationValue.tagNumber = 0xA3u;
-            identificationValue.sequence = [ presentationContextID, transferSyntax ];
+            identificationChoice.tagNumber = 3u;
+            identificationChoice.sequence = [ presentationContextID, transferSyntax ];
         }
         else if (!(value.identification.transferSyntax.isNull))
         {
-            identificationValue.tagNumber = 0x84u;
-            identificationValue.objectIdentifier = value.identification.transferSyntax;
+            identificationChoice.tagNumber = 4u;
+            identificationChoice.objectIdentifier = value.identification.transferSyntax;
         }
         else if (value.identification.fixed)
         {
-            identificationValue.tagNumber = 0x85u;
-            identificationValue.value = [];
+            identificationChoice.tagNumber = 5u;
+            identificationChoice.value = [];
         }
         else // it must be the presentationContextID INTEGER
         {
-            identificationValue.tagNumber = 0x82u;
-            identificationValue.integer!long = value.identification.presentationContextID;
+            identificationChoice.tagNumber = 2u;
+            identificationChoice.integer!ptrdiff_t = value.identification.presentationContextID;
         }
 
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
-        identification.value = cast(ubyte[]) identificationValue;
+        identification.value = cast(ubyte[]) identificationChoice;
 
         BERElement stringValue = new BERElement();
-        stringValue.tagNumber = 0x81u;
+        stringValue.tagClass = ASN1TagClass.contextSpecific;
+        stringValue.tagNumber = 2u;
         stringValue.octetString = value.stringValue;
 
         this.sequence = [ identification, stringValue ];

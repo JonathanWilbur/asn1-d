@@ -149,7 +149,9 @@ Version 1.0.0-beta was released on November 8th, 2017.
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
 - [x] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
+- [ ] Extract the string constants into either `codec.d`, `asn1.d`, or something else.
 - [ ] Fix constructors to accept `const` variations.
+- [ ] Remove trailing spaces
 - [ ] `ObjectIdentifier` constants
 - [ ] OID / ROID codec properties
   - [ ] Explanatory comments
@@ -159,12 +161,15 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Review that un-terminating components do not crash program.
 - [ ] Review code for anything that could be made `const` or `immutable`
 - [ ] Redo Context-Switching Types
-  - [x] Make them actually work
-  - [x] Make them use the right tag classes (`UNIVERSAL`, not `CONTEXT`)
+  - [ ] Make them actually work
   - [ ] Document your research into this (Page 413 of the Dubuisson book, and format of X.509 certificates)
   - [x] Support the pre-1994 `EXTERNAL`
   - [ ] Deprecate `EXTERNAL`
   - [ ] Document all of the fields in excruciating detail
+  - [ ] Unittest all variations of `EXTERNAL`'s `encoding`
+  - [ ] Implement `OBJECT IDENTIFIER` restrictions
+  - [ ] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
+  - [ ] Since the `characterString` code is so similar to `embeddedPDV`, could I de-duplicate?
 - [ ] Improve exception messages
 - [ ] De-duplicate decoding code (private `fromBytes()` method called by constructor)
 - [ ] Use either the term `byte` or `octet` consistently for variable names
