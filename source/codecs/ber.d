@@ -2624,7 +2624,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             BERElement presentationContextID = new BERElement();
             presentationContextID.tagClass = ASN1TagClass.contextSpecific;
             presentationContextID.tagNumber = 0u;
-            presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
+            presentationContextID.integer!ptrdiff_t = value.identification.contextNegotiation.presentationContextID;
             
             BERElement transferSyntax = new BERElement();
             transferSyntax.tagClass = ASN1TagClass.contextSpecific;
@@ -3838,7 +3838,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             BERElement presentationContextID = new BERElement();
             presentationContextID.tagClass = ASN1TagClass.contextSpecific;
             presentationContextID.tagNumber = 0u;
-            presentationContextID.integer!long = value.identification.contextNegotiation.presentationContextID;
+            presentationContextID.integer!ptrdiff_t = value.identification.contextNegotiation.presentationContextID;
             
             BERElement transferSyntax = new BERElement();
             transferSyntax.tagClass = ASN1TagClass.contextSpecific;

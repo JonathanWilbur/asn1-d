@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.9](http://semver.org/)
+* Version: [1.0.0-beta.10](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -155,7 +155,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Check for correct terminal spacing
   - [ ] Add parenthetical abbreviations
 - [x] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
-- [ ] Find and change integral types to either `size_t` or `ptrdiff_t`
+- [x] Find and change integral types to either `size_t` or `ptrdiff_t`
 - [ ] Extract the string constants into either `codec.d`, `asn1.d`, or something else.
 - [ ] Fix constructors to accept `const` variations.
 - [ ] Remove trailing spaces

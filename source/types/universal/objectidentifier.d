@@ -125,12 +125,12 @@ public class ObjectIdentifier
         import std.array : split;
         import std.conv : to;
         string[] segments = str.split(".");
-        uint[] numbers;
+        size_t[] numbers;
         numbers.length = segments.length;
 
         for (size_t i = 0u; i < segments.length; i++)
         {
-            numbers[i] = segments[i].to!uint;
+            numbers[i] = segments[i].to!size_t;
         }
 
         if (numbers.length < 3u)
