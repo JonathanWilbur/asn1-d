@@ -145,128 +145,9 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
     static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
 
-    /** 
-        Returns the tag class of the element. Though you could directly get the
-        class yourself, you should still use this property instead; not doing
-        so is a good way to introduce bugs into your program.
-
-        Returns: the tag class of the element.
-    */
-    final public @property nothrow @safe
-    ASN1TagClass tagClass() const
-    {
-        switch (this.tagNumber & 0b1100_0000u)
-        {
-            case (0b0000_0000u):
-            {
-                return ASN1TagClass.universal;
-            }
-            case (0b0100_0000u):
-            {
-                return ASN1TagClass.application;
-            }
-            case (0b1000_0000u):
-            {
-                return ASN1TagClass.contextSpecific;
-            }
-            case (0b1100_0000u):
-            {
-                return ASN1TagClass.privatelyDefined;
-            }
-            default:
-            {
-                assert(0, "Impossible tag class appeared!");
-            }
-        }
-    }
-
-    /** 
-        Sets the tag class of the element. Though you could directly set the
-        class yourself, you should still use this property instead; not doing
-        so is a good way to introduce bugs into your program.
-    */
-    final public @property nothrow @safe
-    void tagClass(ASN1TagClass value)
-    {
-        this.tagNumber |= cast(ubyte) value;
-    }
-
-    /** 
-        Returns the construction of the element. Though you could directly get 
-        the construction yourself, you should still use this property instead; 
-        not doing so is a good way to introduce bugs into your program.
-
-        Returns: the tag class of the element.
-    */
-    final public @property nothrow @safe
-    ASN1Construction construction() const
-    {
-        switch (this.tagNumber & 0b0010_0000u)
-        {
-            case (0b0000_0000u):
-            {
-                return ASN1Construction.primitive;
-            }
-            case (0b0010_0000u):
-            {
-                return ASN1Construction.constructed;
-            }
-            default:
-            {
-                assert(0, "Impossible tag class appeared!");
-            }
-        }
-    }
-
-    /** 
-        Sets the construction of the element. Though you could directly set 
-        the construction yourself, you should still use this property instead; 
-        not doing so is a good way to introduce bugs into your program.
-    */
-    final public @property nothrow @safe
-    void construction(ASN1Construction value)
-    {
-        this.tagNumber |= cast(ubyte) value;
-    }
-
-    /** 
-        Returns the type number of the element. Though you could directly get 
-        the number yourself, you should still use this property instead; 
-        not doing so is a good way to introduce bugs into your program.
-
-        Returns: the type number associated with this element.
-    */
-    final public @property nothrow @safe
-    T tagNumber(T)() const
-    if (isIntegral!T && isUnsigned!T)
-    {
-        return cast(T) (this.tagNumber & 0b0001_1111u);
-    }
-
-    /** 
-        Sets the type number of the element. Though you could directly set 
-        the number yourself, you should still use this property instead; 
-        not doing so is a good way to introduce bugs into your program.
-    */
-    final public @property @safe
-    void tagNumber(T)(T value)
-    if (isIntegral!T && isUnsigned!T)
-    {
-        if (value > 31u)
-            throw new ASN1CodecException
-            (
-                "This exception was thrown because you attempted to assign a " ~
-                "value greater than 31 to the type number of a BER-encoded " ~
-                "ASN.1 element. Since the type tag reserves only five bits " ~
-                "for encoding the type number, the valid range of type numbers " ~
-                "is strictly between 0 and 31, inclusively."
-            );
-        
-        this.tagNumber |= ((cast(ubyte) value) & 0b0001_1111u);
-    }
-
-    /// The type tag of this element
-    public ubyte type;
+    public ASN1TagClass tagClass;
+    public ASN1Construction construction;
+    public size_t tagNumber;
 
     /// The length of the value in octets
     final public @property @safe nothrow
@@ -1174,120 +1055,234 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 of EMBEDDED PDV itself is referenced by an out-of-range 
                 context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
     */
-    override public @property @system
+override public @property @system
     External external() const
     {
-        CERElement[] cvs = this.sequence;
-        if (cvs.length < 2 || cvs.length > 3)
+        const CERElement[] components = this.sequence;
+        External ext = External();
+        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+
+        if (components.length < 2u || components.length > 3u)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an EXTERNAL that contained too many or too few elements. " ~
-                "An EXTERNAL should have either two or three elements: " ~
-                "identification, an optional data-value-descriptor, and " ~
-                "a data-value, in that order. " ~
+                "An EXTERNAL should have either two and three elements: " ~
+                "a direct-reference (syntax), an optional " ~
+                "data-value-descriptor, and an encoding (data-value). " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        External ext = External();
-        if (cvs[0].tagNumber == 0x80u)
+        // Every component except the last must be universal class
+        foreach (component; components[0 .. $-1])
         {
-            ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
-            CERElement identificationElement = new CERElement(cvs[0].value);
-            /* NOTE:
-                'syntax' is the only permitted CHOICE for EXTERNAL's identification, 
-                when using Canonical Encoding Rules (CER).
-            */
-            if (identificationElement.tagNumber == 0x80u) 
-            {
-                identification.syntax = identificationElement.objectIdentifier;
-            }
-            else
-            {
-                throw new ASN1ValueInvalidException
+            if (component.tagClass != ASN1TagClass.universal)
+                throw new ASN1TagException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "an EXTERNAL whose CHOICE of identification was something " ~
-                    "other than `syntax`. When using Canonical Encoding " ~
-                    "Rules (CER), `syntax` is the only permitted CHOICE of " ~
-                    "identification. " ~
+                    "an EXTERNAL whose components were not of the correct tag " ~
+                    "class. When using Distinguished Encoding Rules, all but the last " ~
+                    "component of the encoded EXTERNAL must be of UNIVERSAL " ~
+                    "class. The last component must be of CONTEXT SPECIFIC " ~
+                    "class. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
+        }
+
+        // The last tag must be context-specific class
+        if (components[$-1].tagClass != ASN1TagClass.contextSpecific)
+            throw new ASN1TagException
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "an EXTERNAL whose last component was not of the correct tag " ~
+                "class. When using Basic Encoding Rules, all but the last " ~
+                "component of the encoded EXTERNAL must be of UNIVERSAL " ~
+                "class. The last component must be of CONTEXT SPECIFIC " ~
+                "class. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        // The first component should always be primitive
+        if (components[0].construction != ASN1Construction.primitive)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "an EXTERNAL whose first element was not primitively " ~
+                "constructed. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        if (components[0].tagNumber != ASN1UniversalType.objectIdentifier)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "an EXTERNAL whose first component was not an " ~
+                "OBJECT IDENTIFIER. The first component of an EXTERNAL " ~
+                "must be an OBJECT IDENTIFIER if it is " ~ 
+                "encoded using Distinguished Encoding Rules. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        identification.directReference = components[0].objectIdentifier;
+        if (components.length == 3u)
+        {
+            if (components[1].tagNumber != ASN1UniversalType.objectDescriptor)
+                throw new ASN1TagException
+                (
+                    "This exception was thrown because you attempted to " ~
+                    "decode an EXTERNAL whose second element was not an " ~
+                    "ObjectDescriptor. This would not be a problem if you " ~
+                    "were using Basic Encoding Rules, but Distinguished " ~
+                    "Encoding Rules mandates that only the direct-reference " ~
+                    "component can be used to identify EXTERNAL data, so " ~
+                    "the second component must necessarily be the data-" ~
+                    "value-descriptor if the EXTERNAL is composed of three " ~
+                    "components. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+
+            if (components[1].construction == ASN1Construction.primitive)
+            {
+                ext.dataValueDescriptor = components[1].objectDescriptor;
             }
-            ext.identification = identification;
-        }
-        else
-        {
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because, you attempted to decode " ~
-                "an EXTERNAL whose elements were not exactly in the order " ~
-                "they appear in the specification. Canonical Encoding " ~
-                "Rules (CER) specify that the encoded elements of any " ~
-                "constructed type must appear in the order of their specification, " ~
-                "which, in the case of EXTERNAL, means that identification " ~
-                "must appear first, then data-value. The problem in your case " ~
-                "is that the first encoded element was not identification, as " ~
-                "indicated by a context-specific type tag of 0x80. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
-                debugInformationText ~ reportBugsText
-            );
+            else
+            {
+                Appender!string descriptor = appender!string();
+                CERElement[] substrings = components[1].sequence;
+                foreach (substring; substrings)
+                {
+                    descriptor.put(substring.objectDescriptor);
+                }
+                ext.dataValueDescriptor = descriptor.data;
+            }
         }
 
-        if (cvs[1].tagNumber == 0x81u) // Next tag is the data-value-descriptor
+        switch (components[$-1].tagNumber)
         {
-            ext.dataValueDescriptor = cvs[1].objectDescriptor;
-        }
-        else if (cvs[1].tagNumber == 0x82u) // Next tag is the data-value-descriptor
-        {
-            ext.dataValue = cvs[1].octetString;
-            return ext;
-        }
-        else
-        {
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because, you attempted to decode " ~
-                "an EXTERNAL whose elements were not exactly in the order " ~
-                "they appear in the specification, or entirely omitted the " ~
-                " mandatory data-value field, as indicated by a context-" ~
-                "specific type tag of 0x82. Canonical Encoding " ~
-                "Rules (CER) specify that the encoded elements of any " ~
-                "constructed type must appear in the order of their specification, " ~
-                "which, in the case of EXTERNAL, means that identification " ~
-                "must appear first, then the optional data-value descriptor, " ~
-                "then the data-value. The problem in your case " ~
-                "is that the second encoded element was not the data-value-" ~
-                "descriptor or a data-value, as would be indicated by a context-" ~
-                "specific type tag of either 0x81 or 0x82 respectively. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
-                debugInformationText ~ reportBugsText
-            );
+            case (0u): // single-ASN1-value
+            {
+                ext.encoding = ASN1ExternalEncodingChoice.singleASN1Type; // REVIEW: Could this be extracted from the switch statement?
+                ext.dataValue = components[$-1].value.dup;
+                break;
+            }
+            case (1u): // octet-aligned
+            {
+                ext.encoding = ASN1ExternalEncodingChoice.octetAligned;
+                if (components[$-1].construction == ASN1Construction.primitive)
+                {
+                    ext.dataValue = components[$-1].value.dup;
+                }
+                else
+                {
+                    CERElement[] substrings = components[$-1].sequence;
+                    Appender!(ubyte[]) octetAligned = appender!(ubyte[])();
+                    foreach (substring; substrings)
+                    {
+                        if (substring.tagNumber != 1u)
+                            throw new ASN1TagException
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode an EXTERNAL whose data-value was " ~
+                                "constructed and contained an encoded primitive " ~
+                                "that did not share the same tag number of its " ~
+                                "constructed parent. " ~
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
+                            );
+
+                        if (substring.construction != ASN1Construction.primitive)
+                            throw new ASN1ValueInvalidException
+                            (
+                                // "Construction recursion too deep for EXTERNAL. "
+                                "This exception was thrown because you attempted " ~
+                                "to decode an EXTERNAL whose data-value component " ~
+                                "was constructed from elements that were " ~
+                                "themselves constructed. Though this is not " ~
+                                "technically illegitimate for an ASN.1 encoding, " ~
+                                "it is not supported by this library, because it " ~
+                                "has proven to be a source of denial-of-service " ~
+                                "bugs involving depply nested constructed " ~ 
+                                "elements. If you believe you will need this " ~
+                                "functionality, contact the author of this " ~
+                                "library, Jonathan M. Wilbur. " ~ reportBugsText
+                            );
+
+                        octetAligned.put(substring.octetString);
+                    }
+                    ext.dataValue = octetAligned.data;
+                }
+                break;
+            }
+            case (2u): // arbitrary
+            {
+                ext.encoding = ASN1ExternalEncodingChoice.arbitrary;
+                if (components[$-1].construction == ASN1Construction.primitive)
+                {
+                    ubyte[] bytes = components[$-1].value.dup;
+                    CERElement arbitrary = new CERElement();
+                    ext.dataValue = arbitrary.value;
+                }
+                else
+                {
+                    CERElement[] substrings = components[$-1].sequence;
+                    Appender!(bool[]) arbitrary = appender!(bool[])();
+                    foreach (substring; substrings)
+                    {
+                        if (substring.tagNumber != 1u)
+                            throw new ASN1TagException
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode an EXTERNAL whose data-value was " ~
+                                "constructed and contained an encoded primitive " ~
+                                "that did not share the same tag number of its " ~
+                                "constructed parent. " ~
+                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                debugInformationText ~ reportBugsText
+                            );
+
+                        if (substring.construction != ASN1Construction.primitive)
+                            throw new ASN1ValueInvalidException
+                            (
+                                // "Construction recursion too deep for EXTERNAL. "
+                                "This exception was thrown because you attempted " ~
+                                "to decode an EXTERNAL whose data-value component " ~
+                                "was constructed from elements that were " ~
+                                "themselves constructed. Though this is not " ~
+                                "technically illegitimate for an ASN.1 encoding, " ~
+                                "it is not supported by this library, because it " ~
+                                "has proven to be a source of denial-of-service " ~
+                                "bugs involving depply nested constructed " ~ 
+                                "elements. If you believe you will need this " ~
+                                "functionality, contact the author of this " ~
+                                "library, Jonathan M. Wilbur. " ~ reportBugsText
+                            );
+
+                        arbitrary.put(substring.bitString);
+                    }
+                    CERElement ret = new CERElement();
+                    ret.bitString = arbitrary.data;
+                    ext.dataValue = ret.value;
+                }
+                break;
+            }
+            default:
+            {
+                throw new ASN1ValueInvalidException
+                (
+                    "Invalid CHOICE."
+                );
+            }
         }
 
-        if (cvs[2].tagNumber == 0x82u)
-        {
-            ext.dataValue = cvs[2].octetString;
-            return ext;
-        }
-        else
-        {
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because, you attempted to decode " ~
-                "an EXTERNAL whose last element was not the data-value field, " ~ 
-                "as indicated by a context-specific type tag of 0x82. " ~
-                "Canonical Encoding Rules (CER) specify that the encoded " ~
-                "elements of any constructed type must appear in the order of " ~
-                "their specification, which, in the case of EXTERNAL, means that " ~
-                "identification must appear first, then the optional data-value " ~
-                "descriptor, then the data-value. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
-                debugInformationText ~ reportBugsText
-            );
-        }
+        ext.dataValue = components[$-1].value.dup;
+        ext.identification = identification;
+        return ext;
     }
 
     /**
@@ -1321,38 +1316,55 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     override public @property @system
     void external(External value)
     {
-        CERElement identification = new CERElement();
-        identification.tagNumber = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
-
-        CERElement identificationValue = new CERElement();
-        if (value.identification.syntax.isNull)
+        CERElement[] components = [];
+        
+        if (!(value.identification.syntax.isNull))
         {
+            CERElement directReference = new CERElement();
+            directReference.tagNumber = ASN1UniversalType.objectIdentifier;
+            directReference.objectIdentifier = value.identification.directReference;
+            components ~= directReference;
+        }
+        else // it must be the presentationContextID / indirectReference INTEGER
             throw new ASN1ValueInvalidException
             (
-                "This exception was thrown because you attempted to encode " ~
-                "an EXTERNAL that used a CHOICE of identification other than " ~
-                "syntax. Canonical Encoding Rules (CER) requires that " ~
-                "EXTERNALs may only use `syntax` as their CHOICE of " ~
-                "identification. " ~
+                "This exception was thrown because you attempted to encode an " ~
+                "EXTERNAL that used something other than syntax as the CHOICE " ~
+                "of identification, which is not permitted when using " ~
+                "Distinguished Encoding Rules. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
-        }
-
-        identificationValue.tagNumber = 0x80u;
-        identificationValue.objectIdentifier = value.identification.syntax;
-        // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
-        identification.value = cast(ubyte[]) identificationValue;
 
         CERElement dataValueDescriptor = new CERElement();
-        dataValueDescriptor.tagNumber = 0x81u; // Primitive ObjectDescriptor
+        dataValueDescriptor.tagNumber = ASN1UniversalType.objectDescriptor;
         dataValueDescriptor.objectDescriptor = value.dataValueDescriptor;
+        components ~= dataValueDescriptor;
 
         CERElement dataValue = new CERElement();
-        dataValue.tagNumber = 0x82u;
-        dataValue.octetString = value.dataValue;
-
-        this.sequence = [ identification, dataValueDescriptor, dataValue ];
+        dataValue.tagClass = ASN1TagClass.contextSpecific;
+        dataValue.tagNumber = value.encoding;
+        switch (value.encoding)
+        {
+            // Yes, both get encoded the same way.
+            case (ASN1ExternalEncodingChoice.singleASN1Type):
+            case (ASN1ExternalEncodingChoice.octetAligned):
+            {
+                dataValue.value = value.dataValue;
+                break;
+            }
+            case (ASN1ExternalEncodingChoice.arbitrary):
+            {
+                dataValue.value = (0x00u ~ value.dataValue);
+                break;
+            }
+            default:
+            {
+                assert(0, "Impossible EXTERNAL encoding choice encountered!");
+            }
+        }
+        components ~= dataValue;
+        this.sequence = components;
     }
 
     /*
@@ -2311,104 +2323,146 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     override public @property @system
     EmbeddedPDV embeddedPresentationDataValue() const
     {
-        CERElement[] cvs = this.sequence;
-        if (cvs.length != 2)
+        const CERElement[] components = this.sequence;
+        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+
+        if (components.length != 2u)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an EMBEDDED PDV that contained too many or too few elements. " ~
-                "An EMBEDDED PDV should have exactly two elements: " ~
-                "identification and data-value, in that order. " ~
+                "An EMBEDDED PDV should have only two elements: " ~
+                "an identification CHOICE, and a data-value OCTET STRING, " ~
+                "in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        if (cvs[0].tagNumber != 0x80u)
+        if
+        (
+            components[0].tagClass != ASN1TagClass.contextSpecific ||
+            components[1].tagClass != ASN1TagClass.contextSpecific
+        )
             throw new ASN1ValueInvalidException
             (
-                "This exception was thrown because, you attempted to decode " ~
-                "an EMBEDDED PDV whose elements were not exactly in the order " ~
-                "they appear in the specification. Canonical Encoding " ~
-                "Rules (CER) specify that the encoded elements of any " ~
-                "constructed type must appear in the order of their specification, " ~
-                "which, in the case of EMBEDDED PDV, means that identification " ~
-                "must appear first, then data-value. The problem in your case " ~
-                "is that the first encoded element was not identification, as " ~
-                "indicated by a context-specific type tag of 0x80." ~
+                "This exception was thrown because you attempted to decode an " ~
+                "EMBEDDED PDV that contained a tag that was not of CONTEXT-" ~
+                "SPECIFIC class. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        if (cvs[1].tagNumber != 0x82u)
+        /* NOTE:
+            See page 224 of Dubuisson, item 11:
+            It sounds like, even if you have an ABSENT constraint applied,
+            all automatically-tagged items still have the same numbers as
+            though the constrained component were PRESENT.
+        */
+        if (components[0].tagNumber != 0u || components[1].tagNumber != 2u)
             throw new ASN1ValueInvalidException
             (
-                "This exception was thrown because, you attempted to decode " ~
-                "an EMBEDDED PDV whose elements were not exactly in the order " ~
-                "they appear in the specification. Canonical Encoding " ~
-                "Rules (CER) specify that the encoded elements of any " ~
-                "constructed type must appear in the order of their specification, " ~
-                "which, in the case of EMBEDDED PDV, means that identification " ~
-                "must appear first, then data-value. The problem in your case " ~
-                "is that the second encoded element was not data-value, as " ~
-                "indicated by a context-specific type tag of 0x82." ~
+                "This exception was thrown because you attempted to decode an " ~
+                "EMBEDDED PDV that contained a component whose tag number " ~
+                "was neither 0 nor 2, which indicate the identification CHOICE " ~
+                "and the data-value OCTET STRING components respectively. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        EmbeddedPDV pdv = EmbeddedPDV();
-        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
-        CERElement identificationElement = new CERElement(cvs[0].value);
-        switch (identificationElement.tagNumber)
+        ubyte[] bytes = components[0].value.dup;
+        const CERElement identificationChoice = new CERElement(bytes);
+        switch (identificationChoice.tagNumber)
         {
-            case (0xA0u): // syntaxes
+            case (0u): // syntaxes
             {
-                ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
-                CERElement[] syns = identificationElement.sequence;
-                if (syns.length != 2)
-                    throw new ASN1ValueTooBigException
+                const CERElement[] syntaxesComponents = identificationChoice.sequence;
+
+                if (syntaxesComponents.length != 2u)
+                    throw new ASN1ValueInvalidException
                     (
-                        "This exception was thrown because you " ~
-                        "attempted to decode an EMBEDDED PDV that had " ~
-                        "too many elements within the syntaxes" ~
-                        "element, which is supposed to " ~
-                        "have only two elements. " ~ 
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EMBEDDED PDV whose syntaxes component " ~
+                        "contained an invalid number of elements. The " ~
+                        "syntaxes component should contain abstract and transfer " ~
+                        "syntax OBJECT IDENTIFIERS, in that order. " ~
                         notWhatYouMeantText ~ forMoreInformationText ~ 
                         debugInformationText ~ reportBugsText
                     );
-                syntaxes.abstractSyntax = syns[0].objectIdentifier;
-                syntaxes.transferSyntax = syns[1].objectIdentifier;
-                identification.syntaxes = syntaxes;
+
+                if
+                (
+                    syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific ||
+                    syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EMBEDDED PDV whose syntaxes contained a " ~ 
+                        "component whose tag class was not CONTEXT-SPECIFIC. " ~
+                        "All elements of the syntaxes component MUST be of " ~
+                        "CONTEXT-SPECIFIC class. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                if
+                (
+                    syntaxesComponents[0].tagNumber != 0u ||
+                    syntaxesComponents[1].tagNumber != 1u
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode an EMBEDDED PDV whose syntaxes component " ~ 
+                        "contained a component whose tag number was not correct. " ~
+                        "The tag numbers of the syntaxes component " ~
+                        "must be 0 and 1, in that order. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                identification.syntaxes  = ASN1ContextSwitchingTypeSyntaxes(
+                    syntaxesComponents[0].objectIdentifier,
+                    syntaxesComponents[1].objectIdentifier
+                );
+
                 break;
             }
-            case (0x81u): // syntax
+            case (1u): // syntax
             {
-                identification.syntax = identificationElement.objectIdentifier;
+                identification.syntax = identificationChoice.objectIdentifier;
                 break;
             }
-            case (0x84u): // transfer-syntax
+            case (4u): // transfer-syntax
             {
-                identification.transferSyntax = identificationElement.objectIdentifier;
+                identification.transferSyntax = identificationChoice.objectIdentifier;
                 break;
             }
-            case (0x85u): // fixed
+            case (5u): // fixed
             {
                 identification.fixed = true;
                 break;
             }
             default:
             {
-                throw new ASN1InvalidIndexException
+                throw new ASN1TagException
                 (
-                    "This exception was thrown because you attempted " ~
-                    "to decode an EMBEDDED PDV whose identification " ~
-                    "CHOICE is not recognized by the specification. " ~
+                    "This exception was thrown because you attempted to decode " ~
+                    "an EMBEDDED PDV whose identification CHOICE has a tag " ~
+                    "not recognized by the specification of the EMBEDDED PDV. " ~
+                    "The EMBEDDED PDV accepts identification CHOICEs with tag " ~
+                    "numbers from 0 to 5. But since you are using Distinguished " ~
+                    "Encoding Rules, options 2 and 3 are ruled out by " ~
+                    "specification. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
             }
         }
+
+        EmbeddedPDV pdv = EmbeddedPDV();
         pdv.identification = identification;
-        pdv.dataValue = cvs[1].octetString;
+        pdv.dataValue = components[1].octetString;
         return pdv;
     }
 
@@ -2473,43 +2527,48 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     void embeddedPresentationDataValue(EmbeddedPDV value)
     {
         CERElement identification = new CERElement();
-        identification.tagNumber = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
+        identification.tagClass = ASN1TagClass.contextSpecific;
+        identification.tagNumber = 0u; // CHOICE is EXPLICIT, even with automatic tagging.
 
-        CERElement identificationValue = new CERElement();
+        CERElement identificationChoice = new CERElement();
+        identificationChoice.tagClass = ASN1TagClass.contextSpecific;
         if (!(value.identification.syntaxes.isNull))
         {
             CERElement abstractSyntax = new CERElement();
-            abstractSyntax.tagNumber = 0x80u;
+            abstractSyntax.tagClass = ASN1TagClass.contextSpecific;
+            abstractSyntax.tagNumber = 0u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
             CERElement transferSyntax = new CERElement();
-            transferSyntax.tagNumber = 0x81u;
+            transferSyntax.tagClass = ASN1TagClass.contextSpecific;
+            transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
-            identificationValue.tagNumber = 0xA0u;
-            identificationValue.sequence = [ abstractSyntax, transferSyntax ];
+            identificationChoice.tagNumber = 0u;
+            identificationChoice.sequence = [ abstractSyntax, transferSyntax ];
         }
         else if (!(value.identification.syntax.isNull))
         {
-            identificationValue.tagNumber = 0x81u;
-            identificationValue.objectIdentifier = value.identification.syntax;
+            identificationChoice.tagNumber = 1u;
+            identificationChoice.objectIdentifier = value.identification.syntax;
         }
         else if (!(value.identification.transferSyntax.isNull))
         {
-            identificationValue.tagNumber = 0x84u;
-            identificationValue.objectIdentifier = value.identification.transferSyntax;
+            identificationChoice.tagNumber = 4u;
+            identificationChoice.objectIdentifier = value.identification.transferSyntax;
         }
-        else // Default to fixed
+        else
         {
-            identificationValue.tagNumber = 0x85u;
-            identificationValue.value = [];
+            identificationChoice.tagNumber = 5u;
+            identificationChoice.value = [];
         }
 
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
-        identification.value = cast(ubyte[]) identificationValue;
+        identification.value = cast(ubyte[]) identificationChoice;
 
         CERElement dataValue = new CERElement();
-        dataValue.tagNumber = 0x82u;
+        dataValue.tagClass = ASN1TagClass.contextSpecific;
+        dataValue.tagNumber = 2u;
         dataValue.octetString = value.dataValue;
 
         this.sequence = [ identification, dataValue ];
@@ -4514,104 +4573,146 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     override public @property @system
     CharacterString characterString() const
     {
-        CERElement[] cvs = this.sequence;
-        if (cvs.length != 2)
+        const CERElement[] components = this.sequence;
+        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
+
+        if (components.length != 2u)
             throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
-                "an CharacterString that contained too many or too few elements. " ~
-                "An CharacterString should have exactly two elements: " ~
-                "identification and string-value, in that order. " ~
+                "a CharacterString that contained too many or too few elements. " ~
+                "A CharacterString should have only two elements: " ~
+                "an identification CHOICE, and a data-value OCTET STRING, " ~
+                "in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        if (cvs[0].tagNumber != 0x80u)
+        if
+        (
+            components[0].tagClass != ASN1TagClass.contextSpecific ||
+            components[1].tagClass != ASN1TagClass.contextSpecific
+        )
             throw new ASN1ValueInvalidException
             (
-                "This exception was thrown because, you attempted to decode " ~
-                "an CharacterString whose elements were not exactly in the order " ~
-                "they appear in the specification. Canonical Encoding " ~
-                "Rules (CER) specify that the encoded elements of any " ~
-                "constructed type must appear in the order of their specification, " ~
-                "which, in the case of CharacterString, means that identification " ~
-                "must appear first, then string-value. The problem in your case " ~
-                "is that the first encoded element was not identification, as " ~
-                "indicated by a context-specific type tag of 0x80." ~
+                "This exception was thrown because you attempted to decode an " ~
+                "CharacterString that contained a tag that was not of CONTEXT-" ~
+                "SPECIFIC class. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        if (cvs[1].tagNumber != 0x81u)
+        /* NOTE:
+            See page 224 of Dubuisson, item 11:
+            It sounds like, even if you have an ABSENT constraint applied,
+            all automatically-tagged items still have the same numbers as
+            though the constrained component were PRESENT.
+        */
+        if (components[0].tagNumber != 0u || components[1].tagNumber != 2u)
             throw new ASN1ValueInvalidException
             (
-                "This exception was thrown because, you attempted to decode " ~
-                "an CharacterString whose elements were not exactly in the order " ~
-                "they appear in the specification. Canonical Encoding " ~
-                "Rules (CER) specify that the encoded elements of any " ~
-                "constructed type must appear in the order of their specification, " ~
-                "which, in the case of CharacterString, means that identification " ~
-                "must appear first, then string-value. The problem in your case " ~
-                "is that the second encoded element was not string-value, as " ~
-                "indicated by a context-specific type tag of 0x81." ~
+                "This exception was thrown because you attempted to decode a " ~
+                "CharacterString that contained a component whose tag number " ~
+                "was neither 0 nor 2, which indicate the identification CHOICE " ~
+                "and the string-value OCTET STRING components respectively. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
 
-        CharacterString cs = CharacterString();
-        ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
-        CERElement identificationElement = new CERElement(cvs[0].value);
-        switch (identificationElement.tagNumber)
+        ubyte[] bytes = components[0].value.dup;
+        const CERElement identificationChoice = new CERElement(bytes);
+        switch (identificationChoice.tagNumber)
         {
-            case (0xA0u): // syntaxes
+            case (0u): // syntaxes
             {
-                ASN1ContextSwitchingTypeSyntaxes syntaxes = ASN1ContextSwitchingTypeSyntaxes();
-                CERElement[] syns = identificationElement.sequence;
-                if (syns.length != 2)
-                    throw new ASN1ValueTooBigException
+                const CERElement[] syntaxesComponents = identificationChoice.sequence;
+
+                if (syntaxesComponents.length != 2u)
+                    throw new ASN1ValueInvalidException
                     (
-                        "This exception was thrown because you " ~
-                        "attempted to decode an EMBEDDED PDV that had " ~
-                        "too many elements within the syntaxes" ~
-                        "element, which is supposed to " ~
-                        "have only two elements. " ~ 
+                        "This exception was thrown because you attempted to " ~
+                        "decode an CharacterString whose syntaxes component " ~
+                        "contained an invalid number of elements. The " ~
+                        "syntaxes component should contain abstract and transfer " ~
+                        "syntax OBJECT IDENTIFIERS, in that order. " ~
                         notWhatYouMeantText ~ forMoreInformationText ~ 
                         debugInformationText ~ reportBugsText
                     );
-                syntaxes.abstractSyntax = syns[0].objectIdentifier;
-                syntaxes.transferSyntax = syns[1].objectIdentifier;
-                identification.syntaxes = syntaxes;
+
+                if
+                (
+                    syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific ||
+                    syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a CharacterString whose syntaxes contained a " ~ 
+                        "component whose tag class was not CONTEXT-SPECIFIC. " ~
+                        "All elements of the syntaxes component MUST be of " ~
+                        "CONTEXT-SPECIFIC class. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                if
+                (
+                    syntaxesComponents[0].tagNumber != 0u ||
+                    syntaxesComponents[1].tagNumber != 1u
+                )
+                    throw new ASN1TagException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a CharacterString whose syntaxes component " ~ 
+                        "contained a component whose tag number was not correct. " ~
+                        "The tag numbers of the syntaxes component " ~
+                        "must be 0 and 1, in that order. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+
+                identification.syntaxes  = ASN1ContextSwitchingTypeSyntaxes(
+                    syntaxesComponents[0].objectIdentifier,
+                    syntaxesComponents[1].objectIdentifier
+                );
+
                 break;
             }
-            case (0x81u): // syntax
+            case (1u): // syntax
             {
-                identification.syntax = identificationElement.objectIdentifier;
+                identification.syntax = identificationChoice.objectIdentifier;
                 break;
             }
-            case (0x84u): // transfer-syntax
+            case (4u): // transfer-syntax
             {
-                identification.transferSyntax = identificationElement.objectIdentifier;
+                identification.transferSyntax = identificationChoice.objectIdentifier;
                 break;
             }
-            case (0x85u): // fixed
+            case (5u): // fixed
             {
                 identification.fixed = true;
                 break;
             }
             default:
             {
-                throw new ASN1InvalidIndexException
+                throw new ASN1TagException
                 (
-                    "This exception was thrown because you attempted " ~
-                    "to decode an CharacterString whose identification " ~
-                    "CHOICE is not recognized by the specification. " ~
+                    "This exception was thrown because you attempted to decode " ~
+                    "a CharacterString whose identification CHOICE has a tag " ~
+                    "not recognized by the specification of the CharacterString. " ~
+                    "The CharacterString accepts identification CHOICEs with tag " ~
+                    "numbers from 0 to 5. But since you are using Distinguished " ~
+                    "Encoding Rules, options 2 and 3 are ruled out by " ~
+                    "specification. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
             }
         }
+
+        CharacterString cs = CharacterString();
         cs.identification = identification;
-        cs.stringValue = cvs[1].octetString;
+        cs.stringValue = components[1].octetString;
         return cs;
     }
 
@@ -4646,43 +4747,48 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     void characterString(CharacterString value)
     {
         CERElement identification = new CERElement();
-        identification.tagNumber = 0x80u; // CHOICE is EXPLICIT, even with automatic tagging.
+        identification.tagClass = ASN1TagClass.contextSpecific;
+        identification.tagNumber = 0u; // CHOICE is EXPLICIT, even with automatic tagging.
 
-        CERElement identificationValue = new CERElement();
+        CERElement identificationChoice = new CERElement();
+        identificationChoice.tagClass = ASN1TagClass.contextSpecific;
         if (!(value.identification.syntaxes.isNull))
         {
             CERElement abstractSyntax = new CERElement();
-            abstractSyntax.tagNumber = 0x80u;
+            abstractSyntax.tagClass = ASN1TagClass.contextSpecific;
+            abstractSyntax.tagNumber = 0u;
             abstractSyntax.objectIdentifier = value.identification.syntaxes.abstractSyntax;
 
             CERElement transferSyntax = new CERElement();
-            transferSyntax.tagNumber = 0x81u;
+            transferSyntax.tagClass = ASN1TagClass.contextSpecific;
+            transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
-            identificationValue.tagNumber = 0xA0u;
-            identificationValue.sequence = [ abstractSyntax, transferSyntax ];
+            identificationChoice.tagNumber = 0u;
+            identificationChoice.sequence = [ abstractSyntax, transferSyntax ];
         }
         else if (!(value.identification.syntax.isNull))
         {
-            identificationValue.tagNumber = 0x81u;
-            identificationValue.objectIdentifier = value.identification.syntax;
+            identificationChoice.tagNumber = 1u;
+            identificationChoice.objectIdentifier = value.identification.syntax;
         }
         else if (!(value.identification.transferSyntax.isNull))
         {
-            identificationValue.tagNumber = 0x84u;
-            identificationValue.objectIdentifier = value.identification.transferSyntax;
+            identificationChoice.tagNumber = 4u;
+            identificationChoice.objectIdentifier = value.identification.transferSyntax;
         }
-        else // Default to fixed
+        else
         {
-            identificationValue.tagNumber = 0x85u;
-            identificationValue.value = [];
+            identificationChoice.tagNumber = 5u;
+            identificationChoice.value = [];
         }
 
         // This makes identification: [CONTEXT 0][L][CONTEXT #][L][V]
-        identification.value = cast(ubyte[]) identificationValue;
+        identification.value = cast(ubyte[]) identificationChoice;
 
         CERElement stringValue = new CERElement();
-        stringValue.tagNumber = 0x81u;
+        stringValue.tagClass = ASN1TagClass.contextSpecific;
+        stringValue.tagNumber = 2u;
         stringValue.octetString = value.stringValue;
 
         this.sequence = [ identification, stringValue ];
@@ -4950,7 +5056,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     public @safe @nogc nothrow
     this()
     {
-        this.tagNumber = 0x00;
+        this.tagNumber = 0u;
         this.value = [];
     }
 
@@ -4990,74 +5096,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     public @system
     this(ref ubyte[] bytes)
     {
-        if (bytes.length < 2u)
-            throw new ASN1ValueTooSmallException
-            ("CER-encoded value terminated prematurely.");
-        
-        this.tagNumber = bytes[0];
-        
-        // Length
-        if (bytes[1] & 0x80u)
-        {
-            immutable ubyte numberOfLengthOctets = (bytes[1] & 0x7Fu);
-            if (numberOfLengthOctets) // Definite Long or Reserved
-            {
-                if (numberOfLengthOctets == 0x7Fu) // Reserved
-                    throw new ASN1InvalidLengthException
-                    ("A CER-encoded length byte of 0xFF is reserved.");
-
-                // Definite Long, if it has made it this far
-
-                if (numberOfLengthOctets > size_t.sizeof)
-                    throw new ASN1ValueTooBigException
-                    ("CER-encoded value is too big to decode.");
-
-                ubyte[] lengthBytes;
-                lengthBytes.length = size_t.sizeof;
-                
-                // REVIEW: I sense that there is a simpler loop that would work.
-                for (ubyte i = numberOfLengthOctets; i > 0u; i--)
-                {
-                    lengthBytes[size_t.sizeof-i] = bytes[2+numberOfLengthOctets-i];
-                }
-                version (LittleEndian) reverse(lengthBytes);
-
-                size_t startOfValue = (2u + numberOfLengthOctets);
-                size_t length = *cast(size_t *) lengthBytes.ptr;
-                this.value = bytes[startOfValue .. startOfValue+length];
-                bytes = bytes[startOfValue+length .. $];
-            }
-            else // Indefinite
-            {   
-                size_t indexOfEndOfContent = 0u;
-                for (size_t i = 2u; i < bytes.length-1; i++)
-                {
-                    if ((bytes[i] == 0x00u) && (bytes[i+1] == 0x00u))
-                    {
-                        indexOfEndOfContent = i;
-                        break;
-                    }
-                }
-
-                if (indexOfEndOfContent == 0u)
-                    throw new ASN1ValueTooSmallException
-                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded CERElement.");
-
-                this.value = bytes[2 .. indexOfEndOfContent];
-                bytes = bytes[indexOfEndOfContent+2u .. $];
-            }
-        }
-        else // Definite Short
-        {
-            ubyte length = (bytes[1] & 0x7Fu);
-
-            if (length > (bytes.length-2))
-                throw new ASN1ValueTooSmallException
-                ("CER-encoded value terminated prematurely.");
-
-            this.value = bytes[2 .. 2+length].dup;
-            bytes = bytes[2+length .. $];
-        }
+        size_t bytesRead = this.fromBytes(0u, bytes);
+        bytes = bytes[bytesRead .. $];
     }
 
     /**
@@ -5097,73 +5137,167 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     public @system
     this(ref size_t bytesRead, ref ubyte[] bytes)
     {
-        if (bytes.length < (bytesRead + 2u))
-            throw new ASN1ValueTooSmallException
-            ("CER-encoded value terminated prematurely.");
-        
-        this.tagNumber = bytes[bytesRead];
+        bytesRead += this.fromBytes(bytesRead, bytes);
+    }
 
-        // Length
-        if (bytes[bytesRead+1] & 0x80u)
+    // Returns the number of bytes read
+    private
+    size_t fromBytes (in size_t start, ref ubyte[] bytes)
+    {
+        if (bytes.length < (start + 2u))
+            throw new ASN1ValueTooSmallException
+            ("BER-encoded value terminated prematurely.");
+        
+        // Index of what we are currently parsing.
+        size_t cursor = start;
+
+        switch (bytes[cursor] & 0b1100_0000u)
         {
-            immutable ubyte numberOfLengthOctets = (bytes[bytesRead+1] & 0x7Fu);            
+            case (0b0000_0000u):
+            {
+                this.tagClass = ASN1TagClass.universal;
+                break;
+            }
+            case (0b0100_0000u):
+            {
+                this.tagClass = ASN1TagClass.application;
+                break;
+            }
+            case (0b1000_0000u):
+            {
+                this.tagClass = ASN1TagClass.contextSpecific;
+                break;
+            }
+            case (0b1100_0000u):
+            {
+                this.tagClass = ASN1TagClass.privatelyDefined;
+                break;
+            }
+            default:
+            {
+                assert(0, "Impossible tag class appeared!");
+            }
+        }
+
+        switch (bytes[cursor] & 0b0010_0000u)
+        {
+            case (0b0000_0000u):
+            {
+                this.construction = ASN1Construction.primitive;
+                break;
+            }
+            case (0b0010_0000u):
+            {
+                this.construction = ASN1Construction.constructed;
+                break;
+            }
+            default:
+            {
+                assert(0, "Impossible tag class appeared!");
+            }
+        }
+
+        this.tagNumber = (bytes[cursor] & 0b00011111u);
+        cursor++;
+        if (this.tagNumber >= 31u)
+        {
+            debug (asn1) writeln("Naughty tag: ", this.tagNumber);
+            this.tagNumber = 0u;
+
+            // This loop looks for the end of the encoded tag number.
+            size_t limit = ((bytes.length-1 >= size_t.sizeof) ? size_t.sizeof : bytes.length-1);
+            while (cursor < limit)
+            {
+                if (!(bytes[cursor++] & 0x80u)) break;
+            }
+
+            if (bytes[cursor-1] & 0x80u)
+                throw new ASN1TagException
+                (
+                    "Type tag is too big."
+                );
+
+            for (ptrdiff_t i = 1; i < cursor; i++)
+            {
+                this.tagNumber <<= 7;
+                this.tagNumber |= cast(size_t) (bytes[i] & 0x7Fu);
+            }
+        }
+        
+        // Length
+        if ((bytes[cursor] & 0x80u) == 0x80u)
+        {
+            immutable ubyte numberOfLengthOctets = (bytes[cursor] & 0x7Fu);
             if (numberOfLengthOctets) // Definite Long or Reserved
             {
-                if (numberOfLengthOctets == 0x7Fu) // Reserved
+                if (numberOfLengthOctets == 0b01111111u) // Reserved
                     throw new ASN1InvalidLengthException
-                    ("A CER-encoded length byte of 0xFF is reserved.");
+                    (
+                        "A BER-encoded length byte of 0xFF is reserved."
+                    );
 
                 // Definite Long, if it has made it this far
 
                 if (numberOfLengthOctets > size_t.sizeof)
                     throw new ASN1ValueTooBigException
-                    ("CER-encoded value is too big to decode.");
+                    (
+                        "BER-encoded value is too big to decode."
+                    );
 
+                if (cursor + numberOfLengthOctets >= bytes.length)
+                    throw new ASN1ValueTooSmallException
+                    (
+                        "Length tag terminated prematurely."
+                    );
+
+                cursor++;
                 ubyte[] lengthBytes;
                 lengthBytes.length = size_t.sizeof;
-                
+
                 // REVIEW: I sense that there is a simpler loop that would work.
                 for (ubyte i = numberOfLengthOctets; i > 0u; i--)
                 {
-                    lengthBytes[size_t.sizeof-i] = bytes[bytesRead+2+numberOfLengthOctets-i];
+                    lengthBytes[size_t.sizeof-i] = bytes[cursor+numberOfLengthOctets-i];
                 }
                 version (LittleEndian) reverse(lengthBytes);
-
-                size_t startOfValue = (bytesRead + 2 + numberOfLengthOctets);
                 size_t length = *cast(size_t *) lengthBytes.ptr;
-                this.value = bytes[startOfValue .. startOfValue+length];
-                bytesRead += (2 + numberOfLengthOctets + length);
+
+                cursor += (numberOfLengthOctets);
+                this.value = bytes[cursor .. cursor+length];
+                return ((cursor + length) - start);
             }
             else // Indefinite
             {   
-                size_t indexOfEndOfContent = bytesRead;
-                for (size_t i = bytesRead+2u; i < bytes.length-1; i++)
+                size_t startOfValue = ++cursor;
+
+                while (cursor < bytes.length-1)
                 {
-                    if ((bytes[i] == 0x00u) && (bytes[i+1] == 0x00))
-                    {
-                        indexOfEndOfContent = i;
-                        break;
-                    }
+                    if 
+                    (
+                        bytes[cursor++] == 0x00u &&
+                        bytes[cursor] == 0x00u
+                    )
+                    break;
                 }
 
-                if (indexOfEndOfContent == 0u)
+                if (bytes[cursor] != 0x00u)
                     throw new ASN1ValueTooSmallException
-                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded CERElement.");
+                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERElement.");
 
-                this.value = bytes[bytesRead+2u .. indexOfEndOfContent];
-                bytesRead = (indexOfEndOfContent + 2u); // +2 for the EOC octets
+                this.value = bytes[startOfValue .. cursor-1u];
+                return (++cursor - start);
             }
         }
         else // Definite Short
         {
-            ubyte length = (bytes[bytesRead+1] & 0x7Fu);
+            ubyte length = (bytes[cursor] & 0x7Fu);
 
-            if ((length+bytesRead) > (bytes.length-2u))
+            if (cursor+length > bytes.length)
                 throw new ASN1ValueTooSmallException
-                ("CER-encoded value terminated prematurely.");
+                ("BER-encoded value terminated prematurely.");
 
-            this.value = bytes[bytesRead+2u .. bytesRead+length+2u].dup;
-            bytesRead += (2u + length);
+            this.value = bytes[++cursor .. cursor+length].dup;
+            return ((cursor + length) - start);
         }
     }
 
@@ -5180,6 +5314,41 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     public @property @system nothrow
     ubyte[] toBytes() const
     {
+        ubyte[] tagBytes = [ 0x00u ];
+        tagBytes[0] |= cast(ubyte) this.tagClass;
+        tagBytes[0] |= cast(ubyte) this.construction;
+
+        if (this.tagNumber < 31u)
+        {
+            tagBytes[0] |= cast(ubyte) this.tagNumber;
+        }
+        else
+        {
+            /*
+                Per section 8.1.2.4 of X.690:
+                The last five bits of the first byte being set indicate that 
+                the tag number is encoded in base-128 on the subsequent octets, 
+                using the first bit of each subsequent octet to indicate if the 
+                encoding continues on the next octet, just like how the 
+                individual numbers of OBJECT IDENTIFIER and RELATIVE OBJECT
+                IDENTIFIER are encoded.
+            */
+            tagBytes[0] |= cast(ubyte) 0b00011111u; 
+            size_t number = this.tagNumber; // We do not want to modify by reference.
+            ubyte[] encodedNumber;
+            while (number != 0u)
+            {
+                ubyte[] numberbytes;
+                numberbytes.length = size_t.sizeof+1;
+                *cast(size_t *) numberbytes.ptr = number;
+                if ((numberbytes[0] & 0x80u) == 0u) numberbytes[0] |= 0x80u;
+                encodedNumber = numberbytes[0] ~ encodedNumber;
+                number >>= 7u;
+            }
+            tagBytes ~= encodedNumber;
+            tagBytes[$-1] &= 0x7Fu; // Set first bit of last byte to zero.
+        }
+
         ubyte[] lengthOctets = [ 0x00u ];
         switch (this.lengthEncodingPreference)
         {
@@ -5221,7 +5390,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             }
         }
         return (
-            [ this.tagNumber ] ~ 
+            tagBytes ~ 
             lengthOctets ~ 
             this.value ~ 
             (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00u, 0x00u ] : cast(ubyte[]) [])
@@ -5260,10 +5429,8 @@ unittest
     ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
     ubyte[] dataOD = [ 0x07u, 0x05u, 'H', 'N', 'E', 'L', 'O' ];
     ubyte[] dataExternal = [ 
-        0x08u, 0x18u, 0x80u, 0x06u, 0x80u, 0x04u, 0x29u, 0x06u, 
-        0x04u, 0x01u, 0x81u, 0x08u, 0x65u, 0x78u, 0x74u, 0x65u, 
-        0x72u, 0x6Eu, 0x61u, 0x6Cu, 0x82u, 0x04u, 0x01u, 0x02u, 
-        0x03u, 0x04u ];
+        0x08u, 0x0Bu, 0x06u, 0x03u, 0x29u, 0x05u, 0x07u, 0x82u, 
+        0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
     ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
     ubyte[] dataEnum = [ 0x0Au, 0x08u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0xFFu ];
     ubyte[] dataEmbeddedPDV = [ 
@@ -5292,7 +5459,7 @@ unittest
     ]; // Big-endian "abcd"
     ubyte[] dataCharacter = [ 
         0x1Du, 0x0Fu, 0x80u, 0x06u, 0x81u, 0x04u, 0x29u, 0x06u, 
-        0x04u, 0x01u, 0x81u, 0x05u, 0x48u, 0x45u, 0x4Eu, 0x4Cu, 
+        0x04u, 0x01u, 0x82u, 0x05u, 0x48u, 0x45u, 0x4Eu, 0x4Cu, 
         0x4Fu ];
     ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"
 
@@ -5344,7 +5511,7 @@ unittest
     assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
     assert(result[6].objectIdentifier == new OID(OIDNode(0x01u), OIDNode(0x03u), OIDNode(0x06u), OIDNode(0x04u), OIDNode(0x01u)));
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
-    assert((x.identification.syntax == new OID(1u, 1u, 6u, 4u, 1u)) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((x.identification.syntax == new OID(1u, 1u, 5u, 7u)) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
     assert(result[10].enumerated!long == 255L);
@@ -5380,7 +5547,7 @@ unittest
     assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
     assert(result[6].objectIdentifier == new OID(OIDNode(0x01u), OIDNode(0x03u), OIDNode(0x06u), OIDNode(0x04u), OIDNode(0x01u)));
     assert(result[7].objectDescriptor == result[7].objectDescriptor);
-    assert((x.identification.syntax == new OID(1u, 1u, 6u, 4u, 1u)) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((x.identification.syntax == new OID(1u, 1u, 5u, 7u)) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
     assert(result[10].enumerated!long == 255L);

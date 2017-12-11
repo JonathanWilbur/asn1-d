@@ -1,0 +1,1296 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>asn1</title>
+    <style type="text/css" media="screen">
+      html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
+      blockquote, pre, a, abbr, address, cite, code, del, dfn, em, figure,
+      img, ins, kbd, q, s, samp, small, strong, sub, sup, var, b, u, i, dl,
+      dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption,
+      tbody, tfoot, thead, tr, th, td {
+        background: transparent none repeat scroll 0 0;
+        border: 0 none;
+        font-size: 100%;
+        margin: 0;
+        outline: 0 none;
+        padding: 0;
+        vertical-align: baseline;
+      }
+
+      .color_red { color: #dc322f; }
+      .color_blue { color: #268bd2; }
+      .color_green { color: #859901; }
+      .color_yellow { color: #b58901; }
+      .color_black { color: black; }
+      .color_white { color: white; }
+
+      .font_big {
+        font-size: 1.2em;
+      }
+
+      .ddoc_section_h {
+        font-weight: bold;
+        font-size: 13px;
+        line-height: 19.5px;
+        margin-top: 11px;
+        display: block;
+      }
+
+      body.dlang .dlang {
+        display: inline-block;
+      }
+
+      body.dlang .declaration .dlang {
+          display: block;
+      }
+
+      body.dlang .ddoc_header_anchor a.dlang {
+        display: block;
+        color: rgba(0, 136, 204, 1);
+        text-decoration: none;
+      }
+
+      body.dlang .ddoc_header_anchor .code {
+        color: rgba(0, 136, 204, 1);
+      }
+
+      #ddoc_main .module {
+          border-color: currentColor rgba(233, 233, 233, 1) rgba(233, 233, 233, 1);
+          border-style: none solid solid;
+          border-width: 0 1px 1px;
+          overflow-x: hidden;
+          padding: 15px;
+      }
+
+      #ddoc_main .section .section {
+        margin-top: 0;
+      }
+
+      #ddoc_main .ddoc_module_members_section {
+          padding: 1px 0 0;
+          transition: transform 0.3s ease 0s;
+      }
+
+      #ddoc_main .ddoc_member, #ddoc_main .ddoc_module_members section.intro {
+          background: #fff none repeat scroll 0 0;
+          list-style-type: none;
+          width: 100%;
+      }
+
+      #ddoc_main .ddoc_header_anchor {
+          font-size: 1.4em;
+          transition: transform 0.3s ease 0s;
+      }
+
+      #ddoc_main .ddoc_header_anchor > .code {
+          display: inline-block;
+
+      }
+
+      #ddoc_main .ddoc_decl {
+        background-color: transparent;
+        height: 100%;
+        left: 0;
+        top: 0;
+        padding: 0;
+        padding-left: 15px;
+      }
+
+      #ddoc_main .ddoc_decl .section, #ddoc_main .section.ddoc_sections {
+        background: white none repeat scroll 0 0;
+        margin: 0;
+        padding: 5px;
+        position: relative;
+        border-radius: 5px;
+      }
+
+      #ddoc_main .ddoc_decl .section h4, #ddoc_main .section.ddoc_sections h4 {
+        font-size: 13px;
+        line-height: 1.5;
+        margin-top: 21px;
+      }
+
+      #ddoc_main .section .declaration {
+          margin-top: 21px;
+      }
+
+      #ddoc_main .section .declaration .code {
+          color: rgba(0, 0, 0, 1);
+          margin-bottom: 15px;
+          padding-bottom: 6px;
+      }
+
+      #ddoc_main .declaration div .para {
+          margin-bottom: 0;
+      }
+
+      #ddoc_main .ddoc_params .graybox tr td:first-of-type {
+        padding: 7px;
+        text-align: right;
+        vertical-align: top;
+        word-break: normal;
+        white-space: nowrap;
+      }
+
+      #ddoc_main .ddoc_params .graybox {
+        border: 0 none;
+      }
+
+      #ddoc_main .ddoc_params .graybox td {
+        border-color: rgba(214, 214, 214, 1);
+      }
+
+      #ddoc_main .ddoc_params .graybox tr:first-child > td {
+        border-top: 0 none;
+      }
+
+      #ddoc_main .ddoc_params .graybox tr:last-child > td {
+        border-bottom: 0 none;
+      }
+
+      #ddoc_main .ddoc_params .graybox tr > td:first-child {
+        border-left: 0 none;
+      }
+
+      #ddoc_main .ddoc_params .graybox tr > td:last-child {
+        border-right: 0 none;
+        width: 100%;
+      }
+
+      #ddoc_main em.term, #ddoc_main em.term .code {
+        color: rgba(65, 65, 65, 1);
+        font-size: 12px;
+        font-style: italic;
+        line-height: 1.5;
+      }
+
+      #ddoc_main .see-also {
+        cursor: pointer;
+        font-family: Menlo,monospace;
+      }
+
+      #ddoc_main .ddoc_decl .section > div:last-of-type {
+        margin-bottom: 15px;
+      }
+
+      #ddoc_main .ddoc_member, #ddoc_main .ddoc_module_members {
+          transition: transform 0.3s ease 0s;
+      }
+
+      #ddoc_main .code_sample {
+        background: inherit;
+      }
+
+      #ddoc_main .declaration .code-line {
+          display: block;
+          font: 1em Menlo,monospace;
+      }
+
+      #ddoc_main a[name] {
+        margin: -112px 0 0;
+        padding-top: 112px;
+      }
+
+      #ddoc_main .ddoc_decl td {
+        max-width: inherit;
+      }
+
+      #ddoc_main .declaration a {
+        color: inherit;
+      }
+
+      #ddoc_main .declaration a:hover {
+          color: rgba(0, 136, 204, 1);
+          text-decoration: underline;
+      }
+
+      body.ddoc {
+        background-color: transparent;
+        color: rgba(0, 0, 0, 1);
+        font-family: Helvetica,Arial,sans-serif;
+        font-size: 62.5%;
+        margin: 0;
+        border: 0;
+        left: 0;
+        top: 0;
+        padding: 0;
+      }
+
+      .ddoc a[name] {
+        display: block;
+        height: 0;
+        margin: -85px 0 0;
+        padding-top: 85px;
+        width: 0;
+      }
+
+      .ddoc .module {
+          border-color: transparent;
+          background-color: rgba(255, 255, 255, 1);
+          border-color: currentColor rgba(233, 233, 233, 1) rgba(233, 233, 233, 1);
+          border-image: none;
+          border-style: none solid solid;
+          border-width: 0 1px 1px;
+          box-shadow: 0 0 1px rgba(0, 0, 0, 0.07);
+          display: block;
+          margin-left: 0;
+          min-height: calc(100% - 173px);
+          overflow: auto;
+          padding-bottom: 100px;
+      }
+
+      .ddoc .content_wrapper {
+          background-color: rgba(242, 242, 242, 1);
+          margin: 0 auto;
+          max-width: 980px;
+      }
+
+      .ddoc .section {
+        padding: 15px 25px 30px;
+      }
+
+      .ddoc .section .section {
+        margin: 30px 0 0;
+        padding: 0;
+      }
+
+      .ddoc .para {
+        color: rgba(65, 65, 65, 1);
+        font-size: 1.4em;
+        line-height: 145%;
+        margin-bottom: 15px;
+      }
+
+      .ddoc .ddoc_examples .para {
+        margin-bottom: 0;
+      }
+
+      .ddoc .module_name {
+          color: rgba(0, 0, 0, 1);
+          display: block;
+          font-family: Helvetica;
+          font-size: 2.8em;
+          font-weight: 100;
+          margin-bottom: 0;
+          padding: 15px 0;
+      }
+
+      .ddoc .module a {
+          color: rgba(0, 136, 204, 1);
+          text-decoration: none;
+      }
+
+      .ddoc .code {
+        color: rgba(128, 128, 128, 1);
+        font-family: Menlo,monospace;
+        font-size: 0.85em;
+        word-wrap: break-word;
+      }
+
+      .ddoc .code i {
+        font-style: normal;
+      }
+
+      .ddoc .code .code {
+        font-size: 1em;
+      }
+
+      .ddoc .code_sample {
+        background-clip: padding-box;
+        margin: 1px 0;
+        text-align: left;
+      }
+
+      .ddoc .code_sample {
+        display: block;
+        font-size: 1.4em;
+        margin-left: 21px;
+      }
+
+      .ddoc ol .code_sample {
+        font-size: 1em;
+      }
+
+      .ddoc .code_lines {
+        counter-reset: li;
+        line-height: 1.6em;
+        list-style: outside none none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .ddoc .code_listing .code_sample div {
+        margin-left: 13px;
+        width: 93%;
+      }
+
+      .ddoc .code_listing .code_sample div .code_lines li {
+        list-style-type: none;
+        margin: 0;
+        padding-right: 10px;
+      }
+
+      .ddoc .code_sample div .code_lines li::before {
+        margin-left: -33px;
+        margin-right: 25px;
+      }
+
+      .ddoc .code_sample div .code_lines li:nth-child(n+10)::before {
+        margin-left: -39px;
+        margin-right: 25px;
+      }
+
+      .ddoc .code_sample div .code_lines li:nth-child(n+100)::before {
+        margin-left: -46px;
+        margin-right: 25px;
+      }
+
+      .ddoc .code_sample .code_lines .code {
+        color: #000;
+      }
+
+      .ddoc div.dlang {
+        margin: 10px 0 21px;
+        padding: 4px 0 2px 10px;
+      }
+
+      .ddoc div.dlang {
+          margin: 10px 0 21px;
+          padding: 4px 0 2px 10px;
+      }
+
+      .ddoc div.dlang {
+        border-left: 5px solid rgba(0, 155, 51, 0.2);
+      }
+
+      .ddoc .code_lines li::before {
+        color: rgba(128, 128, 128, 1);
+        content: counter(li, decimal);
+        counter-increment: li;
+        font-family: Menlo,monospace;
+        font-size: 0.9em;
+        margin-right: 16px;
+      }
+
+      .ddoc .code_lines li {
+        padding-left: 0;
+        white-space: pre-wrap;
+      }
+
+      .ddoc .code_lines li:only-of-type::before {
+        color: rgba(255, 255, 255, 1);
+        content: " ";
+      }
+
+      .ddoc .code_lines li:only-of-type {
+        color: rgba(255, 255, 255, 1);
+        content: " ";
+      }
+
+      .ddoc .code_lines li:nth-child(n+10) {
+        text-indent: -17px;
+      }
+
+      .ddoc .code_lines li:nth-child(n+10)::before {
+        margin-right: 12px;
+      }
+
+      .ddoc .graybox {
+        border: 1px solid rgba(233, 233, 233, 1);
+        border-collapse: collapse;
+        border-spacing: 0;
+        empty-cells: hide;
+        margin: 20px 0 36px;
+        text-align: left;
+      }
+
+      .ddoc .graybox p {
+        margin: 0;
+        min-width: 50px;
+      }
+
+      .ddoc td {
+        border: 1px solid rgba(233, 233, 233, 1);
+        margin: 0;
+        max-width: 260px;
+        padding: 5px 25px 5px 10px;
+        vertical-align: middle;
+      }
+
+      .punctuation {
+        color: rgba(0, 0, 0, 1);
+      }
+
+      .comment {
+        color: rgba(0, 131, 18, 1);
+      }
+
+      .operator {
+        color: #000;
+      }
+
+      .keyword {
+        color: rgba(170, 13, 145, 1);
+      }
+
+      .keyword_type {
+        color: rgba(170, 51, 145, 1);
+      }
+
+      .string_literal {
+        color: rgba(196, 26, 22, 1);
+      }
+
+      .ddoc_psuper_symbol {
+        color: rgba(92, 38, 153, 1);
+      }
+
+      .param {
+        color: rgba(0, 0, 0, 1);
+      }
+
+      .psymbol {
+        color: rgba(0, 0, 0, 1);
+      }
+
+      .ddoc_member_header .ddoc_header_anchor .code {
+        font-size: 1em;
+      }
+    </style>
+  </head>
+  <body id="ddoc_main" class="ddoc dlang">
+    <div class="content_wrapper">
+      <article class="module">
+        <h1 class="module_name">asn1</h1>
+        <section id="module_content"><section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Abstract Syntax Notation 1 is a high-level syntax specification created
+    by the <a href="http://www.itu.int/en/pages/default.aspx">    International Telecommunications Union</a> in
+    <a href="https://www.itu.int/rec/T-REC-X.680/en">    X.680 - Abstract Syntax Notation One (ASN.1)</a>, that
+    abstractly defines data structures and protocol data units used by
+    programs and protocols. It defines an extensible system of data types,
+    modules, and data structures.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    While described abstractly by ASN.1, the specified protocol data units
+    and data structures can be encoded via various encoding schemes, such as
+    the Basic Encoding Rules (BER), which are defined in the
+    <a href="http://www.itu.int/en/pages/default.aspx">    International Telecommunications Union</a>'s
+    <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>.
+    These encoding schemes uniformly relay data between systems that
+    can differ in endianness, bit-width, byte-size, operating system,
+    machine architecture, and so on.
+<br><br>
+    The encoding schemata that inherit from ASN.1 are used widely in protocols
+    such as TLS, LDAP, SNMP, RDP, and many more.
+
+
+  </p>
+</div>
+<div class="ddoc_section">
+  <p class="para">
+    <span class="ddoc_section_h">Author:</span>
+<a href="http://jonathan.wilbur.space">Jonathan M. Wilbur</a>
+            <a href="mailto:jonathan@wilbur.space">jonathan@wilbur.space</a>
+
+  </p>
+</div>
+<div class="ddoc_license">
+  <h4>License</h4>
+  <p class="para">
+    <a href="https://mit-license.org/">MIT License</a>
+
+  </p>
+</div>
+<div class="ddoc_standards">
+  <h4>Standards</h4>
+  <p class="para">
+    <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680 - Abstract Syntax Notation One (ASN.1)</a>
+
+  </p>
+</div><div class="ddoc_see_also">
+  <h4>See Also</h4>
+  <p class="para">
+    <a href="https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One">The Wikipedia Page on ASN.1</a>
+        <a href="https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf">ASN.1 By Simple Words</a>
+        <a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">ASN.1: Communication Between Heterogeneous Systems</a>
+  </p>
+</div>
+
+</section>
+<section class="section ddoc_module_members_section">
+  <div class="ddoc_module_members">
+    <ul class="ddoc_members">
+  <li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1Exception" id="ASN1Exception"><code class="code">ASN1Exception</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1Exception"></span>alias <code class="code">ASN1Exception</code> = AbstractSyntaxNotation1Exception;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1Exception" id="AbstractSyntaxNotation1Exception"><code class="code">AbstractSyntaxNotation1Exception</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Exception"></span>class <code class="code">AbstractSyntaxNotation1Exception</code>: <span class="ddoc_psuper_symbol">object.Exception</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    A Generic Exception from which all other ASN.1 Exceptions will inherit.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1TagClass" id="ASN1TagClass"><code class="code">ASN1TagClass</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1TagClass"></span>alias <code class="code">ASN1TagClass</code> = AbstractSyntaxNotation1TagClass;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1TagClass" id="AbstractSyntaxNotation1TagClass"><code class="code">AbstractSyntaxNotation1TagClass</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagClass"></span>enum <code class="code">AbstractSyntaxNotation1TagClass</code>: ubyte;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1Construction" id="ASN1Construction"><code class="code">ASN1Construction</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1Construction"></span>alias <code class="code">ASN1Construction</code> = AbstractSyntaxNotation1Construction;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1Construction" id="AbstractSyntaxNotation1Construction"><code class="code">AbstractSyntaxNotation1Construction</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Construction"></span>enum <code class="code">AbstractSyntaxNotation1Construction</code>: ubyte;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1UniversalType" id="ASN1UniversalType"><code class="code">ASN1UniversalType</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1UniversalType"></span>alias <code class="code">ASN1UniversalType</code> = AbstractSyntaxNotation1UniversalType;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1UniversalType" id="AbstractSyntaxNotation1UniversalType"><code class="code">AbstractSyntaxNotation1UniversalType</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1UniversalType"></span>enum <code class="code">AbstractSyntaxNotation1UniversalType</code>: ubyte;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The data types, as well as their permitted construction and numeric
+    identifiers, according to the
+    <a href="http://www.itu.int/en/pages/default.aspx">    International Telecommunications Union</a>'s
+    <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    <table>        <tr><th>Type</th>                 <th>Construction</th>      <th>Hexadecimal Value</th></tr>
+        <tr><td>End-of-Content</td>       <td>Primitive</td>         <td>0x00</td></tr>
+        <tr><td>BOOLEAN</td>	            <td>Primitive</td>         <td>0x01</td></tr>
+        <tr><td>INTEGER</td>	            <td>Primitive</td>         <td>0x02</td></tr>
+        <tr><td>BIT STRING</td>           <td>Both</td>              <td>0x03</td></tr>
+        <tr><td>OCTET STRING</td>         <td>Both</td>              <td>0x04</td></tr>
+        <tr><td>NULL</td>                 <td>Primitive</td>         <td>0x05</td></tr>
+        <tr><td>OBJECT IDENTIFIER</td>	<td>Primitive</td>         <td>0x06</td></tr>
+        <tr><td>Object Descriptor</td>    <td>Both</td>              <td>0x07</td></tr>
+        <tr><td>EXTERNAL</td>	            <td>Constructed</td>       <td>0x08</td></tr>
+        <tr><td>REAL</td>            	    <td>Primitive</td>         <td>0x09</td></tr>
+        <tr><td>ENUMERATED</td>	        <td>Primitive</td>         <td>0x0A</td></tr>
+        <tr><td>EMBEDDED PDV</td>	        <td>Constructed</td>       <td>0x0B</td></tr>
+        <tr><td>UTF8String</td>	        <td>Both</td>              <td>0x0C</td></tr>
+        <tr><td>RELATIVE-OID</td>	        <td>Primitive</td>         <td>0x0D</td></tr>
+        <tr><td>SEQUENCE</td>	            <td>Constructed</td>       <td>0x10</td></tr>
+        <tr><td>SET</td>	                <td>Constructed</td>       <td>0x11</td></tr>
+        <tr><td>NumericString</td>	    <td>Both</td>              <td>0x12</td></tr>
+        <tr><td>PrintableString</td>	    <td>Both</td>              <td>0x13</td></tr>
+        <tr><td>T61String</td>	        <td>Both</td>              <td>0x14</td></tr>
+        <tr><td>VideotexString</td>	    <td>Both</td>              <td>0x15</td></tr>
+        <tr><td>IA5String</td>	        <td>Both</td>              <td>0x16</td></tr>
+        <tr><td>UTCTime</td>	            <td>Both</td>              <td>0x17</td></tr>
+        <tr><td>GeneralizedTime</td>	    <td>Both</td>              <td>0x18</td></tr>
+        <tr><td>GraphicString</td>	    <td>Both</td>              <td>0x19</td></tr>
+        <tr><td>VisibleString</td>	    <td>Both</td>              <td>0x1A</td></tr>
+        <tr><td>GeneralString</td>	    <td>Both</td>              <td>0x1B</td></tr>
+        <tr><td>UniversalString</td>	    <td>Both</td>              <td>0x1C</td></tr>
+        <tr><td>CHARACTER STRING</td>	    <td>Both</td>              <td>0x1D</td></tr>
+        <tr><td>BMPString</td>	        <td>Both</td>              <td>0x1E</td></tr>
+    </table>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1LengthEncoding" id="ASN1LengthEncoding"><code class="code">ASN1LengthEncoding</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1LengthEncoding"></span>alias <code class="code">ASN1LengthEncoding</code> = AbstractSyntaxNotation1LengthEncoding;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1LengthEncoding" id="AbstractSyntaxNotation1LengthEncoding"><code class="code">AbstractSyntaxNotation1LengthEncoding</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthEncoding"></span>enum <code class="code">AbstractSyntaxNotation1LengthEncoding</code>: ubyte;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1RealEncodingBase" id="ASN1RealEncodingBase"><code class="code">ASN1RealEncodingBase</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1RealEncodingBase"></span>alias <code class="code">ASN1RealEncodingBase</code> = AbstractSyntaxNotation1RealEncodingBase;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1RealEncodingBase" id="AbstractSyntaxNotation1RealEncodingBase"><code class="code">AbstractSyntaxNotation1RealEncodingBase</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1RealEncodingBase"></span>enum <code class="code">AbstractSyntaxNotation1RealEncodingBase</code>: ubyte;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1RealEncodingScale" id="ASN1RealEncodingScale"><code class="code">ASN1RealEncodingScale</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1RealEncodingScale"></span>alias <code class="code">ASN1RealEncodingScale</code> = AbstractSyntaxNotation1RealEncodingScale;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1RealEncodingScale" id="AbstractSyntaxNotation1RealEncodingScale"><code class="code">AbstractSyntaxNotation1RealEncodingScale</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1RealEncodingScale"></span>enum <code class="code">AbstractSyntaxNotation1RealEncodingScale</code>: ubyte;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1RealExponentEncoding" id="ASN1RealExponentEncoding"><code class="code">ASN1RealExponentEncoding</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1RealExponentEncoding"></span>alias <code class="code">ASN1RealExponentEncoding</code> = AbstractSyntaxNotation1RealExponentEncoding;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1RealExponentEncoding" id="AbstractSyntaxNotation1RealExponentEncoding"><code class="code">AbstractSyntaxNotation1RealExponentEncoding</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1RealExponentEncoding"></span>enum <code class="code">AbstractSyntaxNotation1RealExponentEncoding</code>: ubyte;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1SpecialRealValue" id="ASN1SpecialRealValue"><code class="code">ASN1SpecialRealValue</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1SpecialRealValue"></span>alias <code class="code">ASN1SpecialRealValue</code> = AbstractSyntaxNotation1SpecialRealValue;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1SpecialRealValue" id="AbstractSyntaxNotation1SpecialRealValue"><code class="code">AbstractSyntaxNotation1SpecialRealValue</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1SpecialRealValue"></span>enum <code class="code">AbstractSyntaxNotation1SpecialRealValue</code>: ubyte;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1Base10RealNumericalRepresentation" id="ASN1Base10RealNumericalRepresentation"><code class="code">ASN1Base10RealNumericalRepresentation</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1Base10RealNumericalRepresentation"></span>alias <code class="code">ASN1Base10RealNumericalRepresentation</code> = AbstractSyntaxNotation1Base10RealNumericalRepresentation;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1Base10RealNumericalRepresentation" id="AbstractSyntaxNotation1Base10RealNumericalRepresentation"><code class="code">AbstractSyntaxNotation1Base10RealNumericalRepresentation</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Base10RealNumericalRepresentation"></span>enum <code class="code">AbstractSyntaxNotation1Base10RealNumericalRepresentation</code>: ubyte;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The standardized string representations of floating point numbers, as
+    specified in <a href="https://www.iso.org/standard/12285.html">ISO 6093</a>.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    <table>        <tr><th>Representation</th> <th>Description</th> <th>Examples</th></tr>
+        <tr><td>NR1</td> <td>Implicit decimal point</td> <td>"3", "-1", "+1000"</td></tr>
+        <tr><td>NR2</td> <td>Explicit decimal</td> <td>"3.0", "-1.3", "-.3"</td></tr>
+        <tr><td>NR3</td> <td>Explicit exponent</td> <td>"3.0E1", "123E+100"</td></tr>
+    </table>
+
+
+  </p>
+</div>
+<div class="ddoc_section">
+  <p class="para">
+    <span class="ddoc_section_h">Citations:</span>
+Dubuisson, Olivier. “Character String Types.” ASN.1:
+            Communication between Heterogeneous Systems, Morgan
+            Kaufmann, 2001, p. 143.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1Base10RealDecimalSeparator" id="ASN1Base10RealDecimalSeparator"><code class="code">ASN1Base10RealDecimalSeparator</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1Base10RealDecimalSeparator"></span>alias <code class="code">ASN1Base10RealDecimalSeparator</code> = AbstractSyntaxNotation1Base10RealDecimalSeparator;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1Base10RealDecimalSeparator" id="AbstractSyntaxNotation1Base10RealDecimalSeparator"><code class="code">AbstractSyntaxNotation1Base10RealDecimalSeparator</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Base10RealDecimalSeparator"></span>enum <code class="code">AbstractSyntaxNotation1Base10RealDecimalSeparator</code>: char;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1Base10RealExponentCharacter" id="ASN1Base10RealExponentCharacter"><code class="code">ASN1Base10RealExponentCharacter</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1Base10RealExponentCharacter"></span>alias <code class="code">ASN1Base10RealExponentCharacter</code> = AbstractSyntaxNotation1Base10RealExponentCharacter;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1Base10RealExponentCharacter" id="AbstractSyntaxNotation1Base10RealExponentCharacter"><code class="code">AbstractSyntaxNotation1Base10RealExponentCharacter</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Base10RealExponentCharacter"></span>enum <code class="code">AbstractSyntaxNotation1Base10RealExponentCharacter</code>: char;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#numericStringCharacters" id="numericStringCharacters"><code class="code">numericStringCharacters</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="numericStringCharacters"></span>immutable string <code class="code">numericStringCharacters</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The acceptable characters for a NumericString
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#printableStringCharacters" id="printableStringCharacters"><code class="code">printableStringCharacters</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="printableStringCharacters"></span>immutable string <code class="code">printableStringCharacters</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The acceptable characters for a printableString.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    The sorting of letters below is a slight optimization:
+    they are sorted in order of decreasing frequency in the English
+    language, so that canFind will usually have to iterate through
+    fewer letters before finding a match.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li>
+</ul>
+  </div>
+</section>
+</section>
+      </article>
+    </div>
+  </body>
+</html>

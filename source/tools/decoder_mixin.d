@@ -194,16 +194,16 @@ mixin template Decoder(Element)
         {
             if (universal)
             {
-                writefln("%s[ %s %d ] : %s", cast(string) indents, tagClassString, element.tagNumber!ubyte, stringifyUniversalValue(element));
+                writefln("%s[ %s %d ] : %s", cast(string) indents, tagClassString, element.tagNumber, stringifyUniversalValue(element));
             }
             else
             {
-                writefln("%s[ %s %d ] : %(%02X %)", cast(string) indents, tagClassString, element.tagNumber!ubyte, element.value);
+                writefln("%s[ %s %d ] : %(%02X %)", cast(string) indents, tagClassString, element.tagNumber, element.value);
             }
         }
         else
         {
-            writefln("%s[ %s %d ] :", cast(string) indents, tagClassString, element.tagNumber!ubyte);
+            writefln("%s[ %s %d ] :", cast(string) indents, tagClassString, element.tagNumber);
             indentation += 4;
 
             ubyte[] value = element.value.dup;
@@ -223,7 +223,7 @@ mixin template Decoder(Element)
     string stringifyUniversalValue (Element element)
     {
         import std.conv : text;
-        switch (element.tagNumber!ubyte)
+        switch (element.tagNumber)
         {
             case (0x00u):
             {
@@ -235,7 +235,7 @@ mixin template Decoder(Element)
             }
             case (0x02u):
             {
-                return text(element.integer!long);
+                return text(element.integer!ptrdiff_t);
             }
             case (0x03u):
             {
@@ -268,7 +268,7 @@ mixin template Decoder(Element)
             }
             case (0x0Au):
             {
-                return text(element.enumerated!long);
+                return text(element.enumerated!ptrdiff_t);
             }
             case (0x0Bu):
             {

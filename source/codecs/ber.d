@@ -197,6 +197,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     public ASN1Construction construction;
     public size_t tagNumber;
 
+    /// The length of the value in octets
     public @property @safe nothrow
     size_t length() const
     {
@@ -1166,7 +1167,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         }
         components ~= dataValue;
         this.sequence = components;
-        // this.value ~= value.dataValue;
     }
 
     /* NOTE:
@@ -2394,8 +2394,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             throw new ASN1ValueInvalidException
             (
                 "This exception was thrown because you attempted to decode an " ~
-                "EMBEDDED PDV that contained a tag that was not of CONTEXT-" ~
-                "SPECIFIC class. " ~
+                "EMBEDDED PDV that contained a component whose tag number " ~
+                "was neither 0 nor 2, which indicate the identification CHOICE " ~
+                "and the string-value OCTET STRING components respectively. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
@@ -3612,9 +3613,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         if (components[0].tagNumber != 0u || components[1].tagNumber != 2u)
             throw new ASN1ValueInvalidException
             (
-                "This exception was thrown because you attempted to decode an " ~
-                "CharacterString that contained a tag that was not of CONTEXT-" ~
-                "SPECIFIC class. " ~
+                "This exception was thrown because you attempted to decode a " ~
+                "CharacterString that contained a component whose tag number " ~
+                "was neither 0 nor 2, which indicate the identification CHOICE " ~
+                "and the string-value OCTET STRING components respectively. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~ 
                 debugInformationText ~ reportBugsText
             );
@@ -3631,7 +3633,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     throw new ASN1ValueInvalidException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode an CharacterString whose syntaxes component " ~
+                        "decode a CharacterString whose syntaxes component " ~
                         "contained an invalid number of elements. The " ~
                         "syntaxes component should contain abstract and transfer " ~
                         "syntax OBJECT IDENTIFIERS, in that order. " ~
@@ -4000,7 +4002,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
     public @safe @nogc nothrow
     this()
     {
-        this.tagNumber = 0x00;
+        this.tagNumber = 0u;
         this.value = [];
     }
 
@@ -4404,7 +4406,7 @@ unittest
     ]; // Big-endian "abcd"
     ubyte[] dataCharacter = [ 
         0x1Du, 0x13u, 0x80u, 0x0Au, 0x82u, 0x08u, 0x00u, 0x00u, 
-        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x3Fu, 0x81u, 0x05u, 
+        0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x3Fu, 0x82u, 0x05u, 
         0x48u, 0x45u, 0x4Eu, 0x4Cu, 0x4Fu ];
     ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"
 
@@ -4448,8 +4450,8 @@ unittest
     
     // Pre-processing
     External x = result[8].external;
-    // EmbeddedPDV m = result[11].embeddedPresentationDataValue;
-    // CharacterString c = result[25].characterString;
+    EmbeddedPDV m = result[11].embeddedPDV;
+    CharacterString c = result[25].characterString;
 
     // Ensure accessors decode the data correctly.
     assert(result[1].boolean == true);
@@ -4462,7 +4464,7 @@ unittest
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
     assert(result[10].enumerated!long == 255L);
-    // assert((m.identification.presentationContextID == 27L) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
+    assert((m.identification.presentationContextID == 27L) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier == [ OIDNode(6), OIDNode(4), OIDNode(1) ]);
     assert(result[14].numericString == "8675309");
@@ -4476,16 +4478,16 @@ unittest
     assert(result[22].visibleString == "PowerThirst");
     assert(result[23].generalString == "PowerThirst");
     assert(result[24].universalString == "abcd"d);
-    // assert((c.identification.presentationContextID == 63L) && (c.stringValue == "HENLO"w));
+    assert((c.identification.presentationContextID == 63L) && (c.stringValue == "HENLO"w));
 
     result = [];
     while (data.length > 0)
         result ~= new BERElement(data);
 
     // Pre-processing
-    // x = result[8].external;
-    // m = result[11].embeddedPresentationDataValue;
-    // c = result[25].characterString;
+    x = result[8].external;
+    m = result[11].embeddedPresentationDataValue;
+    c = result[25].characterString;
 
     // Ensure accessors decode the data correctly.
     assert(result[1].boolean == true);
