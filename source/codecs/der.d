@@ -85,42 +85,6 @@ public alias DERElement = DistinguishedEncodingRulesElement;
 public
 class DistinguishedEncodingRulesElement : ASN1Element!DERElement
 {
-    // Constants used to save CPU cycles
-    private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()
-    private immutable real maxLongAsReal = cast(real) long.max; // Saves CPU cycles in realType()
-    private immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in realType()
-
-    // Constants for exception messages
-    immutable string notWhatYouMeantText = 
-        "It is highly likely that what you attempted to decode was not the " ~
-        "data type that you thought it was. Most likely, one of the following " ~
-        "scenarios occurred: (1) you did not write this program to the exact " ~
-        "specification of the protocol, or (2) someone is attempting to hack " ~
-        "this program (review the HeartBleed bug), or (3) the client sent " ~
-        "valid data that was just too big to decode. ";
-    immutable string forMoreInformationText = 
-        "For more information on the specific method or property that originated " ~
-        "this exception, see the documentation associated with this ASN.1 " ~
-        "library. For more information on ASN.1's data types in general, see " ~
-        "the International Telecommunications Union's X.680 specification, " ~
-        "which can be found at: " ~
-        "https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf. " ~
-        "For more information on how those data types are supposed to be " ~
-        "encoded using Distinguished Encoding Rules, Canonical Encoding Rules, or " ~
-        "Distinguished Encoding Rules, see the International " ~
-        "Telecommunications Union's X.690 specification, which can be found " ~
-        "at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf. ";
-    immutable string debugInformationText =
-        "If reviewing the documentation does not help, you may want to run " ~
-        "the ASN.1 library in debug mode. To do this, compile the source code " ~
-        "for this library with the `-debug=asn1` flag (if you are compiling " ~
-        "with `dmd`). This will display information to the console that may " ~
-        "help you diagnose any issues. ";
-    immutable string reportBugsText =
-        "If none of the steps above helped, and you believe that you have " ~
-        "discovered a bug, please create an issue on the GitHub page's Issues " ~
-        "section at: https://github.com/JonathanWilbur/asn1-d/issues. ";
-
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
     static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
 
@@ -843,7 +807,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 of EMBEDDED PDV itself is referenced by an out-of-range 
                 context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
     */
-    override public @property @system
+    deprecated override public @property @system
     External external() const
     {
         const DERElement[] components = this.sequence;
@@ -1101,7 +1065,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
     */
-    override public @property @system
+    deprecated override public @property @system
     void external(External value)
     {
         DERElement[] components = [];

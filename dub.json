@@ -1,7 +1,14 @@
 {
 	"name": "asn1",
-	"description": "An ASN.1 Encoder and decoder",
-	"authors": [ "jonathanwilbur" ],
+	"description": "ASN.1 encoding and decoding",
+	"authors": [ "Jonathan M. Wilbur" ],
 	"license": "MIT",
-	"targetType": "library"
+	"importPaths": "./source/",
+	"sourcePaths": "./source/",
+	"excludedSourceFiles": "./source/tools/*",
+	"targetType": "library",
+	"targetPath": "./build/libraries/",
+	"dependencies": {
+		"cli": "~>2.0"
+	}
 }

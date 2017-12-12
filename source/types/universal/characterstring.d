@@ -21,8 +21,12 @@ CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
 public
 struct CharacterString
 {
-    ///
+    /**
+        A field indicating the the transfer syntax used to indicate the means 
+        by which the string-value field is encoded. Can also be used to specify
+        the abstract syntax of what is encoded.
+    */
     public ASN1ContextSwitchingTypeID identification;
-    ///
+    /// The encoded data
     public ubyte[] stringValue;
 }

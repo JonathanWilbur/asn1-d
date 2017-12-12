@@ -129,6 +129,50 @@ class AbstractSyntaxNotation1Element(Element)
 {
     static assert(is(Element : typeof(this)), "Tried to instantiate " ~ typeof(this).stringof ~ " with type parameter " ~ Element.stringof);
 
+    // Constants used to save CPU cycles
+    private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()
+    private immutable real maxLongAsReal = cast(real) long.max; // Saves CPU cycles in realType()
+    private immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in realType()
+
+    // Constants for exception messages
+    immutable string notWhatYouMeantText = 
+        "It is highly likely that what you attempted to decode was not the " ~
+        "data type that you thought it was. Most likely, one of the following " ~
+        "scenarios occurred: (1) you did not write this program to the exact " ~
+        "specification of the protocol, or (2) someone is attempting to hack " ~
+        "this program (review the HeartBleed bug), or (3) the client sent " ~
+        "valid data that was just too big to decode. ";
+    immutable string forMoreInformationText = 
+        "For more information on the specific method or property that originated " ~
+        "this exception, see the documentation associated with this ASN.1 " ~
+        "library. For more information on ASN.1's data types in general, see " ~
+        "the International Telecommunications Union's X.680 specification, " ~
+        "which can be found at: " ~
+        "https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf. " ~
+        "For more information on how those data types are supposed to be " ~
+        "encoded using Basic Encoding Rules, Canonical Encoding Rules, or " ~
+        "Distinguished Encoding Rules, see the International " ~
+        "Telecommunications Union's X.690 specification, which can be found " ~
+        "at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf. ";
+    immutable string debugInformationText =
+        "If reviewing the documentation does not help, you may want to run " ~
+        "the ASN.1 library in debug mode. To do this, compile the source code " ~
+        "for this library with the `-debug=asn1` flag (if you are compiling " ~
+        "with `dmd`). This will display information to the console that may " ~
+        "help you diagnose any issues. ";
+    immutable string reportBugsText =
+        "If none of the steps above helped, and you believe that you have " ~
+        "discovered a bug, please create an issue on the GitHub page's Issues " ~
+        "section at: https://github.com/JonathanWilbur/asn1-d/issues. ";
+
+    ///
+    immutable public
+    enum LengthEncodingPreference : ubyte
+    {
+        definite,
+        indefinite
+    }
+
     /// Decodes a boolean
     abstract public @property
     bool boolean() const;
@@ -515,7 +559,7 @@ class AbstractSyntaxNotation1Element(Element)
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
     */
-    abstract public @property
+    deprecated abstract public @property
     External external() const;
 
     /**
@@ -541,7 +585,7 @@ class AbstractSyntaxNotation1Element(Element)
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
     */
-    abstract public @property
+    deprecated abstract public @property
     void external(External value);
 
     @system

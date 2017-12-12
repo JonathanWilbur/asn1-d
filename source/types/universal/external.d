@@ -166,13 +166,23 @@ import types.identification;
 public
 struct External
 {
-    ///
+    /**
+        A field indicating the the transfer syntax used to indicate the means 
+        by which the data-value field is encoded. Can also be used to specify
+        the abstract syntax of what is encoded.
+    */
     public ASN1ContextSwitchingTypeID identification;
-    ///
+    /// An optional field used to describe the encoded data.
     public string dataValueDescriptor; // Made public because validation is done at encoding.
-    ///
+    /// The encoded data
     public ubyte[] dataValue;
-    /// octet-aligned is a sensible default, since it is the most lax of the three choices.
+    /**
+        A field that exists only to determine the developer's choice of
+        encoding used, per the pre-1994 definition of EXTERNAL.
+
+        octet-aligned is a sensible default, since it is the most lax of the 
+        three choices.
+    */
     ASN1ExternalEncodingChoice encoding = ASN1ExternalEncodingChoice.octetAligned;
 }
 

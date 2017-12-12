@@ -7,7 +7,7 @@ public
 struct ASN1ContextNegotiation
 {
     ///
-    public ptrdiff_t presentationContextID = 0u;
+    public ptrdiff_t presentationContextID = 0;
     ///
     public ObjectIdentifier transferSyntax;
 
@@ -39,7 +39,7 @@ struct ASN1ContextSwitchingTypeIdentification
     ///
     public Nullable!ObjectIdentifier syntax;
     ///
-    public size_t presentationContextID = 0u; // REVIEW: Change to ptrdiff_t
+    public ptrdiff_t presentationContextID = 0;
     ///
     public Nullable!ASN1ContextNegotiation contextNegotiation;
     ///

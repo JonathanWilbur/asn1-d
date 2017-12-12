@@ -65,7 +65,7 @@ class AbstractSyntaxNotation1Exception : Exception
 ///
 public alias ASN1TagClass = AbstractSyntaxNotation1TagClass;
 ///
-public
+immutable public
 enum AbstractSyntaxNotation1TagClass : ubyte
 {
     universal = 0b00000000, // Native to ASN.1
@@ -77,7 +77,7 @@ enum AbstractSyntaxNotation1TagClass : ubyte
 ///
 public alias ASN1Construction = AbstractSyntaxNotation1Construction;
 ///
-public
+immutable public
 enum AbstractSyntaxNotation1Construction : ubyte
 {
     primitive = 0b00000000, // The content octets directly encode the element value
@@ -126,7 +126,7 @@ public alias ASN1UniversalType = AbstractSyntaxNotation1UniversalType;
         $(TR $(TD BMPString)	        $(TD Both)              $(TD 0x1E))
     )
 */
-public
+immutable public
 enum AbstractSyntaxNotation1UniversalType : ubyte
 {
     endOfContent = 0x00u,
@@ -196,7 +196,7 @@ enum AbstractSyntaxNotation1LengthEncoding : ubyte
 ///
 public alias ASN1RealEncodingBase = AbstractSyntaxNotation1RealEncodingBase;
 ///
-public
+immutable public
 enum AbstractSyntaxNotation1RealEncodingBase : ubyte
 {
     base2 = 0x02,
@@ -208,7 +208,7 @@ enum AbstractSyntaxNotation1RealEncodingBase : ubyte
 ///
 public alias ASN1RealEncodingScale = AbstractSyntaxNotation1RealEncodingScale;
 ///
-public
+immutable public
 enum AbstractSyntaxNotation1RealEncodingScale : ubyte
 {
     scale0 = 0x00,
@@ -220,7 +220,7 @@ enum AbstractSyntaxNotation1RealEncodingScale : ubyte
 ///
 public alias ASN1RealExponentEncoding = AbstractSyntaxNotation1RealExponentEncoding;
 ///
-public
+immutable public
 enum AbstractSyntaxNotation1RealExponentEncoding : ubyte
 {
     followingOctet = 0b00000000,
@@ -232,7 +232,7 @@ enum AbstractSyntaxNotation1RealExponentEncoding : ubyte
 ///
 public alias ASN1SpecialRealValue = AbstractSyntaxNotation1SpecialRealValue;
 ///
-public
+immutable public
 enum AbstractSyntaxNotation1SpecialRealValue : ubyte
 {
     plusInfinity = 0b01000000,
@@ -259,7 +259,7 @@ public alias ASN1Base10RealNumericalRepresentation = AbstractSyntaxNotation1Base
             Communication between Heterogeneous Systems, Morgan 
             Kaufmann, 2001, p. 143.
 */
-public
+immutable public
 enum AbstractSyntaxNotation1Base10RealNumericalRepresentation : ubyte
 {
     nr1 = 0b0000_0001,
@@ -270,6 +270,7 @@ enum AbstractSyntaxNotation1Base10RealNumericalRepresentation : ubyte
 ///
 public alias ASN1Base10RealDecimalSeparator = AbstractSyntaxNotation1Base10RealDecimalSeparator;
 ///
+immutable public
 enum AbstractSyntaxNotation1Base10RealDecimalSeparator : char
 {
     period = '.',
@@ -279,6 +280,7 @@ enum AbstractSyntaxNotation1Base10RealDecimalSeparator : char
 ///
 public alias ASN1Base10RealExponentCharacter = AbstractSyntaxNotation1Base10RealExponentCharacter;
 ///
+immutable public
 enum AbstractSyntaxNotation1Base10RealExponentCharacter : char
 {
     lowercaseE = 'e',
@@ -286,7 +288,7 @@ enum AbstractSyntaxNotation1Base10RealExponentCharacter : char
 }
 
 /// The acceptable characters for a NumericString
-public immutable string numericStringCharacters = "0123456789 ";
+immutable public string numericStringCharacters = "0123456789 ";
 
 /**
     The acceptable characters for a printableString.
@@ -296,5 +298,5 @@ public immutable string numericStringCharacters = "0123456789 ";
     language, so that canFind will usually have to iterate through
     fewer letters before finding a match.
 */
-public immutable string printableStringCharacters = 
+immutable public string printableStringCharacters = 
     "etaoinsrhdlucmfywgpbvkxqjzETAOINSRHDLUCMFYWGPBVKXQJZ0123456789 '()+,-./:=?";

@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.10](http://semver.org/)
+* Version: [1.0.0-beta.11](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -148,43 +148,37 @@ Version 1.0.0-beta was released on November 8th, 2017.
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
-- [ ] Review Comments and Exception Messages
-  - [ ] Check for `a` and `an` mixups
-  - [ ] Check for duplicated terminal words
-  - [ ] Check for incorrect data types
-  - [ ] Check for correct terminal spacing
-  - [ ] Add parenthetical abbreviations
 - [x] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
 - [x] Find and change integral types to either `size_t` or `ptrdiff_t`
-- [ ] Extract the string constants into either `codec.d`, `asn1.d`, or something else.
-- [ ] Fix constructors to accept `const` variations.
-- [ ] Remove trailing spaces
-- [ ] `ObjectIdentifier` constants
+- [x] Extract the string constants into either `codec.d`, `asn1.d`, or something else.
 - [ ] OID / ROID codec properties
   - [ ] Explanatory comments
   - [ ] Proper unsigned number formatting
   - [ ] Review again for endianness (It doesn't look right.)
   - [ ] Review for performance (I believe it could be done a faster way.)
   - [ ] Review that un-terminating components do not crash program.
-- [ ] Review code for anything that could be made `const` or `immutable`
 - [ ] Redo Context-Switching Types
-  - [ ] Make them actually work
-  - [ ] Document your research into this (Page 413 of the Dubuisson book, and format of X.509 certificates)
+  - [x] Make them actually work
   - [x] Support the pre-1994 `EXTERNAL`
-  - [ ] Deprecate `EXTERNAL`
-  - [ ] Document all of the fields in excruciating detail
+  - [x] Deprecate `EXTERNAL`
+  - [x] Document all of the fields
   - [ ] Unittest all variations of `EXTERNAL`'s `encoding`
-  - [ ] Implement `OBJECT IDENTIFIER` restrictions
+  - [ ] ~~Implement `OBJECT IDENTIFIER` restrictions for `CharacterString`~~ (I can't find documentation of this.)
   - [ ] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
   - [ ] Since the `characterString` code is so similar to `embeddedPDV`, could I de-duplicate?
-- [ ] Improve exception messages
-- [ ] De-duplicate decoding code (private `fromBytes()` method called by constructor)
+- [ ] Fix constructors to accept `const` variations.
+- [ ] Make as much code `const` or `immutable` as possible
 - [ ] Use either the term `byte` or `octet` consistently for variable names
-- [ ] Configure `.vscode`
-  - [ ] `tasks.json`
-  - [ ] `launch.json`?
-- [ ] Configure `dub.json`
-- [ ] Make `enum`s in `asn1.d` `immutable`, if possible.
+- [ ] Review Comments and Exception Messages
+  - [ ] Check for `a` and `an` mixups
+  - [ ] Check for duplicated terminal words
+  - [ ] Check for incorrect data types
+  - [ ] Check for correct terminal spacing
+  - [ ] Add parenthetical abbreviations
+- [ ] Remove trailing spaces
+- [x] De-duplicate decoding code (private `fromBytes()` method called by constructor)
+- [x] Configure `.vscode/tasks.json`
+- [x] Configure `dub.json`
 - [x] Either do something with `valueContainsDoubleNull()` or make it public
 - [x] String `ObjectIdentifier` constructor
 - [x] Properties for member `type`
@@ -313,8 +307,11 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] [CVE-2003-0430](https://nvd.nist.gov/vuln/detail/CVE-2003-0430)
   - [ ] [CVE-2002-0036](https://nvd.nist.gov/vuln/detail/CVE-2002-0036)
   - [x] ~~[CVE-2002-0353](https://nvd.nist.gov/vuln/detail/CVE-2002-0353)~~
+- [ ] `cli.lib`
+  - [ ] Figure out how to parse negative numbers from the command-line (`-1.0` gets interpreted as a command...)
 - [ ] Documentation
   - [ ] `build.md`
+    - [ ] Instructions on installing and linking `cli.lib`.
   - [ ] `compliance.md`
     - [ ] Review that character-encoded `REAL`s are strictly conformant to [ISO 6093](https://www.iso.org/standard/12285.html) (Maybe even make an ISO 6093 Library...)
     - [ ] Create a checklist for every bullet point of X.690.
@@ -336,6 +333,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
       - [ ] `SET OF`
       - [ ] `SEQUENCE OF`
   - [ ] `contributing.md`
+  - [ ] `context-switching-types.md` (My research into context-switching types)
   - [ ] `security.md`
     - [ ] Review by a Security Firm
     - [ ] Fuzz Testing Results
@@ -350,8 +348,6 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Create dynamically-linked libraries as well
   - [ ] [GNU Make](https://www.gnu.org/software/make/) `Makefile`
   - [ ] Generate a `.def` file for Windows?
-- [ ] Figure out how to parse negative numbers from the command-line (`-1.0` gets interpreted as a command...)
-- [ ] Instructions on installing and linking `cli.lib`.
 - [ ] If I were to just `alias` `AbstractSyntaxNotation1` to `ASN1`, would it apply to `AbstractSyntaxNotation1*`?
 
 ### 1.0.0 Release
