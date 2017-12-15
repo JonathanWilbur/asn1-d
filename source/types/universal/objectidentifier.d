@@ -197,6 +197,28 @@ public class ObjectIdentifier
         this.nodes = cast(immutable (OIDNode[])) nodes;
     }
 
+    @system
+    unittest
+    {
+        assert((new OID("0.0.1.127")).numericArray == [ 0, 0, 1, 127 ]);
+        assert((new OID("1.1.256.1")).numericArray == [ 1, 1, 256, 1 ]);
+        assert((new OID("2.174.3.1")).numericArray == [ 2, 174, 3, 1 ]);
+
+        // Test an invalid first subidentifier
+        assertThrown!OIDException(new OID("3.0.1.1"));
+
+        // Test an invalid second identifier
+        assertThrown!OIDException(new OID("0.64.1.1"));
+        assertThrown!OIDException(new OID("1.64.1.1"));
+        assertThrown!OIDException(new OID("1.178.1.1"));
+
+        // Test terminal zero
+        assert((new OID("1.0.1.0")).numericArray == [ 1, 0, 1, 0 ]);
+
+        // Test terminal large number
+        assert((new OID("1.0.1.65537")).numericArray == [ 1, 0, 1, 65537 ]);
+    }
+
     override public @system
     bool opEquals(in Object other) const
     {
