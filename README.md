@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.11](http://semver.org/)
+* Version: [1.0.0-beta.12](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -150,13 +150,20 @@ Version 1.0.0-beta was released on November 8th, 2017.
 
 - [x] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
 - [x] Find and change integral types to either `size_t` or `ptrdiff_t`
+- [ ] Use `size_t` and `ptrdiff_t` appropriately for array indices and lengths
 - [x] Extract the string constants into either `codec.d`, `asn1.d`, or something else.
-- [ ] OID / ROID codec properties
-  - [ ] Explanatory comments
-  - [ ] Proper unsigned number formatting
-  - [ ] Review again for endianness (It doesn't look right.)
-  - [ ] Review for performance (I believe it could be done a faster way.)
-  - [ ] Review that un-terminating components do not crash program.
+- [ ] Fix OID / ROID
+  - [x] Review that un-terminating OID components do not crash program.
+  - [x] Throw exception if encoded OID type contains `0x80u` (See 8.19.2 of X.690.)
+  - [x] Permit `OID` to contain arcs under `2` that exceed `39`, but not `175`.
+  - [x] Remove dependency on `Appender`
+  - [x] Allow `OID`s to be only two nodes long
+  - [x] Use the terms 'node', 'component', 'number', and 'subidentifier' consistently
+    - X.660 uses the term 'node' and 'arc'
+    - X.690 uses the term 'subidentifier'
+    - The Dubuisson book uses the term 'arc' and 'node'
+    - It sounds like 'arc' refers to the space beneath a 'node'
+  - [ ] Test string constructor of `OID`
 - [ ] Redo Context-Switching Types
   - [x] Make them actually work
   - [x] Support the pre-1994 `EXTERNAL`
@@ -166,7 +173,10 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] ~~Implement `OBJECT IDENTIFIER` restrictions for `CharacterString`~~ (I can't find documentation of this.)
   - [ ] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
   - [ ] Since the `characterString` code is so similar to `embeddedPDV`, could I de-duplicate?
+- [ ] Add Object Identifier constants from Section 12 of X.690
+- [ ] Check the encoding of `tagNumber` for non-terminating
 - [ ] Fix constructors to accept `const` variations.
+  - [ ] Particularly, the `OID` constructor
 - [ ] Make as much code `const` or `immutable` as possible
 - [ ] Use either the term `byte` or `octet` consistently for variable names
 - [ ] Review Comments and Exception Messages
@@ -175,6 +185,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Check for incorrect data types
   - [ ] Check for correct terminal spacing
   - [ ] Add parenthetical abbreviations
+- [ ] Ensure all numeric literals end with `u`
 - [ ] Remove trailing spaces
 - [x] De-duplicate decoding code (private `fromBytes()` method called by constructor)
 - [x] Configure `.vscode/tasks.json`
@@ -349,6 +360,10 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] [GNU Make](https://www.gnu.org/software/make/) `Makefile`
   - [ ] Generate a `.def` file for Windows?
 - [ ] If I were to just `alias` `AbstractSyntaxNotation1` to `ASN1`, would it apply to `AbstractSyntaxNotation1*`?
+
+From X.690, Section 8.19.2 on encoding of OIDs:
+
+> The subidentifier shall be encoded in the fewest possible octets, that is, the leading octet of the subidentifier shall not have the value 0x80. 
 
 ### 1.0.0 Release
 

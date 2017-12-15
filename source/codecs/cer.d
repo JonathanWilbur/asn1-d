@@ -667,7 +667,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     OID objectIdentifier() const
     out (value)
     {
-        assert(value.length > 2u);
+        assert(value.length >= 2u);
     }
     body
     {
@@ -681,25 +681,68 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 debugInformationText ~ reportBugsText
             );
 
-        ubyte[][] components;
-        size_t[] numbers = [ (this.value[0] / 0x28u), (this.value[0] % 0x28u) ];
-        Appender!(OIDNode[]) nodes = appender!(OIDNode[])();
+        if (this.value.length >= 2u)
+        {
+            // Skip the first, because it is fine if it is 0x80
+            // Skip the last because it will be checked next
+            foreach (octet; this.value[1 .. $-1])
+            {
+                if (octet == 0x80u)
+                    throw new ASN1ValueInvalidException
+                    (
+                        "This exception was thrown because you attempted to decode " ~
+                        "an OBJECT IDENTIFIER that contained a number that was " ~
+                        "encoded on more than the minimum necessary octets. This " ~
+                        "is indicated by an occurrence of the octet 0x80, which " ~
+                        "is the encoded equivalent of a leading zero. " ~
+                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        debugInformationText ~ reportBugsText
+                    );
+            }
+
+            if ((this.value[$-1] & 0x80u) == 0x80u)
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "an OBJECT IDENTIFIER whose last byte had the most significant " ~
+                    "bit set, which is used to indicate the continuity of the " ~
+                    "encoding of a number on the next octet. In other words, the " ~
+                    "encoded data appears to be truncated. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+        }
+
+        size_t[] numbers;
+        if (this.value[0] >= 0x50u)
+        {
+            numbers = [ 2u, (this.value[0] - 0x50u) ];
+        }
+        else if (this.value[0] >= 0x28u)
+        {
+            numbers = [ 1u, (this.value[0] - 0x28u) ];
+        }
+        else
+        {
+            numbers = [ 0u, this.value[0] ];
+        }
         
-        // Breaks bytes into groups, where each group encodes one OID number.
+        // Breaks bytes into groups, where each group encodes one OID component.
+        ubyte[][] byteGroups;
         ptrdiff_t lastTerminator = 1;
         for (ptrdiff_t i = 1; i < this.length; i++)
         {
             if (!(this.value[i] & 0x80u))
             {
-                components ~= cast(ubyte[]) this.value[lastTerminator .. i+1];
+                byteGroups ~= cast(ubyte[]) this.value[lastTerminator .. i+1];
                 lastTerminator = i+1;
             }
         }
 
         // Converts each group of bytes to a number.
-        foreach (component; components)
+        foreach (byteGroup; byteGroups)
         {
-            if (component.length > (size_t.sizeof * 2u))
+            if (byteGroup.length > (size_t.sizeof * 2u))
                 throw new ASN1ValueTooBigException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -710,20 +753,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 );
 
             numbers ~= 0u;
-            for (ptrdiff_t i = 0; i < component.length; i++)
+            for (ptrdiff_t i = 0; i < byteGroup.length; i++)
             {
                 numbers[$-1] <<= 7;
-                numbers[$-1] |= cast(size_t) (component[i] & 0x7Fu);
+                numbers[$-1] |= cast(size_t) (byteGroup[i] & 0x7Fu);
             }
         }
         
         // Constructs the array of OIDNodes from the array of numbers.
+        OIDNode[] nodes;
         foreach (number; numbers)
         {
-            nodes.put(OIDNode(number));
+            nodes ~= OIDNode(number);
         }
 
-        return new OID(cast(immutable OIDNode[]) nodes.data);
+        return new OID(cast(immutable OIDNode[]) nodes); // FIXME to not require immutable
     }
 
     /**
@@ -746,37 +790,90 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     void objectIdentifier(OID value)
     in
     {
-        assert(value.length > 2u);
+        assert(value.length >= 2u);
         assert(value.numericArray[0] <= 2u);
-        assert(value.numericArray[1] <= 39u);
+        if (value.numericArray[0] == 2u)
+            assert(value.numericArray[1] <= 175u);
+        else
+            assert(value.numericArray[1] <= 39u);
     }
     body
     {
         size_t[] numbers = value.numericArray();
         this.value = [ cast(ubyte) (numbers[0] * 40u + numbers[1]) ];
-        if (numbers.length > 2)
+        if (numbers.length > 2u)
         {
             foreach (number; numbers[2 .. $])
             {
-                ubyte[] encodedOIDComponent;
                 if (number < 128u)
                 {
                     this.value ~= cast(ubyte) number;
                     continue;
                 }
-                while (number != 0)
+
+                ubyte[] encodedOIDNode;
+                while (number != 0u)
                 {
-                    ubyte[] compbytes;
-                    compbytes.length = size_t.sizeof;
-                    *cast(size_t *) compbytes.ptr = number;
-                    if ((compbytes[0] & 0x80u) == 0) compbytes[0] |= 0x80u;
-                    encodedOIDComponent = compbytes[0] ~ encodedOIDComponent;
-                    number >>= 7;
+                    ubyte[] numberBytes;
+                    numberBytes.length = size_t.sizeof;
+                    *cast(size_t *) numberBytes.ptr = number;
+                    if ((numberBytes[0] & 0x80u) == 0u) numberBytes[0] |= 0x80u;
+                    encodedOIDNode = numberBytes[0] ~ encodedOIDNode;
+                    number >>= 7u;
                 }
-                encodedOIDComponent[$-1] &= 0x7Fu;
-                this.value ~= encodedOIDComponent;
+
+                encodedOIDNode[$-1] &= 0x7Fu;
+                this.value ~= encodedOIDNode;
             }
         }
+    }
+
+    @system
+    unittest
+    {
+        CERElement element = new CERElement();
+
+        // All values of octet[0] should pass.
+        for (ubyte i = 0x00u; i < 0xFFu; i++)
+        {
+            element.value = [ i ];
+            assertNotThrown!Exception(element.objectIdentifier);
+        }
+
+        // All values of octet[0] should pass.
+        for (ubyte i = 0x00u; i < 0xFFu; i++)
+        {
+            element.value = [ i, 0x14u ];
+            assertNotThrown!Exception(element.objectIdentifier);
+        }
+    }
+
+    @system
+    unittest
+    {
+        CERElement element = new CERElement();
+
+        // Tests for the "leading zero byte," 0x80
+        element.value = [ 0x29u, 0x80u ];
+        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        element.value = [ 0x29u, 0x80u, 0x14u ];
+        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        element.value = [ 0x29u, 0x14u, 0x80u ];
+        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        element.value = [ 0x29u, 0x80u, 0x80u ];
+        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        element.value = [ 0x80u, 0x80u, 0x80u ];
+        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+
+        // Test for non-terminating components
+        element.value = [ 0x29u, 0x81u ];
+        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        element.value = [ 0x29u, 0x14u, 0x81u ];
+        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+
+        // This one should not fail. 0x80u is valid for the first octet.
+        element.value = [ 0x80u, 0x14u, 0x14u ];
+        assertNotThrown!ASN1ValueInvalidException(element.objectIdentifier);
     }
 
     /**
@@ -2715,25 +2812,51 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     override public @property @system
     OIDNode[] relativeObjectIdentifier() const
     {
-        ubyte[][] components;
-        size_t[] numbers = [];
-        Appender!(OIDNode[]) nodes = appender!(OIDNode[])();
+        if (this.value.length == 0u) return [];
+        foreach (octet; this.value)
+        {
+            if (octet == 0x80u)
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a RELATIVE OID that contained a number that was " ~
+                    "encoded on more than the minimum necessary octets. This " ~
+                    "is indicated by an occurrence of the octet 0x80, which " ~
+                    "is the encoded equivalent of a leading zero. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+        }
+
+        if (this.value[$-1] > 0x80u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "a RELATIVE OID whose last byte had the most significant " ~
+                "bit set, which is used to indicate the continuity of the " ~
+                "encoding of a number on the next octet. In other words, the " ~
+                "encoded data appears to be truncated. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
         
-        // Breaks bytes into groups, where each group encodes one OID number.
+        // Breaks bytes into groups, where each group encodes one OID component.
+        ubyte[][] byteGroups;
         ptrdiff_t lastTerminator = 0;
-        for (int i = 0; i < this.length; i++)
+        for (ptrdiff_t i = 0; i < this.length; i++)
         {
             if (!(this.value[i] & 0x80u))
             {
-                components ~= cast(ubyte[]) this.value[lastTerminator .. i+1];
+                byteGroups ~= cast(ubyte[]) this.value[lastTerminator .. i+1];
                 lastTerminator = i+1;
             }
         }
 
         // Converts each group of bytes to a number.
-        foreach (component; components)
+        size_t[] numbers;
+        foreach (byteGroup; byteGroups)
         {
-            if (component.length > (size_t.sizeof * 2u))
+            if (byteGroup.length > (size_t.sizeof * 2u))
                 throw new ASN1ValueTooBigException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -2744,20 +2867,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 );
 
             numbers ~= 0u;
-            for (ptrdiff_t i = 0; i < component.length; i++)
+            for (ptrdiff_t i = 0; i < byteGroup.length; i++)
             {
                 numbers[$-1] <<= 7;
-                numbers[$-1] |= cast(size_t) (component[i] & 0x7Fu);
+                numbers[$-1] |= cast(size_t) (byteGroup[i] & 0x7Fu);
             }
         }
         
         // Constructs the array of OIDNodes from the array of numbers.
+        OIDNode[] nodes;
         foreach (number; numbers)
         {
-            nodes.put(OIDNode(number));
+            nodes ~= OIDNode(number);
         }
 
-        return nodes.data;
+        return nodes;
     }
 
     /**
@@ -2780,24 +2904,70 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         foreach (node; value)
         {
             size_t number = node.number;
-            ubyte[] encodedOIDComponent;
             if (number < 128u)
             {
                 this.value ~= cast(ubyte) number;
                 continue;
             }
+
+            ubyte[] encodedOIDNode;
             while (number != 0u)
             {
-                ubyte[] compbytes;
-                compbytes.length = size_t.sizeof;
-                *cast(size_t *) compbytes.ptr = number;
-                if ((compbytes[0] & 0x80u) == 0) compbytes[0] |= 0x80u;
-                encodedOIDComponent = compbytes[0] ~ encodedOIDComponent;
-                number >>= 7;
+                ubyte[] numberBytes;
+                numberBytes.length = size_t.sizeof;
+                *cast(size_t *) numberBytes.ptr = number;
+                if ((numberBytes[0] & 0x80u) == 0u) numberBytes[0] |= 0x80u;
+                encodedOIDNode = numberBytes[0] ~ encodedOIDNode;
+                number >>= 7u;
             }
-            encodedOIDComponent[$-1] &= 0x7Fu;
-            this.value ~= encodedOIDComponent;
+
+            encodedOIDNode[$-1] &= 0x7Fu;
+            this.value ~= encodedOIDNode;
         }
+    }
+
+    @system
+    unittest
+    {
+        CERElement element = new CERElement();
+
+        // All values of octet[0] should pass.
+        for (ubyte i = 0x00u; i < 0x80u; i++)
+        {
+            element.value = [ i ];
+            assertNotThrown!Exception(element.roid);
+        }
+
+        // All values of octet[0] should pass.
+        for (ubyte i = 0x81u; i < 0xFFu; i++)
+        {
+            element.value = [ i, 0x14u ];
+            assertNotThrown!Exception(element.roid);
+        }
+    }
+
+    @system
+    unittest
+    {
+        CERElement element = new CERElement();
+
+        // Tests for the "leading zero byte," 0x80
+        element.value = [ 0x29u, 0x80u ];
+        assertThrown!ASN1ValueInvalidException(element.roid);
+        element.value = [ 0x29u, 0x80u, 0x14u ];
+        assertThrown!ASN1ValueInvalidException(element.roid);
+        element.value = [ 0x29u, 0x14u, 0x80u ];
+        assertThrown!ASN1ValueInvalidException(element.roid);
+        element.value = [ 0x29u, 0x80u, 0x80u ];
+        assertThrown!ASN1ValueInvalidException(element.roid);
+        element.value = [ 0x80u, 0x80u, 0x80u ];
+        assertThrown!ASN1ValueInvalidException(element.roid);
+
+        // Test for non-terminating components
+        element.value = [ 0x29u, 0x81u ];
+        assertThrown!ASN1ValueInvalidException(element.roid);
+        element.value = [ 0x29u, 0x14u, 0x81u ];
+        assertThrown!ASN1ValueInvalidException(element.roid);
     }
 
     /**

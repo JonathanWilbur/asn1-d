@@ -55,27 +55,41 @@ public class ObjectIdentifier
                 greater than 39.
     */
     public @system
-    this(size_t[] numbers ...)
+    this(in size_t[] numbers ...)
     {
-        if (numbers.length < 3u)
+        if (numbers.length < 2u)
             throw new OIDException
-            ("At least three nodes must be provided to ObjectIdenifier constructor.");
-
-        if ((numbers[0] != 0) && (numbers[0] != 1) && (numbers[0] != 2))
+            ("At least two nodes must be provided to ObjectIdenifier constructor.");
+        
+        if (numbers[0] == 0u || numbers[0] == 1u)
+        {
+            if (numbers[1] > 39u)
+                throw new OIDException
+                (
+                    "Second object identifier node number cannot be greater " ~
+                    "than 39 if the first node number is either 0 or 1."
+                );
+        }
+        else if (numbers[0] == 2u)
+        {
+            if (numbers[1] > 175u)
+                throw new OIDException
+                (
+                    "Second object identifier node number cannot be greater " ~
+                    "than 175 if the first node number is 2."
+                );
+        }
+        else
             throw new OIDException
             ("First object identifier node number can only be 0, 1, or 2.");
 
-        if (numbers[1] > 39)
-            throw new OIDException
-            ("Second object identifier node number cannot be greater than 39.");
-
-        Appender!(OIDNode[]) nodes = appender!(OIDNode[]);
+        OIDNode[] nodes = [];
         foreach (number; numbers)
         {
-            nodes.put(OIDNode(number));
+            nodes ~= OIDNode(number);
         }
 
-        this.nodes = cast(immutable (OIDNode[])) nodes.data;
+        this.nodes = cast(immutable (OIDNode[])) nodes;
     }
 
 
@@ -93,17 +107,31 @@ public class ObjectIdentifier
     public @safe
     this(immutable OIDNode[] nodes ...)
     {
-        if (nodes.length < 3u)
+        if (nodes.length < 2u)
             throw new OIDException
-            ("At least three nodes must be provided to ObjectIdenifier constructor.");
+            ("At least two nodes must be provided to ObjectIdenifier constructor.");
 
-        if ((nodes[0].number != 0) && (nodes[0].number != 1) && (nodes[0].number != 2))
+        if (nodes[0].number == 0u || nodes[0].number == 1u)
+        {
+            if (nodes[1].number > 39u)
+                throw new OIDException
+                (
+                    "Second object identifier node number cannot be greater " ~
+                    "than 39 if the first node number is either 0 or 1."
+                );
+        }
+        else if (nodes[0].number == 2u)
+        {
+            if (nodes[1].number > 175u)
+                throw new OIDException
+                (
+                    "Second object identifier node number cannot be greater " ~
+                    "than 175 if the first node number is 2."
+                );
+        }
+        else
             throw new OIDException
             ("First object identifier node number can only be 0, 1, or 2.");
-
-        if (nodes[1].number > 39)
-            throw new OIDException
-            ("Second object identifier node number cannot be greater than 39.");
 
         this.nodes = nodes;
     }
@@ -120,11 +148,16 @@ public class ObjectIdentifier
                 than 39.
     */
     public
-    this (string str)
+    this (in string str)
     {
         import std.array : split;
         import std.conv : to;
         string[] segments = str.split(".");
+
+        if (segments.length < 2u)
+            throw new OIDException
+            ("At least two nodes must be provided to ObjectIdenifier constructor.");
+
         size_t[] numbers;
         numbers.length = segments.length;
 
@@ -133,29 +166,39 @@ public class ObjectIdentifier
             numbers[i] = segments[i].to!size_t;
         }
 
-        if (numbers.length < 3u)
-            throw new OIDException
-            ("At least three nodes must be provided to ObjectIdenifier constructor.");
-
-        if ((numbers[0] != 0) && (numbers[0] != 1) && (numbers[0] != 2))
+        if (numbers[0] == 0u || numbers[0] == 1u)
+        {
+            if (numbers[1] > 39u)
+                throw new OIDException
+                (
+                    "Second object identifier node number cannot be greater " ~
+                    "than 39 if the first node number is either 0 or 1."
+                );
+        }
+        else if (numbers[0] == 2u)
+        {
+            if (numbers[1] > 175u)
+                throw new OIDException
+                (
+                    "Second object identifier node number cannot be greater " ~
+                    "than 175 if the first node number is 2."
+                );
+        }
+        else
             throw new OIDException
             ("First object identifier node number can only be 0, 1, or 2.");
 
-        if (numbers[1] > 39)
-            throw new OIDException
-            ("Second object identifier node number cannot be greater than 39.");
-
-        Appender!(OIDNode[]) nodes = appender!(OIDNode[]);
+        OIDNode[] nodes = [];
         foreach (number; numbers)
         {
-            nodes.put(OIDNode(number));
+            nodes ~= OIDNode(number);
         }
 
-        this.nodes = cast(immutable (OIDNode[])) nodes.data;
+        this.nodes = cast(immutable (OIDNode[])) nodes;
     }
 
     override public @system
-    bool opEquals(Object other) const
+    bool opEquals(in Object other) const
     {
         OID that = cast(OID) other;
         if (that is null) return false;
@@ -184,8 +227,8 @@ public class ObjectIdentifier
         Throws:
             RangeError = if invalid index specified.
     */
-    public @safe
-    OIDNode opIndex(ptrdiff_t index) const
+    public @safe @nogc nothrow
+    OIDNode opIndex(in ptrdiff_t index) const
     {
         return this.nodes[index];
     }
@@ -202,8 +245,8 @@ public class ObjectIdentifier
         Throws:
             RangeError = if invalid indices are specified.
     */
-    public @system
-    OIDNode[] opSlice(ptrdiff_t index1, ptrdiff_t index2) const
+    public @system @nogc nothrow
+    OIDNode[] opSlice(in ptrdiff_t index1, in ptrdiff_t index2) const
     {
         return cast(OIDNode[]) this.nodes[index1 .. index2];
     }
@@ -211,7 +254,7 @@ public class ObjectIdentifier
     /**
         Returns: the length of the OID.
     */
-    public @safe nothrow
+    public @safe @nogc nothrow
     size_t opDollar() const
     {
         return this.nodes.length;
@@ -222,8 +265,8 @@ public class ObjectIdentifier
         Throws:
             RangeError = if invalid index specified.
     */
-    public @safe
-    string descriptor(size_t index) const
+    public @safe @nogc nothrow
+    string descriptor(in size_t index) const
     {
         return this.nodes[index].descriptor;
     }

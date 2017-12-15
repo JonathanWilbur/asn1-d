@@ -9,14 +9,28 @@ public alias OIDNode = ObjectIdentifierNode;
     A struct representing a single node in an OID, which has a mandatory
     number and an optional descriptor.
 */
-public
+public 
 struct ObjectIdentifierNode
 {
+    /** 
+        The unique unsigned integral number associated with a node in the 
+        object identifier hierarchy.
+    */
     immutable public size_t number;
+    /**
+        The descriptor string is an ObjectDescriptor, which is defined as:
+
+        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
+
+        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
+        0x20 to 0x7E.
+
+        It is used to describe the object identified by this node.
+    */
     immutable public string descriptor;
 
     /// Override for use of the `==` operand.
-    public
+    public @safe @nogc nothrow
     bool opEquals(const OIDNode other) const
     {
         return (this.number == other.number);
@@ -32,10 +46,10 @@ struct ObjectIdentifierNode
     }
 
     /// Override for the use of the '>', '<', '<=', and '>=' operands.
-    public
-    int opCmp(ref const OIDNode other) const
+    public @safe @nogc nothrow
+    ptrdiff_t opCmp(ref const OIDNode other) const
     {
-        return cast(int) (this.number - other.number);
+        return cast(ptrdiff_t) (this.number - other.number);
     }
 
     // REVIEW: Mainly, I want to know that this line is secure.

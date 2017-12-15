@@ -130,9 +130,9 @@ class AbstractSyntaxNotation1Element(Element)
     static assert(is(Element : typeof(this)), "Tried to instantiate " ~ typeof(this).stringof ~ " with type parameter " ~ Element.stringof);
 
     // Constants used to save CPU cycles
-    private immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()
-    private immutable real maxLongAsReal = cast(real) long.max; // Saves CPU cycles in realType()
-    private immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in realType()
+    protected immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()
+    protected immutable real maxLongAsReal = cast(real) long.max; // Saves CPU cycles in realType()
+    protected immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in realType()
 
     // Constants for exception messages
     immutable string notWhatYouMeantText = 
@@ -445,7 +445,7 @@ class AbstractSyntaxNotation1Element(Element)
             70000 // A large number that takes three bytes to encode
         ];
 
-        for (size_t x = 0u; x < 3; x++)
+        for (size_t x = 0u; x < 2; x++)
         {
             for (size_t y = 0u; y < 40u; y++)
             {
@@ -464,6 +464,25 @@ class AbstractSyntaxNotation1Element(Element)
                     el.objectIdentifier = new OID(OIDNode(x), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z), OIDNode(1));
                     assert(el.objectIdentifier == new OID(OIDNode(x), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z), OIDNode(1)));
                 }
+            }
+        }
+
+        for (size_t y = 0u; y < 175u; y++)
+        {
+            foreach (z; sensitiveValues)
+            {
+                el.objectIdentifier = new OID(2, y, 6, 4, z);
+                assert(el.objectIdentifier.numericArray == [ 2, y, 6, 4, z ]);
+                el.objectIdentifier = new OID(2, y, 6, 4, z, 0);
+                assert(el.objectIdentifier.numericArray == [ 2, y, 6, 4, z, 0 ]);
+                el.objectIdentifier = new OID(2, y, 6, 4, z, 1);
+                assert(el.objectIdentifier.numericArray == [ 2, y, 6, 4, z, 1 ]);
+                el.objectIdentifier = new OID(OIDNode(2), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z));
+                assert(el.objectIdentifier == new OID(OIDNode(2), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z)));
+                el.objectIdentifier = new OID(OIDNode(2), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z), OIDNode(0));
+                assert(el.objectIdentifier == new OID(OIDNode(2), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z), OIDNode(0)));
+                el.objectIdentifier = new OID(OIDNode(2), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z), OIDNode(1));
+                assert(el.objectIdentifier == new OID(OIDNode(2), OIDNode(y), OIDNode(256u), OIDNode(5u), OIDNode(z), OIDNode(1)));
             }
         }
 
