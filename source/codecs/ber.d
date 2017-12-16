@@ -998,117 +998,24 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         {
             case (0u): // single-ASN1-value
             {
-                ext.encoding = ASN1ExternalEncodingChoice.singleASN1Type; // REVIEW: Could this be extracted from the switch statement?
-                ext.dataValue = components[$-1].value.dup;
+                ext.encoding = ASN1ExternalEncodingChoice.singleASN1Type;
                 break;
             }
             case (1u): // octet-aligned
             {
                 ext.encoding = ASN1ExternalEncodingChoice.octetAligned;
-                if (components[$-1].construction == ASN1Construction.primitive)
-                {
-                    ext.dataValue = components[$-1].value.dup;
-                }
-                else
-                {
-                    BERElement[] substrings = components[$-1].sequence;
-                    Appender!(ubyte[]) octetAligned = appender!(ubyte[])();
-                    foreach (substring; substrings)
-                    {
-                        if (substring.tagNumber != 1u)
-                            throw new ASN1TagException
-                            (
-                                "This exception was thrown because you attempted " ~
-                                "to decode an EXTERNAL whose data-value was " ~
-                                "constructed and contained an encoded primitive " ~
-                                "that did not share the same tag number of its " ~
-                                "constructed parent. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
-                                debugInformationText ~ reportBugsText
-                            );
-
-                        if (substring.construction != ASN1Construction.primitive)
-                            throw new ASN1ValueInvalidException
-                            (
-                                // "Construction recursion too deep for EXTERNAL. "
-                                "This exception was thrown because you attempted " ~
-                                "to decode an EXTERNAL whose data-value component " ~
-                                "was constructed from elements that were " ~
-                                "themselves constructed. Though this is not " ~
-                                "technically illegitimate for an ASN.1 encoding, " ~
-                                "it is not supported by this library, because it " ~
-                                "has proven to be a source of denial-of-service " ~
-                                "bugs involving depply nested constructed " ~ 
-                                "elements. If you believe you will need this " ~
-                                "functionality, contact the author of this " ~
-                                "library, Jonathan M. Wilbur. " ~ reportBugsText
-                            );
-
-                        octetAligned.put(substring.octetString);
-                    }
-                    ext.dataValue = octetAligned.data;
-                }
                 break;
             }
             case (2u): // arbitrary
             {
                 ext.encoding = ASN1ExternalEncodingChoice.arbitrary;
-                if (components[$-1].construction == ASN1Construction.primitive)
-                {
-                    ubyte[] bytes = components[$-1].value.dup;
-                    BERElement arbitrary = new BERElement();
-                    ext.dataValue = arbitrary.value;
-                }
-                else
-                {
-                    BERElement[] substrings = components[$-1].sequence;
-                    Appender!(bool[]) arbitrary = appender!(bool[])();
-                    foreach (substring; substrings)
-                    {
-                        if (substring.tagNumber != 1u)
-                            throw new ASN1TagException
-                            (
-                                "This exception was thrown because you attempted " ~
-                                "to decode an EXTERNAL whose data-value was " ~
-                                "constructed and contained an encoded primitive " ~
-                                "that did not share the same tag number of its " ~
-                                "constructed parent. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
-                                debugInformationText ~ reportBugsText
-                            );
-
-                        if (substring.construction != ASN1Construction.primitive)
-                            throw new ASN1ValueInvalidException
-                            (
-                                // "Construction recursion too deep for EXTERNAL. "
-                                "This exception was thrown because you attempted " ~
-                                "to decode an EXTERNAL whose data-value component " ~
-                                "was constructed from elements that were " ~
-                                "themselves constructed. Though this is not " ~
-                                "technically illegitimate for an ASN.1 encoding, " ~
-                                "it is not supported by this library, because it " ~
-                                "has proven to be a source of denial-of-service " ~
-                                "bugs involving depply nested constructed " ~ 
-                                "elements. If you believe you will need this " ~
-                                "functionality, contact the author of this " ~
-                                "library, Jonathan M. Wilbur. " ~ reportBugsText
-                            );
-
-                        arbitrary.put(substring.bitString);
-                    }
-                    BERElement ret = new BERElement();
-                    ret.bitString = arbitrary.data;
-                    ext.dataValue = ret.value;
-                }
                 break;
             }
             default:
-            {
                 throw new ASN1ValueInvalidException
                 (
                     "Invalid CHOICE."
                 );
-            }
         }
 
         ext.dataValue = components[$-1].value.dup;
@@ -1194,28 +1101,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         BERElement dataValue = new BERElement();
         dataValue.tagClass = ASN1TagClass.contextSpecific;
         dataValue.tagNumber = value.encoding;
-        switch (value.encoding)
-        {
-            // Yes, both get encoded the same way.
-            case (ASN1ExternalEncodingChoice.singleASN1Type):
-            case (ASN1ExternalEncodingChoice.octetAligned):
-            {
-                dataValue.value = value.dataValue;
-                break;
-            }
-            case (ASN1ExternalEncodingChoice.arbitrary):
-            {
-                dataValue.value = (0x00u ~ value.dataValue);
-                break;
-            }
-            default:
-            {
-                throw new ASN1ValueInvalidException
-                (
-                    "Invalid EXTERNAL data-value encoding choice."
-                );
-            }
-        }
+        dataValue.value = value.dataValue;
+
         components ~= dataValue;
         this.sequence = components;
     }
@@ -2504,7 +2391,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         debugInformationText ~ reportBugsText
                     );
 
-                identification.syntaxes  = ASN1ContextSwitchingTypeSyntaxes(
+                identification.syntaxes  = ASN1Syntaxes(
                     syntaxesComponents[0].objectIdentifier,
                     syntaxesComponents[1].objectIdentifier
                 );
@@ -3797,7 +3684,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                         debugInformationText ~ reportBugsText
                     );
 
-                identification.syntaxes  = ASN1ContextSwitchingTypeSyntaxes(
+                identification.syntaxes  = ASN1Syntaxes(
                     syntaxesComponents[0].objectIdentifier,
                     syntaxesComponents[1].objectIdentifier
                 );

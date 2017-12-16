@@ -607,6 +607,7 @@ class AbstractSyntaxNotation1Element(Element)
     deprecated abstract public @property
     void external(External value);
 
+    // Test of all pre-1994 External encoding choices
     @system
     unittest
     {
@@ -614,13 +615,33 @@ class AbstractSyntaxNotation1Element(Element)
         id.syntax = new OID(1, 3, 6, 4, 1, 256, 39);
 
         External input = External();
+        External output;
         input.identification = id;
         input.dataValueDescriptor = "boop";
         input.dataValue = [ 0x03u, 0x05u, 0x07u, 0x09u ];
 
         Element el = new Element();
+
+        // single-ASN1-type
+        input.encoding = ASN1ExternalEncodingChoice.singleASN1Type;
         el.external = input;
-        External output = el.external;
+        output = el.external;
+        assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
+
+        // octet-aligned
+        input.encoding = ASN1ExternalEncodingChoice.octetAligned;
+        el.external = input;
+        output = el.external;
+        assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
+        assert(output.dataValueDescriptor == "boop");
+        assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
+
+        // arbitrary
+        input.encoding = ASN1ExternalEncodingChoice.arbitrary;
+        el.external = input;
+        output = el.external;
         assert(output.identification.syntax == new OID(1, 3, 6, 4, 1, 256, 39));
         assert(output.dataValueDescriptor == "boop");
         assert(output.dataValue == [ 0x03u, 0x05u, 0x07u, 0x09u ]);
@@ -1242,7 +1263,7 @@ class AbstractSyntaxNotation1Element(Element)
     @system
     unittest
     {
-        ASN1ContextSwitchingTypeSyntaxes syn = ASN1ContextSwitchingTypeSyntaxes();
+        ASN1Syntaxes syn = ASN1Syntaxes();
         syn.abstractSyntax = new OID(1, 3, 6, 4, 1, 256, 7);
         syn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 8);
 
@@ -1797,7 +1818,7 @@ class AbstractSyntaxNotation1Element(Element)
     @system
     unittest
     {
-        ASN1ContextSwitchingTypeSyntaxes syn = ASN1ContextSwitchingTypeSyntaxes();
+        ASN1Syntaxes syn = ASN1Syntaxes();
         syn.abstractSyntax = new OID(1, 3, 6, 4, 1, 256, 7);
         syn.transferSyntax = new OID(1, 3, 6, 4, 1, 256, 8);
 

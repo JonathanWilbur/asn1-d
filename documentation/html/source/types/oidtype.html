@@ -527,6 +527,83 @@
   <li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifierNode.number" id="ObjectIdentifierNode.number"><code class="code">number</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifierNode.number"></span>immutable size_t <code class="code">number</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The unique unsigned integral <code class="code">number</code> associated with a node in the
+        object identifier hierarchy.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ObjectIdentifierNode.descriptor" id="ObjectIdentifierNode.descriptor"><code class="code">descriptor</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ObjectIdentifierNode.descriptor"></span>immutable string <code class="code">descriptor</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The <code class="code">descriptor</code> string is an ObjectDescriptor, which is defined as:
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    <i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+<br><br>
+        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
+        0x20 to 0x7E.
+<br><br>
+        It is used to describe the object identified by this node.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
   <a href="#ObjectIdentifierNode.opEquals" id="ObjectIdentifierNode.opEquals"><code class="code">opEquals</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -536,7 +613,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifierNode.opEquals"></span>const bool <code class="code">opEquals</code>(const OIDNode <code class="code">other</code>);
+            <span class="ddoc_anchor" id="ObjectIdentifierNode.opEquals"></span>const nothrow @nogc @safe bool <code class="code">opEquals</code>(const OIDNode <code class="code">other</code>);
 
           </code>
         </p>
@@ -586,7 +663,7 @@ OIDNode b = OIDNode(1, <span class="string_literal">"not-iso"</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifierNode.opCmp"></span>const int <code class="code">opCmp</code>(ref const OIDNode <code class="code">other</code>);
+            <span class="ddoc_anchor" id="ObjectIdentifierNode.opCmp"></span>const nothrow @nogc @safe ptrdiff_t <code class="code">opCmp</code>(ref const OIDNode <code class="code">other</code>);
 
           </code>
         </p>

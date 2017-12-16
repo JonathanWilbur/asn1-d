@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.13](http://semver.org/)
+* Version: [1.0.0-beta.14](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -154,7 +154,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Extract the string constants into either `codec.d`, `asn1.d`, or something else.
 - [x] Fix OID / ROID
   - [x] Review that un-terminating OID components do not crash program.
-  - [x] Throw exception if encoded OID type contains `0x80u` (See 8.19.2 of X.690.)
+  - [x] Throw exception if encoded OID type contains `0x80u` (See Note #1 below.)
   - [x] Permit `OID` to contain arcs under `2` that exceed `39`, but not `175`.
   - [x] Remove dependency on `Appender`
   - [x] Allow `OID`s to be only two nodes long
@@ -164,30 +164,32 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - The Dubuisson book uses the term 'arc' and 'node'
     - It sounds like 'arc' refers to the space beneath a 'node'
   - [x] Test string constructor of `OID`
-- [ ] Redo Context-Switching Types
+- [x] Redo Context-Switching Types
   - [x] Make them actually work
   - [x] Support the pre-1994 `EXTERNAL`
   - [x] Deprecate `EXTERNAL`
   - [x] Document all of the fields
-  - [ ] Unittest all variations of `EXTERNAL`'s `encoding`
-  - [ ] ~~Implement `OBJECT IDENTIFIER` restrictions for `CharacterString`~~ (I can't find documentation of this.)
-  - [ ] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
-  - [ ] Since the `characterString` code is so similar to `embeddedPDV`, could I de-duplicate?
+  - [x] Unittest all variations of `EXTERNAL`'s `encoding`
+  - [x] ~~Implement `OBJECT IDENTIFIER` restrictions for `CharacterString`~~ (I can't find documentation of this.)
 - [ ] Add Object Identifier constants from Section 12 of X.690
 - [ ] Check the encoding of `tagNumber` for non-terminating
 - [ ] Fix constructors to accept `const` variations.
   - [ ] Particularly, the `OID` constructor
 - [ ] Make as much code `const` or `immutable` as possible
-- [ ] Use either the term `byte` or `octet` consistently for variable names
-- [ ] Review Comments and Exception Messages
+- [ ] Code de-duplication
+  - [ ] Since the `characterString` code is so similar to `embeddedPDV`, could I de-duplicate?
+  - [x] ~~Break X.690 common functionality into template mixins~~ (See Note #2 below.)
+  - [x] De-duplicate decoding code (private `fromBytes()` method called by constructor)
+- [ ] Grammar and Styling
   - [ ] Check for `a` and `an` mixups
   - [ ] Check for duplicated terminal words
   - [ ] Check for incorrect data types
   - [ ] Check for correct terminal spacing
   - [ ] Add parenthetical abbreviations
-- [ ] Ensure all numeric literals end with `u`
-- [ ] Remove trailing spaces
-- [x] De-duplicate decoding code (private `fromBytes()` method called by constructor)
+  - [ ] Ensure all numeric literals end with `u`
+  - [ ] Remove trailing spaces
+  - [ ] Use either the term `byte` or `octet` consistently for variable names
+  - [x] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
 - [x] Configure `.vscode/tasks.json`
 - [x] Configure `dub.json`
 - [x] Either do something with `valueContainsDoubleNull()` or make it public
@@ -361,9 +363,28 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Generate a `.def` file for Windows?
 - [ ] If I were to just `alias` `AbstractSyntaxNotation1` to `ASN1`, would it apply to `AbstractSyntaxNotation1*`?
 
+#### Note 1:
+
 From X.690, Section 8.19.2 on encoding of OIDs:
 
 > The subidentifier shall be encoded in the fewest possible octets, that is, the leading octet of the subidentifier shall not have the value 0x80. 
+
+#### Note 2:
+
+Due to [this bug that I found](https://issues.dlang.org/show_bug.cgi?id=18087), 
+I would either have to have no documentation for all mixin'd properties, since 
+embedded documentation does not appear to get generated after mixins are 
+applied, or I would have to split the getter-setter pairs for each property 
+into two separate mixins, which will make the use of the properties only work
+if called syntactically like their method equivalents (e.g. `.prop(arg)` 
+instead of `.prop = arg`)
+
+I tried doing this for the following properties:
+
+* `integer`
+* `objectIdentifier`
+* `enumerated`
+* `relativeObjectIdentifier`
 
 ### 1.0.0 Release
 

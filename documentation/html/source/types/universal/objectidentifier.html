@@ -669,7 +669,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.this"></span>@system this(size_t[] <code class="code">numbers</code>...);
+            <span class="ddoc_anchor" id="ObjectIdentifier.this"></span>@system this(in size_t[] <code class="code">numbers</code>...);
 
           </code>
         </p>
@@ -807,7 +807,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.this.3"></span>this(string <code class="code">str</code>);
+            <span class="ddoc_anchor" id="ObjectIdentifier.this.3"></span>this(in string <code class="code">str</code>);
 
           </code>
         </p>
@@ -876,7 +876,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.opIndex"></span>const @safe OIDNode <code class="code">opIndex</code>(ptrdiff_t <code class="code">index</code>);
+            <span class="ddoc_anchor" id="ObjectIdentifier.opIndex"></span>const nothrow @nogc @safe OIDNode <code class="code">opIndex</code>(in ptrdiff_t <code class="code">index</code>);
 
           </code>
         </p>
@@ -915,7 +915,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.opSlice"></span>const @system OIDNode[] <code class="code">opSlice</code>(ptrdiff_t <code class="code">index1</code>, ptrdiff_t <code class="code">index2</code>);
+            <span class="ddoc_anchor" id="ObjectIdentifier.opSlice"></span>const nothrow @nogc @system OIDNode[] <code class="code">opSlice</code>(in ptrdiff_t <code class="code">index1</code>, in ptrdiff_t <code class="code">index2</code>);
 
           </code>
         </p>
@@ -954,7 +954,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.opDollar"></span>const nothrow @safe size_t <code class="code">opDollar</code>();
+            <span class="ddoc_anchor" id="ObjectIdentifier.opDollar"></span>const nothrow @nogc @safe size_t <code class="code">opDollar</code>();
 
           </code>
         </p>
@@ -987,7 +987,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.descriptor"></span>const @safe string <code class="code">descriptor</code>(size_t <code class="code">index</code>);
+            <span class="ddoc_anchor" id="ObjectIdentifier.descriptor"></span>const nothrow @nogc @safe string <code class="code">descriptor</code>(in size_t <code class="code">index</code>);
 
           </code>
         </p>

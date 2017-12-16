@@ -18,7 +18,7 @@ struct ASN1ContextNegotiation
 
 ///
 public
-struct ASN1ContextSwitchingTypeSyntaxes
+struct ASN1Syntaxes
 {
     ///
     public ObjectIdentifier abstractSyntax;
@@ -35,7 +35,7 @@ public
 struct ASN1ContextSwitchingTypeIdentification
 {
     ///
-    public Nullable!ASN1ContextSwitchingTypeSyntaxes syntaxes;
+    public Nullable!ASN1Syntaxes syntaxes;
     ///
     public Nullable!ObjectIdentifier syntax;
     ///
