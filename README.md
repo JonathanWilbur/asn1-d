@@ -150,11 +150,13 @@ Version 1.0.0-beta was released on November 8th, 2017.
 
 - [x] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
 - [x] Find and change integral types to either `size_t` or `ptrdiff_t`
-- [ ] Use `size_t` and `ptrdiff_t` appropriately for array indices and lengths
+- [x] Use `size_t` and `ptrdiff_t` appropriately for array indices and lengths
 - [x] Extract the string constants into either `codec.d`, `asn1.d`, or something else.
 - [x] Prohibit leading zeroes in `tagNumber`, per section 8.1.2.4.2, item C, from X.690.
 - [x] Perform unit tests on the `tagNumber` encoding
 - [x] Check the encoding of `tagNumber` for non-terminating
+- [x] Reconcile `BIT STRING` properties among codecs
+- [ ] Check for `REVIEW`, `FIXME`, `TODO`, etc.
 - [ ] Prohibit leading zeroes in encoding and decoding of `INTEGER` and `ENUMERATED`
 - [x] Fix OID / ROID
   - [x] Review that un-terminating OID components do not crash program.
@@ -211,6 +213,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `decode-ber`
   - [x] `decode-cer`
 - [ ] Fuzz testing to ensure `RangeError` is never thrown. If it is thrown, it means that there are vulnerabilities if compiled with `-boundscheck=off` flag. Google's [OSS-Fuzz](https://github.com/google/oss-fuzz) tool looks like a pretty promising way to test this.
+- [ ] Test really large items
 - [x] Test that all one-byte elements throw exceptions
 - [x] Test an OID with a node with a values 127, 128, and 0.
 - [x] Test even more significant mathematical values with `realType()`:

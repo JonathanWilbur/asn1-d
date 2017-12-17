@@ -266,10 +266,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             truncated from the start of the INTEGER, with one loop for positive
             and another loop for negative numbers. 
         */
-        ptrdiff_t startOfNonPadding = 0;
+        size_t startOfNonPadding = 0u;
         if (value >= 0)
         {
-            for (ptrdiff_t i = 0; i < ub.length-1; i++)
+            for (size_t i = 0u; i < ub.length-1; i++)
             {
                 if (ub[i] == 0x00 && ((ub[i+1] & 0x80) == 0x00)) 
                     startOfNonPadding++;
@@ -277,7 +277,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         }
         else
         {
-            for (ptrdiff_t i = 0; i < ub.length-1; i++)
+            for (size_t i = 0u; i < ub.length-1; i++)
             {
                 if (ub[i] == 0xFF && ((ub[i+1] & 0x80) == 0x80)) 
                     startOfNonPadding++;
@@ -345,7 +345,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 );
             
             bool[] ret;
-            for (ptrdiff_t i = 1; i < this.value.length; i++)
+            for (size_t i = 1; i < this.value.length; i++)
             {
                 ret ~= [
                     (this.value[i] & 0b1000_0000u ? true : false),
@@ -404,7 +404,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                     );
                 
                 bool[] pret;
-                for (ptrdiff_t i = 1; i < primitives[p].value.length; i++)
+                for (size_t i = 1; i < primitives[p].value.length; i++)
                 {
                     pret ~= [
                         (primitives[p].value[i] & 0b1000_0000u ? true : false),
@@ -729,8 +729,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         
         // Breaks bytes into groups, where each group encodes one OID component.
         ubyte[][] byteGroups;
-        ptrdiff_t lastTerminator = 1;
-        for (ptrdiff_t i = 1; i < this.length; i++)
+        size_t lastTerminator = 1;
+        for (size_t i = 1; i < this.length; i++)
         {
             if (!(this.value[i] & 0x80u))
             {
@@ -753,7 +753,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 );
 
             numbers ~= 0u;
-            for (ptrdiff_t i = 0; i < byteGroup.length; i++)
+            for (size_t i = 0u; i < byteGroup.length; i++)
             {
                 numbers[$-1] <<= 7;
                 numbers[$-1] |= cast(size_t) (byteGroup[i] & 0x7Fu);
@@ -2732,8 +2732,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         
         // Breaks bytes into groups, where each group encodes one OID component.
         ubyte[][] byteGroups;
-        ptrdiff_t lastTerminator = 0;
-        for (ptrdiff_t i = 0; i < this.length; i++)
+        size_t lastTerminator = 0u;
+        for (size_t i = 0u; i < this.length; i++)
         {
             if (!(this.value[i] & 0x80u))
             {
@@ -2757,7 +2757,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 );
 
             numbers ~= 0u;
-            for (ptrdiff_t i = 0; i < byteGroup.length; i++)
+            for (size_t i = 0u; i < byteGroup.length; i++)
             {
                 numbers[$-1] <<= 7;
                 numbers[$-1] |= cast(size_t) (byteGroup[i] & 0x7Fu);
@@ -4408,7 +4408,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 else version (LittleEndian)
                 {
                     dstring segment;
-                    ptrdiff_t i = 0;
+                    size_t i = 0u;
                     while (i < primitives[p].value.length-3)
                     {
                         ubyte[] character;
@@ -5259,7 +5259,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                     "Type tag is too big."
                 );
 
-            for (ptrdiff_t i = 1; i < cursor; i++)
+            for (size_t i = 1; i < cursor; i++)
             {
                 this.tagNumber <<= 7;
                 this.tagNumber |= cast(size_t) (bytes[i] & 0x7Fu);

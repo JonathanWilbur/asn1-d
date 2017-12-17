@@ -255,10 +255,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             truncated from the start of the INTEGER, with one loop for positive
             and another loop for negative numbers. 
         */
-        ptrdiff_t startOfNonPadding = 0;
+        size_t startOfNonPadding = 0u;
         if (value >= 0)
         {
-            for (ptrdiff_t i = 0; i < ub.length-1; i++)
+            for (size_t i = 0u; i < ub.length-1; i++)
             {
                 if (ub[i] == 0x00 && ((ub[i+1] & 0x80) == 0x00)) 
                     startOfNonPadding++;
@@ -266,7 +266,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         }
         else
         {
-            for (ptrdiff_t i = 0; i < ub.length-1; i++)
+            for (size_t i = 0u; i < ub.length-1; i++)
             {
                 if (ub[i] == 0xFF && ((ub[i+1] & 0x80) == 0x80)) 
                     startOfNonPadding++;
@@ -323,7 +323,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             );
         
         bool[] ret;
-        for (ptrdiff_t i = 1; i < this.value.length; i++)
+        for (size_t i = 1; i < this.value.length; i++)
         {
             ret ~= [
                 (this.value[i] & 0b1000_0000u ? true : false),
@@ -350,22 +350,15 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     override public @property
     void bitString(bool[] value)
     {
-        if (value == []) // FIXME: Or, if there are no 1-bits
+        ubyte[] ub;
+        ub.length = ((value.length / 8u) + (value.length % 8u ? 1u : 0u)); 
+        for (size_t i = 0u; i < value.length; i++)
         {
-            this.value = [ 0x00u ];
-            return;
+            if (value[i] == false) continue;
+            ub[(i/8u)] |= (0b1000_0000u >> (i % 8u));
         }
-        // REVIEW: I feel like there is a better way to do this...
-        this.value = [ cast(ubyte) (8u - (value.length % 8u)) ];
+        this.value = [ cast(ubyte) (8u - (value.length % 8u)) ] ~ ub;
         if (this.value[0] == 0x08u) this.value[0] = 0x00u;
-
-        ptrdiff_t i = 0;
-        while (i < value.length)
-        {
-            if (!(i % 8u)) this.value ~= 0x00u;
-            this.value[$-1] |= ((value[i] ? 0b1000_0000u : 0b0000_0000u) >> (i % 8u));
-            i++;
-        }
     }
 
     /**
@@ -475,8 +468,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         
         // Breaks bytes into groups, where each group encodes one OID component.
         ubyte[][] byteGroups;
-        ptrdiff_t lastTerminator = 1;
-        for (ptrdiff_t i = 1; i < this.length; i++)
+        size_t lastTerminator = 1;
+        for (size_t i = 1; i < this.length; i++)
         {
             if (!(this.value[i] & 0x80u))
             {
@@ -499,7 +492,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 );
 
             numbers ~= 0u;
-            for (ptrdiff_t i = 0; i < byteGroup.length; i++)
+            for (size_t i = 0u; i < byteGroup.length; i++)
             {
                 numbers[$-1] <<= 7;
                 numbers[$-1] |= cast(size_t) (byteGroup[i] & 0x7Fu);
@@ -1192,7 +1185,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     {
         import std.conv : ConvException, ConvOverflowException, to;
 
-        if (this.value.length == 0) return cast(T) 0.0;
+        if (this.value.length == 0u) return cast(T) 0.0;
 
         if (this.value == [ 0x40u ]) return T.infinity;
         if (this.value == [ 0x41u ]) return -T.infinity;
@@ -2437,8 +2430,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         
         // Breaks bytes into groups, where each group encodes one OID component.
         ubyte[][] byteGroups;
-        ptrdiff_t lastTerminator = 0;
-        for (ptrdiff_t i = 0; i < this.length; i++)
+        size_t lastTerminator = 0u;
+        for (size_t i = 0u; i < this.length; i++)
         {
             if (!(this.value[i] & 0x80u))
             {
@@ -2462,7 +2455,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 );
 
             numbers ~= 0u;
-            for (ptrdiff_t i = 0; i < byteGroup.length; i++)
+            for (size_t i = 0u; i < byteGroup.length; i++)
             {
                 numbers[$-1] <<= 7;
                 numbers[$-1] |= cast(size_t) (byteGroup[i] & 0x7Fu);
@@ -3221,7 +3214,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         else version (LittleEndian)
         {
             dstring ret;
-            ptrdiff_t i = 0;
+            size_t i = 0u;
             while (i < this.value.length-3)
             {
                 ubyte[] character;
@@ -3586,7 +3579,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         else version (LittleEndian)
         {
             wstring ret;
-            ptrdiff_t i = 0;
+            size_t i = 0u;
             while (i < this.value.length-1)
             {
                 ubyte[] character;
@@ -3823,7 +3816,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     "Type tag is too big."
                 );
 
-            for (ptrdiff_t i = 1; i < cursor; i++)
+            for (size_t i = 1; i < cursor; i++)
             {
                 this.tagNumber <<= 7;
                 this.tagNumber |= cast(size_t) (bytes[i] & 0x7Fu);
