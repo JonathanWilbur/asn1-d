@@ -181,8 +181,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     /**
         Decodes a signed integer.
         
-        Bytes are stored in big-endian order, where the bytes represent 
-        the two's complement encoding of the integer.
+        The integer is encoded big endian in two's complement form on the 
+        smallest number of bytes that can encode it.
 
         Returns: any chosen signed integral type
         Throws:
@@ -209,7 +209,23 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 debugInformationText ~ reportBugsText
             );
 
-        // REVIEW: Does this need to apply to BER as well?
+        if 
+        (
+            this.value.length > 1u &&
+            (
+                (this.value[0] == 0x00u && (!(this.value[1] & 0x80u))) || // Unnecessary positive leading bytes
+                (this.value[0] == 0xFFu && (this.value[1] & 0x80u)) // Unnecessary negative leading bytes
+            )
+        )
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "an INTEGER that was encoded on more than the minimum " ~
+                "necessary bytes. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
         /* NOTE:
             Because the DER INTEGER is stored in two's complement form, you 
             can't just apppend 0x00u to the big end of it until it is as long
@@ -230,15 +246,15 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         while (value.length < T.sizeof)
             value = (paddingByte ~ value);
         version (LittleEndian) reverse(value);
-        assert(value.length == T.sizeof);
+        version (unittest) assert(value.length == T.sizeof);
         return *cast(T *) value.ptr;
     }
 
     /**
         Encodes an integer.
-        
-        Bytes are stored in big-endian order, where the bytes represent 
-        the two's complement encoding of the integer.
+
+        The integer is encoded big endian in two's complement form on the 
+        smallest number of bytes that can encode it.
     */
     public @property @system nothrow
     void integer(T)(T value)
@@ -254,22 +270,35 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             encode it. The loops below identify how many bytes can be 
             truncated from the start of the INTEGER, with one loop for positive
             and another loop for negative numbers. 
+            
+            From X.690, Section 8.3.2:
+
+            If the contents octets of an integer value encoding consist of more 
+            than one octet, then the bits of the first octet and bit 8 of the 
+            second octet:
+                a) shall not all be ones; and
+                b) shall not all be zero.
+                NOTE – These rules ensure that an integer value is always 
+                encoded in the smallest possible number of octets. 
         */
         size_t startOfNonPadding = 0u;
-        if (value >= 0)
+        if (T.sizeof > 1u)
         {
-            for (size_t i = 0u; i < ub.length-1; i++)
+            if (value >= 0)
             {
-                if (ub[i] == 0x00 && ((ub[i+1] & 0x80) == 0x00)) 
-                    startOfNonPadding++;
+                for (size_t i = 0u; i < ub.length-1; i++)
+                {
+                    if (ub[i] != 0x00u) break;
+                    if (!(ub[i+1] & 0x80u)) startOfNonPadding++;
+                }
             }
-        }
-        else
-        {
-            for (size_t i = 0u; i < ub.length-1; i++)
+            else
             {
-                if (ub[i] == 0xFF && ((ub[i+1] & 0x80) == 0x80)) 
-                    startOfNonPadding++;
+                for (size_t i = 0u; i < ub.length-1; i++)
+                {
+                    if (ub[i] != 0xFFu) break;
+                    if (ub[i+1] & 0x80u) startOfNonPadding++;
+                }
             }
         }
 
@@ -1954,6 +1983,23 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 debugInformationText ~ reportBugsText
             );
 
+        if 
+        (
+            this.value.length > 1u &&
+            (
+                (this.value[0] == 0x00u && (!(this.value[1] & 0x80u))) || // Unnecessary positive leading bytes
+                (this.value[0] == 0xFFu && (this.value[1] & 0x80u)) // Unnecessary negative leading bytes
+            )
+        )
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "an INTEGER that was encoded on more than the minimum " ~
+                "necessary bytes. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
         /* NOTE:
             Because the DER ENUMERATED is stored in two's complement form, you 
             can't just apppend 0x00u to the big end of it until it is as long
@@ -1973,8 +2019,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
         while (value.length < T.sizeof)
             value = (paddingByte ~ value);
-
         version (LittleEndian) reverse(value);
+        version (unittest) assert(value.length == T.sizeof);
         return *cast(T *) value.ptr;
     }
 
@@ -1982,14 +2028,53 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Encodes an ENUMERATED type from an integer. In DER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
     */
-    public @property @system
+    public @property @system nothrow
     void enumerated(T)(T value)
     {
         ubyte[] ub;
         ub.length = T.sizeof;
         *cast(T *)&ub[0] = value;
         version (LittleEndian) reverse(ub);
-        this.value = ub[0 .. $];
+    
+        /*
+            An ENUMERATED must be encoded on the fewest number of bytes than can
+            encode it. The loops below identify how many bytes can be 
+            truncated from the start of the ENUMERATED, with one loop for positive
+            and another loop for negative numbers. ENUMERATED is encoded in the
+            same exact way that INTEGER is encoded.
+            
+            From X.690, Section 8.3.2:
+
+            If the contents octets of an integer value encoding consist of more 
+            than one octet, then the bits of the first octet and bit 8 of the 
+            second octet:
+                a) shall not all be ones; and
+                b) shall not all be zero.
+                NOTE – These rules ensure that an integer value is always 
+                encoded in the smallest possible number of octets. 
+        */
+        size_t startOfNonPadding = 0u;
+        if (T.sizeof > 1u)
+        {
+            if (value >= 0)
+            {
+                for (size_t i = 0u; i < ub.length-1; i++)
+                {
+                    if (ub[i] != 0x00u) break;
+                    if (!(ub[i+1] & 0x80u)) startOfNonPadding++;
+                }
+            }
+            else
+            {
+                for (size_t i = 0u; i < ub.length-1; i++)
+                {
+                    if (ub[i] != 0xFFu) break;
+                    if (ub[i+1] & 0x80u) startOfNonPadding++;
+                }
+            }
+        }
+
+        this.value = ub[startOfNonPadding .. $];
     }
 
     ///
@@ -3990,7 +4075,7 @@ unittest
     // Test data
     ubyte[] dataEndOfContent = [ 0x00u, 0x00u ];
     ubyte[] dataBoolean = [ 0x01u, 0x01u, 0xFFu ];
-    ubyte[] dataInteger = [ 0x02u, 0x08u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0xFFu ];
+    ubyte[] dataInteger = [ 0x02u, 0x01u, 0x1Bu ];
     ubyte[] dataBitString = [ 0x03u, 0x03u, 0x07u, 0xF0u, 0xF0u ];
     ubyte[] dataOctetString = [ 0x04u, 0x04u, 0xFF, 0x00u, 0x88u, 0x14u ];
     ubyte[] dataNull = [ 0x05u, 0x00u ];
@@ -4000,7 +4085,7 @@ unittest
         0x08u, 0x0Bu, 0x06u, 0x03u, 0x29u, 0x05u, 0x07u, 0x82u, 
         0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
     ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
-    ubyte[] dataEnum = [ 0x0Au, 0x08u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0x00u, 0xFFu ];
+    ubyte[] dataEnum = [ 0x0Au, 0x01u, 0x3Fu ];
     ubyte[] dataEmbeddedPDV = [ 
         0x0Bu, 0x0Au, 0x80u, 0x02u, 0x85u, 0x00u, 0x82u, 0x04u, 
         0x01u, 0x02u, 0x03u, 0x04u ];
@@ -4074,7 +4159,7 @@ unittest
 
     // Ensure accessors decode the data correctly.
     assert(result[1].boolean == true);
-    assert(result[2].integer!long == 255L);
+    assert(result[2].integer!long == 27L);
     assert(result[3].bitString == [ true, true, true, true, false, false, false, false, true ]);
     assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
     assert(result[6].objectIdentifier == new OID(OIDNode(0x01u), OIDNode(0x03u), OIDNode(0x06u), OIDNode(0x04u), OIDNode(0x01u)));
@@ -4082,7 +4167,7 @@ unittest
     assert((x.identification.syntax == new OID(1u, 1u, 5u, 7u)) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
-    assert(result[10].enumerated!long == 255L);
+    assert(result[10].enumerated!long == 63L);
     assert((m.identification.fixed == true) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier == [ OIDNode(6), OIDNode(4), OIDNode(1) ]);
@@ -4110,7 +4195,7 @@ unittest
 
     // Ensure accessors decode the data correctly.
     assert(result[1].boolean == true);
-    assert(result[2].integer!long == 255L);
+    assert(result[2].integer!long == 27L);
     assert(result[3].bitString == [ true, true, true, true, false, false, false, false, true ]);
     assert(result[4].octetString == [ 0xFFu, 0x00u, 0x88u, 0x14u ]);
     assert(result[6].objectIdentifier == new OID(OIDNode(0x01u), OIDNode(0x03u), OIDNode(0x06u), OIDNode(0x04u), OIDNode(0x01u)));
@@ -4118,7 +4203,7 @@ unittest
     assert((x.identification.syntax == new OID(1u, 1u, 5u, 7u)) && (x.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[9].realType!float == 0.15625);
     assert(result[9].realType!double == 0.15625);
-    assert(result[10].enumerated!long == 255L);
+    assert(result[10].enumerated!long == 63L);
     assert((m.identification.fixed == true) && (m.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]));
     assert(result[12].utf8String == "HENLO");
     assert(result[13].relativeObjectIdentifier == [ OIDNode(6), OIDNode(4), OIDNode(1) ]);

@@ -881,8 +881,8 @@ assertThrown!ASN1ValueInvalidException(dv.<span class="psymbol">boolean</span>);
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    Bytes are stored in big-endian order, where the bytes represent
-        the two's complement encoding of the <code class="code">integer</code>.
+    The <code class="code">integer</code> is encoded big endian in two's complement form on the
+        smallest number of bytes that can encode it.
 
 
   </p>
@@ -936,8 +936,8 @@ assertThrown!ASN1ValueInvalidException(dv.<span class="psymbol">boolean</span>);
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    Bytes are stored in big-endian order, where the bytes represent
-        the two's complement encoding of the <code class="code">integer</code>.
+    The <code class="code">integer</code> is encoded big endian in two's complement form on the
+        smallest number of bytes that can encode it.
   </p>
 </div>
 
@@ -1899,7 +1899,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.enumerated.2"></span>@property @system void <code class="code">enumerated</code>(T)(T <code class="code">value</code>);
+            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.enumerated.2"></span>nothrow @property @system void <code class="code">enumerated</code>(T)(T <code class="code">value</code>);
 
           </code>
         </p>

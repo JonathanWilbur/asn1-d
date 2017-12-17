@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.16](http://semver.org/)
+* Version: [1.0.0-beta.17](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -156,8 +156,12 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Perform unit tests on the `tagNumber` encoding
 - [x] Check the encoding of `tagNumber` for non-terminating
 - [x] Reconcile `BIT STRING` properties among codecs
-- [ ] Check for `REVIEW`, `FIXME`, `TODO`, etc.
-- [ ] Prohibit leading zeroes in encoding and decoding of `INTEGER` and `ENUMERATED`
+- [ ] Check for:
+  - [ ] `TODO`
+  - [ ] `FIXME`
+  - [ ] `REVIEW`
+- [x] Prohibit leading zeroes in encoding and decoding of `INTEGER` and `ENUMERATED`
+- [x] Create ranged unit tests for `INTEGER` and `ENUMERATED`
 - [x] Fix OID / ROID
   - [x] Review that un-terminating OID components do not crash program.
   - [x] Throw exception if encoded OID type contains `0x80u` (See Note #1 below.)
@@ -181,6 +185,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [ ] Fix constructors to accept `const` variations.
   - [ ] Particularly, the `OID` constructor
 - [ ] Make as much code `const` or `immutable` as possible
+- [ ] Write unit testing information to terminal
 - [ ] Code de-duplication
   - [ ] Since the `characterString` code is so similar to `embeddedPDV`, could I de-duplicate?
   - [x] ~~Break X.690 common functionality into template mixins~~ (See Note #2 below.)
