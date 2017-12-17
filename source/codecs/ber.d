@@ -4158,7 +4158,35 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         cursor++;
         if (this.tagNumber >= 31u)
         {
-            debug (asn1) writeln("Naughty tag: ", this.tagNumber);
+            /* NOTE:
+                Section 8.1.2.4.2, point C of the International 
+                Telecommunications Union's X.690 specification says:
+
+                "bits 7 to 1 of the first subsequent octet shall not all be zero."
+                
+                in reference to the bytes used to encode the tag number in long
+                form, which happens when the least significant five bits of the
+                first byte are all set.
+
+                This essentially means that the long-form tag number must be
+                encoded on the fewest possible octets. If the first byte is 
+                0x80, then it is not encoded on the fewest possible octets.
+            */
+            if (bytes[cursor] == 0b1000_0000u)
+                throw new ASN1TagException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a Basic Encoding Rules (BER) encoded element whose tag " ~
+                    "number was encoded in long form in the octets following " ~
+                    "the first octet of the type tag, and whose tag number " ~
+                    "was encoded with a 'leading zero' byte, 0x80. When " ~
+                    "using Basic Encoding Rules (BER), the tag number must " ~
+                    "be encoded on the smallest number of octets possible, " ~
+                    "which the inclusion of leading zero bytes necessarily " ~
+                    "contradicts. " ~ 
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
+            
             this.tagNumber = 0u;
 
             // This loop looks for the end of the encoded tag number.
@@ -4674,4 +4702,29 @@ unittest
     el.realType!double = 1.0;
     assert(approxEqual(el.realType!float, 1.0));
     assert(approxEqual(el.realType!double, 1.0));
+}
+
+// Test long-form tag number (when # >= 31) with leading zero bytes (0x80)
+@system
+unittest
+{
+    ubyte[] invalid;
+    invalid = [ 0b10011111u, 0b10000000u ];
+    assertThrown!ASN1TagException(new BERElement(invalid));
+
+    invalid = [ 0b10011111u, 0b10000000u, 0b10000000u ];
+    assertThrown!ASN1TagException(new BERElement(invalid));
+
+    invalid = [ 0b10011111u, 0b10000000u, 0b10000111u ];
+    assertThrown!ASN1TagException(new BERElement(invalid));
+}
+
+// Test long-form tag numbers do not encode with leading zeroes
+@system
+unittest
+{
+    ubyte[] invalid;
+    BERElement element = new BERElement();
+    element.tagNumber = 73u;
+    assert((element.toBytes)[1] != 0x80u);
 }

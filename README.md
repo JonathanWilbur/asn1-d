@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.14](http://semver.org/)
+* Version: [1.0.0-beta.15](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -152,6 +152,10 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Find and change integral types to either `size_t` or `ptrdiff_t`
 - [ ] Use `size_t` and `ptrdiff_t` appropriately for array indices and lengths
 - [x] Extract the string constants into either `codec.d`, `asn1.d`, or something else.
+- [x] Prohibit leading zeroes in `tagNumber`, per section 8.1.2.4.2, item C, from X.690.
+- [x] Perform unit tests on the `tagNumber` encoding
+- [x] Check the encoding of `tagNumber` for non-terminating
+- [ ] Prohibit leading zeroes in encoding and decoding of `INTEGER` and `ENUMERATED`
 - [x] Fix OID / ROID
   - [x] Review that un-terminating OID components do not crash program.
   - [x] Throw exception if encoded OID type contains `0x80u` (See Note #1 below.)
@@ -172,7 +176,6 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Unittest all variations of `EXTERNAL`'s `encoding`
   - [x] ~~Implement `OBJECT IDENTIFIER` restrictions for `CharacterString`~~ (I can't find documentation of this.)
 - [ ] Add Object Identifier constants from Section 12 of X.690
-- [ ] Check the encoding of `tagNumber` for non-terminating
 - [ ] Fix constructors to accept `const` variations.
   - [ ] Particularly, the `OID` constructor
 - [ ] Make as much code `const` or `immutable` as possible
