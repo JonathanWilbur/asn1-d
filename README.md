@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.17](http://semver.org/)
+* Version: [1.0.0-beta.18](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -156,6 +156,11 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Perform unit tests on the `tagNumber` encoding
 - [x] Check the encoding of `tagNumber` for non-terminating
 - [x] Reconcile `BIT STRING` properties among codecs
+- [x] Definite Long Length Encoding:
+  - BER does not have to encode or decode on the fewest octets
+  - CER MUST encode and decode the fewest octets
+  - DER MUST encode and decode the fewest octets
+- [x] Ensure that length <= 127 is not encoded in long form for CER and DER
 - [ ] Check for:
   - [ ] `TODO`
   - [ ] `FIXME`
@@ -199,6 +204,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Ensure all numeric literals end with `u`
   - [ ] Remove trailing spaces
   - [ ] Use either the term `byte` or `octet` consistently for variable names
+    - [ ] Especially in `toBytes()`
   - [x] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
 - [x] Configure `.vscode/tasks.json`
 - [x] Configure `dub.json`
@@ -228,9 +234,14 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `max` of every integral type
   - [x] `min` of every integral type
 - [ ] Cross-Platform Testing
-  - [ ] Windows
-  - [x] Mac OS X
-  - [x] Linux
+  - [ ] Windows (Which is Big-Endian)
+    - [ ] 64-Bit
+    - [ ] 32-Bit
+  - [x] Mac OS X (Which is Little-Endian)
+    - [ ] 64-Bit
+  - [x] Linux (Which is Little-Endian)
+    - [ ] 64-Bit
+    - [ ] 32-Bit
 - [ ] Comparison Testing with
   - [ ] [PyASN1](http://pyasn1.sourceforge.net)
   - [ ] [@YuryStrozhevsky](https://github.com/YuryStrozhevsky)'s [ASN.1 BER Codec](https://github.com/YuryStrozhevsky/C-plus-plus-ASN.1-2008-coder-decoder)

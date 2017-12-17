@@ -4339,17 +4339,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                     );
 
                 cursor++;
-                ubyte[] lengthBytes;
-                lengthBytes.length = size_t.sizeof;
-
-                // REVIEW: I sense that there is a simpler loop that would work.
+                ubyte[] lengthNumberOctets;
+                lengthNumberOctets.length = size_t.sizeof;
                 for (ubyte i = numberOfLengthOctets; i > 0u; i--)
                 {
-                    lengthBytes[size_t.sizeof-i] = bytes[cursor+numberOfLengthOctets-i];
+                    lengthNumberOctets[size_t.sizeof-i] = bytes[cursor+numberOfLengthOctets-i];
                 }
-                version (LittleEndian) reverse(lengthBytes);
-                size_t length = *cast(size_t *) lengthBytes.ptr;
-
+                version (LittleEndian) reverse(lengthNumberOctets);
+                size_t length = *cast(size_t *) lengthNumberOctets.ptr;
                 cursor += (numberOfLengthOctets);
                 this.value = bytes[cursor .. cursor+length];
                 return ((cursor + length) - start);
@@ -4448,22 +4445,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 }
                 else
                 {
-                    ulong length = cast(ulong) this.value.length;
-                    version (BigEndian)
-                    {
-                        lengthOctets = [ cast(ubyte) 0x88u ] ~ cast(ubyte[]) *cast(ubyte[8] *) &length;
-                    }
-                    else version (LittleEndian)
-                    {
-                        // REVIEW: You could use better variable names here.
-                        ubyte[] lengthBytes = cast(ubyte[]) *cast(ubyte[8] *) &length;
-                        reverse(lengthBytes);
-                        lengthOctets = [ cast(ubyte) 0x88u ] ~ lengthBytes;
-                    }
-                    else
-                    {
-                        static assert(0, "Could not determine endianness. Cannot compile.");
-                    }
+                    lengthOctets = [ cast(ubyte) 0x80u + cast(ubyte) size_t.sizeof ];
+                    size_t length = cast(size_t) this.value.length;
+                    ubyte[] lengthNumberOctets = cast(ubyte[]) *cast(ubyte[size_t.sizeof] *) &length;
+                    version (LittleEndian) reverse(lengthNumberOctets);
+                    lengthOctets ~= lengthNumberOctets;
                 }
                 break;
             }
@@ -4828,4 +4814,12 @@ unittest
     BERElement element = new BERElement();
     element.tagNumber = 73u;
     assert((element.toBytes)[1] != 0x80u);
+}
+
+// Test that a misleading definite-long length byte does not throw a RangeError.
+@system
+unittest
+{
+    ubyte[] invalid = [ 0b0000_0000u, 0b1000_0001u ];
+    assertThrown!ASN1ValueTooSmallException(new BERElement(invalid)); // FIXME: Change this exception!
 }

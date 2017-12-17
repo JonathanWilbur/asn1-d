@@ -5377,17 +5377,41 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                         "Length tag terminated prematurely."
                     );
 
-                cursor++;
-                ubyte[] lengthBytes;
-                lengthBytes.length = size_t.sizeof;
+                if (bytes[++cursor] == 0x00u)
+                    throw new ASN1InvalidLengthException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Canonical Encoding Rules (CER) encoded " ~
+                        "element whose length was encoded in definite long " ~
+                        "form, and encoded on more octets than necessary, " ~
+                        "which is prohibited by the specification for " ~
+                        "Canonical Encoding Rules (CER). " ~
+                        forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    );
 
-                // REVIEW: I sense that there is a simpler loop that would work.
+                ubyte[] lengthNumberOctets;
+                lengthNumberOctets.length = size_t.sizeof;
                 for (ubyte i = numberOfLengthOctets; i > 0u; i--)
                 {
-                    lengthBytes[size_t.sizeof-i] = bytes[cursor+numberOfLengthOctets-i];
+                    lengthNumberOctets[size_t.sizeof-i] = bytes[cursor+numberOfLengthOctets-i];
                 }
-                version (LittleEndian) reverse(lengthBytes);
-                size_t length = *cast(size_t *) lengthBytes.ptr;
+                version (LittleEndian) reverse(lengthNumberOctets);
+                size_t length = *cast(size_t *) lengthNumberOctets.ptr;
+
+                if (length <= 127u)
+                    throw new ASN1InvalidLengthException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Canonical Encoding Rules (CER) encoded " ~
+                        "element whose length was encoded in definite long " ~
+                        "form, and encoded on more octets than necessary, " ~
+                        "which is prohibited by the specification for " ~
+                        "Canonical Encoding Rules (CER). Specifically, it " ~
+                        "was encoded in definite-long form when it was less " ~
+                        "than or equal to 127, which could have been encoded " ~
+                        "in definite-short form. " ~
+                        forMoreInformationText ~ debugInformationText ~ reportBugsText
+                    );
 
                 cursor += (numberOfLengthOctets);
                 this.value = bytes[cursor .. cursor+length];
@@ -5487,22 +5511,18 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 }
                 else
                 {
-                    ulong length = cast(ulong) this.value.length;
-                    version (BigEndian)
+                    size_t length = cast(size_t) this.value.length;
+                    ubyte[] lengthNumberOctets = cast(ubyte[]) *cast(ubyte[size_t.sizeof] *) &length;
+                    version (LittleEndian) reverse(lengthNumberOctets);
+                    size_t startOfNonPadding = 0u;
+                    for (size_t i = 0u; i < size_t.sizeof; i++)
                     {
-                        lengthOctets = [ cast(ubyte) 0x88u ] ~ cast(ubyte[]) *cast(ubyte[8] *) &length;
+                        if (lengthNumberOctets[i] != 0x00u) break;
+                        startOfNonPadding++;
                     }
-                    else version (LittleEndian)
-                    {
-                        // REVIEW: You could use better variable names here.
-                        ubyte[] lengthBytes = cast(ubyte[]) *cast(ubyte[8] *) &length;
-                        reverse(lengthBytes);
-                        lengthOctets = [ cast(ubyte) 0x88u ] ~ lengthBytes;
-                    }
-                    else
-                    {
-                        static assert(0, "Could not determine endianness. Cannot compile.");
-                    }
+                    lengthNumberOctets = lengthNumberOctets[startOfNonPadding .. $];
+                    lengthOctets = [ cast(ubyte) (0x80u + lengthNumberOctets.length) ];
+                    lengthOctets ~= lengthNumberOctets;
                 }
                 break;
             }
@@ -5853,4 +5873,20 @@ unittest
     CERElement element = new CERElement();
     element.tagNumber = 73u;
     assert((element.toBytes)[1] != 0x80u);
+}
+
+// Test that a misleading definite-long length byte does not throw a RangeError.
+@system
+unittest
+{
+    ubyte[] invalid = [ 0b0000_0000u, 0b1000_0001u ];
+    assertThrown!ASN1ValueTooSmallException(new CERElement(invalid)); // FIXME: Change this exception!
+}
+
+// Test that leading zeroes in definite long length encodings throw exceptions
+@system
+unittest
+{
+    ubyte[] invalid = [ 0b0000_0000u, 0b1000_0010u, 0b0000_0000u, 0b0000_0001u ];
+    assertThrown!ASN1InvalidLengthException(new CERElement(invalid));
 }
