@@ -44,6 +44,7 @@ version (unittest)
     public import core.exception : AssertError, RangeError;
     public import std.exception : assertNotThrown, assertThrown;
     public import std.math : approxEqual;
+    public import std.stdio : write, writefln, writeln;
 }
 
 public import std.array : appender, Appender;

@@ -3987,6 +3987,25 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         forMoreInformationText ~ debugInformationText ~ reportBugsText
                     );
 
+                if ((cursor + length) < cursor)
+                    throw new ASN1ValueTooBigException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Basic Encoding Rules (BER) encoded element " ~ 
+                        "that indicated that it was exceedingly large--so " ~
+                        "large, in fact, that it cannot be stored on this " ~
+                        "computer (18 exabytes if you are on a 64-bit system). " ~
+                        "This may indicate that the data you attempted to " ~
+                        "decode was either corrupted, malformed, or deliberately " ~
+                        "crafted to hack you. You would be wise to ensure that " ~
+                        "you are running the latest stable version of this " ~
+                        "library. "
+                    );
+
+                if ((cursor + length) > bytes.length)
+                    throw new ASN1ValueTooSmallException
+                    ("DER-encoded value terminated prematurely.");
+
                 cursor += (numberOfLengthOctets);
                 this.value = bytes[cursor .. cursor+length].dup;
                 return (cursor + length);
@@ -4417,4 +4436,28 @@ unittest
 {
     ubyte[] invalid = [ 0b0000_0000u, 0b1000_0010u, 0b0000_0000u, 0b0000_0001u ];
     assertThrown!ASN1InvalidLengthException(new DERElement(invalid));
+}
+
+// Test that a very large value does not cause a segfault or something
+@system
+unittest
+{
+    size_t biggest = cast(size_t) int.max;
+    ubyte[] big = [ 0x00u, 0x80u ];
+    big[1] += cast(ubyte) int.sizeof;
+    big ~= cast(ubyte[]) *cast(ubyte[int.sizeof] *) &biggest;
+    big ~= [ 0x01u, 0x02u, 0x03u ]; // Plus some arbitrary data.
+    assertThrown!ASN1ValueTooSmallException(new DERElement(big));
+}
+
+// Test that the largest possible item does not cause a segfault or something
+@system
+unittest
+{
+    size_t biggest = size_t.max;
+    ubyte[] big = [ 0x00u, 0x80u ];
+    big[1] += cast(ubyte) size_t.sizeof;
+    big ~= cast(ubyte[]) *cast(ubyte[size_t.sizeof] *) &biggest;
+    big ~= [ 0x01u, 0x02u, 0x03u ]; // Plus some arbitrary data.
+    assertThrown!ASN1ValueTooBigException(new DERElement(big));
 }

@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.21](http://semver.org/)
+* Version: [1.0.0-beta.22](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -190,23 +190,11 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Make as much code `const` or `immutable` as possible
 - [x] Make `Byteable` interface, and implement it on all codecs
 - [x] Add storage classes to `codec` and to its children
-- [ ] Write unit testing information to terminal
-- [ ] Code de-duplication
-  - [ ] Since the `characterString` code is so similar to `embeddedPDV`, could I de-duplicate?
+- [x] Write unit testing information to terminal
+- [x] Code de-duplication
+  - [x] ~~Since the `characterString` code is so similar to `embeddedPDV`, could I de-duplicate?~~
   - [x] ~~Break X.690 common functionality into template mixins~~ (See Note #2 below.)
   - [x] De-duplicate decoding code (private `fromBytes()` method called by constructor)
-- [ ] Check for external reference modification.
-- [ ] Grammar and Styling
-  - [ ] Check for `a` and `an` mixups
-  - [ ] Check for duplicated terminal words
-  - [ ] Check for incorrect data types
-  - [ ] Check for correct terminal spacing
-  - [ ] Add parenthetical abbreviations
-  - [ ] Ensure all numeric literals end with `u`
-  - [ ] Remove trailing spaces
-  - [ ] Use either the term `byte` or `octet` consistently for variable names
-    - [ ] Especially in `toBytes()`
-  - [x] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
 - [x] Configure `.vscode/tasks.json`
 - [x] Configure `dub.json`
 - [x] Either do something with `valueContainsDoubleNull()` or make it public
@@ -224,9 +212,6 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `decode-der`
   - [x] `decode-ber`
   - [x] `decode-cer`
-- [ ] Fuzz testing to ensure `RangeError` is never thrown. If it is thrown, it means that there are vulnerabilities if compiled with `-boundscheck=off` flag. Google's [OSS-Fuzz](https://github.com/google/oss-fuzz) tool looks like a pretty promising way to test this.
-- [ ] Test really large items
-- [ ] Test that .length > 1000 octetStrings cannot modify their references (Specifically for CER, but might as well for others, too.)
 - [x] Test that all one-byte elements throw exceptions
 - [x] Test an OID with a node with a values 127, 128, and 0.
 - [x] Test even more significant mathematical values with `realType()`:
@@ -235,14 +220,17 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Everything [here](https://en.wikipedia.org/wiki/Mathematical_constant)
   - [x] `max` of every integral type
   - [x] `min` of every integral type
+- [x] Test that .length > 1000 octetStrings cannot modify their references
+- [x] Test really large items
+- [ ] Fuzz testing to ensure `RangeError` is never thrown. If it is thrown, it means that there are vulnerabilities if compiled with `-boundscheck=off` flag.
 - [ ] Cross-Platform Testing
   - [ ] Windows (Which is Big-Endian)
     - [ ] 64-Bit
     - [ ] 32-Bit
   - [x] Mac OS X (Which is Little-Endian)
-    - [ ] 64-Bit
+    - [x] 64-Bit
   - [x] Linux (Which is Little-Endian)
-    - [ ] 64-Bit
+    - [x] 64-Bit
     - [ ] 32-Bit
 - [ ] Comparison Testing with
   - [ ] [PyASN1](http://pyasn1.sourceforge.net)
@@ -344,6 +332,17 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] [CVE-2003-0430](https://nvd.nist.gov/vuln/detail/CVE-2003-0430)
   - [ ] [CVE-2002-0036](https://nvd.nist.gov/vuln/detail/CVE-2002-0036)
   - [x] ~~[CVE-2002-0353](https://nvd.nist.gov/vuln/detail/CVE-2002-0353)~~
+- [ ] Grammar and Styling
+  - [ ] Check for `a` and `an` mixups
+  - [ ] Check for duplicated terminal words
+  - [ ] Check for incorrect data types
+  - [ ] Check for correct terminal spacing
+  - [ ] Add parenthetical abbreviations
+  - [ ] Ensure all numeric literals end with `u`
+  - [ ] Remove trailing spaces
+  - [ ] Use either the term `byte` or `octet` consistently for variable names
+    - [ ] Especially in `toBytes()`
+  - [x] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
 - [ ] `cli.lib`
   - [ ] Figure out how to parse negative numbers from the command-line (`-1.0` gets interpreted as a command...)
 - [ ] Documentation

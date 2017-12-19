@@ -129,6 +129,12 @@ class AbstractSyntaxNotation1Element(Element)
 {
     static assert(is(Element : typeof(this)), "Tried to instantiate " ~ typeof(this).stringof ~ " with type parameter " ~ Element.stringof);
 
+    @system
+    unittest 
+    { // REVIEW: Are you sure that the unit tests actually execute in this order?
+        writeln("Running unit tests for codec: " ~ Element.stringof);
+    }
+
     // Constants used to save CPU cycles
     protected immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()
     protected immutable real maxLongAsReal = cast(real) long.max; // Saves CPU cycles in realType()
@@ -489,6 +495,18 @@ class AbstractSyntaxNotation1Element(Element)
         el.octetString = test;
         el.value[4] = 0x88u;
         assert(test[4] == 0x6Au);
+    }
+
+    // Test that mutating a large value does not mutate an external reference.
+    @system
+    unittest
+    {
+        ubyte[] test;
+        test.length = 10000u;
+        Element el = new Element();
+        el.octetString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 0x00u);
     }
 
     ///
@@ -1679,6 +1697,18 @@ class AbstractSyntaxNotation1Element(Element)
         assert(test[4] == 0x6Au);
     }
 
+    // Test that mutating a large value does not mutate an external reference.
+    @system
+    unittest
+    {
+        ubyte[] test;
+        test.length = 10000u;
+        Element el = new Element();
+        el.teletexString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 0x00u);
+    }
+
     abstract public @property
     ubyte[] videotexString() const;
 
@@ -1707,6 +1737,18 @@ class AbstractSyntaxNotation1Element(Element)
         el.videotexString = test;
         el.value[4] = 0x88u;
         assert(test[4] == 0x6Au);
+    }
+
+    // Test that mutating a large value does not mutate an external reference.
+    @system
+    unittest
+    {
+        ubyte[] test;
+        test.length = 10000u;
+        Element el = new Element();
+        el.videotexString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 0x00u);
     }
 
     ///
