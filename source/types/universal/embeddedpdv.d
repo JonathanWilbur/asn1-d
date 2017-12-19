@@ -1,5 +1,4 @@
 module types.universal.embeddedpdv;
-import asn1;
 import types.identification;
 
 /* REVIEW:

@@ -39,7 +39,7 @@ public class ObjectIdentifier
     @system
     unittest
     {
-        OID oid = new OID(1, 3, 6, 4, 1);
+        const OID oid = new OID(1, 3, 6, 4, 1);
         assert(oid.length == 5);
     }
 
@@ -54,7 +54,7 @@ public class ObjectIdentifier
                 first number is not 0, 1, or 2, or if the second number is 
                 greater than 39.
     */
-    public @system
+    public @safe
     this(in size_t[] numbers ...)
     {
         if (numbers.length < 2u)
@@ -89,7 +89,7 @@ public class ObjectIdentifier
             nodes ~= OIDNode(number);
         }
 
-        this.nodes = cast(immutable (OIDNode[])) nodes;
+        this.nodes = nodes.idup;
     }
 
 
@@ -105,7 +105,7 @@ public class ObjectIdentifier
                 than 39.
     */
     public @safe
-    this(immutable OIDNode[] nodes ...)
+    this(OIDNode[] nodes ...)
     {
         if (nodes.length < 2u)
             throw new OIDException
@@ -133,7 +133,7 @@ public class ObjectIdentifier
             throw new OIDException
             ("First object identifier node number can only be 0, 1, or 2.");
 
-        this.nodes = nodes;
+        this.nodes = nodes.idup;
     }
 
     /**
@@ -147,7 +147,7 @@ public class ObjectIdentifier
                 first node is not 0, 1, or 2, or if the second node is greater
                 than 39.
     */
-    public
+    public @safe
     this (in string str)
     {
         import std.array : split;
@@ -194,7 +194,7 @@ public class ObjectIdentifier
             nodes ~= OIDNode(number);
         }
 
-        this.nodes = cast(immutable (OIDNode[])) nodes;
+        this.nodes = nodes.idup;
     }
 
     @system
@@ -222,7 +222,7 @@ public class ObjectIdentifier
     override public @system
     bool opEquals(in Object other) const
     {
-        OID that = cast(OID) other;
+        const OID that = cast(OID) other;
         if (that is null) return false;
         if (this.nodes.length != that.nodes.length) return false;
         for (ptrdiff_t i = 0; i < this.nodes.length; i++)
@@ -235,12 +235,12 @@ public class ObjectIdentifier
     @system
     unittest
     {
-        OID a = new OID(1, 3, 6, 4, 1, 5);
-        OID b = new OID(1, 3, 6, 4, 1, 5);
+        const OID a = new OID(1, 3, 6, 4, 1, 5);
+        const OID b = new OID(1, 3, 6, 4, 1, 5);
         assert(a == b);
-        OID c = new OID(1, 3, 6, 4, 1, 6);
+        const OID c = new OID(1, 3, 6, 4, 1, 6);
         assert(a != c);
-        OID d = new OID(2, 3, 6, 4, 1, 6);
+        const OID d = new OID(2, 3, 6, 4, 1, 6);
         assert(c != d);
     }
 
@@ -258,7 +258,7 @@ public class ObjectIdentifier
     @system
     unittest
     {
-        OID oid = new OID(1, 3, 7000);
+        const OID oid = new OID(1, 3, 7000);
         assert((oid[0].number == 1) && (oid[1].number == 3) && (oid[2].number == 7000));
     }
 
@@ -296,7 +296,7 @@ public class ObjectIdentifier
     @system
     unittest
     {
-        OID oid = new OID(OIDNode(1, "iso"), OIDNode(3, "registered-org"), OIDNode(4, "dod"));
+        const OID oid = new OID(OIDNode(1, "iso"), OIDNode(3, "registered-org"), OIDNode(4, "dod"));
         assert(oid.descriptor(1) == "registered-org");
         assertThrown!RangeError(oid.descriptor(6));
     }
@@ -323,7 +323,7 @@ public class ObjectIdentifier
     @system
     unittest
     {
-        OID a = new OID(1, 3, 6, 4, 1, 5);
+        const OID a = new OID(1, 3, 6, 4, 1, 5);
         assert(a.numericArray == [ 1, 3, 6, 4, 1, 5 ]);
     }
 

@@ -1,5 +1,4 @@
 module types.universal.external;
-import asn1; // REVIEW: Is this necessary?
 import types.identification;
 
 /**

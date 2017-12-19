@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.18](http://semver.org/)
+* Version: [1.0.0-beta.19](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -186,15 +186,15 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Document all of the fields
   - [x] Unittest all variations of `EXTERNAL`'s `encoding`
   - [x] ~~Implement `OBJECT IDENTIFIER` restrictions for `CharacterString`~~ (I can't find documentation of this.)
-- [ ] Add Object Identifier constants from Section 12 of X.690
-- [ ] Fix constructors to accept `const` variations.
-  - [ ] Particularly, the `OID` constructor
-- [ ] Make as much code `const` or `immutable` as possible
+- [x] Add Object Identifier constants from Section 12 of X.690
+- [x] Make as much code `const` or `immutable` as possible
+- [ ] Add storage classes to `codec` and to its children
 - [ ] Write unit testing information to terminal
 - [ ] Code de-duplication
   - [ ] Since the `characterString` code is so similar to `embeddedPDV`, could I de-duplicate?
   - [x] ~~Break X.690 common functionality into template mixins~~ (See Note #2 below.)
   - [x] De-duplicate decoding code (private `fromBytes()` method called by constructor)
+- [ ] Check for external reference modification.
 - [ ] Grammar and Styling
   - [ ] Check for `a` and `an` mixups
   - [ ] Check for duplicated terminal words
@@ -225,6 +225,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `decode-cer`
 - [ ] Fuzz testing to ensure `RangeError` is never thrown. If it is thrown, it means that there are vulnerabilities if compiled with `-boundscheck=off` flag. Google's [OSS-Fuzz](https://github.com/google/oss-fuzz) tool looks like a pretty promising way to test this.
 - [ ] Test really large items
+- [ ] Test that .length > 1000 octetStrings cannot modify their references (Specifically for CER, but might as well for others, too.)
 - [x] Test that all one-byte elements throw exceptions
 - [x] Test an OID with a node with a values 127, 128, and 0.
 - [x] Test even more significant mathematical values with `realType()`:

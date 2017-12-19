@@ -31,6 +31,22 @@ public import codec;
 public import types.identification;
 
 ///
+public alias cerOID = canonicalEncodingRulesObjectIdentifier;
+///
+public alias cerObjectID = canonicalEncodingRulesObjectIdentifier;
+///
+public alias cerObjectIdentifier = canonicalEncodingRulesObjectIdentifier;
+/** 
+    The object identifier assigned to the Canonical Encoding Rules (CER), per the
+    $(LINK2 http://www.itu.int/en/pages/default.aspx, 
+        International Telecommunications Union)'s,
+    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
+
+    $(I {joint-iso-itu-t asn1(1) ber-derived(2) canonical-encoding(0)} )
+*/
+public immutable OID canonicalEncodingRulesObjectIdentifier = cast(immutable(OID)) new OID(2, 1, 2, 0);
+
+///
 public alias CERElement = CanonicalEncodingRulesElement;
 /**
     The unit of encoding and decoding for Canonical Encoding Rules CER.
@@ -253,7 +269,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             hence, the padding byte should be 0xFF. If not, it is positive,
             and the padding byte should be 0x00.
         */
-        ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
+        immutable ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
         while (value.length < T.sizeof)
             value = (paddingByte ~ value);
         version (LittleEndian) reverse(value);
@@ -612,7 +628,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     {
         if (value.length <= 1000u)
         {
-            this.value = value;
+            this.value = value.dup;
         }
         else
         {
@@ -714,7 +730,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         {
             // Skip the first, because it is fine if it is 0x80
             // Skip the last because it will be checked next
-            foreach (octet; this.value[1 .. $-1])
+            foreach (immutable octet; this.value[1 .. $-1])
             {
                 if (octet == 0x80u)
                     throw new ASN1ValueInvalidException
@@ -769,7 +785,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         }
 
         // Converts each group of bytes to a number.
-        foreach (byteGroup; byteGroups)
+        foreach (const byteGroup; byteGroups)
         {
             if (byteGroup.length > (size_t.sizeof * 2u))
                 throw new ASN1ValueTooBigException
@@ -796,7 +812,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             nodes ~= OIDNode(number);
         }
 
-        return new OID(cast(immutable OIDNode[]) nodes); // FIXME to not require immutable
+        return new OID(nodes); // FIXME to not require immutable
     }
 
     /**
@@ -934,7 +950,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     {
         if (this.value.length <= 1000u)
         {        
-            foreach (character; this.value)
+            foreach (immutable character; this.value)
             {
                 if ((!character.isGraphical) && (character != ' '))
                     throw new ASN1ValueInvalidException
@@ -977,7 +993,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             Appender!(string) ret = appender!(string)();
             foreach (p; primitives)
             {
-                foreach (character; p.value)
+                foreach (immutable character; p.value)
                 {
                     if ((!character.isGraphical) && (character != ' '))
                         throw new ASN1ValueInvalidException
@@ -1023,7 +1039,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     override public @property @system
     void objectDescriptor(string value)
     {
-        foreach (character; value)
+        foreach (immutable character; value)
         {
             if ((!character.isGraphical) && (character != ' '))
                 throw new ASN1ValueInvalidException
@@ -1155,7 +1171,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             );
 
         // Every component except the last must be universal class
-        foreach (component; components[0 .. $-1])
+        foreach (const component; components[0 .. $-1])
         {
             if (component.tagClass != ASN1TagClass.universal)
                 throw new ASN1TagException
@@ -1606,7 +1622,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                                 debugInformationText ~ reportBugsText
                             );
                         
-                        ubyte exponentLength = this.value[1];
+                        immutable ubyte exponentLength = this.value[1];
 
                         if (this.length < exponentLength)
                             throw new ASN1ValueTooSmallException
@@ -1870,12 +1886,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         */
         static if (is(T == double))
         {
-            DoubleRep valueUnion = DoubleRep(value);
+            immutable DoubleRep valueUnion = DoubleRep(value);
             significand = (valueUnion.fraction | 0x0010000000000000u); // Flip bit #53
         }
         static if (is(T == float))
         {
-            FloatRep valueUnion = FloatRep(value);
+            immutable FloatRep valueUnion = FloatRep(value);
             significand = (valueUnion.fraction | 0x00800000u); // Flip bit #24
         }
 
@@ -2225,7 +2241,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             hence, the padding byte should be 0xFF. If not, it is positive,
             and the padding byte should be 0x00.
         */
-        ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
+        immutable ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
         while (value.length < T.sizeof)
             value = (paddingByte ~ value);
         version (LittleEndian) reverse(value);
@@ -2829,7 +2845,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
 
         // Converts each group of bytes to a number.
         size_t[] numbers;
-        foreach (byteGroup; byteGroups)
+        foreach (const byteGroup; byteGroups)
         {
             if (byteGroup.length > (size_t.sizeof * 2u))
                 throw new ASN1ValueTooBigException
@@ -3027,7 +3043,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     {
         if (this.value.length <= 1000u)
         {        
-            foreach (character; this.value)
+            foreach (immutable character; this.value)
             {
                 if (!canFind(numericStringCharacters, character))
                     throw new ASN1ValueInvalidException
@@ -3069,7 +3085,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             Appender!(string) ret = appender!(string)();
             foreach (p; primitives)
             {
-                foreach (character; p.value)
+                foreach (immutable character; p.value)
                 {
                     if (!canFind(numericStringCharacters, character))
                         throw new ASN1ValueInvalidException
@@ -3098,7 +3114,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     override public @property @system
     void numericString(string value)
     {
-        foreach (character; value)
+        foreach (immutable character; value)
         {
             if (!canFind(numericStringCharacters, character))
                 throw new ASN1ValueInvalidException
@@ -3189,7 +3205,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     {
         if (this.value.length <= 1000u)
         {        
-            foreach (character; this.value)
+            foreach (immutable character; this.value)
             {
                 if (!canFind(printableStringCharacters, character))
                     throw new ASN1ValueInvalidException
@@ -3233,7 +3249,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             Appender!(string) ret = appender!(string)();
             foreach (p; primitives)
             {
-                foreach (character; p.value)
+                foreach (immutable character; p.value)
                 {
                     if (!canFind(printableStringCharacters, character))
                         throw new ASN1ValueInvalidException
@@ -3268,7 +3284,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     override public @property @system
     void printableString(string value)
     {
-        foreach (character; value)
+        foreach (immutable character; value)
         {
             if (!canFind(printableStringCharacters, character))
                 throw new ASN1ValueInvalidException
@@ -3399,7 +3415,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         // TODO: Validation.
         if (value.length <= 1000u)
         {
-            this.value = cast(ubyte[]) value;
+            this.value = value.dup;
         }
         else
         {
@@ -3514,7 +3530,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         // TODO: Validation.
         if (value.length <= 1000u)
         {
-            this.value = cast(ubyte[]) value;
+            this.value = value.dup;
         }
         else
         {
@@ -3602,7 +3618,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     {
         if (this.value.length <= 1000u)
         {        
-            foreach (character; this.value)
+            foreach (immutable character; this.value)
             {
                 if (!character.isASCII)
                     throw new ASN1ValueInvalidException
@@ -3644,7 +3660,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             Appender!(string) ret = appender!(string)();
             foreach (p; primitives)
             {
-                foreach (character; p.value)
+                foreach (immutable character; p.value)
                 {
                     if (!character.isASCII)
                         throw new ASN1ValueInvalidException
@@ -3689,7 +3705,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     override public @property @system
     void internationalAlphabetNumber5String(string value)
     {
-        foreach (character; value)
+        foreach (immutable character; value)
         {
             if (!character.isASCII)
                 throw new ASN1ValueInvalidException
@@ -3799,7 +3815,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             whose cryptic message reads "Invalid ISO String: " followed,
             strangely, by only the last six characters of the string.
         */
-        string dt = (((this.value[0] <= '7') ? "20" : "19") ~ cast(string) this.value);
+        immutable string dt = (((this.value[0] <= '7') ? "20" : "19") ~ cast(string) this.value);
         return cast(DateTime) SysTime.fromISOString(dt[0 .. 8].idup ~ "T" ~ dt[8 .. $].idup);
     }
 
@@ -3822,7 +3838,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     void coordinatedUniversalTime(DateTime value)
     {
         import std.string : replace;
-        SysTime st = SysTime(value, UTC());
+        immutable SysTime st = SysTime(value, UTC());
         this.value = cast(ubyte[]) ((st.toUTC()).toISOString()[2 .. $].replace("T", ""));
     }
 
@@ -3856,7 +3872,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             whose cryptic message reads "Invalid ISO String: " followed,
             strangely, by only the last six characters of the string.
         */
-        string dt = cast(string) this.value;
+        immutable string dt = cast(string) this.value;
         return cast(DateTime) SysTime.fromISOString(dt[0 .. 8].idup ~ "T" ~ dt[8 .. $].idup);
     }
 
@@ -3878,7 +3894,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     void generalizedTime(DateTime value)
     {
         import std.string : replace;
-        SysTime st = SysTime(value, UTC());
+        immutable SysTime st = SysTime(value, UTC());
         this.value = cast(ubyte[]) ((st.toUTC()).toISOString().replace("T", ""));
     }
 
@@ -3906,7 +3922,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     {
         if (this.value.length <= 1000u)
         {        
-            foreach (character; this.value)
+            foreach (immutable character; this.value)
             {
                 if (!character.isGraphical && character != ' ')
                     throw new ASN1ValueInvalidException
@@ -3949,7 +3965,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             Appender!(string) ret = appender!(string)();
             foreach (p; primitives)
             {
-                foreach (character; p.value)
+                foreach (immutable character; p.value)
                 {
                     if (!character.isGraphical && character != ' ')
                         throw new ASN1ValueInvalidException
@@ -3990,7 +4006,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     override public @property @system
     void graphicString(string value)
     {
-        foreach (character; value)
+        foreach (immutable character; value)
         {
             if (!character.isGraphical && character != ' ')
                 throw new ASN1ValueInvalidException
@@ -4080,7 +4096,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     {
         if (this.value.length <= 1000u)
         {        
-            foreach (character; this.value)
+            foreach (immutable character; this.value)
             {
                 if (!character.isGraphical && character != ' ')
                     throw new ASN1ValueInvalidException
@@ -4123,7 +4139,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             Appender!(string) ret = appender!(string)();
             foreach (p; primitives)
             {
-                foreach (character; p.value)
+                foreach (immutable character; p.value)
                 {
                     if (!character.isGraphical && character != ' ')
                         throw new ASN1ValueInvalidException
@@ -4155,7 +4171,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     override public @property @system
     void visibleString(string value)
     {
-        foreach (character; value)
+        foreach (immutable character; value)
         {
             if (!character.isGraphical && character != ' ')
                 throw new ASN1ValueInvalidException
@@ -4249,7 +4265,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     {
         if (this.value.length <= 1000u)
         {        
-            foreach (character; this.value)
+            foreach (immutable character; this.value)
             {
                 if (!character.isASCII)
                     throw new ASN1ValueInvalidException
@@ -4291,7 +4307,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             Appender!(string) ret = appender!(string)();
             foreach (p; primitives)
             {
-                foreach (character; p.value)
+                foreach (immutable character; p.value)
                 {
                     if (!character.isASCII)
                         throw new ASN1ValueInvalidException
@@ -4326,7 +4342,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     override public @property @system
     void generalString(string value)
     {
-        foreach (character; value)
+        foreach (immutable character; value)
         {
             if (!character.isASCII)
                 throw new ASN1ValueInvalidException
@@ -4529,7 +4545,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             }
             else version (LittleEndian)
             {
-                foreach (character; value)
+                foreach (immutable character; value)
                 {
                     ubyte[] charBytes = cast(ubyte[]) *cast(char[4] *) &character;
                     reverse(charBytes);
@@ -4556,7 +4572,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 }
                 else version (LittleEndian)
                 {
-                    foreach (character; value[i .. i+250u])
+                    foreach (immutable character; value[i .. i+250u])
                     {
                         ubyte[] charBytes = cast(ubyte[]) *cast(char[4] *) &character;
                         reverse(charBytes);
@@ -4580,7 +4596,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             }
             else version (LittleEndian)
             {
-                foreach (character; value[i .. $])
+                foreach (immutable character; value[i .. $])
                 {
                     ubyte[] charBytes = cast(ubyte[]) *cast(char[4] *) &character;
                     reverse(charBytes);
@@ -5048,7 +5064,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             }
             else version (LittleEndian)
             {
-                foreach (character; value)
+                foreach (immutable character; value)
                 {
                     ubyte[] charBytes = cast(ubyte[]) *cast(char[2] *) &character;
                     reverse(charBytes);
@@ -5075,7 +5091,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 }
                 else version (LittleEndian)
                 {
-                    foreach (character; value[i .. i+500u])
+                    foreach (immutable character; value[i .. i+500u])
                     {
                         ubyte[] charBytes = cast(ubyte[]) *cast(char[2] *) &character;
                         reverse(charBytes);
@@ -5099,7 +5115,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             }
             else version (LittleEndian)
             {
-                foreach (character; value[i .. $])
+                foreach (immutable character; value[i .. $])
                 {
                     ubyte[] charBytes = cast(ubyte[]) *cast(char[2] *) &character;
                     reverse(charBytes);
@@ -5332,7 +5348,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             this.tagNumber = 0u;
 
             // This loop looks for the end of the encoded tag number.
-            size_t limit = ((bytes.length-1 >= size_t.sizeof) ? size_t.sizeof : bytes.length-1);
+            immutable size_t limit = ((bytes.length-1 >= size_t.sizeof) ? size_t.sizeof : bytes.length-1);
             while (cursor < limit)
             {
                 if (!(bytes[cursor++] & 0x80u)) break;
@@ -5567,52 +5583,52 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
 unittest
 {
     // Test data
-    ubyte[] dataEndOfContent = [ 0x00u, 0x00u ];
-    ubyte[] dataBoolean = [ 0x01u, 0x01u, 0xFFu ];
-    ubyte[] dataInteger = [ 0x02u, 0x01u, 0x1Bu ];
-    ubyte[] dataBitString = [ 0x03u, 0x03u, 0x07u, 0xF0u, 0xF0u ];
-    ubyte[] dataOctetString = [ 0x04u, 0x04u, 0xFF, 0x00u, 0x88u, 0x14u ];
-    ubyte[] dataNull = [ 0x05u, 0x00u ];
-    ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
-    ubyte[] dataOD = [ 0x07u, 0x05u, 'H', 'N', 'E', 'L', 'O' ];
-    ubyte[] dataExternal = [ 
+    immutable ubyte[] dataEndOfContent = [ 0x00u, 0x00u ];
+    immutable ubyte[] dataBoolean = [ 0x01u, 0x01u, 0xFFu ];
+    immutable ubyte[] dataInteger = [ 0x02u, 0x01u, 0x1Bu ];
+    immutable ubyte[] dataBitString = [ 0x03u, 0x03u, 0x07u, 0xF0u, 0xF0u ];
+    immutable ubyte[] dataOctetString = [ 0x04u, 0x04u, 0xFF, 0x00u, 0x88u, 0x14u ];
+    immutable ubyte[] dataNull = [ 0x05u, 0x00u ];
+    immutable ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
+    immutable ubyte[] dataOD = [ 0x07u, 0x05u, 'H', 'N', 'E', 'L', 'O' ];
+    immutable ubyte[] dataExternal = [ 
         0x08u, 0x0Bu, 0x06u, 0x03u, 0x29u, 0x05u, 0x07u, 0x82u, 
         0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
-    ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
-    ubyte[] dataEnum = [ 0x0Au, 0x01u, 0x3Fu ];
-    ubyte[] dataEmbeddedPDV = [ 
+    immutable ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
+    immutable ubyte[] dataEnum = [ 0x0Au, 0x01u, 0x3Fu ];
+    immutable ubyte[] dataEmbeddedPDV = [ 
         0x0Bu, 0x0Au, 0x80u, 0x02u, 0x85u, 0x00u, 0x82u, 0x04u, 
         0x01u, 0x02u, 0x03u, 0x04u ];
-    ubyte[] dataUTF8 = [ 0x0Cu, 0x05u, 'H', 'E', 'N', 'L', 'O' ];
-    ubyte[] dataROID = [ 0x0Du, 0x03u, 0x06u, 0x04u, 0x01u ];
+    immutable ubyte[] dataUTF8 = [ 0x0Cu, 0x05u, 'H', 'E', 'N', 'L', 'O' ];
+    immutable ubyte[] dataROID = [ 0x0Du, 0x03u, 0x06u, 0x04u, 0x01u ];
     // sequence
     // set
-    ubyte[] dataNumeric = [ 0x12u, 0x07u, '8', '6', '7', '5', '3', '0', '9' ];
-    ubyte[] dataPrintable = [ 0x13u, 0x06u, '8', '6', ' ', 'b', 'f', '8' ];
-    ubyte[] dataTeletex = [ 0x14u, 0x06u, 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ];
-    ubyte[] dataVideotex = [ 0x15u, 0x06u, 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ];
-    ubyte[] dataIA5 = [ 0x16u, 0x08u, 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S' ];
-    ubyte[] dataUTC = [ 0x17u, 0x0Cu, '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0' ];
-    ubyte[] dataGT = [ 0x18u, 0x0Eu, '2', '0', '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0' ];
-    ubyte[] dataGraphic = [ 0x19u, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
-    ubyte[] dataVisible = [ 0x1Au, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
-    ubyte[] dataGeneral = [ 0x1Bu, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
-    ubyte[] dataUniversal = [ 
+    immutable ubyte[] dataNumeric = [ 0x12u, 0x07u, '8', '6', '7', '5', '3', '0', '9' ];
+    immutable ubyte[] dataPrintable = [ 0x13u, 0x06u, '8', '6', ' ', 'b', 'f', '8' ];
+    immutable ubyte[] dataTeletex = [ 0x14u, 0x06u, 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ];
+    immutable ubyte[] dataVideotex = [ 0x15u, 0x06u, 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ];
+    immutable ubyte[] dataIA5 = [ 0x16u, 0x08u, 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S' ];
+    immutable ubyte[] dataUTC = [ 0x17u, 0x0Cu, '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0' ];
+    immutable ubyte[] dataGT = [ 0x18u, 0x0Eu, '2', '0', '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0' ];
+    immutable ubyte[] dataGraphic = [ 0x19u, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
+    immutable ubyte[] dataVisible = [ 0x1Au, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
+    immutable ubyte[] dataGeneral = [ 0x1Bu, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
+    immutable ubyte[] dataUniversal = [ 
         0x1Cu, 0x10u, 
         0x00u, 0x00u, 0x00u, 0x61u, 
         0x00u, 0x00u, 0x00u, 0x62u, 
         0x00u, 0x00u, 0x00u, 0x63u, 
         0x00u, 0x00u, 0x00u, 0x64u 
     ]; // Big-endian "abcd"
-    ubyte[] dataCharacter = [ 
+    immutable ubyte[] dataCharacter = [ 
         0x1Du, 0x0Fu, 0x80u, 0x06u, 0x81u, 0x04u, 0x29u, 0x06u, 
         0x04u, 0x01u, 0x82u, 0x05u, 0x48u, 0x45u, 0x4Eu, 0x4Cu, 
         0x4Fu ];
-    ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"
+    immutable ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"
 
     // Combine it all
     ubyte[] data = 
-        dataEndOfContent ~
+        (dataEndOfContent ~
         dataBoolean ~
         dataInteger ~
         dataBitString ~
@@ -5638,7 +5654,7 @@ unittest
         dataGeneral ~
         dataUniversal ~
         dataCharacter ~
-        dataBMP;
+        dataBMP).dup;
 
     CERElement[] result;
 
@@ -5838,14 +5854,14 @@ unittest
 {
     for (ubyte i = 0x00u; i < ubyte.max; i++)
     {
-        ubyte[] data = [i];
+        ubyte[] data = [i]; // REVIEW: Make this immutable
         assertThrown!Exception(new CERElement(data));
     }
 
     size_t index;
     for (ubyte i = 0x00u; i < ubyte.max; i++)
     {
-        ubyte[] data = [i];
+        ubyte[] data = [i]; // REVIEW: Make this immutable
         assertThrown!Exception(new CERElement(index, data));
     }
 }

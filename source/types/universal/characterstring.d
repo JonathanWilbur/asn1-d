@@ -1,5 +1,4 @@
 module types.universal.characterstring;
-import asn1;
 import types.identification;
 
 /**

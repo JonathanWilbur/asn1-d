@@ -40,8 +40,8 @@ struct ObjectIdentifierNode
     @system
     unittest
     {
-        OIDNode a = OIDNode(1, "iso");
-        OIDNode b = OIDNode(1, "not-iso");
+        immutable OIDNode a = OIDNode(1, "iso");
+        immutable OIDNode b = OIDNode(1, "not-iso");
         assert(a == b);
     }
 
@@ -68,8 +68,8 @@ struct ObjectIdentifierNode
     @system
     unittest
     {
-        OIDNode a = OIDNode(1, "iso");
-        OIDNode b = OIDNode(2, "even-more-iso");
+        immutable OIDNode a = OIDNode(1, "iso");
+        immutable OIDNode b = OIDNode(2, "even-more-iso");
         assert(b > a);
     }
 
@@ -105,7 +105,7 @@ struct ObjectIdentifierNode
     public @system
     this(in size_t number, in string descriptor)
     {   
-        foreach (character; descriptor)
+        foreach (immutable character; descriptor)
         {
             if ((!character.isGraphical) && (character != ' '))
             {
@@ -133,11 +133,11 @@ struct ObjectIdentifierNode
     @system
     unittest
     {
-        OIDNode a = OIDNode(1, "Nitro dubs & T-Rix");
+        immutable OIDNode a = OIDNode(1, "Nitro dubs & T-Rix");
         assert(a.descriptor == "Nitro dubs & T-Rix");
-        OIDNode b = OIDNode(1, " ");
+        immutable OIDNode b = OIDNode(1, " ");
         assert(b.descriptor == " ");
-        OIDNode c = OIDNode(1, "");
+        immutable OIDNode c = OIDNode(1, "");
         assert(c.descriptor == "");
         assertThrown!ASN1ValueInvalidException(OIDNode(1, "\xD7"));
         assertThrown!ASN1ValueInvalidException(OIDNode(1, "\t"));

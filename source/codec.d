@@ -480,6 +480,17 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.octetString == el.octetString);
     }
 
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        ubyte[] test = [ 0x05u, 0x02u, 0xFFu, 0x00u, 0x6Au ];
+        Element el = new Element();
+        el.octetString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 0x6Au);
+    }
+
     ///
     public alias oid = objectIdentifier;
     /// Decodes an Object Identifier
@@ -1657,6 +1668,17 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.teletexString == el.teletexString);
     }
 
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        ubyte[] test = [ 0x05u, 0x02u, 0xFFu, 0x00u, 0x6Au ];
+        Element el = new Element();
+        el.teletexString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 0x6Au);
+    }
+
     abstract public @property
     ubyte[] videotexString() const;
 
@@ -1674,6 +1696,17 @@ class AbstractSyntaxNotation1Element(Element)
 
         // Assert that accessor does not mutate state
         assert(el.videotexString == el.videotexString);
+    }
+
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        ubyte[] test = [ 0x05u, 0x02u, 0xFFu, 0x00u, 0x6Au ];
+        Element el = new Element();
+        el.videotexString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 0x6Au);
     }
 
     ///
