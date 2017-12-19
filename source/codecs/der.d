@@ -28,6 +28,7 @@
 */
 module codecs.der;
 public import codec;
+public import interfaces : Byteable;
 public import types.identification;
 
 ///
@@ -99,7 +100,7 @@ public alias DERElement = DistinguishedEncodingRulesElement;
     https://issues.dlang.org/show_bug.cgi?id=17909
 */
 public
-class DistinguishedEncodingRulesElement : ASN1Element!DERElement
+class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 {
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
     static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
@@ -3768,7 +3769,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
     public @system
     this(ref ubyte[] bytes)
     {
-        immutable size_t bytesRead = this.fromBytes(0u, bytes);
+        immutable size_t bytesRead = this.fromBytes(bytes);
         bytes = bytes[bytesRead .. $];
     }
 
@@ -3807,21 +3808,21 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         ---
     */
     public @system
-    this(ref size_t bytesRead, ref ubyte[] bytes)
+    this(ref size_t bytesRead, in ubyte[] bytes)
     {
-        bytesRead += this.fromBytes(bytesRead, bytes);
+        bytesRead += this.fromBytes(bytes[bytesRead .. $].dup);
     }
 
     // Returns the number of bytes read
-    private
-    size_t fromBytes (in size_t start, ref ubyte[] bytes)
+    public
+    size_t fromBytes (in ubyte[] bytes)
     {
-        if (bytes.length < (start + 2u))
+        if (bytes.length < 2u)
             throw new ASN1ValueTooSmallException
             ("DER-encoded value terminated prematurely.");
         
         // Index of what we are currently parsing.
-        size_t cursor = start;
+        size_t cursor = 0u;
 
         switch (bytes[cursor] & 0b1100_0000u)
         {
@@ -3987,8 +3988,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                     );
 
                 cursor += (numberOfLengthOctets);
-                this.value = bytes[cursor .. cursor+length];
-                return ((cursor + length) - start);
+                this.value = bytes[cursor .. cursor+length].dup;
+                return (cursor + length);
             }
             else // Indefinite
             {   
@@ -4010,7 +4011,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 ("BER-encoded value terminated prematurely.");
 
             this.value = bytes[++cursor .. cursor+length].dup;
-            return ((cursor + length) - start);
+            return (cursor + length);
         }
     }
 

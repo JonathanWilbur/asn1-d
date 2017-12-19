@@ -9,6 +9,7 @@ mkdir .\build\objects 2>&1 | Out-Null
 dmd `
 .\source\asn1.d `
 .\source\codec.d `
+.\source\interfaces.d `
 .\source\types\alltypes.d `
 .\source\types\identification.d `
 .\source\types\oidtype.d `

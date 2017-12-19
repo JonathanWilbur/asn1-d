@@ -32,6 +32,7 @@ echo -n "Building the ASN.1 Library (static)... "
 if dmd \
  ./source/asn1.d \
  ./source/codec.d \
+ ./source/interfaces.d \
  ./source/types/*.d \
  ./source/types/universal/*.d \
  ./source/codecs/*.d \
@@ -55,6 +56,7 @@ echo -n "Building the ASN.1 Library (shared / dynamic)... "
 if dmd \
  ./source/asn1.d \
  ./source/codec.d \
+ ./source/interfaces.d \
  ./source/types/*.d \
  ./source/types/universal/*.d \
  ./source/codecs/*.d \

@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.20](http://semver.org/)
+* Version: [1.0.0-beta.21](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -188,7 +188,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] ~~Implement `OBJECT IDENTIFIER` restrictions for `CharacterString`~~ (I can't find documentation of this.)
 - [x] Add Object Identifier constants from Section 12 of X.690
 - [x] Make as much code `const` or `immutable` as possible
-- [ ] Make `Byteable` interface, and implement it on all constructors
+- [x] Make `Byteable` interface, and implement it on all codecs
 - [x] Add storage classes to `codec` and to its children
 - [ ] Write unit testing information to terminal
 - [ ] Code de-duplication
@@ -506,6 +506,8 @@ The following codecs will be added:
 - [ ] Teletex (T61String) validation (WireShark has an implementation.)
 - [ ] Videotex validation
 - [ ] Included Source Signature
+- [ ] Operator Overloads
+  - [ ] `~=` making a constructed element
 - [ ] Build System
   - [ ] [Bazel](https://www.bazel.build)
   - [ ] Makefile

@@ -28,6 +28,7 @@
 */
 module codecs.cer;
 public import codec;
+public import interfaces : Byteable;
 public import types.identification;
 
 ///
@@ -99,7 +100,7 @@ public alias CERElement = CanonicalEncodingRulesElement;
     https://issues.dlang.org/show_bug.cgi?id=17909
 */
 public
-class CanonicalEncodingRulesElement : ASN1Element!CERElement
+class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 {
     /**
         Unlike most other settings, this is non-static, because wanting to
@@ -5211,7 +5212,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
     public @system
     this(ref ubyte[] bytes)
     {
-        size_t bytesRead = this.fromBytes(0u, bytes);
+        size_t bytesRead = this.fromBytes(bytes);
         bytes = bytes[bytesRead .. $];
     }
 
@@ -5250,21 +5251,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         ---
     */
     public @system
-    this(ref size_t bytesRead, ref ubyte[] bytes)
+    this(ref size_t bytesRead, in ubyte[] bytes)
     {
-        bytesRead += this.fromBytes(bytesRead, bytes);
+        bytesRead += this.fromBytes(bytes[bytesRead .. $].dup);
     }
 
     // Returns the number of bytes read
-    private
-    size_t fromBytes (in size_t start, ref ubyte[] bytes)
+    public
+    size_t fromBytes (in ubyte[] bytes)
     {
-        if (bytes.length < (start + 2u))
+        if (bytes.length < 2u)
             throw new ASN1ValueTooSmallException
             ("CER-encoded value terminated prematurely.");
         
         // Index of what we are currently parsing.
-        size_t cursor = start;
+        size_t cursor = 0u;
 
         switch (bytes[cursor] & 0b1100_0000u)
         {
@@ -5430,8 +5431,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                     );
 
                 cursor += (numberOfLengthOctets);
-                this.value = bytes[cursor .. cursor+length];
-                return ((cursor + length) - start);
+                this.value = bytes[cursor .. cursor+length].dup;
+                return (cursor + length);
             }
             else // Indefinite
             {   
@@ -5451,8 +5452,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                     throw new ASN1ValueTooSmallException
                     ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERElement.");
 
-                this.value = bytes[startOfValue .. cursor-1u];
-                return (++cursor - start);
+                this.value = bytes[startOfValue .. cursor-1u].dup;
+                return ++cursor;
             }
         }
         else // Definite Short
@@ -5464,7 +5465,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 ("BER-encoded value terminated prematurely.");
 
             this.value = bytes[++cursor .. cursor+length].dup;
-            return ((cursor + length) - start);
+            return (cursor + length);
         }
     }
 

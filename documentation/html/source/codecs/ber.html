@@ -685,7 +685,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement"></span>class <code class="code">BasicEncodingRulesElement</code>: <span class="ddoc_psuper_symbol">codec.ASN1Element!(<code class="code">BasicEncodingRulesElement</code>).AbstractSyntaxNotation1Element</span>;
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement"></span>class <code class="code">BasicEncodingRulesElement</code>: <span class="ddoc_psuper_symbol">codec.ASN1Element!(<code class="code">BasicEncodingRulesElement</code>).AbstractSyntaxNotation1Element</span>, <span class="ddoc_psuper_symbol">interfaces.Byteable</span>;
 
           </code>
         </p>
@@ -3986,7 +3986,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.this.3"></span>@system this(ref size_t <code class="code">bytesRead</code>, ref ubyte[] <code class="code">bytes</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.this.3"></span>@system this(ref size_t <code class="code">bytesRead</code>, in ubyte[] <code class="code">bytes</code>);
 
           </code>
         </p>
