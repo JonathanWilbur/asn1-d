@@ -5666,7 +5666,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 4424,
+      "endline" : 4437,
       "endchar" : 5,
       "overrides" : [
        "interfaces.Byteable.fromBytes"
@@ -5676,10 +5676,10 @@
       "name" : "toBytes",
       "kind" : "function",
       "comment" : "        This differs from $(D_INLINECODE this.value) in that\n        $(D_INLINECODE this.value) only returns the value octets, whereas\n        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D_INLINECODE this.opCast!(ubyte[])()).\n\n        Returns: type tag, length tag, and value, all concatenated as a ubyte array.\n",
-      "line" : 4437,
+      "line" : 4450,
       "char" : 13,
       "deco" : "xFNbNdZAh",
-      "endline" : 4509,
+      "endline" : 4522,
       "endchar" : 5,
       "overrides" : [
        "interfaces.Byteable.toBytes"
@@ -5688,7 +5688,7 @@
      {
       "kind" : "template",
       "comment" : "        This differs from $(D_INLINECODE this.value) in that\n        $(D_INLINECODE this.value) only returns the value octets, whereas\n        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D_INLINECODE this.toBytes()).\n\n        Returns: type tag, length tag, and value, all concatenated as a ubyte array.\n",
-      "line" : 4522,
+      "line" : 4535,
       "char" : 13,
       "name" : "opCast",
       "parameters" : [
@@ -5702,10 +5702,10 @@
        {
         "name" : "opCast",
         "kind" : "function",
-        "line" : 4522,
+        "line" : 4535,
         "char" : 13,
         "type" : "nothrow @system ubyte[]()",
-        "endline" : 4525,
+        "endline" : 4538,
         "endchar" : 5
        }
       ]
@@ -5713,64 +5713,53 @@
     ]
    },
    {
-    "name" : "__unittest___source_codecs_ber_d_4531_18",
+    "name" : "__unittest___source_codecs_ber_d_4544_18",
     "kind" : "function",
-    "line" : 4531,
+    "line" : 4544,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4682,
+    "endline" : 4695,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_ber_d_4683_19",
+    "name" : "__unittest___source_codecs_ber_d_4696_19",
     "kind" : "function",
-    "line" : 4683,
+    "line" : 4696,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4724,
+    "endline" : 4737,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_ber_d_4725_20",
+    "name" : "__unittest___source_codecs_ber_d_4738_20",
     "kind" : "function",
-    "line" : 4725,
+    "line" : 4738,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4776,
+    "endline" : 4789,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_ber_d_4777_21",
+    "name" : "__unittest___source_codecs_ber_d_4790_21",
     "kind" : "function",
-    "line" : 4777,
+    "line" : 4790,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4800,
+    "endline" : 4813,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_ber_d_4801_22",
+    "name" : "__unittest___source_codecs_ber_d_4814_22",
     "kind" : "function",
-    "line" : 4801,
-    "char" : 1,
-    "storageClass" : [
-     "@system"
-    ],
-    "endline" : 4817,
-    "endchar" : 1
-   },
-   {
-    "name" : "__unittest___source_codecs_ber_d_4818_23",
-    "kind" : "function",
-    "line" : 4818,
+    "line" : 4814,
     "char" : 1,
     "storageClass" : [
      "@system"
@@ -5779,58 +5768,113 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_ber_d_4831_24",
+    "name" : "__unittest___source_codecs_ber_d_4831_23",
     "kind" : "function",
     "line" : 4831,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4845,
+    "endline" : 4843,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_ber_d_4846_25",
+    "name" : "__unittest___source_codecs_ber_d_4844_24",
     "kind" : "function",
-    "line" : 4846,
+    "line" : 4844,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4855,
+    "endline" : 4858,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_ber_d_4856_26",
+    "name" : "__unittest___source_codecs_ber_d_4859_25",
     "kind" : "function",
-    "line" : 4856,
+    "line" : 4859,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4863,
+    "endline" : 4868,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_ber_d_4864_27",
+    "name" : "__unittest___source_codecs_ber_d_4869_26",
     "kind" : "function",
-    "line" : 4864,
+    "line" : 4869,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4875,
+    "endline" : 4876,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_ber_d_4876_28",
+    "name" : "__unittest___source_codecs_ber_d_4877_27",
     "kind" : "function",
-    "line" : 4876,
+    "line" : 4877,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
     "endline" : 4884,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_codecs_ber_d_4885_28",
+    "kind" : "function",
+    "line" : 4885,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 4896,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_codecs_ber_d_4897_29",
+    "kind" : "function",
+    "line" : 4897,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 4908,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_codecs_ber_d_4909_30",
+    "kind" : "function",
+    "line" : 4909,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 4917,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_codecs_ber_d_4918_31",
+    "kind" : "function",
+    "line" : 4918,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 4926,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_codecs_ber_d_4927_32",
+    "kind" : "function",
+    "line" : 4927,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 4932,
     "endchar" : 2
    }
   ]
@@ -7519,7 +7563,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 5489,
+      "endline" : 5500,
       "endchar" : 5,
       "overrides" : [
        "interfaces.Byteable.fromBytes"
@@ -7529,10 +7573,10 @@
       "name" : "toBytes",
       "kind" : "function",
       "comment" : "        This differs from $(D_INLINECODE this.value) in that\n        $(D_INLINECODE this.value) only returns the value octets, whereas\n        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D_INLINECODE this.opCast!(ubyte[])()).\n\n        Returns: type tag, length tag, and value, all concatenated as a ubyte array.\n",
-      "line" : 5502,
+      "line" : 5513,
       "char" : 13,
       "deco" : "xFNbNdZAh",
-      "endline" : 5581,
+      "endline" : 5592,
       "endchar" : 5,
       "overrides" : [
        "interfaces.Byteable.toBytes"
@@ -7541,7 +7585,7 @@
      {
       "kind" : "template",
       "comment" : "        This differs from $(D_INLINECODE this.value) in that\n        $(D_INLINECODE this.value) only returns the value octets, whereas\n        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D_INLINECODE this.toBytes()).\n\n        Returns: type tag, length tag, and value, all concatenated as a ubyte array.\n",
-      "line" : 5594,
+      "line" : 5605,
       "char" : 13,
       "name" : "opCast",
       "parameters" : [
@@ -7555,10 +7599,10 @@
        {
         "name" : "opCast",
         "kind" : "function",
-        "line" : 5594,
+        "line" : 5605,
         "char" : 13,
         "type" : "nothrow @system ubyte[]()",
-        "endline" : 5597,
+        "endline" : 5608,
         "endchar" : 5
        }
       ]
@@ -7566,124 +7610,168 @@
     ]
    },
    {
-    "name" : "__unittest___source_codecs_cer_d_5603_27",
+    "name" : "__unittest___source_codecs_cer_d_5614_27",
     "kind" : "function",
-    "line" : 5603,
+    "line" : 5614,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5755,
+    "endline" : 5766,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_cer_d_5756_28",
+    "name" : "__unittest___source_codecs_cer_d_5767_28",
     "kind" : "function",
-    "line" : 5756,
+    "line" : 5767,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5797,
+    "endline" : 5808,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_cer_d_5798_29",
+    "name" : "__unittest___source_codecs_cer_d_5809_29",
     "kind" : "function",
-    "line" : 5798,
+    "line" : 5809,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5848,
+    "endline" : 5859,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_cer_d_5849_30",
+    "name" : "__unittest___source_codecs_cer_d_5860_30",
     "kind" : "function",
-    "line" : 5849,
+    "line" : 5860,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5872,
+    "endline" : 5883,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_cer_d_5873_31",
+    "name" : "__unittest___source_codecs_cer_d_5884_31",
     "kind" : "function",
-    "line" : 5873,
+    "line" : 5884,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5890,
+    "endline" : 5901,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_cer_d_5891_32",
+    "name" : "__unittest___source_codecs_cer_d_5902_32",
     "kind" : "function",
-    "line" : 5891,
+    "line" : 5902,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5905,
+    "endline" : 5916,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_cer_d_5906_33",
+    "name" : "__unittest___source_codecs_cer_d_5917_33",
     "kind" : "function",
-    "line" : 5906,
+    "line" : 5917,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5915,
+    "endline" : 5926,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_cer_d_5916_34",
+    "name" : "__unittest___source_codecs_cer_d_5927_34",
     "kind" : "function",
-    "line" : 5916,
+    "line" : 5927,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5923,
+    "endline" : 5934,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_cer_d_5924_35",
+    "name" : "__unittest___source_codecs_cer_d_5935_35",
     "kind" : "function",
-    "line" : 5924,
+    "line" : 5935,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5931,
+    "endline" : 5942,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_cer_d_5932_36",
+    "name" : "__unittest___source_codecs_cer_d_5943_36",
     "kind" : "function",
-    "line" : 5932,
+    "line" : 5943,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5943,
+    "endline" : 5950,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_cer_d_5944_37",
+    "name" : "__unittest___source_codecs_cer_d_5951_37",
     "kind" : "function",
-    "line" : 5944,
+    "line" : 5951,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5952,
+    "endline" : 5962,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_codecs_cer_d_5963_38",
+    "kind" : "function",
+    "line" : 5963,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 5974,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_codecs_cer_d_5975_39",
+    "kind" : "function",
+    "line" : 5975,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 5983,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_codecs_cer_d_5984_40",
+    "kind" : "function",
+    "line" : 5984,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 5992,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_codecs_cer_d_5993_41",
+    "kind" : "function",
+    "line" : 5993,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 5998,
     "endchar" : 2
    }
   ]
@@ -9179,7 +9267,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 4035,
+      "endline" : 4036,
       "endchar" : 5,
       "overrides" : [
        "interfaces.Byteable.fromBytes"
@@ -9189,10 +9277,10 @@
       "name" : "toBytes",
       "kind" : "function",
       "comment" : "        This differs from $(D_INLINECODE this.value) in that\n        $(D_INLINECODE this.value) only returns the value octets, whereas\n        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D_INLINECODE this.opCast!(ubyte[])()).\n\n        Returns: type tag, length tag, and value, all concatenated as a ubyte array.\n",
-      "line" : 4048,
+      "line" : 4049,
       "char" : 13,
       "deco" : "xFNbNdZAh",
-      "endline" : 4107,
+      "endline" : 4108,
       "endchar" : 5,
       "overrides" : [
        "interfaces.Byteable.toBytes"
@@ -9201,7 +9289,7 @@
      {
       "kind" : "template",
       "comment" : "        This differs from $(D_INLINECODE this.value) in that\n        $(D_INLINECODE this.value) only returns the value octets, whereas\n        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D_INLINECODE this.toBytes()).\n\n        Returns: type tag, length tag, and value, all concatenated as a ubyte array.\n",
-      "line" : 4120,
+      "line" : 4121,
       "char" : 13,
       "name" : "opCast",
       "parameters" : [
@@ -9215,10 +9303,10 @@
        {
         "name" : "opCast",
         "kind" : "function",
-        "line" : 4120,
+        "line" : 4121,
         "char" : 13,
         "type" : "nothrow @system ubyte[]()",
-        "endline" : 4123,
+        "endline" : 4124,
         "endchar" : 5
        }
       ]
@@ -9226,124 +9314,146 @@
     ]
    },
    {
-    "name" : "__unittest___source_codecs_der_d_4129_12",
+    "name" : "__unittest___source_codecs_der_d_4130_12",
     "kind" : "function",
-    "line" : 4129,
+    "line" : 4130,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4281,
+    "endline" : 4282,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_der_d_4282_13",
+    "name" : "__unittest___source_codecs_der_d_4283_13",
     "kind" : "function",
-    "line" : 4282,
+    "line" : 4283,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4323,
+    "endline" : 4324,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_der_d_4324_14",
+    "name" : "__unittest___source_codecs_der_d_4325_14",
     "kind" : "function",
-    "line" : 4324,
+    "line" : 4325,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4359,
+    "endline" : 4360,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_der_d_4360_15",
+    "name" : "__unittest___source_codecs_der_d_4361_15",
     "kind" : "function",
-    "line" : 4360,
+    "line" : 4361,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4383,
+    "endline" : 4384,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_der_d_4384_16",
+    "name" : "__unittest___source_codecs_der_d_4385_16",
     "kind" : "function",
-    "line" : 4384,
+    "line" : 4385,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4401,
+    "endline" : 4402,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_der_d_4402_17",
+    "name" : "__unittest___source_codecs_der_d_4403_17",
     "kind" : "function",
-    "line" : 4402,
+    "line" : 4403,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4416,
+    "endline" : 4417,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_der_d_4417_18",
+    "name" : "__unittest___source_codecs_der_d_4418_18",
     "kind" : "function",
-    "line" : 4417,
+    "line" : 4418,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4426,
+    "endline" : 4427,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_der_d_4427_19",
+    "name" : "__unittest___source_codecs_der_d_4428_19",
     "kind" : "function",
-    "line" : 4427,
+    "line" : 4428,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4434,
+    "endline" : 4435,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_der_d_4435_20",
+    "name" : "__unittest___source_codecs_der_d_4436_20",
     "kind" : "function",
-    "line" : 4435,
+    "line" : 4436,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4442,
+    "endline" : 4443,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_der_d_4443_21",
+    "name" : "__unittest___source_codecs_der_d_4444_21",
     "kind" : "function",
-    "line" : 4443,
+    "line" : 4444,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4454,
+    "endline" : 4451,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_codecs_der_d_4455_22",
+    "name" : "__unittest___source_codecs_der_d_4452_22",
     "kind" : "function",
-    "line" : 4455,
+    "line" : 4452,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
     "endline" : 4463,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_codecs_der_d_4464_23",
+    "kind" : "function",
+    "line" : 4464,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 4475,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_codecs_der_d_4476_24",
+    "kind" : "function",
+    "line" : 4476,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 4481,
     "endchar" : 2
    }
   ]

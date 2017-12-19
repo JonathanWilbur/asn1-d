@@ -4002,11 +4002,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         "library. "
                     );
 
+                cursor += (numberOfLengthOctets);
+
                 if ((cursor + length) > bytes.length)
                     throw new ASN1ValueTooSmallException
                     ("DER-encoded value terminated prematurely.");
 
-                cursor += (numberOfLengthOctets);
                 this.value = bytes[cursor .. cursor+length].dup;
                 return (cursor + length);
             }
@@ -4025,7 +4026,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         {
             ubyte length = (bytes[cursor] & 0x7Fu);
 
-            if (cursor+length > bytes.length)
+            if (cursor+length >= bytes.length)
                 throw new ASN1ValueTooSmallException
                 ("BER-encoded value terminated prematurely.");
 
@@ -4422,6 +4423,14 @@ unittest
     assert((element.toBytes)[1] != 0x80u);
 }
 
+// Test that a value that is a byte too short does not throw a RangeError.
+@system
+unittest
+{
+    ubyte[] test = [ 0x00u, 0x03u, 0x00u, 0x00u ];
+    assertThrown!ASN1ValueTooSmallException(new DERElement(test));
+}
+
 // Test that a misleading definite-long length byte does not throw a RangeError.
 @system
 unittest
@@ -4460,4 +4469,13 @@ unittest
     big ~= cast(ubyte[]) *cast(ubyte[size_t.sizeof] *) &biggest;
     big ~= [ 0x01u, 0x02u, 0x03u ]; // Plus some arbitrary data.
     assertThrown!ASN1ValueTooBigException(new DERElement(big));
+}
+
+// Test that a valueless long-form definite-length element does not throw a RangeError
+@system
+unittest
+{
+    ubyte[] naughty = [ 0x00u, 0x82, 0x00u, 0x01u ];
+    size_t bytesRead = 0u;
+    assertThrown!ASN1InvalidLengthException(new DERElement(bytesRead, naughty));
 }

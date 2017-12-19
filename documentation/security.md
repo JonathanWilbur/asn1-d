@@ -13,6 +13,26 @@ I plan to do fuzz testing on all possible one to three byte values at least.
 
 The results of this testing will go here.
 
+### FourBytes Fuzz Testing
+
+FourBytes is a rather uncreative name I gave to the fuzz test that supplies
+all possible combinations of four bytes (4.2 billion of them) to the 
+constructors of each codec. I am not done with this testing yet, but I 
+already found two severe bugs.
+
+#### Bug #1
+
+An "off-by-one" error. When using definite-short length, I did not check that
+the remaining bytes of the encoded data was just one byte short of what was
+necessary to live up to the stated length in the length octets. In other words,
+I used `>` when I should have used `>=`.
+
+#### Bug #2
+
+I did not check that the value octets of an indefinite-length element were
+greater than or equal to two in number, so an indefinite-length element with
+a single null value octet (`0x00u`) would read out of bounds.
+
 ## CVE Review
 
 Below are my reviews of all ASN.1-related CVEs, and how they might relate to 

@@ -5445,17 +5445,28 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                         "library. "
                     );
 
+                cursor += (numberOfLengthOctets);
+
                 if ((cursor + length) > bytes.length)
                     throw new ASN1ValueTooSmallException
                     ("CER-encoded value terminated prematurely.");
 
-                cursor += (numberOfLengthOctets);
                 this.value = bytes[cursor .. cursor+length].dup;
                 return (cursor + length);
             }
             else // Indefinite
             {   
                 size_t startOfValue = ++cursor;
+
+                if (bytes.length < (cursor + 2u))
+                    throw new ASN1ValueTooSmallException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Canonical Encoding Rules (CER) encoded element that " ~
+                        "was encoded using indefinite length form, but whose " ~
+                        "value octets were too few to contain the necessary " ~
+                        "END OF CONTENT octets (two consecutive null bytes). "
+                    );
 
                 while (cursor < bytes.length-1)
                 {
@@ -5479,7 +5490,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         {
             ubyte length = (bytes[cursor] & 0x7Fu);
 
-            if (cursor+length > bytes.length)
+            if (cursor+length >= bytes.length)
                 throw new ASN1ValueTooSmallException
                 ("BER-encoded value terminated prematurely.");
 
@@ -5911,6 +5922,14 @@ unittest
     assert((element.toBytes)[1] != 0x80u);
 }
 
+// Test that a value that is a byte too short does not throw a RangeError.
+@system
+unittest
+{
+    ubyte[] test = [ 0x00u, 0x03u, 0x00u, 0x00u ];
+    assertThrown!ASN1ValueTooSmallException(new CERElement(test));
+}
+
 // Test that a misleading definite-long length byte does not throw a RangeError.
 @system
 unittest
@@ -5949,4 +5968,31 @@ unittest
     big ~= cast(ubyte[]) *cast(ubyte[size_t.sizeof] *) &biggest;
     big ~= [ 0x01u, 0x02u, 0x03u ]; // Plus some arbitrary data.
     assertThrown!ASN1ValueTooBigException(new CERElement(big));
+}
+
+// Test that a short indefinite-length element does not throw a RangeError
+@system
+unittest
+{
+    ubyte[] naughty = [ 0x1F, 0x00u, 0x80, 0x00u ];
+    size_t bytesRead = 0u;
+    assertThrown!ASN1ValueTooSmallException(new CERElement(bytesRead, naughty));
+}
+
+// Test that a short indefinite-length element does not throw a RangeError
+@system
+unittest
+{
+    ubyte[] naughty = [ 0x1F, 0x00u, 0x80, 0x00u, 0x00u ];
+    size_t bytesRead = 0u;
+    assertNotThrown!ASN1ValueTooSmallException(new CERElement(bytesRead, naughty));
+}
+
+// Test that a valueless long-form definite-length element does not throw a RangeError
+@system
+unittest
+{
+    ubyte[] naughty = [ 0x00u, 0x82, 0x00u, 0x01u ];
+    size_t bytesRead = 0u;
+    assertThrown!ASN1InvalidLengthException(new CERElement(bytesRead, naughty));
 }

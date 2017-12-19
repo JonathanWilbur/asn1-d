@@ -4379,12 +4379,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "you are running the latest stable version of this " ~
                         "library. "
                     );
+            
+                cursor += (numberOfLengthOctets);
 
                 if ((cursor + length) > bytes.length)
                     throw new ASN1ValueTooSmallException
                     ("BER-encoded value terminated prematurely.");
-            
-                cursor += (numberOfLengthOctets);
+
                 this.value = bytes[cursor .. cursor+length].dup;
                 return (cursor + length);
             }
@@ -4392,7 +4393,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             {   
                 size_t startOfValue = ++cursor;
 
-                while (cursor < bytes.length-1)
+                if (bytes.length < (cursor + 2u))
+                    throw new ASN1ValueTooSmallException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Basic Encoding Rules (BER) encoded element that " ~
+                        "was encoded using indefinite length form, but whose " ~
+                        "value octets were too few to contain the necessary " ~
+                        "END OF CONTENT octets (two consecutive null bytes). "
+                    );
+
+                while (cursor < (bytes.length - 1u))
                 {
                     if 
                     (
@@ -4406,6 +4417,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1ValueTooSmallException
                     ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERElement.");
 
+                // writeln(bytes[startOfValue .. cursor-1u].length);
+                // writefln("%(%02X %)", bytes[startOfValue .. cursor-1u]);
                 this.value = bytes[startOfValue .. cursor-1u].dup;
                 return ++cursor;
             }
@@ -4414,7 +4427,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         {
             ubyte length = (bytes[cursor] & 0x7Fu);
 
-            if ((cursor + length) > bytes.length)
+            if ((cursor + length) >= bytes.length)
                 throw new ASN1ValueTooSmallException
                 ("BER-encoded value terminated prematurely.");
 
@@ -4851,6 +4864,14 @@ unittest
     assert((element.toBytes)[1] != 0x80u);
 }
 
+// Test that a value that is a byte too short does not throw a RangeError.
+@system
+unittest
+{
+    ubyte[] test = [ 0x00u, 0x03u, 0x00u, 0x00u ];
+    assertThrown!ASN1ValueTooSmallException(new BERElement(test));
+}
+
 // Test that a misleading definite-long length byte does not throw a RangeError.
 @system
 unittest
@@ -4881,4 +4902,31 @@ unittest
     big ~= cast(ubyte[]) *cast(ubyte[size_t.sizeof] *) &biggest;
     big ~= [ 0x01u, 0x02u, 0x03u ]; // Plus some arbitrary data.
     assertThrown!ASN1ValueTooBigException(new BERElement(big));
+}
+
+// Test that a short indefinite-length element does not throw a RangeError
+@system
+unittest
+{
+    ubyte[] naughty = [ 0x1F, 0x00u, 0x80, 0x00u ];
+    size_t bytesRead = 0u;
+    assertThrown!ASN1ValueTooSmallException(new BERElement(bytesRead, naughty));
+}
+
+// Test that a short indefinite-length element does not throw a RangeError
+@system
+unittest
+{
+    ubyte[] naughty = [ 0x1F, 0x00u, 0x80, 0x00u, 0x00u ];
+    size_t bytesRead = 0u;
+    assertNotThrown!ASN1ValueTooSmallException(new BERElement(bytesRead, naughty));
+}
+
+// Test that a valueless long-form definite-length element does not throw a RangeError
+@system
+unittest
+{
+    ubyte[] naughty = [ 0x00u, 0x82, 0x00u, 0x01u ];
+    size_t bytesRead = 0u;
+    assertThrown!ASN1ValueTooSmallException(new BERElement(bytesRead, naughty));
 }

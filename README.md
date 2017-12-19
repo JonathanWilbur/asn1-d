@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.22](http://semver.org/)
+* Version: [1.0.0-beta.23](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -222,6 +222,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `min` of every integral type
 - [x] Test that .length > 1000 octetStrings cannot modify their references
 - [x] Test really large items
+- [ ] Enforce tag number encoding on the fewest possible bytes
 - [ ] Fuzz testing to ensure `RangeError` is never thrown. If it is thrown, it means that there are vulnerabilities if compiled with `-boundscheck=off` flag.
 - [ ] Cross-Platform Testing
   - [ ] Windows (Which is Big-Endian)
