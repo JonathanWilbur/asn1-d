@@ -521,6 +521,122 @@
   <li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
+  <a href="#cerOID" id="cerOID"><code class="code">cerOID</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="cerOID"></span>alias <code class="code">cerOID</code> = canonicalEncodingRulesObjectIdentifier;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#cerObjectID" id="cerObjectID"><code class="code">cerObjectID</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="cerObjectID"></span>alias <code class="code">cerObjectID</code> = canonicalEncodingRulesObjectIdentifier;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#cerObjectIdentifier" id="cerObjectIdentifier"><code class="code">cerObjectIdentifier</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="cerObjectIdentifier"></span>alias <code class="code">cerObjectIdentifier</code> = canonicalEncodingRulesObjectIdentifier;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#canonicalEncodingRulesObjectIdentifier" id="canonicalEncodingRulesObjectIdentifier"><code class="code">canonicalEncodingRulesObjectIdentifier</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="canonicalEncodingRulesObjectIdentifier"></span>immutable OID <code class="code">canonicalEncodingRulesObjectIdentifier</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The object identifier assigned to the Canonical Encoding Rules (CER), per the
+    <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>'s,
+    <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    <i>{joint-iso-itu-t asn1(1) ber-derived(2) canonical-encoding(0)} </i>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
   <a href="#CERElement" id="CERElement"><code class="code">CERElement</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -833,7 +949,7 @@ cv.tagNumber = 0x02u; <span class="comment">// "2" means this is an INTEGER
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.boolean.2"></span>nothrow @property @safe void <code class="code">boolean</code>(bool <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.boolean.2"></span>nothrow @property @safe void <code class="code">boolean</code>(in bool <code class="code">value</code>);
 
           </code>
         </p>
@@ -954,7 +1070,7 @@ assertThrown!ASN1ValueInvalidException(cv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.integer.2"></span>nothrow @property @system void <code class="code">integer</code>(T)(T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.integer.2"></span>nothrow @property @system void <code class="code">integer</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
 
           </code>
         </p>
@@ -1050,7 +1166,7 @@ assertThrown!ASN1ValueInvalidException(cv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.bitString.2"></span>@property @system void <code class="code">bitString</code>(bool[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.bitString.2"></span>@property @system void <code class="code">bitString</code>(in bool[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -1130,7 +1246,7 @@ assertThrown!ASN1ValueInvalidException(cv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.octetString.2"></span>@property @system void <code class="code">octetString</code>(ubyte[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.octetString.2"></span>@property @system void <code class="code">octetString</code>(in ubyte[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -1225,7 +1341,7 @@ assertThrown!ASN1ValueInvalidException(cv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectIdentifier.2"></span>@property @system void <code class="code">objectIdentifier</code>(OID <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectIdentifier.2"></span>@property @system void <code class="code">objectIdentifier</code>(in OID <code class="code">value</code>);
 
           </code>
         </p>
@@ -1351,7 +1467,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectDescriptor.2"></span>@property @system void <code class="code">objectDescriptor</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectDescriptor.2"></span>@property @system void <code class="code">objectDescriptor</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -1496,7 +1612,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.external.2"></span>deprecated @property @system void <code class="code">external</code>(External <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.external.2"></span>deprecated @property @system void <code class="code">external</code>(in External <code class="code">value</code>);
 
           </code>
         </p>
@@ -1657,7 +1773,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.realType.2"></span>@property @system void <code class="code">realType</code>(T)(T <code class="code">value</code>) if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.realType.2"></span>@property @system void <code class="code">realType</code>(T)(in T <code class="code">value</code>) if (is(T == float) || is(T == double));
 
           </code>
         </p>
@@ -1794,7 +1910,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.enumerated.2"></span>nothrow @property @system void <code class="code">enumerated</code>(T)(T <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.enumerated.2"></span>nothrow @property @system void <code class="code">enumerated</code>(T)(in T <code class="code">value</code>);
 
           </code>
         </p>
@@ -1921,7 +2037,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.embeddedPresentationDataValue.2"></span>@property @system void <code class="code">embeddedPresentationDataValue</code>(EmbeddedPDV <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.embeddedPresentationDataValue.2"></span>@property @system void <code class="code">embeddedPresentationDataValue</code>(in EmbeddedPDV <code class="code">value</code>);
 
           </code>
         </p>
@@ -2051,7 +2167,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.unicodeTransformationFormat8String.2"></span>@property @system void <code class="code">unicodeTransformationFormat8String</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.unicodeTransformationFormat8String.2"></span>@property @system void <code class="code">unicodeTransformationFormat8String</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2135,7 +2251,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.relativeObjectIdentifier.2"></span>nothrow @property @system void <code class="code">relativeObjectIdentifier</code>(OIDNode[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.relativeObjectIdentifier.2"></span>nothrow @property @system void <code class="code">relativeObjectIdentifier</code>(in OIDNode[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2235,7 +2351,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.sequence.2"></span>@property @system void <code class="code">sequence</code>(CERElement[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.sequence.2"></span>@property @system void <code class="code">sequence</code>(in CERElement[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2315,7 +2431,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.set.2"></span>@property @system void <code class="code">set</code>(CERElement[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.set.2"></span>@property @system void <code class="code">set</code>(in CERElement[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2394,7 +2510,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.numericString.2"></span>@property @system void <code class="code">numericString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.numericString.2"></span>@property @system void <code class="code">numericString</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2484,7 +2600,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.printableString.2"></span>@property @system void <code class="code">printableString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.printableString.2"></span>@property @system void <code class="code">printableString</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2566,7 +2682,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.teletexString.2"></span>@property @system void <code class="code">teletexString</code>(ubyte[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.teletexString.2"></span>@property @system void <code class="code">teletexString</code>(in ubyte[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2637,7 +2753,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.videotexString.2"></span>@property @system void <code class="code">videotexString</code>(ubyte[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.videotexString.2"></span>@property @system void <code class="code">videotexString</code>(in ubyte[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2736,7 +2852,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.internationalAlphabetNumber5String.2"></span>@property @system void <code class="code">internationalAlphabetNumber5String</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.internationalAlphabetNumber5String.2"></span>@property @system void <code class="code">internationalAlphabetNumber5String</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2862,7 +2978,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.coordinatedUniversalTime.2"></span>@property @system void <code class="code">coordinatedUniversalTime</code>(DateTime <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.coordinatedUniversalTime.2"></span>@property @system void <code class="code">coordinatedUniversalTime</code>(in DateTime <code class="code">value</code>);
 
           </code>
         </p>
@@ -2968,7 +3084,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalizedTime.2"></span>@property @system void <code class="code">generalizedTime</code>(DateTime <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalizedTime.2"></span>@property @system void <code class="code">generalizedTime</code>(in DateTime <code class="code">value</code>);
 
           </code>
         </p>
@@ -3081,7 +3197,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.graphicString.2"></span>@property @system void <code class="code">graphicString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.graphicString.2"></span>@property @system void <code class="code">graphicString</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -3189,7 +3305,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.visibleString.2"></span>@property @system void <code class="code">visibleString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.visibleString.2"></span>@property @system void <code class="code">visibleString</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -3293,7 +3409,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalString.2"></span>@property @system void <code class="code">generalString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalString.2"></span>@property @system void <code class="code">generalString</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -3395,7 +3511,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.universalString.2"></span>@property @system void <code class="code">universalString</code>(dstring <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.universalString.2"></span>@property @system void <code class="code">universalString</code>(in dstring <code class="code">value</code>);
 
           </code>
         </p>
@@ -3508,7 +3624,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.characterString.2"></span>@property @system void <code class="code">characterString</code>(CharacterString <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.characterString.2"></span>@property @system void <code class="code">characterString</code>(in CharacterString <code class="code">value</code>);
 
           </code>
         </p>
@@ -3613,7 +3729,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.basicMultilingualPlaneString.2"></span>@property @system void <code class="code">basicMultilingualPlaneString</code>(wstring <code class="code">value</code>);
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.basicMultilingualPlaneString.2"></span>@property @system void <code class="code">basicMultilingualPlaneString</code>(in wstring <code class="code">value</code>);
 
           </code>
         </p>

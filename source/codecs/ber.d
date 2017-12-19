@@ -227,7 +227,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         interpreted as FALSE.
     */
     override public @property @safe nothrow
-    void boolean(bool value)
+    void boolean(in bool value)
     {
         this.value = [(value ? 0xFFu : 0x00u)];
     }
@@ -328,7 +328,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         the two's complement encoding of the integer.
     */
     public @property @system nothrow
-    void integer(T)(T value)
+    void integer(T)(in T value)
     if (isIntegral!T && isSigned!T)
     {
         ubyte[] ub;
@@ -448,7 +448,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         the BIT STRING. The unused bits can be anything.
     */
     override public @property
-    void bitString(bool[] value)
+    void bitString(in bool[] value)
     {
         ubyte[] ub;
         ub.length = ((value.length / 8u) + (value.length % 8u ? 1u : 0u)); 
@@ -476,7 +476,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Encodes an OCTET STRING from an unsigned byte array.
     */
     override public @property @safe
-    void octetString(ubyte[] value)
+    void octetString(in ubyte[] value)
     {
         this.value = value.dup; // REVIEW: Does this need to be .dup?
     }
@@ -626,7 +626,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     override public @property @system
-    void objectIdentifier(OID value)
+    void objectIdentifier(in OID value)
     in
     {
         assert(value.length >= 2u);
@@ -785,7 +785,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 characters or DELETE.
     */
     override public @property @system
-    void objectDescriptor(string value)
+    void objectDescriptor(in string value)
     {
         foreach (immutable character; value)
         {
@@ -1125,7 +1125,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 arbitrary         [2] IMPLICIT BIT STRING } }
     */
     deprecated override public @property @system
-    void external(External value)
+    void external(in External value)
     {
         BERElement[] components = [];
         
@@ -1164,7 +1164,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         BERElement dataValue = new BERElement();
         dataValue.tagClass = ASN1TagClass.contextSpecific;
         dataValue.tagNumber = value.encoding;
-        dataValue.value = value.dataValue;
+        dataValue.value = value.dataValue.dup;
 
         components ~= dataValue;
         this.sequence = components;
@@ -1646,7 +1646,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             2001, pp. 400–402.
     */
     public @property @system
-    void realType(T)(T value)
+    void realType(T)(in T value)
     if (is(T == float) || is(T == double))
     {
         import std.bitmanip : DoubleRep, FloatRep;
@@ -2319,7 +2319,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         type is encoded the exact same way that an INTEGER is.
     */
     public @property @system nothrow
-    void enumerated(T)(T value)
+    void enumerated(T)(in T value)
     {
         ubyte[] ub;
         ub.length = T.sizeof;
@@ -2648,7 +2648,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 invalid characters.
     */
     override public @property @system
-    void embeddedPresentationDataValue(EmbeddedPDV value)
+    void embeddedPresentationDataValue(in EmbeddedPDV value)
     {
         BERElement identification = new BERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
@@ -2782,7 +2782,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Encodes a UTF-8 string to bytes. No checks are performed.
     */
     override public @property @system nothrow
-    void unicodeTransformationFormat8String(string value)
+    void unicodeTransformationFormat8String(in string value)
     {
         this.value = cast(ubyte[]) value;
     }
@@ -2892,7 +2892,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     override public @property @system nothrow
-    void relativeObjectIdentifier(OIDNode[] value)
+    void relativeObjectIdentifier(in OIDNode[] value)
     {
         foreach (node; value)
         {
@@ -2987,12 +2987,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Encodes a sequence of BERElements.
     */
     override public @property @system
-    void sequence(BERElement[] value)
+    void sequence(in BERElement[] value)
     {
         ubyte[] result;
         foreach (bv; value)
         {
-            result ~= cast(ubyte[]) bv;
+            result ~= bv.toBytes;
         }
         this.value = result;
     }
@@ -3021,12 +3021,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Encodes a set of BERElements.
     */
     override public @property @system
-    void set(BERElement[] value)
+    void set(in BERElement[] value)
     {
         ubyte[] result;
         foreach (bv; value)
         {
-            result ~= cast(ubyte[]) bv;
+            result ~= bv.toBytes;
         }
         this.value = result;
     }
@@ -3067,7 +3067,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 space is supplied.
     */
     override public @property @system
-    void numericString(string value)
+    void numericString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3128,7 +3128,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 supplied.
     */
     override public @property @system
-    void printableString(string value)
+    void printableString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3162,7 +3162,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Literally just sets the value bytes.
     */
     override public @property @safe nothrow
-    void teletexString(ubyte[] value)
+    void teletexString(in ubyte[] value)
     {
         // TODO: Validation.
         this.value = value.dup;
@@ -3184,7 +3184,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Literally just sets the value bytes.
     */
     override public @property @safe nothrow
-    void videotexString(ubyte[] value)
+    void videotexString(in ubyte[] value)
     {
         // TODO: Validation.
         this.value = value.dup;
@@ -3257,7 +3257,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             ASN1ValueInvalidException = if any enecoded character is not ASCII.
     */
     override public @property @system
-    void internationalAlphabetNumber5String(string value)
+    void internationalAlphabetNumber5String(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3330,7 +3330,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
     override public @property @system nothrow
-    void coordinatedUniversalTime(DateTime value)
+    void coordinatedUniversalTime(in DateTime value)
     {
         import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
@@ -3386,7 +3386,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         )
     */
     override public @property @system nothrow
-    void generalizedTime(DateTime value)
+    void generalizedTime(in DateTime value)
     {
         import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
@@ -3451,7 +3451,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 (including space) is supplied.
     */
     override public @property @system
-    void graphicString(string value)
+    void graphicString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3509,7 +3509,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
                 (including space) is supplied.
     */
     override public @property @system
-    void visibleString(string value)
+    void visibleString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3574,7 +3574,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
             2001, p. 182.
     */
     override public @property @system
-    void generalString(string value)
+    void generalString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3642,7 +3642,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Encodes a dstring of UTF-32 characters.
     */
     override public @property @system
-    void universalString(dstring value)
+    void universalString(in dstring value)
     {
         version (BigEndian)
         {
@@ -3935,7 +3935,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         will be context-specific and numbered from 0 to 5.
     */
     override public @property @system
-    void characterString(CharacterString value)
+    void characterString(in CharacterString value)
     {
         BERElement identification = new BERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
@@ -4105,7 +4105,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement
         Encodes a wstring of UTF-16 characters.
     */
     override public @property @system
-    void basicMultilingualPlaneString(wstring value)
+    void basicMultilingualPlaneString(in wstring value)
     {
         version (BigEndian)
         {

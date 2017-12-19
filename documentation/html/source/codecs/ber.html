@@ -535,6 +535,122 @@
   <li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
+  <a href="#berOID" id="berOID"><code class="code">berOID</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="berOID"></span>alias <code class="code">berOID</code> = basicEncodingRulesObjectIdentifier;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#berObjectID" id="berObjectID"><code class="code">berObjectID</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="berObjectID"></span>alias <code class="code">berObjectID</code> = basicEncodingRulesObjectIdentifier;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#berObjectIdentifier" id="berObjectIdentifier"><code class="code">berObjectIdentifier</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="berObjectIdentifier"></span>alias <code class="code">berObjectIdentifier</code> = basicEncodingRulesObjectIdentifier;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#basicEncodingRulesObjectIdentifier" id="basicEncodingRulesObjectIdentifier"><code class="code">basicEncodingRulesObjectIdentifier</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="basicEncodingRulesObjectIdentifier"></span>immutable OID <code class="code">basicEncodingRulesObjectIdentifier</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The object identifier assigned to the Basic Encoding Rules (BER), per the
+    <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>'s,
+    <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    <i>{joint-iso-itu-t asn1 (1) basic-encoding (1)} </i>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
   <a href="#BERElement" id="BERElement"><code class="code">BERElement</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -968,7 +1084,7 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.boolean.2"></span>nothrow @property @safe void <code class="code">boolean</code>(bool <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.boolean.2"></span>nothrow @property @safe void <code class="code">boolean</code>(in bool <code class="code">value</code>);
 
           </code>
         </p>
@@ -1089,7 +1205,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.integer.2"></span>nothrow @property @system void <code class="code">integer</code>(T)(T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.integer.2"></span>nothrow @property @system void <code class="code">integer</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
 
           </code>
         </p>
@@ -1185,7 +1301,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.bitString.2"></span>@property void <code class="code">bitString</code>(bool[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.bitString.2"></span>@property void <code class="code">bitString</code>(in bool[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -1265,7 +1381,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.octetString.2"></span>@property @safe void <code class="code">octetString</code>(ubyte[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.octetString.2"></span>@property @safe void <code class="code">octetString</code>(in ubyte[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -1360,7 +1476,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.objectIdentifier.2"></span>@property @system void <code class="code">objectIdentifier</code>(OID <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.objectIdentifier.2"></span>@property @system void <code class="code">objectIdentifier</code>(in OID <code class="code">value</code>);
 
           </code>
         </p>
@@ -1486,7 +1602,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.objectDescriptor.2"></span>@property @system void <code class="code">objectDescriptor</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.objectDescriptor.2"></span>@property @system void <code class="code">objectDescriptor</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -1640,7 +1756,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.external.2"></span>deprecated @property @system void <code class="code">external</code>(External <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.external.2"></span>deprecated @property @system void <code class="code">external</code>(in External <code class="code">value</code>);
 
           </code>
         </p>
@@ -1810,7 +1926,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realType.2"></span>@property @system void <code class="code">realType</code>(T)(T <code class="code">value</code>) if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realType.2"></span>@property @system void <code class="code">realType</code>(T)(in T <code class="code">value</code>) if (is(T == float) || is(T == double));
 
           </code>
         </p>
@@ -1947,7 +2063,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.enumerated.2"></span>nothrow @property @system void <code class="code">enumerated</code>(T)(T <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.enumerated.2"></span>nothrow @property @system void <code class="code">enumerated</code>(T)(in T <code class="code">value</code>);
 
           </code>
         </p>
@@ -2058,7 +2174,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.embeddedPresentationDataValue.2"></span>@property @system void <code class="code">embeddedPresentationDataValue</code>(EmbeddedPDV <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.embeddedPresentationDataValue.2"></span>@property @system void <code class="code">embeddedPresentationDataValue</code>(in EmbeddedPDV <code class="code">value</code>);
 
           </code>
         </p>
@@ -2165,7 +2281,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.unicodeTransformationFormat8String.2"></span>nothrow @property @system void <code class="code">unicodeTransformationFormat8String</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.unicodeTransformationFormat8String.2"></span>nothrow @property @system void <code class="code">unicodeTransformationFormat8String</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2249,7 +2365,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.relativeObjectIdentifier.2"></span>nothrow @property @system void <code class="code">relativeObjectIdentifier</code>(OIDNode[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.relativeObjectIdentifier.2"></span>nothrow @property @system void <code class="code">relativeObjectIdentifier</code>(in OIDNode[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2349,7 +2465,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.sequence.2"></span>@property @system void <code class="code">sequence</code>(BERElement[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.sequence.2"></span>@property @system void <code class="code">sequence</code>(in BERElement[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2429,7 +2545,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.set.2"></span>@property @system void <code class="code">set</code>(BERElement[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.set.2"></span>@property @system void <code class="code">set</code>(in BERElement[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2508,7 +2624,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.numericString.2"></span>@property @system void <code class="code">numericString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.numericString.2"></span>@property @system void <code class="code">numericString</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2598,7 +2714,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.printableString.2"></span>@property @system void <code class="code">printableString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.printableString.2"></span>@property @system void <code class="code">printableString</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2680,7 +2796,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.teletexString.2"></span>nothrow @property @safe void <code class="code">teletexString</code>(ubyte[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.teletexString.2"></span>nothrow @property @safe void <code class="code">teletexString</code>(in ubyte[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2751,7 +2867,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.videotexString.2"></span>nothrow @property @safe void <code class="code">videotexString</code>(ubyte[] <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.videotexString.2"></span>nothrow @property @safe void <code class="code">videotexString</code>(in ubyte[] <code class="code">value</code>);
 
           </code>
         </p>
@@ -2850,7 +2966,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.internationalAlphabetNumber5String.2"></span>@property @system void <code class="code">internationalAlphabetNumber5String</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.internationalAlphabetNumber5String.2"></span>@property @system void <code class="code">internationalAlphabetNumber5String</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -2976,7 +3092,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.coordinatedUniversalTime.2"></span>nothrow @property @system void <code class="code">coordinatedUniversalTime</code>(DateTime <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.coordinatedUniversalTime.2"></span>nothrow @property @system void <code class="code">coordinatedUniversalTime</code>(in DateTime <code class="code">value</code>);
 
           </code>
         </p>
@@ -3082,7 +3198,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.generalizedTime.2"></span>nothrow @property @system void <code class="code">generalizedTime</code>(DateTime <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.generalizedTime.2"></span>nothrow @property @system void <code class="code">generalizedTime</code>(in DateTime <code class="code">value</code>);
 
           </code>
         </p>
@@ -3195,7 +3311,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.graphicString.2"></span>@property @system void <code class="code">graphicString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.graphicString.2"></span>@property @system void <code class="code">graphicString</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -3303,7 +3419,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.visibleString.2"></span>@property @system void <code class="code">visibleString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.visibleString.2"></span>@property @system void <code class="code">visibleString</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -3407,7 +3523,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.generalString.2"></span>@property @system void <code class="code">generalString</code>(string <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.generalString.2"></span>@property @system void <code class="code">generalString</code>(in string <code class="code">value</code>);
 
           </code>
         </p>
@@ -3509,7 +3625,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.universalString.2"></span>@property @system void <code class="code">universalString</code>(dstring <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.universalString.2"></span>@property @system void <code class="code">universalString</code>(in dstring <code class="code">value</code>);
 
           </code>
         </p>
@@ -3622,7 +3738,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.characterString.2"></span>@property @system void <code class="code">characterString</code>(CharacterString <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.characterString.2"></span>@property @system void <code class="code">characterString</code>(in CharacterString <code class="code">value</code>);
 
           </code>
         </p>
@@ -3727,7 +3843,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.basicMultilingualPlaneString.2"></span>@property @system void <code class="code">basicMultilingualPlaneString</code>(wstring <code class="code">value</code>);
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.basicMultilingualPlaneString.2"></span>@property @system void <code class="code">basicMultilingualPlaneString</code>(in wstring <code class="code">value</code>);
 
           </code>
         </p>

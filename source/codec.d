@@ -179,7 +179,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a boolean
     abstract public @property
-    void boolean(bool value);
+    void boolean(in bool value);
 
     @system
     unittest
@@ -200,7 +200,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes an integer
     abstract public @property
-    void integer(T)(T value) if (isIntegral!T && isSigned!T);
+    void integer(T)(in T value) if (isIntegral!T && isSigned!T);
 
     // Test all 255 signed 8-bit integers
     @system
@@ -442,7 +442,7 @@ class AbstractSyntaxNotation1Element(Element)
     bool[] bitString() const;
 
     abstract public @property
-    void bitString(bool[] value);
+    void bitString(in bool[] value);
 
     @system
     unittest
@@ -467,7 +467,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a ubyte[] array
     abstract public @property
-    void octetString(ubyte[] value);
+    void octetString(in ubyte[] value);
 
     @system
     unittest
@@ -499,7 +499,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes an Object Identifier
     abstract public @property
-    void objectIdentifier(OID value);
+    void objectIdentifier(in OID value);
 
     @system
     unittest
@@ -605,7 +605,7 @@ class AbstractSyntaxNotation1Element(Element)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
     */
     abstract public @property
-    void objectDescriptor(string value);
+    void objectDescriptor(in string value);
 
     @system
     unittest
@@ -680,7 +680,7 @@ class AbstractSyntaxNotation1Element(Element)
         will be context-specific and numbered from 0 to 2.
     */
     deprecated abstract public @property
-    void external(External value);
+    void external(in External value);
 
     // Test of all pre-1994 External encoding choices
     @system
@@ -728,7 +728,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a floating-point number
     abstract public @property
-    void realType(T)(T value) if (is(T == float) || is(T == double));
+    void realType(T)(in T value) if (is(T == float) || is(T == double));
 
     ///
     @system
@@ -1095,7 +1095,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Decodes an integer that represents an ENUMERATED value
     abstract public @property
-    void enumerated(T)(T value) if (isIntegral!T && isSigned!T);
+    void enumerated(T)(in T value) if (isIntegral!T && isSigned!T);
 
     // Test all 255 signed 8-bit integers
     @system
@@ -1397,7 +1397,7 @@ class AbstractSyntaxNotation1Element(Element)
         will be context-specific and numbered from 0 to 5.
     */
     abstract public @property
-    void embeddedPresentationDataValue(EmbeddedPDV value);
+    void embeddedPresentationDataValue(in EmbeddedPDV value);
 
     @system
     unittest
@@ -1483,7 +1483,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a UTF-8 String
     abstract public @property
-    void unicodeTransformationFormat8String(string value);
+    void unicodeTransformationFormat8String(in string value);
 
     @system
     unittest
@@ -1508,7 +1508,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a porition of an Object Identifier
     abstract public @property
-    void relativeObjectIdentifier(OIDNode[] value);
+    void relativeObjectIdentifier(in OIDNode[] value);
 
     @system
     unittest
@@ -1550,7 +1550,7 @@ class AbstractSyntaxNotation1Element(Element)
             child class as a template.
     */
     abstract public @property
-    void sequence(Element[] value);
+    void sequence(in Element[] value);
 
     /**
         Decodes an array of elements.
@@ -1574,7 +1574,7 @@ class AbstractSyntaxNotation1Element(Element)
             child class as a template.
     */
     abstract public @property
-    void set(Element[] value);
+    void set(in Element[] value);
 
     /**
         Decodes a string, where the characters of the string are limited to
@@ -1588,7 +1588,7 @@ class AbstractSyntaxNotation1Element(Element)
         0 - 9 and space.
     */
     abstract public @property
-    void numericString(string value);
+    void numericString(in string value);
 
     @system
     unittest
@@ -1621,7 +1621,7 @@ class AbstractSyntaxNotation1Element(Element)
         forward slash, colon, equals, and question mark.
     */
     abstract public @property
-    void printableString(string value);
+    void printableString(in string value);
 
     @system
     unittest
@@ -1653,7 +1653,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes bytes representing the T.61 Character Set
     abstract public @property
-    void teletexString(ubyte[] value);
+    void teletexString(in ubyte[] value);
 
     @system
     unittest
@@ -1683,7 +1683,7 @@ class AbstractSyntaxNotation1Element(Element)
     ubyte[] videotexString() const;
 
     abstract public @property
-    void videotexString(ubyte[] value);
+    void videotexString(in ubyte[] value);
 
     @system
     unittest
@@ -1717,7 +1717,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a string of ASCII characters
     abstract public @property
-    void internationalAlphabetNumber5String(string value);
+    void internationalAlphabetNumber5String(in string value);
 
     @system
     unittest
@@ -1743,7 +1743,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a DateTime
     abstract public @property
-    void coordinatedUniversalTime(DateTime value);
+    void coordinatedUniversalTime(in DateTime value);
 
     @system
     unittest
@@ -1762,7 +1762,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a DateTime
     abstract public @property
-    void generalizedTime(DateTime value);
+    void generalizedTime(in DateTime value);
 
     @system
     unittest
@@ -1805,7 +1805,7 @@ class AbstractSyntaxNotation1Element(Element)
     */
     deprecated
     abstract public @property
-    void graphicString(string value);
+    void graphicString(in string value);
 
     @system
     unittest
@@ -1846,7 +1846,7 @@ class AbstractSyntaxNotation1Element(Element)
         GraphicalString.)
     */
     abstract public @property
-    void visibleString(string value);
+    void visibleString(in string value);
 
     @system
     unittest
@@ -1879,7 +1879,7 @@ class AbstractSyntaxNotation1Element(Element)
     /// Encodes a string containing only ASCII characters.
     deprecated
     abstract public @property
-    void generalString(string value);
+    void generalString(in string value);
 
     @system
     unittest
@@ -1901,7 +1901,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a string of UTF-32 characters
     abstract public @property
-    void universalString(dstring value);
+    void universalString(in dstring value);
 
     @system
     unittest
@@ -1974,7 +1974,7 @@ class AbstractSyntaxNotation1Element(Element)
         will be context-specific and numbered from 0 to 5.
     */
     abstract public @property
-    void characterString(CharacterString value);
+    void characterString(in CharacterString value);
 
     @system
     unittest
@@ -2063,7 +2063,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a string of UTF-16 characters
     abstract public @property
-    void basicMultilingualPlaneString(wstring value);
+    void basicMultilingualPlaneString(in wstring value);
 
     @system
     unittest

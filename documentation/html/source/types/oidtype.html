@@ -636,8 +636,8 @@
   <div class="code_sample">
     <div class="dlang">
       <ol class="code_lines">
-        <li><code class="code">OIDNode a = OIDNode(1, <span class="string_literal">"iso"</span>);
-OIDNode b = OIDNode(1, <span class="string_literal">"not-iso"</span>);
+        <li><code class="code"><span class="keyword">immutable</span> OIDNode a = OIDNode(1, <span class="string_literal">"iso"</span>);
+<span class="keyword">immutable</span> OIDNode b = OIDNode(1, <span class="string_literal">"not-iso"</span>);
 <span class="keyword">assert</span>(a == b);
 </code></li>
       </ol>
@@ -726,8 +726,8 @@ OIDNode b = OIDNode(1, <span class="string_literal">"not-iso"</span>);
   <div class="code_sample">
     <div class="dlang">
       <ol class="code_lines">
-        <li><code class="code">OIDNode a = OIDNode(1, <span class="string_literal">"iso"</span>);
-OIDNode b = OIDNode(2, <span class="string_literal">"even-more-iso"</span>);
+        <li><code class="code"><span class="keyword">immutable</span> OIDNode a = OIDNode(1, <span class="string_literal">"iso"</span>);
+<span class="keyword">immutable</span> OIDNode b = OIDNode(2, <span class="string_literal">"even-more-iso"</span>);
 <span class="keyword">assert</span>(b &gt; a);
 </code></li>
       </ol>

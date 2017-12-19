@@ -183,7 +183,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         interpreted as FALSE.
     */
     override public @property @safe nothrow
-    void boolean(bool value)
+    void boolean(in bool value)
     {
         this.value = [(value ? 0xFFu : 0x00u)];
     }
@@ -284,7 +284,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         the two's complement encoding of the integer.
     */
     public @property @system nothrow
-    void integer(T)(T value)
+    void integer(T)(in T value)
     if (isIntegral!T && isSigned!T)
     {
         ubyte[] ub;
@@ -477,7 +477,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         the BIT STRING. The unused bits must be zeroed.
     */
     override public @property @system
-    void bitString(bool[] value)
+    void bitString(in bool[] value)
     {
         ubyte[] ub;
         ub.length = ((value.length / 8u) + (value.length % 8u ? 1u : 0u));
@@ -615,7 +615,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         Encodes an OCTET STRING from an unsigned byte array.
     */
     override public @property @system
-    void octetString(ubyte[] value)
+    void octetString(in ubyte[] value)
     in
     {
         // If the blank constructor ever stops producing an EOC, 
@@ -639,7 +639,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             {
                 CERElement x = new CERElement();
                 x.tagNumber = (this.tagNumber & 0b1101_1111u);
-                x.value = value[i .. i+1000u];
+                x.value = value[i .. i+1000u].dup;
                 primitives ~= x;
                 i += 1000u;
             }
@@ -647,7 +647,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
 
             CERElement y = new CERElement();
             y.tagNumber = (this.tagNumber & 0b1101_1111u);
-            y.value = value[i .. $];
+            y.value = value[i .. $].dup;
             primitives ~= y;
 
             CERElement z = new CERElement();
@@ -832,7 +832,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     override public @property @system
-    void objectIdentifier(OID value)
+    void objectIdentifier(in OID value)
     in
     {
         assert(value.length >= 2u);
@@ -1037,7 +1037,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 characters or DELETE.
     */
     override public @property @system
-    void objectDescriptor(string value)
+    void objectDescriptor(in string value)
     {
         foreach (immutable character; value)
         {
@@ -1317,7 +1317,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 invalid characters.
     */
     deprecated override public @property @system
-    void external(External value)
+    void external(in External value)
     {
         CERElement[] components = [];
         
@@ -1347,7 +1347,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         CERElement dataValue = new CERElement();
         dataValue.tagClass = ASN1TagClass.contextSpecific;
         dataValue.tagNumber = value.encoding;
-        dataValue.value = value.dataValue;
+        dataValue.value = value.dataValue.dup;
 
         components ~= dataValue;
         this.sequence = components;
@@ -1805,7 +1805,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             2001, pp. 400–402.
     */
     public @property @system
-    void realType(T)(T value)
+    void realType(T)(in T value)
     if (is(T == float) || is(T == double))
     {
         import std.bitmanip : DoubleRep, FloatRep;
@@ -2254,7 +2254,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         type is encoded the exact same way that an INTEGER is.
     */
     public @property @system nothrow
-    void enumerated(T)(T value)
+    void enumerated(T)(in T value)
     {
         ubyte[] ub;
         ub.length = T.sizeof;
@@ -2566,7 +2566,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 invalid characters.
     */
     override public @property @system
-    void embeddedPresentationDataValue(EmbeddedPDV value)
+    void embeddedPresentationDataValue(in EmbeddedPDV value)
     {
         CERElement identification = new CERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
@@ -2722,7 +2722,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         Encodes a UTF-8 string to bytes. No checks are performed.
     */
     override public @property @system
-    void unicodeTransformationFormat8String(string value)
+    void unicodeTransformationFormat8String(in string value)
     {
         if (value.length <= 1000u)
         {
@@ -2890,7 +2890,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     override public @property @system nothrow
-    void relativeObjectIdentifier(OIDNode[] value)
+    void relativeObjectIdentifier(in OIDNode[] value)
     {
         foreach (node; value)
         {
@@ -2985,12 +2985,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         Encodes a sequence of CERElements.
     */
     override public @property @system
-    void sequence(CERElement[] value)
+    void sequence(in CERElement[] value)
     {
         ubyte[] result;
         foreach (cv; value)
         {
-            result ~= cast(ubyte[]) cv;
+            result ~= cv.toBytes;
         }
         this.value = result;
     }
@@ -3019,12 +3019,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         Encodes a set of CERElements.
     */
     override public @property @system
-    void set(CERElement[] value)
+    void set(in CERElement[] value)
     {
         ubyte[] result;
         foreach (cv; value)
         {
-            result ~= cast(ubyte[]) cv;
+            result ~= cv.toBytes;
         }
         this.value = result;
     }
@@ -3112,7 +3112,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 space is supplied.
     */
     override public @property @system
-    void numericString(string value)
+    void numericString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3282,7 +3282,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 supplied.
     */
     override public @property @system
-    void printableString(string value)
+    void printableString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3410,7 +3410,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         Literally just sets the value bytes.
     */
     override public @property @system
-    void teletexString(ubyte[] value)
+    void teletexString(in ubyte[] value)
     {
         // TODO: Validation.
         if (value.length <= 1000u)
@@ -3426,7 +3426,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             {
                 CERElement x = new CERElement();
                 x.tagNumber = (this.tagNumber & 0b1101_1111u);
-                x.value = value[i .. i+1000u];
+                x.value = value[i .. i+1000u].dup;
                 primitives ~= x;
                 i += 1000u;
             }
@@ -3434,7 +3434,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
 
             CERElement y = new CERElement();
             y.tagNumber = (this.tagNumber & 0b1101_1111u);
-            y.value = value[i .. $];
+            y.value = value[i .. $].dup;
             primitives ~= y;
 
             CERElement z = new CERElement();
@@ -3525,7 +3525,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         Literally just sets the value bytes.
     */
     override public @property @system
-    void videotexString(ubyte[] value)
+    void videotexString(in ubyte[] value)
     {
         // TODO: Validation.
         if (value.length <= 1000u)
@@ -3541,7 +3541,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             {
                 CERElement x = new CERElement();
                 x.tagNumber = (this.tagNumber & 0b1101_1111u);
-                x.value = value[i .. i+1000u];
+                x.value = value[i .. i+1000u].dup;
                 primitives ~= x;
                 i += 1000u;
             }
@@ -3549,7 +3549,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
 
             CERElement y = new CERElement();
             y.tagNumber = (this.tagNumber & 0b1101_1111u);
-            y.value = value[i .. $];
+            y.value = value[i .. $].dup;
             primitives ~= y;
 
             CERElement z = new CERElement();
@@ -3703,7 +3703,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             ASN1ValueInvalidException = if any enecoded character is not ASCII.
     */
     override public @property @system
-    void internationalAlphabetNumber5String(string value)
+    void internationalAlphabetNumber5String(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3835,7 +3835,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
     override public @property @system
-    void coordinatedUniversalTime(DateTime value)
+    void coordinatedUniversalTime(in DateTime value)
     {
         import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
@@ -3891,7 +3891,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         )
     */
     override public @property @system
-    void generalizedTime(DateTime value)
+    void generalizedTime(in DateTime value)
     {
         import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
@@ -4004,7 +4004,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 (including space) is supplied.
     */
     override public @property @system
-    void graphicString(string value)
+    void graphicString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -4169,7 +4169,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
                 (including space) is supplied.
     */
     override public @property @system
-    void visibleString(string value)
+    void visibleString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -4340,7 +4340,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
             2001, p. 182.
     */
     override public @property @system
-    void generalString(string value)
+    void generalString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -4535,7 +4535,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         Encodes a dstring of UTF-32 characters.
     */
     override public @property @system
-    void universalString(dstring value)
+    void universalString(in dstring value)
     {
         if (value.length <= 250u)
         {
@@ -4859,7 +4859,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         will be context-specific and numbered from 0 to 5.
     */
     override public @property @system
-    void characterString(CharacterString value)
+    void characterString(in CharacterString value)
     {
         CERElement identification = new CERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
@@ -5054,7 +5054,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement
         Encodes a wstring of UTF-16 characters.
     */
     override public @property @system
-    void basicMultilingualPlaneString(wstring value)
+    void basicMultilingualPlaneString(in wstring value)
     {
         if (value.length <= 500u)
         {

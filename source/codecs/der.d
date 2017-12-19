@@ -172,7 +172,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         interpreted as FALSE.
     */
     override public @property @safe nothrow
-    void boolean(bool value)
+    void boolean(in bool value)
     {
         this.value = [(value ? 0xFFu : 0x00u)];
     }
@@ -273,7 +273,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         smallest number of bytes that can encode it.
     */
     public @property @system nothrow
-    void integer(T)(T value)
+    void integer(T)(in T value)
     if (isIntegral!T && isSigned!T)
     {
         ubyte[] ub;
@@ -393,7 +393,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         the BIT STRING. The unused bits must be zeroed.
     */
     override public @property
-    void bitString(bool[] value)
+    void bitString(in bool[] value)
     {
         ubyte[] ub;
         ub.length = ((value.length / 8u) + (value.length % 8u ? 1u : 0u)); 
@@ -421,7 +421,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Encodes an OCTET STRING from an unsigned byte array.
     */
     override public @property @safe
-    void octetString(ubyte[] value)
+    void octetString(in ubyte[] value)
     {
         this.value = value.dup;
     }
@@ -571,7 +571,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     override public @property @system
-    void objectIdentifier(OID value)
+    void objectIdentifier(in OID value)
     in
     {
         assert(value.length >= 2u);
@@ -730,7 +730,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 characters or DELETE.
     */
     override public @property @system
-    void objectDescriptor(string value)
+    void objectDescriptor(in string value)
     {
         foreach (immutable character; value)
         {
@@ -1108,7 +1108,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 invalid characters.
     */
     deprecated override public @property @system
-    void external(External value)
+    void external(in External value)
     {
         DERElement[] components = [];
         
@@ -1138,7 +1138,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         DERElement dataValue = new DERElement();
         dataValue.tagClass = ASN1TagClass.contextSpecific;
         dataValue.tagNumber = value.encoding;
-        dataValue.value = value.dataValue;
+        dataValue.value = value.dataValue.dup;
 
         components ~= dataValue;
         this.sequence = components;
@@ -1596,7 +1596,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             2001, pp. 400–402.
     */
     public @property @system
-    void realType(T)(T value)
+    void realType(T)(in T value)
     if (is(T == float) || is(T == double))
     {
         import std.bitmanip : DoubleRep, FloatRep;
@@ -2045,7 +2045,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         type is encoded the exact same way that an INTEGER is.
     */
     public @property @system nothrow
-    void enumerated(T)(T value)
+    void enumerated(T)(in T value)
     {
         ubyte[] ub;
         ub.length = T.sizeof;
@@ -2357,7 +2357,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 invalid characters.
     */
     override public @property @system
-    void embeddedPresentationDataValue(EmbeddedPDV value)
+    void embeddedPresentationDataValue(in EmbeddedPDV value)
     {
         DERElement identification = new DERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
@@ -2478,7 +2478,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Encodes a UTF-8 string to bytes. No checks are performed.
     */
     override public @property @system nothrow
-    void unicodeTransformationFormat8String(string value)
+    void unicodeTransformationFormat8String(in string value)
     {
         this.value = cast(ubyte[]) value;
     }
@@ -2588,7 +2588,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     override public @property @system nothrow
-    void relativeObjectIdentifier(OIDNode[] value)
+    void relativeObjectIdentifier(in OIDNode[] value)
     {
         foreach (node; value)
         {
@@ -2683,12 +2683,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Encodes a sequence of DERElements.
     */
     override public @property @system
-    void sequence(DERElement[] value)
+    void sequence(in DERElement[] value)
     {
         ubyte[] result;
         foreach (dv; value)
         {
-            result ~= cast(ubyte[]) dv;
+            result ~= dv.toBytes;
         }
         this.value = result;
     }
@@ -2717,12 +2717,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Encodes a set of DERElements.
     */
     override public @property @system
-    void set(DERElement[] value)
+    void set(in DERElement[] value)
     {
         ubyte[] result;
         foreach (dv; value)
         {
-            result ~= cast(ubyte[]) dv;
+            result ~= dv.toBytes;
         }
         this.value = result;
     }
@@ -2763,7 +2763,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 space is supplied.
     */
     override public @property @system
-    void numericString(string value)
+    void numericString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -2824,7 +2824,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 supplied.
     */
     override public @property @system
-    void printableString(string value)
+    void printableString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -2858,7 +2858,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Literally just sets the value bytes.
     */
     override public @property @safe nothrow
-    void teletexString(ubyte[] value)
+    void teletexString(in ubyte[] value)
     {
         // TODO: Validation.
         this.value = value.dup;
@@ -2880,7 +2880,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Literally just sets the value bytes.
     */
     override public @property @safe nothrow
-    void videotexString(ubyte[] value)
+    void videotexString(in ubyte[] value)
     {
         // TODO: Validation.
         this.value = value.dup;
@@ -2953,7 +2953,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             ASN1ValueInvalidException = if any enecoded character is not ASCII.
     */
     override public @property @system
-    void internationalAlphabetNumber5String(string value)
+    void internationalAlphabetNumber5String(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3026,7 +3026,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
     override public @property @system
-    void coordinatedUniversalTime(DateTime value)
+    void coordinatedUniversalTime(in DateTime value)
     {
         import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
@@ -3082,7 +3082,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         )
     */
     override public @property @system
-    void generalizedTime(DateTime value)
+    void generalizedTime(in DateTime value)
     {
         import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
@@ -3147,7 +3147,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 (including space) is supplied.
     */
     override public @property @system
-    void graphicString(string value)
+    void graphicString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3205,7 +3205,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
                 (including space) is supplied.
     */
     override public @property @system
-    void visibleString(string value)
+    void visibleString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3270,7 +3270,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
             2001, p. 182.
     */
     override public @property @system
-    void generalString(string value)
+    void generalString(in string value)
     {
         foreach (immutable character; value)
         {
@@ -3338,7 +3338,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Encodes a dstring of UTF-32 characters.
     */
     override public @property @system
-    void universalString(dstring value)
+    void universalString(in dstring value)
     {
         version (BigEndian)
         {
@@ -3572,7 +3572,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         will be context-specific and numbered from 0 to 5.
     */
     override public @property @system
-    void characterString(CharacterString value)
+    void characterString(in CharacterString value)
     {
         DERElement identification = new DERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
@@ -3701,7 +3701,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement
         Encodes a wstring of UTF-16 characters.
     */
     override public @property @system
-    void basicMultilingualPlaneString(wstring value)
+    void basicMultilingualPlaneString(in wstring value)
     {
         version (BigEndian)
         {
