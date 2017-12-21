@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.25](http://semver.org/)
+* Version: [1.0.0-beta.26](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -240,7 +240,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [ ] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) Review 
       in [National Vulnerability Database](https://nvd.nist.gov)
   - [x] ~~[CVE-2017-11496](https://nvd.nist.gov/vuln/detail/CVE-2017-11496)~~
-  - [ ] [CVE-2017-9023](https://nvd.nist.gov/vuln/detail/CVE-2017-9023)
+  - [x] [CVE-2017-9023](https://nvd.nist.gov/vuln/detail/CVE-2017-9023)
   - [ ] [CVE-2016-7053](https://nvd.nist.gov/vuln/detail/CVE-2016-7053)
   - [ ] [CVE-2016-6129](https://nvd.nist.gov/vuln/detail/CVE-2016-6129)
   - [x] [CVE-2016-9939](https://nvd.nist.gov/vuln/detail/CVE-2016-9939)

@@ -2882,6 +2882,44 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assert(output.dataValue == [ 0x13u, 0x15u, 0x17u, 0x19u ]);
     }
 
+    // Inspired by CVE-2017-9023
+    @system
+    unittest
+    {
+        ubyte[] data = [ // This is valid.
+            0x0Bu, 0x0Au, // EMBEDDED PDV, Length 11
+                0x80u, 0x02u, // CHOICE
+                    0x85u, 0x00u, // NULL
+                0x82u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u ]; // OCTET STRING
+
+        // Valid values for data[2]: 80
+        for (ubyte i = 0x81u; i < 0x9Eu; i++)
+        {
+            data[2] = i;
+            size_t x = 0u;
+            BERElement el = new BERElement(x, data);
+            assertThrown!ASN1Exception(el.embeddedPDV);
+        }
+
+        // Valid values for data[4]: 80-85
+        for (ubyte i = 0x86u; i < 0x9Eu; i++)
+        {
+            data[4] = i;
+            size_t x = 0u;
+            BERElement el = new BERElement(x, data);
+            assertThrown!ASN1Exception(el.embeddedPDV);
+        }
+
+        // Valid values for data[6]: 82
+        for (ubyte i = 0x83u; i < 0x9Eu; i++)
+        {
+            data[6] = i;
+            size_t x = 0u;
+            BERElement el = new BERElement(x, data);
+            assertThrown!ASN1Exception(el.embeddedPDV);
+        }
+    }
+
     /**
         Decodes the value to UTF-8 characters.
 
@@ -4169,6 +4207,44 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assert(output.identification.contextNegotiation.presentationContextID == 27L);
         assert(output.identification.contextNegotiation.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 39));
         assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
+    }
+
+    // Inspired by CVE-2017-9023
+    @system
+    unittest
+    {
+        ubyte[] data = [ // This is valid.
+            0x1Eu, 0x0Au, // CharacterString, Length 11
+                0x80u, 0x02u, // CHOICE
+                    0x85u, 0x00u, // NULL
+                0x82u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u ]; // OCTET STRING
+
+        // Valid values for data[2]: 80
+        for (ubyte i = 0x81u; i < 0x9Eu; i++)
+        {
+            data[2] = i;
+            size_t x = 0u;
+            BERElement el = new BERElement(x, data);
+            assertThrown!ASN1Exception(el.characterString);
+        }
+
+        // Valid values for data[4]: 80-85
+        for (ubyte i = 0x86u; i < 0x9Eu; i++)
+        {
+            data[4] = i;
+            size_t x = 0u;
+            BERElement el = new BERElement(x, data);
+            assertThrown!ASN1Exception(el.characterString);
+        }
+
+        // Valid values for data[6]: 82
+        for (ubyte i = 0x83u; i < 0x9Eu; i++)
+        {
+            data[6] = i;
+            size_t x = 0u;
+            BERElement el = new BERElement(x, data);
+            assertThrown!ASN1Exception(el.characterString);
+        }
     }
 
     /**
