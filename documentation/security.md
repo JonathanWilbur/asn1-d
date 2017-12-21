@@ -17,8 +17,8 @@ The results of this testing will go here.
 
 FourBytes is a rather uncreative name I gave to the fuzz test that supplies
 all possible combinations of four bytes (4.2 billion of them) to the 
-constructors of each codec. I am not done with this testing yet, but I 
-already found two severe bugs.
+constructors of each codec. I found two critical bugs from the testing, which
+are described below.
 
 #### Bug #1
 
