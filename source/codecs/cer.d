@@ -1419,6 +1419,76 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         assertThrown!ASN1ValueInvalidException(el.external = input);
     }
 
+    // Inspired by CVE-2017-9023
+    @system
+    unittest
+    {
+        ubyte[] external = [ // This is valid
+            0x08u, 0x09u, // EXTERNAL, Length 9
+                0x02u, 0x01u, 0x1Bu, // INTEGER 27
+                0x81, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+        ];
+
+        // Valid values for octet[2]: 02 06
+        for (ubyte i = 0x07u; i < 0x1Eu; i++)
+        {
+            external[2] = i;
+            size_t x = 0u;
+            CERElement el = new CERElement(x, external);
+            assertThrown!ASN1Exception(el.external);
+        }
+
+        // Valid values for octet[5]: 80 - 82 (Anything else is an invalid value)
+        for (ubyte i = 0x82u; i < 0x9Eu; i++)
+        {
+            external[5] = i;
+            size_t x = 0u;
+            CERElement el = new CERElement(x, external);
+            assertThrown!ASN1Exception(el.external);
+        }
+    }
+
+    // Assert that duplicate elements throw exceptions
+    @system
+    unittest
+    {
+        ubyte[] external;
+
+        external = [ // This is invalid
+            0x08u, 0x0Cu, // EXTERNAL, Length 12
+                0x02u, 0x01u, 0x1Bu, // INTEGER 27
+                0x02u, 0x01u, 0x1Bu, // INTEGER 27
+                0x81, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+        ];
+        assertThrown!ASN1Exception((new CERElement(external)).external);
+
+        external = [ // This is invalid
+            0x08u, 0x0Eu, // EXTERNAL, Length 14
+                0x06u, 0x02u, 0x2Au, 0x03u, // OBJECT IDENTIFIER 1.2.3
+                0x06u, 0x02u, 0x2Au, 0x03u, // OBJECT IDENTIFIER 1.2.3
+                0x81, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+        ];
+        assertThrown!ASN1Exception((new CERElement(external)).external);
+
+        external = [ // This is invalid
+            0x08u, 0x12u, // EXTERNAL, Length 18
+                0x06u, 0x02u, 0x2Au, 0x03u, // OBJECT IDENTIFIER 1.2.3
+                0x07u, 0x02u, 0x45u, 0x45u, // ObjectDescriptor "EE"
+                0x07u, 0x02u, 0x45u, 0x45u, // ObjectDescriptor "EE"
+                0x81u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+        ];
+        assertThrown!ASN1Exception((new CERElement(external)).external);
+
+        external = [ // This is invalid
+            0x08u, 0x14u, // EXTERNAL, Length 20
+                0x06u, 0x02u, 0x2Au, 0x03u, // OBJECT IDENTIFIER 1.2.3
+                0x07u, 0x02u, 0x45u, 0x45u, // ObjectDescriptor "EE"
+                0x81u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u, // OCTET STRING 1,2,3,4
+                0x81u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+        ];
+        assertThrown!ASN1Exception((new CERElement(external)).external);
+    }
+
     /* REVIEW:
         I have not seen it confirmed in the specification that you can use
         base-8 or base-16 for CER-encoded REALs. It seems like that would
@@ -5525,7 +5595,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
                 if (bytes[cursor] != 0x00u)
                     throw new ASN1ValueTooSmallException
-                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERElement.");
+                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded CERElement.");
 
                 this.value = bytes[startOfValue .. cursor-1u].dup;
                 return ++cursor;

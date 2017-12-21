@@ -1049,8 +1049,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             {
                 if
                 (
-                    components[0].tagNumber != ASN1UniversalType.objectIdentifier &&
-                    components[1].tagNumber != ASN1UniversalType.integer &&
+                    components[0].tagNumber != ASN1UniversalType.objectIdentifier ||
+                    components[1].tagNumber != ASN1UniversalType.integer ||
                     components[2].tagNumber != ASN1UniversalType.objectDescriptor
                 )
                     throw new ASN1ValueInvalidException
@@ -1270,6 +1270,76 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         // Assert that accessor does not mutate state
         assert(el.external == el.external);
+    }
+
+    // Inspired by CVE-2017-9023
+    @system
+    unittest
+    {
+        ubyte[] external = [ // This is valid
+            0x08u, 0x09u, // EXTERNAL, Length 9
+                0x02u, 0x01u, 0x1Bu, // INTEGER 27
+                0x81, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+        ];
+
+        // Valid values for octet[2]: 02 06
+        for (ubyte i = 0x07u; i < 0x1Eu; i++)
+        {
+            external[2] = i;
+            size_t x = 0u;
+            BERElement el = new BERElement(x, external);
+            assertThrown!ASN1ValueInvalidException(el.external);
+        }
+
+        // Valid values for octet[5]: 80 - 82 (Anything else is an invalid value)
+        for (ubyte i = 0x82u; i < 0x9Eu; i++)
+        {
+            external[5] = i;
+            size_t x = 0u;
+            BERElement el = new BERElement(x, external);
+            assertThrown!ASN1ValueInvalidException(el.external);
+        }
+    }
+
+    // Assert that duplicate elements throw exceptions
+    @system
+    unittest
+    {
+        ubyte[] external;
+
+        external = [ // This is invalid
+            0x08u, 0x0Cu, // EXTERNAL, Length 12
+                0x02u, 0x01u, 0x1Bu, // INTEGER 27
+                0x02u, 0x01u, 0x1Bu, // INTEGER 27
+                0x81, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+        ];
+        assertThrown!ASN1Exception((new BERElement(external)).external);
+
+        external = [ // This is invalid
+            0x08u, 0x0Eu, // EXTERNAL, Length 14
+                0x06u, 0x02u, 0x2Au, 0x03u, // OBJECT IDENTIFIER 1.2.3
+                0x06u, 0x02u, 0x2Au, 0x03u, // OBJECT IDENTIFIER 1.2.3
+                0x81, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+        ];
+        assertThrown!ASN1Exception((new BERElement(external)).external);
+
+        external = [ // This is invalid
+            0x08u, 0x12u, // EXTERNAL, Length 18
+                0x06u, 0x02u, 0x2Au, 0x03u, // OBJECT IDENTIFIER 1.2.3
+                0x07u, 0x02u, 0x45u, 0x45u, // ObjectDescriptor "EE"
+                0x07u, 0x02u, 0x45u, 0x45u, // ObjectDescriptor "EE"
+                0x81u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+        ];
+        assertThrown!ASN1Exception((new BERElement(external)).external);
+
+        external = [ // This is invalid
+            0x08u, 0x14u, // EXTERNAL, Length 20
+                0x06u, 0x02u, 0x2Au, 0x03u, // OBJECT IDENTIFIER 1.2.3
+                0x07u, 0x02u, 0x45u, 0x45u, // ObjectDescriptor "EE"
+                0x81u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u, // OCTET STRING 1,2,3,4
+                0x81u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+        ];
+        assertThrown!ASN1Exception((new BERElement(external)).external);
     }
 
     /**

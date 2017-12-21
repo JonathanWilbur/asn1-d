@@ -85,6 +85,11 @@ This concrete issue does not affect this library, but the implementations for
 `EXTERNAL`, `EMBEDDED PDV`, and `CharacterString` need to be reviewed and 
 tested for this vulnerability.
 
+This did actually result in me finding a bug in the Basic Encoding Rules encoding
+of `EXTERNAL`. I mixed up `&&` and `||`, resulting in a conditional in which
+an exception would be thrown only if _all_ of the tags of the `EXTERNAL` were
+incorrect.
+
 ### CVE-2016-7053
 
 Note: CMS = [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652)
