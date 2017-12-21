@@ -210,6 +210,20 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     T integer(T)() const
     if (isIntegral!T && isSigned!T)
     {
+        if (this.value.length == 0u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode an " ~
+                "INTEGER that was encoded on 0 bytes. According to the Distinguished " ~
+                "Encoding Rules (DER), an INTEGER must be encoded on at least " ~
+                "one byte. Even 0 must be encoded as a single null byte. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+        
+        if (this.value.length == 1u)
+            return cast(T) cast(byte) this.value[0];
+
         /* NOTE:
             this.value must be duplicated; if it is not, the reverse() operation
             below reverses this.value, which persists until the next decode!
@@ -277,6 +291,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     void integer(T)(in T value)
     if (isIntegral!T && isSigned!T)
     {
+        if (value <= byte.max && value >= byte.min)
+        {
+            this.value = [ cast(ubyte) cast(byte) value ];
+            return;
+        }
+
         ubyte[] ub;
         ub.length = T.sizeof;
         *cast(T *)&ub[0] = value;
@@ -320,6 +340,31 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         }
 
         this.value = ub[startOfNonPadding .. $];
+    }
+
+    // Ensure that INTEGER 0 gets encoded on a single null byte.
+    @system
+    unittest
+    {
+        DERElement el = new DERElement();
+
+        el.integer!byte = cast(byte) 0x00;
+        assert(el.value == [ 0x00u ]);
+
+        el.integer!short = cast(short) 0x0000;
+        assert(el.value == [ 0x00u ]);
+
+        el.integer!int = cast(int) 0;
+        assert(el.value == [ 0x00u ]);
+
+        el.integer!long = cast(long) 0;
+        assert(el.value == [ 0x00u ]);
+
+        el.value = [];
+        assertThrown!ASN1ValueInvalidException(el.integer!byte);
+        assertThrown!ASN1ValueInvalidException(el.integer!short);
+        assertThrown!ASN1ValueInvalidException(el.integer!int);
+        assertThrown!ASN1ValueInvalidException(el.integer!long);
     }
 
     /**
@@ -4478,4 +4523,29 @@ unittest
     ubyte[] naughty = [ 0x00u, 0x82, 0x00u, 0x01u ];
     size_t bytesRead = 0u;
     assertThrown!ASN1InvalidLengthException(new DERElement(bytesRead, naughty));
+}
+
+// PyASN1 Comparison Testing
+@system
+unittest
+{
+    DERElement e = new DERElement();
+    e.boolean = false;
+    assert(e.value == [ 0x00u ]);
+    e.integer = 5;
+    assert(e.value == [ 0x05u ]);
+    e.bitString = [ 
+        true, false, true, true, false, false, true, true, 
+        true, false, false, false ];
+    assert(e.value == [ 0x04u, 0xB3u, 0x80u ]);
+    e.bitString = [ 
+        true, false, true, true, false, true, false, false ];
+    assert(e.value == [ 0x00u, 0xB4u ]);
+    e.objectIdentifier = new OID(1, 2, 0, 256, 79999, 7);
+    assert(e.value == [ 
+        0x2Au, 0x00u, 0x82u, 0x00u, 0x84u, 0xF0u, 0x7Fu, 0x07u ]);
+    e.enumerated = 5;
+    assert(e.value == [ 0x05u ]);
+    e.enumerated = 90000;
+    assert(e.value == [ 0x01u, 0x5Fu, 0x90u ]);
 }
