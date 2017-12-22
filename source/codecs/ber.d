@@ -490,6 +490,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 text(this.value[0]) ~ ". " ~ notWhatYouMeantText ~ 
                 forMoreInformationText ~ debugInformationText ~ reportBugsText
             );
+
+        if (this.value[0] > 0x00u && this.value.length <= 1u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode a " ~
+                "BIT STRING that had a misleading first byte, which indicated " ~
+                "that there were more than zero padding bits, but there were " ~
+                "no subsequent octets supplied, which contain the octet-" ~
+                "aligned bits and padding. This may have been a mistake on " ~
+                "the part of the encoder, but this looks really suspicious: " ~
+                "it is likely that an attempt was made to hack your systems " ~
+                "by inducing an out-of-bounds read from an array. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
         
         bool[] ret;
         for (size_t i = 1; i < this.value.length; i++)
@@ -528,6 +543,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
         this.value = [ cast(ubyte) (8u - (value.length % 8u)) ] ~ ub;
         if (this.value[0] == 0x08u) this.value[0] = 0x00u;
+    }
+
+    // Test a BIT STRING with a deceptive first byte.
+    @system
+    unittest
+    {
+        BERElement el = new BERElement();
+        el.value = [ 0x01u ];
+        assertThrown!ASN1ValueInvalidException(el.bitString);
     }
 
     /**

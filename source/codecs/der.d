@@ -435,6 +435,21 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 text(this.value[0]) ~ ". " ~ notWhatYouMeantText ~ 
                 forMoreInformationText ~ debugInformationText ~ reportBugsText
             );
+
+        if (this.value[0] > 0x00u && this.value.length <= 1u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode a " ~
+                "BIT STRING that had a misleading first byte, which indicated " ~
+                "that there were more than zero padding bits, but there were " ~
+                "no subsequent octets supplied, which contain the octet-" ~
+                "aligned bits and padding. This may have been a mistake on " ~
+                "the part of the encoder, but this looks really suspicious: " ~
+                "it is likely that an attempt was made to hack your systems " ~
+                "by inducing an out-of-bounds read from an array. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
         
         bool[] ret;
         for (size_t i = 1; i < this.value.length; i++)
@@ -450,6 +465,23 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 (this.value[i] & 0b0000_0001u ? true : false)
             ];
         }
+
+        foreach (immutable bit; ret[$-this.value[0] .. $])
+        {
+            if (bit == true)
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a BIT STRING whose padding bits were not entirely zeroes. " ~
+                    "If you were using the Basic Encoding Rules (BER), this " ~
+                    "would not be a problem, but under Distinguished Encoding " ~
+                    "Rules (DER), padding the BIT STRING with anything other " ~
+                    "zeroes is forbidden. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
+                );
+        }
+
         ret.length -= this.value[0];
         return ret;
     }
@@ -475,12 +507,28 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         if (this.value[0] == 0x08u) this.value[0] = 0x00u;
     }
 
-    // Ensure that empty BIT STRINGs always throw. See CVE-2015-5726.
+    // Ensure that 1s in the padding get PUNISHED with an exception
     @system
     unittest
     {
         DERElement el = new DERElement();
-        assertThrown!ASN1Exception(el.bitString);
+        el.value = [ 0x07u, 0b1100_0000u ];
+        assertThrown!ASN1ValueInvalidException(el.bitString);
+
+        el.value = [ 0x01u, 0b1111_1111u ];
+        assertThrown!ASN1ValueInvalidException(el.bitString);
+
+        el.value = [ 0x00u, 0b1111_1111u ];
+        assertNotThrown!ASN1ValueInvalidException(el.bitString);
+    }
+
+    // Test a BIT STRING with a deceptive first byte.
+    @system
+    unittest
+    {
+        DERElement el = new DERElement();
+        el.value = [ 0x01u ];
+        assertThrown!ASN1ValueInvalidException(el.bitString);
     }
 
     /**
@@ -4447,7 +4495,7 @@ unittest
     immutable ubyte[] dataEndOfContent = [ 0x00u, 0x00u ];
     immutable ubyte[] dataBoolean = [ 0x01u, 0x01u, 0xFFu ];
     immutable ubyte[] dataInteger = [ 0x02u, 0x01u, 0x1Bu ];
-    immutable ubyte[] dataBitString = [ 0x03u, 0x03u, 0x07u, 0xF0u, 0xF0u ];
+    immutable ubyte[] dataBitString = [ 0x03u, 0x03u, 0x07u, 0xF0u, 0x80u ];
     immutable ubyte[] dataOctetString = [ 0x04u, 0x04u, 0xFF, 0x00u, 0x88u, 0x14u ];
     immutable ubyte[] dataNull = [ 0x05u, 0x00u ];
     immutable ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
