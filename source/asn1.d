@@ -34,6 +34,13 @@
 */
 module asn1;
 
+/*
+    Done to avoid the problems associated with CVE-2009-0789. I don't know this
+    to be a bug with this code, but it is better to play on the safe side. 
+    Remove at your own peril.
+*/
+static assert(!(long.sizeof < (void *).sizeof));
+
 debug (asn1)
 {
     public import std.stdio : write, writefln, writeln;

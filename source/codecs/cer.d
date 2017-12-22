@@ -378,6 +378,29 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         assertThrown!ASN1ValueInvalidException(el.integer!long);
     }
 
+    // Test encoding -0 for the sake of CVE-2016-2108
+    @system
+    unittest
+    {
+        CERElement el = new CERElement();
+
+        el.integer!byte = -0;
+        assertNotThrown!RangeError(el.integer!byte);
+        assertNotThrown!ASN1Exception(el.integer!byte);
+
+        el.integer!short = -0;
+        assertNotThrown!RangeError(el.integer!short);
+        assertNotThrown!ASN1Exception(el.integer!short);
+
+        el.integer!int = -0;
+        assertNotThrown!RangeError(el.integer!int);
+        assertNotThrown!ASN1Exception(el.integer!int);
+
+        el.integer!long = -0;
+        assertNotThrown!RangeError(el.integer!long);
+        assertNotThrown!ASN1Exception(el.integer!long);
+    }
+
     /**
         Decodes an array of $(D bool)s representing a string of bits.
 
@@ -609,6 +632,14 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         test(1000u);
         test(1001u);
         test(2017u);
+    }
+
+    // Ensure that empty BIT STRINGs always throw. See CVE-2015-5726.
+    @system
+    unittest
+    {
+        CERElement el = new CERElement();
+        assertThrown!ASN1Exception(el.bitString);
     }
 
     /**
@@ -2308,6 +2339,20 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     T enumerated(T)() const
     if (isIntegral!T && isSigned!T)
     {
+        if (this.value.length == 0u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode an " ~
+                "ENUMERATED that was encoded on 0 bytes. According to the Canonical " ~
+                "Encoding Rules (CER), an ENUMERATED must be encoded on at least " ~
+                "one byte. Even 0 must be encoded as a single null byte. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+        
+        if (this.value.length == 1u)
+            return cast(T) cast(byte) this.value[0];
+
         /* NOTE:
             this.value must be duplicated; if it is not, the reverse() operation
             below reverses this.value, which persists until the next decode!
@@ -2372,6 +2417,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     public @property @system nothrow
     void enumerated(T)(in T value)
     {
+        if (value <= byte.max && value >= byte.min)
+        {
+            this.value = [ cast(ubyte) cast(byte) value ];
+            return;
+        }
+
         ubyte[] ub;
         ub.length = T.sizeof;
         *cast(T *)&ub[0] = value;
@@ -2416,6 +2467,54 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
 
         this.value = ub[startOfNonPadding .. $];
+    }
+
+    // Ensure that ENUMERATED 0 gets encoded on a single null byte.
+    @system
+    unittest
+    {
+        CERElement el = new CERElement();
+
+        el.enumerated!byte = cast(byte) 0x00;
+        assert(el.value == [ 0x00u ]);
+
+        el.enumerated!short = cast(short) 0x0000;
+        assert(el.value == [ 0x00u ]);
+
+        el.enumerated!int = cast(int) 0;
+        assert(el.value == [ 0x00u ]);
+
+        el.enumerated!long = cast(long) 0;
+        assert(el.value == [ 0x00u ]);
+
+        el.value = [];
+        assertThrown!ASN1ValueInvalidException(el.enumerated!byte);
+        assertThrown!ASN1ValueInvalidException(el.enumerated!short);
+        assertThrown!ASN1ValueInvalidException(el.enumerated!int);
+        assertThrown!ASN1ValueInvalidException(el.enumerated!long);
+    }
+
+    // Test encoding -0 for the sake of CVE-2016-2108
+    @system
+    unittest
+    {
+        CERElement el = new CERElement();
+
+        el.enumerated!byte = -0;
+        assertNotThrown!RangeError(el.enumerated!byte);
+        assertNotThrown!ASN1Exception(el.enumerated!byte);
+
+        el.enumerated!short = -0;
+        assertNotThrown!RangeError(el.enumerated!short);
+        assertNotThrown!ASN1Exception(el.enumerated!short);
+
+        el.enumerated!int = -0;
+        assertNotThrown!RangeError(el.enumerated!int);
+        assertNotThrown!ASN1Exception(el.enumerated!int);
+
+        el.enumerated!long = -0;
+        assertNotThrown!RangeError(el.enumerated!long);
+        assertNotThrown!ASN1Exception(el.enumerated!long);
     }
 
     ///
@@ -3959,6 +4058,18 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     DateTime coordinatedUniversalTime() const
     {
+        if (this.value.length < 10u)
+            throw new ASN1ValueTooSmallException
+            (
+                "This exception was thrown because you attempted to decode a " ~
+                "UTCTime that was encoded on too few bytes to be " ~
+                "correct. A GeneralizedTime needs at least 12 bytes. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        // REVIEW: Manually check for invalid characters before the cast?
+
         /** NOTE:
             .fromISOString() MUST be called from SysTime, not DateTime. There 
             is a subtle difference in how .fromISOString() works in both SysTime
@@ -4016,6 +4127,18 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     DateTime generalizedTime() const
     {
+        if (this.value.length < 10u)
+            throw new ASN1ValueTooSmallException
+            (
+                "This exception was thrown because you attempted to decode a " ~
+                "GeneralizedTime that was encoded on too few bytes to be " ~
+                "correct. A GeneralizedTime needs at least 14 bytes. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~ 
+                debugInformationText ~ reportBugsText
+            );
+
+        // REVIEW: Manually check for invalid characters before the cast?
+
         /** NOTE:
             .fromISOString() MUST be called from SysTime, not DateTime. There 
             is a subtle difference in how .fromISOString() works in both SysTime
@@ -6211,4 +6334,25 @@ unittest
     assert(e.value == [ 0x05u ]);
     e.enumerated = 90000;
     assert(e.value == [ 0x01u, 0x5Fu, 0x90u ]);
+}
+
+// Test that all data types that cannot have value length = 0 throw exceptions.
+// See CVE-2015-5726.
+@system
+unittest
+{
+    CERElement el = new CERElement();
+    assertThrown!ASN1Exception(el.boolean);
+    assertThrown!ASN1Exception(el.integer!byte);
+    assertThrown!ASN1Exception(el.integer!short);
+    assertThrown!ASN1Exception(el.integer!int);
+    assertThrown!ASN1Exception(el.integer!long);
+    assertThrown!ASN1Exception(el.bitString);
+    assertThrown!ASN1Exception(el.objectIdentifier);
+    assertThrown!ASN1Exception(el.enumerated!byte);
+    assertThrown!ASN1Exception(el.enumerated!short);
+    assertThrown!ASN1Exception(el.enumerated!int);
+    assertThrown!ASN1Exception(el.enumerated!long);
+    assertThrown!ASN1Exception(el.generalizedTime);
+    assertThrown!ASN1Exception(el.utcTime);
 }

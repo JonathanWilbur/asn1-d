@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.26](http://semver.org/)
+* Version: [1.0.0-beta.27](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -224,6 +224,12 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Test really large items
 - [x] Encode `INTEGER` of 0 as a single null byte and, decode it as such.
 - [x] Fuzz testing to ensure `RangeError` is never thrown. If it is thrown, it means that there are vulnerabilities if compiled with `-boundscheck=off` flag.
+  - [ ] Fuzz test all possible two-byte combinations
+  - [ ] Fuzz test all possible three-byte combinations
+- [ ] Enforce `0` padding bits for DER and CER-encoded `BIT STRING`
+- [ ] Do some more unit testing for extreme lengths.
+- [ ] Contracts / Invariants
+  - [ ] `BOOLEAN`, `INTEGER`, `ENUMERATED`, `OBJECT IDENTIFIER`, `BIT STRING`, `GeneralizedTime` and `UTCTime` are never less than 0 bytes
 - [ ] Cross-Platform Testing
   - [ ] Windows (Which is Big-Endian)
     - [ ] 64-Bit
@@ -234,75 +240,77 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [x] 64-Bit
     - [ ] 32-Bit
 - [x] Comparison Testing with [PyASN1](http://pyasn1.sourceforge.net)
-- [x] Field Testing
+- [ ] Field Testing
   - [x] Reading [X.509 Certificates](http://www.itu.int/rec/T-REC-X.509-201610-I/en)
   - [x] Creating a Session with [OpenLDAP Server](http://www.openldap.org)
+  - [ ] Test on all [OpenSSL Bads](https://github.com/openssl/openssl/tree/6a69e8694af23dae1d1927813932f4296d133416/test/certs)
+    - [ ] And [these](https://github.com/openssl/openssl/tree/6a69e8694af23dae1d1927813932f4296d133416/test/d2i-tests)
 - [ ] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) Review 
       in [National Vulnerability Database](https://nvd.nist.gov)
   - [x] ~~[CVE-2017-11496](https://nvd.nist.gov/vuln/detail/CVE-2017-11496)~~
   - [x] [CVE-2017-9023](https://nvd.nist.gov/vuln/detail/CVE-2017-9023)
-  - [ ] [CVE-2016-7053](https://nvd.nist.gov/vuln/detail/CVE-2016-7053)
-  - [ ] [CVE-2016-6129](https://nvd.nist.gov/vuln/detail/CVE-2016-6129)
+  - [x] [CVE-2016-7053](https://nvd.nist.gov/vuln/detail/CVE-2016-7053)
+  - [x] [CVE-2016-6129](https://nvd.nist.gov/vuln/detail/CVE-2016-6129)
   - [x] [CVE-2016-9939](https://nvd.nist.gov/vuln/detail/CVE-2016-9939)
   - [x] ~~[CVE-2016-6891](https://nvd.nist.gov/vuln/detail/CVE-2016-6891)~~
   - [x] ~~[CVE-2016-5080](https://nvd.nist.gov/vuln/detail/CVE-2016-5080)~~
-  - [ ] [CVE-2016-0758](https://nvd.nist.gov/vuln/detail/CVE-2016-0758)
-  - [ ] [CVE-2015-5726](https://nvd.nist.gov/vuln/detail/CVE-2015-5726)
+  - [x] [CVE-2016-0758](https://nvd.nist.gov/vuln/detail/CVE-2016-0758)
+  - [x] [CVE-2015-5726](https://nvd.nist.gov/vuln/detail/CVE-2015-5726)
   - [x] [CVE-2016-2176](https://nvd.nist.gov/vuln/detail/CVE-2016-2176)
-  - [ ] [CVE-2016-2109](https://nvd.nist.gov/vuln/detail/CVE-2016-2109)
-  - [ ] [CVE-2016-2108](https://nvd.nist.gov/vuln/detail/CVE-2016-2108)
+  - [x] [CVE-2016-2109](https://nvd.nist.gov/vuln/detail/CVE-2016-2109)
+  - [x] [CVE-2016-2108](https://nvd.nist.gov/vuln/detail/CVE-2016-2108)
   - [x] [CVE-2016-2053](https://nvd.nist.gov/vuln/detail/CVE-2016-2053)
-  - [ ] [CVE-2016-4421](https://nvd.nist.gov/vuln/detail/CVE-2016-4421)
-  - [ ] [CVE-2016-4418](https://nvd.nist.gov/vuln/detail/CVE-2016-4418)
+  - [x] [CVE-2016-4421](https://nvd.nist.gov/vuln/detail/CVE-2016-4421)
+  - ~~[x] [CVE-2016-4418](https://nvd.nist.gov/vuln/detail/CVE-2016-4418)~~
   - [x] ~~[CVE-2016-2427](https://nvd.nist.gov/vuln/detail/CVE-2016-2427)~~
-  - [ ] [CVE-2016-1950](https://nvd.nist.gov/vuln/detail/CVE-2016-1950)
-  - [ ] [CVE-2016-2842](https://nvd.nist.gov/vuln/detail/CVE-2016-2842)
-  - [ ] [CVE-2016-0799](https://nvd.nist.gov/vuln/detail/CVE-2016-0799)
-  - [ ] [CVE-2016-2522](https://nvd.nist.gov/vuln/detail/CVE-2016-2522)
-  - [ ] [CVE-2015-7540](https://nvd.nist.gov/vuln/detail/CVE-2015-7540)
+  - [x] [CVE-2016-1950](https://nvd.nist.gov/vuln/detail/CVE-2016-1950)
+  - [x] [CVE-2016-2842](https://nvd.nist.gov/vuln/detail/CVE-2016-2842)
+  - [x] [CVE-2016-0799](https://nvd.nist.gov/vuln/detail/CVE-2016-0799)
+  - [x] [CVE-2016-2522](https://nvd.nist.gov/vuln/detail/CVE-2016-2522)
+  - [x] [CVE-2015-7540](https://nvd.nist.gov/vuln/detail/CVE-2015-7540)
   - [x] ~~[CVE-2015-7061](https://nvd.nist.gov/vuln/detail/CVE-2015-7061)~~
   - [x] ~~[CVE-2015-7060](https://nvd.nist.gov/vuln/detail/CVE-2015-7060)~~
   - [x] ~~[CVE-2015-7059](https://nvd.nist.gov/vuln/detail/CVE-2015-7059)~~
-  - [ ] [CVE-2015-3194](https://nvd.nist.gov/vuln/detail/CVE-2015-3194)
-  - [ ] [CVE-2015-7182](https://nvd.nist.gov/vuln/detail/CVE-2015-7182)
+  - [x] [CVE-2015-3194](https://nvd.nist.gov/vuln/detail/CVE-2015-3194)
+  - [x] ~~[CVE-2015-7182](https://nvd.nist.gov/vuln/detail/CVE-2015-7182)~~
   - [x] [CVE-2015-1790](https://nvd.nist.gov/vuln/detail/CVE-2015-1790)
   - [x] [CVE-2015-0289](https://nvd.nist.gov/vuln/detail/CVE-2015-0289)
   - [x] [CVE-2015-0287](https://nvd.nist.gov/vuln/detail/CVE-2015-0287)
-  - [ ] [CVE-2015-0208](https://nvd.nist.gov/vuln/detail/CVE-2015-0208)
-  - [ ] [CVE-2015-1182](https://nvd.nist.gov/vuln/detail/CVE-2015-1182)
-  - [ ] [CVE-2014-1569](https://nvd.nist.gov/vuln/detail/CVE-2014-1569)
+  - [x] [CVE-2015-0208](https://nvd.nist.gov/vuln/detail/CVE-2015-0208)
+  - [x] ~~[CVE-2015-1182](https://nvd.nist.gov/vuln/detail/CVE-2015-1182)~~
+  - [x] [CVE-2014-1569](https://nvd.nist.gov/vuln/detail/CVE-2014-1569)
   - [x] ~~[CVE-2014-4443](https://nvd.nist.gov/vuln/detail/CVE-2014-4443)~~
-  - [ ] [CVE-2014-1568](https://nvd.nist.gov/vuln/detail/CVE-2014-1568)
-  - [ ] [CVE-2014-5165](https://nvd.nist.gov/vuln/detail/CVE-2014-5165)
-  - [ ] [CVE-2014-3468](https://nvd.nist.gov/vuln/detail/CVE-2014-3468)
+  - [x] ~~[CVE-2014-1568](https://nvd.nist.gov/vuln/detail/CVE-2014-1568)~~
+  - [x] [CVE-2014-5165](https://nvd.nist.gov/vuln/detail/CVE-2014-5165)
+  - [x] [CVE-2014-3468](https://nvd.nist.gov/vuln/detail/CVE-2014-3468)
   - [x] ~~[CVE-2014-3467](https://nvd.nist.gov/vuln/detail/CVE-2014-3467)~~
   - [x] ~~[CVE-2014-1316](https://nvd.nist.gov/vuln/detail/CVE-2014-1316)~~
-  - [ ] [CVE-2013-5018](https://nvd.nist.gov/vuln/detail/CVE-2013-5018)
-  - [ ] [CVE-2013-4935](https://nvd.nist.gov/vuln/detail/CVE-2013-4935)
+  - [x] [CVE-2013-5018](https://nvd.nist.gov/vuln/detail/CVE-2013-5018)
+  - [x] [CVE-2013-4935](https://nvd.nist.gov/vuln/detail/CVE-2013-4935)
   - [x] ~~[CVE-2013-3557](https://nvd.nist.gov/vuln/detail/CVE-2013-3557)~~
   - [x] [CVE-2013-3556](https://nvd.nist.gov/vuln/detail/CVE-2013-3556)
-  - [ ] [CVE-2012-0441](https://nvd.nist.gov/vuln/detail/CVE-2012-0441)
+  - [x] [CVE-2012-0441](https://nvd.nist.gov/vuln/detail/CVE-2012-0441)
   - [x] [CVE-2012-1569](https://nvd.nist.gov/vuln/detail/CVE-2012-1569)
-  - [ ] [CVE-2011-1142](https://nvd.nist.gov/vuln/detail/CVE-2011-1142)
-  - [ ] [CVE-2011-0445](https://nvd.nist.gov/vuln/detail/CVE-2011-0445)
-  - [ ] [CVE-2010-3445](https://nvd.nist.gov/vuln/detail/CVE-2010-3445)
-  - [ ] [CVE-2010-2994](https://nvd.nist.gov/vuln/detail/CVE-2010-2994)
-  - [ ] [CVE-2010-2284](https://nvd.nist.gov/vuln/detail/CVE-2010-2284)
+  - [x] [CVE-2011-1142](https://nvd.nist.gov/vuln/detail/CVE-2011-1142)
+  - [x] [CVE-2011-0445](https://nvd.nist.gov/vuln/detail/CVE-2011-0445)
+  - [x] [CVE-2010-3445](https://nvd.nist.gov/vuln/detail/CVE-2010-3445)
+  - [x] ~~[CVE-2010-2994](https://nvd.nist.gov/vuln/detail/CVE-2010-2994)~~
+  - [x] ~~[CVE-2010-2284](https://nvd.nist.gov/vuln/detail/CVE-2010-2284)~~
   - [x] ~~[CVE-2009-3877](https://nvd.nist.gov/vuln/detail/CVE-2009-3877)~~
   - [x] ~~[CVE-2009-3876](https://nvd.nist.gov/vuln/detail/CVE-2009-3876)~~
   - [x] ~~[CVE-2009-2511](https://nvd.nist.gov/vuln/detail/CVE-2009-2511)~~
-  - [ ] [CVE-2009-2661](https://nvd.nist.gov/vuln/detail/CVE-2009-2661)
+  - [x] ~~[CVE-2009-2661](https://nvd.nist.gov/vuln/detail/CVE-2009-2661)~~
   - [x] [CVE-2009-2185](https://nvd.nist.gov/vuln/detail/CVE-2009-2185)
   - [x] [CVE-2009-0847](https://nvd.nist.gov/vuln/detail/CVE-2009-0847)
   - [x] [CVE-2009-0846](https://nvd.nist.gov/vuln/detail/CVE-2009-0846)
-  - [ ] [CVE-2009-0789](https://nvd.nist.gov/vuln/detail/CVE-2009-0789)
+  - [x] [CVE-2009-0789](https://nvd.nist.gov/vuln/detail/CVE-2009-0789)
   - [x] ~~[CVE-2008-2952](https://nvd.nist.gov/vuln/detail/CVE-2008-2952)~~
-  - [ ] [CVE-2008-1673](https://nvd.nist.gov/vuln/detail/CVE-2008-1673)
+  - [x] ~~[CVE-2008-1673](https://nvd.nist.gov/vuln/detail/CVE-2008-1673)~~
   - [x] ~~[CVE-2006-3894](https://nvd.nist.gov/vuln/detail/CVE-2006-3894)~~
   - [x] ~~[CVE-2006-6836](https://nvd.nist.gov/vuln/detail/CVE-2006-6836)~~
   - [x] ~~[CVE-2006-2937](https://nvd.nist.gov/vuln/detail/CVE-2006-2937)~~
   - [x] ~~[CVE-2006-1939](https://nvd.nist.gov/vuln/detail/CVE-2006-1939)~~
-  - [ ] [CVE-2006-0645](https://nvd.nist.gov/vuln/detail/CVE-2006-0645)
+  - [x] ~~[CVE-2006-0645](https://nvd.nist.gov/vuln/detail/CVE-2006-0645)~~
   - [ ] [CVE-2005-1730](https://nvd.nist.gov/vuln/detail/CVE-2005-1730)
   - [x] ~~[CVE-2005-1935](https://nvd.nist.gov/vuln/detail/CVE-2005-1935)~~
   - [x] ~~[CVE-2004-2344](https://nvd.nist.gov/vuln/detail/CVE-2004-2344)~~
@@ -317,12 +325,12 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] ~~[CVE-2003-1005](https://nvd.nist.gov/vuln/detail/CVE-2003-1005)~~
   - [ ] [CVE-2003-0564](https://nvd.nist.gov/vuln/detail/CVE-2003-0564)
   - [x] ~~[CVE-2003-0565](https://nvd.nist.gov/vuln/detail/CVE-2003-0565)~~
-  - [ ] [CVE-2003-0851](https://nvd.nist.gov/vuln/detail/CVE-2003-0851)
-  - [ ] [CVE-2003-0543](https://nvd.nist.gov/vuln/detail/CVE-2003-0543)
-  - [ ] [CVE-2003-0544](https://nvd.nist.gov/vuln/detail/CVE-2003-0544)
+  - [x] [CVE-2003-0851](https://nvd.nist.gov/vuln/detail/CVE-2003-0851)
+  - [x] [CVE-2003-0543](https://nvd.nist.gov/vuln/detail/CVE-2003-0543)
+  - [x] [CVE-2003-0544](https://nvd.nist.gov/vuln/detail/CVE-2003-0544)
   - [x] [CVE-2003-0545](https://nvd.nist.gov/vuln/detail/CVE-2003-0545)
   - [x] [CVE-2003-0430](https://nvd.nist.gov/vuln/detail/CVE-2003-0430)
-  - [ ] [CVE-2002-0036](https://nvd.nist.gov/vuln/detail/CVE-2002-0036)
+  - [x] ~~[CVE-2002-0036](https://nvd.nist.gov/vuln/detail/CVE-2002-0036)~~
   - [x] ~~[CVE-2002-0353](https://nvd.nist.gov/vuln/detail/CVE-2002-0353)~~
 - [ ] Grammar and Styling
   - [ ] Check for `a` and `an` mixups
@@ -352,9 +360,11 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [ ] Class Hierarchy
     - [ ] Exception Hierarchy
     - [ ] Security Advice
+      - [ ] Leave note to developers about avoiding recursion problems. (See CVE-2016-4421 and CVE-2010-2284.)
+      - [ ] About constructed types (See CVE-2010-3445.)
     - [ ] How to encode and decode
       - [ ] `ANY`
-      - [ ] `CHOICE`
+      - [ ] `CHOICE` (Mind CVE-2011-1142)
       - [ ] `INSTANCE OF`
       - [ ] `SET OF`
       - [ ] `SEQUENCE OF`
@@ -496,6 +506,9 @@ The following codecs will be added:
 - [ ] Teletex (T61String) validation (WireShark has an implementation.)
 - [ ] Videotex validation
 - [ ] Included Source Signature
+- [ ] Better Indefinite Length support
+  - [ ] Recursively parse the subelements.
+  - [ ] Enforce constructed construction.
 - [ ] Operator Overloads
   - [ ] `~=` making a constructed element
 - [ ] Build System

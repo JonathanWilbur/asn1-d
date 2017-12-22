@@ -101,12 +101,17 @@ Note: CMS = [Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652)
 > free certain invalid encodings. Only `CHOICE` structures using a callback 
 > which do not handle `NULL` value are affected.
 
-I need to review 
+Reviewed:
 [OpenSSL's Test for this vulnerability](
         https://github.com/openssl/openssl/blob/6a69e8694af23dae1d1927813932f4296d133416/test/recipes/25-test_d2i.t) 
 as well as 
 [OpenSSL version 1.1.0](
         https://github.com/openssl/openssl/blob/OpenSSL_1_1_0-stable/apps/cms.c).
+
+Looking at the `bad-cms.der` file that caused this exception, I do not 
+believe this one is a problem. I decoded `bad-cms.der` without a problem
+(it did throw an exception, but that was _supposed_ to happen). Looking at
+that file, this appears to be a failure to validate length. That's it.
 
 ### CVE-2016-6129
 
@@ -165,17 +170,12 @@ Closed source software. Skipping.
 > Integer overflow in `lib/asn1_decoder.c` in the Linux kernel before 4.6 
 > allows local users to gain privileges via crafted ASN.1 data.
 
-I need to review this 
 [Linux Diff](
         https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=23c8a812dc3c621009e4f0e5342aa4e2ede1ceaa).
 
-This is another integer overflow when parsing length:
+This is another integer overflow when parsing length.
 
-- [ ] Ensure the length value cannot overflow or underflow.
-
-Also, I just thought of this:
-
-- [ ] De-duplicate code where length | lengthOfLength is extracted from length tag.
+- [x] Ensure the length value cannot overflow or underflow.
 
 ### CVE-2015-5726
 
@@ -192,10 +192,10 @@ From the [Botan Security Advisory](https://botan.randombit.net/security.html):
 
 They did not validate that the `BIT STRING` in question has at least one byte.
 
-- [ ] Write unit tests to ensure that all `BIT STRING`s throw if length < 3.
+- [x] Write unit tests to ensure that all `BIT STRING`s throw if length < 3.
 
-Really, I want to write unit tests that test all combinations of two bytes for
-every type that requires at least three to make sure that they throw exceptions.
+~~Really, I want to write unit tests that test all combinations of two bytes for
+every type that requires at least three to make sure that they throw exceptions.~~ Done.
 
 ### CVE-2016-2176
 
@@ -260,8 +260,8 @@ description describes the problem by describing the solution:
 This one pretty much speaks for itself, but it is definitely worth reviewing my
 code for potential denial-of-service conditions like this.
 
-- [ ] Review `.length = *` for potential memory consumption DoS attacks.
-- [ ] Try to exhaust memory by supplying the decoder with "false giants."
+- [x] Review `.length = *` for potential memory consumption DoS attacks.
+- [x] Try to exhaust memory by supplying the decoder with "false giants."
 
 ### CVE-2016-2108
 
@@ -285,7 +285,7 @@ variable that is liable to deviate from the state of the encoded data.
 
 But it would be worth a review.
 
-- [ ] Aggressively test all variations of encoding zero.
+- [x] Aggressively test all variations of encoding zero.
 
 ### CVE-2016-2053
 
@@ -310,8 +310,6 @@ different principle than my codec.
 Again, I don't believe this applies to this library, because this library 
 performs no recursion. Developers who use this library will perform recursion.
 However, I will include a note to developers.
-
-- [ ] Leave note to developers about avoiding recursion problems.
 
 ### CVE-2016-4418
 
@@ -362,17 +360,6 @@ substrings (although, I _might_ change that), but if it did, I would _never_
 give `length` a precarious double-meaning that it was given by the developers
 that wrote this terrible code.
 
-That said:
-
-- [ ] Specifically note that `length` will **always** refer to bytes in the 
-        encoded value; never bits or characters or elements or anything else, 
-        and reference this CVE.
-
-Maybe:
-
-- [ ] Make `bitStringLength`, `bmpStringLength`, and `universalStringLength` 
-        methods to prevent developers from doing dumb stuff like this.
-
 ### CVE-2016-2842
 
 > The `doapr_outch` function in `crypto/bio/b_print.c` in OpenSSL 1.0.1 before 
@@ -404,10 +391,7 @@ As noted in the description:
 
 Though I don't manually manage memory in D, it would be a wise idea to:
 
-- [ ] Test gigantic elements, where `.length` is `int.max` or larger.
-- [ ] Add code for handling failed memory allocations.
-- [ ] Create a compile-time immutable maximum element size, such as `int.max` 
-        (but still test larger sizes anyway), and document the reasoning.
+- [x] Test gigantic elements, where `.length` is `int.max` or larger.
 
 ### CVE-2016-0799
 
@@ -451,10 +435,7 @@ formatted string. This can be leveraged to produce giant demands on memory.
 
 Once again, this means that I need to:
 
-- [ ] Test gigantic elements, where `.length` is `int.max` or larger.
-- [ ] Add code for handling failed memory allocations.
-- [ ] Create a compile-time immutable maximum element size, such as `int.max` 
-        (but still test larger sizes anyway), and document the reasoning.
+- [x] Test gigantic elements, where `.length` is `int.max` or larger.
 
 ### CVE-2016-2522
 
@@ -468,8 +449,8 @@ This one is really straight-forward. A `BIT STRING` must always have at least
 one byte of encoded data. The code here did not check that this first byte
 exists before attempting to access it, thereby reading out of bounds.
 
-- [ ] Throw an exception if a `BIT STRING` does not have at least one byte.
-- [ ] Create unittests for the minimum size of all types.
+- [x] Throw an exception if a `BIT STRING` does not have at least one byte.
+- [x] Create unittests for the minimum size of all types.
 
 ### CVE-2015-7540
 
@@ -615,10 +596,9 @@ Review this [bug page](https://bugzilla.mozilla.org/show_bug.cgi?id=1064670).
 `integer` and `enum` already check for this, but it might not hurt to look into
 additional measures to ensure that DER does not encode invalid-length data.
 
-- [ ] Throw exception in DER Codec if `NULL` ever has any value bytes.
-- [ ] Ensure there are no leading `NULL` bytes in DER Codec for `INTEGER` and 
+- [x] Ensure there are no leading `NULL` bytes in DER Codec for `INTEGER` and 
         `ENUMERATED`
-- [ ] Ensure all padding bits in `BIT STRING` are zeroed.
+~~Ensure all padding bits in `BIT STRING` are zeroed.~~ Moved to `README.md`.
 
 _Note: According to the Bugzilla page, it looks like some old X.509_
 _certificates are not technically DER-compliant: they often pad their_
@@ -644,6 +624,8 @@ Not really able to be reviewed, because Apple is closed-source.
 
 [This bugzilla](https://bugzilla.mozilla.org/show_bug.cgi?id=1064636)
 [That bugzilla](https://bugzilla.mozilla.org/show_bug.cgi?id=1069405)
+
+I have to tap out on this one. This is just too complex for me to diagnose: the commit is hundreds of very complicated lines, and it seems like it is a higher level issue: one that my library probably does not deal with. 
 
 ### CVE-2014-5165
 
@@ -694,7 +676,7 @@ crash or read out of bounds if padding > 7 && bits < 7.
 > data.
 
 With this bug, all I need to do is make sure that length is always an 
-*unsigned* integral type, and make sure it cannot somehow underflow.
+*unsigned* integral type (handy hint: it is), and make sure it cannot somehow underflow. (Update: I've tested with `size_t.max`.)
 
 ### CVE-2014-3467
 
@@ -810,10 +792,10 @@ From the [Bugzilla page](https://bugzilla.mozilla.org/show_bug.cgi?id=715073):
 > should abort further processing when the template specifies one of these 
 > types and the buffer being processed holds such an illegal encoding.
 
-- [ ] Review how DER specifies that an `INTEGER` and `ENUMERATED` of zero 
+- [x] Review how DER specifies that an `INTEGER` and `ENUMERATED` of zero 
         should be encoded.
-- [ ] Implement `invariant`s that ensure that all of the above types are never 
-        zero-length.
+~~Implement `invariant`s that ensure that all of the above types are never 
+        zero-length.~~ Moved to `README.md`.
 
 ### CVE-2012-1569
 
@@ -889,7 +871,7 @@ This bug occurs on the same exact line that CVE-2014-5165 occurs on, in
 
 Here they just didn't check that the length is actually greater than zero.
 
-- [ ] Review code for possible invalid zero lengths.
+~~Review code for possible invalid zero lengths.~~ (Already noted.)
 
 ### CVE-2010-3445
 
@@ -937,11 +919,12 @@ that appears to fix possible infinite recursion.
 Again, with the other infinite recursion / stack overflow bugs mentioned above,
 this one does not really relate to my code, because my code does not recurse.
 
-However, it is possible to encode indefinite-length encoded elements in other 
+~~However, it is possible to encode indefinite-length encoded elements in other 
 indefinite-length elements, which would *require* recursion to determine the
-length, so I definitely need to review my code for this possibility.
+length, so I definitely need to review my code for this possibility.~~
 
-- [ ] Make sure IL elements can contain other IL elements.
+~~Make sure IL elements can contain other IL elements.~~
+_NOTE: This looks like this is going to be a problem, because my code does not parse indefinite-length items totally correctly... Or is it? X.690 just says that IL ends with the double null; nothing else._
 
 ### CVE-2009-3877
 
@@ -1119,10 +1102,10 @@ element. I don't know why is must be no larger than
 The other checks added to the diff for that commit are duplicates of the
 checks above.
 
-- [ ] Check that length tag indicates length less than data length.
-- [ ] Set PC to constructed if indefinite encoding is used. (Check that this 
-        is actually a rule, too.)
-- [ ] Check that encoded value is at least two bytes long (one for type, one for length).
+- [x] Check that length tag indicates length less than data length.
+~~[ ] Set PC to constructed if indefinite encoding is used. (Check that this 
+        is actually a rule, too.)~~ (Scheduled for 2.0.0.)
+- [x] Check that encoded value is at least two bytes long (one for type, one for length).
 
 ### CVE-2006-3894
 
@@ -1367,10 +1350,6 @@ Geriatric code strikes once more:
 Fortunately for me, my library does no recursion (I think; it's getting so big
 that I can't remember), so I think this is irrelevant to my code.
 
-However, something I just thought of:
-
-- [ ] Ensure that all context-switching types can decode constructed elements correctly.
-
 ### CVE-2003-0543
 
 > Integer overflow in OpenSSL 0.9.6 and 0.9.7 allows remote attackers to cause 
@@ -1394,10 +1373,8 @@ specifically in this change:
 +               if (--max == 0) goto err;
 ```
 
-- [ ] Ascertain that 0xFF cannot be used as a length tag.
-- [ ] Use inequalities instead of bit masks as a slight performance improvement.
-- [ ] Review section 8.1.2.4 of X.690. You omitted some functionality. It turns 
-        out that you can have infinitely many tags.
+- [x] Ascertain that 0xFF cannot be used as a length tag.
+- [x] Review section 8.1.2.4 of X.690. You omitted some functionality. It turns out that you can have infinitely many tags.
 
 ### CVE-2003-0544
 
