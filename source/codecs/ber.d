@@ -229,6 +229,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     */
     override public @property @safe nothrow
     void boolean(in bool value)
+    out
+    {
+        assert(this.value.length > 0u);
+    }
+    body
     {
         this.value = [(value ? 0xFFu : 0x00u)];
     }
@@ -345,6 +350,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     public @property @system nothrow
     void integer(T)(in T value)
     if (isIntegral!T && isSigned!T)
+    out
+    {
+        assert(this.value.length > 0u);
+    }
+    body
     {
         if (value <= byte.max && value >= byte.min)
         {
@@ -533,6 +543,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     */
     override public @property
     void bitString(in bool[] value)
+    out
+    {
+        assert(this.value.length > 0u);
+    }
+    body
     {
         ubyte[] ub;
         ub.length = ((value.length / 8u) + (value.length % 8u ? 1u : 0u)); 
@@ -728,6 +743,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             assert(value.numericArray[1] <= 175u);
         else
             assert(value.numericArray[1] <= 39u);
+    }
+    out
+    {
+        assert(this.value.length > 0u);
     }
     body
     {
@@ -1219,6 +1238,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     */
     deprecated override public @property @system
     void external(in External value)
+    out
+    {
+        assert(this.value.length > 0u);
+    }
+    body
     {
         BERElement[] components = [];
         
@@ -2497,6 +2521,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     */
     public @property @system nothrow
     void enumerated(T)(in T value)
+    out
+    {
+        assert(this.value.length > 0u);
+    }
+    body
     {
         if (value <= byte.max && value >= byte.min)
         {
@@ -2880,6 +2909,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     */
     override public @property @system
     void embeddedPresentationDataValue(in EmbeddedPDV value)
+    out
+    {
+        assert(this.value.length > 0u);
+    }
+    body
     {
         BERElement identification = new BERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
@@ -3612,6 +3646,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     */
     override public @property @system nothrow
     void coordinatedUniversalTime(in DateTime value)
+    out
+    {
+        assert(this.value.length > 10u);
+    }
+    body
     {
         import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
@@ -3680,6 +3719,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     */
     override public @property @system nothrow
     void generalizedTime(in DateTime value)
+    out
+    {
+        assert(this.value.length > 10u);
+    }
+    body
     {
         import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
@@ -4229,6 +4273,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     */
     override public @property @system
     void characterString(in CharacterString value)
+    out
+    {
+        assert(this.value.length > 0u);
+    }
+    body
     {
         BERElement identification = new BERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;

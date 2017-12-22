@@ -34,6 +34,14 @@ I did not check that the value octets of an indefinite-length element were
 greater than or equal to two in number, so an indefinite-length element with
 a single null value octet (`0x00u`) would read out of bounds.
 
+### ThreeBytes Fuzz Testing
+
+No bugs found.
+
+### TwoBytes Fuzz Testing
+
+No bugs found.
+
 ## CVE Review
 
 Below are my reviews of all ASN.1-related CVEs, and how they might relate to 
