@@ -140,8 +140,8 @@ class AbstractSyntaxNotation1Element(Element)
 
     @system
     unittest 
-    { // REVIEW: Are you sure that the unit tests actually execute in this order?
-        writeln("Running unit tests for codec: " ~ Element.stringof);
+    {
+        writeln("Running unit tests for ASN1Element template for codec: " ~ Element.stringof);
     }
 
     // Constants used to save CPU cycles

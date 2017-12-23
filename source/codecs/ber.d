@@ -110,6 +110,12 @@ public alias BERElement = BasicEncodingRulesElement;
 public
 class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 {
+    @system
+    unittest 
+    {
+        writeln("Running unit tests for codec: " ~ typeof(this).stringof);
+    }
+
     /**
         Unlike most other settings, this is non-static, because wanting to
         encode with indefinite length is probably going to be somewhat rare,
@@ -4800,6 +4806,30 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         child.length == 0u
                     )
                     break;
+
+                    if (child.tagClass != this.tagClass)
+                    {
+                        this.nestingRecursionCount = 0u;
+                        throw new ASN1TagException
+                        (
+                            "This exception was thrown because you attempted " ~
+                            "to decode an indefinite-length element that " ~
+                            "contained an element that did not share the same " ~
+                            "tag class."
+                        );
+                    }
+
+                    if (child.tagNumber != this.tagNumber)
+                    {
+                        this.nestingRecursionCount = 0u;
+                        throw new ASN1TagException
+                        (
+                            "This exception was thrown because you attempted " ~
+                            "to decode an indefinite-length element that " ~
+                            "contained an element that did not share the same " ~
+                            "tag number."
+                        );
+                    }
                 }
                     
                 if (sentinel == bytes.length && (bytes[sentinel-1] != 0x00u || bytes[sentinel-2] != 0x00u))
@@ -5223,10 +5253,32 @@ unittest
 unittest
 {
     ubyte[] data = [
-        0x2Cu, 0x80u,
+        0x04u, 0x80u,
             0x04u, 0x04u, 0x00u, 0x00u, 0x00u, 0x00u, // These should not indicate the end.
             0x00u, 0x00u ]; // These should.
     assert((new BERElement(data)).value == [ 0x04u, 0x04u, 0x00u, 0x00u, 0x00u, 0x00u ]);
+}
+
+// Test that a nested element must have the same tag class
+@system
+unittest
+{
+    ubyte[] invalid = [
+        0x2Cu, 0x80u,
+            0xACu, 0x02u, 'H', 'I', // The first byte should be 0x0Cu, not 0xACu.
+            0x00u, 0x00u ];
+    assertThrown!ASN1TagException(new BERElement(invalid));
+}
+
+// Test that a nested element must have the same tag number
+@system
+unittest
+{
+    ubyte[] invalid = [
+        0x2Cu, 0x80u,
+            0x0Du, 0x02u, 'H', 'I', // The first byte should be 0x0Cu, not 0x0Du.
+            0x00u, 0x00u ];
+    assertThrown!ASN1TagException(new BERElement(invalid));
 }
 
 /*

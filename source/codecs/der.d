@@ -102,6 +102,12 @@ public alias DERElement = DistinguishedEncodingRulesElement;
 public
 class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 {
+    @system
+    unittest 
+    {
+        writeln("Running unit tests for codec: " ~ typeof(this).stringof);
+    }
+
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
     static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
 
