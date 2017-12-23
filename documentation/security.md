@@ -7,11 +7,23 @@ I recognize is probably not going to happen. If I can't get one for free, I
 would at least like to get a price quote, so I could start a crowdfunding
 campaign
 
+## Field Testing
+
+### Decode an X.509 Certificate
+
+This worked perfectly on the first try. Nothing to report.
+
+### Perform a handshake with an OpenLDAP server
+
+Obviously, this one was a little more involved, but I only had trouble because
+I was creating incorrect PDUs. Once I got that fixed, it worked fine.
+
+### Test against all OpenSSL d2i Tests
+
+This threw exceptions where it should have and did not when it should not have.
+A success.
+
 ## Fuzz Testing
-
-I plan to do fuzz testing on all possible one to three byte values at least.
-
-The results of this testing will go here.
 
 ### FourBytes Fuzz Testing
 
@@ -1185,8 +1197,12 @@ which is saved in `documentation/miscellaneous/exploit-CVE-2005-1730.c`.
 The author says you can use it [here](
         http://www.derkeiler.com/Mailing-Lists/securityfocus/bugtraq/2004-01/0126.html).
 
-I will have to analyze it to discover the exploit (and possibly run it on my
-system).
+~~I will have to analyze it to discover the exploit (and possibly run it on my
+system).~~
+
+It looks like the malware I downloaded just (pseudo-)randomly corrupts the packet.
+There is no actual indication as to what in particular causes the vulnerability.
+I have to skip this one.
 
 ### CVE-2005-1935
 
@@ -1240,6 +1256,8 @@ manual memory management in D.
 > 5 (`krb5`) 1.2.2 through 1.3.4 allows remote attackers to cause a denial of 
 > service (infinite loop) via a certain BER encoding.
 
+I can't even find this version of the source code. I gave it an honest effort.
+
 ### CVE-2004-0699
 
 > Heap-based buffer overflow in ASN.1 decoding library in Check Point VPN-1 
@@ -1290,6 +1308,8 @@ Closed source. Skipping.
 > attackers to cause a denial of service and possibly execute arbitrary code 
 > via an S/MIME email message containing certain unexpected ASN.1 constructs, 
 > as demonstrated using the NISSC test suite.
+
+This appears to apply only to proprietary software. Skipping.
 
 ### CVE-2003-0565
 

@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.29](http://semver.org/)
+* Version: [1.0.0-beta.30](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -204,7 +204,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `typeConstruction` (Just rename `construction`.)
   - [x] `typeNumber`
 - [x] Rename `enum`s in `asn1.d`.
-- [x] Command Line Tools
+- [ ] Command Line Tools
   - [x] Create a template mixin or something to reduce duplication between decoders.
   - [x] `encode-der`
   - [x] `encode-ber`
@@ -212,6 +212,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `decode-der`
   - [x] `decode-ber`
   - [x] `decode-cer`
+  - [ ] Fix them
+  - [ ] Catch exceptions and display error message.
 - [x] Test that all one-byte elements throw exceptions
 - [x] Test an OID with a node with a values 127, 128, and 0.
 - [x] Test even more significant mathematical values with `realType()`:
@@ -229,6 +231,9 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Enforce `0` padding bits for DER and CER-encoded `BIT STRING`
 - [x] Test a `BIT STRING` with only a first byte
 - [ ] Do some more unit testing for extreme lengths.
+- [ ] Fix Indefinite Length
+  - [ ] Create a `lengthOf` private method
+  - [ ] Finding IL would be a matter of recursively calling it.
 - [x] Contracts / Invariants
   - [x] `BOOLEAN`, `INTEGER`, `ENUMERATED`, `OBJECT IDENTIFIER`, `BIT STRING`, `GeneralizedTime` and `UTCTime` are never less than 0 bytes
 - [ ] Cross-Platform Testing
@@ -241,12 +246,11 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [x] 64-Bit
     - [ ] 32-Bit
 - [x] Comparison Testing with [PyASN1](http://pyasn1.sourceforge.net)
-- [ ] Field Testing
+- [x] Field Testing
   - [x] Reading [X.509 Certificates](http://www.itu.int/rec/T-REC-X.509-201610-I/en)
   - [x] Creating a Session with [OpenLDAP Server](http://www.openldap.org)
-  - [ ] Test on all [OpenSSL Bads](https://github.com/openssl/openssl/tree/6a69e8694af23dae1d1927813932f4296d133416/test/certs)
-    - [ ] And [these](https://github.com/openssl/openssl/tree/6a69e8694af23dae1d1927813932f4296d133416/test/d2i-tests)
-- [ ] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) Review 
+  - [x] Test [OpenSSL](https://www.openssl.org/)'s [d2i tests]()
+- [x] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) Review 
       in [National Vulnerability Database](https://nvd.nist.gov)
   - [x] ~~[CVE-2017-11496](https://nvd.nist.gov/vuln/detail/CVE-2017-11496)~~
   - [x] [CVE-2017-9023](https://nvd.nist.gov/vuln/detail/CVE-2017-9023)
@@ -312,19 +316,19 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] ~~[CVE-2006-2937](https://nvd.nist.gov/vuln/detail/CVE-2006-2937)~~
   - [x] ~~[CVE-2006-1939](https://nvd.nist.gov/vuln/detail/CVE-2006-1939)~~
   - [x] ~~[CVE-2006-0645](https://nvd.nist.gov/vuln/detail/CVE-2006-0645)~~
-  - [ ] [CVE-2005-1730](https://nvd.nist.gov/vuln/detail/CVE-2005-1730)
+  - [x] [CVE-2005-1730](https://nvd.nist.gov/vuln/detail/CVE-2005-1730)
   - [x] ~~[CVE-2005-1935](https://nvd.nist.gov/vuln/detail/CVE-2005-1935)~~
   - [x] ~~[CVE-2004-2344](https://nvd.nist.gov/vuln/detail/CVE-2004-2344)~~
   - [x] [CVE-2004-2644](https://nvd.nist.gov/vuln/detail/CVE-2004-2644)
   - [x] [CVE-2004-2645](https://nvd.nist.gov/vuln/detail/CVE-2004-2645)
   - [x] [CVE-2004-0642](https://nvd.nist.gov/vuln/detail/CVE-2004-0642)
-  - [ ] [CVE-2004-0644](https://nvd.nist.gov/vuln/detail/CVE-2004-0644)
+  - [x] [CVE-2004-0644](https://nvd.nist.gov/vuln/detail/CVE-2004-0644)
   - [x] ~~[CVE-2004-0699](https://nvd.nist.gov/vuln/detail/CVE-2004-0699)~~
   - [x] ~~[CVE-2004-0123](https://nvd.nist.gov/vuln/detail/CVE-2004-0123)~~
   - [x] ~~[CVE-2003-0818](https://nvd.nist.gov/vuln/detail/CVE-2003-0818)~~
   - [x] ~~[CVE-2005-1247](https://nvd.nist.gov/vuln/detail/CVE-2005-1247)~~
   - [x] ~~[CVE-2003-1005](https://nvd.nist.gov/vuln/detail/CVE-2003-1005)~~
-  - [ ] [CVE-2003-0564](https://nvd.nist.gov/vuln/detail/CVE-2003-0564)
+  - [x] [CVE-2003-0564](https://nvd.nist.gov/vuln/detail/CVE-2003-0564)
   - [x] ~~[CVE-2003-0565](https://nvd.nist.gov/vuln/detail/CVE-2003-0565)~~
   - [x] [CVE-2003-0851](https://nvd.nist.gov/vuln/detail/CVE-2003-0851)
   - [x] [CVE-2003-0543](https://nvd.nist.gov/vuln/detail/CVE-2003-0543)
@@ -371,10 +375,10 @@ Version 1.0.0-beta was released on November 8th, 2017.
       - [ ] `SEQUENCE OF`
   - [ ] `contributing.md`
   - [ ] `context-switching-types.md` (My research into context-switching types)
-  - [ ] `security.md`
-    - [ ] Review by a Security Firm
-    - [ ] Fuzz Testing Results
-    - [ ] [National Vulnerability Database](https://nvd.nist.gov) Common Vulnerability and Exploit (CVE) Review
+  - [x] `security.md`
+    - [x] OpenSSL Bads
+    - [x] Fuzz Testing Results
+    - [x] [National Vulnerability Database](https://nvd.nist.gov) Common Vulnerability and Exploit (CVE) Review
   - [ ] `tools.md`
   - [ ] `roadmap.md`
   - [ ] `releases.csv` (Version, Date, LOC, SLOC, Signature)
@@ -385,7 +389,6 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Create dynamically-linked libraries as well
   - [ ] [GNU Make](https://www.gnu.org/software/make/) `Makefile`
   - [ ] Generate a `.def` file for Windows?
-- [ ] If I were to just `alias` `AbstractSyntaxNotation1` to `ASN1`, would it apply to `AbstractSyntaxNotation1*`?
 
 #### Note 1:
 
