@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.30](http://semver.org/)
+* Version: [1.0.0-beta.31](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -187,7 +187,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Unittest all variations of `EXTERNAL`'s `encoding`
   - [x] ~~Implement `OBJECT IDENTIFIER` restrictions for `CharacterString`~~ (I can't find documentation of this.)
 - [x] Add Object Identifier constants from Section 12 of X.690
-- [x] Make as much code `const` or `immutable` as possible
+- [ ] Make as much code `const` or `immutable` as possible
+  - [ ] This still needs to be done for constructors.
 - [x] Make `Byteable` interface, and implement it on all codecs
 - [x] Add storage classes to `codec` and to its children
 - [x] Write unit testing information to terminal
@@ -231,9 +232,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Enforce `0` padding bits for DER and CER-encoded `BIT STRING`
 - [x] Test a `BIT STRING` with only a first byte
 - [ ] Do some more unit testing for extreme lengths.
-- [ ] Fix Indefinite Length
-  - [ ] Create a `lengthOf` private method
-  - [ ] Finding IL would be a matter of recursively calling it.
+- [x] Fix Indefinite Length
 - [x] Contracts / Invariants
   - [x] `BOOLEAN`, `INTEGER`, `ENUMERATED`, `OBJECT IDENTIFIER`, `BIT STRING`, `GeneralizedTime` and `UTCTime` are never less than 0 bytes
 - [ ] Cross-Platform Testing

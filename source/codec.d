@@ -32,6 +32,15 @@ class AbstractSyntaxNotation1CodecException : ASN1Exception
 }
 
 ///
+public alias ASN1RecursionException = AbstractSyntaxNotation1RecursionException;
+/// An exception that is thrown when excessively deep recursion occurs.
+public
+class AbstractSyntaxNotation1RecursionException : ASN1CodecException
+{
+    mixin basicExceptionCtors;
+}
+
+///
 public alias ASN1TagException = AbstractSyntaxNotation1TagException;
 ///
 public

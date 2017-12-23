@@ -164,6 +164,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
     static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
 
+    /// The number of recursions used for parsing constructed elements.
+    static protected size_t nestingRecursionCount = 0u;
+
+    /// The limit of recursions permitted for parsing constructed elements.
+    static immutable size_t nestingRecursionLimit = 5u; 
+
     public ASN1TagClass tagClass;
     public ASN1Construction construction;
     public size_t tagNumber;
@@ -4770,34 +4776,42 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             }
             else // Indefinite
             {   
-                size_t startOfValue = ++cursor;
-
-                if (bytes.length < (cursor + 2u))
-                    throw new ASN1ValueTooSmallException
+                if (++(this.nestingRecursionCount) > this.nestingRecursionLimit)
+                {
+                    this.nestingRecursionCount = 0u;
+                    throw new ASN1RecursionException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode a Basic Encoding Rules (BER) encoded element that " ~
-                        "was encoded using indefinite length form, but whose " ~
-                        "value octets were too few to contain the necessary " ~
-                        "END OF CONTENT octets (two consecutive null bytes). "
+                        "decode a Basic Encoding Rules (BER) encoded element " ~
+                        "that recursed too deep."
                     );
-
-                while (cursor < (bytes.length - 1u))
+                }
+                
+                immutable size_t startOfValue = ++cursor;
+                size_t sentinel = cursor; // Used to track the length of the nested elements.
+                while (sentinel < bytes.length)
                 {
+                    BERElement child = new BERElement(sentinel, bytes);
                     if 
                     (
-                        bytes[cursor++] == 0x00u &&
-                        bytes[cursor] == 0x00u
+                        child.tagClass == ASN1TagClass.universal &&
+                        child.construction == ASN1Construction.primitive &&
+                        child.tagNumber == ASN1UniversalType.endOfContent &&
+                        child.length == 0u
                     )
                     break;
                 }
-
-                if (bytes[cursor] != 0x00u)
+                    
+                if (sentinel == bytes.length && (bytes[sentinel-1] != 0x00u || bytes[sentinel-2] != 0x00u))
                     throw new ASN1ValueTooSmallException
-                    ("No end-of-content word [0x00,0x00] found at the end of indefinite-length encoded BERElement.");
+                    (
+                        "No end-of-content word [0x00,0x00] found at the end of " ~
+                        "indefinite-length encoded BERElement."
+                    );
 
-                this.value = bytes[startOfValue .. cursor-1u].dup;
-                return ++cursor;
+                this.nestingRecursionCount--;
+                this.value = bytes[startOfValue .. sentinel-2u].dup;
+                return (sentinel);
             }
         }
         else // Definite Short
@@ -5115,19 +5129,19 @@ unittest
 unittest
 {
     ubyte[] data = [ // 192 characters of boomer-posting
-        0x0Cu, 0x80u, 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x2Cu, 0x80u, 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
         0x00u, 0x00u
     ];
 
@@ -5137,11 +5151,11 @@ unittest
     size_t i = 0u;
     while (i < data.length)
         result ~= new BERElement(i, data);
-        
+
     assert(result.length == 3);
-    assert(result[0].length == 192u);
-    assert(result[0].utf8String[0 .. 5] == "AMREN");
-    assert(result[1].utf8String[6 .. 14] == "BORTHERS");
+    assert(result[0].length == 216u);
+    assert(result[0].utf8String[2 .. 7] == "AMREN");
+    assert(result[1].utf8String[8 .. 16] == "BORTHERS");
     assert(result[2].utf8String[$-2] == '!');
 
     result = [];
@@ -5149,9 +5163,70 @@ unittest
         result ~= new BERElement(data);
 
     assert(result.length == 3);
-    assert(result[0].utf8String[0 .. 5] == "AMREN");
-    assert(result[1].utf8String[6 .. 14] == "BORTHERS");
+    assert(result[0].utf8String[2 .. 7] == "AMREN");
+    assert(result[1].utf8String[8 .. 16] == "BORTHERS");
     assert(result[2].utf8String[$-2] == '!');
+}
+
+// Test deeply (but not too deeply) nested indefinite-length elements
+@system
+unittest
+{
+    ubyte[] data = [ 
+        0x2Cu, 0x80u,
+            0x2Cu, 0x80u,
+                0x0Cu, 0x02u, 'H', 'I',
+                0x00u, 0x00u,
+            0x00u, 0x00u ];
+    assertNotThrown!ASN1Exception(new BERElement(data));
+}
+
+// Test nested DL within IL within DL within IL elements
+@system
+unittest
+{
+    ubyte[] data = [ 
+        0x2Cu, 0x80u, // IL
+            0x2Cu, 0x06u, // DL
+                0x2Cu, 0x80u, // IL
+                    0x0Cu, 0x02u, 'H', 'I',
+                    0x00u, 0x00u, 
+            0x00u, 0x00u ];
+    assertNotThrown!ASN1Exception(new BERElement(data));
+}
+
+// Try to induce infinite recursion for an indefinite-length element
+@system
+unittest
+{
+    ubyte[] invalid = [];
+    for (size_t i = 0u; i < BERElement.nestingRecursionLimit+1; i++)
+    {
+        invalid ~= [ 0x2Cu, 0x80u ];
+    }
+    assertThrown!ASN1RecursionException(new BERElement(invalid));
+}
+
+// Try to crash everything with a short indefinite-length element
+@system
+unittest
+{
+    ubyte[] invalid;
+    invalid = [ 0x2Cu, 0x80u, 0x01u ];
+    assertThrown!ASN1Exception(new BERElement(invalid));
+    invalid = [ 0x2Cu, 0x80u, 0x00u ];
+    assertThrown!ASN1Exception(new BERElement(invalid));
+}
+
+// Test an embedded value with two adjacent null octets
+@system
+unittest
+{
+    ubyte[] data = [
+        0x2Cu, 0x80u,
+            0x04u, 0x04u, 0x00u, 0x00u, 0x00u, 0x00u, // These should not indicate the end.
+            0x00u, 0x00u ]; // These should.
+    assert((new BERElement(data)).value == [ 0x04u, 0x04u, 0x00u, 0x00u, 0x00u, 0x00u ]);
 }
 
 /*
