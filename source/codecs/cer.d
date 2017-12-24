@@ -108,17 +108,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         writeln("Running unit tests for codec: " ~ typeof(this).stringof);
     }
 
-    /**
-        Unlike most other settings, this is non-static, because wanting to
-        encode with indefinite length is probably going to be somewhat rare,
-        and it is also less safe, because the value octets have to be inspected
-        for double octets before encoding! (If they are not, the receiver will 
-        interpret those inner null octets as the terminator for the indefinite
-        length value, and the rest will be truncated.)
-    */
-    public LengthEncodingPreference lengthEncodingPreference = 
-        LengthEncodingPreference.definite;
-
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
     static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
 
@@ -656,21 +645,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+999u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = [ cast(ubyte) 0u ] ~ ub[i .. i+999u];
                 primitives ~= x;
                 i += 999u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = ([ cast(ubyte) 0u ] ~ ub[i .. $]);
             primitives ~= y;
 
@@ -678,8 +667,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -816,21 +804,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = value[i .. i+1000u].dup;
                 primitives ~= x;
                 i += 1000u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = value[i .. $].dup;
             primitives ~= y;
 
@@ -838,8 +826,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -1247,21 +1234,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -1269,8 +1256,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -3109,21 +3095,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -3131,8 +3117,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -3512,21 +3497,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -3534,8 +3519,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -3683,21 +3667,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -3705,8 +3689,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -3798,21 +3781,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = value[i .. i+1000u].dup;
                 primitives ~= x;
                 i += 1000u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = value[i .. $].dup;
             primitives ~= y;
 
@@ -3820,8 +3803,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -3913,21 +3895,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = value[i .. i+1000u].dup;
                 primitives ~= x;
                 i += 1000u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = value[i .. $].dup;
             primitives ~= y;
 
@@ -3935,8 +3917,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -4102,21 +4083,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -4124,8 +4105,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -4439,21 +4419,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -4461,8 +4441,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -4604,21 +4583,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -4626,8 +4605,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -4773,21 +4751,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+1000u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 x.value = cast(ubyte[]) value[i .. i+1000u];
                 primitives ~= x;
                 i += 1000u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
@@ -4795,8 +4773,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -4972,13 +4949,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+250u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 version (BigEndian)
                 {
                     x.value = cast(ubyte[]) value[i .. i+250u];
@@ -4999,10 +4976,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 primitives ~= x;
                 i += 250u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             version (BigEndian)
             {
                 y.value = cast(ubyte[]) value[i .. $];
@@ -5026,8 +5003,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -5534,13 +5510,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
             CERElement[] primitives;
             size_t i = 0u;
             while (i+500u < value.length)
             {
                 CERElement x = new CERElement();
-                x.tagNumber = (this.tagNumber & 0b1101_1111u);
+                x.tagNumber = this.tagNumber;
+                x.construction = ASN1Construction.primitive;
                 version (BigEndian)
                 {
                     x.value = cast(ubyte[]) value[i .. i+500u];
@@ -5561,10 +5537,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 primitives ~= x;
                 i += 500u;
             }
-            this.lengthEncodingPreference = LengthEncodingPreference.indefinite;
 
             CERElement y = new CERElement();
-            y.tagNumber = (this.tagNumber & 0b1101_1111u);
+            y.tagNumber = this.tagNumber;
+            y.construction = ASN1Construction.primitive;
             version (BigEndian)
             {
                 y.value = cast(ubyte[]) value[i .. $];
@@ -5588,8 +5564,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             primitives ~= z;
 
             this.sequence = primitives;
-            this.tagNumber |= 0b0010_0000u;
-            this.lengthEncodingPreference = LengthEncodingPreference.definite;
+            this.construction = ASN1Construction.constructed;
         }
     }
 
@@ -5910,7 +5885,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 return (cursor + length);
             }
             else // Indefinite
-            {   
+            {            
                 if (++(this.nestingRecursionCount) > this.nestingRecursionLimit)
                 {
                     this.nestingRecursionCount = 0u;
@@ -6035,9 +6010,9 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
 
         ubyte[] lengthOctets = [ 0x00u ];
-        switch (this.lengthEncodingPreference)
+        switch (this.construction)
         {
-            case (LengthEncodingPreference.definite):
+            case (ASN1Construction.primitive):
             {
                 if (this.length < 127u)
                 {
@@ -6060,21 +6035,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 }
                 break;
             }
-            case (LengthEncodingPreference.indefinite):
+            case (ASN1Construction.constructed):
             {
                 lengthOctets = [ 0x80u ];
                 break;
             }
             default:
             {
-                assert(0, "Invalid LengthEncodingPreference encountered!");
+                assert(0, "Invalid ASN1Construction encountered!");
             }
         }
         return (
             tagBytes ~ 
             lengthOctets ~ 
             this.value ~ 
-            (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00u, 0x00u ] : cast(ubyte[]) [])
+            (this.construction == ASN1Construction.constructed ? cast(ubyte[]) [ 0x00u, 0x00u ] : cast(ubyte[]) [])
         );
     }
 
