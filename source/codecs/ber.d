@@ -348,7 +348,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         immutable ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
         while (value.length < T.sizeof)
             value = (paddingByte ~ value);
-        version (LittleEndian) reverse(value); // REVIEW: if (value.length > 1) reverse?
+        version (LittleEndian) reverse(value);
         version (unittest) assert(value.length == T.sizeof);
         return *cast(T *) value.ptr;
     }
@@ -701,12 +701,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         // Converts each group of bytes to a number.
         foreach (const byteGroup; byteGroups)
         {
-            if (byteGroup.length > (size_t.sizeof * 2u))
+            if (byteGroup.length > size_t.sizeof)
                 throw new ASN1ValueTooBigException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "an OBJECT IDENTIFIER that encoded a number on more than " ~
-                    "size_t*2 bytes (16 on 64-bit, 8 on 32-bit). " ~
+                    "a OBJECT IDENTIFIER that encoded a number on more than " ~
+                    "size_t bytes. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
@@ -1202,7 +1202,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             default:
                 throw new ASN1ValueInvalidException
                 (
-                    "Invalid CHOICE."
+                    "This exception was thrown because you attempted to decode " ~
+                    "an EXTERNAL that was encoded according to the pre-1994 " ~
+                    "specification (as required by the ITU's X.690 " ~
+                    "specification), but used an invalid choice for the encoding " ~
+                    "component. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
                 );
         }
 
@@ -3099,7 +3105,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system nothrow
     void unicodeTransformationFormat8String(in string value)
     {
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
 
     /**
@@ -3164,12 +3170,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         size_t[] numbers;
         foreach (const byteGroup; byteGroups)
         {
-            if (byteGroup.length > (size_t.sizeof * 2u))
+            if (byteGroup.length > size_t.sizeof)
                 throw new ASN1ValueTooBigException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a RELATIVE OID that encoded a number on more than " ~
-                    "size_t*2 bytes (16 on 64-bit, 8 on 32-bit). " ~
+                    "size_t bytes. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
@@ -3366,7 +3372,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "This exception was thrown because you tried to decode " ~
                     "a NumericString that contained a character that " ~
                     "is not numeric or space. The encoding of the offending character is '" ~
-                    character ~ "'. " ~ notWhatYouMeantText ~
+                    text(cast(uint) character) ~ "'. " ~ notWhatYouMeantText ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
@@ -3392,11 +3398,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "This exception was thrown because you tried to decode " ~
                     "a NumericString that contained a character that " ~
                     "is not numeric or space. The encoding of the offending character is '" ~
-                    character ~ "'. " ~ forMoreInformationText ~ 
+                    text(cast(uint) character) ~ "'. " ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
 
     /**
@@ -3422,7 +3428,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "This exception was thrown because you tried to decode " ~
                     "a PrintableString that contained a character that " ~
                     "is not considered 'printable' by the specification. " ~
-                    "The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
+                    "The encoding of the offending character is '" ~ 
+                    text(cast(uint) character) ~ "'. " ~
                     "The allowed characters are: " ~ printableStringCharacters ~ " " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
@@ -3453,12 +3460,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "This exception was thrown because you tried to encode " ~
                     "a PrintableString that contained a character that " ~
                     "is not considered 'printable' by the specification. " ~
-                    "The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
+                    "The encoding of the offending character is '" ~ 
+                    text(cast(uint) character) ~ "'. " ~
                     "The allowed characters are: " ~ printableStringCharacters ~ " " ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
    
     /**
@@ -3585,7 +3593,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     } 
 
     /**
@@ -3815,7 +3823,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
 
     /**
@@ -3873,7 +3881,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
 
     /**
@@ -3901,7 +3909,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 (
                     "This exception was thrown because you tried to decode " ~
                     "an GeneralString that contained a character that " ~
-                    "is not ASCII. The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
+                    "is not ASCII. The encoding of the offending character is '" ~ 
+                    text(cast(uint) character) ~ "'. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
@@ -3932,11 +3941,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 (
                     "This exception was thrown because you tried to decode " ~
                     "an GeneralString that contained a character that " ~
-                    "is not ASCII. The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
+                    "is not ASCII. The encoding of the offending character is '" ~ 
+                    text(cast(uint) character) ~ "'. " ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
 
     /**
@@ -3995,7 +4005,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         version (BigEndian)
         {
-            this.value = cast(ubyte[]) value;
+            this.value = cast(ubyte[]) value.dup;
         }
         else version (LittleEndian)
         {
@@ -4501,7 +4511,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         version (BigEndian)
         {
-            this.value = cast(ubyte[]) value;
+            this.value = cast(ubyte[]) value.dup;
         }
         else version (LittleEndian)
         {
@@ -4614,7 +4624,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         if (bytes.length < 2u)
             throw new ASN1ValueTooSmallException
-            ("BER-encoded value terminated prematurely.");
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "a Basic Encoding Rules (BER) encoded element from fewer than " ~
+                "two bytes, which cannot possibly encode a valid Basic " ~
+                "Encoding Rules (BER) element. " 
+            );
         
         // Index of what we are currently parsing.
         size_t cursor = 0u;
@@ -4710,7 +4725,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             if (bytes[cursor-1] & 0x80u)
                 throw new ASN1TagException
                 (
-                    "Type tag is too big."
+                    "This exception was thrown because you attempted to decode " ~
+                    "a Basic Encoding Rules (BER) encoded element that encoded " ~
+                    "a tag number that was either too large to decode or " ~
+                    "terminated prematurely."
                 );
 
             for (size_t i = 1; i < cursor; i++)
@@ -4729,7 +4747,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 if (numberOfLengthOctets == 0b01111111u) // Reserved
                     throw new ASN1InvalidLengthException
                     (
-                        "A BER-encoded length byte of 0xFF is reserved."
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Basic Encoding Rules (BER) encoded element " ~
+                        "whose length tag was 0xFF, which is reserved by the " ~
+                        "specification."
                     );
 
                 // Definite Long, if it has made it this far
@@ -4737,13 +4758,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 if (numberOfLengthOctets > size_t.sizeof)
                     throw new ASN1ValueTooBigException
                     (
-                        "BER-encoded value is too big to decode."
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Basic Encoding Rules (BER) encoded element " ~
+                        "whose length tag was encoded on more than size_t." ~
+                        "sizeof bytes, which is too big to decode."
                     );
 
                 if (cursor + numberOfLengthOctets >= bytes.length)
                     throw new ASN1ValueTooSmallException
                     (
-                        "Length tag terminated prematurely."
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Basic Encoding Rules (BER) encoded element " ~
+                        "whose length bytes are too many to decode from " ~
+                        "the deficient bytes supplied."
                     );
 
                 cursor++;
@@ -4775,7 +4802,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
                 if ((cursor + length) > bytes.length)
                     throw new ASN1ValueTooSmallException
-                    ("BER-encoded value terminated prematurely.");
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Basic Encoding Rules (BER) encoded element " ~
+                        "whose indicated length is too large to decode from " ~
+                        "the deficient bytes supplied."
+                    );
 
                 this.value = bytes[cursor .. cursor+length].dup;
                 return (cursor + length);
@@ -4835,8 +4867,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 if (sentinel == bytes.length && (bytes[sentinel-1] != 0x00u || bytes[sentinel-2] != 0x00u))
                     throw new ASN1ValueTooSmallException
                     (
-                        "No end-of-content word [0x00,0x00] found at the end of " ~
-                        "indefinite-length encoded BERElement."
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Basic Encoding Rules (BER) encoded element " ~
+                        "that was encoded using indefinite length form, but " ~
+                        "did not terminate with an END OF CONTENT word (two " ~
+                        "consecutive null bytes)."
                     );
 
                 this.nestingRecursionCount--;
@@ -4850,7 +4885,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
             if ((cursor + length) >= bytes.length)
                 throw new ASN1ValueTooSmallException
-                ("BER-encoded value terminated prematurely.");
+                (
+                    "This exception was thrown because you attempted to " ~
+                    "decode a Basic Encoding Rules (BER) encoded element " ~
+                    "whose indicated length is too large to decode from " ~
+                    "the deficient bytes supplied."
+                );
 
             this.value = bytes[++cursor .. cursor+length].dup;
             return (cursor + length);

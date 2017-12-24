@@ -1525,6 +1525,17 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.utf8String == el.utf8String);
     }
 
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        string test = "HENLO";
+        Element el = new Element();
+        el.utf8String = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 'O');
+    }
+
     ///
     public alias roid = relativeObjectIdentifier;
     ///
@@ -1634,6 +1645,17 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.numericString == el.numericString);
     }
 
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        string test = "12345";
+        Element el = new Element();
+        el.numericString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == '5');
+    }
+
     /**
         Decodes a string that will only contain characters a-z, A-Z, 0-9,
         space, apostrophe, parentheses, comma, minus, plus, period, 
@@ -1670,6 +1692,17 @@ class AbstractSyntaxNotation1Element(Element)
 
         // Assert that accessor does not mutate state
         assert(el.printableString == el.printableString);
+    }
+
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        string test = "HENLO";
+        Element el = new Element();
+        el.printableString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 'O');
     }
 
     ///
@@ -1784,6 +1817,17 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.ia5String == el.ia5String);
     }
 
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        string test = "HENLO";
+        Element el = new Element();
+        el.ia5String = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 'O');
+    }
+
     ///
     public alias utc = coordinatedUniversalTime;
     ///
@@ -1881,6 +1925,17 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.graphicString == el.graphicString);
     }
 
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        string test = "HENLO";
+        Element el = new Element();
+        el.graphicString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 'O');
+    }
+
     ///
     public alias iso646String = visibleString;
     /**
@@ -1922,6 +1977,17 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.visibleString == el.visibleString);
     }
 
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        string test = "HENLO";
+        Element el = new Element();
+        el.visibleString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 'O');
+    }
+
     /// Decodes a string containing only ASCII characters.
     deprecated
     abstract public @property
@@ -1946,6 +2012,17 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.generalString == el.generalString);
     }
 
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        string test = "HENLO";
+        Element el = new Element();
+        el.generalString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 'O');
+    }
+
     /// Decodes a string of UTF-32 characters
     abstract public @property
     dstring universalString() const;
@@ -1965,6 +2042,17 @@ class AbstractSyntaxNotation1Element(Element)
 
         // Assert that accessor does not mutate state
         assert(el.universalString == el.universalString);
+    }
+
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        dstring test = "HENLO"d;
+        Element el = new Element();
+        el.universalString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 'O');
     }
 
     /**
@@ -2127,6 +2215,17 @@ class AbstractSyntaxNotation1Element(Element)
 
         // Assert that accessor does not mutate state
         assert(el.bmpString == el.bmpString);
+    }
+
+    // Test that mutating the value does not mutate an external reference.
+    @system
+    unittest
+    {
+        wstring test = "HENLO"w;
+        Element el = new Element();
+        el.bmpString = test;
+        el.value[4] = 0x88u;
+        assert(test[4] == 'O');
     }
     
 }

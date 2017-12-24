@@ -672,12 +672,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         // Converts each group of bytes to a number.
         foreach (const byteGroup; byteGroups)
         {
-            if (byteGroup.length > (size_t.sizeof * 2u))
+            if (byteGroup.length > size_t.sizeof)
                 throw new ASN1ValueTooBigException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "an OBJECT IDENTIFIER that encoded a number on more than " ~
-                    "size_t*2 bytes (16 on 64-bit, 8 on 32-bit). " ~
+                    "a OBJECT IDENTIFIER that encoded a number on more than " ~
+                    "size_t bytes. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
@@ -1220,7 +1220,13 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             default:
                 throw new ASN1ValueInvalidException
                 (
-                    "Invalid CHOICE."
+                    "This exception was thrown because you attempted to decode " ~
+                    "an EXTERNAL that was encoded according to the pre-1994 " ~
+                    "specification (as required by the ITU's X.690 " ~
+                    "specification), but used an invalid choice for the encoding " ~
+                    "component. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    debugInformationText ~ reportBugsText
                 );
         }
 
@@ -2821,7 +2827,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system nothrow
     void unicodeTransformationFormat8String(in string value)
     {
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
 
     /**
@@ -2886,12 +2892,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         size_t[] numbers;
         foreach (byteGroup; byteGroups)
         {
-            if (byteGroup.length > (size_t.sizeof * 2u))
+            if (byteGroup.length > size_t.sizeof)
                 throw new ASN1ValueTooBigException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a RELATIVE OID that encoded a number on more than " ~
-                    "size_t*2 bytes (16 on 64-bit, 8 on 32-bit). " ~
+                    "size_t bytes. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~ 
                     debugInformationText ~ reportBugsText
                 );
@@ -3118,7 +3124,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
 
     /**
@@ -3180,7 +3186,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
    
     /**
@@ -3307,7 +3313,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     } 
 
     /**
@@ -3537,7 +3543,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
 
     /**
@@ -3595,7 +3601,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
 
     /**
@@ -3658,7 +3664,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
-        this.value = cast(ubyte[]) value;
+        this.value = cast(ubyte[]) value.dup;
     }
 
     /**
@@ -3717,7 +3723,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     {
         version (BigEndian)
         {
-            this.value = cast(ubyte[]) value;
+            this.value = cast(ubyte[]) value.dup;
         }
         else version (LittleEndian)
         {
@@ -4123,7 +4129,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     {
         version (BigEndian)
         {
-            this.value = cast(ubyte[]) value;
+            this.value = cast(ubyte[]) value.dup;
         }
         else version (LittleEndian)
         {
@@ -4236,7 +4242,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     {
         if (bytes.length < 2u)
             throw new ASN1ValueTooSmallException
-            ("DER-encoded value terminated prematurely.");
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "a Distinguished Encoding Rules (DER) encoded element from " ~
+                "fewer than two bytes, which cannot possibly encode a valid " ~
+                "Distinguished Encoding Rules (DER) element. " 
+            );
         
         // Index of what we are currently parsing.
         size_t cursor = 0u;
@@ -4330,9 +4341,13 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             }
 
             if (bytes[cursor-1] & 0x80u)
+            if (bytes[cursor-1] & 0x80u)
                 throw new ASN1TagException
                 (
-                    "Type tag is too big."
+                    "This exception was thrown because you attempted to decode " ~
+                    "a Distinguished Encoding Rules (DER) encoded element that encoded " ~
+                    "a tag number that was either too large to decode or " ~
+                    "terminated prematurely."
                 );
 
             for (size_t i = 1; i < cursor; i++)
@@ -4351,7 +4366,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 if (numberOfLengthOctets == 0b01111111u) // Reserved
                     throw new ASN1InvalidLengthException
                     (
-                        "A BER-encoded length byte of 0xFF is reserved."
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Distinguished Encoding Rules (DER) encoded " ~
+                        "element whose length tag was 0xFF, which is reserved " ~
+                        "by the specification."
                     );
 
                 // Definite Long, if it has made it this far
@@ -4359,13 +4377,19 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 if (numberOfLengthOctets > size_t.sizeof)
                     throw new ASN1ValueTooBigException
                     (
-                        "BER-encoded value is too big to decode."
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Distinguished Encoding Rules (DER) encoded " ~
+                        "element whose length tag was encoded on more than " ~
+                        "size_t.sizeof bytes, which is too big to decode."
                     );
 
                 if (cursor + numberOfLengthOctets >= bytes.length)
                     throw new ASN1ValueTooSmallException
                     (
-                        "Length tag terminated prematurely."
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Distinguished Encoding Rules (DER) encoded " ~
+                        "element whose length bytes are too many to decode " ~
+                        "from the deficient bytes supplied."
                     );
 
                 if (bytes[++cursor] == 0x00u)
@@ -4423,7 +4447,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
                 if ((cursor + length) > bytes.length)
                     throw new ASN1ValueTooSmallException
-                    ("DER-encoded value terminated prematurely.");
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a Distinguished Encoding Rules (DER) encoded " ~
+                        "element whose indicated length is too large to decode " ~
+                        "from the deficient bytes supplied."
+                    );
 
                 this.value = bytes[cursor .. cursor+length].dup;
                 return (cursor + length);
@@ -4445,7 +4474,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
             if (cursor+length >= bytes.length)
                 throw new ASN1ValueTooSmallException
-                ("BER-encoded value terminated prematurely.");
+                (
+                    "This exception was thrown because you attempted to " ~
+                    "decode a Distinguished Encoding Rules (DER) encoded " ~
+                    "element whose indicated length is too large to decode " ~
+                    "from the deficient bytes supplied."
+                );
 
             this.value = bytes[++cursor .. cursor+length].dup;
             return (cursor + length);
