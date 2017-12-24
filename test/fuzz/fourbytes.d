@@ -1,4 +1,4 @@
-/* 
+/*
     This just tests all possible four byte combinations for RangeErrors
 
     Build like so:

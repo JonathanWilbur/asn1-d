@@ -1,28 +1,28 @@
 /**
     Abstract Syntax Notation 1 is a high-level syntax specification created
-    by the $(LINK2 http://www.itu.int/en/pages/default.aspx, 
-    International Telecommunications Union) in 
-    $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, 
+    by the $(LINK2 http://www.itu.int/en/pages/default.aspx,
+    International Telecommunications Union) in
+    $(LINK2 https://www.itu.int/rec/T-REC-X.680/en,
     X.680 - Abstract Syntax Notation One (ASN.1)), that
     abstractly defines data structures and protocol data units used by
-    programs and protocols. It defines an extensible system of data types, 
+    programs and protocols. It defines an extensible system of data types,
     modules, and data structures.
-    
-    While described abstractly by ASN.1, the specified protocol data units 
+
+    While described abstractly by ASN.1, the specified protocol data units
     and data structures can be encoded via various encoding schemes, such as
     the Basic Encoding Rules (BER), which are defined in the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx, 
+    $(LINK2 http://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union)'s
     $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules).
     These encoding schemes uniformly relay data between systems that
-    can differ in endianness, bit-width, byte-size, operating system, 
+    can differ in endianness, bit-width, byte-size, operating system,
     machine architecture, and so on.
 
     The encoding schemata that inherit from ASN.1 are used widely in protocols
     such as TLS, LDAP, SNMP, RDP, and many more.
 
-    Author: 
-        $(LINK2 http://jonathan.wilbur.space, Jonathan M. Wilbur) 
+    Author:
+        $(LINK2 http://jonathan.wilbur.space, Jonathan M. Wilbur)
             $(LINK2 mailto:jonathan@wilbur.space, jonathan@wilbur.space)
     License: $(LINK2 https://mit-license.org/, MIT License)
     Standards:
@@ -36,7 +36,7 @@ module asn1;
 
 /*
     Done to avoid the problems associated with CVE-2009-0789. I don't know this
-    to be a bug with this code, but it is better to play on the safe side. 
+    to be a bug with this code, but it is better to play on the safe side.
     Remove at your own peril.
 */
 static assert(!(long.sizeof < (void *).sizeof));
@@ -96,8 +96,8 @@ enum AbstractSyntaxNotation1Construction : ubyte
 public alias ASN1UniversalType = AbstractSyntaxNotation1UniversalType;
 /**
     The data types, as well as their permitted construction and numeric
-    identifiers, according to the 
-    $(LINK2 http://www.itu.int/en/pages/default.aspx, 
+    identifiers, according to the
+    $(LINK2 http://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union)'s
     $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
 
@@ -252,7 +252,7 @@ enum AbstractSyntaxNotation1SpecialRealValue : ubyte
 ///
 public alias ASN1Base10RealNumericalRepresentation = AbstractSyntaxNotation1Base10RealNumericalRepresentation;
 /**
-    The standardized string representations of floating point numbers, as 
+    The standardized string representations of floating point numbers, as
     specified in $(LINK2 https://www.iso.org/standard/12285.html, ISO 6093).
 
     $(TABLE
@@ -263,8 +263,8 @@ public alias ASN1Base10RealNumericalRepresentation = AbstractSyntaxNotation1Base
     )
 
     Citations:
-        Dubuisson, Olivier. “Character String Types.” ASN.1: 
-            Communication between Heterogeneous Systems, Morgan 
+        Dubuisson, Olivier. “Character String Types.” ASN.1:
+            Communication between Heterogeneous Systems, Morgan
             Kaufmann, 2001, p. 143.
 */
 immutable public
@@ -306,5 +306,5 @@ immutable public string numericStringCharacters = "0123456789 ";
     language, so that canFind will usually have to iterate through
     fewer letters before finding a match.
 */
-immutable public string printableStringCharacters = 
+immutable public string printableStringCharacters =
     "etaoinsrhdlucmfywgpbvkxqjzETAOINSRHDLUCMFYWGPBVKXQJZ0123456789 '()+,-./:=?";

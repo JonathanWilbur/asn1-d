@@ -3,9 +3,9 @@ import types.identification;
 
 /**
     According to the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx, 
+    $(LINK2 http://www.itu.int/en/pages/default.aspx,
         International Telecommunications Union)'s
-    $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, 
+    $(LINK2 https://www.itu.int/rec/T-REC-X.680/en,
         X.680 - Abstract Syntax Notation One (ASN.1)),
     the abstract definition for an EXTERNAL, after removing the comments in the
     specification, is as follows:
@@ -31,15 +31,15 @@ import types.identification;
                         ... ,
                         syntaxes ABSENT,
                         transfer-syntax ABSENT,
-                        fixed ABSENT } ) } ) 
+                        fixed ABSENT } ) } )
     )
-    
-    Note that the abstract syntax resembles that of EMBEDDED PDV and 
+
+    Note that the abstract syntax resembles that of EMBEDDED PDV and
     CharacterString, except with a WITH COMPONENTS constraint that removes some
-    of our choices of identification. 
-    As can be seen on page 303 of Olivier Dubuisson's 
+    of our choices of identification.
+    As can be seen on page 303 of Olivier Dubuisson's
     $(I $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
-        ASN.1: Communication Between Heterogeneous Systems)), 
+        ASN.1: Communication Between Heterogeneous Systems)),
     after applying the WITH COMPONENTS constraint, our reduced syntax becomes:
 
     $(I
@@ -54,8 +54,8 @@ import types.identification;
             data-value OCTET STRING }
     )
 
-    But, according to the 
-    $(LINK2 http://www.itu.int/en/pages/default.aspx, 
+    But, according to the
+    $(LINK2 http://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union)'s
     $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),
     section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
@@ -76,16 +76,16 @@ import types.identification;
     field of the post-1994 definition maps to the direct-reference field of
     the pre-1994 definition. The presentation-context-id field of the post-1994
     definition maps to the indirect-reference field of the pre-1994 definition.
-    If context-negotiation is used, per the abstract syntax, then the 
-    presentation-context-id field of the context-negotiation SEQUENCE in the 
+    If context-negotiation is used, per the abstract syntax, then the
+    presentation-context-id field of the context-negotiation SEQUENCE in the
     post-1994 definition maps to the indirect-reference field of the pre-1994
-    definition, and the transfer-syntax field of the context-negotiation 
+    definition, and the transfer-syntax field of the context-negotiation
     SEQUENCE maps to the direct-reference field of the pre-1994 definition.
 
-    The following additional constraints are applied to the abstract syntax 
-    when using Canonical Encoding Rules or Distinguished Encoding Rules, 
-    which are also defined in the 
-    $(LINK2 http://www.itu.int/en/pages/default.aspx, 
+    The following additional constraints are applied to the abstract syntax
+    when using Canonical Encoding Rules or Distinguished Encoding Rules,
+    which are also defined in the
+    $(LINK2 http://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union)'s
     $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
 
@@ -95,13 +95,13 @@ import types.identification;
             identification ( WITH COMPONENTS {
                 ... ,
                 presentation-context-id ABSENT,
-                context-negotiation ABSENT } ) } ) 
+                context-negotiation ABSENT } ) } )
     )
 
-    The stated purpose of the constraints shown above is to restrict the use of 
-    the presentation-context-id, either by itself or within the 
-    context-negotiation, which makes the following the effective abstract 
-    syntax of EXTERNAL when using Canonical Encoding Rules or 
+    The stated purpose of the constraints shown above is to restrict the use of
+    the presentation-context-id, either by itself or within the
+    context-negotiation, which makes the following the effective abstract
+    syntax of EXTERNAL when using Canonical Encoding Rules or
     Distinguished Encoding Rules:
 
     $(I
@@ -127,7 +127,7 @@ import types.identification;
                         presentation-context-id ABSENT,
                         context-negotiation ABSENT,
                         transfer-syntax ABSENT,
-                        fixed ABSENT } ) } ) 
+                        fixed ABSENT } ) } )
     )
 
     With the constraints applied, the abstract syntax for EXTERNALs encoded
@@ -142,7 +142,7 @@ import types.identification;
     )
 
     Upon removing the CHOICE tag (since you have no choice but to use syntax
-    at this point), the encoding definition when using 
+    at this point), the encoding definition when using
     Canonical Encoding Rules or Distinguished Encoding Rules:
 
     $(I
@@ -153,10 +153,10 @@ import types.identification;
     )
 
     For all encoding rules defined in the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx, 
+    $(LINK2 http://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union)'s
     $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
-    (meaning Basic Encoding Rules, Canonical Encoding Rules, and 
+    (meaning Basic Encoding Rules, Canonical Encoding Rules, and
     Distinguished Encoding Rules), EXPLICIT tagging must be used when encoding
     the EXTERNAL type. Unlike the other Context-Switching Types, automatic
     tagging is NOT used when encoding with Basic Encoding Rules,
@@ -166,7 +166,7 @@ public
 struct External
 {
     /**
-        A field indicating the the transfer syntax used to indicate the means 
+        A field indicating the the transfer syntax used to indicate the means
         by which the data-value field is encoded. Can also be used to specify
         the abstract syntax of what is encoded.
     */
@@ -179,7 +179,7 @@ struct External
         A field that exists only to determine the developer's choice of
         encoding used, per the pre-1994 definition of EXTERNAL.
 
-        octet-aligned is a sensible default, since it is the most lax of the 
+        octet-aligned is a sensible default, since it is the most lax of the
         three choices.
     */
     ASN1ExternalEncodingChoice encoding = ASN1ExternalEncodingChoice.octetAligned;
@@ -189,7 +189,7 @@ struct External
 public alias ASN1ExternalEncodingChoice = AbstractSyntaxNotation1ExternalEncodingChoice;
 /**
     The CHOICE of encoding used for the encoding of a pre-1994 EXTERNAL,
-    as used by the Basic Encoding Rules, Canonical Encoding Rules, or 
+    as used by the Basic Encoding Rules, Canonical Encoding Rules, or
     Distinguished Encoding Rules.
 */
 public

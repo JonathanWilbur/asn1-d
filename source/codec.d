@@ -91,7 +91,7 @@ public alias ASN1ValueInvalidException = AbstractSyntaxNotation1ValueInvalidExce
 public
 class AbstractSyntaxNotation1ValueInvalidException : ASN1CodecException
 {
-    mixin basicExceptionCtors; 
+    mixin basicExceptionCtors;
 }
 
 ///
@@ -115,7 +115,7 @@ public alias ASN1InvalidIndexException = AbstractSyntaxNotation1InvalidIndexExce
 public
 class AbstractSyntaxNotation1InvalidIndexException : ASN1CodecException
 {
-    mixin basicExceptionCtors; 
+    mixin basicExceptionCtors;
 }
 
 ///
@@ -127,7 +127,7 @@ public alias ASN1InvalidLengthException = AbstractSyntaxNotation1InvalidLengthEx
 public
 class AbstractSyntaxNotation1InvalidLengthException : ASN1CodecException
 {
-    mixin basicExceptionCtors; 
+    mixin basicExceptionCtors;
 }
 
 ///
@@ -139,7 +139,7 @@ class AbstractSyntaxNotation1Element(Element)
     static assert(is(Element : typeof(this)), "Tried to instantiate " ~ typeof(this).stringof ~ " with type parameter " ~ Element.stringof);
 
     @system
-    unittest 
+    unittest
     {
         writeln("Running unit tests for ASN1Element template for codec: " ~ Element.stringof);
     }
@@ -150,14 +150,14 @@ class AbstractSyntaxNotation1Element(Element)
     protected immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in realType()
 
     // Constants for exception messages
-    immutable string notWhatYouMeantText = 
+    immutable string notWhatYouMeantText =
         "It is highly likely that what you attempted to decode was not the " ~
         "data type that you thought it was. Most likely, one of the following " ~
         "scenarios occurred: (1) you did not write this program to the exact " ~
         "specification of the protocol, or (2) someone is attempting to hack " ~
         "this program (review the HeartBleed bug), or (3) the client sent " ~
         "valid data that was just too big to decode. ";
-    immutable string forMoreInformationText = 
+    immutable string forMoreInformationText =
         "For more information on the specific method or property that originated " ~
         "this exception, see the documentation associated with this ASN.1 " ~
         "library. For more information on ASN.1's data types in general, see " ~
@@ -606,7 +606,7 @@ class AbstractSyntaxNotation1Element(Element)
         Sources:
             $(LINK2 ,
                 ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
     */
@@ -627,7 +627,7 @@ class AbstractSyntaxNotation1Element(Element)
         Sources:
             $(LINK2 ,
                 ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
     */
@@ -658,9 +658,9 @@ class AbstractSyntaxNotation1Element(Element)
     }
 
     /**
-        Decodes an EXTERNAL, which is a constructed data type, defined in 
-        the $(LINK2 https://www.itu.int, 
-            International Telecommunications Union)'s 
+        Decodes an EXTERNAL, which is a constructed data type, defined in
+        the $(LINK2 https://www.itu.int,
+            International Telecommunications Union)'s
         $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EXTERNAL as:
@@ -684,9 +684,9 @@ class AbstractSyntaxNotation1Element(Element)
     External external() const;
 
     /**
-        Encodes an EXTERNAL, which is a constructed data type, defined in 
-        the $(LINK2 https://www.itu.int, 
-            International Telecommunications Union)'s 
+        Encodes an EXTERNAL, which is a constructed data type, defined in
+        the $(LINK2 https://www.itu.int,
+            International Telecommunications Union)'s
         $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EXTERNAL as:
@@ -999,12 +999,12 @@ class AbstractSyntaxNotation1Element(Element)
     @system
     unittest
     {
-        import std.math : 
-            E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2, 
+        import std.math :
+            E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2,
             LOG2E, LOG2T, LOG10E, SQRT2, SQRT1_2, sqrt;
 
         immutable real SQRT_2_OVER_2 = (SQRT2 / 2.0);
-        
+
         // Sourced from https://en.wikipedia.org/wiki/Mathematical_constant
         immutable real EULER_MASCHERONI_CONSTANT = 0.57721;
         immutable real GOLDEN_RATIO = ((1.0 + sqrt(5.0)) / 2.0);
@@ -1045,7 +1045,7 @@ class AbstractSyntaxNotation1Element(Element)
         immutable real GLAISHER_KINKELIN_CONSTANT = 1.2824271291;
 
         immutable real[] tests = [
-            E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2, 
+            E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2,
             LOG2E, LOG2T, LOG10E, SQRT2, SQRT1_2, SQRT_2_OVER_2,
             EULER_MASCHERONI_CONSTANT,
             GOLDEN_RATIO,
@@ -1363,9 +1363,9 @@ class AbstractSyntaxNotation1Element(Element)
     ///
     public alias embeddedPDV = embeddedPresentationDataValue;
     /**
-        Decodes an EMBEDDED PDV, which is a constructed data type, defined in 
-            the $(LINK2 https://www.itu.int, 
-                International Telecommunications Union)'s 
+        Decodes an EMBEDDED PDV, which is a constructed data type, defined in
+            the $(LINK2 https://www.itu.int,
+                International Telecommunications Union)'s
             $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EMBEDDED PDV as:
@@ -1395,9 +1395,9 @@ class AbstractSyntaxNotation1Element(Element)
     EmbeddedPDV embeddedPresentationDataValue() const;
 
     /**
-        Encodes an EMBEDDED PDV, which is a constructed data type, defined in 
-            the $(LINK2 https://www.itu.int, 
-                International Telecommunications Union)'s 
+        Encodes an EMBEDDED PDV, which is a constructed data type, defined in
+            the $(LINK2 https://www.itu.int,
+                International Telecommunications Union)'s
             $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EMBEDDED PDV as:
@@ -1570,9 +1570,9 @@ class AbstractSyntaxNotation1Element(Element)
         Decodes an array of elements.
 
         Credits:
-            Thanks to StackOverflow user 
+            Thanks to StackOverflow user
             $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
-            for teaching me how to create the abstract method that uses the 
+            for teaching me how to create the abstract method that uses the
             child class as a template.
     */
     abstract public @property
@@ -1582,9 +1582,9 @@ class AbstractSyntaxNotation1Element(Element)
         Encodes an array of elements.
 
         Credits:
-            Thanks to StackOverflow user 
+            Thanks to StackOverflow user
             $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
-            for teaching me how to create the abstract method that uses the 
+            for teaching me how to create the abstract method that uses the
             child class as a template.
     */
     abstract public @property
@@ -1594,9 +1594,9 @@ class AbstractSyntaxNotation1Element(Element)
         Decodes an array of elements.
 
         Credits:
-            Thanks to StackOverflow user 
+            Thanks to StackOverflow user
             $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
-            for teaching me how to create the abstract method that uses the 
+            for teaching me how to create the abstract method that uses the
             child class as a template.
     */
     abstract public @property
@@ -1606,9 +1606,9 @@ class AbstractSyntaxNotation1Element(Element)
         Encodes an array of elements.
 
         Credits:
-            Thanks to StackOverflow user 
+            Thanks to StackOverflow user
             $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
-            for teaching me how to create the abstract method that uses the 
+            for teaching me how to create the abstract method that uses the
             child class as a template.
     */
     abstract public @property
@@ -1658,7 +1658,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /**
         Decodes a string that will only contain characters a-z, A-Z, 0-9,
-        space, apostrophe, parentheses, comma, minus, plus, period, 
+        space, apostrophe, parentheses, comma, minus, plus, period,
         forward slash, colon, equals, and question mark.
     */
     abstract public @property
@@ -1666,7 +1666,7 @@ class AbstractSyntaxNotation1Element(Element)
 
     /**
         Encodes a string that will only contain characters a-z, A-Z, 0-9,
-        space, apostrophe, parentheses, comma, minus, plus, period, 
+        space, apostrophe, parentheses, comma, minus, plus, period,
         forward slash, colon, equals, and question mark.
     */
     abstract public @property
@@ -1871,13 +1871,13 @@ class AbstractSyntaxNotation1Element(Element)
     }
 
     /**
-        Decodes an ASCII string that contains only characters between and 
+        Decodes an ASCII string that contains only characters between and
         including 0x20 and 0x75.
 
         Sources:
             $(LINK2 ,
                 ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
@@ -1887,13 +1887,13 @@ class AbstractSyntaxNotation1Element(Element)
     string graphicString() const;
 
     /**
-        Encodes an ASCII string that contains only characters between and 
+        Encodes an ASCII string that contains only characters between and
         including 0x20 and 0x75.
 
         Sources:
             $(LINK2 ,
                 ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
@@ -2057,8 +2057,8 @@ class AbstractSyntaxNotation1Element(Element)
 
     /**
         Decodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK2 https://www.itu.int, 
-                International Telecommunications Union)'s 
+        in the $(LINK2 https://www.itu.int,
+                International Telecommunications Union)'s
             $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines CHARACTER as:
@@ -2087,8 +2087,8 @@ class AbstractSyntaxNotation1Element(Element)
 
     /**
         Encodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK2 https://www.itu.int, 
-                International Telecommunications Union)'s 
+        in the $(LINK2 https://www.itu.int,
+                International Telecommunications Union)'s
             $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines CHARACTER as:
@@ -2227,5 +2227,5 @@ class AbstractSyntaxNotation1Element(Element)
         el.value[4] = 0x88u;
         assert(test[4] == 'O');
     }
-    
+
 }

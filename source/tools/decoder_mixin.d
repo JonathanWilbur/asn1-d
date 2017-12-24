@@ -95,7 +95,7 @@ mixin template Decoder(Element)
             }
 
             /* NOTE:
-                Though isFile() can throw a FileException if the file does not 
+                Though isFile() can throw a FileException if the file does not
                 exist, we assume that the file does exist at this point, since
                 we tested it with exist() in the line above this. However, if
                 by some freak accident, the file disappears between these two
@@ -214,7 +214,7 @@ mixin template Decoder(Element)
 
             foreach (sub; subs)
             {
-                display(new Element(element.value), indentation); 
+                display(new Element(element.value), indentation);
             }
         }
         indentation -= 4;

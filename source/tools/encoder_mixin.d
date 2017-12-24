@@ -278,7 +278,7 @@ mixin template Encoder(Element)
         element.construction = construction;
         try
         {
-            element.utf8String = value;        
+            element.utf8String = value;
         }
         catch (UTFException e)
         {
@@ -592,7 +592,7 @@ mixin template Encoder(Element)
         else if (value.startsWith("file:"))
         {
             import std.file : exists, FileException, isFile;
-            import std.path : isValidPath;  
+            import std.path : isValidPath;
             string filePath = value[5 .. $];
             if (!filePath.isValidPath())
             {

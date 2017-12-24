@@ -9,14 +9,14 @@
 
 ## What is ASN.1?
 
-ASN.1 stands for *Abstract Syntax Notation*. ASN.1 was first specified in 
+ASN.1 stands for *Abstract Syntax Notation*. ASN.1 was first specified in
 [X.680 - Abstract Syntax Notation One (ASN.1)](https://www.itu.int/rec/T-REC-X.680/en),
 by the [International Telecommunications Union](http://www.itu.int/en/pages/default.aspx).
-ASN.1 messages can be encoded in one of several encoding/decoding standards. 
-It provides a system of types that are extensible, and can presumably describe 
-every protocol. You can think of it as a protocol for describing other protocols 
-as well as a family of standards for encoding and decoding said protocols. 
-It is similar to Google's [Protocol Buffers](https://developers.google.com/protocol-buffers/), 
+ASN.1 messages can be encoded in one of several encoding/decoding standards.
+It provides a system of types that are extensible, and can presumably describe
+every protocol. You can think of it as a protocol for describing other protocols
+as well as a family of standards for encoding and decoding said protocols.
+It is similar to Google's [Protocol Buffers](https://developers.google.com/protocol-buffers/),
 or Sun Microsystems' [External Data Representation (XDR)](https://tools.ietf.org/html/rfc1014).
 
 ## Why ASN.1?
@@ -31,7 +31,7 @@ ASN.1 is used in, or required by, multiple technologies, including:
 * Microsoft's [Remote Desktop Protocol (RDP)](https://msdn.microsoft.com/en-us/library/mt242409.aspx)
 * [Simple Network Management Protocol (SNMP)](https://www.ietf.org/rfc/rfc1157.txt)
 * [Common Management Information Protocol (CMIP)](http://www.itu.int/rec/T-REC-X.711/en)
-* [Signalling System Number 7 (SS7)](http://www.itu.int/rec/T-REC-Q.700-199303-I/en), 
+* [Signalling System Number 7 (SS7)](http://www.itu.int/rec/T-REC-Q.700-199303-I/en),
   used to make most phone calls on the Public Switched Telephone Network (PSTN).
 * [H.323](http://www.itu.int/rec/T-REC-H.323-200912-I/en) Video conferencing
 * Biometrics Protocols:
@@ -57,13 +57,13 @@ The "root" of this library is `asn1.d`, which contains some universal absolutes,
 such as `enum`s and `const`s that are used by ASN.1. But this is a pretty boring
 file with almost no actual code.
 
-The real fun begins with `source/codec.d`, whose flagship item is `ASN1Element`, 
-the abstract class from which all other codecs must inherit. An `ASN1Element` 
+The real fun begins with `source/codec.d`, whose flagship item is `ASN1Element`,
+the abstract class from which all other codecs must inherit. An `ASN1Element`
 represents a single encoded value (although it could be a single `SEQUENCE`
 or `SET`). In the `source/codecs` directory, you will find all of the codecs that
 inherit from `ASN1Element`. The `BERElement` class can be found in `ber.d`,
 and it represents a ASN.1 value, encoded via the Basic Encoding Rules (BER)
-specified in the 
+specified in the
 [International Telecommunications Union](http://www.itu.int/en/pages/default.aspx)'s
 [X.690 - ASN.1 encoding rules](http://www.itu.int/rec/T-REC-X.690/en).
 
@@ -78,17 +78,17 @@ D data types for some of ASN.1's universal data types.
 In the `source/tools` directory, you will find the source for this
 library's related ASN.1 command-line tools, such as `decode-ber`.
 
-In the `documentation` directory, you will find documentation. The 
+In the `documentation` directory, you will find documentation. The
 automatically-generated DDoc HTML (produced from the commentary documentation)
 can be found in `documentation/html`. URIs to useful websites can be found
 in `documentation/links`. The list of developers for this library can be found
-in CSV-format in `documentation/credits.csv`, where the fields are `role`, 
+in CSV-format in `documentation/credits.csv`, where the fields are `role`,
 `full name`, and `email address` for each row. In `documentation/license`,
 you will find the full text of the license for this library.
 
 In the `build` directory, you will find tools for building the library, and
 directories for the placement of outputs or intermediary artifacts (midputs?).
-The most important subdirectory for you, the end user, is going to be 
+The most important subdirectory for you, the end user, is going to be
 `build/scripts`, which contains various scripts for building this library in
 a variety of environments.
 
@@ -106,7 +106,7 @@ using the `chmod` command.
 ### On Windows
 
 Run `.\build\scripts\build.bat` from a `cmd` or run `.\build\scripts\build.ps1`
-from the PowerShell command line. If you get a warning about needing a 
+from the PowerShell command line. If you get a warning about needing a
 cryptographic signature for the PowerShell script, it is probably because
 your system is blocking running unsigned PowerShell scripts. Just run the
 other script if that is the case.
@@ -139,7 +139,7 @@ long x = el2.integer!long;
 ## Development
 
 I hope to be done with this library before the end of 2017. When it is
-complete, it will contain several codecs, and everything will be unit-tested 
+complete, it will contain several codecs, and everything will be unit-tested
 and reviewed for security and performance.
 
 ### 1.0.0-beta Development
@@ -187,8 +187,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Unittest all variations of `EXTERNAL`'s `encoding`
   - [x] ~~Implement `OBJECT IDENTIFIER` restrictions for `CharacterString`~~ (I can't find documentation of this.)
 - [x] Add Object Identifier constants from Section 12 of X.690
-- [ ] Make as much code `const` or `immutable` as possible
-  - [ ] This still needs to be done for constructors.
+- [x] Make as much code `const` or `immutable` as possible
 - [x] Make `Byteable` interface, and implement it on all codecs
 - [x] Add storage classes to `codec` and to its children
 - [x] Write unit testing information to terminal
@@ -252,16 +251,13 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Creating a Session with [OpenLDAP Server](http://www.openldap.org)
   - [x] Test [OpenSSL](https://www.openssl.org/)'s [d2i tests]()
 - [x] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) in the [National Vulnerability Database](https://nvd.nist.gov)
-- [ ] Grammar and Styling
-  - [ ] Check for `a` and `an` mixups
-  - [ ] Check for duplicated terminal words
-  - [ ] Check for incorrect data types
-  - [ ] Check for correct terminal spacing
-  - [ ] Add parenthetical abbreviations
-  - [ ] Ensure all numeric literals end with `u`
-  - [ ] Remove trailing spaces
-  - [ ] Use either the term `byte` or `octet` consistently for variable names
-    - [ ] Especially in `toBytes()`
+- [x] Grammar and Styling
+  - [x] Check for `a` and `an` mixups
+  - [x] Check for duplicated terminal words
+  - [x] Check for incorrect data types
+  - [x] Check for correct terminal spacing
+  - [x] Add parenthetical abbreviations
+  - [x] Remove trailing spaces
   - [x] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
 - [ ] `cli.lib`
   - [ ] Figure out how to parse negative numbers from the command-line (`-1.0` gets interpreted as a command...)
@@ -309,16 +305,16 @@ Version 1.0.0-beta was released on November 8th, 2017.
 
 From X.690, Section 8.19.2 on encoding of OIDs:
 
-> The subidentifier shall be encoded in the fewest possible octets, that is, the leading octet of the subidentifier shall not have the value 0x80. 
+> The subidentifier shall be encoded in the fewest possible octets, that is, the leading octet of the subidentifier shall not have the value 0x80.
 
 #### Note 2:
 
-Due to [this bug that I found](https://issues.dlang.org/show_bug.cgi?id=18087), 
-I would either have to have no documentation for all mixin'd properties, since 
-embedded documentation does not appear to get generated after mixins are 
-applied, or I would have to split the getter-setter pairs for each property 
+Due to [this bug that I found](https://issues.dlang.org/show_bug.cgi?id=18087),
+I would either have to have no documentation for all mixin'd properties, since
+embedded documentation does not appear to get generated after mixins are
+applied, or I would have to split the getter-setter pairs for each property
 into two separate mixins, which will make the use of the properties only work
-if called syntactically like their method equivalents (e.g. `.prop(arg)` 
+if called syntactically like their method equivalents (e.g. `.prop(arg)`
 instead of `.prop = arg`)
 
 I tried doing this for the following properties:
@@ -424,10 +420,6 @@ The following codecs will be added:
 
 - [ ] Teletex (T61String) validation (WireShark has an implementation.)
 - [ ] Videotex validation
-- [ ] Included Source Signature
-- [ ] Better Indefinite Length support
-  - [ ] Recursively parse the subelements.
-  - [ ] Enforce constructed construction.
 - [ ] Operator Overloads
   - [ ] `~=` making a constructed element
 - [ ] Build System
@@ -460,7 +452,7 @@ If you have any great ideas, let me know.
 
 ## Bugs
 
-The codecs are intended to be `final` classes, but due to 
+The codecs are intended to be `final` classes, but due to
 [this bug](https://issues.dlang.org/show_bug.cgi?id=17909) I found, it cannot
 be until that bug is resolved.
 

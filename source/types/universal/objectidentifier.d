@@ -51,7 +51,7 @@ public class ObjectIdentifier
         Returns: An OID object
         Throws:
             OIDException = if fewer than three numbers are provided, or if the
-                first number is not 0, 1, or 2, or if the second number is 
+                first number is not 0, 1, or 2, or if the second number is
                 greater than 39.
     */
     public @safe
@@ -60,7 +60,7 @@ public class ObjectIdentifier
         if (numbers.length < 2u)
             throw new OIDException
             ("At least two nodes must be provided to ObjectIdenifier constructor.");
-        
+
         if (numbers[0] == 0u || numbers[0] == 1u)
         {
             if (numbers[1] > 39u)
@@ -95,7 +95,7 @@ public class ObjectIdentifier
 
     /**
         Constructor for an Object Identifier
-        
+
         Params:
             nodes = An array of OIDNodes
         Returns: An OID object
@@ -138,7 +138,7 @@ public class ObjectIdentifier
 
     /**
         Constructor for an Object Identifier
-        
+
         Params:
             nodes = An array of OIDNodes
         Returns: An OID object
@@ -396,7 +396,7 @@ public class ObjectIdentifier
 
         OID b = new OID(OIDNode(1, "iso"), OIDNode(3, "registered-org"), OIDNode(4, "dod"));
         b.showDescriptors = true;
-        assert(b.dotNotation == "iso.registered-org.dod");    
+        assert(b.dotNotation == "iso.registered-org.dod");
     }
 
     ///

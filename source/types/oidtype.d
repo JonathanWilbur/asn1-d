@@ -9,11 +9,11 @@ public alias OIDNode = ObjectIdentifierNode;
     A struct representing a single node in an OID, which has a mandatory
     number and an optional descriptor.
 */
-public 
+public
 struct ObjectIdentifierNode
 {
-    /** 
-        The unique unsigned integral number associated with a node in the 
+    /**
+        The unique unsigned integral number associated with a node in the
         object identifier hierarchy.
     */
     immutable public size_t number;
@@ -93,7 +93,7 @@ struct ObjectIdentifierNode
         Sources:
             $(LINK2 ,
                 ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
@@ -104,7 +104,7 @@ struct ObjectIdentifierNode
     */
     public @system
     this(in size_t number, in string descriptor)
-    {   
+    {
         foreach (immutable character; descriptor)
         {
             if ((!character.isGraphical) && (character != ' '))
@@ -119,7 +119,7 @@ struct ObjectIdentifierNode
                     "For more information on Object Identifiers, read the " ~
                     "International Telecommunications Union's X.660 specification, " ~
                     "which can be found at " ~
-                    "http://www.itu.int/rec/T-REC-X.660-201107-I/en. " ~ 
+                    "http://www.itu.int/rec/T-REC-X.660-201107-I/en. " ~
                     "If you believe that you have " ~
                     "discovered a bug, please create an issue on the GitHub page's Issues " ~
                     "section at: https://github.com/JonathanWilbur/asn1-d/issues. "

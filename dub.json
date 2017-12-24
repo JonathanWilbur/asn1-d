@@ -7,8 +7,5 @@
 	"sourcePaths": "./source/",
 	"excludedSourceFiles": "./source/tools/*",
 	"targetType": "library",
-	"targetPath": "./build/libraries/",
-	"dependencies": {
-		"cli": "~>2.0"
-	}
+	"targetPath": "./build/libraries/"
 }

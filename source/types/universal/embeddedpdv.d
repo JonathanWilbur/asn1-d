@@ -10,12 +10,12 @@ import types.identification;
 public alias EmbeddedPDV = EmbeddedPresentationDataValue;
 /**
     Page: 215
-    If a module includes the clause AUTOMATIC TAGS in its header, 
-    the components of all its structured types (SEQUENCE, SET or CHOICE) 
-    are automatically tagged by the compiler starting from 0 by one-increment. 
-    By default, every component is tagged in the implicit mode except if it 
-    is a CHOICE type, an open type or a parameter that is a type. This 
-    tagging mechanism is obviously documented in the ASN.1 standard and, 
+    If a module includes the clause AUTOMATIC TAGS in its header,
+    the components of all its structured types (SEQUENCE, SET or CHOICE)
+    are automatically tagged by the compiler starting from 0 by one-increment.
+    By default, every component is tagged in the implicit mode except if it
+    is a CHOICE type, an open type or a parameter that is a type. This
+    tagging mechanism is obviously documented in the ASN.1 standard and,
     as a result, does not depend on the compiler. Hence, the module:
 
         $(I
@@ -55,7 +55,7 @@ public alias EmbeddedPDV = EmbeddedPresentationDataValue;
                     fixed NULL },
                 data-value-descriptor ObjectDescriptor OPTIONAL,
                 data-value OCTET STRING }
-            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })   
+            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
         )
 
     Note that, the data-value-descriptor field should be absent!
@@ -64,7 +64,7 @@ public
 struct EmbeddedPresentationDataValue
 {
     /**
-        A field indicating the the transfer syntax used to indicate the means 
+        A field indicating the the transfer syntax used to indicate the means
         by which the data-value field is encoded. Can also be used to specify
         the abstract syntax of what is encoded.
     */

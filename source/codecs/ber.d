@@ -1,28 +1,28 @@
 /**
     Basic Encoding Rules (BER) is a standard for encoding ASN.1 data. It is by
-    far the most common standard for doing so, being used in LDAP, TLS, SNMP, 
-    RDP, and other protocols. Like Distinguished Encoding Rules (DER), 
+    far the most common standard for doing so, being used in LDAP, TLS, SNMP,
+    RDP, and other protocols. Like Distinguished Encoding Rules (DER),
     Canonical Encoding Rules (CER), and Packed Encoding Rules (PER), Basic
-    Encoding Rules is a specification created by the 
-    $(LINK2 http://www.itu.int/en/pages/default.aspx, 
+    Encoding Rules is a specification created by the
+    $(LINK2 http://www.itu.int/en/pages/default.aspx,
         International Telecommunications Union),
-    and specified in 
+    and specified in
     $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
-    
-    BER is generally regarded as the most flexible of the encoding schemes, 
+
+    BER is generally regarded as the most flexible of the encoding schemes,
     because all values can be encoded in a multitude of ways. This flexibility
     might be convenient for developers who use a BER Library, but creating
     a BER library in the first place is a nightmare, because of its flexibility.
     I personally suspect that the complexity of BER may make its implementation
     inclined to security vulnerabilities, so I would not use it if you have a
-    choice in the matter. Also, the ability to represent values in several 
-    different ways is actually a security problem when data has to be guarded 
-    against tampering with a cryptographic signature. (Basically, it makes it 
-    a lot easier to find a tampered payload that has the identical signature 
+    choice in the matter. Also, the ability to represent values in several
+    different ways is actually a security problem when data has to be guarded
+    against tampering with a cryptographic signature. (Basically, it makes it
+    a lot easier to find a tampered payload that has the identical signature
     as the genuine payload.)
 
-    Author: 
-        $(LINK2 http://jonathan.wilbur.space, Jonathan M. Wilbur) 
+    Author:
+        $(LINK2 http://jonathan.wilbur.space, Jonathan M. Wilbur)
             $(LINK2 mailto:jonathan@wilbur.space, jonathan@wilbur.space)
     License: $(LINK2 https://mit-license.org/, MIT License)
     Standards:
@@ -45,9 +45,9 @@ public alias berOID = basicEncodingRulesObjectIdentifier;
 public alias berObjectID = basicEncodingRulesObjectIdentifier;
 ///
 public alias berObjectIdentifier = basicEncodingRulesObjectIdentifier;
-/** 
+/**
     The object identifier assigned to the Basic Encoding Rules (BER), per the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx, 
+    $(LINK2 http://www.itu.int/en/pages/default.aspx,
         International Telecommunications Union)'s,
     $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
 
@@ -58,9 +58,10 @@ public immutable OID basicEncodingRulesObjectIdentifier = cast(immutable(OID)) n
 ///
 public alias BERElement = BasicEncodingRulesElement;
 /**
-    The unit of encoding and decoding for Basic Encoding Rules BER.
-    
-    There are three parts to an encoded BER Value:
+    The unit of encoding and decoding for Basic Encoding Rules (BER).
+
+    There are three parts to an element encoded according to the Basic
+    Encoding Rules (BER):
 
     $(UL
         $(LI A Type Tag, which specifies what data type is encoded)
@@ -111,7 +112,7 @@ public
 class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 {
     @system
-    unittest 
+    unittest
     {
         writeln("Running unit tests for codec: " ~ typeof(this).stringof);
     }
@@ -120,11 +121,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Unlike most other settings, this is non-static, because wanting to
         encode with indefinite length is probably going to be somewhat rare,
         and it is also less safe, because the value octets have to be inspected
-        for double octets before encoding! (If they are not, the receiver will 
+        for double octets before encoding! (If they are not, the receiver will
         interpret those inner null octets as the terminator for the indefinite
         length value, and the rest will be truncated.)
     */
-    public LengthEncodingPreference lengthEncodingPreference = 
+    public LengthEncodingPreference lengthEncodingPreference =
         LengthEncodingPreference.definite;
 
     /**
@@ -138,7 +139,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         fractional components of the base 10 / character-encoded representation
         of a REAL.
     */
-    static public ASN1Base10RealDecimalSeparator base10RealDecimalSeparator = 
+    static public ASN1Base10RealDecimalSeparator base10RealDecimalSeparator =
         ASN1Base10RealDecimalSeparator.period;
 
     /**
@@ -146,11 +147,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         from the exponent in the base 10 / character-encoded representation
         of a REAL.
     */
-    static public ASN1Base10RealExponentCharacter base10RealExponentCharacter = 
+    static public ASN1Base10RealExponentCharacter base10RealExponentCharacter =
         ASN1Base10RealExponentCharacter.uppercaseE;
 
     /**
-        The standardized string representations of floating point numbers, as 
+        The standardized string representations of floating point numbers, as
         specified in $(LINK2 https://www.iso.org/standard/12285.html, ISO 6093).
 
         $(TABLE
@@ -161,10 +162,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         )
 
         Citation:
-            Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between 
+            Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
             Heterogeneous Systems, Morgan Kaufmann, 2001, p. 143.
     */
-    static public ASN1Base10RealNumericalRepresentation base10RealNumericalRepresentation = 
+    static public ASN1Base10RealNumericalRepresentation base10RealNumericalRepresentation =
         ASN1Base10RealNumericalRepresentation.nr3;
 
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
@@ -174,7 +175,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     static protected size_t nestingRecursionCount = 0u;
 
     /// The limit of recursions permitted for parsing constructed elements.
-    static immutable size_t nestingRecursionLimit = 5u; 
+    static immutable size_t nestingRecursionLimit = 5u;
 
     public ASN1TagClass tagClass;
     public ASN1Construction construction;
@@ -188,11 +189,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /*
-        I have been on the fence about this for a while now: I don't want 
+        I have been on the fence about this for a while now: I don't want
         developers directly setting the bytes of the value. I know that making
-        value a public member means that some idiot somewhere is going to 
+        value a public member means that some idiot somewhere is going to
         bypass all of the methods I made and just directly set values himself,
-        resulting in some catastrophic bug in a major library or program 
+        resulting in some catastrophic bug in a major library or program
         somewhere.
 
         But on the other hand, if I make value a private member, and readable
@@ -207,10 +208,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
     /**
         Decodes a boolean.
-        
+
         Any non-zero value will be interpreted as TRUE. Only zero will be
         interpreted as FALSE.
-        
+
         Returns: a boolean
         Throws:
             ASN1ValueSizeException = if the encoded value is anything other
@@ -226,7 +227,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "one byte (in addition to the type and length bytes, of " ~
                 "course). This exception was thrown because you attempted to " ~
                 "decode a BOOLEAN from an element that had either zero or more " ~
-                "than one bytes as the encoded value. " ~ notWhatYouMeantText ~ 
+                "than one bytes as the encoded value. " ~ notWhatYouMeantText ~
                 forMoreInformationText ~ debugInformationText ~ reportBugsText
             );
 
@@ -269,8 +270,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
     /**
         Decodes a signed integer.
-        
-        Bytes are stored in big-endian order, where the bytes represent 
+
+        Bytes are stored in big-endian order, where the bytes represent
         the two's complement encoding of the integer.
 
         Returns: any chosen signed integral type
@@ -289,10 +290,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "INTEGER that was encoded on 0 bytes. According to the Basic " ~
                 "Encoding Rules (BER), an INTEGER must be encoded on at least " ~
                 "one byte. Even 0 must be encoded as a single null byte. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
-        
+
         if (this.value.length == 1u)
             return cast(T) cast(byte) this.value[0];
 
@@ -308,11 +309,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "INTEGER that was just too large to decode to any signed " ~
                 "integral data type. The largest INTEGER that can be decoded " ~
                 "is eight bytes, which can only be decoded to a long. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
-        if 
+        if
         (
             this.value.length > 1u &&
             (
@@ -325,12 +326,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "This exception was thrown because you attempted to decode " ~
                 "an INTEGER that was encoded on more than the minimum " ~
                 "necessary bytes. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
         /* NOTE:
-            Because the BER INTEGER is stored in two's complement form, you 
+            Because the BER INTEGER is stored in two's complement form, you
             can't just apppend 0x00u to the big end of it until it is as long
             as T in bytes, then cast to T. Instead, you have to first determine
             if the encoded integer is negative or positive. If it is negative,
@@ -339,7 +340,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             you choose.
 
             The line immediately below this determines whether the padding byte
-            should be 0xFF or 0x00 based on the most significant bit of the 
+            should be 0xFF or 0x00 based on the most significant bit of the
             most significant byte (which, since BER encodes big-endian, will
             always be the first byte). If set (1), the number is negative, and
             hence, the padding byte should be 0xFF. If not, it is positive,
@@ -355,8 +356,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
     /**
         Encodes an integer.
-        
-        Bytes are stored in big-endian order, where the bytes represent 
+
+        Bytes are stored in big-endian order, where the bytes represent
         the two's complement encoding of the integer.
     */
     public @property @system nothrow
@@ -378,22 +379,22 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         ub.length = T.sizeof;
         *cast(T *)&ub[0] = value;
         version (LittleEndian) reverse(ub);
-    
+
         /*
             An INTEGER must be encoded on the fewest number of bytes than can
-            encode it. The loops below identify how many bytes can be 
+            encode it. The loops below identify how many bytes can be
             truncated from the start of the INTEGER, with one loop for positive
-            and another loop for negative numbers. 
-            
+            and another loop for negative numbers.
+
             From X.690, Section 8.3.2:
 
-            If the contents octets of an integer value encoding consist of more 
-            than one octet, then the bits of the first octet and bit 8 of the 
+            If the contents octets of an integer value encoding consist of more
+            than one octet, then the bits of the first octet and bit 8 of the
             second octet:
                 a) shall not all be ones; and
                 b) shall not all be zero.
-                NOTE – These rules ensure that an integer value is always 
-                encoded in the smallest possible number of octets. 
+                NOTE – These rules ensure that an integer value is always
+                encoded in the smallest possible number of octets.
         */
         size_t startOfNonPadding = 0u;
         if (T.sizeof > 1u)
@@ -487,16 +488,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             (
                 "This exception was thrown because you attempted to decode a " ~
                 "BIT STRING that was encoded on zero bytes. A BIT STRING " ~
-                "requires at least one byte to encode the length. " 
-                ~ notWhatYouMeantText ~ forMoreInformationText ~ 
+                "requires at least one byte to encode the length. "
+                ~ notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
-        
+
         if (this.value[0] > 0x07u)
             throw new ASN1ValueInvalidException
             (
                 "In Basic Encoding Rules, the first byte of the encoded " ~
-                "binary value (after the type and length bytes, of course) " ~ 
+                "binary value (after the type and length bytes, of course) " ~
                 "is used to indicate how many unused bits there are at the " ~
                 "end of the BIT STRING. Since everything is encoded in bytes " ~
                 "in Basic Encoding Rules, but a BIT STRING may not " ~
@@ -508,8 +509,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "unused bits or more, you may as well truncate an entire " ~
                 "byte from the encoded data. This exception was thrown because " ~
                 "you attempted to decode a BIT STRING whose first byte " ~
-                "had a value greater than seven. The value was: " ~ 
-                text(this.value[0]) ~ ". " ~ notWhatYouMeantText ~ 
+                "had a value greater than seven. The value was: " ~
+                text(this.value[0]) ~ ". " ~ notWhatYouMeantText ~
                 forMoreInformationText ~ debugInformationText ~ reportBugsText
             );
 
@@ -524,10 +525,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "the part of the encoder, but this looks really suspicious: " ~
                 "it is likely that an attempt was made to hack your systems " ~
                 "by inducing an out-of-bounds read from an array. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
-        
+
         bool[] ret;
         for (size_t i = 1; i < this.value.length; i++)
         {
@@ -562,7 +563,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     body
     {
         ubyte[] ub;
-        ub.length = ((value.length / 8u) + (value.length % 8u ? 1u : 0u)); 
+        ub.length = ((value.length / 8u) + (value.length % 8u ? 1u : 0u));
         for (size_t i = 0u; i < value.length; i++)
         {
             if (value[i] == false) continue;
@@ -617,7 +618,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Throws:
             ASN1ValueTooSmallException = if an attempt is made to decode
                 an Object Identifier from zero bytes.
-            ASN1ValueTooBigException = if a single OID number is too big to 
+            ASN1ValueTooBigException = if a single OID number is too big to
                 decode to a size_t.
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
@@ -636,7 +637,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "This exception was thrown because you attempted to decode " ~
                 "an OBJECT IDENTIFIER from no bytes. An OBJECT IDENTIFIER " ~
                 "must be encoded on at least one byte. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -654,7 +655,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "encoded on more than the minimum necessary octets. This " ~
                         "is indicated by an occurrence of the octet 0x80, which " ~
                         "is the encoded equivalent of a leading zero. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
             }
@@ -667,7 +668,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "bit set, which is used to indicate the continuity of the " ~
                     "encoding of a number on the next octet. In other words, the " ~
                     "encoded data appears to be truncated. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
         }
@@ -685,7 +686,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         {
             numbers = [ 0u, this.value[0] ];
         }
-        
+
         // Breaks bytes into groups, where each group encodes one OID component.
         ubyte[][] byteGroups;
         size_t lastTerminator = 1;
@@ -707,7 +708,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "This exception was thrown because you attempted to decode " ~
                     "a OBJECT IDENTIFIER that encoded a number on more than " ~
                     "size_t bytes. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
 
@@ -718,7 +719,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 numbers[$-1] |= cast(size_t) (byteGroup[i] & 0x7Fu);
             }
         }
-        
+
         // Constructs the array of OIDNodes from the array of numbers.
         OIDNode[] nodes;
         foreach (number; numbers)
@@ -790,7 +791,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             }
         }
     }
-    
+
     @system
     unittest
     {
@@ -851,10 +852,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         0x20 to 0x7E.
 
         Citations:
-            Dubuisson, Olivier. “Character String Types.” ASN.1: 
-                Communication between Heterogeneous Systems, Morgan 
+            Dubuisson, Olivier. “Character String Types.” ASN.1:
+                Communication between Heterogeneous Systems, Morgan
                 Kaufmann, 2001, pp. 175-178.
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
@@ -896,10 +897,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         0x20 to 0x7E.
 
         Citations:
-            Dubuisson, Olivier. “Character String Types.” ASN.1: 
-                Communication between Heterogeneous Systems, Morgan 
+            Dubuisson, Olivier. “Character String Types.” ASN.1:
+                Communication between Heterogeneous Systems, Morgan
                 Kaufmann, 2001, pp. 175-178.
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
@@ -930,9 +931,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Decodes an EXTERNAL, which is a constructed data type, defined in 
-        the $(LINK2 https://www.itu.int, 
-            International Telecommunications Union)'s 
+        Decodes an EXTERNAL, which is a constructed data type, defined in
+        the $(LINK2 https://www.itu.int,
+            International Telecommunications Union)'s
         $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EXTERNAL as:
@@ -960,10 +961,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
-            ASN1InvalidIndexException = if encoded value selects a choice for 
+            ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
                 syntaxes or context-negotiation, or if an unspecified element
-                of EMBEDDED PDV itself is referenced by an out-of-range 
+                of EMBEDDED PDV itself is referenced by an out-of-range
                 context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
 
         EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
@@ -991,7 +992,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "either a direct-reference (syntax) and/or an indirect-" ~
                 "reference (presentation-context-id), an optional " ~
                 "data-value-descriptor, and an encoding (data-value). " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -1007,7 +1008,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "component of the encoded EXTERNAL must be of UNIVERSAL " ~
                     "class. The last component must be of CONTEXT SPECIFIC " ~
                     "class. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
         }
@@ -1022,7 +1023,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "component of the encoded EXTERNAL must be of UNIVERSAL " ~
                 "class. The last component must be of CONTEXT SPECIFIC " ~
                 "class. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -1033,14 +1034,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "This exception was thrown because you attempted to decode " ~
                 "an EXTERNAL whose first element was not primitively " ~
                 "constructed. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
         // REVIEW: A faster way to do this is to AND components[0] with 0b0000_0010u
-        if 
+        if
         (
-            components[0].tagNumber != ASN1UniversalType.objectIdentifier && 
+            components[0].tagNumber != ASN1UniversalType.objectIdentifier &&
             components[0].tagNumber != ASN1UniversalType.integer
         )
             throw new ASN1ValueInvalidException
@@ -1048,9 +1049,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "This exception was thrown because you attempted to decode " ~
                 "an EXTERNAL whose first component was not an INTEGER or " ~
                 "OBJECT IDENTIFIER. The first component of an EXTERNAL " ~
-                "must be either an OBJECT IDENTIFIER or an INTEGER if it is " ~ 
+                "must be either an OBJECT IDENTIFIER or an INTEGER if it is " ~
                 "encoded using Basic Encoding Rules. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -1060,13 +1061,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             {
                 if (components[0].tagNumber == ASN1UniversalType.objectIdentifier)
                     identification.directReference = components[0].objectIdentifier;
-                else 
+                else
                     identification.indirectReference = components[0].integer!ptrdiff_t;
                 break;
             }
             case (3u):
             {
-                if 
+                if
                 (
                     components[0].tagNumber == ASN1UniversalType.objectIdentifier &&
                     components[1].tagNumber == ASN1UniversalType.integer
@@ -1080,10 +1081,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                             "three was primitively constructed. Whether it is " ~
                             "an OBJECT IDENTIFIER or an ObjectDescriptor, it " ~
                             "must be primitively constructed. " ~
-                            notWhatYouMeantText ~ forMoreInformationText ~ 
+                            notWhatYouMeantText ~ forMoreInformationText ~
                             debugInformationText ~ reportBugsText
                         );
-                    
+
                     identification.contextNegotiation = ASN1ContextNegotiation(
                         components[1].integer!ptrdiff_t,
                         components[0].objectIdentifier
@@ -1118,7 +1119,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "an EXTERNAL whose middle component was neither an OBJECT " ~
                         "IDENTIFIER, INTEGER, nor ObjectDescriptor. This middle " ~
                         "component of the three must be one of those types. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
                 break;
@@ -1141,7 +1142,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "the resulting EXTERNAL should contain four components, " ~
                         "and the first three should have the types OBJECT " ~
                         "IDENTIFIER, INTEGER, and ObjectDescriptor in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -1151,10 +1152,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "This exception was thrown because you attempted to " ~
                         "decode an EXTERNAL whose second element was not " ~
                         "primitively constructed, despite being INTEGER type. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
-                
+
                 identification.contextNegotiation = ASN1ContextNegotiation(
                     components[1].integer!ptrdiff_t,
                     components[0].objectIdentifier
@@ -1207,7 +1208,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "specification (as required by the ITU's X.690 " ~
                     "specification), but used an invalid choice for the encoding " ~
                     "component. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
         }
@@ -1218,9 +1219,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Encodes an EXTERNAL, which is a constructed data type, defined in 
-        the $(LINK2 https://www.itu.int, 
-            International Telecommunications Union)'s 
+        Encodes an EXTERNAL, which is a constructed data type, defined in
+        the $(LINK2 https://www.itu.int,
+            International Telecommunications Union)'s
         $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EXTERNAL as:
@@ -1263,7 +1264,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     body
     {
         BERElement[] components = [];
-        
+
         if (!(value.identification.syntax.isNull))
         {
             BERElement directReference = new BERElement();
@@ -1306,7 +1307,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished 
+        This unit test had to be moved out of ASN1Element, because Distinguished
         Encoding Rules (DER) does not permit EXTERNALs to use an identification
         CHOICE of presentation-context-id or context-negotiation
     */
@@ -1330,7 +1331,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished 
+        This unit test had to be moved out of ASN1Element, because Distinguished
         Encoding Rules (DER) does not permit EXTERNALs to use an identification
         CHOICE of presentation-context-id or context-negotiation
     */
@@ -1448,10 +1449,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         takes on values of 0x1, 0x2, or 0x3 to indicate that the string
         representation conforms to
         $(LINK2 , ISO 6093) Numeric Representation 1, 2, or 3 respectively.
-        
+
         If the first bit is set, then the first byte is an "information block"
         that describes the binary encoding of the REAL on the subsequent bytes.
-        If bit 6 is set, the value is negative; if clear, the value is 
+        If bit 6 is set, the value is negative; if clear, the value is
         positive. Bits 4 and 5 determine the base, with a value of 0 indicating
         a base of 2, a value of 1 indicating a base of 8, and a value of 2
         indicating a base of 16. Bits 2 and 3 indicates that the value should
@@ -1460,8 +1461,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         that the exponent is encoded as a signed byte on the second byte of
         the value, with 1 indicating that the exponent is encoded as a signed
         short on the subsequent two bytes, with 2 indicating that the exponent
-        is encoded as a three-byte signed integer on the subsequent three 
-        bytes, and with 4 indicating that the subsequent byte encodes the 
+        is encoded as a three-byte signed integer on the subsequent three
+        bytes, and with 4 indicating that the subsequent byte encodes the
         unsigned length of the exponent on the following bytes. The remaining
         bytes encode an unsigned integer, N, such that mantissa is equal to
         sign * N * 2^scale.
@@ -1469,20 +1470,20 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Throws:
             ConvException = if character-encoding cannot be converted to
                 the selected floating-point type, T.
-            ConvOverflowException = if the character-encoding encodes a 
+            ConvOverflowException = if the character-encoding encodes a
                 number that is too big for the selected floating-point
                 type to express.
             ASN1ValueTooSmallException = if the binary-encoding contains fewer
                 bytes than the information byte purports.
-            ASN1ValueTooBigException = if the binary-encoded mantissa is too 
+            ASN1ValueTooBigException = if the binary-encoded mantissa is too
                 big to be expressed by an unsigned long integer.
             ASN1ValueInvalidException = if both bits indicating the base in the
-                information byte of a binary-encoded REAL's information byte 
+                information byte of a binary-encoded REAL's information byte
                 are set, which would indicate an invalid base.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
-            Communication between Heterogeneous Systems, Morgan Kaufmann, 
+            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
+            Communication between Heterogeneous Systems, Morgan Kaufmann,
             2001, pp. 400–402.
     */
     public @property @system
@@ -1518,7 +1519,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 ubyte scale;
                 ubyte base;
 
-                immutable string mantissaTooBigExceptionText = 
+                immutable string mantissaTooBigExceptionText =
                     "This exception was thrown because the mantissa encoded by " ~
                     "a Basic Encoding Rules-encoded REAL could not fit in " ~
                     "to a 64-bit signed integer (long). This might indicate that " ~
@@ -1537,7 +1538,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "correctly-encoded REAL has one byte for general " ~
                         "encoding information about the REAL, and at least " ~
                         "one byte for encoding the exponent. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -1575,7 +1576,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                                 "would encode the exponent of the REAL, but " ~
                                 "there were less than three bytes in the entire " ~
                                 "encoded value. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                notWhatYouMeantText ~ forMoreInformationText ~
                                 debugInformationText ~ reportBugsText
                             );
 
@@ -1624,7 +1625,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                                 "would encode the exponent of the REAL, but " ~
                                 "there were less than four bytes in the entire " ~
                                 "encoded value. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                notWhatYouMeantText ~ forMoreInformationText ~
                                 debugInformationText ~ reportBugsText
                             );
 
@@ -1656,7 +1657,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         {
                             static assert(0, "Could not determine endianness!");
                         }
-                        
+
                         break;
                     }
                     case 0b00000011: // Complicated
@@ -1670,10 +1671,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                                 "would encode the length of the exponent of the REAL, but " ~
                                 "there were less than two bytes in the entire " ~
                                 "encoded value. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                notWhatYouMeantText ~ forMoreInformationText ~
                                 debugInformationText ~ reportBugsText
                             );
-                        
+
                         immutable ubyte exponentLength = this.value[1];
 
                         if (this.length < exponentLength)
@@ -1687,19 +1688,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                                 "(the third byte). However, the encoded value " ~
                                 "does not have enough bytes to encode the " ~
                                 "exponent with the size indicated. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                notWhatYouMeantText ~ forMoreInformationText ~
                                 debugInformationText ~ reportBugsText
                             );
 
                         if (exponentLength > 0x08u)
                             throw new ASN1ValueTooBigException
                             (
-                                "This exception was thrown because you attempted" ~
+                                "This exception was thrown because you attempted " ~
                                 "to decode a REAL that had an exponent that was " ~
                                 "too big to decode to a floating-point type." ~
                                 "Specifically, the exponent was encoded on " ~
                                 "more than eight bytes. " ~
-                                notWhatYouMeantText ~ forMoreInformationText ~ 
+                                notWhatYouMeantText ~ forMoreInformationText ~
                                 debugInformationText ~ reportBugsText
                             );
 
@@ -1744,7 +1745,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         assert(0, "Impossible binary exponent encoding on REAL type");
                     }
                 }
-                
+
                 if (mantissa > long.max)
                     throw new ASN1ValueInvalidException(mantissaTooBigExceptionText);
 
@@ -1773,8 +1774,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                             "decode a REAL that had both base bits in the " ~
                             "information block set, the meaning of which is " ~
                             "not specified. " ~
-                            notWhatYouMeantText ~ forMoreInformationText ~ 
-                            debugInformationText ~ reportBugsText 
+                            notWhatYouMeantText ~ forMoreInformationText ~
+                            debugInformationText ~ reportBugsText
                         );
                     }
                 }
@@ -1820,10 +1821,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         takes on values of 0x1, 0x2, or 0x3 to indicate that the string
         representation conforms to
         $(LINK2 , ISO 6093) Numeric Representation 1, 2, or 3 respectively.
-        
+
         If the first bit is set, then the first byte is an "information block"
         that describes the binary encoding of the REAL on the subsequent bytes.
-        If bit 6 is set, the value is negative; if clear, the value is 
+        If bit 6 is set, the value is negative; if clear, the value is
         positive. Bits 4 and 5 determine the base, with a value of 0 indicating
         a base of 2, a value of 1 indicating a base of 8, and a value of 2
         indicating a base of 16. Bits 2 and 3 indicates that the value should
@@ -1832,22 +1833,22 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         that the exponent is encoded as a signed byte on the second byte of
         the value, with 1 indicating that the exponent is encoded as a signed
         short on the subsequent two bytes, with 2 indicating that the exponent
-        is encoded as a three-byte signed integer on the subsequent three 
-        bytes, and with 4 indicating that the subsequent byte encodes the 
+        is encoded as a three-byte signed integer on the subsequent three
+        bytes, and with 4 indicating that the subsequent byte encodes the
         unsigned length of the exponent on the following bytes. The remaining
         bytes encode an unsigned integer, N, such that mantissa is equal to
         sign * N * 2^scale.
 
         Throws:
             ASN1ValueInvalidException = if an attempt to encode NaN is made.
-            ASN1ValueTooSmallException = if an attempt to encode would result 
+            ASN1ValueTooSmallException = if an attempt to encode would result
                 in an arithmetic underflow of a signed short.
             ASN1ValueTooBigException = if an attempt to encode would result
                 in an arithmetic overflow of a signed short.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
-            Communication between Heterogeneous Systems, Morgan Kaufmann, 
+            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
+            Communication between Heterogeneous Systems, Morgan Kaufmann,
             2001, pp. 400–402.
     */
     public @property @system
@@ -1865,7 +1866,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         /**
             Because the current settings for realEncodingBase must be referenced
             repeatedly throughout this method, a private copy must be made of
-            the state of this.realEncodingBase to prevent both TOCTOU 
+            the state of this.realEncodingBase to prevent both TOCTOU
             vulnerabilities as well as problems with concurrent programming.
         */
         ASN1RealEncodingBase base = this.realEncodingBase;
@@ -1911,7 +1912,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     break;
                 }
                 case (ASN1Base10RealNumericalRepresentation.nr2):
-                {                    
+                {
                     static if (is(T == double))
                     {
                         writer.formattedWrite!"%.12f"(value);
@@ -1963,11 +1964,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 }
             }
 
-            this.value = 
-                cast(ubyte[]) [ (cast(ubyte) 0u | cast(ubyte) this.base10RealNumericalRepresentation) ] ~ 
+            this.value =
+                cast(ubyte[]) [ (cast(ubyte) 0u | cast(ubyte) this.base10RealNumericalRepresentation) ] ~
                 ((this.base10RealShouldShowPlusSignIfPositive && (writer.data[0] != '-')) ? cast(ubyte[]) ['+'] : []) ~
                 cast(ubyte[]) writer.data;
-            
+
             return;
         }
 
@@ -2063,7 +2064,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "If you have encountered this exception, and if you " ~
                         "know specifically what number created the exception, " ~
                         "please report it on the ASN.1 library's GitHub " ~
-                        "issues page: " ~ 
+                        "issues page: " ~
                         "https://github.com/JonathanWilbur/asn1-d/issues. " ~
                         "Please include your machine architecture, bit-width, " ~
                         "the exact number you tried to encode, and whether you " ~
@@ -2091,7 +2092,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "If you have encountered this exception, and if you " ~
                         "know specifically what number created the exception, " ~
                         "please report it on the ASN.1 library's GitHub " ~
-                        "issues page: " ~ 
+                        "issues page: " ~
                         "https://github.com/JonathanWilbur/asn1-d/issues. " ~
                         "Please include your machine architecture, bit-width, " ~
                         "the exact number you tried to encode, and whether you " ~
@@ -2133,7 +2134,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         exponentBytes.length = short.sizeof;
         *cast(short *)exponentBytes.ptr = exponent;
         version (LittleEndian) reverse(exponentBytes);
-        
+
         ubyte[] significandBytes;
         significandBytes.length = ulong.sizeof;
         *cast(ulong *)significandBytes.ptr = cast(ulong) significand;
@@ -2268,7 +2269,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assert(cast(string) (bv.value[1 .. $]) == "+22.123");
         assert(approxEqual(bv.realType!float, 22.123));
         assert(approxEqual(bv.realType!double, 22.123));
-        
+
         // Negative numbers are encoded correctly.
         bv.realType!float = -22.123;
         assert(cast(string) (bv.value[1 .. $]) == "-22.123");
@@ -2339,7 +2340,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assert(cast(string) (bv.value[1 .. $]) == "+22.123000000000");
         assert(approxEqual(bv.realType!float, 22.123));
         assert(approxEqual(bv.realType!double, 22.123));
-        
+
         // Negative numbers are encoded correctly.
         bv.realType!float = -22.123;
         // assert(cast(string) (bv.value[1 .. $]) == "-22.123000"); // Precision problem
@@ -2410,7 +2411,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assert(cast(string) (bv.value[1 .. $]) == "+2.212300000000E+01");
         assert(approxEqual(bv.realType!float, 22.123));
         assert(approxEqual(bv.realType!double, 22.123));
-        
+
         // Negative numbers are encoded correctly.
         bv.realType!float = -22.123;
         assert(cast(string) (bv.value[1 .. $]) == "-2.212300E+01");
@@ -2422,7 +2423,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assert(approxEqual(bv.realType!double, -22.123));
 
         // Small positive numbers are encoded correctly.
-        bv.realType!float = 0.123;     
+        bv.realType!float = 0.123;
         assert(cast(string) (bv.value[1 .. $]) == "+1.230000E-01");
         assert(approxEqual(bv.realType!float, 0.123));
         assert(approxEqual(bv.realType!double, 0.123));
@@ -2469,13 +2470,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "ENUMERATED that was encoded on 0 bytes. According to the Basic " ~
                 "Encoding Rules (BER), an ENUMERATED must be encoded on at least " ~
                 "one byte. Even 0 must be encoded as a single null byte. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
-        
+
         if (this.value.length == 1u)
             return cast(T) cast(byte) this.value[0];
-        
+
         /* NOTE:
             this.value must be duplicated; if it is not, the reverse() operation
             below reverses this.value, which persists until the next decode!
@@ -2488,11 +2489,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "ENUMERATED that was just too large to decode to any signed " ~
                 "integral data type. The largest ENUMERATED that can be decoded " ~
                 "is eight bytes, which can only be decoded to a long. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
-        if 
+        if
         (
             this.value.length > 1u &&
             (
@@ -2505,12 +2506,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "This exception was thrown because you attempted to decode " ~
                 "an ENUMERATED that was encoded on more than the minimum " ~
                 "necessary bytes. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
         /* NOTE:
-            Because the BER ENUMERATED is stored in two's complement form, you 
+            Because the BER ENUMERATED is stored in two's complement form, you
             can't just apppend 0x00u to the big end of it until it is as long
             as T in bytes, then cast to T. Instead, you have to first determine
             if the encoded integer is negative or positive. If it is negative,
@@ -2519,7 +2520,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             you choose.
 
             The line immediately below this determines whether the padding byte
-            should be 0xFF or 0x00 based on the most significant bit of the 
+            should be 0xFF or 0x00 based on the most significant bit of the
             most significant byte (which, since BER encodes big-endian, will
             always be the first byte). If set (1), the number is negative, and
             hence, the padding byte should be 0xFF. If not, it is positive,
@@ -2555,23 +2556,23 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         ub.length = T.sizeof;
         *cast(T *)&ub[0] = value;
         version (LittleEndian) reverse(ub);
-    
+
         /*
             An ENUMERATED must be encoded on the fewest number of bytes than can
-            encode it. The loops below identify how many bytes can be 
+            encode it. The loops below identify how many bytes can be
             truncated from the start of the ENUMERATED, with one loop for positive
             and another loop for negative numbers. ENUMERATED is encoded in the
             same exact way that INTEGER is encoded.
-            
+
             From X.690, Section 8.3.2:
 
-            If the contents octets of an integer value encoding consist of more 
-            than one octet, then the bits of the first octet and bit 8 of the 
+            If the contents octets of an integer value encoding consist of more
+            than one octet, then the bits of the first octet and bit 8 of the
             second octet:
                 a) shall not all be ones; and
                 b) shall not all be zero.
-                NOTE – These rules ensure that an integer value is always 
-                encoded in the smallest possible number of octets. 
+                NOTE – These rules ensure that an integer value is always
+                encoded in the smallest possible number of octets.
         */
         size_t startOfNonPadding = 0u;
         if (T.sizeof > 1u)
@@ -2646,9 +2647,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Decodes an EMBEDDED PDV, which is a constructed data type, defined in 
-            the $(LINK2 https://www.itu.int, 
-                International Telecommunications Union)'s 
+        Decodes an EMBEDDED PDV, which is a constructed data type, defined in
+            the $(LINK2 https://www.itu.int,
+                International Telecommunications Union)'s
             $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EMBEDDED PDV as:
@@ -2681,10 +2682,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
-            ASN1InvalidIndexException = if encoded value selects a choice for 
+            ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
                 syntaxes or context-negotiation, or if an unspecified element
-                of EMBEDDED PDV itself is referenced by an out-of-range 
+                of EMBEDDED PDV itself is referenced by an out-of-range
                 context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
     */
     override public @property @system
@@ -2701,7 +2702,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "An EMBEDDED PDV should have only two elements: " ~
                 "an identification CHOICE, and a data-value OCTET STRING, " ~
                 "in that order. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -2715,7 +2716,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "This exception was thrown because you attempted to decode an " ~
                 "EMBEDDED PDV that contained a tag that was not of CONTEXT-" ~
                 "SPECIFIC class. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -2732,7 +2733,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "EMBEDDED PDV that contained a component whose tag number " ~
                 "was neither 0 nor 2, which indicate the identification CHOICE " ~
                 "and the string-value OCTET STRING components respectively. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -2752,7 +2753,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "contained an invalid number of elements. The " ~
                         "syntaxes component should contain abstract and transfer " ~
                         "syntax OBJECT IDENTIFIERS, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -2764,11 +2765,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1TagException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose syntaxes contained a " ~ 
+                        "decode an EMBEDDED PDV whose syntaxes contained a " ~
                         "component whose tag class was not CONTEXT-SPECIFIC. " ~
                         "All elements of the syntaxes component MUST be of " ~
                         "CONTEXT-SPECIFIC class. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -2780,11 +2781,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1TagException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose syntaxes component " ~ 
+                        "decode an EMBEDDED PDV whose syntaxes component " ~
                         "contained a component whose tag number was not correct. " ~
                         "The tag numbers of the syntaxes component " ~
                         "must be 0 and 1, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -2818,7 +2819,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "context-negotiation component should contain a " ~
                         "presentation-context-id INTEGER and transfer-syntax " ~
                         "OBJECT IDENTIFIER in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -2830,11 +2831,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1TagException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose context-negotiation " ~ 
+                        "decode an EMBEDDED PDV whose context-negotiation " ~
                         "contained a component whose tag class was not CONTEXT-" ~
                         "SPECIFIC. All elements of the context-negotiation " ~
                         "component MUST be of CONTEXT-SPECIFIC class." ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -2846,11 +2847,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1TagException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose context-negotiation " ~ 
+                        "decode an EMBEDDED PDV whose context-negotiation " ~
                         "contained a component whose tag number was not correct. " ~
                         "The tag numbers of the context-negotiation component " ~
                         "must be 0 and 1, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -2858,7 +2859,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     contextNegotiationComponents[0].integer!ptrdiff_t,
                     contextNegotiationComponents[1].objectIdentifier
                 );
-                
+
                 break;
             }
             case (4u): // transfer-syntax
@@ -2880,7 +2881,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "not recognized by the specification of the EMBEDDED PDV. " ~
                     "The EMBEDDED PDV accepts identification CHOICEs with tag " ~
                     "numbers from 0 to 5. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
             }
@@ -2893,9 +2894,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Encodes an EMBEDDED PDV, which is a constructed data type, defined in 
-            the $(LINK2 https://www.itu.int, 
-                International Telecommunications Union)'s 
+        Encodes an EMBEDDED PDV, which is a constructed data type, defined in
+            the $(LINK2 https://www.itu.int,
+                International Telecommunications Union)'s
             $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EMBEDDED PDV as:
@@ -2965,12 +2966,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             presentationContextID.tagClass = ASN1TagClass.contextSpecific;
             presentationContextID.tagNumber = 0u;
             presentationContextID.integer!ptrdiff_t = value.identification.contextNegotiation.presentationContextID;
-            
+
             BERElement transferSyntax = new BERElement();
             transferSyntax.tagClass = ASN1TagClass.contextSpecific;
             transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
-            
+
             identificationChoice.tagNumber = 3u;
             identificationChoice.sequence = [ presentationContextID, transferSyntax ];
         }
@@ -3137,7 +3138,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "encoded on more than the minimum necessary octets. This " ~
                     "is indicated by an occurrence of the octet 0x80, which " ~
                     "is the encoded equivalent of a leading zero. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
         }
@@ -3150,10 +3151,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "bit set, which is used to indicate the continuity of the " ~
                 "encoding of a number on the next octet. In other words, the " ~
                 "encoded data appears to be truncated. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
-        
+
         // Breaks bytes into groups, where each group encodes one OID component.
         ubyte[][] byteGroups;
         size_t lastTerminator = 0u;
@@ -3176,7 +3177,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "This exception was thrown because you attempted to decode " ~
                     "a RELATIVE OID that encoded a number on more than " ~
                     "size_t bytes. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
 
@@ -3187,7 +3188,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 numbers[$-1] |= cast(size_t) (byteGroup[i] & 0x7Fu);
             }
         }
-        
+
         // Constructs the array of OIDNodes from the array of numbers.
         OIDNode[] nodes;
         foreach (number; numbers)
@@ -3398,7 +3399,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "This exception was thrown because you tried to decode " ~
                     "a NumericString that contained a character that " ~
                     "is not numeric or space. The encoding of the offending character is '" ~
-                    text(cast(uint) character) ~ "'. " ~ forMoreInformationText ~ 
+                    text(cast(uint) character) ~ "'. " ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
         }
@@ -3407,12 +3408,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
     /**
         Decodes a string that will only contain characters a-z, A-Z, 0-9,
-        space, apostrophe, parentheses, comma, minus, plus, period, 
+        space, apostrophe, parentheses, comma, minus, plus, period,
         forward slash, colon, equals, and question mark.
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any character other than a-z, A-Z, 
+            ASN1ValueInvalidException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 encoded.
@@ -3428,10 +3429,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "This exception was thrown because you tried to decode " ~
                     "a PrintableString that contained a character that " ~
                     "is not considered 'printable' by the specification. " ~
-                    "The encoding of the offending character is '" ~ 
+                    "The encoding of the offending character is '" ~
                     text(cast(uint) character) ~ "'. " ~
                     "The allowed characters are: " ~ printableStringCharacters ~ " " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
         }
@@ -3440,11 +3441,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
     /**
         Encodes a string that may only contain characters a-z, A-Z, 0-9,
-        space, apostrophe, parentheses, comma, minus, plus, period, 
+        space, apostrophe, parentheses, comma, minus, plus, period,
         forward slash, colon, equals, and question mark.
 
         Throws:
-            ASN1ValueInvalidException = if any character other than a-z, A-Z, 
+            ASN1ValueInvalidException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 supplied.
@@ -3460,7 +3461,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "This exception was thrown because you tried to encode " ~
                     "a PrintableString that contained a character that " ~
                     "is not considered 'printable' by the specification. " ~
-                    "The encoding of the offending character is '" ~ 
+                    "The encoding of the offending character is '" ~
                     text(cast(uint) character) ~ "'. " ~
                     "The allowed characters are: " ~ printableStringCharacters ~ " " ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
@@ -3468,7 +3469,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
         this.value = cast(ubyte[]) value.dup;
     }
-   
+
     /**
         Literally just returns the value bytes.
 
@@ -3549,7 +3550,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "This exception was thrown because you tried to decode " ~
                     "an IA5String that contained a character that " ~
                     "is not ASCII. The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
         }
@@ -3594,29 +3595,29 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 );
         }
         this.value = cast(ubyte[]) value.dup;
-    } 
+    }
 
     /**
         Decodes a DateTime.
-        
+
         The BER-encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 
-        An UTC Timestamp looks like: 
+        An UTC Timestamp looks like:
         $(UL
             $(LI 9912312359Z)
             $(LI 991231235959+0200)
         )
 
-        If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0, 
+        If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,
         meaning that the date refers to the first 80 years of the century, this
         assumes we are talking about the 21st century and prepend '20' when
-        creating the ISO Date String. Otherwise, it assumes we are talking 
+        creating the ISO Date String. Otherwise, it assumes we are talking
         about the 20th century, and prepend '19' when creating the string.
 
         See_Also:
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
-        
+
         Throws:
             DateTimeException = if string cannot be decoded to a DateTime
     */
@@ -3629,14 +3630,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "This exception was thrown because you attempted to decode a " ~
                 "UTCTime that was encoded on too few bytes to be " ~
                 "correct. A GeneralizedTime needs at least 12 bytes. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
         // REVIEW: Manually check for invalid characters before the cast?
 
         /** NOTE:
-            .fromISOString() MUST be called from SysTime, not DateTime. There 
+            .fromISOString() MUST be called from SysTime, not DateTime. There
             is a subtle difference in how .fromISOString() works in both SysTime
             and DateTime: SysTime's accepts the "Z" at the end (indicating that
             the time is in GMT).
@@ -3651,11 +3652,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
     /**
         Encodes a DateTime.
-        
+
         The BER-encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 
-        An UTC Timestamp looks like: 
+        An UTC Timestamp looks like:
         $(UL
             $(LI 9912312359Z)
             $(LI 991231235959+0200)
@@ -3681,10 +3682,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Decodes a DateTime.
 
         The BER-encoded value is just the ASCII character representation of
-        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html, 
+        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,
         ISO 8601)-formatted timestamp.
 
-        An ISO-8601 Timestamp looks like: 
+        An ISO-8601 Timestamp looks like:
         $(UL
             $(LI 19851106210627.3)
             $(LI 19851106210627.3Z)
@@ -3703,14 +3704,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "This exception was thrown because you attempted to decode a " ~
                 "GeneralizedTime that was encoded on too few bytes to be " ~
                 "correct. A GeneralizedTime needs at least 14 bytes. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
         // REVIEW: Manually check for invalid characters before the cast?
 
         /** NOTE:
-            .fromISOString() MUST be called from SysTime, not DateTime. There 
+            .fromISOString() MUST be called from SysTime, not DateTime. There
             is a subtle difference in how .fromISOString() works in both SysTime
             and DateTime: SysTime's accepts the "Z" at the end (indicating that
             the time is in GMT).
@@ -3727,10 +3728,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Encodes a DateTime.
 
         The BER-encoded value is just the ASCII character representation of
-        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html, 
+        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,
         ISO 8601)-formatted timestamp.
 
-        An ISO-8601 Timestamp looks like: 
+        An ISO-8601 Timestamp looks like:
         $(UL
             $(LI 19851106210627.3)
             $(LI 19851106210627.3Z)
@@ -3751,22 +3752,22 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Decodes an ASCII string that contains only characters between and 
+        Decodes an ASCII string that contains only characters between and
         including 0x20 and 0x75.
 
         Deprecated, according to page 182 of the Dubuisson book.
 
         Citations:
-            Dubuisson, Olivier. “Character String Types.” ASN.1: 
-                Communication between Heterogeneous Systems, Morgan 
+            Dubuisson, Olivier. “Character String Types.” ASN.1:
+                Communication between Heterogeneous Systems, Morgan
                 Kaufmann, 2001, pp. 175-178.
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character 
+            ASN1ValueInvalidException = if any non-graphical character
                 (including space) is encoded.
     */
     override public @property @system
@@ -3790,21 +3791,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Encodes an ASCII string that may contain only characters between and 
+        Encodes an ASCII string that may contain only characters between and
         including 0x20 and 0x75.
 
         Deprecated, according to page 182 of the Dubuisson book.
 
         Citations:
-            Dubuisson, Olivier. “Character String Types.” ASN.1: 
-                Communication between Heterogeneous Systems, Morgan 
+            Dubuisson, Olivier. “Character String Types.” ASN.1:
+                Communication between Heterogeneous Systems, Morgan
                 Kaufmann, 2001, pp. 175-178.
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022, 
+            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character 
+            ASN1ValueInvalidException = if any non-graphical character
                 (including space) is supplied.
     */
     override public @property @system
@@ -3819,7 +3820,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "a GraphicString that contained a character that " ~
                     "is not graphical (a character whose ASCII encoding " ~
                     "is outside of the range 0x20 to 0x7E). The encoding of the offending " ~
-                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ 
+                    "character is '" ~ text(cast(uint) character) ~ "'. " ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
@@ -3833,7 +3834,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character 
+            ASN1ValueInvalidException = if any non-graphical character
                 (including space) is encoded.
     */
     override public @property @system
@@ -3862,7 +3863,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         GraphicalString.)
 
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character 
+            ASN1ValueInvalidException = if any non-graphical character
                 (including space) is supplied.
     */
     override public @property @system
@@ -3877,7 +3878,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "a VisibleString that contained a character that " ~
                     "is not graphical (a character whose ASCII encoding " ~
                     "is outside of the range 0x20 to 0x7E) or space. The encoding of the offending " ~
-                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ 
+                    "character is '" ~ text(cast(uint) character) ~ "'. " ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
         }
@@ -3894,8 +3895,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             ASN1ValueInvalidException = if any enecoded character is not ASCII.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
-            Communication between Heterogeneous Systems, Morgan Kaufmann, 
+            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
+            Communication between Heterogeneous Systems, Morgan Kaufmann,
             2001, p. 182.
     */
     override public @property @system
@@ -3909,9 +3910,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 (
                     "This exception was thrown because you tried to decode " ~
                     "an GeneralString that contained a character that " ~
-                    "is not ASCII. The encoding of the offending character is '" ~ 
+                    "is not ASCII. The encoding of the offending character is '" ~
                     text(cast(uint) character) ~ "'. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
         }
@@ -3927,8 +3928,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             ASN1ValueInvalidException = if any enecoded character is not ASCII.
 
         Citations:
-            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1: 
-            Communication between Heterogeneous Systems, Morgan Kaufmann, 
+            Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
+            Communication between Heterogeneous Systems, Morgan Kaufmann,
             2001, p. 182.
     */
     override public @property @system
@@ -3941,7 +3942,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 (
                     "This exception was thrown because you tried to decode " ~
                     "an GeneralString that contained a character that " ~
-                    "is not ASCII. The encoding of the offending character is '" ~ 
+                    "is not ASCII. The encoding of the offending character is '" ~
                     text(cast(uint) character) ~ "'. " ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
@@ -3967,7 +3968,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "This exception was thrown because you tried to decode " ~
                 "a UniversalString that contained a number of bytes that " ~
                 "is not divisible by four. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -4024,8 +4025,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
     /**
         Decodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK2 https://www.itu.int, 
-                International Telecommunications Union)'s 
+        in the $(LINK2 https://www.itu.int,
+                International Telecommunications Union)'s
             $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines CHARACTER as:
@@ -4055,10 +4056,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
-            ASN1InvalidIndexException = if encoded value selects a choice for 
+            ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
                 syntaxes or context-negotiation, or if an unspecified element
-                of CharacterString itself is referenced by an out-of-range 
+                of CharacterString itself is referenced by an out-of-range
                 context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
     */
     override public @property @system
@@ -4075,7 +4076,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "A CharacterString should have only two elements: " ~
                 "an identification CHOICE, and a data-value OCTET STRING, " ~
                 "in that order. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -4086,10 +4087,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         )
             throw new ASN1ValueInvalidException
             (
-                "This exception was thrown because you attempted to decode an " ~
+                "This exception was thrown because you attempted to decode a " ~
                 "CharacterString that contained a tag that was not of CONTEXT-" ~
                 "SPECIFIC class. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -4106,7 +4107,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "CharacterString that contained a component whose tag number " ~
                 "was neither 0 nor 2, which indicate the identification CHOICE " ~
                 "and the string-value OCTET STRING components respectively. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -4126,7 +4127,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "contained an invalid number of elements. The " ~
                         "syntaxes component should contain abstract and transfer " ~
                         "syntax OBJECT IDENTIFIERS, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -4138,11 +4139,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1TagException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString whose syntaxes contained a " ~ 
+                        "decode a CharacterString whose syntaxes contained a " ~
                         "component whose tag class was not CONTEXT-SPECIFIC. " ~
                         "All elements of the syntaxes component MUST be of " ~
                         "CONTEXT-SPECIFIC class. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -4154,11 +4155,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1TagException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString whose syntaxes component " ~ 
+                        "decode a CharacterString whose syntaxes component " ~
                         "contained a component whose tag number was not correct. " ~
                         "The tag numbers of the syntaxes component " ~
                         "must be 0 and 1, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -4192,7 +4193,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "context-negotiation component should contain a " ~
                         "presentation-context-id INTEGER and transfer-syntax " ~
                         "OBJECT IDENTIFIER in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -4204,11 +4205,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1TagException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString whose context-negotiation " ~ 
+                        "decode a CharacterString whose context-negotiation " ~
                         "contained a component whose tag class was not CONTEXT-" ~
                         "SPECIFIC. All elements of the context-negotiation " ~
                         "component MUST be of CONTEXT-SPECIFIC class." ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -4220,11 +4221,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1TagException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString whose context-negotiation " ~ 
+                        "decode a CharacterString whose context-negotiation " ~
                         "contained a component whose tag number was not correct. " ~
                         "The tag numbers of the context-negotiation component " ~
                         "must be 0 and 1, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~ 
+                        notWhatYouMeantText ~ forMoreInformationText ~
                         debugInformationText ~ reportBugsText
                     );
 
@@ -4232,7 +4233,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     contextNegotiationComponents[0].integer!ptrdiff_t,
                     contextNegotiationComponents[1].objectIdentifier
                 );
-                
+
                 break;
             }
             case (4u): // transfer-syntax
@@ -4254,7 +4255,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "not recognized by the specification of the CharacterString. " ~
                     "The CharacterString accepts identification CHOICEs with tag " ~
                     "numbers from 0 to 5. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~ 
+                    notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
             }
@@ -4268,8 +4269,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
     /**
         Encodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK2 https://www.itu.int, 
-                International Telecommunications Union)'s 
+        in the $(LINK2 https://www.itu.int,
+                International Telecommunications Union)'s
             $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines CHARACTER as:
@@ -4333,12 +4334,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             presentationContextID.tagClass = ASN1TagClass.contextSpecific;
             presentationContextID.tagNumber = 0u;
             presentationContextID.integer!ptrdiff_t = value.identification.contextNegotiation.presentationContextID;
-            
+
             BERElement transferSyntax = new BERElement();
             transferSyntax.tagClass = ASN1TagClass.contextSpecific;
             transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
-            
+
             identificationChoice.tagNumber = 3u;
             identificationChoice.sequence = [ presentationContextID, transferSyntax ];
         }
@@ -4370,7 +4371,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished 
+        This unit test had to be moved out of ASN1Element, because Distinguished
         Encoding Rules (DER) does not permit CharacterStrings to use an identification
         CHOICE of presentation-context-id or context-negotiation
     */
@@ -4391,9 +4392,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assert(output.identification.presentationContextID == 27L);
         assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
     }
-    
+
     /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished 
+        This unit test had to be moved out of ASN1Element, because Distinguished
         Encoding Rules (DER) does not permit CharacterStrings to use an identification
         CHOICE of presentation-context-id or context-negotiation
     */
@@ -4475,7 +4476,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "This exception was thrown because you tried to decode " ~
                 "a BMPString that contained a number of bytes that " ~
                 "is not divisible by two. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~ 
+                notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
 
@@ -4542,7 +4543,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Creates a BERElement from the supplied bytes, inferring that the first
         byte is the type tag. The supplied ubyte[] array is "chomped" by
         reference, so the original array will grow shorter as BERElements are
-        generated. 
+        generated.
 
         Throws:
             ASN1ValueTooSmallException = if the bytes supplied are fewer than
@@ -4551,9 +4552,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 form, but the END OF CONTENT octets (two consecutive null
                 octets) cannot be found, or if the value is encoded in fewer
                 octets than indicated by the length byte.
-            ASN1InvalidLengthException = if the length byte is set to 0xFF, 
+            ASN1InvalidLengthException = if the length byte is set to 0xFF,
                 which is reserved.
-            ASN1ValueTooBigException = if the length cannot be represented by 
+            ASN1ValueTooBigException = if the length cannot be represented by
                 the largest unsigned integer.
 
         Example:
@@ -4581,7 +4582,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     /**
         Creates a BERElement from the supplied bytes, inferring that the first
         byte is the type tag. The supplied ubyte[] array is read, starting
-        from the index specified by $(D bytesRead), and increments 
+        from the index specified by $(D bytesRead), and increments
         $(D bytesRead) by the number of bytes read.
 
         Throws:
@@ -4591,9 +4592,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 form, but the END OF CONTENT octets (two consecutive null
                 octets) cannot be found, or if the value is encoded in fewer
                 octets than indicated by the length byte.
-            ASN1InvalidLengthException = if the length byte is set to 0xFF, 
+            ASN1InvalidLengthException = if the length byte is set to 0xFF,
                 which is reserved.
-            ASN1ValueTooBigException = if the length cannot be represented by 
+            ASN1ValueTooBigException = if the length cannot be represented by
                 the largest unsigned integer.
 
         Example:
@@ -4628,9 +4629,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 "This exception was thrown because you attempted to decode " ~
                 "a Basic Encoding Rules (BER) encoded element from fewer than " ~
                 "two bytes, which cannot possibly encode a valid Basic " ~
-                "Encoding Rules (BER) element. " 
+                "Encoding Rules (BER) element. "
             );
-        
+
         // Index of what we are currently parsing.
         size_t cursor = 0u;
 
@@ -4685,17 +4686,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         if (this.tagNumber >= 31u)
         {
             /* NOTE:
-                Section 8.1.2.4.2, point C of the International 
+                Section 8.1.2.4.2, point C of the International
                 Telecommunications Union's X.690 specification says:
 
                 "bits 7 to 1 of the first subsequent octet shall not all be zero."
-                
+
                 in reference to the bytes used to encode the tag number in long
                 form, which happens when the least significant five bits of the
                 first byte are all set.
 
                 This essentially means that the long-form tag number must be
-                encoded on the fewest possible octets. If the first byte is 
+                encoded on the fewest possible octets. If the first byte is
                 0x80, then it is not encoded on the fewest possible octets.
             */
             if (bytes[cursor] == 0b1000_0000u)
@@ -4709,10 +4710,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     "using Basic Encoding Rules (BER), the tag number must " ~
                     "be encoded on the smallest number of octets possible, " ~
                     "which the inclusion of leading zero bytes necessarily " ~
-                    "contradicts. " ~ 
+                    "contradicts. " ~
                     forMoreInformationText ~ debugInformationText ~ reportBugsText
                 );
-            
+
             this.tagNumber = 0u;
 
             // This loop looks for the end of the encoded tag number.
@@ -4737,7 +4738,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 this.tagNumber |= cast(size_t) (bytes[i] & 0x7Fu);
             }
         }
-        
+
         // Length
         if ((bytes[cursor] & 0x80u) == 0x80u)
         {
@@ -4782,12 +4783,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 }
                 version (LittleEndian) reverse(lengthNumberOctets);
                 size_t length = *cast(size_t *) lengthNumberOctets.ptr;
-                
+
                 if ((cursor + length) < cursor)
                     throw new ASN1ValueTooBigException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode a Basic Encoding Rules (BER) encoded element " ~ 
+                        "decode a Basic Encoding Rules (BER) encoded element " ~
                         "that indicated that it was exceedingly large--so " ~
                         "large, in fact, that it cannot be stored on this " ~
                         "computer (18 exabytes if you are on a 64-bit system). " ~
@@ -4797,7 +4798,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "you are running the latest stable version of this " ~
                         "library. "
                     );
-            
+
                 cursor += (numberOfLengthOctets);
 
                 if ((cursor + length) > bytes.length)
@@ -4813,7 +4814,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 return (cursor + length);
             }
             else // Indefinite
-            {   
+            {
                 if (++(this.nestingRecursionCount) > this.nestingRecursionLimit)
                 {
                     this.nestingRecursionCount = 0u;
@@ -4824,13 +4825,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "that recursed too deep."
                     );
                 }
-                
+
                 immutable size_t startOfValue = ++cursor;
                 size_t sentinel = cursor; // Used to track the length of the nested elements.
                 while (sentinel < bytes.length)
                 {
                     BERElement child = new BERElement(sentinel, bytes);
-                    if 
+                    if
                     (
                         child.tagClass == ASN1TagClass.universal &&
                         child.construction == ASN1Construction.primitive &&
@@ -4863,7 +4864,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         );
                     }
                 }
-                    
+
                 if (sentinel == bytes.length && (bytes[sentinel-1] != 0x00u || bytes[sentinel-2] != 0x00u))
                     throw new ASN1ValueTooSmallException
                     (
@@ -4898,7 +4899,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        This differs from $(D_INLINECODE this.value) in that 
+        This differs from $(D_INLINECODE this.value) in that
         $(D_INLINECODE this.value) only returns the value octets, whereas
         $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,
         and the value octets, all concatenated.
@@ -4922,14 +4923,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         {
             /*
                 Per section 8.1.2.4 of X.690:
-                The last five bits of the first byte being set indicate that 
-                the tag number is encoded in base-128 on the subsequent octets, 
-                using the first bit of each subsequent octet to indicate if the 
-                encoding continues on the next octet, just like how the 
+                The last five bits of the first byte being set indicate that
+                the tag number is encoded in base-128 on the subsequent octets,
+                using the first bit of each subsequent octet to indicate if the
+                encoding continues on the next octet, just like how the
                 individual numbers of OBJECT IDENTIFIER and RELATIVE OBJECT
                 IDENTIFIER are encoded.
             */
-            tagBytes[0] |= cast(ubyte) 0b00011111u; 
+            tagBytes[0] |= cast(ubyte) 0b00011111u;
             size_t number = this.tagNumber; // We do not want to modify by reference.
             ubyte[] encodedNumber;
             while (number != 0u)
@@ -4952,7 +4953,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             {
                 if (this.length < 127u)
                 {
-                    lengthOctets = [ cast(ubyte) this.length ];    
+                    lengthOctets = [ cast(ubyte) this.length ];
                 }
                 else
                 {
@@ -4975,15 +4976,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             }
         }
         return (
-            tagBytes ~ 
-            lengthOctets ~ 
-            this.value ~ 
+            tagBytes ~
+            lengthOctets ~
+            this.value ~
             (this.lengthEncodingPreference == LengthEncodingPreference.indefinite ? cast(ubyte[]) [ 0x00u, 0x00u ] : cast(ubyte[]) [])
         );
     }
 
     /**
-        This differs from $(D_INLINECODE this.value) in that 
+        This differs from $(D_INLINECODE this.value) in that
         $(D_INLINECODE this.value) only returns the value octets, whereas
         $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,
         and the value octets, all concatenated.
@@ -5013,13 +5014,13 @@ unittest
     immutable ubyte[] dataNull = [ 0x05u, 0x00u ];
     immutable ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
     immutable ubyte[] dataOD = [ 0x07u, 0x05u, 'H', 'N', 'E', 'L', 'O' ];
-    immutable ubyte[] dataExternal = [ 
-        0x08u, 0x09u, 0x02u, 0x01u, 0x1Bu, 0x81, 0x04u, 0x01u, 
+    immutable ubyte[] dataExternal = [
+        0x08u, 0x09u, 0x02u, 0x01u, 0x1Bu, 0x81, 0x04u, 0x01u,
         0x02u, 0x03u, 0x04u ];
     immutable ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
     immutable ubyte[] dataEnum = [ 0x0Au, 0x01u, 0x3Fu ];
-    immutable ubyte[] dataEmbeddedPDV = [ 
-        0x0Bu, 0x0Bu, 0x80u, 0x03u, 0x82u, 0x01u, 0x1Bu, 0x82u, 
+    immutable ubyte[] dataEmbeddedPDV = [
+        0x0Bu, 0x0Bu, 0x80u, 0x03u, 0x82u, 0x01u, 0x1Bu, 0x82u,
         0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
     immutable ubyte[] dataUTF8 = [ 0x0Cu, 0x05u, 'H', 'E', 'N', 'L', 'O' ];
     immutable ubyte[] dataROID = [ 0x0Du, 0x03u, 0x06u, 0x04u, 0x01u ];
@@ -5035,20 +5036,20 @@ unittest
     immutable ubyte[] dataGraphic = [ 0x19u, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
     immutable ubyte[] dataVisible = [ 0x1Au, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
     immutable ubyte[] dataGeneral = [ 0x1Bu, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
-    immutable ubyte[] dataUniversal = [ 
-        0x1Cu, 0x10u, 
-        0x00u, 0x00u, 0x00u, 0x61u, 
-        0x00u, 0x00u, 0x00u, 0x62u, 
-        0x00u, 0x00u, 0x00u, 0x63u, 
-        0x00u, 0x00u, 0x00u, 0x64u 
+    immutable ubyte[] dataUniversal = [
+        0x1Cu, 0x10u,
+        0x00u, 0x00u, 0x00u, 0x61u,
+        0x00u, 0x00u, 0x00u, 0x62u,
+        0x00u, 0x00u, 0x00u, 0x63u,
+        0x00u, 0x00u, 0x00u, 0x64u
     ]; // Big-endian "abcd"
-    immutable ubyte[] dataCharacter = [ 
-        0x1Du, 0x0Cu, 0x80u, 0x03u, 0x82u, 0x01u, 0x3Fu, 0x82u, 
+    immutable ubyte[] dataCharacter = [
+        0x1Du, 0x0Cu, 0x80u, 0x03u, 0x82u, 0x01u, 0x3Fu, 0x82u,
         0x05u, 0x48u, 0x45u, 0x4Eu, 0x4Cu, 0x4Fu ];
     immutable ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"
 
     // Combine it all
-    ubyte[] data = 
+    ubyte[] data =
         (dataEndOfContent ~
         dataBoolean ~
         dataInteger ~
@@ -5057,7 +5058,7 @@ unittest
         dataNull ~
         dataOID ~
         dataOD ~
-        dataExternal ~ 
+        dataExternal ~
         dataReal ~
         dataEnum ~
         dataEmbeddedPDV ~
@@ -5071,7 +5072,7 @@ unittest
         dataUTC ~
         dataGT ~
         dataGraphic ~
-        dataVisible ~ 
+        dataVisible ~
         dataGeneral ~
         dataUniversal ~
         dataCharacter ~
@@ -5082,7 +5083,7 @@ unittest
     size_t i = 0u;
     while (i < data.length)
         result ~= new BERElement(i, data);
-    
+
     // Pre-processing
     External x = result[8].external;
     EmbeddedPDV m = result[11].embeddedPDV;
@@ -5157,19 +5158,19 @@ unittest
 unittest
 {
     ubyte[] data = [ // 192 characters of boomer-posting
-        0x0Cu, 0x81u, 0xC0u, 
+        0x0Cu, 0x81u, 0xC0u,
         'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n'  
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n'
     ];
 
     data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
@@ -5178,7 +5179,7 @@ unittest
     size_t i = 0u;
     while (i < data.length)
         result ~= new BERElement(i, data);
-        
+
     assert(result.length == 3);
     assert(result[0].utf8String[0 .. 5] == "AMREN");
     assert(result[1].utf8String[6 .. 14] == "BORTHERS");
@@ -5187,7 +5188,7 @@ unittest
     result = [];
     while (data.length > 0)
         result ~= new BERElement(data);
-        
+
     assert(result.length == 3);
     assert(result[0].utf8String[0 .. 5] == "AMREN");
     assert(result[1].utf8String[6 .. 14] == "BORTHERS");
@@ -5199,18 +5200,18 @@ unittest
 unittest
 {
     ubyte[] data = [ // 192 characters of boomer-posting
-        0x2Cu, 0x80u, 
+        0x2Cu, 0x80u,
         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n', 
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
         0x00u, 0x00u
     ];
@@ -5242,7 +5243,7 @@ unittest
 @system
 unittest
 {
-    ubyte[] data = [ 
+    ubyte[] data = [
         0x2Cu, 0x80u,
             0x2Cu, 0x80u,
                 0x0Cu, 0x02u, 'H', 'I',
@@ -5255,12 +5256,12 @@ unittest
 @system
 unittest
 {
-    ubyte[] data = [ 
+    ubyte[] data = [
         0x2Cu, 0x80u, // IL
             0x2Cu, 0x06u, // DL
                 0x2Cu, 0x80u, // IL
                     0x0Cu, 0x02u, 'H', 'I',
-                    0x00u, 0x00u, 
+                    0x00u, 0x00u,
             0x00u, 0x00u ];
     assertNotThrown!ASN1Exception(new BERElement(data));
 }
@@ -5326,7 +5327,7 @@ unittest
 
     The number 500 was specifically selected for this test because CER
     uses 1000 as the threshold after which OCTET STRING must be represented
-    as a constructed sequence of definite-length-encoded OCTET STRINGS, 
+    as a constructed sequence of definite-length-encoded OCTET STRINGS,
     followed by an EOC element, but 500 is also big enough to require
     the length to be encoded on two octets in definite-long form.
 */
@@ -5484,15 +5485,15 @@ unittest
     assert(e.value == [ 0x00u ]);
     e.integer = 5;
     assert(e.value == [ 0x05u ]);
-    e.bitString = [ 
-        true, false, true, true, false, false, true, true, 
+    e.bitString = [
+        true, false, true, true, false, false, true, true,
         true, false, false, false ];
     assert(e.value == [ 0x04u, 0xB3u, 0x80u ]);
-    e.bitString = [ 
+    e.bitString = [
         true, false, true, true, false, true, false, false ];
     assert(e.value == [ 0x00u, 0xB4u ]);
     e.objectIdentifier = new OID(1, 2, 0, 256, 79999, 7);
-    assert(e.value == [ 
+    assert(e.value == [
         0x2Au, 0x00u, 0x82u, 0x00u, 0x84u, 0xF0u, 0x7Fu, 0x07u ]);
     e.enumerated = 5;
     assert(e.value == [ 0x05u ]);
