@@ -1708,14 +1708,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         while (i < exponentLength)
                         {
                             exponent <<= 8;
-                            exponent += this.value[i];
+                            exponent += this.value[i+2];
                             i++;
                         }
 
                         if (this.length - 1u - exponentLength > 8u)
                             throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
 
-                        ubyte m = 0x01u; // FIXME: I think this needs to be 0x01u + exponentLength;
+                        ubyte m = cast(ubyte) (0x02u + exponentLength);
                         version (LittleEndian)
                         {
                             while (m < this.length)
@@ -1896,6 +1896,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             import std.format : formattedWrite;
             Appender!string writer = appender!string();
 
+            // FIXME: This is not exactly to specification....
             // REVIEW: Change the format strings to have the best precision for those types.
             switch (this.base10RealNumericalRepresentation)
             {
@@ -2448,6 +2449,33 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     unittest
     {
         BERElement.realEncodingBase = ASN1RealEncodingBase.base2;
+    }
+
+    // Test "complicated" exponent encoding.
+    @system
+    unittest
+    {
+        BERElement el = new BERElement();
+
+        el.value = [ 0b1000_0011u, 0x01u, 0x00u, 0x03u ];
+        assert(el.realType!float == 3.0);
+        assert(el.realType!double == 3.0);
+
+        el.value = [ 0b1000_0011u, 0x01u, 0x05u, 0x03u ];
+        assert(el.realType!float == 96.0);
+        assert(el.realType!double == 96.0);
+
+        el.value = [ 0b1000_0011u, 0x02u, 0x00u, 0x05u, 0x03u ];
+        assert(el.realType!float == 96.0);
+        assert(el.realType!double == 96.0);
+
+        el.value = [ 0b1000_0011u ];
+        el.value ~= cast(ubyte) size_t.sizeof;
+        el.value.length += size_t.sizeof;
+        el.value[$-1] = 0x05u;
+        el.value ~= 0x03u;
+        assert(el.realType!float == 96.0);
+        assert(el.realType!double == 96.0);
     }
 
     /**
@@ -5422,7 +5450,7 @@ unittest
 unittest
 {
     ubyte[] invalid = [ 0b0000_0000u, 0b1000_0001u ];
-    assertThrown!ASN1ValueTooSmallException(new BERElement(invalid)); // FIXME: Change this exception!
+    assertThrown!ASN1ValueTooSmallException(new BERElement(invalid));
 }
 
 // Test that a very large value does not cause a segfault or something

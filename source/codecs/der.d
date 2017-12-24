@@ -698,7 +698,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             nodes ~= OIDNode(number);
         }
 
-        return new OID(nodes); // FIXME to not require immutable
+        return new OID(nodes);
     }
 
     /**
@@ -1678,14 +1678,14 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         while (i < exponentLength)
                         {
                             exponent <<= 8;
-                            exponent += this.value[i];
+                            exponent += this.value[i+2];
                             i++;
                         }
 
                         if (this.length - 1u - exponentLength > 8u)
                             throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
 
-                        ubyte m = 0x01u; // FIXME: I think this needs to be 0x01u + exponentLength;
+                        ubyte m = cast(ubyte) (0x02u + exponentLength);
                         version (LittleEndian)
                         {
                             while (m < this.length)
@@ -2200,6 +2200,33 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         assert(cast(string) (dv.value[1 .. $]) == "-1.230000000000E-01");
         assert(approxEqual(dv.realType!float, -0.123));
         assert(approxEqual(dv.realType!double, -0.123));
+    }
+
+    // Test "complicated" exponent encoding.
+    @system
+    unittest
+    {
+        DERElement el = new DERElement();
+
+        el.value = [ 0b1000_0011u, 0x01u, 0x00u, 0x03u ];
+        assert(el.realType!float == 3.0);
+        assert(el.realType!double == 3.0);
+
+        el.value = [ 0b1000_0011u, 0x01u, 0x05u, 0x03u ];
+        assert(el.realType!float == 96.0);
+        assert(el.realType!double == 96.0);
+
+        el.value = [ 0b1000_0011u, 0x02u, 0x00u, 0x05u, 0x03u ];
+        assert(el.realType!float == 96.0);
+        assert(el.realType!double == 96.0);
+
+        el.value = [ 0b1000_0011u ];
+        el.value ~= cast(ubyte) size_t.sizeof;
+        el.value.length += size_t.sizeof;
+        el.value[$-1] = 0x05u;
+        el.value ~= 0x03u;
+        assert(el.realType!float == 96.0);
+        assert(el.realType!double == 96.0);
     }
 
     /**
@@ -4888,7 +4915,7 @@ unittest
 unittest
 {
     ubyte[] invalid = [ 0b0000_0000u, 0b1000_0001u ];
-    assertThrown!ASN1ValueTooSmallException(new DERElement(invalid)); // FIXME: Change this exception!
+    assertThrown!ASN1ValueTooSmallException(new DERElement(invalid));
 }
 
 // Test that leading zeroes in definite long length encodings throw exceptions

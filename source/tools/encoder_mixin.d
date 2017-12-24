@@ -13,7 +13,6 @@ mixin template Encoder(Element)
     import std.utf : UTFException;
 
     // TODO: REAL format options
-    // TODO: Context-Switching Type options?
     // TODO: Number option
 
     ASN1TagClass tagClass = ASN1TagClass.universal;

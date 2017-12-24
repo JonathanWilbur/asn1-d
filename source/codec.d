@@ -2132,8 +2132,6 @@ class AbstractSyntaxNotation1Element(Element)
         Element el = new Element();
         el.characterString = input;
 
-        // TODO: Test el.value
-
         CharacterString output = el.characterString;
         assert(output.identification.syntaxes.abstractSyntax == new OID(1, 3, 6, 4, 1, 256, 7));
         assert(output.identification.syntaxes.transferSyntax == new OID(1, 3, 6, 4, 1, 256, 8));

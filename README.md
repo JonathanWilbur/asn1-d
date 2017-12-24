@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.34](http://semver.org/)
+* Version: [1.0.0-beta.35](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -236,6 +236,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Enforce same tag numbers for nested elements
 - [x] Contracts / Invariants
   - [x] `BOOLEAN`, `INTEGER`, `ENUMERATED`, `OBJECT IDENTIFIER`, `BIT STRING`, `GeneralizedTime` and `UTCTime` are never less than 0 bytes
+- [ ] More unit testing of `REAL`
 - [ ] Cross-Platform Testing
   - [ ] Windows (Which is Big-Endian)
     - [ ] 64-Bit
