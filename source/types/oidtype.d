@@ -52,7 +52,6 @@ struct ObjectIdentifierNode
         return cast(ptrdiff_t) (this.number - other.number);
     }
 
-    // REVIEW: Mainly, I want to know that this line is secure.
     /**
         An override so that associative arrays can use an OIDNode as a
         key.

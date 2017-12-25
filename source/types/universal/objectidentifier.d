@@ -484,7 +484,6 @@ public class ObjectIdentifier
         return this.dotNotation();
     }
 
-    // REVIEW: Mainly, I want to know that this line is secure.
     /**
         An override so that associative arrays can use an OIDNode as a
         key.

@@ -474,7 +474,7 @@
     could not have different cryptographic signatures. For this reason, CER
     is generally regarded as the most secure encoding standard for ASN.1.
     Like Basic Encoding Rules (BER), Canonical Encoding Rules (CER), and
-    Packed Encoding Rules (PER), Canonical Encoding Rules is a
+    Packed Encoding Rules (PER), Canonical Encoding Rules (CER) is a
     specification created by the
     <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>,
     and specified in
@@ -683,14 +683,15 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    The unit of encoding and decoding for Canonical Encoding Rules CER.
+    The unit of encoding and decoding for Canonical Encoding Rules (CER).
 
   </p>
 </div>
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-        There are three parts to an encoded CER Value:
+        There are three parts to an element encoded according to the Canonical
+    Encoding Rules (CER):
 <br><br>
     <ul>        <li>A Type Tag, which specifies what data type is encoded</li>
         <li>A Length Tag, which specifies how many subsequent bytes encode the data</li>
@@ -751,43 +752,6 @@ cv.tagNumber = 0x02u; <span class="comment">// "2" means this is an INTEGER
   <li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#CanonicalEncodingRulesElement.lengthEncodingPreference" id="CanonicalEncodingRulesElement.lengthEncodingPreference"><code class="code">lengthEncodingPreference</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.lengthEncodingPreference"></span>LengthEncodingPreference <code class="code">lengthEncodingPreference</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Unlike most other settings, this is non-static, because wanting to
-        encode with indefinite length is probably going to be somewhat rare,
-        and it is also less safe, because the value octets have to be inspected
-        for double octets before encoding! (If they are not, the receiver will
-        interpret those inner <code class="code">null</code> octets as the terminator for the indefinite
-        length value, and the rest will be truncated.)
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
   <a href="#CanonicalEncodingRulesElement.realEncodingBase" id="CanonicalEncodingRulesElement.realEncodingBase"><code class="code">realEncodingBase</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -810,6 +774,70 @@ cv.tagNumber = 0x02u; <span class="comment">// "2" means this is an INTEGER
   <div class="ddoc_summary">
   <p class="para">
     The base of encoded REALs. May be 2, 8, 10, or 16.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#CanonicalEncodingRulesElement.nestingRecursionCount" id="CanonicalEncodingRulesElement.nestingRecursionCount"><code class="code">nestingRecursionCount</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.nestingRecursionCount"></span>protected static size_t <code class="code">nestingRecursionCount</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The number of recursions used for parsing constructed elements.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#CanonicalEncodingRulesElement.nestingRecursionLimit" id="CanonicalEncodingRulesElement.nestingRecursionLimit"><code class="code">nestingRecursionLimit</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.nestingRecursionLimit"></span>static immutable size_t <code class="code">nestingRecursionLimit</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The limit of recursions permitted for parsing constructed elements.
   </p>
 </div>
 
@@ -1129,7 +1157,7 @@ assertThrown!ASN1ValueInvalidException(cv.<span class="psymbol">boolean</span>);
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    In Canonical Encoding Rules, the first byte is an unsigned
+    In Canonical Encoding Rules (CER), the first byte is an unsigned
         integral byte indicating the number of unused bits at the end of
         the BIT STRING. The unused bits must be zeroed.
 
@@ -1986,7 +2014,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 <br><br>
-        In Canonical Encoding Rules, the identification CHOICE cannot be
+        In Canonical Encoding Rules (CER), the identification CHOICE cannot be
         presentation-context-id, nor context-negotiation. Also, the elements
         must appear in the exact order of the specification. With these
         constraints in mind, the specification effectively becomes:
@@ -2080,7 +2108,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 <br><br>
-        In Canonical Encoding Rules, the identification CHOICE cannot be
+        In Canonical Encoding Rules (CER), the identification CHOICE cannot be
         presentation-context-id, nor context-negotiation. Also, the elements
         must appear in the exact order of the specification. With these
         constraints in mind, the specification effectively becomes:

@@ -697,14 +697,15 @@
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    The unit of encoding and decoding for Basic Encoding Rules BER.
+    The unit of encoding and decoding for Basic Encoding Rules (BER).
 
   </p>
 </div>
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-        There are three parts to an encoded BER Value:
+        There are three parts to an element encoded according to the Basic
+    Encoding Rules (BER):
 <br><br>
     <ul>        <li>A Type Tag, which specifies what data type is encoded</li>
         <li>A Length Tag, which specifies how many subsequent bytes encode the data</li>
@@ -978,6 +979,70 @@ Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
   <div class="ddoc_summary">
   <p class="para">
     The base of encoded REALs. May be 2, 8, 10, or 16.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.nestingRecursionCount" id="BasicEncodingRulesElement.nestingRecursionCount"><code class="code">nestingRecursionCount</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.nestingRecursionCount"></span>protected static size_t <code class="code">nestingRecursionCount</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The number of recursions used for parsing constructed elements.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.nestingRecursionLimit" id="BasicEncodingRulesElement.nestingRecursionLimit"><code class="code">nestingRecursionLimit</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.nestingRecursionLimit"></span>static immutable size_t <code class="code">nestingRecursionLimit</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The limit of recursions permitted for parsing constructed elements.
   </p>
 </div>
 

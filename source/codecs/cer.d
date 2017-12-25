@@ -1717,7 +1717,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     long.max.
                 */
                 ulong mantissa;
-                long exponent; // REVIEW: Can this be a smaller data type?
+                long exponent;
                 ubyte scale;
                 ubyte base;
 
@@ -1789,7 +1789,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                         if (this.length - 3u > 8u)
                             throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
 
-                        // REVIEW: There is probably a better way to do this.
                         ubyte m = 0x02u;
                         version (LittleEndian)
                         {
@@ -2103,9 +2102,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         {
             import std.format : formattedWrite;
             Appender!string writer = appender!string();
-
-            // FIXME: This is not exactly to specification....
-            // REVIEW: Change the format strings to have the best precision for those types.
             static if (is(T == double))
             {
                 writer.formattedWrite!"%.12E"(value);
@@ -2115,9 +2111,27 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 writer.formattedWrite!"%.6E"(value);
             }
 
+            string[] parts = writer.data.split("E");
+            bool exponentPositive = true;
+            if (parts[1][0] == '+')
+                exponentPositive = true;
+            else if (parts[1][0] == '-')
+                exponentPositive = false;
+            else
+                assert(0, "Formatted write in .realType() produced an unexpected format.");
+
+            parts[1] = parts[1][1 .. $];
+            if (parts[1] == "00") parts[1] = "+0";
+            else
+            {
+                size_t startOfNonPadding = 0u;
+                while (startOfNonPadding < parts[1].length-1 && parts[1][startOfNonPadding++] == '0') {};
+                parts[1] = ((exponentPositive ? "" : "-") ~ parts[1][startOfNonPadding .. $]);
+            }
+
             this.value =
-                cast(ubyte[]) [ (cast(ubyte) 0u | cast(ubyte) ASN1Base10RealNumericalRepresentation.nr3) ] ~
-                cast(ubyte[]) writer.data;
+                [ cast(ubyte) ASN1Base10RealNumericalRepresentation.nr3 ] ~
+                cast(ubyte[]) (parts[0] ~ 'E' ~ parts[1]);
 
             return;
         }
@@ -2281,11 +2295,14 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
 
         // If the significand is even and we're using Base-2 encoding, make it odd or 0
-        // REVIEW: You might have a precision problem here, since significand is a FP type.
-        if (base == ASN1RealEncodingBase.base2 && !(significand % 2) && significand != 0)
+        if (base == ASN1RealEncodingBase.base2 && significand != 0u)
         {
-            significand /= 2.0;
-            exponent++;
+            while (!(cast(size_t) significand % 2u))
+            {
+                significand /= 2.0;
+                exponent++;
+            }
+            assert(cast(size_t) significand % 2u || significand == 0u);
         }
 
         ubyte[] exponentBytes;
@@ -2380,58 +2397,68 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     @system
     unittest
     {
-        CERElement cv = new CERElement();
-        realEncodingBase = ASN1RealEncodingBase.base10;
+        CERElement el = new CERElement();
+        CERElement.realEncodingBase = ASN1RealEncodingBase.base10;
+
+        // Test that the exponent gets a + sign if it is 0.
+        el.realType!float = 2.2;
+        assert(cast(string) (el.value[1 .. $]) == "2.200000E+0");
+        assert(approxEqual(el.realType!float, 2.2));
+        assert(approxEqual(el.realType!double, 2.2));
+        el.realType!double = 2.2;
+        assert(cast(string) (el.value[1 .. $]) == "2.200000000000E+0");
+        assert(approxEqual(el.realType!float, 2.2));
+        assert(approxEqual(el.realType!double, 2.2));
 
         // Decimal + trailing zeros are not added if not necessary.
-        cv.realType!float = 22.0;
-        assert(cast(string) (cv.value[1 .. $]) == "2.200000E+01");
-        assert(approxEqual(cv.realType!float, 22.0));
-        assert(approxEqual(cv.realType!double, 22.0));
-        cv.realType!double = 22.0;
-        assert(cast(string) (cv.value[1 .. $]) == "2.200000000000E+01");
-        assert(approxEqual(cv.realType!float, 22.0));
-        assert(approxEqual(cv.realType!double, 22.0));
+        el.realType!float = 22.0;
+        assert(cast(string) (el.value[1 .. $]) == "2.200000E1");
+        assert(approxEqual(el.realType!float, 22.0));
+        assert(approxEqual(el.realType!double, 22.0));
+        el.realType!double = 22.0;
+        assert(cast(string) (el.value[1 .. $]) == "2.200000000000E1");
+        assert(approxEqual(el.realType!float, 22.0));
+        assert(approxEqual(el.realType!double, 22.0));
 
         // Decimal + trailing zeros are added if necessary.
-        cv.realType!float = 22.123;
-        assert(cast(string) (cv.value[1 .. $]) == "2.212300E+01");
-        assert(approxEqual(cv.realType!float, 22.123));
-        assert(approxEqual(cv.realType!double, 22.123));
-        cv.realType!double = 22.123;
-        assert(cast(string) (cv.value[1 .. $]) == "2.212300000000E+01");
-        assert(approxEqual(cv.realType!float, 22.123));
-        assert(approxEqual(cv.realType!double, 22.123));
+        el.realType!float = 22.123;
+        assert(cast(string) (el.value[1 .. $]) == "2.212300E1");
+        assert(approxEqual(el.realType!float, 22.123));
+        assert(approxEqual(el.realType!double, 22.123));
+        el.realType!double = 22.123;
+        assert(cast(string) (el.value[1 .. $]) == "2.212300000000E1");
+        assert(approxEqual(el.realType!float, 22.123));
+        assert(approxEqual(el.realType!double, 22.123));
 
         // Negative numbers are encoded correctly.
-        cv.realType!float = -22.123;
-        assert(cast(string) (cv.value[1 .. $]) == "-2.212300E+01");
-        assert(approxEqual(cv.realType!float, -22.123));
-        assert(approxEqual(cv.realType!double, -22.123));
-        cv.realType!double = -22.123;
-        assert(cast(string) (cv.value[1 .. $]) == "-2.212300000000E+01");
-        assert(approxEqual(cv.realType!float, -22.123));
-        assert(approxEqual(cv.realType!double, -22.123));
+        el.realType!float = -22.123;
+        assert(cast(string) (el.value[1 .. $]) == "-2.212300E1");
+        assert(approxEqual(el.realType!float, -22.123));
+        assert(approxEqual(el.realType!double, -22.123));
+        el.realType!double = -22.123;
+        assert(cast(string) (el.value[1 .. $]) == "-2.212300000000E1");
+        assert(approxEqual(el.realType!float, -22.123));
+        assert(approxEqual(el.realType!double, -22.123));
 
         // Small positive numbers are encoded correctly.
-        cv.realType!float = 0.123;
-        assert(cast(string) (cv.value[1 .. $]) == "1.230000E-01");
-        assert(approxEqual(cv.realType!float, 0.123));
-        assert(approxEqual(cv.realType!double, 0.123));
-        cv.realType!double = 0.123;
-        assert(cast(string) (cv.value[1 .. $]) == "1.230000000000E-01");
-        assert(approxEqual(cv.realType!float, 0.123));
-        assert(approxEqual(cv.realType!double, 0.123));
+        el.realType!float = 0.123;
+        assert(cast(string) (el.value[1 .. $]) == "1.230000E-1");
+        assert(approxEqual(el.realType!float, 0.123));
+        assert(approxEqual(el.realType!double, 0.123));
+        el.realType!double = 0.123;
+        assert(cast(string) (el.value[1 .. $]) == "1.230000000000E-1");
+        assert(approxEqual(el.realType!float, 0.123));
+        assert(approxEqual(el.realType!double, 0.123));
 
         // Small negative numbers are encoded correctly.
-        cv.realType!float = -0.123;
-        assert(cast(string) (cv.value[1 .. $]) == "-1.230000E-01");
-        assert(approxEqual(cv.realType!float, -0.123));
-        assert(approxEqual(cv.realType!double, -0.123));
-        cv.realType!double = -0.123;
-        assert(cast(string) (cv.value[1 .. $]) == "-1.230000000000E-01");
-        assert(approxEqual(cv.realType!float, -0.123));
-        assert(approxEqual(cv.realType!double, -0.123));
+        el.realType!float = -0.123;
+        assert(cast(string) (el.value[1 .. $]) == "-1.230000E-1");
+        assert(approxEqual(el.realType!float, -0.123));
+        assert(approxEqual(el.realType!double, -0.123));
+        el.realType!double = -0.123;
+        assert(cast(string) (el.value[1 .. $]) == "-1.230000000000E-1");
+        assert(approxEqual(el.realType!float, -0.123));
+        assert(approxEqual(el.realType!double, -0.123));
     }
 
     // Test "complicated" exponent encoding.
@@ -3196,7 +3223,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    // REVIEW: This could probably be a lot faster if you combine all three loops.
     override public @property @system
     OIDNode[] relativeObjectIdentifier() const
     {
@@ -4207,8 +4233,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 debugInformationText ~ reportBugsText
             );
 
-        // REVIEW: Manually check for invalid characters before the cast?
-
         /** NOTE:
             .fromISOString() MUST be called from SysTime, not DateTime. There
             is a subtle difference in how .fromISOString() works in both SysTime
@@ -4280,8 +4304,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
-
-        // REVIEW: Manually check for invalid characters before the cast?
 
         /** NOTE:
             .fromISOString() MUST be called from SysTime, not DateTime. There
@@ -6494,14 +6516,14 @@ unittest
 {
     for (ubyte i = 0x00u; i < ubyte.max; i++)
     {
-        ubyte[] data = [i]; // REVIEW: Make this immutable
+        ubyte[] data = [i];
         assertThrown!Exception(new CERElement(data));
     }
 
     size_t index;
     for (ubyte i = 0x00u; i < ubyte.max; i++)
     {
-        ubyte[] data = [i]; // REVIEW: Make this immutable
+        immutable ubyte[] data = [i];
         assertThrown!Exception(new CERElement(index, data));
     }
 }

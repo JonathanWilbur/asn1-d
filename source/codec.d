@@ -13,6 +13,7 @@ public import types.identification;
 public import types.oidtype;
 public import std.algorithm.mutation : reverse;
 public import std.algorithm.searching : canFind;
+public import std.array : replace, split;
 public import std.ascii : isASCII, isGraphical;
 public import std.conv : text;
 public import std.datetime.date : DateTime;

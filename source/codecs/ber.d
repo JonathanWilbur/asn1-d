@@ -599,7 +599,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @safe
     void octetString(in ubyte[] value)
     {
-        this.value = value.dup; // REVIEW: Does this need to be .dup?
+        this.value = value.dup;
     }
 
     /**
@@ -1038,7 +1038,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 debugInformationText ~ reportBugsText
             );
 
-        // REVIEW: A faster way to do this is to AND components[0] with 0b0000_0010u
         if
         (
             components[0].tagNumber != ASN1UniversalType.objectIdentifier &&
@@ -1515,7 +1514,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     long.max.
                 */
                 ulong mantissa;
-                long exponent; // REVIEW: Can this be a smaller data type?
+                long exponent;
                 ubyte scale;
                 ubyte base;
 
@@ -1587,7 +1586,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         if (this.length - 3u > 8u)
                             throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
 
-                        // REVIEW: There is probably a better way to do this.
                         ubyte m = 0x02u;
                         version (LittleEndian)
                         {
@@ -1896,19 +1894,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             import std.format : formattedWrite;
             Appender!string writer = appender!string();
 
-            // FIXME: This is not exactly to specification....
-            // REVIEW: Change the format strings to have the best precision for those types.
             switch (this.base10RealNumericalRepresentation)
             {
                 case (ASN1Base10RealNumericalRepresentation.nr1):
                 {
                     static if (is(T == double))
                     {
-                        writer.formattedWrite!"%g"(value);
+                        writer.formattedWrite!"%.12g"(value);
                     }
                     static if (is(T == float))
                     {
-                        writer.formattedWrite!"%g"(value);
+                        writer.formattedWrite!"%.6g"(value);
                     }
                     break;
                 }
@@ -3151,7 +3147,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
-    // REVIEW: This could probably be a lot faster if you combine all three loops.
     override public @property @system
     OIDNode[] relativeObjectIdentifier() const
     {
@@ -3662,8 +3657,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 debugInformationText ~ reportBugsText
             );
 
-        // REVIEW: Manually check for invalid characters before the cast?
-
         /** NOTE:
             .fromISOString() MUST be called from SysTime, not DateTime. There
             is a subtle difference in how .fromISOString() works in both SysTime
@@ -3735,8 +3728,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
-
-        // REVIEW: Manually check for invalid characters before the cast?
 
         /** NOTE:
             .fromISOString() MUST be called from SysTime, not DateTime. There
@@ -5388,14 +5379,14 @@ unittest
 {
     for (ubyte i = 0x00u; i < ubyte.max; i++)
     {
-        ubyte[] data = [i]; // REVIEW: Make this immutable
+        ubyte[] data = [i];
         assertThrown!Exception(new BERElement(data));
     }
 
     size_t index;
     for (ubyte i = 0x00u; i < ubyte.max; i++)
     {
-        ubyte[] data = [i]; // REVIEW: Make this immutable
+        immutable ubyte[] data = [i];
         assertThrown!Exception(new BERElement(index, data));
     }
 }

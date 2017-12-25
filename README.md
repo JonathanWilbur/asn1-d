@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.35](http://semver.org/)
+* Version: [1.0.0-beta.36](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -161,10 +161,10 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - CER MUST encode and decode the fewest octets
   - DER MUST encode and decode the fewest octets
 - [x] Ensure that length <= 127 is not encoded in long form for CER and DER
-- [ ] Check for:
-  - [ ] `TODO`
-  - [ ] `FIXME`
-  - [ ] `REVIEW`
+- [x] Check for:
+  - [x] `TODO`
+  - [x] `FIXME`
+  - [x] `REVIEW`
 - [x] Prohibit leading zeroes in encoding and decoding of `INTEGER` and `ENUMERATED`
 - [x] Create ranged unit tests for `INTEGER` and `ENUMERATED`
 - [x] Fix OID / ROID
@@ -222,7 +222,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Everything [here](https://en.wikipedia.org/wiki/Mathematical_constant)
   - [x] `max` of every integral type
   - [x] `min` of every integral type
-- [x] Test that .length > 1000 octetStrings cannot modify their references
+- [x] Test that `.length` > 1000 octetStrings cannot modify their references
 - [x] Test really large items
 - [x] Encode `INTEGER` of 0 as a single null byte and, decode it as such.
 - [x] Fuzz testing to ensure `RangeError` is never thrown. If it is thrown, it means that there are vulnerabilities if compiled with `-boundscheck=off` flag.
@@ -230,6 +230,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Fuzz test all possible three-byte combinations
 - [x] Enforce `0` padding bits for DER and CER-encoded `BIT STRING`
 - [x] Test a `BIT STRING` with only a first byte
+- [ ] Fix CER and DER base-2 `REAL`, which must encode the exponent on the fewest octets, and scale = 0.
 - [ ] Do some more unit testing for extreme lengths.
 - [x] Fix Indefinite Length
   - [x] Enforce constructed construction
