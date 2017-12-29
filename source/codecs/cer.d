@@ -1681,7 +1681,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     */
     public @property @system
     T realNumber(T)() const
-    if (is(T == float) || is(T == double))
+    if (isFloatingPoint!T)
     {
         if (this.value.length == 0) return cast(T) 0.0;
         if (this.value == [ 0x40u ]) return T.infinity;
@@ -1947,7 +1947,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     */
     public @property @system
     void realNumber(T)(in T value)
-    if (is(T == float) || is(T == double))
+    if (isFloatingPoint!T)
     {
         import std.bitmanip : DoubleRep, FloatRep;
         bool positive = true;
@@ -1996,19 +1996,45 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             fraction enough to have made it an integer represented by the
             same sequence of bits.
         */
-        static if (is(T == double))
+        static if (is(T == real))
+        {
+            ubyte[] realBytes;
+            realBytes.length = real.sizeof;
+            *cast(T *)&realBytes[0] = value;
+            version (LittleEndian) reverse(realBytes);
+            positive = ((realBytes[0] & 0x80u) ? false : true);
+
+            static if (T.mant_dig == 64) // x86 Extended Precision
+            {
+                exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 16383); // 16383 is the bias
+                mantissa = *cast(ulong *) &realBytes[2]; // REVIEW: Endianness?
+            }
+            else if (T.mant_dig == 53) // Double Precision
+            {
+                exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 16383); // 16383 is the bias
+                mantissa = (((*cast(ulong *) &realBytes[0]) & 0x000FFFFFFFFFFFFFu) | 0x0010000000000000u); // REVIEW: Endianness?
+            }
+            else if (T.mant_dig == 24) // Single Precision
+            {
+                exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 16383); // 16383 is the bias
+                mantissa = cast(ulong) (((*cast(uint *) &realBytes[0]) & 0x007F_FFFFu) | 0x00800000u); // REVIEW: Endianness?
+            }
+            else assert(0, "Unrecognized real floating-point format.");
+        }
+        else if (is(T == double))
         {
             immutable DoubleRep valueUnion = DoubleRep(value);
+            positive = (valueUnion.sign ? false : true);
+            exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
             mantissa = (valueUnion.fraction | 0x0010000000000000u); // Flip bit #53
         }
-        static if (is(T == float))
+        else if (is(T == float))
         {
             immutable FloatRep valueUnion = FloatRep(value);
+            positive = (valueUnion.sign ? false : true);
+            exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
             mantissa = (valueUnion.fraction | 0x00800000u); // Flip bit #24
         }
-
-        positive = (valueUnion.sign ? false : true);
-        exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
 
         /* NOTE:
             Section 11.3.1 of X.690 states that, for Canonical Encoding Rules

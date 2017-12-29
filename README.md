@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.39](http://semver.org/)
+* Version: [1.0.0-beta.39.1](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -244,6 +244,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Validate base-10 decoding
   - [ ] Remove dependency on `FloatRep` and `DoubleRep`
   - [ ] Section 8.5.3 might mean that you have to support encoding with all bases.
+  - [ ] Ensure no overflows on returning a `float`
 - [ ] Do some more unit testing for extreme lengths.
 - [ ] Search for `reverse` for potential optimizations
 - [x] Fix Indefinite Length

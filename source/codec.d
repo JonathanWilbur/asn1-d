@@ -21,7 +21,7 @@ public import std.datetime.systime : SysTime;
 public import std.datetime.timezone : TimeZone, UTC;
 private import std.exception : basicExceptionCtors;
 public import std.math : isNaN, log2;
-public import std.traits : isIntegral, isSigned, isUnsigned;
+public import std.traits : isFloatingPoint, isIntegral, isSigned, isUnsigned;
 
 ///
 public alias ASN1CodecException = AbstractSyntaxNotation1CodecException;
@@ -754,11 +754,11 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a floating-point number
     abstract public @property
-    T realNumber(T)() const if (is(T == float) || is(T == double));
+    T realNumber(T)() const if (isFloatingPoint!T);
 
     /// Encodes a floating-point number
     abstract public @property
-    void realNumber(T)(in T value) if (is(T == float) || is(T == double));
+    void realNumber(T)(in T value) if (isFloatingPoint!T);
 
     ///
     @system
@@ -1109,14 +1109,24 @@ class AbstractSyntaxNotation1Element(Element)
             // Alternating negative and positive floating point numbers exploring extreme values
             immutable float f = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
             immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
+            immutable real r = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
             Element elf = new Element();
             Element eld = new Element();
+            Element elr = new Element();
             elf.realNumber!float = f;
             eld.realNumber!double = d;
+            elr.realNumber!real = r;
+            writefln("%(%02X %) ", elr.value);
+            writefln("%.12f", elr.realNumber!float);
             assert(approxEqual(elf.realNumber!float, f));
             assert(approxEqual(elf.realNumber!double, f));
+            assert(approxEqual(elf.realNumber!real, f));
             assert(approxEqual(eld.realNumber!float, d));
             assert(approxEqual(eld.realNumber!double, d));
+            assert(approxEqual(eld.realNumber!real, d));
+            assert(approxEqual(elr.realNumber!float, d));
+            assert(approxEqual(elr.realNumber!double, d));
+            assert(approxEqual(elr.realNumber!real, d));
         }
     }
 

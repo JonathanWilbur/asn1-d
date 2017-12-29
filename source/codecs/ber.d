@@ -1444,7 +1444,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     */
     public @property @system
     T realNumber(T)() const
-    if (is(T == float) || is(T == double))
+    if (isFloatingPoint!T)
     {
         if (this.value.length == 0) return cast(T) 0.0;
         if (this.value == [ 0x40u ]) return T.infinity;
@@ -1794,7 +1794,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     */
     public @property @system
     void realNumber(T)(in T value)
-    if (is(T == float) || is(T == double))
+    if (isFloatingPoint!T)
     {
         import std.bitmanip : DoubleRep, FloatRep;
         bool positive = true;
@@ -1843,19 +1843,61 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             fraction enough to have made it an integer represented by the
             same sequence of bits.
         */
-        static if (is(T == double))
+        static if (is(T == real))
+        {
+            ubyte[] realBytes;
+            realBytes.length = real.sizeof;
+            *cast(T *)&realBytes[0] = value;
+            writefln("RealBytes for %.12f before reversal: %(%02X %)", value, realBytes);
+
+            static if (T.mant_dig == 64) // x86 Extended Precision
+            {
+                version (BigEndian)
+                {
+                    static if (real.sizeof > 10u) realBytes = realBytes[real.sizeof-10 .. $];
+                    positive = ((realBytes[0] & 0x80u) ? false : true);
+                    exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 16383 - 63); // 16383 is the bias
+                    mantissa = *cast(ulong *) &realBytes[2];
+                }
+                else version (LittleEndian)
+                {
+                    static if (real.sizeof > 10u) realBytes.length = 10u;
+                    positive = ((realBytes[$-1] & 0x80u) ? false : true);
+                    exponent = (((*cast(short *) &realBytes[8]) & 0x7FFF) - 16383 - 63); // 16383 is the bias
+                    mantissa = *cast(ulong *) &realBytes[0];
+                }
+                else assert(0, "Could not determine endianness");
+            }
+            else if (T.mant_dig == 53) // Double Precision
+            {
+                // FIXME:
+                exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 1023); // 1023 is the bias
+                mantissa = (((*cast(ulong *) &realBytes[0]) & 0x000FFFFFFFFFFFFFu) | 0x0010000000000000u);
+            }
+            else if (T.mant_dig == 24) // Single Precision
+            {
+                // FIXME:
+                exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 127); // 127 is the bias
+                mantissa = cast(ulong) (((*cast(uint *) &realBytes[0]) & 0x007F_FFFFu) | 0x00800000u);
+            }
+            else assert(0, "Unrecognized real floating-point format.");
+
+            writefln("E=%d, M=%d", exponent, mantissa);
+        }
+        else if (is(T == double))
         {
             immutable DoubleRep valueUnion = DoubleRep(value);
+            positive = (valueUnion.sign ? false : true);
+            exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
             mantissa = (valueUnion.fraction | 0x0010000000000000u); // Flip bit #53
         }
-        static if (is(T == float))
+        else if (is(T == float))
         {
             immutable FloatRep valueUnion = FloatRep(value);
+            positive = (valueUnion.sign ? false : true);
+            exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
             mantissa = (valueUnion.fraction | 0x00800000u); // Flip bit #24
         }
-
-        positive = (valueUnion.sign ? false : true);
-        exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
 
         ubyte[] exponentBytes;
         exponentBytes.length = short.sizeof;
