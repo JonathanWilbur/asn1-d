@@ -1809,14 +1809,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         ulong significand;
         short exponent = 0;
 
-        /**
-            Because the current settings for realEncodingBase must be referenced
-            repeatedly throughout this method, a private copy must be made of
-            the state of this.realEncodingBase to prevent both TOCTOU
-            vulnerabilities as well as problems with concurrent programming.
-        */
-        ASN1RealEncodingBase base = this.realEncodingBase;
-
         if (value == 0.0)
         {
             this.value = [];
@@ -1839,44 +1831,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         else if (value == -T.infinity)
         {
             this.value = [ ASN1SpecialRealValue.minusInfinity ];
-            return;
-        }
-
-        if (base == ASN1RealEncodingBase.base10)
-        {
-            import std.format : formattedWrite;
-            Appender!string writer = appender!string();
-            static if (is(T == double))
-            {
-                writer.formattedWrite!"%.12E"(value);
-            }
-            static if (is(T == float))
-            {
-                writer.formattedWrite!"%.6E"(value);
-            }
-
-            string[] parts = writer.data.split("E");
-            bool exponentPositive = true;
-            if (parts[1][0] == '+')
-                exponentPositive = true;
-            else if (parts[1][0] == '-')
-                exponentPositive = false;
-            else
-                assert(0, "Formatted write in .realType() produced an unexpected format.");
-
-            parts[1] = parts[1][1 .. $];
-            if (parts[1] == "00") parts[1] = "+0";
-            else
-            {
-                size_t startOfNonPadding = 0u;
-                while (startOfNonPadding < parts[1].length-1 && parts[1][startOfNonPadding++] == '0') {};
-                parts[1] = ((exponentPositive ? "" : "-") ~ parts[1][startOfNonPadding .. $]);
-            }
-
-            this.value =
-                [ cast(ubyte) ASN1Base10RealNumericalRepresentation.nr3 ] ~
-                cast(ubyte[]) (parts[0] ~ 'E' ~ parts[1]);
-
             return;
         }
 
@@ -1911,15 +1865,19 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         positive = (valueUnion.sign ? false : true);
         exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
 
-        // If the significand is even and we're using Base-2 encoding, make it odd or 0
-        if (base == ASN1RealEncodingBase.base2 && significand != 0u)
+        /* NOTE:
+            Section 11.3.1 of X.690 states that, for Canonical Encoding Rules
+            (CER) and Distinguished Encoding Rules (DER), the mantissa must be
+            zero or odd.
+        */
+        if (significand != 0u)
         {
             while (!(significand & 1u))
             {
                 significand /= 2.0;
                 exponent++;
             }
-            version(unittest) assert((significand & 1u) || significand == 0u);
+            version(unittest) assert(significand & 1u);
         }
 
         ubyte[] exponentBytes;
@@ -1969,74 +1927,74 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     // Testing Base-10 (Character-Encoded) REALs
-    @system
-    unittest
-    {
-        DERElement el = new DERElement();
-        DERElement.realEncodingBase = ASN1RealEncodingBase.base10;
+    // @system
+    // unittest
+    // {
+    //     DERElement el = new DERElement();
+    //     DERElement.realEncodingBase = ASN1RealEncodingBase.base10;
 
-        // Test that the exponent gets a + sign if it is 0.
-        el.realType!float = 2.2;
-        assert(cast(string) (el.value[1 .. $]) == "2.200000E+0");
-        assert(approxEqual(el.realType!float, 2.2));
-        assert(approxEqual(el.realType!double, 2.2));
-        el.realType!double = 2.2;
-        assert(cast(string) (el.value[1 .. $]) == "2.200000000000E+0");
-        assert(approxEqual(el.realType!float, 2.2));
-        assert(approxEqual(el.realType!double, 2.2));
+    //     // Test that the exponent gets a + sign if it is 0.
+    //     el.realType!float = 2.2;
+    //     assert(cast(string) (el.value[1 .. $]) == "2.200000E+0");
+    //     assert(approxEqual(el.realType!float, 2.2));
+    //     assert(approxEqual(el.realType!double, 2.2));
+    //     el.realType!double = 2.2;
+    //     assert(cast(string) (el.value[1 .. $]) == "2.200000000000E+0");
+    //     assert(approxEqual(el.realType!float, 2.2));
+    //     assert(approxEqual(el.realType!double, 2.2));
 
-        // Decimal + trailing zeros are not added if not necessary.
-        el.realType!float = 22.0;
-        assert(cast(string) (el.value[1 .. $]) == "2.200000E1");
-        assert(approxEqual(el.realType!float, 22.0));
-        assert(approxEqual(el.realType!double, 22.0));
-        el.realType!double = 22.0;
-        assert(cast(string) (el.value[1 .. $]) == "2.200000000000E1");
-        assert(approxEqual(el.realType!float, 22.0));
-        assert(approxEqual(el.realType!double, 22.0));
+    //     // Decimal + trailing zeros are not added if not necessary.
+    //     el.realType!float = 22.0;
+    //     assert(cast(string) (el.value[1 .. $]) == "2.200000E1");
+    //     assert(approxEqual(el.realType!float, 22.0));
+    //     assert(approxEqual(el.realType!double, 22.0));
+    //     el.realType!double = 22.0;
+    //     assert(cast(string) (el.value[1 .. $]) == "2.200000000000E1");
+    //     assert(approxEqual(el.realType!float, 22.0));
+    //     assert(approxEqual(el.realType!double, 22.0));
 
-        // Decimal + trailing zeros are added if necessary.
-        el.realType!float = 22.123;
-        assert(cast(string) (el.value[1 .. $]) == "2.212300E1");
-        assert(approxEqual(el.realType!float, 22.123));
-        assert(approxEqual(el.realType!double, 22.123));
-        el.realType!double = 22.123;
-        assert(cast(string) (el.value[1 .. $]) == "2.212300000000E1");
-        assert(approxEqual(el.realType!float, 22.123));
-        assert(approxEqual(el.realType!double, 22.123));
+    //     // Decimal + trailing zeros are added if necessary.
+    //     el.realType!float = 22.123;
+    //     assert(cast(string) (el.value[1 .. $]) == "2.212300E1");
+    //     assert(approxEqual(el.realType!float, 22.123));
+    //     assert(approxEqual(el.realType!double, 22.123));
+    //     el.realType!double = 22.123;
+    //     assert(cast(string) (el.value[1 .. $]) == "2.212300000000E1");
+    //     assert(approxEqual(el.realType!float, 22.123));
+    //     assert(approxEqual(el.realType!double, 22.123));
 
-        // Negative numbers are encoded correctly.
-        el.realType!float = -22.123;
-        assert(cast(string) (el.value[1 .. $]) == "-2.212300E1");
-        assert(approxEqual(el.realType!float, -22.123));
-        assert(approxEqual(el.realType!double, -22.123));
-        el.realType!double = -22.123;
-        assert(cast(string) (el.value[1 .. $]) == "-2.212300000000E1");
-        assert(approxEqual(el.realType!float, -22.123));
-        assert(approxEqual(el.realType!double, -22.123));
+    //     // Negative numbers are encoded correctly.
+    //     el.realType!float = -22.123;
+    //     assert(cast(string) (el.value[1 .. $]) == "-2.212300E1");
+    //     assert(approxEqual(el.realType!float, -22.123));
+    //     assert(approxEqual(el.realType!double, -22.123));
+    //     el.realType!double = -22.123;
+    //     assert(cast(string) (el.value[1 .. $]) == "-2.212300000000E1");
+    //     assert(approxEqual(el.realType!float, -22.123));
+    //     assert(approxEqual(el.realType!double, -22.123));
 
-        // Small positive numbers are encoded correctly.
-        el.realType!float = 0.123;
-        assert(cast(string) (el.value[1 .. $]) == "1.230000E-1");
-        assert(approxEqual(el.realType!float, 0.123));
-        assert(approxEqual(el.realType!double, 0.123));
-        el.realType!double = 0.123;
-        assert(cast(string) (el.value[1 .. $]) == "1.230000000000E-1");
-        assert(approxEqual(el.realType!float, 0.123));
-        assert(approxEqual(el.realType!double, 0.123));
+    //     // Small positive numbers are encoded correctly.
+    //     el.realType!float = 0.123;
+    //     assert(cast(string) (el.value[1 .. $]) == "1.230000E-1");
+    //     assert(approxEqual(el.realType!float, 0.123));
+    //     assert(approxEqual(el.realType!double, 0.123));
+    //     el.realType!double = 0.123;
+    //     assert(cast(string) (el.value[1 .. $]) == "1.230000000000E-1");
+    //     assert(approxEqual(el.realType!float, 0.123));
+    //     assert(approxEqual(el.realType!double, 0.123));
 
-        // Small negative numbers are encoded correctly.
-        el.realType!float = -0.123;
-        assert(cast(string) (el.value[1 .. $]) == "-1.230000E-1");
-        assert(approxEqual(el.realType!float, -0.123));
-        assert(approxEqual(el.realType!double, -0.123));
-        el.realType!double = -0.123;
-        assert(cast(string) (el.value[1 .. $]) == "-1.230000000000E-1");
-        assert(approxEqual(el.realType!float, -0.123));
-        assert(approxEqual(el.realType!double, -0.123));
+    //     // Small negative numbers are encoded correctly.
+    //     el.realType!float = -0.123;
+    //     assert(cast(string) (el.value[1 .. $]) == "-1.230000E-1");
+    //     assert(approxEqual(el.realType!float, -0.123));
+    //     assert(approxEqual(el.realType!double, -0.123));
+    //     el.realType!double = -0.123;
+    //     assert(cast(string) (el.value[1 .. $]) == "-1.230000000000E-1");
+    //     assert(approxEqual(el.realType!float, -0.123));
+    //     assert(approxEqual(el.realType!double, -0.123));
 
-        DERElement.realEncodingBase = ASN1RealEncodingBase.base2;
-    }
+    //     DERElement.realEncodingBase = ASN1RealEncodingBase.base2;
+    // }
 
     // Test "complicated" exponent encoding.
     // @system

@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.37](http://semver.org/)
+* Version: [1.0.0-beta.38](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -231,6 +231,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Enforce `0` padding bits for DER and CER-encoded `BIT STRING`
 - [x] Test a `BIT STRING` with only a first byte
 - [ ] Fix `REAL`
+  - [x] Remove encoding capabilities for anything but base-2.
   - [ ] Fix CER and DER base-2 `REAL` must encode the exponent on the fewest octets, and scale = 0.
   - [ ] Enforce exponent > 0 when using complicated exponent encoding. (X.690 8.5.6.4.d)
   - [ ] Enforce exponent encoding on the fewest possible octets?
@@ -239,7 +240,6 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Note that you are assuming IEEE 754 Floating Points.
   - [ ] Can you just shift an IEEE 754 FP type right by 1, so the exponent is octet-aligned?
   - [ ] Banish the term "significand" to the shadow realm (IEEE 754 coins "significand.")
-  - [ ] Do _something_ if the encoding base is not 2 or 10.
   - [ ] Change the property's name to `realNumber`.
   - [ ] Change the template to accept any type that `isFloatingPoint`.
 - [ ] Do some more unit testing for extreme lengths.
