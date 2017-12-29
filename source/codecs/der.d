@@ -1561,11 +1561,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
                 ubyte[] mantissaBytes = this.value[startOfMantissa .. $].dup;
 
-                if
-                (
-                    (mantissaBytes[0] == 0x00u && (!(mantissaBytes[1] & 0x80u))) || // Unnecessary positive leading bytes
-                    (mantissaBytes[0] == 0xFFu && (mantissaBytes[1] & 0x80u)) // Unnecessary negative leading bytes
-                )
+                if (mantissaBytes[0] == 0x00u)
                     throw new ASN1ValueInvalidException
                     (
                         "This exception was thrown because you attempted to decode " ~
@@ -1575,9 +1571,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
-                immutable ubyte paddingByte = ((mantissaBytes[0] & 0x80u) ? 0xFFu : 0x00u);
                 while (mantissaBytes.length < ulong.sizeof)
-                    mantissaBytes = (paddingByte ~ mantissaBytes);
+                    mantissaBytes = (0x00u ~ mantissaBytes);
                 version (LittleEndian) reverse(mantissaBytes);
                 version (unittest) assert(mantissaBytes.length == ulong.sizeof);
                 mantissa = *cast(ulong *) mantissaBytes.ptr;
@@ -1656,12 +1651,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         }
     }
 
-    /* REVIEW:
-        I have not seen it confirmed in the specification that you can use
-        base-8 or base-16 for DER-encoded REALs. It seems like that would
-        be a problem, since with base-2, the expectation is that the mantissa
-        is 0 or odd. I have looked at the Dubuisson book and X.690.
-    */
     /**
         Encodes a float or double. This can never decode directly to a
         real type, because of the way it works.
@@ -1716,11 +1705,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     void realNumber(T)(in T value)
     if (isFloatingPoint!T)
     {
-        import std.bitmanip : DoubleRep, FloatRep;
-        bool positive = true;
-        ulong mantissa;
-        short exponent = 0;
-
         if (value == 0.0)
         {
             this.value = [];
@@ -1746,62 +1730,99 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             return;
         }
 
-        /*
-            IEEE floating-point types only store the fractional part of
-            the mantissa, because there is an implicit 1 prior to the
-            fractional part. To retrieve the actual mantissa encoded,
-            we flip the bit that comes just before the most significant
-            bit of the fractional part of the number.
+        real realValue = cast(real) value;
+        bool positive = true;
+        ulong mantissa;
+        short exponent;
 
+        /*
             Per the IEEE specifications, the exponent of a floating-point
             type is stored with a bias, meaning that the exponent counts
             up from a negative number, the reaches zero at the bias. We
             subtract the bias from the raw binary exponent to get the
             actual exponent encoded in the IEEE floating-point number.
+            In the case of an x86 80-bit extended-precision floating-point
+            type, the bias is 16383. In the case of double-precision, it is
+            1023. For single-precision, it is 127.
+
             We then subtract the number of bits in the fraction from the
             exponent, which is equivalent to having had multiplied the
             fraction enough to have made it an integer represented by the
             same sequence of bits.
         */
-        static if (is(T == real))
-        {
-            ubyte[] realBytes;
-            realBytes.length = real.sizeof;
-            *cast(T *)&realBytes[0] = value;
-            version (LittleEndian) reverse(realBytes);
-            positive = ((realBytes[0] & 0x80u) ? false : true);
+        ubyte[] realBytes;
+        realBytes.length = real.sizeof;
+        *cast(real *)&realBytes[0] = realValue;
 
-            static if (T.mant_dig == 64) // x86 Extended Precision
-            {
-                exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 16383); // 16383 is the bias
-                mantissa = *cast(ulong *) &realBytes[2]; // REVIEW: Endianness?
-            }
-            else if (T.mant_dig == 53) // Double Precision
-            {
-                exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 16383); // 16383 is the bias
-                mantissa = (((*cast(ulong *) &realBytes[0]) & 0x000FFFFFFFFFFFFFu) | 0x0010000000000000u); // REVIEW: Endianness?
-            }
-            else if (T.mant_dig == 24) // Single Precision
-            {
-                exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 16383); // 16383 is the bias
-                mantissa = cast(ulong) (((*cast(uint *) &realBytes[0]) & 0x007F_FFFFu) | 0x00800000u); // REVIEW: Endianness?
-            }
-            else assert(0, "Unrecognized real floating-point format.");
-        }
-        else if (is(T == double))
+        version (BigEndian)
         {
-            immutable DoubleRep valueUnion = DoubleRep(value);
-            positive = (valueUnion.sign ? false : true);
-            exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
-            mantissa = (valueUnion.fraction | 0x0010000000000000u); // Flip bit #53
+            static if (real.sizeof > 10u) realBytes = realBytes[real.sizeof-10 .. $];
+            positive = ((realBytes[0] & 0x80u) ? false : true);
         }
-        else if (is(T == float))
+        else version (LittleEndian)
         {
-            immutable FloatRep valueUnion = FloatRep(value);
-            positive = (valueUnion.sign ? false : true);
-            exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
-            mantissa = (valueUnion.fraction | 0x00800000u); // Flip bit #24
+            static if (real.sizeof > 10u) realBytes.length = 10u;
+            positive = ((realBytes[$-1] & 0x80u) ? false : true);
         }
+        else assert(0, "Could not determine endianness");
+
+        static if (real.mant_dig == 64) // x86 Extended Precision
+        {
+            version (BigEndian)
+            {
+                exponent = (((*cast(short *) &realBytes[0]) & 0x7FFF) - 16383 - 63); // 16383 is the bias
+                mantissa = *cast(ulong *) &realBytes[2];
+            }
+            else version (LittleEndian)
+            {
+                exponent = (((*cast(short *) &realBytes[8]) & 0x7FFF) - 16383 - 63); // 16383 is the bias
+                mantissa = *cast(ulong *) &realBytes[0];
+            }
+            else assert(0, "Could not determine endianness");
+        }
+        else if (T.mant_dig == 53) // Double Precision
+        {
+            /*
+                The IEEE 754 double-precision floating point type only stores
+                the fractional part of the mantissa, because there is an
+                implicit 1 prior to the fractional part. To retrieve the actual
+                mantissa encoded, we flip the bit that comes just before the
+                most significant bit of the fractional part of the number.
+            */
+            version (BigEndian)
+            {
+                exponent = (((*cast(short *) &realBytes[0]) & 0x7FFF) - 1023 - 53); // 1023 is the bias
+                mantissa = (((*cast(ulong *) &realBytes[2]) & 0x000FFFFFFFFFFFFFu) | 0x0010000000000000u);
+            }
+            else version (LittleEndian)
+            {
+                exponent = (((*cast(short *) &realBytes[8]) & 0x7FFF) - 1023 - 53); // 1023 is the bias
+                mantissa = (((*cast(ulong *) &realBytes[0]) & 0x000FFFFFFFFFFFFFu) | 0x0010000000000000u);
+            }
+            else assert(0, "Could not determine endianness");
+        }
+        else if (T.mant_dig == 24) // Single Precision
+        {
+            /*
+                The IEEE 754 single-precision floating point type only stores
+                the fractional part of the mantissa, because there is an
+                implicit 1 prior to the fractional part. To retrieve the actual
+                mantissa encoded, we flip the bit that comes just before the
+                most significant bit of the fractional part of the number.
+            */
+            version (BigEndian)
+            {
+                exponent = ((((*cast(short *) &realBytes[0]) & 0x7F80) >> 7) - 127 - 23); // 127 is the bias
+                mantissa = cast(ulong) (((*cast(uint *) &realBytes[2]) & 0x007FFFFFu) | 0x00800000u);
+            }
+            else version (LittleEndian)
+            {
+                exponent = ((((*cast(short *) &realBytes[8]) & 0x7F80) >> 7) - 127 - 23); // 127 is the bias
+                mantissa = cast(ulong) (((*cast(uint *) &realBytes[0]) & 0x007FFFFFu) | 0x00800000u);
+            }
+            else assert(0, "Could not determine endianness");
+        }
+        else assert(0, "Unrecognized real floating-point format.");
 
         /* NOTE:
             Section 11.3.1 of X.690 states that, for Canonical Encoding Rules
@@ -1835,21 +1856,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         version (LittleEndian) reverse(mantissaBytes);
 
         size_t startOfNonPadding = 0u;
-        if (mantissa >= 0)
+        for (size_t i = 0u; i < mantissaBytes.length-1; i++)
         {
-            for (size_t i = 0u; i < mantissaBytes.length-1; i++)
-            {
-                if (mantissaBytes[i] != 0x00u) break;
-                if (!(mantissaBytes[i+1] & 0x80u)) startOfNonPadding++;
-            }
-        }
-        else
-        {
-            for (size_t i = 0u; i < mantissaBytes.length-1; i++)
-            {
-                if (mantissaBytes[i] != 0xFFu) break;
-                if (mantissaBytes[i+1] & 0x80u) startOfNonPadding++;
-            }
+            if (mantissaBytes[i] != 0x00u) break;
+            startOfNonPadding++;
         }
         mantissaBytes = mantissaBytes[startOfNonPadding .. $];
 

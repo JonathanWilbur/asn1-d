@@ -1672,9 +1672,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     );
 
                 ubyte[] mantissaBytes = this.value[startOfMantissa .. $].dup;
-                immutable ubyte paddingByte = ((mantissaBytes[0] & 0x80u) ? 0xFFu : 0x00u);
                 while (mantissaBytes.length < ulong.sizeof)
-                    mantissaBytes = (paddingByte ~ mantissaBytes);
+                    mantissaBytes = (0x00u ~ mantissaBytes);
                 version (LittleEndian) reverse(mantissaBytes);
                 version (unittest) assert(mantissaBytes.length == ulong.sizeof);
                 mantissa = *cast(ulong *) mantissaBytes.ptr;
@@ -1796,11 +1795,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     void realNumber(T)(in T value)
     if (isFloatingPoint!T)
     {
-        import std.bitmanip : DoubleRep, FloatRep;
-        bool positive = true;
-        ulong mantissa;
-        short exponent = 0;
-
         if (value == 0.0)
         {
             this.value = [];
@@ -1826,78 +1820,99 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             return;
         }
 
-        /*
-            IEEE floating-point types only store the fractional part of
-            the mantissa, because there is an implicit 1 prior to the
-            fractional part. To retrieve the actual mantissa encoded,
-            we flip the bit that comes just before the most significant
-            bit of the fractional part of the number.
+        real realValue = cast(real) value;
+        bool positive = true;
+        ulong mantissa;
+        short exponent;
 
+        /*
             Per the IEEE specifications, the exponent of a floating-point
             type is stored with a bias, meaning that the exponent counts
             up from a negative number, the reaches zero at the bias. We
             subtract the bias from the raw binary exponent to get the
             actual exponent encoded in the IEEE floating-point number.
+            In the case of an x86 80-bit extended-precision floating-point
+            type, the bias is 16383. In the case of double-precision, it is
+            1023. For single-precision, it is 127.
+
             We then subtract the number of bits in the fraction from the
             exponent, which is equivalent to having had multiplied the
             fraction enough to have made it an integer represented by the
             same sequence of bits.
         */
-        static if (is(T == real))
-        {
-            ubyte[] realBytes;
-            realBytes.length = real.sizeof;
-            *cast(T *)&realBytes[0] = value;
-            writefln("RealBytes for %.12f before reversal: %(%02X %)", value, realBytes);
+        ubyte[] realBytes;
+        realBytes.length = real.sizeof;
+        *cast(real *)&realBytes[0] = realValue;
 
-            static if (T.mant_dig == 64) // x86 Extended Precision
+        version (BigEndian)
+        {
+            static if (real.sizeof > 10u) realBytes = realBytes[real.sizeof-10 .. $];
+            positive = ((realBytes[0] & 0x80u) ? false : true);
+        }
+        else version (LittleEndian)
+        {
+            static if (real.sizeof > 10u) realBytes.length = 10u;
+            positive = ((realBytes[$-1] & 0x80u) ? false : true);
+        }
+        else assert(0, "Could not determine endianness");
+
+        static if (real.mant_dig == 64) // x86 Extended Precision
+        {
+            version (BigEndian)
             {
-                version (BigEndian)
-                {
-                    static if (real.sizeof > 10u) realBytes = realBytes[real.sizeof-10 .. $];
-                    positive = ((realBytes[0] & 0x80u) ? false : true);
-                    exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 16383 - 63); // 16383 is the bias
-                    mantissa = *cast(ulong *) &realBytes[2];
-                }
-                else version (LittleEndian)
-                {
-                    static if (real.sizeof > 10u) realBytes.length = 10u;
-                    positive = ((realBytes[$-1] & 0x80u) ? false : true);
-                    exponent = (((*cast(short *) &realBytes[8]) & 0x7FFF) - 16383 - 63); // 16383 is the bias
-                    mantissa = *cast(ulong *) &realBytes[0];
-                }
-                else assert(0, "Could not determine endianness");
+                exponent = (((*cast(short *) &realBytes[0]) & 0x7FFF) - 16383 - 63); // 16383 is the bias
+                mantissa = *cast(ulong *) &realBytes[2];
             }
-            else if (T.mant_dig == 53) // Double Precision
+            else version (LittleEndian)
             {
-                // FIXME:
-                exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 1023); // 1023 is the bias
+                exponent = (((*cast(short *) &realBytes[8]) & 0x7FFF) - 16383 - 63); // 16383 is the bias
+                mantissa = *cast(ulong *) &realBytes[0];
+            }
+            else assert(0, "Could not determine endianness");
+        }
+        else if (T.mant_dig == 53) // Double Precision
+        {
+            /*
+                The IEEE 754 double-precision floating point type only stores
+                the fractional part of the mantissa, because there is an
+                implicit 1 prior to the fractional part. To retrieve the actual
+                mantissa encoded, we flip the bit that comes just before the
+                most significant bit of the fractional part of the number.
+            */
+            version (BigEndian)
+            {
+                exponent = (((*cast(short *) &realBytes[0]) & 0x7FFF) - 1023 - 53); // 1023 is the bias
+                mantissa = (((*cast(ulong *) &realBytes[2]) & 0x000FFFFFFFFFFFFFu) | 0x0010000000000000u);
+            }
+            else version (LittleEndian)
+            {
+                exponent = (((*cast(short *) &realBytes[8]) & 0x7FFF) - 1023 - 53); // 1023 is the bias
                 mantissa = (((*cast(ulong *) &realBytes[0]) & 0x000FFFFFFFFFFFFFu) | 0x0010000000000000u);
             }
-            else if (T.mant_dig == 24) // Single Precision
+            else assert(0, "Could not determine endianness");
+        }
+        else if (T.mant_dig == 24) // Single Precision
+        {
+            /*
+                The IEEE 754 single-precision floating point type only stores
+                the fractional part of the mantissa, because there is an
+                implicit 1 prior to the fractional part. To retrieve the actual
+                mantissa encoded, we flip the bit that comes just before the
+                most significant bit of the fractional part of the number.
+            */
+            version (BigEndian)
             {
-                // FIXME:
-                exponent = (((*cast(short *) realBytes.ptr) & 0x7FFF) - 127); // 127 is the bias
-                mantissa = cast(ulong) (((*cast(uint *) &realBytes[0]) & 0x007F_FFFFu) | 0x00800000u);
+                exponent = ((((*cast(short *) &realBytes[0]) & 0x7F80) >> 7) - 127 - 23); // 127 is the bias
+                mantissa = cast(ulong) (((*cast(uint *) &realBytes[2]) & 0x007FFFFFu) | 0x00800000u);
             }
-            else assert(0, "Unrecognized real floating-point format.");
-
-            writefln("E=%d, M=%d", exponent, mantissa);
+            else version (LittleEndian)
+            {
+                exponent = ((((*cast(short *) &realBytes[8]) & 0x7F80) >> 7) - 127 - 23); // 127 is the bias
+                mantissa = cast(ulong) (((*cast(uint *) &realBytes[0]) & 0x007FFFFFu) | 0x00800000u);
+            }
+            else assert(0, "Could not determine endianness");
         }
-        else if (is(T == double))
-        {
-            immutable DoubleRep valueUnion = DoubleRep(value);
-            positive = (valueUnion.sign ? false : true);
-            exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
-            mantissa = (valueUnion.fraction | 0x0010000000000000u); // Flip bit #53
-        }
-        else if (is(T == float))
-        {
-            immutable FloatRep valueUnion = FloatRep(value);
-            positive = (valueUnion.sign ? false : true);
-            exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
-            mantissa = (valueUnion.fraction | 0x00800000u); // Flip bit #24
-        }
+        else assert(0, "Unrecognized real floating-point format.");
 
         ubyte[] exponentBytes;
         exponentBytes.length = short.sizeof;

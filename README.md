@@ -240,11 +240,13 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Note that you are assuming IEEE 754 Floating Points.
   - [x] Banish the term "significand" to the shadow realm.
   - [x] Change the property's name to `realNumber`.
-  - [ ] Change the template to accept any type that `isFloatingPoint`.
+  - [x] Change the template to accept any type that `isFloatingPoint`.
   - [ ] Validate base-10 decoding
-  - [ ] Remove dependency on `FloatRep` and `DoubleRep`
+  - [x] Remove dependency on `FloatRep` and `DoubleRep`
   - [ ] Section 8.5.3 might mean that you have to support encoding with all bases.
   - [ ] Ensure no overflows on returning a `float`
+  - [ ] Ensure using base-8 or base-16 cannot be used to overflow
+  - [x] Remove `approxEqual` from unit tests, if possible
 - [ ] Do some more unit testing for extreme lengths.
 - [ ] Search for `reverse` for potential optimizations
 - [x] Fix Indefinite Length

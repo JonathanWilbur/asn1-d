@@ -760,347 +760,6 @@ class AbstractSyntaxNotation1Element(Element)
     abstract public @property
     void realNumber(T)(in T value) if (isFloatingPoint!T);
 
-    ///
-    @system
-    unittest
-    {
-        float f = -22.86;
-        double d = 0.00583;
-        Element elf = new Element();
-        Element eld = new Element();
-        elf.realNumber!float = f;
-        eld.realNumber!double = d;
-        // writefln("%f", elf.realNumber!float);
-        assert(approxEqual(elf.realNumber!float, f));
-        assert(approxEqual(elf.realNumber!double, f));
-        assert(approxEqual(eld.realNumber!float, d));
-        assert(approxEqual(eld.realNumber!double, d));
-
-        // Assert that accessor does not mutate state
-        assert(approxEqual(elf.realNumber!double, elf.realNumber!double));
-    }
-
-    // Test a few edge cases
-    @system
-    unittest
-    {
-        Element el = new Element();
-
-        // Positive Zeroes
-        el.realNumber!float = 0.0;
-        assert(approxEqual(el.realNumber!float, 0.0));
-        assert(approxEqual(el.realNumber!double, 0.0));
-        el.realNumber!double = 0.0;
-        assert(approxEqual(el.realNumber!float, 0.0));
-        assert(approxEqual(el.realNumber!double, 0.0));
-
-        // Negative Zeroes
-        el.realNumber!float = -0.0;
-        assert(approxEqual(el.realNumber!float, -0.0));
-        assert(approxEqual(el.realNumber!double, -0.0));
-        el.realNumber!double = -0.0;
-        assert(approxEqual(el.realNumber!float, -0.0));
-        assert(approxEqual(el.realNumber!double, -0.0));
-
-        // Positive Repeating decimal
-        el.realNumber!float = (10.0 / 3.0);
-        assert(approxEqual(el.realNumber!float, (10.0 / 3.0)));
-        assert(approxEqual(el.realNumber!double, (10.0 / 3.0)));
-        el.realNumber!double = (10.0 / 3.0);
-        assert(approxEqual(el.realNumber!float, (10.0 / 3.0)));
-        assert(approxEqual(el.realNumber!double, (10.0 / 3.0)));
-
-        // Negative Repeating Decimal
-        el.realNumber!float = -(10.0 / 3.0);
-        assert(approxEqual(el.realNumber!float, -(10.0 / 3.0)));
-        assert(approxEqual(el.realNumber!double, -(10.0 / 3.0)));
-        el.realNumber!double = -(10.0 / 3.0);
-        assert(approxEqual(el.realNumber!float, -(10.0 / 3.0)));
-        assert(approxEqual(el.realNumber!double, -(10.0 / 3.0)));
-
-        // Positive one
-        el.realNumber!float = 1.0;
-        assert(approxEqual(el.realNumber!float, 1.0));
-        assert(approxEqual(el.realNumber!double, 1.0));
-        el.realNumber!double = 1.0;
-        assert(approxEqual(el.realNumber!float, 1.0));
-        assert(approxEqual(el.realNumber!double, 1.0));
-
-        // Negative one
-        el.realNumber!float = -1.0;
-        assert(approxEqual(el.realNumber!float, -1.0));
-        assert(approxEqual(el.realNumber!double, -1.0));
-        el.realNumber!double = -1.0;
-        assert(approxEqual(el.realNumber!float, -1.0));
-        assert(approxEqual(el.realNumber!double, -1.0));
-
-        // Positive Infinity
-        el.realNumber!float = float.infinity;
-        assert(el.realNumber!float == float.infinity);
-        assert(el.realNumber!double == double.infinity);
-        el.realNumber!double = double.infinity;
-        assert(el.realNumber!float == float.infinity);
-        assert(el.realNumber!double == double.infinity);
-
-        // Negative Infinity
-        el.realNumber!float = -float.infinity;
-        assert(el.realNumber!float == -float.infinity);
-        assert(el.realNumber!double == -double.infinity);
-        el.realNumber!double = -double.infinity;
-        assert(el.realNumber!float == -float.infinity);
-        assert(el.realNumber!double == -double.infinity);
-
-        // Not-a-Number
-        assertThrown!ASN1ValueInvalidException(el.realNumber!float = float.nan);
-        assertThrown!ASN1ValueInvalidException(el.realNumber!double = double.nan);
-    }
-
-    // Tests of maximum and minimums of integral types
-    @system
-    unittest
-    {
-        Element el = new Element();
-
-        el.realNumber!float = cast(float) byte.max;
-        approxEqual(el.realNumber!float, byte.max);
-        el.realNumber!double = cast(double) byte.max;
-        approxEqual(el.realNumber!double, byte.max);
-
-        el.realNumber!float = cast(float) byte.min;
-        approxEqual(el.realNumber!float, byte.min);
-        el.realNumber!double = cast(double) byte.min;
-        approxEqual(el.realNumber!double, byte.min);
-
-        el.realNumber!float = cast(float) ubyte.max;
-        approxEqual(el.realNumber!float, ubyte.max);
-        el.realNumber!double = cast(double) ubyte.max;
-        approxEqual(el.realNumber!double, byte.max);
-
-        el.realNumber!float = cast(float) ubyte.min;
-        approxEqual(el.realNumber!float, ubyte.min);
-        el.realNumber!double = cast(double) ubyte.min;
-        approxEqual(el.realNumber!double, ubyte.min);
-
-        el.realNumber!float = cast(float) short.max;
-        approxEqual(el.realNumber!float, short.max);
-        el.realNumber!double = cast(double) short.max;
-        approxEqual(el.realNumber!double, short.max);
-
-        el.realNumber!float = cast(float) short.min;
-        approxEqual(el.realNumber!float, short.min);
-        el.realNumber!double = cast(double) short.min;
-        approxEqual(el.realNumber!double, short.min);
-
-        el.realNumber!float = cast(float) ushort.max;
-        approxEqual(el.realNumber!float, ushort.max);
-        el.realNumber!double = cast(double) ushort.max;
-        approxEqual(el.realNumber!double, ushort.max);
-
-        el.realNumber!float = cast(float) ushort.min;
-        approxEqual(el.realNumber!float, ushort.min);
-        el.realNumber!double = cast(double) ushort.min;
-        approxEqual(el.realNumber!double, ushort.min);
-
-        el.realNumber!float = cast(float) int.max;
-        approxEqual(el.realNumber!float, int.max);
-        el.realNumber!double = cast(double) int.max;
-        approxEqual(el.realNumber!double, int.max);
-
-        el.realNumber!float = cast(float) int.min;
-        approxEqual(el.realNumber!float, int.min);
-        el.realNumber!double = cast(double) int.min;
-        approxEqual(el.realNumber!double, int.min);
-
-        el.realNumber!float = cast(float) uint.max;
-        approxEqual(el.realNumber!float, uint.max);
-        el.realNumber!double = cast(double) uint.max;
-        approxEqual(el.realNumber!double, uint.max);
-
-        el.realNumber!float = cast(float) uint.min;
-        approxEqual(el.realNumber!float, uint.min);
-        el.realNumber!double = cast(double) uint.min;
-        approxEqual(el.realNumber!double, uint.min);
-
-        el.realNumber!float = cast(float) long.max;
-        approxEqual(el.realNumber!float, long.max);
-        el.realNumber!double = cast(double) long.max;
-        approxEqual(el.realNumber!double, long.max);
-
-        el.realNumber!float = cast(float) long.min;
-        approxEqual(el.realNumber!float, long.min);
-        el.realNumber!double = cast(double) long.min;
-        approxEqual(el.realNumber!double, long.min);
-
-        el.realNumber!float = cast(float) ulong.max;
-        approxEqual(el.realNumber!float, ulong.max);
-        el.realNumber!double = cast(double) ulong.max;
-        approxEqual(el.realNumber!double, ulong.max);
-
-        el.realNumber!float = cast(float) ulong.min;
-        approxEqual(el.realNumber!float, ulong.min);
-        el.realNumber!double = cast(double) ulong.min;
-        approxEqual(el.realNumber!double, ulong.min);
-    }
-
-    // Tests of maximum and minimums of floating-point types
-    @system
-    unittest
-    {
-        Element el = new Element();
-
-        // Maximums and minimums of floats
-        el.realNumber!float = float.max;
-        approxEqual(el.realNumber!float, float.max);
-        el.realNumber!double = cast(double) float.max;
-        approxEqual(el.realNumber!double, float.max);
-
-        el.realNumber!float = float.max_10_exp;
-        approxEqual(el.realNumber!float, float.max_10_exp);
-        el.realNumber!double = cast(double) float.max_10_exp;
-        approxEqual(el.realNumber!double, float.max_10_exp);
-
-        el.realNumber!float = float.max_exp;
-        approxEqual(el.realNumber!float, float.max_exp);
-        el.realNumber!double = cast(double) float.max_exp;
-        approxEqual(el.realNumber!double, float.max_exp);
-
-        el.realNumber!float = float.min_10_exp;
-        approxEqual(el.realNumber!float, float.min_10_exp);
-        el.realNumber!double = cast(double) float.min_10_exp;
-        approxEqual(el.realNumber!double, float.min_10_exp);
-
-        el.realNumber!float = float.min_exp;
-        approxEqual(el.realNumber!float, float.min_exp);
-        el.realNumber!double = cast(double) float.min_exp;
-        approxEqual(el.realNumber!double, float.min_exp);
-
-        el.realNumber!float = float.min_normal;
-        approxEqual(el.realNumber!float, float.min_normal);
-        el.realNumber!double = cast(double) float.min_normal;
-        approxEqual(el.realNumber!double, float.min_normal);
-
-        // Maximums and minimums of doubles
-        el.realNumber!double = cast(double) double.max;
-        approxEqual(el.realNumber!double, double.max);
-
-        el.realNumber!double = cast(double) double.max_10_exp;
-        approxEqual(el.realNumber!double, double.max_10_exp);
-
-        el.realNumber!double = cast(double) double.max_exp;
-        approxEqual(el.realNumber!double, double.max_exp);
-
-        el.realNumber!double = cast(double) double.min_10_exp;
-        approxEqual(el.realNumber!double, double.min_10_exp);
-
-        el.realNumber!double = cast(double) double.min_exp;
-        approxEqual(el.realNumber!double, double.min_exp);
-
-        el.realNumber!double = cast(double) double.min_normal;
-        approxEqual(el.realNumber!double, double.min_normal);
-    }
-
-    // Test with all of the math constants, to make sure there are no edge cases.
-    @system
-    unittest
-    {
-        import std.math :
-            E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2,
-            LOG2E, LOG2T, LOG10E, SQRT2, SQRT1_2, sqrt;
-
-        immutable real SQRT_2_OVER_2 = (SQRT2 / 2.0);
-
-        // Sourced from https://en.wikipedia.org/wiki/Mathematical_constant
-        immutable real EULER_MASCHERONI_CONSTANT = 0.57721;
-        immutable real GOLDEN_RATIO = ((1.0 + sqrt(5.0)) / 2.0);
-        immutable real MEISSEL_MERTENS_CONSTANT = 0.2614972128;
-        immutable real BERNSTEINS_CONSTANT = 0.2801694990;
-        immutable real GAUSS_KUZMIN_WIRSING_CONSTANT = 0.3036630028;
-        immutable real HAFNER_SARNAK_MCCURLEY_CONSTANT = 0.3532363718;
-        immutable real OMEGA_CONSTANT = 0.5671432904;
-        immutable real GOLOMB_DICKMAN_CONSTANT = 0.6243299885;
-        immutable real CAHENS_CONSTANT = 0.6434105462;
-        immutable real TWIN_PRIME_CONSTANT = 0.6601618158;
-        immutable real LAPLACE_LIMIT = 0.6627434193;
-        immutable real LANDAU_RAMANUJAN_CONSTANT = 0.70258;
-        immutable real ALLADI_GRINSTEAD_CONSTANT = 0.8093940205;
-        immutable real BRUNS_CONSTANT_FOR_PRIME_QUADRUPLETS = 0.87058838;
-        immutable real CATALANS_CONSTANT = 0.9159655941;
-        immutable real LENGYELS_CONSTANT = 1.0986858055;
-        immutable real VISWANATHS_CONSTANT = 1.13198824;
-        immutable real APERYS_CONSTANT = 1.2020569;
-        immutable real CONWAYS_CONSTANT = 1.30357;
-        immutable real MILLS_CONSTANT = 1.3063778838;
-        immutable real PLASTIC_CONSTANT = 1.3247179572;
-        immutable real RAMANUJAN_SOLDNER_CONSTANT = 1.4513692348;
-        immutable real BACKHOUSES_CONSTANT = 1.4560749485;
-        immutable real PORTERS_CONSTANT = 1.4670780794;
-        immutable real LIEBS_SQUARE_ICE_CONSTANT = 1.5396007178;
-        immutable real ERDOS_BORWEIN_CONSTANT = 1.6066951524;
-        immutable real NIVENS_CONSTANT = 1.7052111401;
-        immutable real BRUNS_CONSTANT_FOR_TWIN_PRIMES = 1.9021605831;
-        immutable real UNIVERSAL_PARABOLIC_CONSTANT = 2.2955871493;
-        immutable real FEIGENBAUM_CONSTANT_ALPHA = 2.5029078750;
-        immutable real SIERPINSKIS_CONSTANT = 2.5849817595;
-        immutable real KHINCHINS_CONSTANT = 2.6854520010;
-        immutable real FRANSEN_ROBINSON_CONSTANT = 2.8077702420;
-        immutable real LEVYS_CONSTANT = 3.2758229187;
-        immutable real RECIPROCAL_FIBONACCI_CONSTANT = 3.3598856662;
-        immutable real FEIGENBAUM_CONSTANT_DELTA = 4.6692016091;
-        immutable real GLAISHER_KINKELIN_CONSTANT = 1.2824271291;
-
-        immutable real[] tests = [
-            E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2,
-            LOG2E, LOG2T, LOG10E, SQRT2, SQRT1_2, SQRT_2_OVER_2,
-            EULER_MASCHERONI_CONSTANT,
-            GOLDEN_RATIO,
-            MEISSEL_MERTENS_CONSTANT,
-            BERNSTEINS_CONSTANT,
-            GAUSS_KUZMIN_WIRSING_CONSTANT,
-            HAFNER_SARNAK_MCCURLEY_CONSTANT,
-            OMEGA_CONSTANT,
-            GOLOMB_DICKMAN_CONSTANT,
-            CAHENS_CONSTANT,
-            TWIN_PRIME_CONSTANT,
-            LAPLACE_LIMIT,
-            LANDAU_RAMANUJAN_CONSTANT,
-            ALLADI_GRINSTEAD_CONSTANT,
-            BRUNS_CONSTANT_FOR_PRIME_QUADRUPLETS,
-            CATALANS_CONSTANT,
-            LENGYELS_CONSTANT,
-            VISWANATHS_CONSTANT,
-            APERYS_CONSTANT,
-            CONWAYS_CONSTANT,
-            MILLS_CONSTANT,
-            PLASTIC_CONSTANT,
-            RAMANUJAN_SOLDNER_CONSTANT,
-            BACKHOUSES_CONSTANT,
-            PORTERS_CONSTANT,
-            LIEBS_SQUARE_ICE_CONSTANT,
-            ERDOS_BORWEIN_CONSTANT,
-            NIVENS_CONSTANT,
-            BRUNS_CONSTANT_FOR_TWIN_PRIMES,
-            UNIVERSAL_PARABOLIC_CONSTANT,
-            FEIGENBAUM_CONSTANT_ALPHA,
-            SIERPINSKIS_CONSTANT,
-            KHINCHINS_CONSTANT,
-            FRANSEN_ROBINSON_CONSTANT,
-            LEVYS_CONSTANT,
-            RECIPROCAL_FIBONACCI_CONSTANT,
-            FEIGENBAUM_CONSTANT_DELTA,
-            GLAISHER_KINKELIN_CONSTANT
-        ];
-
-        Element el = new Element();
-
-        foreach (test; tests)
-        {
-            el.realNumber!float = cast(float) test;
-            assert(approxEqual(el.realNumber!float, cast(float) test));
-            el.realNumber!double = cast(double) test;
-            assert(approxEqual(el.realNumber!double, cast(double) test));
-        }
-    }
-
     @system
     unittest
     {
@@ -1116,8 +775,6 @@ class AbstractSyntaxNotation1Element(Element)
             elf.realNumber!float = f;
             eld.realNumber!double = d;
             elr.realNumber!real = r;
-            writefln("%(%02X %) ", elr.value);
-            writefln("%.12f", elr.realNumber!float);
             assert(approxEqual(elf.realNumber!float, f));
             assert(approxEqual(elf.realNumber!double, f));
             assert(approxEqual(elf.realNumber!real, f));
@@ -1127,6 +784,350 @@ class AbstractSyntaxNotation1Element(Element)
             assert(approxEqual(elr.realNumber!float, d));
             assert(approxEqual(elr.realNumber!double, d));
             assert(approxEqual(elr.realNumber!real, d));
+        }
+    }
+
+    // Test a few edge cases
+    @system
+    unittest
+    {
+        immutable float[] tests = [
+            0.0,
+            -0.0,
+            (10.0 / 3.0), // Non-terminating decimal
+            (-10.0 / 3.0), // Negative non-terminating decimal
+            1.0,
+            -1.0
+        ];
+        Element el = new Element();
+
+        foreach (test; tests)
+        {
+            el.realNumber!float = cast(float) test;
+            assert(approxEqual(el.realNumber!float, cast(float) test));
+            el.realNumber!double = cast(double) test;
+            assert(approxEqual(el.realNumber!double, cast(double) test));
+            el.realNumber!real = test;
+            assert(approxEqual(el.realNumber!real, test));
+        }
+    }
+
+    // Test both positive and negative infinity for each floating-point type
+    @system
+    unittest
+    {
+        Element el = new Element();
+
+        // float.infinity
+        el.realNumber!float = float.infinity;
+        assert(el.realNumber!float  == float.infinity);
+        assert(el.realNumber!double == float.infinity);
+        assert(el.realNumber!real   == float.infinity);
+
+        el.realNumber!double = float.infinity;
+        assert(el.realNumber!float  == float.infinity);
+        assert(el.realNumber!double == float.infinity);
+        assert(el.realNumber!real   == float.infinity);
+
+        el.realNumber!real = float.infinity;
+        assert(el.realNumber!float  == float.infinity);
+        assert(el.realNumber!double == float.infinity);
+        assert(el.realNumber!real   == float.infinity);
+
+        el.realNumber!float = -float.infinity;
+        assert(el.realNumber!float  == -float.infinity);
+        assert(el.realNumber!double == -float.infinity);
+        assert(el.realNumber!real   == -float.infinity);
+
+        el.realNumber!double = -float.infinity;
+        assert(el.realNumber!float  == -float.infinity);
+        assert(el.realNumber!double == -float.infinity);
+        assert(el.realNumber!real   == -float.infinity);
+
+        el.realNumber!real = -float.infinity;
+        assert(el.realNumber!float  == -float.infinity);
+        assert(el.realNumber!double == -float.infinity);
+        assert(el.realNumber!real   == -float.infinity);
+
+        // double.infinity
+        el.realNumber!float = double.infinity;
+        assert(el.realNumber!float  == double.infinity);
+        assert(el.realNumber!double == double.infinity);
+        assert(el.realNumber!real   == double.infinity);
+
+        el.realNumber!double = double.infinity;
+        assert(el.realNumber!float  == double.infinity);
+        assert(el.realNumber!double == double.infinity);
+        assert(el.realNumber!real   == double.infinity);
+
+        el.realNumber!real = double.infinity;
+        assert(el.realNumber!float  == double.infinity);
+        assert(el.realNumber!double == double.infinity);
+        assert(el.realNumber!real   == double.infinity);
+
+        el.realNumber!float = -double.infinity;
+        assert(el.realNumber!float  == -double.infinity);
+        assert(el.realNumber!double == -double.infinity);
+        assert(el.realNumber!real   == -double.infinity);
+
+        el.realNumber!double = -double.infinity;
+        assert(el.realNumber!float  == -double.infinity);
+        assert(el.realNumber!double == -double.infinity);
+        assert(el.realNumber!real   == -double.infinity);
+
+        el.realNumber!real = -double.infinity;
+        assert(el.realNumber!float  == -double.infinity);
+        assert(el.realNumber!double == -double.infinity);
+        assert(el.realNumber!real   == -double.infinity);
+
+        // real.infinity
+        el.realNumber!float = real.infinity;
+        assert(el.realNumber!float  == real.infinity);
+        assert(el.realNumber!double == real.infinity);
+        assert(el.realNumber!real   == real.infinity);
+
+        el.realNumber!double = real.infinity;
+        assert(el.realNumber!float  == real.infinity);
+        assert(el.realNumber!double == real.infinity);
+        assert(el.realNumber!real   == real.infinity);
+
+        el.realNumber!real = real.infinity;
+        assert(el.realNumber!float  == real.infinity);
+        assert(el.realNumber!double == real.infinity);
+        assert(el.realNumber!real   == real.infinity);
+
+        el.realNumber!float = -real.infinity;
+        assert(el.realNumber!float  == -real.infinity);
+        assert(el.realNumber!double == -real.infinity);
+        assert(el.realNumber!real   == -real.infinity);
+
+        el.realNumber!double = -real.infinity;
+        assert(el.realNumber!float  == -real.infinity);
+        assert(el.realNumber!double == -real.infinity);
+        assert(el.realNumber!real   == -real.infinity);
+
+        el.realNumber!real = -real.infinity;
+        assert(el.realNumber!float  == -real.infinity);
+        assert(el.realNumber!double == -real.infinity);
+        assert(el.realNumber!real   == -real.infinity);
+    }
+
+    // Test NaN does not encode
+    @system
+    unittest
+    {
+        Element el = new Element();
+
+        assertThrown!ASN1ValueInvalidException(el.realNumber!float  = float.nan);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!double = float.nan);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!real   = float.nan);
+
+        assertThrown!ASN1ValueInvalidException(el.realNumber!float  = double.nan);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!double = double.nan);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!real   = double.nan);
+
+        assertThrown!ASN1ValueInvalidException(el.realNumber!float  = real.nan);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!double = real.nan);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!real   = real.nan);
+    }
+
+    // Tests of maximum and minimums of integral types
+    @system
+    unittest
+    {
+        immutable float[] tests = [
+            byte.max,
+            byte.min,
+            ubyte.max,
+            ubyte.min,
+            short.max,
+            short.min,
+            ushort.max,
+            ushort.min,
+            int.max,
+            int.min,
+            uint.max,
+            uint.min,
+            long.max,
+            long.min,
+            ulong.max,
+            ulong.min
+        ];
+
+        Element el = new Element();
+
+        foreach (test; tests)
+        {
+            el.realNumber!float = cast(float) test;
+            assert(approxEqual(el.realNumber!float, cast(float) test));
+            el.realNumber!double = cast(double) test;
+            assert(approxEqual(el.realNumber!double, cast(double) test));
+            el.realNumber!real = test;
+            assert(approxEqual(el.realNumber!real, test));
+        }
+    }
+
+    // Tests of maximum and minimums of floating-point types
+    @system
+    unittest
+    {
+        Element el = new Element();
+
+        // Maximums and minimums of floats
+        el.realNumber!float = float.max;
+        assert(approxEqual(el.realNumber!float, float.max));
+        el.realNumber!double = cast(double) float.max;
+        assert(approxEqual(el.realNumber!double, float.max));
+        el.realNumber!real = cast(real) float.max;
+        assert(approxEqual(el.realNumber!real, float.max));
+
+        el.realNumber!float = float.max_10_exp;
+        assert(approxEqual(el.realNumber!float, float.max_10_exp));
+        el.realNumber!double = cast(double) float.max_10_exp;
+        assert(approxEqual(el.realNumber!double, float.max_10_exp));
+        el.realNumber!real = cast(real) float.max_10_exp;
+        assert(approxEqual(el.realNumber!real, float.max_10_exp));
+
+        el.realNumber!float = float.max_exp;
+        assert(approxEqual(el.realNumber!float, float.max_exp));
+        el.realNumber!double = cast(double) float.max_exp;
+        assert(approxEqual(el.realNumber!double, float.max_exp));
+        el.realNumber!real = cast(real) float.max_exp;
+        assert(approxEqual(el.realNumber!real, float.max_exp));
+
+        el.realNumber!float = float.min_10_exp;
+        assert(approxEqual(el.realNumber!float, float.min_10_exp));
+        el.realNumber!double = cast(double) float.min_10_exp;
+        assert(approxEqual(el.realNumber!double, float.min_10_exp));
+        el.realNumber!real = cast(real) float.min_10_exp;
+        assert(approxEqual(el.realNumber!real, float.min_10_exp));
+
+        el.realNumber!float = float.min_exp;
+        assert(approxEqual(el.realNumber!float, float.min_exp));
+        el.realNumber!double = cast(double) float.min_exp;
+        assert(approxEqual(el.realNumber!double, float.min_exp));
+        el.realNumber!real = cast(real) float.min_exp;
+        assert(approxEqual(el.realNumber!real, float.min_exp));
+
+        el.realNumber!float = float.min_normal;
+        assert(approxEqual(el.realNumber!float, float.min_normal));
+        el.realNumber!double = cast(double) float.min_normal;
+        assert(approxEqual(el.realNumber!double, float.min_normal));
+        el.realNumber!real = cast(real) float.min_normal;
+        assert(approxEqual(el.realNumber!real, float.min_normal));
+
+        // Maximums and minimums of doubles
+        el.realNumber!double = cast(double) double.max;
+        assert(approxEqual(el.realNumber!double, double.max));
+        el.realNumber!real = cast(real) double.max;
+        assert(approxEqual(el.realNumber!real, double.max));
+
+        el.realNumber!double = cast(double) double.max_10_exp;
+        assert(approxEqual(el.realNumber!double, double.max_10_exp));
+        el.realNumber!real = cast(real) double.max_10_exp;
+        assert(approxEqual(el.realNumber!real, double.max_10_exp));
+
+        el.realNumber!double = cast(double) double.max_exp;
+        assert(approxEqual(el.realNumber!double, double.max_exp));
+        el.realNumber!real = cast(real) double.max_exp;
+        assert(approxEqual(el.realNumber!real, double.max_exp));
+
+        el.realNumber!double = cast(double) double.min_10_exp;
+        assert(approxEqual(el.realNumber!double, double.min_10_exp));
+        el.realNumber!real = cast(real) double.min_10_exp;
+        assert(approxEqual(el.realNumber!real, double.min_10_exp));
+
+        el.realNumber!double = cast(double) double.min_exp;
+        assert(approxEqual(el.realNumber!double, double.min_exp));
+        el.realNumber!real = cast(real) double.min_exp;
+        assert(approxEqual(el.realNumber!real, double.min_exp));
+
+        el.realNumber!double = cast(double) double.min_normal;
+        assert(approxEqual(el.realNumber!double, double.min_normal));
+        el.realNumber!real = cast(real) double.min_normal;
+        assert(approxEqual(el.realNumber!real, double.min_normal));
+
+        // Maximums and minimums of reals
+        el.realNumber!real = cast(real) real.max;
+        assert(approxEqual(el.realNumber!real, real.max));
+
+        el.realNumber!real = cast(real) real.max_10_exp;
+        assert(approxEqual(el.realNumber!real, real.max_10_exp));
+
+        el.realNumber!real = cast(real) real.max_exp;
+        assert(approxEqual(el.realNumber!real, real.max_exp));
+
+        el.realNumber!real = cast(real) real.min_10_exp;
+        assert(approxEqual(el.realNumber!real, real.min_10_exp));
+
+        el.realNumber!real = cast(real) real.min_exp;
+        assert(approxEqual(el.realNumber!real, real.min_exp));
+
+        el.realNumber!real = cast(real) real.min_normal;
+        assert(approxEqual(el.realNumber!real, real.min_normal));
+    }
+
+    // Test with all of the math constants, to make sure there are no edge cases.
+    @system
+    unittest
+    {
+        import std.math :
+            E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2,
+            LOG2E, LOG2T, LOG10E, SQRT2, SQRT1_2, sqrt;
+
+        immutable real[] tests = [
+            E, PI, PI_2, PI_4, M_1_PI, M_2_PI, M_2_SQRTPI, LN10, LN2, LOG2,
+            LOG2E, LOG2T, LOG10E, SQRT2, SQRT1_2,
+            (SQRT2 / 2.0), // SQRT_2_OVER_2
+            ((1.0 + sqrt(5.0)) / 2.0), // GOLDEN_RATIO
+            0.57721,      // EULER_MASCHERONI_CONSTANT
+            0.2614972128, // MEISSEL_MERTENS_CONSTANT
+            0.2801694990, // BERNSTEINS_CONSTANT
+            0.3036630028, // GAUSS_KUZMIN_WIRSING_CONSTANT
+            0.3532363718, // HAFNER_SARNAK_MCCURLEY_CONSTANT
+            0.5671432904, // OMEGA_CONSTANT
+            0.6243299885, // GOLOMB_DICKMAN_CONSTANT
+            0.6434105462, // CAHENS_CONSTANT
+            0.6601618158, // TWIN_PRIME_CONSTANT
+            0.6627434193, // LAPLACE_LIMIT
+            0.70258,      // LANDAU_RAMANUJAN_CONSTANT
+            0.8093940205, // ALLADI_GRINSTEAD_CONSTANT
+            0.87058838,   // BRUNS_CONSTANT_FOR_PRIME_QUADRUPLETS
+            0.9159655941, // CATALANS_CONSTANT
+            1.0986858055, // LENGYELS_CONSTANT
+            1.13198824,   // VISWANATHS_CONSTANT
+            1.2020569,    // APERYS_CONSTANT
+            1.30357,      // CONWAYS_CONSTANT
+            1.3063778838, // MILLS_CONSTANT
+            1.3247179572, // PLASTIC_CONSTANT
+            1.4513692348, // RAMANUJAN_SOLDNER_CONSTANT
+            1.4560749485, // BACKHOUSES_CONSTANT
+            1.4670780794, // PORTERS_CONSTANT
+            1.5396007178, // LIEBS_SQUARE_ICE_CONSTANT
+            1.6066951524, // ERDOS_BORWEIN_CONSTANT
+            1.7052111401, // NIVENS_CONSTANT
+            1.9021605831, // BRUNS_CONSTANT_FOR_TWIN_PRIMES
+            2.2955871493, // UNIVERSAL_PARABOLIC_CONSTANT
+            2.5029078750, // FEIGENBAUM_CONSTANT_ALPHA
+            2.5849817595, // SIERPINSKIS_CONSTANT
+            2.6854520010, // KHINCHINS_CONSTANT
+            2.8077702420, // FRANSEN_ROBINSON_CONSTANT
+            3.2758229187, // LEVYS_CONSTANT
+            3.3598856662, // RECIPROCAL_FIBONACCI_CONSTANT
+            4.6692016091, // FEIGENBAUM_CONSTANT_DELTA
+            1.2824271291  // GLAISHER_KINKELIN_CONSTANT
+        ];
+
+        Element el = new Element();
+
+        foreach (test; tests)
+        {
+            el.realNumber!float = cast(float) test;
+            assert(approxEqual(el.realNumber!float, cast(float) test));
+            el.realNumber!double = cast(double) test;
+            assert(approxEqual(el.realNumber!double, cast(double) test));
+            el.realNumber!real = test;
+            assert(approxEqual(el.realNumber!real, test));
         }
     }
 
