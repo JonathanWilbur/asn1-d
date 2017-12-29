@@ -264,7 +264,7 @@ mixin template Decoder(Element)
             }
             case (0x09u):
             {
-                return text(element.realType!double);
+                return text(element.realNumber!double);
             }
             case (0x0Au):
             {

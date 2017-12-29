@@ -229,7 +229,7 @@ mixin template Encoder(Element)
         element.construction = construction;
         try
         {
-            element.realType!double = value.to!double;
+            element.realNumber!double = value.to!double;
         }
         catch (ConvException e)
         {

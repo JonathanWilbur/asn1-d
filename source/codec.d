@@ -146,11 +146,11 @@ class AbstractSyntaxNotation1Element(Element)
     }
 
     // Constants used to save CPU cycles
-    protected immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()
-    protected immutable real maxLongAsReal = cast(real) long.max; // Saves CPU cycles in realType()
-    protected immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in realType()
-    protected immutable int threeByteMax = 0x007FFFFF; // Used for CER and DER realType()
-    protected immutable int threeByteMin = 0xFF800000; // Used for CER and DER realType()
+    protected immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realNumber()
+    protected immutable real maxLongAsReal = cast(real) long.max; // Saves CPU cycles in realNumber()
+    protected immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in realNumber()
+    protected immutable int threeByteMax = 0x007FFFFF; // Used for CER and DER realNumber()
+    protected immutable int threeByteMin = 0xFF800000; // Used for CER and DER realNumber()
 
     // Constants for exception messages
     immutable string notWhatYouMeantText =
@@ -754,11 +754,11 @@ class AbstractSyntaxNotation1Element(Element)
 
     /// Encodes a floating-point number
     abstract public @property
-    T realType(T)() const if (is(T == float) || is(T == double));
+    T realNumber(T)() const if (is(T == float) || is(T == double));
 
     /// Encodes a floating-point number
     abstract public @property
-    void realType(T)(in T value) if (is(T == float) || is(T == double));
+    void realNumber(T)(in T value) if (is(T == float) || is(T == double));
 
     ///
     @system
@@ -768,16 +768,16 @@ class AbstractSyntaxNotation1Element(Element)
         double d = 0.00583;
         Element elf = new Element();
         Element eld = new Element();
-        elf.realType!float = f;
-        eld.realType!double = d;
-        // writefln("%f", elf.realType!float);
-        assert(approxEqual(elf.realType!float, f));
-        assert(approxEqual(elf.realType!double, f));
-        assert(approxEqual(eld.realType!float, d));
-        assert(approxEqual(eld.realType!double, d));
+        elf.realNumber!float = f;
+        eld.realNumber!double = d;
+        // writefln("%f", elf.realNumber!float);
+        assert(approxEqual(elf.realNumber!float, f));
+        assert(approxEqual(elf.realNumber!double, f));
+        assert(approxEqual(eld.realNumber!float, d));
+        assert(approxEqual(eld.realNumber!double, d));
 
         // Assert that accessor does not mutate state
-        assert(approxEqual(elf.realType!double, elf.realType!double));
+        assert(approxEqual(elf.realNumber!double, elf.realNumber!double));
     }
 
     // Test a few edge cases
@@ -787,72 +787,72 @@ class AbstractSyntaxNotation1Element(Element)
         Element el = new Element();
 
         // Positive Zeroes
-        el.realType!float = 0.0;
-        assert(approxEqual(el.realType!float, 0.0));
-        assert(approxEqual(el.realType!double, 0.0));
-        el.realType!double = 0.0;
-        assert(approxEqual(el.realType!float, 0.0));
-        assert(approxEqual(el.realType!double, 0.0));
+        el.realNumber!float = 0.0;
+        assert(approxEqual(el.realNumber!float, 0.0));
+        assert(approxEqual(el.realNumber!double, 0.0));
+        el.realNumber!double = 0.0;
+        assert(approxEqual(el.realNumber!float, 0.0));
+        assert(approxEqual(el.realNumber!double, 0.0));
 
         // Negative Zeroes
-        el.realType!float = -0.0;
-        assert(approxEqual(el.realType!float, -0.0));
-        assert(approxEqual(el.realType!double, -0.0));
-        el.realType!double = -0.0;
-        assert(approxEqual(el.realType!float, -0.0));
-        assert(approxEqual(el.realType!double, -0.0));
+        el.realNumber!float = -0.0;
+        assert(approxEqual(el.realNumber!float, -0.0));
+        assert(approxEqual(el.realNumber!double, -0.0));
+        el.realNumber!double = -0.0;
+        assert(approxEqual(el.realNumber!float, -0.0));
+        assert(approxEqual(el.realNumber!double, -0.0));
 
         // Positive Repeating decimal
-        el.realType!float = (10.0 / 3.0);
-        assert(approxEqual(el.realType!float, (10.0 / 3.0)));
-        assert(approxEqual(el.realType!double, (10.0 / 3.0)));
-        el.realType!double = (10.0 / 3.0);
-        assert(approxEqual(el.realType!float, (10.0 / 3.0)));
-        assert(approxEqual(el.realType!double, (10.0 / 3.0)));
+        el.realNumber!float = (10.0 / 3.0);
+        assert(approxEqual(el.realNumber!float, (10.0 / 3.0)));
+        assert(approxEqual(el.realNumber!double, (10.0 / 3.0)));
+        el.realNumber!double = (10.0 / 3.0);
+        assert(approxEqual(el.realNumber!float, (10.0 / 3.0)));
+        assert(approxEqual(el.realNumber!double, (10.0 / 3.0)));
 
         // Negative Repeating Decimal
-        el.realType!float = -(10.0 / 3.0);
-        assert(approxEqual(el.realType!float, -(10.0 / 3.0)));
-        assert(approxEqual(el.realType!double, -(10.0 / 3.0)));
-        el.realType!double = -(10.0 / 3.0);
-        assert(approxEqual(el.realType!float, -(10.0 / 3.0)));
-        assert(approxEqual(el.realType!double, -(10.0 / 3.0)));
+        el.realNumber!float = -(10.0 / 3.0);
+        assert(approxEqual(el.realNumber!float, -(10.0 / 3.0)));
+        assert(approxEqual(el.realNumber!double, -(10.0 / 3.0)));
+        el.realNumber!double = -(10.0 / 3.0);
+        assert(approxEqual(el.realNumber!float, -(10.0 / 3.0)));
+        assert(approxEqual(el.realNumber!double, -(10.0 / 3.0)));
 
         // Positive one
-        el.realType!float = 1.0;
-        assert(approxEqual(el.realType!float, 1.0));
-        assert(approxEqual(el.realType!double, 1.0));
-        el.realType!double = 1.0;
-        assert(approxEqual(el.realType!float, 1.0));
-        assert(approxEqual(el.realType!double, 1.0));
+        el.realNumber!float = 1.0;
+        assert(approxEqual(el.realNumber!float, 1.0));
+        assert(approxEqual(el.realNumber!double, 1.0));
+        el.realNumber!double = 1.0;
+        assert(approxEqual(el.realNumber!float, 1.0));
+        assert(approxEqual(el.realNumber!double, 1.0));
 
         // Negative one
-        el.realType!float = -1.0;
-        assert(approxEqual(el.realType!float, -1.0));
-        assert(approxEqual(el.realType!double, -1.0));
-        el.realType!double = -1.0;
-        assert(approxEqual(el.realType!float, -1.0));
-        assert(approxEqual(el.realType!double, -1.0));
+        el.realNumber!float = -1.0;
+        assert(approxEqual(el.realNumber!float, -1.0));
+        assert(approxEqual(el.realNumber!double, -1.0));
+        el.realNumber!double = -1.0;
+        assert(approxEqual(el.realNumber!float, -1.0));
+        assert(approxEqual(el.realNumber!double, -1.0));
 
         // Positive Infinity
-        el.realType!float = float.infinity;
-        assert(el.realType!float == float.infinity);
-        assert(el.realType!double == double.infinity);
-        el.realType!double = double.infinity;
-        assert(el.realType!float == float.infinity);
-        assert(el.realType!double == double.infinity);
+        el.realNumber!float = float.infinity;
+        assert(el.realNumber!float == float.infinity);
+        assert(el.realNumber!double == double.infinity);
+        el.realNumber!double = double.infinity;
+        assert(el.realNumber!float == float.infinity);
+        assert(el.realNumber!double == double.infinity);
 
         // Negative Infinity
-        el.realType!float = -float.infinity;
-        assert(el.realType!float == -float.infinity);
-        assert(el.realType!double == -double.infinity);
-        el.realType!double = -double.infinity;
-        assert(el.realType!float == -float.infinity);
-        assert(el.realType!double == -double.infinity);
+        el.realNumber!float = -float.infinity;
+        assert(el.realNumber!float == -float.infinity);
+        assert(el.realNumber!double == -double.infinity);
+        el.realNumber!double = -double.infinity;
+        assert(el.realNumber!float == -float.infinity);
+        assert(el.realNumber!double == -double.infinity);
 
         // Not-a-Number
-        assertThrown!ASN1ValueInvalidException(el.realType!float = float.nan);
-        assertThrown!ASN1ValueInvalidException(el.realType!double = double.nan);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!float = float.nan);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!double = double.nan);
     }
 
     // Tests of maximum and minimums of integral types
@@ -861,85 +861,85 @@ class AbstractSyntaxNotation1Element(Element)
     {
         Element el = new Element();
 
-        el.realType!float = cast(float) byte.max;
-        approxEqual(el.realType!float, byte.max);
-        el.realType!double = cast(double) byte.max;
-        approxEqual(el.realType!double, byte.max);
+        el.realNumber!float = cast(float) byte.max;
+        approxEqual(el.realNumber!float, byte.max);
+        el.realNumber!double = cast(double) byte.max;
+        approxEqual(el.realNumber!double, byte.max);
 
-        el.realType!float = cast(float) byte.min;
-        approxEqual(el.realType!float, byte.min);
-        el.realType!double = cast(double) byte.min;
-        approxEqual(el.realType!double, byte.min);
+        el.realNumber!float = cast(float) byte.min;
+        approxEqual(el.realNumber!float, byte.min);
+        el.realNumber!double = cast(double) byte.min;
+        approxEqual(el.realNumber!double, byte.min);
 
-        el.realType!float = cast(float) ubyte.max;
-        approxEqual(el.realType!float, ubyte.max);
-        el.realType!double = cast(double) ubyte.max;
-        approxEqual(el.realType!double, byte.max);
+        el.realNumber!float = cast(float) ubyte.max;
+        approxEqual(el.realNumber!float, ubyte.max);
+        el.realNumber!double = cast(double) ubyte.max;
+        approxEqual(el.realNumber!double, byte.max);
 
-        el.realType!float = cast(float) ubyte.min;
-        approxEqual(el.realType!float, ubyte.min);
-        el.realType!double = cast(double) ubyte.min;
-        approxEqual(el.realType!double, ubyte.min);
+        el.realNumber!float = cast(float) ubyte.min;
+        approxEqual(el.realNumber!float, ubyte.min);
+        el.realNumber!double = cast(double) ubyte.min;
+        approxEqual(el.realNumber!double, ubyte.min);
 
-        el.realType!float = cast(float) short.max;
-        approxEqual(el.realType!float, short.max);
-        el.realType!double = cast(double) short.max;
-        approxEqual(el.realType!double, short.max);
+        el.realNumber!float = cast(float) short.max;
+        approxEqual(el.realNumber!float, short.max);
+        el.realNumber!double = cast(double) short.max;
+        approxEqual(el.realNumber!double, short.max);
 
-        el.realType!float = cast(float) short.min;
-        approxEqual(el.realType!float, short.min);
-        el.realType!double = cast(double) short.min;
-        approxEqual(el.realType!double, short.min);
+        el.realNumber!float = cast(float) short.min;
+        approxEqual(el.realNumber!float, short.min);
+        el.realNumber!double = cast(double) short.min;
+        approxEqual(el.realNumber!double, short.min);
 
-        el.realType!float = cast(float) ushort.max;
-        approxEqual(el.realType!float, ushort.max);
-        el.realType!double = cast(double) ushort.max;
-        approxEqual(el.realType!double, ushort.max);
+        el.realNumber!float = cast(float) ushort.max;
+        approxEqual(el.realNumber!float, ushort.max);
+        el.realNumber!double = cast(double) ushort.max;
+        approxEqual(el.realNumber!double, ushort.max);
 
-        el.realType!float = cast(float) ushort.min;
-        approxEqual(el.realType!float, ushort.min);
-        el.realType!double = cast(double) ushort.min;
-        approxEqual(el.realType!double, ushort.min);
+        el.realNumber!float = cast(float) ushort.min;
+        approxEqual(el.realNumber!float, ushort.min);
+        el.realNumber!double = cast(double) ushort.min;
+        approxEqual(el.realNumber!double, ushort.min);
 
-        el.realType!float = cast(float) int.max;
-        approxEqual(el.realType!float, int.max);
-        el.realType!double = cast(double) int.max;
-        approxEqual(el.realType!double, int.max);
+        el.realNumber!float = cast(float) int.max;
+        approxEqual(el.realNumber!float, int.max);
+        el.realNumber!double = cast(double) int.max;
+        approxEqual(el.realNumber!double, int.max);
 
-        el.realType!float = cast(float) int.min;
-        approxEqual(el.realType!float, int.min);
-        el.realType!double = cast(double) int.min;
-        approxEqual(el.realType!double, int.min);
+        el.realNumber!float = cast(float) int.min;
+        approxEqual(el.realNumber!float, int.min);
+        el.realNumber!double = cast(double) int.min;
+        approxEqual(el.realNumber!double, int.min);
 
-        el.realType!float = cast(float) uint.max;
-        approxEqual(el.realType!float, uint.max);
-        el.realType!double = cast(double) uint.max;
-        approxEqual(el.realType!double, uint.max);
+        el.realNumber!float = cast(float) uint.max;
+        approxEqual(el.realNumber!float, uint.max);
+        el.realNumber!double = cast(double) uint.max;
+        approxEqual(el.realNumber!double, uint.max);
 
-        el.realType!float = cast(float) uint.min;
-        approxEqual(el.realType!float, uint.min);
-        el.realType!double = cast(double) uint.min;
-        approxEqual(el.realType!double, uint.min);
+        el.realNumber!float = cast(float) uint.min;
+        approxEqual(el.realNumber!float, uint.min);
+        el.realNumber!double = cast(double) uint.min;
+        approxEqual(el.realNumber!double, uint.min);
 
-        el.realType!float = cast(float) long.max;
-        approxEqual(el.realType!float, long.max);
-        el.realType!double = cast(double) long.max;
-        approxEqual(el.realType!double, long.max);
+        el.realNumber!float = cast(float) long.max;
+        approxEqual(el.realNumber!float, long.max);
+        el.realNumber!double = cast(double) long.max;
+        approxEqual(el.realNumber!double, long.max);
 
-        el.realType!float = cast(float) long.min;
-        approxEqual(el.realType!float, long.min);
-        el.realType!double = cast(double) long.min;
-        approxEqual(el.realType!double, long.min);
+        el.realNumber!float = cast(float) long.min;
+        approxEqual(el.realNumber!float, long.min);
+        el.realNumber!double = cast(double) long.min;
+        approxEqual(el.realNumber!double, long.min);
 
-        el.realType!float = cast(float) ulong.max;
-        approxEqual(el.realType!float, ulong.max);
-        el.realType!double = cast(double) ulong.max;
-        approxEqual(el.realType!double, ulong.max);
+        el.realNumber!float = cast(float) ulong.max;
+        approxEqual(el.realNumber!float, ulong.max);
+        el.realNumber!double = cast(double) ulong.max;
+        approxEqual(el.realNumber!double, ulong.max);
 
-        el.realType!float = cast(float) ulong.min;
-        approxEqual(el.realType!float, ulong.min);
-        el.realType!double = cast(double) ulong.min;
-        approxEqual(el.realType!double, ulong.min);
+        el.realNumber!float = cast(float) ulong.min;
+        approxEqual(el.realNumber!float, ulong.min);
+        el.realNumber!double = cast(double) ulong.min;
+        approxEqual(el.realNumber!double, ulong.min);
     }
 
     // Tests of maximum and minimums of floating-point types
@@ -949,54 +949,54 @@ class AbstractSyntaxNotation1Element(Element)
         Element el = new Element();
 
         // Maximums and minimums of floats
-        el.realType!float = float.max;
-        approxEqual(el.realType!float, float.max);
-        el.realType!double = cast(double) float.max;
-        approxEqual(el.realType!double, float.max);
+        el.realNumber!float = float.max;
+        approxEqual(el.realNumber!float, float.max);
+        el.realNumber!double = cast(double) float.max;
+        approxEqual(el.realNumber!double, float.max);
 
-        el.realType!float = float.max_10_exp;
-        approxEqual(el.realType!float, float.max_10_exp);
-        el.realType!double = cast(double) float.max_10_exp;
-        approxEqual(el.realType!double, float.max_10_exp);
+        el.realNumber!float = float.max_10_exp;
+        approxEqual(el.realNumber!float, float.max_10_exp);
+        el.realNumber!double = cast(double) float.max_10_exp;
+        approxEqual(el.realNumber!double, float.max_10_exp);
 
-        el.realType!float = float.max_exp;
-        approxEqual(el.realType!float, float.max_exp);
-        el.realType!double = cast(double) float.max_exp;
-        approxEqual(el.realType!double, float.max_exp);
+        el.realNumber!float = float.max_exp;
+        approxEqual(el.realNumber!float, float.max_exp);
+        el.realNumber!double = cast(double) float.max_exp;
+        approxEqual(el.realNumber!double, float.max_exp);
 
-        el.realType!float = float.min_10_exp;
-        approxEqual(el.realType!float, float.min_10_exp);
-        el.realType!double = cast(double) float.min_10_exp;
-        approxEqual(el.realType!double, float.min_10_exp);
+        el.realNumber!float = float.min_10_exp;
+        approxEqual(el.realNumber!float, float.min_10_exp);
+        el.realNumber!double = cast(double) float.min_10_exp;
+        approxEqual(el.realNumber!double, float.min_10_exp);
 
-        el.realType!float = float.min_exp;
-        approxEqual(el.realType!float, float.min_exp);
-        el.realType!double = cast(double) float.min_exp;
-        approxEqual(el.realType!double, float.min_exp);
+        el.realNumber!float = float.min_exp;
+        approxEqual(el.realNumber!float, float.min_exp);
+        el.realNumber!double = cast(double) float.min_exp;
+        approxEqual(el.realNumber!double, float.min_exp);
 
-        el.realType!float = float.min_normal;
-        approxEqual(el.realType!float, float.min_normal);
-        el.realType!double = cast(double) float.min_normal;
-        approxEqual(el.realType!double, float.min_normal);
+        el.realNumber!float = float.min_normal;
+        approxEqual(el.realNumber!float, float.min_normal);
+        el.realNumber!double = cast(double) float.min_normal;
+        approxEqual(el.realNumber!double, float.min_normal);
 
         // Maximums and minimums of doubles
-        el.realType!double = cast(double) double.max;
-        approxEqual(el.realType!double, double.max);
+        el.realNumber!double = cast(double) double.max;
+        approxEqual(el.realNumber!double, double.max);
 
-        el.realType!double = cast(double) double.max_10_exp;
-        approxEqual(el.realType!double, double.max_10_exp);
+        el.realNumber!double = cast(double) double.max_10_exp;
+        approxEqual(el.realNumber!double, double.max_10_exp);
 
-        el.realType!double = cast(double) double.max_exp;
-        approxEqual(el.realType!double, double.max_exp);
+        el.realNumber!double = cast(double) double.max_exp;
+        approxEqual(el.realNumber!double, double.max_exp);
 
-        el.realType!double = cast(double) double.min_10_exp;
-        approxEqual(el.realType!double, double.min_10_exp);
+        el.realNumber!double = cast(double) double.min_10_exp;
+        approxEqual(el.realNumber!double, double.min_10_exp);
 
-        el.realType!double = cast(double) double.min_exp;
-        approxEqual(el.realType!double, double.min_exp);
+        el.realNumber!double = cast(double) double.min_exp;
+        approxEqual(el.realNumber!double, double.min_exp);
 
-        el.realType!double = cast(double) double.min_normal;
-        approxEqual(el.realType!double, double.min_normal);
+        el.realNumber!double = cast(double) double.min_normal;
+        approxEqual(el.realNumber!double, double.min_normal);
     }
 
     // Test with all of the math constants, to make sure there are no edge cases.
@@ -1094,10 +1094,10 @@ class AbstractSyntaxNotation1Element(Element)
 
         foreach (test; tests)
         {
-            el.realType!float = cast(float) test;
-            assert(approxEqual(el.realType!float, cast(float) test));
-            el.realType!double = cast(double) test;
-            assert(approxEqual(el.realType!double, cast(double) test));
+            el.realNumber!float = cast(float) test;
+            assert(approxEqual(el.realNumber!float, cast(float) test));
+            el.realNumber!double = cast(double) test;
+            assert(approxEqual(el.realNumber!double, cast(double) test));
         }
     }
 
@@ -1111,12 +1111,12 @@ class AbstractSyntaxNotation1Element(Element)
             immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
             Element elf = new Element();
             Element eld = new Element();
-            elf.realType!float = f;
-            eld.realType!double = d;
-            assert(approxEqual(elf.realType!float, f));
-            assert(approxEqual(elf.realType!double, f));
-            assert(approxEqual(eld.realType!float, d));
-            assert(approxEqual(eld.realType!double, d));
+            elf.realNumber!float = f;
+            eld.realNumber!double = d;
+            assert(approxEqual(elf.realNumber!float, f));
+            assert(approxEqual(elf.realNumber!double, f));
+            assert(approxEqual(eld.realNumber!float, d));
+            assert(approxEqual(eld.realNumber!double, d));
         }
     }
 

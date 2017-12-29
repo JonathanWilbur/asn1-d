@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.38](http://semver.org/)
+* Version: [1.0.0-beta.39](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -216,7 +216,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Catch exceptions and display error message.
 - [x] Test that all one-byte elements throw exceptions
 - [x] Test an OID with a node with a values 127, 128, and 0.
-- [x] Test even more significant mathematical values with `realType()`:
+- [x] Test even more significant mathematical values with `realNumber()`:
   - [x] `sqrt(2)/2`
   - [x] The golden ratio
   - [x] Everything [here](https://en.wikipedia.org/wiki/Mathematical_constant)
@@ -232,17 +232,20 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Test a `BIT STRING` with only a first byte
 - [ ] Fix `REAL`
   - [x] Remove encoding capabilities for anything but base-2.
-  - [ ] Fix CER and DER base-2 `REAL` must encode the exponent on the fewest octets, and scale = 0.
-  - [ ] Enforce exponent > 0 when using complicated exponent encoding. (X.690 8.5.6.4.d)
-  - [ ] Enforce exponent encoding on the fewest possible octets?
-  - [ ] Enforce mantissa > 0. (X.690 8.5.2)
+  - [x] Fix CER and DER base-2 `REAL` must encode the exponent on the fewest octets, and scale = 0.
+  - [x] Enforce exponent > 0 when using complicated exponent encoding. (X.690 8.5.6.4.d)
+  - [x] Enforce exponent encoding on the fewest possible octets
+  - [x] Enforce mantissa > 0. (X.690 8.5.2)
   - [x] Test for odd using a bitmask of 0x01 instead of modulus.
-  - [ ] Note that you are assuming IEEE 754 Floating Points.
-  - [ ] Can you just shift an IEEE 754 FP type right by 1, so the exponent is octet-aligned?
-  - [ ] Banish the term "significand" to the shadow realm (IEEE 754 coins "significand.")
-  - [ ] Change the property's name to `realNumber`.
+  - [x] Note that you are assuming IEEE 754 Floating Points.
+  - [x] Banish the term "significand" to the shadow realm.
+  - [x] Change the property's name to `realNumber`.
   - [ ] Change the template to accept any type that `isFloatingPoint`.
+  - [ ] Validate base-10 decoding
+  - [ ] Remove dependency on `FloatRep` and `DoubleRep`
+  - [ ] Section 8.5.3 might mean that you have to support encoding with all bases.
 - [ ] Do some more unit testing for extreme lengths.
+- [ ] Search for `reverse` for potential optimizations
 - [x] Fix Indefinite Length
   - [x] Enforce constructed construction
   - [x] Enforce same tag numbers for nested elements
@@ -266,7 +269,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) in the [National Vulnerability Database](https://nvd.nist.gov)
 - [ ] Should all of the `ubyte[]`s be `void[]` instead?
 - [ ] Prevent TOCTOU problems resulting from multi-threading by making a private duplicate of `this.value`
-- [x] Grammar and Styling
+- [ ] Grammar and Styling
   - [x] Check for `a` and `an` mixups
   - [x] Check for duplicated terminal words
   - [x] Check for incorrect data types
@@ -274,6 +277,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Add parenthetical abbreviations
   - [x] Remove trailing spaces
   - [x] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
+  - [ ] Format numbers consistently (particularly `0b` binary literals)
 - [ ] `cli.lib`
   - [ ] Figure out how to parse negative numbers from the command-line (`-1.0` gets interpreted as a command...)
 - [ ] Documentation
@@ -287,7 +291,10 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [ ] What the different classes are for
     - [ ] What it means to be primitive or constructed
     - [ ] "Don't use ASN.1 unless you absolutely MUST use ASN.1."
+    - [ ] This library assumes IEEE 754 floating point structure
   - [ ] `library.md`
+    - [ ] Terminology
+      - [ ] This library uses "mantissa," not "significand," because "mantissa" is in the specification.
     - [ ] Class Hierarchy
     - [ ] Exception Hierarchy
     - [ ] Security Advice
@@ -299,6 +306,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
       - [ ] `INSTANCE OF`
       - [ ] `SET OF`
       - [ ] `SEQUENCE OF`
+      - [ ] `REAL`
+        - [ ] This library does not support encoding in base-8, base-10, or base-16.
   - [ ] `contributing.md`
   - [ ] `context-switching-types.md` (My research into context-switching types)
   - [x] `security.md`
@@ -312,6 +321,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] `man` Pages
 - [ ] Build Scripts
   - [ ] Add `chmod +x` to the build scripts for all executables
+  - [ ] Fix `echo` output problem on Mac
   - [ ] Create dynamically-linked libraries as well
   - [ ] [GNU Make](https://www.gnu.org/software/make/) `Makefile`
   - [ ] Generate a `.def` file for Windows?

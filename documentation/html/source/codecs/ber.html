@@ -803,160 +803,6 @@ bv.tagNumber = 0x02u; <span class="comment">// "2" means this is an INTEGER
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#BasicEncodingRulesElement.base10RealShouldShowPlusSignIfPositive" id="BasicEncodingRulesElement.base10RealShouldShowPlusSignIfPositive"><code class="code">base10RealShouldShowPlusSignIfPositive</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.base10RealShouldShowPlusSignIfPositive"></span>static bool <code class="code">base10RealShouldShowPlusSignIfPositive</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Whether the base 10 / character-encoded representation of a REAL
-        should prepend a plus sign if the value is positive.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#BasicEncodingRulesElement.base10RealDecimalSeparator" id="BasicEncodingRulesElement.base10RealDecimalSeparator"><code class="code">base10RealDecimalSeparator</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.base10RealDecimalSeparator"></span>static ASN1Base10RealDecimalSeparator <code class="code">base10RealDecimalSeparator</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Whether a comma or a period is used to separate the whole and
-        fractional components of the base 10 / character-encoded representation
-        of a REAL.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#BasicEncodingRulesElement.base10RealExponentCharacter" id="BasicEncodingRulesElement.base10RealExponentCharacter"><code class="code">base10RealExponentCharacter</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.base10RealExponentCharacter"></span>static ASN1Base10RealExponentCharacter <code class="code">base10RealExponentCharacter</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Whether a capital or lowercase E is used to separate the significand
-        from the exponent in the base 10 / character-encoded representation
-        of a REAL.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#BasicEncodingRulesElement.base10RealNumericalRepresentation" id="BasicEncodingRulesElement.base10RealNumericalRepresentation"><code class="code">base10RealNumericalRepresentation</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.base10RealNumericalRepresentation"></span>static ASN1Base10RealNumericalRepresentation <code class="code">base10RealNumericalRepresentation</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    The standardized string representations of floating point numbers, as
-        specified in <a href="https://www.iso.org/standard/12285.html">ISO 6093</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    <table>            <tr><th>Representation</th> <th>Description</th> <th>Examples</th></tr>
-            <tr><td>NR1</td> <td>Implicit decimal point</td> <td>"3", "-1", "+1000"</td></tr>
-            <tr><td>NR2</td> <td>Explicit decimal</td> <td>"3.0", "-1.3", "-.3"</td></tr>
-            <tr><td>NR3</td> <td>Explicit exponent</td> <td>"3.0E1", "123E+100"</td></tr>
-        </table>
-
-
-  </p>
-</div>
-<div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Citation:</span>
-Dubuisson, Olivier. “Basic Types.” ASN.1: Communication between
-            Heterogeneous Systems, Morgan Kaufmann, 2001, p. 143.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
   <a href="#BasicEncodingRulesElement.realEncodingBase" id="BasicEncodingRulesElement.realEncodingBase"><code class="code">realEncodingBase</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -1885,7 +1731,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#BasicEncodingRulesElement.realType" id="BasicEncodingRulesElement.realType"><code class="code">realType</code></a>
+  <a href="#BasicEncodingRulesElement.realNumber" id="BasicEncodingRulesElement.realNumber"><code class="code">realNumber</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1894,7 +1740,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realType"></span>const @property @system T <code class="code">realType</code>(T)() if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realNumber"></span>const @property @system T <code class="code">realNumber</code>(T)() if (is(T == float) || is(T == double));
 
           </code>
         </p>
@@ -1914,13 +1760,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    This is admittedly a pretty slow function, so I would recommend
-        avoiding it, if possible. Also, because it is so complex, it is
-        highly likely to have bugs, so for that reason as well, I highly
-        recommand against encoding or decoding REALs if you do not have
-        to; try using INTEGER instead.
-<br><br>
-        For the BER-encoded REAL, a value of 0x40 means "positive infinity,"
+    For the BER-encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1944,6 +1784,9 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         unsigned length of the exponent on the following bytes. The remaining
         bytes encode an unsigned integer, N, such that mantissa is equal to
         sign * N * 2^scale.
+<br><br>
+        Note that this method assumes that your machine uses IEEE 754 floating
+        point format.
 
 
   </p>
@@ -1982,7 +1825,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#BasicEncodingRulesElement.realType" id="BasicEncodingRulesElement.realType"><code class="code">realType</code></a>
+  <a href="#BasicEncodingRulesElement.realNumber" id="BasicEncodingRulesElement.realNumber"><code class="code">realNumber</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1991,7 +1834,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realType.2"></span>@property @system void <code class="code">realType</code>(T)(in T <code class="code">value</code>) if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realNumber.2"></span>@property @system void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (is(T == float) || is(T == double));
 
           </code>
         </p>
@@ -2041,6 +1884,9 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
         unsigned length of the exponent on the following bytes. The remaining
         bytes encode an unsigned integer, N, such that mantissa is equal to
         sign * N * 2^scale.
+<br><br>
+        Note that this method assumes that your machine uses IEEE 754 floating
+        point format.
 
 
   </p>

@@ -1773,7 +1773,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.realType" id="DistinguishedEncodingRulesElement.realType"><code class="code">realType</code></a>
+  <a href="#DistinguishedEncodingRulesElement.realNumber" id="DistinguishedEncodingRulesElement.realNumber"><code class="code">realNumber</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1782,7 +1782,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realType"></span>const @property @system T <code class="code">realType</code>(T)() if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realNumber"></span>const @property @system T <code class="code">realNumber</code>(T)() if (is(T == float) || is(T == double));
 
           </code>
         </p>
@@ -1802,13 +1802,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    This is admittedly a pretty slow function, so I would recommend
-        avoiding it, if possible. Also, because it is so complex, it is
-        highly likely to have bugs, so for that reason as well, I highly
-        recommand against encoding or decoding REALs if you do not have
-        to; try using INTEGER instead.
-<br><br>
-        For the DER-encoded REAL, a value of 0x40 means "positive infinity,"
+    For the DER-encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1832,6 +1826,9 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         unsigned length of the exponent on the following bytes. The remaining
         bytes encode an unsigned integer, N, such that mantissa is equal to
         sign * N * 2^scale.
+<br><br>
+        Note that this method assumes that your machine uses IEEE 754 floating
+        point format.
 
 
   </p>
@@ -1870,7 +1867,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.realType" id="DistinguishedEncodingRulesElement.realType"><code class="code">realType</code></a>
+  <a href="#DistinguishedEncodingRulesElement.realNumber" id="DistinguishedEncodingRulesElement.realNumber"><code class="code">realNumber</code></a>
 </div>
 </div><div class="ddoc_decl">
   <section class="section">
@@ -1879,7 +1876,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realType.2"></span>@property @system void <code class="code">realType</code>(T)(in T <code class="code">value</code>) if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realNumber.2"></span>@property @system void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (is(T == float) || is(T == double));
 
           </code>
         </p>
@@ -1929,6 +1926,9 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
         unsigned length of the exponent on the following bytes. The remaining
         bytes encode an unsigned integer, N, such that mantissa is equal to
         sign * N * 2^scale.
+<br><br>
+        Note that this method assumes that your machine uses IEEE 754 floating
+        point format.
 
 
   </p>

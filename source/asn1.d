@@ -149,7 +149,7 @@ enum AbstractSyntaxNotation1UniversalType : ubyte
     objectDescriptor = 0x07u,
     external = 0x08u,
     ext = external,
-    realType = 0x09u,
+    realNumber = 0x09u,
     enumerated = 0x0Au,
     embeddedPresentationDataValue = 0x0Bu,
     embeddedPDV = embeddedPresentationDataValue,
@@ -273,26 +273,6 @@ enum AbstractSyntaxNotation1Base10RealNumericalRepresentation : ubyte
     nr1 = 0b0000_0001,
     nr2 = 0b0000_0010,
     nr3 = 0b0000_0011
-}
-
-///
-public alias ASN1Base10RealDecimalSeparator = AbstractSyntaxNotation1Base10RealDecimalSeparator;
-///
-immutable public
-enum AbstractSyntaxNotation1Base10RealDecimalSeparator : char
-{
-    period = '.',
-    comma = ','
-}
-
-///
-public alias ASN1Base10RealExponentCharacter = AbstractSyntaxNotation1Base10RealExponentCharacter;
-///
-immutable public
-enum AbstractSyntaxNotation1Base10RealExponentCharacter : char
-{
-    lowercaseE = 'e',
-    uppercaseE = 'E'
 }
 
 /// The acceptable characters for a NumericString
