@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.36](http://semver.org/)
+* Version: [1.0.0-beta.37](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -230,7 +230,18 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Fuzz test all possible three-byte combinations
 - [x] Enforce `0` padding bits for DER and CER-encoded `BIT STRING`
 - [x] Test a `BIT STRING` with only a first byte
-- [ ] Fix CER and DER base-2 `REAL`, which must encode the exponent on the fewest octets, and scale = 0.
+- [ ] Fix `REAL`
+  - [ ] Fix CER and DER base-2 `REAL` must encode the exponent on the fewest octets, and scale = 0.
+  - [ ] Enforce exponent > 0 when using complicated exponent encoding. (X.690 8.5.6.4.d)
+  - [ ] Enforce exponent encoding on the fewest possible octets?
+  - [ ] Enforce mantissa > 0. (X.690 8.5.2)
+  - [x] Test for odd using a bitmask of 0x01 instead of modulus.
+  - [ ] Note that you are assuming IEEE 754 Floating Points.
+  - [ ] Can you just shift an IEEE 754 FP type right by 1, so the exponent is octet-aligned?
+  - [ ] Banish the term "significand" to the shadow realm (IEEE 754 coins "significand.")
+  - [ ] Do _something_ if the encoding base is not 2 or 10.
+  - [ ] Change the property's name to `realNumber`.
+  - [ ] Change the template to accept any type that `isFloatingPoint`.
 - [ ] Do some more unit testing for extreme lengths.
 - [x] Fix Indefinite Length
   - [x] Enforce constructed construction
@@ -253,6 +264,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Creating a Session with [OpenLDAP Server](http://www.openldap.org)
   - [x] Test [OpenSSL](https://www.openssl.org/)'s [d2i tests]()
 - [x] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) in the [National Vulnerability Database](https://nvd.nist.gov)
+- [ ] Should all of the `ubyte[]`s be `void[]` instead?
+- [ ] Prevent TOCTOU problems resulting from multi-threading by making a private duplicate of `this.value`
 - [x] Grammar and Styling
   - [x] Check for `a` and `an` mixups
   - [x] Check for duplicated terminal words

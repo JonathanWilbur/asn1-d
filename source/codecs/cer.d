@@ -1692,10 +1692,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     T realType(T)() const
     if (is(T == float) || is(T == double))
     {
-        import std.conv : ConvException, ConvOverflowException, to;
-
         if (this.value.length == 0) return cast(T) 0.0;
-
         if (this.value == [ 0x40u ]) return T.infinity;
         if (this.value == [ 0x41u ]) return -T.infinity;
 
@@ -1707,64 +1704,36 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
             case (0b_0000_0000u): // Character Encoding
             {
+                import std.conv : to;
                 return to!(T)(cast(string) this.value[1 .. $]);
             }
             case 0b_1000_0000u, 0b_1100_0000u: // Binary Encoding
             {
-                /*
-                    While the mantissa is a ulong here, it must be cast to a
-                    long later on, so it is important that it is less than
-                    long.max.
-                */
                 ulong mantissa;
-                long exponent;
+                short exponent;
                 ubyte scale;
                 ubyte base;
-
-                immutable string mantissaTooBigExceptionText =
-                    "This exception was thrown because the mantissa encoded by " ~
-                    "a Canonical Encoding Rules (CER) encoded REAL could not fit in " ~
-                    "to a 64-bit signed integer (long). This might indicate that " ~
-                    "what you tried to decode was not actually a REAL at all. " ~
-                    "For more information, see the ASN.1 library documentation, " ~
-                    "or the International Telecommuncation Union's X.690 " ~
-                    "specification. ";
-
-                // There must be at least one information byte and one exponent byte.
-                if (this.length < 2)
-                    throw new ASN1ValueTooSmallException
-                    (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a REAL that had either zero or one bytes of data," ~
-                        "which cannot encode a valid binary-encoded REAL. A " ~
-                        "correctly-encoded REAL has one byte for general " ~
-                        "encoding information about the REAL, and at least " ~
-                        "one byte for encoding the exponent. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
-                    );
+                size_t startOfMantissa;
 
                 switch (this.value[0] & 0b00000011u)
                 {
                     case 0b00000000u: // Exponent on the following octet
                     {
-                        /*
-                            this.value[1] has to be cast to a byte first so that it
-                            acquires a sign.
-                        */
-                        exponent = cast(long) cast(byte) this.value[1];
+                        if (this.length < 2u)
+                            throw new ASN1ValueTooSmallException
+                            (
+                                "This exception was thrown because you attempted to " ~
+                                "decode a REAL that had either zero or one bytes of data," ~
+                                "which cannot encode a valid binary-encoded REAL. A " ~
+                                "correctly-encoded REAL has one byte for general " ~
+                                "encoding information about the REAL, and at least " ~
+                                "one byte for encoding the exponent. " ~
+                                notWhatYouMeantText ~ forMoreInformationText ~
+                                debugInformationText ~ reportBugsText
+                            );
 
-                        if (this.length - 2u > 8u)
-                            throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
-
-                        ubyte m = 0x02u;
-                        while (m < this.length)
-                        {
-                            mantissa <<= 8;
-                            mantissa += this.value[m];
-                            m++;
-                        }
-
+                        exponent = cast(short) cast(byte) this.value[1];
+                        startOfMantissa = 2u;
                         break;
                     }
                     case 0b00000001u: // Exponent on the following two octets
@@ -1784,35 +1753,24 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
                         ubyte[] exponentBytes = this.value[1 .. 3].dup;
                         version (LittleEndian) reverse(exponentBytes);
-                        exponent = cast(long) (*cast(short *) exponentBytes.ptr);
+                        exponent = *cast(short *) exponentBytes.ptr;
 
-                        if (this.length - 3u > 8u)
-                            throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
+                        if (exponent <= byte.max && exponent >= byte.min)
+                            throw new ASN1ValueInvalidException
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode a binary-encoded REAL whose exponent " ~
+                                "was encoded on more bytes than necessary. This " ~
+                                "would not be a problem if you were using the " ~
+                                "Basic Encoding Rules (BER), but the Canonical " ~
+                                "Encoding Rules (CER) and Distinguished Encoding " ~
+                                "Rules (DER) require that the exponent be " ~
+                                "encoded on the fewest possible bytes. " ~
+                                notWhatYouMeantText ~ forMoreInformationText ~
+                                debugInformationText ~ reportBugsText
+                            );
 
-                        ubyte m = 0x02u;
-                        version (LittleEndian)
-                        {
-                            while (m < this.length)
-                            {
-                                mantissa <<= 8;
-                                mantissa += this.value[m];
-                                m++;
-                            }
-                        }
-                        else version (BigEndian)
-                        {
-                            while (this.length - m > 0u)
-                            {
-                                mantissa <<= 8;
-                                mantissa += this.value[m];
-                                m--;
-                            }
-                        }
-                        else
-                        {
-                            static assert(0, "Could not determine endianness!");
-                        }
-
+                        startOfMantissa = 3u;
                         break;
                     }
                     case 0b00000010: // Exponent on the following three octets
@@ -1830,55 +1788,71 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                                 debugInformationText ~ reportBugsText
                             );
 
-                        exponent = cast(long) ((*cast(int *) cast(void[4] *) &(this.value[1])) & 0x00FFFFFF);
+                        ubyte[] exponentBytes = this.value[1 .. 4].dup;
 
-                        if (this.length - 4u > 8u)
-                            throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
-
-                        ubyte m = 0x03u;
-                        version (LittleEndian)
-                        {
-                            while (m < this.length)
-                            {
-                                mantissa <<= 8;
-                                mantissa += this.value[m];
-                                m++;
-                            }
-                        }
-                        else version (BigEndian)
-                        {
-                            while (this.length - m > 0u)
-                            {
-                                mantissa <<= 8;
-                                mantissa += this.value[m];
-                                m--;
-                            }
+                        if // the first byte is basically meaningless padding
+                        (
+                            (this.value[0] == 0x00u && (!(this.value[1] & 0x80u))) || // Unnecessary positive leading bytes
+                            (this.value[0] == 0xFFu && (this.value[1] & 0x80u)) // Unnecessary negative leading bytes
+                        )
+                        { // then it is small enough to become an IEEE 754 floating point type.
+                            exponentBytes = exponentBytes[1 .. $];
+                            exponent = *cast(short *) exponentBytes.ptr;
+                            startOfMantissa = 4u;
                         }
                         else
                         {
-                            static assert(0, "Could not determine endianness!");
+                            throw new ASN1ValueTooBigException
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode a REAL that had an exponent that was " ~
+                                "too big to decode to a floating-point type." ~
+                                "Specifically, the exponent was encoded on " ~
+                                "more than two bytes, which is simply too " ~
+                                "many to fit in any IEEE 754 Floating Point " ~
+                                "type supported by this system. " ~
+                                notWhatYouMeantText ~ forMoreInformationText ~
+                                debugInformationText ~ reportBugsText
+                            );
                         }
-
                         break;
                     }
                     case 0b00000011: // Complicated
                     {
-                        if (this.length < 2u)
+                        /* NOTE:
+                            X.690 states that, in this case, the exponent must
+                            be encoded on the fewest possible octets, even for
+                            the Basic Encoding Rules (BER).
+                        */
+
+                        if (this.length < 3u)
                             throw new ASN1ValueTooSmallException
                             (
                                 "This exception was thrown because you attempted " ~
                                 "to decode a REAL that had too few bytes. The first " ~
                                 "byte indicated that the subsequent byte " ~
                                 "would encode the length of the exponent of the REAL, but " ~
-                                "there were less than two bytes in the entire " ~
-                                "encoded value. " ~
+                                "there were less than three bytes in the entire " ~
+                                "encoded value. There must be a first byte for " ~
+                                "information, a second byte for the exponent length " ~
+                                "then the exponent cannot be a zero, so it must " ~
+                                "be encoded on at least one byte. " ~
                                 notWhatYouMeantText ~ forMoreInformationText ~
                                 debugInformationText ~ reportBugsText
                             );
 
                         immutable ubyte exponentLength = this.value[1];
 
-                        if (this.length < exponentLength)
+                        if (exponentLength == 0u)
+                            throw new ASN1ValueInvalidException
+                            (
+                                "This exception was thrown because you attempted " ~
+                                "to decode a REAL whose exponent was encoded on " ~
+                                "zero bytes, which is prohibited by the X.690 " ~
+                                "specification, section 8.5.6.4, note D. "
+                            );
+
+                        if (exponentLength > (this.length + 2u))
                             throw new ASN1ValueTooSmallException
                             (
                                 "This exception was thrown because you attempted " ~
@@ -1893,62 +1867,67 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                                 debugInformationText ~ reportBugsText
                             );
 
-                        if (exponentLength > 0x08u)
+                        if (exponentLength > 2u)
                             throw new ASN1ValueTooBigException
                             (
                                 "This exception was thrown because you attempted " ~
                                 "to decode a REAL that had an exponent that was " ~
                                 "too big to decode to a floating-point type." ~
                                 "Specifically, the exponent was encoded on " ~
-                                "more than eight bytes. " ~
+                                "more than two bytes, which is simply too " ~
+                                "many to fit in any IEEE 754 Floating Point " ~
+                                "type supported by this system. " ~
                                 notWhatYouMeantText ~ forMoreInformationText ~
                                 debugInformationText ~ reportBugsText
                             );
 
-                        ubyte i = 0x00u;
-                        while (i < exponentLength)
+                        if (exponentLength == 1u)
                         {
-                            exponent <<= 8;
-                            exponent += this.value[i+2];
-                            i++;
+                            exponent = cast(short) cast(byte) this.value[2];
                         }
+                        else // length == 2
+                        {
+                            ubyte[] exponentBytes = this.value[2 .. 4].dup;
 
-                        if (this.length - 1u - exponentLength > 8u)
-                            throw new ASN1ValueTooBigException(mantissaTooBigExceptionText);
+                            if
+                            (
+                                (exponentBytes[0] == 0x00u && (!(exponentBytes[1] & 0x80u))) || // Unnecessary positive leading bytes
+                                (exponentBytes[0] == 0xFFu && (exponentBytes[1] & 0x80u)) // Unnecessary negative leading bytes
+                            )
+                                throw new ASN1ValueInvalidException
+                                (
+                                    "This exception was thrown because you attempted to decode " ~
+                                    "a REAL exponent that was encoded on more than the minimum " ~
+                                    "necessary bytes. " ~
+                                    notWhatYouMeantText ~ forMoreInformationText ~
+                                    debugInformationText ~ reportBugsText
+                                );
 
-                        ubyte m = cast(ubyte) (0x02u + exponentLength);
-                        version (LittleEndian)
-                        {
-                            while (m < this.length)
-                            {
-                                mantissa <<= 8;
-                                mantissa += this.value[m];
-                                m++;
-                            }
+                            version (LittleEndian) reverse(exponentBytes);
+                            exponent = *cast(short *) exponentBytes.ptr;
                         }
-                        else version (BigEndian)
-                        {
-                            while (this.length - m > 0u)
-                            {
-                                mantissa <<= 8;
-                                mantissa += this.value[m];
-                                m--;
-                            }
-                        }
-                        else
-                        {
-                            static assert(0, "Could not determine endianness!");
-                        }
+                        startOfMantissa = (2u + exponentLength);
                         break;
                     }
-                    default:
-                    {
-                        assert(0, "Impossible binary exponent encoding on REAL type");
-                    }
+                    default: assert(0, "Impossible binary exponent encoding on REAL type");
                 }
 
-                if (mantissa > long.max)
-                    throw new ASN1ValueInvalidException(mantissaTooBigExceptionText);
+                if (this.value.length - startOfMantissa > 8u)
+                    throw new ASN1ValueTooBigException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a REAL whose mantissa was encoded on too many " ~
+                        "bytes to decode to the largest unsigned integral data " ~
+                        "type. "
+                    );
+
+                ubyte[] mantissaBytes = this.value[startOfMantissa .. $].dup;
+                immutable ubyte paddingByte = ((mantissaBytes[0] & 0x80u) ? 0xFFu : 0x00u);
+                while (mantissaBytes.length < ulong.sizeof)
+                    mantissaBytes = (paddingByte ~ mantissaBytes);
+                version (LittleEndian) reverse(mantissaBytes);
+                version (unittest) assert(mantissaBytes.length == ulong.sizeof);
+                mantissa = *cast(ulong *) mantissaBytes.ptr;
 
                 switch (this.value[0] & 0b_0011_0000)
                 {
@@ -1968,7 +1947,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                         break;
                     }
                     default:
-                    {
                         throw new ASN1ValueInvalidException
                         (
                             "This exception was throw because you attempted to " ~
@@ -1978,7 +1956,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                             notWhatYouMeantText ~ forMoreInformationText ~
                             debugInformationText ~ reportBugsText
                         );
-                    }
                 }
 
                 scale = ((this.value[0] & 0b_0000_1100u) >> 2);
@@ -1993,15 +1970,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 */
                 return (
                     ((this.value[0] & 0b_0100_0000u) ? -1.0 : 1.0) *
-                    cast(long) mantissa * // Mantissa MUST be cast to a long
+                    cast(T) mantissa *
                     2^^scale *
-                    (cast(T) base)^^(cast(T) exponent) // base needs to be cast
+                    (cast(T) base)^^(cast(T) exponent) // base must be cast
                 );
             }
-            default:
-            {
-                assert(0, "Impossible information byte value appeared!");
-            }
+            default: assert(0, "Impossible information byte value appeared!");
         }
     }
 
@@ -2063,11 +2037,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     if (is(T == float) || is(T == double))
     {
         import std.bitmanip : DoubleRep, FloatRep;
-        import std.math : floor;
-
         bool positive = true;
-        real significand;
-        ubyte scale = 2u;
+        ulong significand;
         short exponent = 0;
 
         /**
@@ -2078,7 +2049,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         */
         ASN1RealEncodingBase base = this.realEncodingBase;
 
-        if (value.isNaN)
+        if (value == 0.0)
+        {
+            this.value = [];
+            return;
+        }
+        else if (value.isNaN)
         {
             throw new ASN1ValueInvalidException
             (
@@ -2164,233 +2140,64 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             significand = (valueUnion.fraction | 0x00800000u); // Flip bit #24
         }
 
-        // IEEE floating-point types use a set first bit to indicate a negative.
         positive = (valueUnion.sign ? false : true);
-
-        // See comment below.
-        exponent = cast(short)
-            (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
-
-        /*
-            This section here converts the base-2 floating-point type to
-            either base-8 or base-16 by dividing the significand by
-            2^^((log2(base)-1)*exponent), which effectively gives the
-            significand the value necessary to maintain the same exponent,
-            despite the underlying base having changed. Of course, doing
-            so makes the significand a non-integral number, so in the
-            while loop, we actually mulitply it by the base until we
-            have an integral value again, decrementing the exponent by 1
-            with each iteration. If the while loop detects an overflow,
-            which you may get with a non-terminating fraction (such as
-            10 / 3), it just reverses the last iteration, and breaks the
-            loop. Yes, this may result in a loss of precision.
-        */
-        if (base != ASN1RealEncodingBase.base2)
-        {
-            if (base == ASN1RealEncodingBase.base8)
-            {
-                significand /= (2.0^^(2.0*exponent));
-            }
-            else if (base == ASN1RealEncodingBase.base16)
-            {
-                significand /= (2.0^^(3.0*exponent));
-            }
-
-            /*
-                Sometimes the significand generated from the previous
-                step can be so high that the last bit of precision is
-                not a fractional bit--integral precision, in other words.
-                When this happens, the long to which the significand is
-                cast later on in the code is completely zeroed out. The
-                loops below iteratively divide the significand by the
-                base, while incrementing the exponent (so that the same
-                number is represented, just with a different combination
-                of significand and exponent), which gives us a significand
-                that can safely be cast to a long.
-
-                Note that the significand must be cast only to a SIGNED
-                long later on, because it will be multiplied with other
-                signed integral types, hence we use this loop to bring
-                the floating-point significand within the range that
-                can be safely cast to a signed long.
-            */
-            while (significand > maxLongAsReal)
-            {
-                significand /= base;
-                if (exponent >= short.max)
-                    throw new ASN1ValueTooBigException
-                    (
-                        "This exception was thrown because you attempted to " ~
-                        "encode a floating-point type as a REAL, which " ~
-                        "resulted in an exponent that was larger than a " ~
-                        "signed short integer could encode. It is not your " ~
-                        "fault that this exception occurred: it is a bug. " ~
-                        "If you have encountered this exception, and if you " ~
-                        "know specifically what number created the exception, " ~
-                        "please report it on the ASN.1 library's GitHub " ~
-                        "issues page: " ~
-                        "https://github.com/JonathanWilbur/asn1-d/issues. " ~
-                        "Please include your machine architecture, bit-width, " ~
-                        "the exact number you tried to encode, and whether you " ~
-                        "tried to encode it from a float or double."
-                    );
-                exponent++;
-            }
-
-            while (significand - floor(significand) != 0.0)
-            {
-                significand *= base;
-                if (significand > maxLongAsReal)
-                {
-                    significand /= base;
-                    break;
-                }
-                if (exponent <= short.min)
-                    throw new ASN1ValueTooSmallException
-                    (
-                        "This exception was thrown because you attempted to " ~
-                        "encode a floating-point type as a REAL, which " ~
-                        "resulted in an exponent that was smaller than a " ~
-                        "signed short integer could encode. It is not your " ~
-                        "fault that this exception occurred: it is a bug. " ~
-                        "If you have encountered this exception, and if you " ~
-                        "know specifically what number created the exception, " ~
-                        "please report it on the ASN.1 library's GitHub " ~
-                        "issues page: " ~
-                        "https://github.com/JonathanWilbur/asn1-d/issues. " ~
-                        "Please include your machine architecture, bit-width, " ~
-                        "the exact number you tried to encode, and whether you " ~
-                        "tried to encode it from a float or double."
-                    );
-                exponent--;
-            }
-        }
-
-        /*
-            However, by doing this, we sometimes underflow the exponent.
-            Fortunately, we can tell we have underflowed the exponent if
-            the exponent is greater than
-            typeof(exponent).max - fractionBits,
-            because in D, as with many other similar languages, overflows
-            and underflows are "wrapped," meaning that, for example,
-            uint.max + 1 = uint.min and uint.min - 1 = uint.max.
-            To correct the underflow... we overflow! This is done in the
-            while loop in each of the two following static ifs. The
-            exponent is incremented until it is as though it never
-            underflowed in the first place, each time dividing the
-            significand by two, such that the same number is still
-            represented by the combination of the significand and
-            exponent.
-
-            Note that the valueUnion.fractionBits must be cast to
-            typeof(exponent) prior to being used in the comparison,
-            otherwise all values in the while loop will be promoted to
-            ints, which will prevent the necessary overflow from
-            happening when it should.
-        */
-        while (exponent > (short.max - cast(short) valueUnion.fractionBits))
-        {
-            significand /= 2.0; // You can't << 2 here, because significand is a real.
-            exponent++;
-        }
+        exponent = cast(short) (valueUnion.exponent - valueUnion.bias - valueUnion.fractionBits);
 
         // If the significand is even and we're using Base-2 encoding, make it odd or 0
         if (base == ASN1RealEncodingBase.base2 && significand != 0u)
         {
-            while (!(cast(size_t) significand % 2u))
+            while (!(significand & 1u))
             {
                 significand /= 2.0;
                 exponent++;
             }
-            assert(cast(size_t) significand % 2u || significand == 0u);
+            version(unittest) assert((significand & 1u) || significand == 0u);
         }
 
         ubyte[] exponentBytes;
         exponentBytes.length = short.sizeof;
         *cast(short *)exponentBytes.ptr = exponent;
-        version (LittleEndian) reverse(exponentBytes);
+        version (LittleEndian) exponentBytes = [ exponentBytes[1], exponentBytes[0] ]; // Manual reversal (optimization)
+        if
+        (
+            (exponentBytes[0] == 0x00u && (!(exponentBytes[1] & 0x80u))) || // Unnecessary positive leading bytes
+            (exponentBytes[0] == 0xFFu && (exponentBytes[1] & 0x80u)) // Unnecessary negative leading bytes
+        )
+            exponentBytes = exponentBytes[1 .. 2];
 
         ubyte[] significandBytes;
         significandBytes.length = ulong.sizeof;
         *cast(ulong *)significandBytes.ptr = cast(ulong) significand;
         version (LittleEndian) reverse(significandBytes);
 
-        ubyte baseBitMask;
-        switch (base)
+        size_t startOfNonPadding = 0u;
+        if (significand >= 0)
         {
-            case (ASN1RealEncodingBase.base2):
+            for (size_t i = 0u; i < significandBytes.length-1; i++)
             {
-                baseBitMask = 0b0000_0000u;
-                break;
-            }
-            case (ASN1RealEncodingBase.base8):
-            {
-                baseBitMask = 0b0001_0000u;
-                break;
-            }
-            case (ASN1RealEncodingBase.base16):
-            {
-                baseBitMask = 0b0010_0000u;
-                break;
-            }
-            default:
-            {
-                assert(0, "Impossible ASN1RealEncodingBase state appeared!");
+                if (significandBytes[i] != 0x00u) break;
+                if (!(significandBytes[i+1] & 0x80u)) startOfNonPadding++;
             }
         }
+        else
+        {
+            for (size_t i = 0u; i < significandBytes.length-1; i++)
+            {
+                if (significandBytes[i] != 0xFFu) break;
+                if (significandBytes[i+1] & 0x80u) startOfNonPadding++;
+            }
+        }
+        significandBytes = significandBytes[startOfNonPadding .. $];
 
         ubyte infoByte =
             0x80u | // First bit gets set for base2, base8, or base16 encoding
             (positive ? 0x00u : 0x40u) | // 1 = negative, 0 = positive
-            baseBitMask | // Bitmask specifying base
             // Scale = 0
-            ASN1RealExponentEncoding.following2Octets;
+            cast(ubyte) (exponentBytes.length == 1u ?
+                ASN1RealExponentEncoding.followingOctet :
+                ASN1RealExponentEncoding.following2Octets);
 
         this.value = (infoByte ~ exponentBytes ~ significandBytes);
-    }
-
-    // Tests of Base-8 Encoding
-    @system
-    unittest
-    {
-        CERElement.realEncodingBase = ASN1RealEncodingBase.base8;
-        for (int i = -100; i < 100; i++)
-        {
-            // Alternating negative and positive floating point numbers exploring extreme values
-            immutable float f = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
-            immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
-            CERElement elf = new CERElement();
-            CERElement eld = new CERElement();
-            elf.realType!float = f;
-            eld.realType!double = d;
-            assert(approxEqual(elf.realType!float, f));
-            assert(approxEqual(elf.realType!double, f));
-            assert(approxEqual(eld.realType!float, d));
-            assert(approxEqual(eld.realType!double, d));
-        }
-        CERElement.realEncodingBase = ASN1RealEncodingBase.base2;
-    }
-
-    // Tests of Base-16 Encoding
-    @system
-    unittest
-    {
-        CERElement.realEncodingBase = ASN1RealEncodingBase.base16;
-        for (int i = -10; i < 10; i++)
-        {
-            // Alternating negative and positive floating point numbers exploring extreme values
-            immutable float f = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
-            immutable double d = ((i % 2 ? -1 : 1) * 1.23 ^^ i);
-            CERElement elf = new CERElement();
-            CERElement eld = new CERElement();
-            elf.realType!float = f;
-            eld.realType!double = d;
-            assert(approxEqual(elf.realType!float, f));
-            assert(approxEqual(elf.realType!double, f));
-            assert(approxEqual(eld.realType!float, d));
-            assert(approxEqual(eld.realType!double, d));
-        }
-        CERElement.realEncodingBase = ASN1RealEncodingBase.base2;
     }
 
     // Testing Base-10 (Character-Encoded) REALs
@@ -2459,33 +2266,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         assert(cast(string) (el.value[1 .. $]) == "-1.230000000000E-1");
         assert(approxEqual(el.realType!float, -0.123));
         assert(approxEqual(el.realType!double, -0.123));
-    }
 
-    // Test "complicated" exponent encoding.
-    @system
-    unittest
-    {
-        CERElement el = new CERElement();
-
-        el.value = [ 0b1000_0011u, 0x01u, 0x00u, 0x03u ];
-        assert(el.realType!float == 3.0);
-        assert(el.realType!double == 3.0);
-
-        el.value = [ 0b1000_0011u, 0x01u, 0x05u, 0x03u ];
-        assert(el.realType!float == 96.0);
-        assert(el.realType!double == 96.0);
-
-        el.value = [ 0b1000_0011u, 0x02u, 0x00u, 0x05u, 0x03u ];
-        assert(el.realType!float == 96.0);
-        assert(el.realType!double == 96.0);
-
-        el.value = [ 0b1000_0011u ];
-        el.value ~= cast(ubyte) size_t.sizeof;
-        el.value.length += size_t.sizeof;
-        el.value[$-1] = 0x05u;
-        el.value ~= 0x03u;
-        assert(el.realType!float == 96.0);
-        assert(el.realType!double == 96.0);
+        CERElement.realEncodingBase = ASN1RealEncodingBase.base2;
     }
 
     /**

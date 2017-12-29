@@ -149,6 +149,8 @@ class AbstractSyntaxNotation1Element(Element)
     protected immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realType()
     protected immutable real maxLongAsReal = cast(real) long.max; // Saves CPU cycles in realType()
     protected immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in realType()
+    protected immutable int threeByteMax = 0x007FFFFF; // Used for CER and DER realType()
+    protected immutable int threeByteMin = 0xFF800000; // Used for CER and DER realType()
 
     // Constants for exception messages
     immutable string notWhatYouMeantText =
@@ -768,6 +770,7 @@ class AbstractSyntaxNotation1Element(Element)
         Element eld = new Element();
         elf.realType!float = f;
         eld.realType!double = d;
+        // writefln("%f", elf.realType!float);
         assert(approxEqual(elf.realType!float, f));
         assert(approxEqual(elf.realType!double, f));
         assert(approxEqual(eld.realType!float, d));
