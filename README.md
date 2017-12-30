@@ -46,10 +46,9 @@ ASN.1 is used in, or required by, multiple technologies, including:
   * [Universal Mobile Telecommunications System (UTMS)](http://www.3gpp.org/DynaReport/25-series.htm)
   * [Long-Term Evolution (LTE)](http://www.3gpp.org/technologies/keywords-acronyms/98-lte)
 
-Source for some of these: [PyASN1](http://pyasn1.sourceforge.net/)
-
-If you look in the `asn1` directory of WireShark's source code, you'll see all
-of the protocols that use ASN.1.
+If you look in the
+[`asn1` directory of WireShark's source code](https://github.com/wireshark/wireshark/tree/master/epan/dissectors/asn1),
+you'll see all of the protocols that use ASN.1.
 
 ## Structure
 
@@ -283,20 +282,20 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [ ] Documentation
   - [ ] `build.md`
     - [ ] Instructions on installing and linking `cli.lib`.
-  - [ ] `compliance.md`
-    - [ ] Create a checklist for every bullet point of X.690.
-    - [ ] Review that character-encoded `REAL`s are strictly conformant to [ISO 6093](https://www.iso.org/standard/12285.html) (Maybe even make an ISO 6093 Library...)
+  - [x] `compliance.md`
+    - [x] Create a checklist for every bullet point of X.690.
+    - [x] ~~Review that character-encoded `REAL`s are strictly conformant to [ISO 6093](https://www.iso.org/standard/12285.html)~~
     - [x] Comparison Tests
-  - [ ] `asn1.md`
-    - [ ] What the different classes are for
-    - [ ] What it means to be primitive or constructed
-    - [ ] "Don't use ASN.1 unless you absolutely MUST use ASN.1."
-    - [ ] This library assumes IEEE 754 floating point structure
+  - [x] `asn1.md`
+    - [x] What the different classes are for
+    - [x] What it means to be primitive or constructed
+    - [x] "Don't use ASN.1 unless you absolutely MUST use ASN.1."
   - [ ] `library.md`
     - [ ] Terminology
       - [ ] This library uses "mantissa," not "significand," because "mantissa" is in the specification.
     - [ ] Class Hierarchy
     - [ ] Exception Hierarchy
+    - [ ] This library assumes IEEE 754 floating point structure
     - [ ] Security Advice
       - [ ] Leave note to developers about avoiding recursion problems. (See CVE-2016-4421 and CVE-2010-2284.)
       - [ ] About constructed types (See CVE-2010-3445.)

@@ -1460,7 +1460,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         {
             case (0b01000000u):
             {
-                return ((this.value[0] & 0b00111111u) ? T.infinity : -T.infinity);
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a REAL whose information byte indicated a special value " ~
+                    "not recognized by the specification. The only special " ~
+                    "values recognized by the specification are PLUS-INFINITY " ~
+                    "and MINUS-INFINITY, idenified by information bytes of " ~
+                    "0x40 and 0x41 respectively. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~
+                    debugInformationText ~ reportBugsText
+                );
             }
             case (0b00000000u): // Character Encoding
             {
