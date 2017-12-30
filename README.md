@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.40](http://semver.org/)
+* Version: [1.0.0-beta.41](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -241,7 +241,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Banish the term "significand" to the shadow realm.
   - [x] Change the property's name to `realNumber`.
   - [x] Change the template to accept any type that `isFloatingPoint`.
-  - [ ] Validate base-10 decoding
+  - [x] Validate base-10 decoding
   - [x] Remove dependency on `FloatRep` and `DoubleRep`
   - [ ] Section 8.5.3 might mean that you have to support encoding with all bases.
   - [ ] Ensure no overflows on returning a `float`

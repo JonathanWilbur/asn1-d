@@ -1695,9 +1695,70 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
             case (0b_0000_0000u): // Character Encoding
             {
-                // FIXME: Validation
+                /* NOTE:
+                    Specification X.690 lays out very strict standards for the
+                    Canonical Encoding Rules (CER) and Distinguished Encoding
+                    Rules (DER) base-10-encoded REAL.
+
+                    The character encoding form must be NR3, from ISO 6093, but
+                    with even more restrictions applied.
+
+                    It must be encoded like so:
+                    * No whitespace whatsoever
+                    * No leading zeroes under any circumstance.
+                    * No trailing zeroes under any circumstance.
+                    * No plus sign unless exponent is 0.
+
+                    A valid encoding looks like this: 22.E-5
+                */
                 import std.conv : to;
-                return to!(T)(cast(string) this.value[1 .. $]);
+                import std.string : indexOf;
+
+                // Smallest possible is '#.E#'. Decimal is necessary.
+                if (this.value.length < 5u)
+                    throw new ASN1ValueInvalidException("A");
+
+                if (this.value[0] != 0b0000_0011u)
+                    throw new ASN1ValueInvalidException("B");
+
+                string valueString = cast(string) this.value[1 .. $];
+
+                foreach (character; valueString)
+                {
+                    import std.ascii : isWhite;
+                    if
+                    (
+                        character.isWhite ||
+                        character == ',' ||
+                        character == '_'
+                    )
+                        throw new ASN1ValueInvalidException("C");
+                }
+
+                if
+                (
+                    valueString[0] == '0' ||
+                    (valueString[0] == '-' && valueString[1] == '0')
+                )
+                    throw new ASN1ValueInvalidException("D");
+
+                ptrdiff_t indexOfDecimalPoint = valueString.indexOf(".");
+                if (indexOfDecimalPoint == -1)
+                    throw new ASN1ValueInvalidException("E");
+
+                if (valueString[indexOfDecimalPoint+1] != 'E')
+                    throw new ASN1ValueInvalidException("F");
+
+                if (valueString[indexOfDecimalPoint-1] == '0')
+                    throw new ASN1ValueInvalidException("G");
+
+                if (valueString[$-2 .. $] != "+0" && canFind(valueString, '+'))
+                    throw new ASN1ValueInvalidException("H");
+
+                if (canFind(valueString, "E0") || canFind(valueString, "E-0"))
+                    throw new ASN1ValueInvalidException("I");
+
+                return to!(T)(valueString);
             }
             case 0b_1000_0000u, 0b_1100_0000u: // Binary Encoding
             {
@@ -2107,75 +2168,82 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         this.value = (infoByte ~ exponentBytes ~ mantissaBytes);
     }
 
-    // Testing Base-10 (Character-Encoded) REALs
-    // @system
-    // unittest
-    // {
-    //     CERElement el = new CERElement();
-    //     CERElement.realEncodingBase = ASN1RealEncodingBase.base10;
+    // Positive Testing Base-10 (Character-Encoded) REALs
+    @system
+    unittest
+    {
+        immutable string[] tests = [
+            "1.E1",
+            "2.E10",
+            "4.E100",
+            "1.E-1",
+            "2.E-10",
+            "4.E-100",
+            "-1.E1",
+            "-2.E10",
+            "-4.E100",
+            "-1.E-1",
+            "-2.E-10",
+            "-4.E-100",
+            "19.E1",
+            "29.E10",
+            "49.E100",
+            "19.E-1",
+            "29.E-10",
+            "49.E-100",
+            "-19.E1",
+            "-29.E10",
+            "-49.E100",
+            "-19.E-1",
+            "-29.E-10",
+            "-49.E-100",
+            "33.E+0"
+        ];
 
-    //     // Test that the exponent gets a + sign if it is 0.
-    //     el.realNumber!float = 2.2;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.200000E+0");
-    //     assert(approxEqual(el.realNumber!float, 2.2));
-    //     assert(approxEqual(el.realNumber!double, 2.2));
-    //     el.realNumber!double = 2.2;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.200000000000E+0");
-    //     assert(approxEqual(el.realNumber!float, 2.2));
-    //     assert(approxEqual(el.realNumber!double, 2.2));
+        CERElement el = new CERElement();
 
-    //     // Decimal + trailing zeros are not added if not necessary.
-    //     el.realNumber!float = 22.0;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.200000E1");
-    //     assert(approxEqual(el.realNumber!float, 22.0));
-    //     assert(approxEqual(el.realNumber!double, 22.0));
-    //     el.realNumber!double = 22.0;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.200000000000E1");
-    //     assert(approxEqual(el.realNumber!float, 22.0));
-    //     assert(approxEqual(el.realNumber!double, 22.0));
+        foreach (test; tests)
+        {
+            el.value = [ 0b0000_0011u ];
+            el.value ~= cast(ubyte[]) test;
+            assertNotThrown!ASN1ValueInvalidException(el.realNumber!float);
+            assertNotThrown!ASN1ValueInvalidException(el.realNumber!double);
+            assertNotThrown!ASN1ValueInvalidException(el.realNumber!real);
+        }
+    }
 
-    //     // Decimal + trailing zeros are added if necessary.
-    //     el.realNumber!float = 22.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.212300E1");
-    //     assert(approxEqual(el.realNumber!float, 22.123));
-    //     assert(approxEqual(el.realNumber!double, 22.123));
-    //     el.realNumber!double = 22.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.212300000000E1");
-    //     assert(approxEqual(el.realNumber!float, 22.123));
-    //     assert(approxEqual(el.realNumber!double, 22.123));
+    // Negative Testing Base-10 (Character-Encoded) REALs
+    @system
+    unittest
+    {
+        immutable string[] tests = [
+            " 1.E1", // Leading whitespace
+            "1.E1 ", // Trailing whitespace
+            "1 .E1", // Internal whitespace
+            "1. E1", // Internal whitespace
+            "1.E 1", // Internal whitespace
+            "+1.E1", // Leading plus sign
+            "01.E1", // Leading zero
+            "10.E1", // Trailing zero
+            "1.0E1", // Fractional zero
+            "1.E+1", // Leading plus sign
+            "1.E01", // Leading zero
+            "1E100", // No decimal point
+            "1.1",   // No 'E'
+            ""       // Empty string
+        ];
 
-    //     // Negative numbers are encoded correctly.
-    //     el.realNumber!float = -22.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "-2.212300E1");
-    //     assert(approxEqual(el.realNumber!float, -22.123));
-    //     assert(approxEqual(el.realNumber!double, -22.123));
-    //     el.realNumber!double = -22.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "-2.212300000000E1");
-    //     assert(approxEqual(el.realNumber!float, -22.123));
-    //     assert(approxEqual(el.realNumber!double, -22.123));
+        CERElement el = new CERElement();
 
-    //     // Small positive numbers are encoded correctly.
-    //     el.realNumber!float = 0.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "1.230000E-1");
-    //     assert(approxEqual(el.realNumber!float, 0.123));
-    //     assert(approxEqual(el.realNumber!double, 0.123));
-    //     el.realNumber!double = 0.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "1.230000000000E-1");
-    //     assert(approxEqual(el.realNumber!float, 0.123));
-    //     assert(approxEqual(el.realNumber!double, 0.123));
-
-    //     // Small negative numbers are encoded correctly.
-    //     el.realNumber!float = -0.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "-1.230000E-1");
-    //     assert(approxEqual(el.realNumber!float, -0.123));
-    //     assert(approxEqual(el.realNumber!double, -0.123));
-    //     el.realNumber!double = -0.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "-1.230000000000E-1");
-    //     assert(approxEqual(el.realNumber!float, -0.123));
-    //     assert(approxEqual(el.realNumber!double, -0.123));
-
-    //     CERElement.realEncodingBase = ASN1RealEncodingBase.base2;
-    // }
+        foreach (test; tests)
+        {
+            el.value = [ 0b0000_0011u ];
+            el.value ~= cast(ubyte[]) test;
+            assertThrown!ASN1ValueInvalidException(el.realNumber!float);
+            assertThrown!ASN1ValueInvalidException(el.realNumber!double);
+            assertThrown!ASN1ValueInvalidException(el.realNumber!real);
+        }
+    }
 
     /**
         Decodes an integer from an ENUMERATED type. In CER, an ENUMERATED
