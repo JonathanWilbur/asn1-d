@@ -493,14 +493,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         for (size_t i = 1; i < this.value.length; i++)
         {
             ret ~= [
-                (this.value[i] & 0b1000_0000u ? true : false),
-                (this.value[i] & 0b0100_0000u ? true : false),
-                (this.value[i] & 0b0010_0000u ? true : false),
-                (this.value[i] & 0b0001_0000u ? true : false),
-                (this.value[i] & 0b0000_1000u ? true : false),
-                (this.value[i] & 0b0000_0100u ? true : false),
-                (this.value[i] & 0b0000_0010u ? true : false),
-                (this.value[i] & 0b0000_0001u ? true : false)
+                (this.value[i] & 0b10000000u ? true : false),
+                (this.value[i] & 0b01000000u ? true : false),
+                (this.value[i] & 0b00100000u ? true : false),
+                (this.value[i] & 0b00010000u ? true : false),
+                (this.value[i] & 0b00001000u ? true : false),
+                (this.value[i] & 0b00000100u ? true : false),
+                (this.value[i] & 0b00000010u ? true : false),
+                (this.value[i] & 0b00000001u ? true : false)
             ];
         }
         ret.length -= this.value[0];
@@ -527,7 +527,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         for (size_t i = 0u; i < value.length; i++)
         {
             if (value[i] == false) continue;
-            ub[(i/8u)] |= (0b1000_0000u >> (i % 8u));
+            ub[(i/8u)] |= (0b10000000u >> (i % 8u));
         }
         this.value = [ cast(ubyte) (8u - (value.length % 8u)) ] ~ ub;
         if (this.value[0] == 0x08u) this.value[0] = 0x00u;
@@ -1401,7 +1401,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         encodes the real as a string of characters, where the latter nybble
         takes on values of 0x1, 0x2, or 0x3 to indicate that the string
         representation conforms to
-        $(LINK2 , ISO 6093) Numeric Representation 1, 2, or 3 respectively.
+        $(LINK2 https://www.iso.org/standard/12285.html, ISO 6093)
+        Numeric Representation 1, 2, or 3 respectively.
 
         If the first bit is set, then the first byte is an "information block"
         that describes the binary encoding of the REAL on the subsequent bytes.
@@ -1422,6 +1423,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Note that this method assumes that your machine uses IEEE 754 floating
         point format.
+
+        If you attempt to decode a REAL that is too big to fit into the selected
+        floating point type, the value of the real will quietly set to zero. This
+        cannot happen if the transmitted value is in base-2, but it can happen if
+        the transmitted value is in base-8 or base-16.
 
         Throws:
             ConvException = if character-encoding cannot be converted to
@@ -1450,18 +1456,18 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         if (this.value == [ 0x40u ]) return T.infinity;
         if (this.value == [ 0x41u ]) return -T.infinity;
 
-        switch (this.value[0] & 0b_1100_0000)
+        switch (this.value[0] & 0b11000000)
         {
-            case (0b_0100_0000u):
+            case (0b01000000u):
             {
-                return ((this.value[0] & 0b_0011_1111u) ? T.infinity : -T.infinity);
+                return ((this.value[0] & 0b00111111u) ? T.infinity : -T.infinity);
             }
-            case (0b_0000_0000u): // Character Encoding
+            case (0b00000000u): // Character Encoding
             {
                 import std.conv : to;
                 return to!(T)(cast(string) this.value[1 .. $]);
             }
-            case 0b_1000_0000u, 0b_1100_0000u: // Binary Encoding
+            case 0b10000000u, 0b11000000u: // Binary Encoding
             {
                 ulong mantissa;
                 short exponent;
@@ -1506,7 +1512,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                             );
 
                         ubyte[] exponentBytes = this.value[1 .. 3].dup;
-                        version (LittleEndian) reverse(exponentBytes); // TODO: Optimize
+                        version (LittleEndian) exponentBytes = [ exponentBytes[1], exponentBytes[0] ];
                         exponent = *cast(short *) exponentBytes.ptr;
                         startOfMantissa = 3u;
                         break;
@@ -1535,6 +1541,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         )
                         { // then it is small enough to become an IEEE 754 floating point type.
                             exponentBytes = exponentBytes[1 .. $];
+                            exponentBytes = [ exponentBytes[1], exponentBytes[0] ];
                             exponent = *cast(short *) exponentBytes.ptr;
                             startOfMantissa = 4u;
                         }
@@ -1653,7 +1660,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                                     debugInformationText ~ reportBugsText
                                 );
 
-                            version (LittleEndian) reverse(exponentBytes);
+                            version (LittleEndian) exponentBytes = [ exponentBytes[1], exponentBytes[0] ];
                             exponent = *cast(short *) exponentBytes.ptr;
                         }
                         startOfMantissa = (2u + exponentLength);
@@ -1691,19 +1698,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
-                switch (this.value[0] & 0b_0011_0000)
+                switch (this.value[0] & 0b00110000)
                 {
-                    case (0b_0000_0000): // Base 2
+                    case (0b00000000): // Base 2
                     {
                         base = 0x02u;
                         break;
                     }
-                    case (0b_0001_0000): // Base 8
+                    case (0b00010000): // Base 8
                     {
                         base = 0x08u;
                         break;
                     }
-                    case (0b_0010_0000): // Base 16
+                    case (0b00100000): // Base 16
                     {
                         base = 0x10u;
                         break;
@@ -1720,7 +1727,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         );
                 }
 
-                scale = ((this.value[0] & 0b_0000_1100u) >> 2);
+                scale = ((this.value[0] & 0b00001100u) >> 2);
 
                 /*
                     For some reason that I have yet to discover, you must
@@ -1731,7 +1738,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     this library without doing this.
                 */
                 return (
-                    ((this.value[0] & 0b_0100_0000u) ? -1.0 : 1.0) *
+                    ((this.value[0] & 0b01000000u) ? -1.0 : 1.0) *
                     cast(T) mantissa *
                     2^^scale *
                     (cast(T) base)^^(cast(T) exponent) // base must be cast
@@ -2011,19 +2018,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     // {
     //     BERElement el = new BERElement();
 
-    //     el.value = [ 0b1000_0011u, 0x01u, 0x00u, 0x03u ];
+    //     el.value = [ 0b10000011u, 0x01u, 0x00u, 0x03u ];
     //     assert(el.realNumber!float == 3.0);
     //     assert(el.realNumber!double == 3.0);
 
-    //     el.value = [ 0b1000_0011u, 0x01u, 0x05u, 0x03u ];
+    //     el.value = [ 0b10000011u, 0x01u, 0x05u, 0x03u ];
     //     assert(el.realNumber!float == 96.0);
     //     assert(el.realNumber!double == 96.0);
 
-    //     el.value = [ 0b1000_0011u, 0x02u, 0x00u, 0x05u, 0x03u ];
+    //     el.value = [ 0b10000011u, 0x02u, 0x00u, 0x05u, 0x03u ];
     //     assert(el.realNumber!float == 96.0);
     //     assert(el.realNumber!double == 96.0);
 
-    //     el.value = [ 0b1000_0011u ];
+    //     el.value = [ 0b10000011u ];
     //     el.value ~= cast(ubyte) size_t.sizeof;
     //     el.value.length += size_t.sizeof;
     //     el.value[$-1] = 0x05u;
@@ -4212,24 +4219,24 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         // Index of what we are currently parsing.
         size_t cursor = 0u;
 
-        switch (bytes[cursor] & 0b1100_0000u)
+        switch (bytes[cursor] & 0b11000000u)
         {
-            case (0b0000_0000u):
+            case (0b00000000u):
             {
                 this.tagClass = ASN1TagClass.universal;
                 break;
             }
-            case (0b0100_0000u):
+            case (0b01000000u):
             {
                 this.tagClass = ASN1TagClass.application;
                 break;
             }
-            case (0b1000_0000u):
+            case (0b10000000u):
             {
                 this.tagClass = ASN1TagClass.contextSpecific;
                 break;
             }
-            case (0b1100_0000u):
+            case (0b11000000u):
             {
                 this.tagClass = ASN1TagClass.privatelyDefined;
                 break;
@@ -4240,14 +4247,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             }
         }
 
-        switch (bytes[cursor] & 0b0010_0000u)
+        switch (bytes[cursor] & 0b00100000u)
         {
-            case (0b0000_0000u):
+            case (0b00000000u):
             {
                 this.construction = ASN1Construction.primitive;
                 break;
             }
-            case (0b0010_0000u):
+            case (0b00100000u):
             {
                 this.construction = ASN1Construction.constructed;
                 break;
@@ -4276,7 +4283,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 encoded on the fewest possible octets. If the first byte is
                 0x80, then it is not encoded on the fewest possible octets.
             */
-            if (bytes[cursor] == 0b1000_0000u)
+            if (bytes[cursor] == 0b10000000u)
                 throw new ASN1TagException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -4914,7 +4921,7 @@ unittest
     ubyte[] test;
     test.length = 504u;
     test[0] = cast(ubyte) ASN1UniversalType.octetString;
-    test[1] = 0b1000_0010u; // Length is encoded on next two octets
+    test[1] = 0b10000010u; // Length is encoded on next two octets
     test[2] = 0x01u; // Most significant byte of length
     test[3] = 0xF4u; // Least significant byte of length
     test[4] = 0x0Au; // First byte of the encoded value
@@ -4998,7 +5005,7 @@ unittest
 @system
 unittest
 {
-    ubyte[] invalid = [ 0b0000_0000u, 0b1000_0001u ];
+    ubyte[] invalid = [ 0b00000000u, 0b10000001u ];
     assertThrown!ASN1ValueTooSmallException(new BERElement(invalid));
 }
 

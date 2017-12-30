@@ -1579,7 +1579,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.realNumber"></span>abstract const @property T <code class="code">realNumber</code>(T)() if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.realNumber"></span>abstract const @property T <code class="code">realNumber</code>(T)() if (isFloatingPoint!T);
 
           </code>
         </p>
@@ -1611,7 +1611,7 @@
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.realNumber.2"></span>abstract @property void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.realNumber.2"></span>abstract @property void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (isFloatingPoint!T);
 
           </code>
         </p>
@@ -1626,36 +1626,7 @@
     Encodes a floating-point number
   </p>
 </div>
-<div class="ddoc_examples">
-  <h4>Examples</h4>
-  <p class="para">
-    
-<section class="code_listing">
-  <div class="code_sample">
-    <div class="dlang">
-      <ol class="code_lines">
-        <li><code class="code"><span class="keyword">float</span> f = -22.86;
-<span class="keyword">double</span> d = 0.00583;
-Element elf = <span class="keyword">new</span> Element();
-Element eld = <span class="keyword">new</span> Element();
-elf.<span class="psymbol">realNumber</span>!<span class="keyword">float</span> = f;
-eld.<span class="psymbol">realNumber</span>!<span class="keyword">double</span> = d;
-<span class="comment">// writefln("%f", elf.realNumber!float);
-</span><span class="keyword">assert</span>(approxEqual(elf.<span class="psymbol">realNumber</span>!<span class="keyword">float</span>, f));
-<span class="keyword">assert</span>(approxEqual(elf.<span class="psymbol">realNumber</span>!<span class="keyword">double</span>, f));
-<span class="keyword">assert</span>(approxEqual(eld.<span class="psymbol">realNumber</span>!<span class="keyword">float</span>, d));
-<span class="keyword">assert</span>(approxEqual(eld.<span class="psymbol">realNumber</span>!<span class="keyword">double</span>, d));
 
-<span class="comment">// Assert that accessor does not mutate state
-</span><span class="keyword">assert</span>(approxEqual(elf.<span class="psymbol">realNumber</span>!<span class="keyword">double</span>, elf.<span class="psymbol">realNumber</span>!<span class="keyword">double</span>));
-</code></li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-  </p>
-</div>
 </section>
 
 </div>

@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.41](http://semver.org/)
+* Version: [1.0.0-beta.42](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -230,7 +230,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Fuzz test all possible three-byte combinations
 - [x] Enforce `0` padding bits for DER and CER-encoded `BIT STRING`
 - [x] Test a `BIT STRING` with only a first byte
-- [ ] Fix `REAL`
+- [x] Fix `REAL`
   - [x] Remove encoding capabilities for anything but base-2.
   - [x] Fix CER and DER base-2 `REAL` must encode the exponent on the fewest octets, and scale = 0.
   - [x] Enforce exponent > 0 when using complicated exponent encoding. (X.690 8.5.6.4.d)
@@ -243,18 +243,17 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Change the template to accept any type that `isFloatingPoint`.
   - [x] Validate base-10 decoding
   - [x] Remove dependency on `FloatRep` and `DoubleRep`
-  - [ ] Section 8.5.3 might mean that you have to support encoding with all bases.
-  - [ ] Ensure no overflows on returning a `float`
-  - [ ] Ensure using base-8 or base-16 cannot be used to overflow
+  - [x] Ensure no overflows on returning a `float`
+  - [x] Ensure using base-8 or base-16 cannot be used to overflow
   - [x] Remove `approxEqual` from unit tests, if possible
-- [ ] Do some more unit testing for extreme lengths.
-- [ ] Search for `reverse` for potential optimizations
+- [x] Search for `reverse` for potential optimizations
 - [x] Fix Indefinite Length
   - [x] Enforce constructed construction
   - [x] Enforce same tag numbers for nested elements
 - [x] Contracts / Invariants
   - [x] `BOOLEAN`, `INTEGER`, `ENUMERATED`, `OBJECT IDENTIFIER`, `BIT STRING`, `GeneralizedTime` and `UTCTime` are never less than 0 bytes
 - [ ] More unit testing of `REAL`
+- [ ] Do some more unit testing for extreme lengths.
 - [ ] Cross-Platform Testing
   - [ ] Windows (Which is Big-Endian)
     - [ ] 64-Bit
@@ -268,11 +267,9 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Field Testing
   - [x] Reading [X.509 Certificates](http://www.itu.int/rec/T-REC-X.509-201610-I/en)
   - [x] Creating a Session with [OpenLDAP Server](http://www.openldap.org)
-  - [x] Test [OpenSSL](https://www.openssl.org/)'s [d2i tests]()
+  - [x] Test [OpenSSL](https://www.openssl.org/)'s [d2i tests](https://github.com/openssl/openssl/tree/master/test/d2i-tests)
 - [x] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) in the [National Vulnerability Database](https://nvd.nist.gov)
-- [ ] Should all of the `ubyte[]`s be `void[]` instead?
-- [ ] Prevent TOCTOU problems resulting from multi-threading by making a private duplicate of `this.value`
-- [ ] Grammar and Styling
+- [x] Grammar and Styling
   - [x] Check for `a` and `an` mixups
   - [x] Check for duplicated terminal words
   - [x] Check for incorrect data types
@@ -280,7 +277,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Add parenthetical abbreviations
   - [x] Remove trailing spaces
   - [x] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
-  - [ ] Format numbers consistently (particularly `0b` binary literals)
+  - [x] Format numbers consistently (particularly `0b` binary literals)
 - [ ] `cli.lib`
   - [ ] Figure out how to parse negative numbers from the command-line (`-1.0` gets interpreted as a command...)
 - [ ] Documentation
@@ -311,6 +308,10 @@ Version 1.0.0-beta was released on November 8th, 2017.
       - [ ] `SEQUENCE OF`
       - [ ] `REAL`
         - [ ] This library does not support encoding in base-8, base-10, or base-16.
+  - [ ] `concurrency.md`
+    - [ ] Potential TOCTOU problems resulting
+    - [ ] Future inclusion of `synchronized` sections
+    - [ ] A better concurrency model
   - [ ] `contributing.md`
   - [ ] `context-switching-types.md` (My research into context-switching types)
   - [x] `security.md`

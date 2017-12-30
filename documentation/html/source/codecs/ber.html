@@ -1740,7 +1740,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realNumber"></span>const @property @system T <code class="code">realNumber</code>(T)() if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realNumber"></span>const @property @system T <code class="code">realNumber</code>(T)() if (isFloatingPoint!T);
 
           </code>
         </p>
@@ -1766,7 +1766,8 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         encodes the real as a string of characters, where the latter nybble
         takes on values of 0x1, 0x2, or 0x3 to indicate that the string
         representation conforms to
-        <a href="">ISO 6093</a> Numeric Representation 1, 2, or 3 respectively.
+        <a href="https://www.iso.org/standard/12285.html">ISO 6093</a>
+        Numeric Representation 1, 2, or 3 respectively.
 <br><br>
         If the first bit is set, then the first byte is an "information block"
         that describes the binary encoding of the REAL on the subsequent bytes.
@@ -1787,6 +1788,11 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <br><br>
         Note that this method assumes that your machine uses IEEE 754 floating
         point format.
+<br><br>
+        If you attempt to decode a REAL that is too big to fit into the selected
+        floating point type, the value of the real will quietly set to zero. This
+        cannot happen if the transmitted value is in base-2, but it can happen if
+        the transmitted value is in base-8 or base-16.
 
 
   </p>
@@ -1834,7 +1840,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
       <div class="dlang">
         <p class="para">
           <code class="code">
-            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realNumber.2"></span>@property @system void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (is(T == float) || is(T == double));
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realNumber.2"></span>@property @system void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (isFloatingPoint!T);
 
           </code>
         </p>

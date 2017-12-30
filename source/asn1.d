@@ -270,9 +270,9 @@ public alias ASN1Base10RealNumericalRepresentation = AbstractSyntaxNotation1Base
 immutable public
 enum AbstractSyntaxNotation1Base10RealNumericalRepresentation : ubyte
 {
-    nr1 = 0b0000_0001,
-    nr2 = 0b0000_0010,
-    nr3 = 0b0000_0011
+    nr1 = 0b00000001,
+    nr2 = 0b00000010,
+    nr3 = 0b00000011
 }
 
 /// The acceptable characters for a NumericString
