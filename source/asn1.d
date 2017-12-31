@@ -54,8 +54,6 @@ version (unittest)
     public import std.stdio : write, writefln, writeln;
 }
 
-public import std.array : appender, Appender;
-
 // Check fundamental assumptions of this library.
 static assert(char.sizeof == 1u);
 static assert(wchar.sizeof == 2u);
@@ -76,10 +74,10 @@ public alias ASN1TagClass = AbstractSyntaxNotation1TagClass;
 immutable public
 enum AbstractSyntaxNotation1TagClass : ubyte
 {
-    universal = 0b00000000, // Native to ASN.1
-    application = 0b01000000, // Only valid for one specific application
-    contextSpecific = 0b10000000, // Specific to a sequence, set, or choice
-    privatelyDefined = 0b11000000 // Defined in private specifications
+    universal = 0b00000000u, // Native to ASN.1
+    application = 0b01000000u, // Only valid for one specific application
+    contextSpecific = 0b10000000u, // Specific to a sequence, set, or choice
+    privatelyDefined = 0b11000000u// Defined in private specifications
 }
 
 ///
@@ -88,8 +86,8 @@ public alias ASN1Construction = AbstractSyntaxNotation1Construction;
 immutable public
 enum AbstractSyntaxNotation1Construction : ubyte
 {
-    primitive = 0b00000000, // The content octets directly encode the element value
-    constructed = 0b00100000 // The content octets contain 0, 1, or more element encodings
+    primitive = 0b00000000u, // The content octets directly encode the element value
+    constructed = 0b00100000u // The content octets contain 0, 1, or more element encodings
 }
 
 ///
@@ -195,10 +193,10 @@ public alias ASN1LengthEncoding = AbstractSyntaxNotation1LengthEncoding;
 public
 enum AbstractSyntaxNotation1LengthEncoding : ubyte
 {
-    definiteShort, // Least significant seven bits of length octet encode content length of 0 - 127 bytes
-    indefinite, // Content ends when two endOfContent bytes are encountered.
-    definiteLong, // Least significant seven bits of length octet encode how many more length octets
-    reserved // 0b11111111
+    definiteShort = 0b00000000u, // Least significant seven bits of length octet encode content length of 0 - 127 bytes
+    indefinite = 0b10000000u, // Content ends when two endOfContent bytes are encountered.
+    definiteLong = 0b10000001u, // Least significant seven bits of length octet encode how many more length octets
+    reserved = 0b11111111u
 }
 
 ///
@@ -207,10 +205,10 @@ public alias ASN1RealEncodingBase = AbstractSyntaxNotation1RealEncodingBase;
 immutable public
 enum AbstractSyntaxNotation1RealEncodingBase : ubyte
 {
-    base2 = 0x02,
-    base8 = 0x08,
-    base10 = 0x0A,
-    base16 = 0x10
+    base2 = 0x02u,
+    base8 = 0x08u,
+    base10 = 0x0Au,
+    base16 = 0x10u
 }
 
 ///
@@ -219,10 +217,10 @@ public alias ASN1RealEncodingScale = AbstractSyntaxNotation1RealEncodingScale;
 immutable public
 enum AbstractSyntaxNotation1RealEncodingScale : ubyte
 {
-    scale0 = 0x00,
-    scale1 = 0x01,
-    scale2 = 0x02,
-    scale3 = 0x03
+    scale0 = 0x00u,
+    scale1 = 0x01u,
+    scale2 = 0x02u,
+    scale3 = 0x03u
 }
 
 ///
@@ -231,10 +229,10 @@ public alias ASN1RealExponentEncoding = AbstractSyntaxNotation1RealExponentEncod
 immutable public
 enum AbstractSyntaxNotation1RealExponentEncoding : ubyte
 {
-    followingOctet = 0b00000000,
-    following2Octets = 0b00000001,
-    following3Octets = 0b00000010,
-    complicated = 0b00000011 // Just calling it as I see it.
+    followingOctet = 0b00000000u,
+    following2Octets = 0b00000001u,
+    following3Octets = 0b00000010u,
+    complicated = 0b00000011u // Just calling it as I see it.
 }
 
 ///
@@ -243,10 +241,10 @@ public alias ASN1SpecialRealValue = AbstractSyntaxNotation1SpecialRealValue;
 immutable public
 enum AbstractSyntaxNotation1SpecialRealValue : ubyte
 {
-    plusInfinity = 0b01000000,
-    minusInfinity = 0b01000001,
-    notANumber = 0b01000010,
-    negativeZero = 0b01000011
+    plusInfinity = 0b01000000u,
+    minusInfinity = 0b01000001u,
+    notANumber = 0b01000010u,
+    negativeZero = 0b01000011u
 }
 
 ///
@@ -270,8 +268,8 @@ public alias ASN1Base10RealNumericalRepresentation = AbstractSyntaxNotation1Base
 immutable public
 enum AbstractSyntaxNotation1Base10RealNumericalRepresentation : ubyte
 {
-    nr1 = 0b00000001,
-    nr2 = 0b00000010,
+    nr1 = 0b00000001u,
+    nr2 = 0b00000010u,
     nr3 = 0b00000011
 }
 

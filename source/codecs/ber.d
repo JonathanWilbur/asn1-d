@@ -128,9 +128,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     public LengthEncodingPreference lengthEncodingPreference =
         LengthEncodingPreference.definite;
 
-    /// The base of encoded REALs. May be 2, 8, 10, or 16.
-    static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
-
     /// The number of recursions used for parsing constructed elements.
     static protected size_t nestingRecursionCount = 0u;
 
@@ -1456,7 +1453,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         if (this.value == [ 0x40u ]) return T.infinity;
         if (this.value == [ 0x41u ]) return -T.infinity;
 
-        switch (this.value[0] & 0b11000000)
+        switch (this.value[0] & 0b11000000u)
         {
             case (0b01000000u):
             {
@@ -1527,7 +1524,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         startOfMantissa = 3u;
                         break;
                     }
-                    case 0b00000010: // Exponent on the following three octets
+                    case 0b00000010u: // Exponent on the following three octets
                     {
                         if (this.length < 4u)
                             throw new ASN1ValueTooSmallException
@@ -1572,7 +1569,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         }
                         break;
                     }
-                    case 0b00000011: // Complicated
+                    case 0b00000011u: // Complicated
                     {
                         /* NOTE:
                             X.690 states that, in this case, the exponent must
@@ -1708,19 +1705,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
-                switch (this.value[0] & 0b00110000)
+                switch (this.value[0] & 0b00110000u)
                 {
-                    case (0b00000000): // Base 2
+                    case (0b00000000u): // Base 2
                     {
                         base = 0x02u;
                         break;
                     }
-                    case (0b00010000): // Base 8
+                    case (0b00010000u): // Base 8
                     {
                         base = 0x08u;
                         break;
                     }
-                    case (0b00100000): // Base 16
+                    case (0b00100000u): // Base 16
                     {
                         base = 0x10u;
                         break;

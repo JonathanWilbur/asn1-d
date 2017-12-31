@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2017
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.42](http://semver.org/)
+* Version: [1.0.0-beta.43](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -49,66 +49,6 @@ ASN.1 is used in, or required by, multiple technologies, including:
 If you look in the
 [`asn1` directory of WireShark's source code](https://github.com/wireshark/wireshark/tree/master/epan/dissectors/asn1),
 you'll see all of the protocols that use ASN.1.
-
-## Structure
-
-The "root" of this library is `asn1.d`, which contains some universal absolutes,
-such as `enum`s and `const`s that are used by ASN.1. But this is a pretty boring
-file with almost no actual code.
-
-The real fun begins with `source/codec.d`, whose flagship item is `ASN1Element`,
-the abstract class from which all other codecs must inherit. An `ASN1Element`
-represents a single encoded value (although it could be a single `SEQUENCE`
-or `SET`). In the `source/codecs` directory, you will find all of the codecs that
-inherit from `ASN1Element`. The `BERElement` class can be found in `ber.d`,
-and it represents a ASN.1 value, encoded via the Basic Encoding Rules (BER)
-specified in the
-[International Telecommunications Union](http://www.itu.int/en/pages/default.aspx)'s
-[X.690 - ASN.1 encoding rules](http://www.itu.int/rec/T-REC-X.690/en).
-
-The codecs rely upon a few ASN.1-specific data types, such as `EMBEDDED PDV`,
-and these data types have their own classes or structs somewhere in the
-`source/types` directory. In `source/types`, you will find `alltypes.d`, which
-just provides a convenient way to import all data types instead of having
-multiple import statements for each. There, you will also find data types
-that are used by other data types. In `source/types/universal`, you will find
-D data types for some of ASN.1's universal data types.
-
-In the `source/tools` directory, you will find the source for this
-library's related ASN.1 command-line tools, such as `decode-ber`.
-
-In the `documentation` directory, you will find documentation. The
-automatically-generated DDoc HTML (produced from the commentary documentation)
-can be found in `documentation/html`. URIs to useful websites can be found
-in `documentation/links`. The list of developers for this library can be found
-in CSV-format in `documentation/credits.csv`, where the fields are `role`,
-`full name`, and `email address` for each row. In `documentation/license`,
-you will find the full text of the license for this library.
-
-In the `build` directory, you will find tools for building the library, and
-directories for the placement of outputs or intermediary artifacts (midputs?).
-The most important subdirectory for you, the end user, is going to be
-`build/scripts`, which contains various scripts for building this library in
-a variety of environments.
-
-## Compile and Install
-
-In `build/scripts` there are three scripts you can use to build the library.
-When the library is built, it will be located in `build/libraries`.
-
-### On POSIX-Compliant Machines (Linux, Mac OS X)
-
-Run `./build/scripts/build.sh`.
-If you get a permissions error, you need to set that file to be executable
-using the `chmod` command.
-
-### On Windows
-
-Run `.\build\scripts\build.bat` from a `cmd` or run `.\build\scripts\build.ps1`
-from the PowerShell command line. If you get a warning about needing a
-cryptographic signature for the PowerShell script, it is probably because
-your system is blocking running unsigned PowerShell scripts. Just run the
-other script if that is the case.
 
 ## Usage
 
@@ -251,6 +191,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Enforce same tag numbers for nested elements
 - [x] Contracts / Invariants
   - [x] `BOOLEAN`, `INTEGER`, `ENUMERATED`, `OBJECT IDENTIFIER`, `BIT STRING`, `GeneralizedTime` and `UTCTime` are never less than 0 bytes
+- [ ] `REAL` encoding of `NaN`?
+- [ ] Restructure the Exception hierarchy
 - [ ] More unit testing of `REAL`
 - [ ] Do some more unit testing for extreme lengths.
 - [ ] Cross-Platform Testing
@@ -291,36 +233,33 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [x] What it means to be primitive or constructed
     - [x] "Don't use ASN.1 unless you absolutely MUST use ASN.1."
   - [ ] `library.md`
-    - [ ] Terminology
-      - [ ] This library uses "mantissa," not "significand," because "mantissa" is in the specification.
-    - [ ] Class Hierarchy
+    - [x] Terminology
+      - [x] This library uses "mantissa," not "significand," because "mantissa" is in the specification.
+    - [x] Class Hierarchy
     - [ ] Exception Hierarchy
-    - [ ] This library assumes IEEE 754 floating point structure
-    - [ ] Security Advice
-      - [ ] Leave note to developers about avoiding recursion problems. (See CVE-2016-4421 and CVE-2010-2284.)
-      - [ ] About constructed types (See CVE-2010-3445.)
-    - [ ] How to encode and decode
-      - [ ] `ANY`
-      - [ ] `CHOICE` (Mind CVE-2011-1142)
-      - [ ] `INSTANCE OF`
-      - [ ] `SET OF`
-      - [ ] `SEQUENCE OF`
-      - [ ] `REAL`
-        - [ ] This library does not support encoding in base-8, base-10, or base-16.
-  - [ ] `concurrency.md`
-    - [ ] Potential TOCTOU problems resulting
-    - [ ] Future inclusion of `synchronized` sections
-    - [ ] A better concurrency model
-  - [ ] `contributing.md`
+    - [x] This library assumes IEEE 754 floating point structure
+    - [x] Security Advice
+      - [x] Leave note to developers about avoiding recursion problems. (See CVE-2016-4421 and CVE-2010-2284.)
+      - [x] About constructed types (See CVE-2010-3445.)
+    - [x] How to encode and decode
+      - [x] `ANY`
+      - [x] `CHOICE`
+      - [x] `INSTANCE OF`
+      - [x] `SET OF`
+      - [x] `SEQUENCE OF`
+  - [x] `concurrency.md`
+    - [x] Potential TOCTOU problems resulting
+    - [x] Future inclusion of `synchronized` sections
+    - [x] A better concurrency model
+  - [x] `contributing.md`
   - [ ] `context-switching-types.md` (My research into context-switching types)
   - [x] `security.md`
     - [x] OpenSSL Bads
     - [x] Fuzz Testing Results
     - [x] [National Vulnerability Database](https://nvd.nist.gov) Common Vulnerability and Exploit (CVE) Review
   - [ ] `tools.md`
-  - [ ] `roadmap.md`
+  - [x] `roadmap.md`
   - [ ] `releases.csv` (Version, Date, LOC, SLOC, Signature)
-  - [ ] `users.md` / `users.csv`
   - [ ] `man` Pages
 - [ ] Build Scripts
   - [ ] Add `chmod +x` to the build scripts for all executables
@@ -373,98 +312,6 @@ I tried doing this for the following properties:
   - [ ] Suggestions for Inclusions in D Libraries
     - [ ] [Botan](https://github.com/etcimon/botan)
     - [ ] [ldap](https://github.com/WebFreak001/ldap)
-
-### 1.1.0 Release
-
-The following codecs will be added:
-
-- [ ] [Aligned Packed Encoding Rules (PER)](http://www.itu.int/rec/T-REC-X.691-201508-I)
-- [ ] Unaligned Packed Encoding Rules (UPER)
-- [ ] [Canonical Packed Encoding Rules (CPER)](http://www.itu.int/rec/T-REC-X.696-201508-I)
-- [ ] Command-Line Tools
-  - [ ] `encode-per`
-  - [ ] `encode-uper`
-  - [ ] `encode-cper`
-  - [ ] `decode-per`
-  - [ ] `decode-uper`
-  - [ ] `decode-cper`
-
-After this release, developers will be able to use this library to develop a
-Remote Desktop Protocol library.
-
-### 1.2.0 Release
-
-The following codecs will be added:
-
-- [ ] [JSON Encoding Rules (JER)](http://www.itu.int/rec/T-REC-X.697-201710-P)
-- [ ] [XML Encoding Rules (XER)](http://www.itu.int/rec/T-REC-X.693-201508-I/en)
-- [ ] [Canonical XML Encoding Rules (CXER)](http://www.itu.int/rec/T-REC-X.693-201508-I/en)
-- [ ] [Extended XML Encoding Rules (EXER)](http://www.itu.int/rec/T-REC-X.693-201508-I/en)
-- [ ] Command-Line Tools
-  - [ ] `encode-xer`
-  - [ ] `encode-cxer`
-  - [ ] `encode-exer`
-  - [ ] `encode-jer`
-  - [ ] `decode-xer`
-  - [ ] `decode-cxer`
-  - [ ] `decode-exer`
-  - [ ] `decode-jer`
-
-### 1.3.0 Release
-
-The following codecs will be added:
-
-- [ ] [Octet Encoding Rules (OER)](http://www.itu.int/rec/T-REC-X.696-201508-I)
-- [ ] [Canonical Octet Encoding Rules (COER)](http://www.itu.int/rec/T-REC-X.696-201508-I)
-- [ ] Command-Line Tools
-  - [ ] `encode-oer`
-  - [ ] `encode-coer`
-  - [ ] `decode-oer`
-  - [ ] `decode-coer`
-
-### 1.4.0 Release
-
-The following codecs will be added:
-
-- [ ] Generic String Encoding Rules (GSER)
-- [ ] Lightweight Encoding Rules (LWER)
-- [ ] BACNet Encoding Rules
-- [ ] Signalling-specific Encoding Rules (SER)
-- [ ] Command-Line Tools
-  - [ ] `encode-gser`
-  - [ ] `encode-lwer`
-  - [ ] `encode-bacnet`
-  - [ ] `encode-ser`
-  - [ ] `decode-gser`
-  - [ ] `decode-lwer`
-  - [ ] `decode-bacnet`
-  - [ ] `decode-ser`
-
-### 1.6.0 Release
-
-- [ ] Scale selection for binary-encoded `REAL` type
-
-### 2.0.0 Release
-
-- [ ] Teletex (T61String) validation (WireShark has an implementation.)
-- [ ] Videotex validation
-- [ ] Operator Overloads
-  - [ ] `~=` making a constructed element
-- [ ] Build System
-  - [ ] [Bazel](https://www.bazel.build)
-  - [ ] Makefile
-  - [ ] Compiled D Executable
-  - [ ] Support `gdc` and `ldc` compilation
-- [ ] Libraries (Intended to split off into independent modules once I figure out good packaging, distribution, and build processes for them)
-  - [x] `cli` ([GitHub Page](https://github.com/JonathanWilbur/cli-d))
-  - [ ] `teletex`
-  - [ ] `videotex`
-  - [ ] `bin2text`
-    - [ ] `Base2`
-    - [ ] `Base8`
-    - [ ] `Base10`?
-    - [ ] `Base16`
-    - [ ] `Base64`
 
 ## Suggestions
 

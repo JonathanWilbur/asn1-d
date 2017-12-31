@@ -1,6 +1,7 @@
 module types.universal.objectidentifier;
 import asn1;
 import types.oidtype;
+import std.array : appender, Appender;
 
 ///
 public alias OIDException = ObjectIdentifierException;

@@ -13,7 +13,7 @@ public import types.identification;
 public import types.oidtype;
 public import std.algorithm.mutation : reverse;
 public import std.algorithm.searching : canFind;
-public import std.array : replace, split;
+public import std.array : appender, Appender, replace, split;
 public import std.ascii : isASCII, isGraphical;
 public import std.conv : text;
 public import std.datetime.date : DateTime;
@@ -523,6 +523,8 @@ class AbstractSyntaxNotation1Element(Element)
 
     ///
     public alias oid = objectIdentifier;
+    ///
+    public alias objectID = objectIdentifier;
     /// Decodes an Object Identifier
     abstract public @property
     OID objectIdentifier() const;

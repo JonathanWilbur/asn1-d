@@ -12,9 +12,6 @@ mixin template Encoder(Element)
     import std.stdio : stderr, stdout;
     import std.utf : UTFException;
 
-    // TODO: REAL format options
-    // TODO: Number option
-
     ASN1TagClass tagClass = ASN1TagClass.universal;
     ASN1Construction construction = ASN1Construction.primitive;
     uint tagNumber = uint.max;

@@ -1461,7 +1461,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         if (this.value == [ 0x40u ]) return T.infinity;
         if (this.value == [ 0x41u ]) return -T.infinity;
 
-        switch (this.value[0] & 0b11000000)
+        switch (this.value[0] & 0b11000000u)
         {
             case (0b01000000u):
             {
@@ -1633,8 +1633,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         startOfMantissa = 3u;
                         break;
                     }
-                    case 0b00000010: // Exponent on the following three octets
-                    case 0b00000011: // Complicated
+                    case 0b00000010u: // Exponent on the following three octets
+                    case 0b00000011u: // Complicated
                     {
                         throw new ASN1ValueTooBigException
                         (
@@ -1690,19 +1690,19 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
-                switch (this.value[0] & 0b00110000)
+                switch (this.value[0] & 0b00110000u)
                 {
-                    case (0b00000000): // Base 2
+                    case (0b00000000u): // Base 2
                     {
                         base = 0x02u;
                         break;
                     }
-                    case (0b00010000): // Base 8
+                    case (0b00010000u): // Base 8
                     {
                         base = 0x08u;
                         break;
                     }
-                    case (0b00100000): // Base 16
+                    case (0b00100000u): // Base 16
                     {
                         base = 0x10u;
                         break;

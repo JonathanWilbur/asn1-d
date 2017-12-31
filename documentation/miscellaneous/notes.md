@@ -18,7 +18,7 @@ CHOICE {
 If you chose [1], your BER-encoding would be:
 
 ```d
-0b10100001 0x01 0x05 0x00
+0b10100001u 0x01 0x05 0x00
 ```
 
 ### IMPLICIT
@@ -26,7 +26,7 @@ If you chose [1], your BER-encoding would be:
 If you chose [1], your encoding would be
 
 ```d
-0b10100001 0x00
+0b10100001u 0x00
 ```
 
 In other words, a context-specific constructed tag, whose tag number is the 
