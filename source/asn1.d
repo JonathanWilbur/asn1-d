@@ -237,14 +237,18 @@ enum AbstractSyntaxNotation1RealExponentEncoding : ubyte
 
 ///
 public alias ASN1SpecialRealValue = AbstractSyntaxNotation1SpecialRealValue;
-///
+/**
+    Special values for REALs, as assigned in section 8.5.9 of X.690.
+
+    Note that NOT-A-NUMBER and minus zero were added in the 2015 version.
+*/
 immutable public
 enum AbstractSyntaxNotation1SpecialRealValue : ubyte
 {
     plusInfinity = 0b01000000u,
     minusInfinity = 0b01000001u,
     notANumber = 0b01000010u,
-    negativeZero = 0b01000011u
+    minusZero = 0b01000011u
 }
 
 ///

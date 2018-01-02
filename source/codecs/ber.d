@@ -1449,22 +1449,23 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     T realNumber(T)() const
     if (isFloatingPoint!T)
     {
-        if (this.value.length == 0) return cast(T) 0.0;
-        if (this.value == [ 0x40u ]) return T.infinity;
-        if (this.value == [ 0x41u ]) return -T.infinity;
-
+        if (this.value.length == 0u) return cast(T) 0.0;
         switch (this.value[0] & 0b11000000u)
         {
-            case (0b01000000u):
+            case (0b01000000u): // Special value
             {
+                if (this.value[0] == ASN1SpecialRealValue.notANumber) return T.nan;
+                if (this.value[0] == ASN1SpecialRealValue.minusZero) return -0.0;
+                if (this.value[0] == ASN1SpecialRealValue.plusInfinity) return T.infinity;
+                if (this.value[0] == ASN1SpecialRealValue.minusInfinity) return -T.infinity;
                 throw new ASN1ValueInvalidException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a REAL whose information byte indicated a special value " ~
                     "not recognized by the specification. The only special " ~
-                    "values recognized by the specification are PLUS-INFINITY " ~
-                    "and MINUS-INFINITY, idenified by information bytes of " ~
-                    "0x40 and 0x41 respectively. " ~
+                    "values recognized by the specification are PLUS-INFINITY, " ~
+                    "MINUS-INFINITY, NOT-A-NUMBER, and minus zero, identified " ~
+                    "by information bytes of 0x40, 0x41 0x42, 0x43 respectively. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
@@ -1809,19 +1810,31 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     void realNumber(T)(in T value)
     if (isFloatingPoint!T)
     {
-        if (value == 0.0)
+        /* NOTE:
+            You must use isIdentical() to compare FP types to negative zero,
+            because the basic == operator does not distinguish between zero
+            and negative zero.
+
+            isNaN() must be used to compare NaNs, because comparison using ==
+            does not work for that at all.
+
+            Also, this cannot go in a switch statement, because FP types
+            cannot be the switch value.
+        */
+        if (isIdentical(value, 0.0))
         {
             this.value = [];
             return;
         }
-        else if (value.isNaN)
+        else if (isIdentical(value, -0.0))
         {
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because you attempted to encode a " ~
-                "floating-point data type with a value of NaN (not-a-number) " ~
-                "as an ASN.1 REAL, but the ASN.1 REAL cannot encode NaN."
-            );
+            this.value = [ ASN1SpecialRealValue.minusZero ];
+            return;
+        }
+        if (value.isNaN)
+        {
+            this.value = [ ASN1SpecialRealValue.notANumber ];
+            return;
         }
         else if (value == T.infinity)
         {
@@ -1947,6 +1960,120 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 ASN1RealExponentEncoding.following2Octets);
 
         this.value = (infoByte ~ exponentBytes ~ mantissaBytes);
+    }
+
+    @system
+    unittest
+    {
+        BERElement el = new BERElement();
+
+        // float
+        el.realNumber!float = cast(float) float.nan;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.notANumber ]);
+        el.realNumber!double = cast(double) float.nan;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.notANumber ]);
+        el.realNumber!real = cast(real) float.nan;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.notANumber ]);
+
+        el.realNumber!float = cast(float) 0.0;
+        assert(el.value == []);
+        el.realNumber!double = cast(float) 0.0;
+        assert(el.value == []);
+        el.realNumber!real = cast(float) 0.0;
+        assert(el.value == []);
+
+        el.realNumber!float = cast(float) -0.0;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusZero ]);
+        el.realNumber!double = cast(float) -0.0;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusZero ]);
+        el.realNumber!real = cast(float) -0.0;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusZero ]);
+
+        el.realNumber!float = cast(float) float.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.plusInfinity ]);
+        el.realNumber!double = cast(double) float.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.plusInfinity ]);
+        el.realNumber!real = cast(real) float.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.plusInfinity ]);
+
+        el.realNumber!float = cast(float) -float.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusInfinity ]);
+        el.realNumber!double = cast(double) -float.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusInfinity ]);
+        el.realNumber!real = cast(real) -float.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusInfinity ]);
+
+        // double
+        el.realNumber!float = cast(float) double.nan;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.notANumber ]);
+        el.realNumber!double = cast(double) double.nan;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.notANumber ]);
+        el.realNumber!real = cast(real) double.nan;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.notANumber ]);
+
+        el.realNumber!float = cast(double) 0.0;
+        assert(el.value == []);
+        el.realNumber!double = cast(double) 0.0;
+        assert(el.value == []);
+        el.realNumber!real = cast(double) 0.0;
+        assert(el.value == []);
+
+        el.realNumber!float = cast(double) -0.0;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusZero ]);
+        el.realNumber!double = cast(double) -0.0;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusZero ]);
+        el.realNumber!real = cast(double) -0.0;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusZero ]);
+
+        el.realNumber!float = cast(float) double.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.plusInfinity ]);
+        el.realNumber!double = cast(double) double.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.plusInfinity ]);
+        el.realNumber!real = cast(real) double.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.plusInfinity ]);
+
+        el.realNumber!float = cast(float) -double.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusInfinity ]);
+        el.realNumber!double = cast(double) -double.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusInfinity ]);
+        el.realNumber!real = cast(real) -double.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusInfinity ]);
+
+        // real
+        el.realNumber!float = cast(float) real.nan;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.notANumber ]);
+        el.realNumber!double = cast(double) real.nan;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.notANumber ]);
+        el.realNumber!real = cast(real) real.nan;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.notANumber ]);
+
+        el.realNumber!float = cast(real) 0.0;
+        assert(el.value == []);
+        el.realNumber!double = cast(real) 0.0;
+        assert(el.value == []);
+        el.realNumber!real = cast(real) 0.0;
+        assert(el.value == []);
+
+        el.realNumber!float = cast(real) -0.0;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusZero ]);
+        el.realNumber!double = cast(real) -0.0;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusZero ]);
+        el.realNumber!real = cast(real) -0.0;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusZero ]);
+
+        el.realNumber!float = cast(float) real.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.plusInfinity ]);
+        el.realNumber!double = cast(double) real.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.plusInfinity ]);
+        el.realNumber!real = cast(real) real.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.plusInfinity ]);
+
+        el.realNumber!float = cast(float) -real.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusInfinity ]);
+        el.realNumber!double = cast(double) -real.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusInfinity ]);
+        el.realNumber!real = cast(real) -real.infinity;
+        assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusInfinity ]);
     }
 
     // Testing Base-10 (Character-Encoded) REALs

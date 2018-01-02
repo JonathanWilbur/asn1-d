@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.44](http://semver.org/)
+* Version: [1.0.0-beta.45](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -143,7 +143,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `typeConstruction` (Just rename `construction`.)
   - [x] `typeNumber`
 - [x] Rename `enum`s in `asn1.d`.
-- [ ] Command Line Tools
+- [x] Command Line Tools
   - [x] Create a template mixin or something to reduce duplication between decoders.
   - [x] `encode-der`
   - [x] `encode-ber`
@@ -151,8 +151,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `decode-der`
   - [x] `decode-ber`
   - [x] `decode-cer`
-  - [ ] Fix them
-  - [ ] Catch exceptions and display error message.
+  - [x] Fix them
+  - [x] Catch exceptions and display error message.
 - [x] Test that all one-byte elements throw exceptions
 - [x] Test an OID with a node with a values 127, 128, and 0.
 - [x] Test even more significant mathematical values with `realNumber()`:
@@ -191,8 +191,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Enforce same tag numbers for nested elements
 - [x] Contracts / Invariants
   - [x] `BOOLEAN`, `INTEGER`, `ENUMERATED`, `OBJECT IDENTIFIER`, `BIT STRING`, `GeneralizedTime` and `UTCTime` are never less than 0 bytes
-- [ ] Add further `REAL` special numbers
-- [ ] Review latest version of X.690
+- [x] Add further `REAL` special numbers
+- [ ] Review latest version of X.690 (I was accidentally reading the 2008 one...)
 - [ ] Restructure the Exception hierarchy
 - [ ] More unit testing of `REAL`
 - [ ] Do some more unit testing for extreme lengths.

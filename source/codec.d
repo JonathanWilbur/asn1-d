@@ -20,7 +20,7 @@ public import std.datetime.date : DateTime;
 public import std.datetime.systime : SysTime;
 public import std.datetime.timezone : TimeZone, UTC;
 private import std.exception : basicExceptionCtors;
-public import std.math : isNaN, log2;
+public import std.math : isIdentical, isNaN, log2;
 public import std.traits : isFloatingPoint, isIntegral, isSigned, isUnsigned;
 
 ///
@@ -914,23 +914,56 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.realNumber!real   == -real.infinity);
     }
 
-    // Test NaN does not encode
+    // Test NaN
     @system
     unittest
     {
         Element el = new Element();
 
-        assertThrown!ASN1ValueInvalidException(el.realNumber!float  = float.nan);
-        assertThrown!ASN1ValueInvalidException(el.realNumber!double = float.nan);
-        assertThrown!ASN1ValueInvalidException(el.realNumber!real   = float.nan);
+        el.realNumber!float = float.nan;
+        assert(el.realNumber!float.isNaN);
+        assert(el.realNumber!double.isNaN);
+        assert(el.realNumber!real.isNaN);
 
-        assertThrown!ASN1ValueInvalidException(el.realNumber!float  = double.nan);
-        assertThrown!ASN1ValueInvalidException(el.realNumber!double = double.nan);
-        assertThrown!ASN1ValueInvalidException(el.realNumber!real   = double.nan);
+        el.realNumber!double = float.nan;
+        assert(el.realNumber!float.isNaN);
+        assert(el.realNumber!double.isNaN);
+        assert(el.realNumber!real.isNaN);
 
-        assertThrown!ASN1ValueInvalidException(el.realNumber!float  = real.nan);
-        assertThrown!ASN1ValueInvalidException(el.realNumber!double = real.nan);
-        assertThrown!ASN1ValueInvalidException(el.realNumber!real   = real.nan);
+        el.realNumber!real = float.nan;
+        assert(el.realNumber!float.isNaN);
+        assert(el.realNumber!double.isNaN);
+        assert(el.realNumber!real.isNaN);
+
+        el.realNumber!float = double.nan;
+        assert(el.realNumber!float.isNaN);
+        assert(el.realNumber!double.isNaN);
+        assert(el.realNumber!real.isNaN);
+
+        el.realNumber!double = double.nan;
+        assert(el.realNumber!float.isNaN);
+        assert(el.realNumber!double.isNaN);
+        assert(el.realNumber!real.isNaN);
+
+        el.realNumber!real = double.nan;
+        assert(el.realNumber!float.isNaN);
+        assert(el.realNumber!double.isNaN);
+        assert(el.realNumber!real.isNaN);
+
+        el.realNumber!float = real.nan;
+        assert(el.realNumber!float.isNaN);
+        assert(el.realNumber!double.isNaN);
+        assert(el.realNumber!real.isNaN);
+
+        el.realNumber!double = real.nan;
+        assert(el.realNumber!float.isNaN);
+        assert(el.realNumber!double.isNaN);
+        assert(el.realNumber!real.isNaN);
+
+        el.realNumber!real = real.nan;
+        assert(el.realNumber!float.isNaN);
+        assert(el.realNumber!double.isNaN);
+        assert(el.realNumber!real.isNaN);
     }
 
     // Tests of maximum and minimums of integral types
