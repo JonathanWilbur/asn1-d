@@ -1,9 +1,9 @@
 # ASN.1 D Library
 
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
-* Copyright Year: 2017
+* Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.43](http://semver.org/)
+* Version: [1.0.0-beta.44](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -191,7 +191,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Enforce same tag numbers for nested elements
 - [x] Contracts / Invariants
   - [x] `BOOLEAN`, `INTEGER`, `ENUMERATED`, `OBJECT IDENTIFIER`, `BIT STRING`, `GeneralizedTime` and `UTCTime` are never less than 0 bytes
-- [ ] `REAL` encoding of `NaN`?
+- [ ] Add further `REAL` special numbers
+- [ ] Review latest version of X.690
 - [ ] Restructure the Exception hierarchy
 - [ ] More unit testing of `REAL`
 - [ ] Do some more unit testing for extreme lengths.
@@ -210,6 +211,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Creating a Session with [OpenLDAP Server](http://www.openldap.org)
   - [x] Test [OpenSSL](https://www.openssl.org/)'s [d2i tests](https://github.com/openssl/openssl/tree/master/test/d2i-tests)
 - [x] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) in the [National Vulnerability Database](https://nvd.nist.gov)
+- [x] Change copyright year to 2018
 - [x] Grammar and Styling
   - [x] Check for `a` and `an` mixups
   - [x] Check for duplicated terminal words
@@ -219,11 +221,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Remove trailing spaces
   - [x] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
   - [x] Format numbers consistently (particularly `0b` binary literals)
-- [ ] `cli.lib`
-  - [ ] Figure out how to parse negative numbers from the command-line (`-1.0` gets interpreted as a command...)
 - [ ] Documentation
-  - [ ] `build.md`
-    - [ ] Instructions on installing and linking `cli.lib`.
+  - [x] `install.md`
   - [x] `compliance.md`
     - [x] Create a checklist for every bullet point of X.690.
     - [x] ~~Review that character-encoded `REAL`s are strictly conformant to [ISO 6093](https://www.iso.org/standard/12285.html)~~
@@ -252,21 +251,20 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [x] Future inclusion of `synchronized` sections
     - [x] A better concurrency model
   - [x] `contributing.md`
-  - [ ] `context-switching-types.md` (My research into context-switching types)
   - [x] `security.md`
     - [x] OpenSSL Bads
     - [x] Fuzz Testing Results
     - [x] [National Vulnerability Database](https://nvd.nist.gov) Common Vulnerability and Exploit (CVE) Review
-  - [ ] `tools.md`
+  - [x] `tools.md`
   - [x] `roadmap.md`
-  - [ ] `releases.csv` (Version, Date, LOC, SLOC, Signature)
-  - [ ] `man` Pages
+  - [x] `man` Pages
 - [ ] Build Scripts
   - [ ] Add `chmod +x` to the build scripts for all executables
-  - [ ] Fix `echo` output problem on Mac
+  - [x] Fix `echo` output problem on Mac
   - [ ] Create dynamically-linked libraries as well
   - [ ] [GNU Make](https://www.gnu.org/software/make/) `Makefile`
   - [ ] Generate a `.def` file for Windows?
+- [ ] `releases.csv` (Version, Date, LOC, SLOC, Signature)
 
 #### Note 1:
 

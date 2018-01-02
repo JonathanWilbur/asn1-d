@@ -1,0 +1,253 @@
+.\" Manpage for encode-ber.
+.\" Contact jonathan@wilbur.space to correct errors or typos.
+.\"
+.\" This man page is released under the following MIT license:
+.\"
+.\" Copyright (c) 2018 Jonathan M. Wilbur <jonathan@wilbur.space>
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining a copy
+.\" of this software and associated documentation files (the "Software"), to deal
+.\" in the Software without restriction, including without limitation the rights
+.\" to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+.\" copies of the Software, and to permit persons to whom the Software is
+.\" furnished to do so, subject to the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included in all
+.\" copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+.\" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+.\" AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+.\" LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+.\" OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+.\" SOFTWARE.
+.\"
+.TH man 1 "01 Jan 2018" "1.0" "encode-ber man page"
+.SH NAME
+.BR encode-ber ", Basic Encoding Rules (BER) Encoder from the ASN.1 D Library"
+.SH SYNOPSIS
+.B encode-ber
+.RI [ element
+.IR .\|.\|. ]
+.SH DESCRIPTION
+Encodes an element via the Basic Encoding Rules (BER), as specified in the
+International Telecommunications Union's specification, X.690, and writes the
+encoded data to
+.IR stdin .
+.SH OPERANDS
+Each
+.B element
+is supplied as an argument having the following form:
+.PP
+.RS
+.I [class:construction:number]::=method:value
+.RE
+.PP
+where
+.I class
+is one of the following:
+.TP
+.B U
+Encodes the element with UNIVERSAL class.
+.TP
+.B A
+Encodes the element with APPLICATION class.
+.TP
+.B C
+Encodes the element with CONTEXT-SPECIFIC class.
+.TP
+.B P
+Encodes the element with PRIVATELY-DEFINED class.
+.PP
+and
+.I construction
+is one of the following:
+.TP
+.B P
+Encodes the element in PRIMITIVE form.
+.TP
+.B C
+Encodes the element in CONSTRUCTED form.
+.PP
+and
+.I number
+is the tag number to be associated with the element.
+.PP
+On the right hand side of the element, you have
+.I method
+which is one of the following:
+.TP
+.B eoc
+Encodes an END OF CONTENT. Takes no
+.IR value .
+.TP
+.B bool
+Encodes a BOOLEAN, taking TRUE or FALSE as the
+.IR value .
+.TP
+.B int
+Encodes a INTEGER, taking any integer as the
+.IR value .
+.TP
+.B bit
+Encodes a BIT STRING, taking a sequence of 1s and 0s as the
+.IR value .
+.TP
+.B oct
+Encodes a OCTET STRING, taking hexadecimal as the
+.IR value .
+.TP
+.B null
+Encodes a NULL. Takes no
+.IR value .
+.TP
+.B oid
+Encodes a OBJECT IDENTIFIER, taking object identifier, such as "1.3.4.6.1" as the
+.IR value .
+.TP
+.B od
+Encodes a ObjectDescriptor, taking a string as the
+.IR value .
+.TP
+.B real
+Encodes a REAL, taking a floating point number, such as -22.86 as the
+.IR value .
+.TP
+.B enum
+Encodes a ENUMERATED, taking any integer as the
+.IR value .
+.TP
+.B utf8
+Encodes a UTF8String, taking any string as the
+.IR value .
+.TP
+.B roid
+Encodes a RELATIVE OID, taking a part of an object identifier, such as "4.6.1", as the
+.IR value .
+.TP
+.B numeric
+Encodes a NumericString, taking a string of only numbers or space as the
+.IR value .
+.TP
+.B printable
+Encodes a PrintableString, taking a string as the
+.IR value .
+.TP
+.B teletex
+Encodes a TeletexString, taking hexadecimal as the
+.IR value .
+.TP
+.B videotex
+Encodes a VideotexString, taking hexadecimal as the
+.IR value .
+.TP
+.B ia5
+Encodes a IA5String, taking a string as the
+.IR value .
+.TP
+.B utc
+Encodes a UTCTime, taking a DateTime String of the form YYYYMMDDTHHMMSS as the
+.IR value .
+.TP
+.B time
+Encodes a GeneralizedTime, taking a DateTime String of the form YYYYMMDDTHHMMSS as the
+.IR value .
+.TP
+.B graphic
+Encodes a GraphicString, taking a string as the
+.IR value .
+.TP
+.B visible
+Encodes a VisibleString, taking a string as the
+.IR value .
+.TP
+.B general
+Encodes a GeneralString, taking a string as the
+.IR value .
+.TP
+.B universal
+Encodes a UniversalString, taking a string as the
+.IR value .
+.TP
+.B bmp
+Encodes a BMPString, taking a string as the
+.IR value .
+.SH EXIT STATUS
+.TP
+.B 0
+Success
+.TP
+.B -1
+Could not understand command line arguments.
+.TP
+.B 1
+Could not encode at least one element.
+.SH EXAMPLES
+This line
+.PP
+.EX
+.RS
+encode-ber \\
+.RE
+.RS
+[UP1]::=bool:TRUE \\
+.RE
+.RS
+[UP2]::=int:5 \\
+.RE
+.RS
+[UP3]::=bit:110110 \\
+.RE
+.RS
+[UP4]::=oct:0AFEBCD159 \\
+.RE
+.RS
+[UP22]::=ia5:testeroni > test.ber
+.RE
+.EE
+.PP
+creates a BOOLEAN, INTEGER, BIT STRING, OCTET STRING, and IA5String in that order,
+and writes the binary data to
+.IR test.ber .
+.PP
+Decoding using
+.I decode-ber(1)
+like so:
+.PP
+.EX
+.RS
+cat test.ber | ./build/executables/decode-ber
+.RE
+.EE
+.PP
+shows that it worked!
+.PP
+.RS
+[ UNIV 1 ] : TRUE
+.RE
+.RS
+[ UNIV 2 ] : 5
+.RE
+.RS
+[ UNIV 3 ] : BIT STRING
+.RE
+.RS
+[ UNIV 4 ] : [10, 254, 188, 209, 89]
+.RE
+.RS
+[ UNIV 22 ] : testeroni
+.RE
+.PP
+.SH SEE ALSO
+.I decode-ber(1)
+.SH BUGS
+There are no known bugs with this program, however, if you find any, please
+report them to
+.UR https://\:github.com/\:JonathanWilbur/\:asn1-d/\:issues
+the GitHub issues page.
+.UE
+.SH AUTHORS
+.MT jonathan@\:wilbur.space
+Jonathan M. Wilbur
+.ME

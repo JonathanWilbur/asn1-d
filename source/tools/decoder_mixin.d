@@ -66,6 +66,7 @@ mixin template Decoder(Element)
             }
         }
 
+        writeln();
         return ReturnValue.success;
     }
 

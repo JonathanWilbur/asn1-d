@@ -68,8 +68,8 @@ The following codecs will be added:
 
 ## 2.0.0 Release
 
-- [ ] Teletex (T61String) validation (WireShark has an implementation.)
-- [ ] Videotex validation
+- [ ] TeletexString (T61String) validation (WireShark has an implementation.)
+- [ ] VideotexString validation
 - [ ] Operator Overloads
   - [ ] `~=` making a constructed element
 - [ ] Build System
@@ -77,13 +77,3 @@ The following codecs will be added:
   - [ ] Makefile
   - [ ] Compiled D Executable
   - [ ] Support `gdc` and `ldc` compilation
-- [ ] Libraries (Intended to split off into independent modules once I figure out good packaging, distribution, and build processes for them)
-  - [x] `cli` ([GitHub Page](https://github.com/JonathanWilbur/cli-d))
-  - [ ] `teletex`
-  - [ ] `videotex`
-  - [ ] `bin2text`
-    - [ ] `Base2`
-    - [ ] `Base8`
-    - [ ] `Base10`?
-    - [ ] `Base16`
-    - [ ] `Base64`

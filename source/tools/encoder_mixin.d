@@ -3,302 +3,148 @@ module tools.encoder_mixin;
 mixin template Encoder(Element)
 {
     import asn1;
-    import cli;
-    import std.ascii : toLower;
-    import std.conv : ConvException, ConvOverflowException, to;
+    import std.algorithm: map;
+    import std.array : array, split;
+    import std.conv : ConvException, ConvOverflowException, parse, to;
     import std.datetime.date : DateTime, DateTimeException;
-    import std.file : read;
-    import std.math : isNaN;
+    import std.range: chunks;
     import std.stdio : stderr, stdout;
+    import std.string : indexOf;
     import std.utf : UTFException;
 
-    ASN1TagClass tagClass = ASN1TagClass.universal;
-    ASN1Construction construction = ASN1Construction.primitive;
-    uint tagNumber = uint.max;
-    ubyte[] encodedData;
-
-    void setTagClass (string value)
+    class ArgumentException : Exception
     {
-        switch (value[0].toLower)
+        private import std.exception : basicExceptionCtors;
+        mixin basicExceptionCtors;
+    }
+
+    void encodeBoolean (Element element, string literal)
+    {
+        switch (literal)
         {
-            case ('u'):
-            {
-                tagClass = ASN1TagClass.universal;
-                break;
-            }
-            case ('a'):
-            {
-                tagClass = ASN1TagClass.application;
-                break;
-            }
-            case ('c'):
-            {
-                tagClass = ASN1TagClass.contextSpecific;
-                break;
-            }
-            case ('p'):
-            {
-                tagClass = ASN1TagClass.privatelyDefined;
-                break;
-            }
-            default:
-            {
-                stderr.rawWrite("Supplied tag class '" ~ value ~ "' could not be resolved to one of: universal, application, context, private");
-                return;
-            }
+            case "TRUE" : element.boolean = true; break;
+            case "FALSE" : element.boolean = false; break;
+            default: stderr.rawWrite("Invalid boolean. Valid options (case insensitive): TRUE, FALSE.\n");
         }
     }
 
-    void setTagNumber (string value)
+    void encodeInteger (Element element, string literal)
     {
         try
         {
-            tagNumber = value.to!uint;
-        }
-        catch (ConvOverflowException e)
-        {
-            stderr.rawWrite(e.msg);
-            return;
+            element.integer!ptrdiff_t = literal.to!ptrdiff_t;
         }
         catch (ConvException e)
         {
             stderr.rawWrite(e.msg);
-            return;
         }
     }
 
-    alias encodeEOC = encodeEndOfContent;
-    void encodeEndOfContent (string option)
-    {
-        Element element = new Element();
-        element.tagNumber = ((tagNumber == uint.max) ? 0u : tagNumber);
-        element.tagClass = tagClass;
-        element.construction = construction;
-        encodedData ~= element.toBytes;
-    }
-
-    void encodeBoolean (string value)
-    {
-        import std.algorithm.iteration : each;
-        value.each!((ref a) => a.toLower);
-        Element element = new Element();
-        element.tagNumber = 1u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-        switch (value)
-        {
-            case "true" : case "t" : case "1" :
-            {
-                element.boolean = true;
-                break;
-            }
-            case "false" : case "f" : case "0" :
-            {
-                element.boolean = false;
-                break;
-            }
-            default:
-            {
-                stderr.rawWrite("Invalid boolean. Valid options (case insensitive): true, t, 1, false, f, 0.\n");
-                return;
-            }
-        }
-        encodedData ~= element.toBytes;
-    }
-
-    void encodeInteger (string value)
-    {
-        Element element = new Element();
-        element.tagNumber = 2u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-        try
-        {
-            element.integer!long = value.to!long;
-        }
-        catch (ConvException e)
-        {
-            stderr.rawWrite(e.msg);
-            return;
-        }
-        encodedData ~= element.toBytes;
-    }
-
-    void encodeBitString (string value)
+    void encodeBitString (Element element, string literal)
     {
         bool[] bits;
-        bits.length = value.length;
+        bits.length = literal.length;
         for (size_t i = 0u; i < bits.length; i++)
         {
-            if (value[i] == '1')
-            {
-                bits[i] = true;
-            }
-            else if (value[i] == '0')
-            {
-                bits[i] = false;
-            }
+            if (literal[i] == '1') bits[i] = true;
+            else if (literal[i] == '0') bits[i] = false;
             else
             {
                 stderr.rawWrite("Invalid BIT STRING. BIT STRING only accepts 1s and 0s.\n");
+                return;
             }
         }
-        Element element = new Element();
-        element.tagNumber = 3u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         element.bitString = bits;
-        encodedData ~= element.toBytes;
     }
 
-    void encodeOctetString (string value)
+    void encodeOctetString (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 4u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-        element.octetString = getBinaryInput(value);
-        encodedData ~= element.toBytes;
-    }
-
-    void encodeNull (string option)
-    {
-        Element element = new Element();
-        element.tagNumber = 5u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-        encodedData ~= element.toBytes;
+        // https://stackoverflow.com/questions/23725222/how-do-i-convert-a-bigint-to-a-ubyte/23741556#23741556
+        // https://forum.dlang.org/post/welnhsfiqyhchagxilet@forum.dlang.org
+        if (literal.length % 2u)
+        {
+            stderr.rawWrite("Cannot decode an odd number of hexadecimal characters.\n");
+            return;
+        }
+        element.octetString = literal
+            .chunks(2)
+            .map!(twoDigits => twoDigits.parse!ubyte(16))
+            .array();
     }
 
     alias encodeOID = encodeObjectIdentifier;
     alias encodeObjectID = encodeObjectIdentifier;
-    void encodeObjectIdentifier (string value)
+    void encodeObjectIdentifier (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 6u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.objectIdentifier = new ObjectIdentifier(value);
+            element.objectIdentifier = new ObjectIdentifier(literal);
         }
         catch (OIDException e)
         {
             stderr.rawWrite(e.msg);
         }
-        encodedData ~= element.toBytes;
     }
 
     alias encodeOD = encodeObjectDescriptor;
-    void encodeObjectDescriptor (string value)
+    void encodeObjectDescriptor (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 7u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.objectDescriptor = value;
+            element.objectDescriptor = literal;
         }
         catch (ASN1ValueInvalidException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
-            return;
         }
-        encodedData ~= element.toBytes;
     }
 
-    void encodeExternal (string value)
+    void encodeReal (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 8u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-        element.value = getBinaryInput(value);
-        encodedData ~= element.toBytes;
-    }
-
-    void encodeReal (string value)
-    {
-        Element element = new Element();
-        element.tagNumber = 9u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.realNumber!double = value.to!double;
+            element.realNumber!real = literal.to!real;
         }
         catch (ConvException e)
         {
             stderr.rawWrite(e.msg);
-            return;
         }
-        encodedData ~= element.toBytes;
     }
 
-    void encodeEnumerated (string value)
+    void encodeEnumerated (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 10u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.enumerated!long = value.to!long;
+            element.enumerated!long = literal.to!long;
         }
         catch (ConvException e)
         {
             stderr.rawWrite(e.msg);
-            return;
         }
-        encodedData ~= element.toBytes;
-    }
-
-    alias encodeEmbeddedPDV = encodeEmbeddedPresentationDataValue;
-    void encodeEmbeddedPresentationDataValue (string value)
-    {
-        Element element = new Element();
-        element.tagNumber = 11u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-        element.value = getBinaryInput(value);
-        encodedData ~= element.toBytes;
     }
 
     alias encodeUTF8String = encodeUnicodeTransformationFormat8String;
-    void encodeUnicodeTransformationFormat8String (string value)
+    void encodeUnicodeTransformationFormat8String (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 12u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.utf8String = value;
+            element.utf8String = literal;
         }
         catch (UTFException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
-            return;
         }
-        encodedData ~= element.toBytes;
     }
 
     alias encodeROID = encodeRelativeObjectIdentifier;
     alias encodeRelativeOID = encodeRelativeObjectIdentifier;
     alias encodeRelativeObjectID = encodeRelativeObjectIdentifier;
-    void encodeRelativeObjectIdentifier (string value)
+    void encodeRelativeObjectIdentifier (Element element, string literal)
     {
         import std.array : split;
-        Element element = new Element();
-        element.tagNumber = 13u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-
-        string[] segments = value.split(".");
+        string[] segments = literal.split(".");
         uint[] numbers;
         numbers.length = segments.length;
-
         for (size_t i = 0u; i < segments.length; i++)
         {
             numbers[i] = segments[i].to!uint;
@@ -311,453 +157,263 @@ mixin template Encoder(Element)
         }
 
         element.relativeObjectIdentifier = nodes.data;
-        encodedData ~= element.toBytes;
     }
 
-    void encodeSequence (string value)
+    void encodeNumericString (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 16u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-        element.value = getBinaryInput(value);
-        encodedData ~= element.toBytes;
-    }
-
-    void encodeSet (string value)
-    {
-        Element element = new Element();
-        element.tagNumber = 17u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-        element.value = getBinaryInput(value);
-        encodedData ~= element.toBytes;
-    }
-
-    void encodeNumericString (string value)
-    {
-        Element element = new Element();
-        element.tagNumber = 18u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.numericString = value;
+            element.numericString = literal;
         }
         catch (ASN1ValueInvalidException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
-            return;
         }
-        encodedData ~= element.toBytes;
     }
 
-    void encodePrintableString (string value)
+    void encodePrintableString (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 19u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.printableString = value;
+            element.printableString = literal;
         }
         catch (ASN1ValueInvalidException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
-            return;
         }
-        encodedData ~= element.toBytes;
     }
 
     alias encodeT61String = encodeTeletexString;
-    void encodeTeletexString (string value)
+    void encodeTeletexString (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 20u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-        element.value = getBinaryInput(value);
-        encodedData ~= element.toBytes;
+        // https://stackoverflow.com/questions/23725222/how-do-i-convert-a-bigint-to-a-ubyte/23741556#23741556
+        // https://forum.dlang.org/post/welnhsfiqyhchagxilet@forum.dlang.org
+        if (literal.length % 2u)
+        {
+            stderr.rawWrite("Cannot decode an odd number of hexadecimal characters.\n");
+            return;
+        }
+        element.teletexString = literal
+            .chunks(2)
+            .map!(twoDigits => twoDigits.parse!ubyte(16))
+            .array();
     }
 
-    void encodeVideotexString (string value)
+    void encodeVideotexString (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 21u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-        element.value = getBinaryInput(value);
-        encodedData ~= element.toBytes;
+        // https://stackoverflow.com/questions/23725222/how-do-i-convert-a-bigint-to-a-ubyte/23741556#23741556
+        // https://forum.dlang.org/post/welnhsfiqyhchagxilet@forum.dlang.org
+        if (literal.length % 2u)
+        {
+            stderr.rawWrite("Cannot decode an odd number of hexadecimal characters.\n");
+            return;
+        }
+        element.videotexString = literal
+            .chunks(2)
+            .map!(twoDigits => twoDigits.parse!ubyte(16))
+            .array();
     }
 
     alias encodeIA5String = encodeInternationalAlphabet5String;
-    void encodeInternationalAlphabet5String (string value)
+    void encodeInternationalAlphabet5String (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 22u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.ia5String = value;
+            element.ia5String = literal;
         }
         catch (ASN1ValueInvalidException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
-            return;
         }
-        encodedData ~= element.toBytes;
     }
 
     alias encodeUTCTime = encodeCoordinatedUniversalTime;
-    void encodeCoordinatedUniversalTime (string value)
+    void encodeCoordinatedUniversalTime (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 23u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.utcTime = DateTime.fromISOString(value);
+            element.utcTime = DateTime.fromISOString(literal);
         }
         catch (DateTimeException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
-            return;
         }
-        encodedData ~= element.toBytes;
     }
 
-    void encodeGeneralizedTime (string value)
+    void encodeGeneralizedTime (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 24u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.generalizedTime = DateTime.fromISOString(value);
+            element.generalizedTime = DateTime.fromISOString(literal);
         }
         catch (DateTimeException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
-            return;
         }
-        encodedData ~= element.toBytes;
     }
 
-    void encodeGraphicString (string value)
+    void encodeGraphicString (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 25u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.graphicString = value;
+            element.graphicString = literal;
         }
         catch (ASN1ValueInvalidException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
-            return;
         }
-        encodedData ~= element.toBytes;
     }
 
-    void encodeVisibleString (string value)
+    void encodeVisibleString (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 26u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.visibleString = value;
+            element.visibleString = literal;
         }
         catch (ASN1ValueInvalidException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
-            return;
         }
-        encodedData ~= element.toBytes;
     }
 
-    void encodeGeneralString (string value)
+    void encodeGeneralString (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 27u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.generalString = value;
+            element.generalString = literal;
         }
         catch (ASN1ValueInvalidException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
-            return;
         }
-        encodedData ~= element.toBytes;
     }
 
-    void encodeUniversalString (string value)
+    void encodeUniversalString (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 28u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.universalString = cast(dstring) value;
+            element.universalString = cast(dstring) literal;
         }
         catch (ASN1ValueInvalidException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
-            return;
         }
-        encodedData ~= element.toBytes;
-    }
-
-    void encodeCharacterString (string value)
-    {
-        Element element = new Element();
-        element.tagNumber = 29u;
-        element.tagClass = tagClass;
-        element.construction = construction;
-        element.value = getBinaryInput(value);
-        encodedData ~= element.toBytes;
     }
 
     alias encodeBMPString = encodeBasicMultilingualPlaneString;
-    void encodeBasicMultilingualPlaneString (string value)
+    void encodeBasicMultilingualPlaneString (Element element, string literal)
     {
-        Element element = new Element();
-        element.tagNumber = 30u;
-        element.tagClass = tagClass;
-        element.construction = construction;
         try
         {
-            element.bmpString = cast(wstring) value;
+            element.bmpString = cast(wstring) literal;
         }
         catch (ASN1ValueInvalidException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
         }
-        encodedData ~= element.toBytes;
     }
 
-    ubyte[] getBinaryInput (string value)
+    ubyte[] encode (string arg)
     {
-        import std.algorithm.iteration : map;
-        import std.algorithm.searching : startsWith;
-        import std.array : array;
-        import std.conv : parse;
-        import std.range : chunks;
-
-        if (value.startsWith("hex:"))
+        if (arg.length < 11u)
         {
-            // https://stackoverflow.com/questions/23725222/how-do-i-convert-a-bigint-to-a-ubyte/23741556#23741556
-            // https://forum.dlang.org/post/welnhsfiqyhchagxilet@forum.dlang.org
-            string hexstr = value[4 .. $];
-            if (hexstr.length % 2u)
-            {
-                stderr.rawWrite("Cannot decode an odd number of hexadecimal characters.\n");
-                return [];
-            }
-            return hexstr
-                .chunks(2)
-                .map!(twoDigits => twoDigits.parse!ubyte(16))
-                .array();
-        }
-        else if (value.startsWith("base64:"))
-        {
-            import std.base64 : Base64, Base64Exception;
-            auto buffer = new ubyte[Base64.decodeLength(value[7 .. $].length)];
-            try
-            {
-                Base64.decode(value[7 .. $], buffer);
-            }
-            catch (Base64Exception e)
-            {
-                stderr.rawWrite("Invalid Base64.\n");
-                return [];
-            }
-            return cast(ubyte[]) buffer;
-        }
-        else if (value.startsWith("file:"))
-        {
-            import std.file : exists, FileException, isFile;
-            import std.path : isValidPath;
-            string filePath = value[5 .. $];
-            if (!filePath.isValidPath())
-            {
-                stderr.rawWrite("Invalid file path.\n");
-                return [];
-            }
-            if (!exists(filePath))
-            {
-                stderr.rawWrite("File not found.\n");
-                return [];
-            }
-            if (!filePath.isFile())
-            {
-                stderr.rawWrite("Selected file system object is not a file.\n");
-                return [];
-            }
-            try
-            {
-                return (cast(ubyte[]) read(filePath));
-            }
-            catch (FileException fe)
-            {
-                stderr.rawWrite("Unable to read file. Check permissions.\n");
-                return [];
-            }
-        }
-        else if (value == "stdin")
-        {
-            // REVIEW: Can this ever throw an exception?
-            import std.stdio : stdin;
-            ubyte[] ret;
-            foreach (ubyte[] buffer; stdin.byChunk(new ubyte[4096]))
-            {
-                ret ~= buffer;
-            }
-            return ret;
-        }
-        else
-        {
-            stderr.rawWrite("Invalid argument. Use hex:, base64:, file:, or stdin.\n");
+            stderr.rawWrite("Argument too short.\n");
             return [];
         }
+
+        if (arg[0] != '[')
+        {
+            stderr.rawWrite("Each argument must start with a '['.\n");
+            return [];
+        }
+
+        ptrdiff_t indexOfDefinition = arg.indexOf("]::=");
+
+        if (indexOfDefinition == -1)
+        {
+            stderr.rawWrite("Each argument must be of the form [??#]::=???:...\n");
+            return [];
+        }
+
+        Element element = new Element();
+        switch (arg[1])
+        {
+            case ('U'): element.tagClass = ASN1TagClass.universal; break;
+            case ('A'): element.tagClass = ASN1TagClass.application; break;
+            case ('C'): element.tagClass = ASN1TagClass.contextSpecific; break;
+            case ('P'): element.tagClass = ASN1TagClass.privatelyDefined; break;
+            default: stderr.rawWrite("Invalid tag class selection. Must be U, A, C, or P.\n");
+        }
+        switch (arg[2])
+        {
+            case ('P'): element.construction = ASN1Construction.primitive; break;
+            case ('C'): element.construction = ASN1Construction.constructed; break;
+            default: stderr.rawWrite("Invalid construction selection. Must be P or C.\n");
+        }
+
+        {
+            string number = arg[3 .. indexOfDefinition];
+            element.tagNumber = number.to!size_t;
+        }
+
+        {
+            string valueVector = arg[(indexOfDefinition + 4u) .. $];
+            ptrdiff_t indexOfColon = valueVector.indexOf(":");
+            if (indexOfColon == -1)
+            {
+                stderr.rawWrite("Invalid value. Must provide a encoding method.\n");
+                return [];
+            }
+
+            switch (valueVector[0 .. indexOfColon])
+            {
+                case("eoc"): break;
+                case("bool"): encodeBoolean(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("int"): encodeInteger(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("bit"): encodeBitString(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("oct"): encodeOctetString(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("null"): break;
+                case("oid"): encodeOID(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("od"): encodeObjectDescriptor(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("real"): encodeReal(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("enum"): encodeEnumerated(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("utf8"): encodeUTF8String(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("roid"): encodeRelativeOID(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("numeric"): encodeNumericString(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("printable"): encodePrintableString(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("teletex"): encodeTeletexString(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("videotex"): encodeVideotexString(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("ia5"): encodeIA5String(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("utc"): encodeUTCTime(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("time"): encodeGeneralizedTime(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("graphic"): encodeGraphicString(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("visible"): encodeVisibleString(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("general"): encodeGeneralString(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("universal"): encodeUniversalString(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                case("bmp"): encodeBMPString(element, valueVector[(indexOfColon + 1u) .. $]); break;
+                default: stderr.rawWrite("Invalid encoding method: '" ~ valueVector[0 .. indexOfColon] ~ "' \n");
+            }
+        }
+
+        return element.toBytes;
     }
 
     int main(string[] args)
     {
-        enum ReturnValue : int
+        ubyte[] encodedData;
+
+        if (args.length < 2u)
         {
-            success = 0,
-            errorParsingCommandLineArguments = 1,
-            invalidFilePathOrFileName = 2,
-            fileNotFound = 3,
-            pathIsNotFile = 4,
-            readPermissionDenied = 5,
-            elementTerminatedPrematurely = 6,
-            invalidEncodedValue = 7,
-            unexpectedException = int.max
+            stderr.rawWrite("Too few arguments.\n");
+            return 1;
         }
 
-        try
+        foreach (arg; args[1 .. $])
         {
-            (new GNUCLIParser(
-                CLIOption("class", &setTagClass),
-                CLIOption("tag-class", &setTagClass),
-                CLIOption("number", &setTagNumber),
-                CLIOption("tag-number", &setTagNumber),
-                CLIOption("1", &encodeBitString),
-                CLIOption("bit", &encodeBitString),
-                CLIOption("bit-string", &encodeBitString),
-                CLIOption("8", &encodeOctetString),
-                CLIOption("oct", &encodeOctetString),
-                CLIOption("octet-string", &encodeOctetString),
-                CLIOption("b", &encodeBoolean),
-                CLIOption("bool", &encodeBoolean),
-                CLIOption("boolean", &encodeBoolean),
-                CLIOption("B", &encodeBMPString),
-                CLIOption("bmp", &encodeBMPString),
-                CLIOption("bmp-string", &encodeBMPString),
-                CLIOption("C", &encodeCharacterString),
-                CLIOption("cs", &encodeCharacterString),
-                CLIOption("character-string", &encodeCharacterString),
-                CLIOption("d", &encodeObjectDescriptor),
-                CLIOption("desc", &encodeObjectDescriptor),
-                CLIOption("obj-desc", &encodeObjectDescriptor),
-                CLIOption("object-descriptor", &encodeObjectDescriptor),
-                CLIOption("e", &encodeEnumerated),
-                CLIOption("enum", &encodeEnumerated),
-                CLIOption("enumerated", &encodeEnumerated),
-                CLIOption("G", &encodeGraphicString),
-                CLIOption("graphic", &encodeGraphicString),
-                CLIOption("graphic-string", &encodeGraphicString),
-                CLIOption("i", &encodeInteger),
-                CLIOption("int", &encodeInteger),
-                CLIOption("integer", &encodeInteger),
-                CLIOption("I", &encodeIA5String),
-                CLIOption("ia5", &encodeIA5String),
-                CLIOption("ia5-string", &encodeIA5String),
-                CLIOption("J", &encodeGeneralString),
-                CLIOption("general", &encodeGeneralString),
-                CLIOption("general-string", &encodeGeneralString),
-                CLIOption("m", &encodeEmbeddedPDV),
-                CLIOption("embedded", &encodeEmbeddedPDV),
-                CLIOption("pdv", &encodeEmbeddedPDV),
-                CLIOption("embedded-pdv", &encodeEmbeddedPDV),
-                CLIOption("n", &encodeNull),
-                CLIOption("null", &encodeNull),
-                CLIOption("N", &encodeNumericString),
-                CLIOption("num", &encodeNumericString),
-                CLIOption("numeric", &encodeNumericString),
-                CLIOption("numeric-string", &encodeNumericString),
-                CLIOption("o", &encodeObjectIdentifier),
-                CLIOption("oid", &encodeObjectIdentifier),
-                CLIOption("object-id", &encodeObjectIdentifier),
-                CLIOption("object-identifier", &encodeObjectIdentifier),
-                CLIOption("O", &encodeRelativeObjectID),
-                CLIOption("roid", &encodeRelativeObjectID),
-                CLIOption("relative-oid", &encodeRelativeObjectID),
-                CLIOption("relative-object-id", &encodeRelativeObjectID),
-                CLIOption("relative-object-identifier", &encodeRelativeObjectID),
-                CLIOption("P", &encodePrintableString),
-                CLIOption("print", &encodePrintableString),
-                CLIOption("printable", &encodePrintableString),
-                CLIOption("printable-string", &encodePrintableString),
-                CLIOption("q", &encodeTeletexString),
-                CLIOption("t61", &encodeTeletexString),
-                CLIOption("teletex", &encodeTeletexString),
-                CLIOption("teletex-string", &encodeTeletexString),
-                CLIOption("Q", &encodeVideotexString),
-                CLIOption("videotex", &encodeVideotexString),
-                CLIOption("videotex-string", &encodeVideotexString),
-                CLIOption("r", &encodeReal),
-                CLIOption("real", &encodeReal),
-                CLIOption("s", &encodeSequence),
-                CLIOption("seq", &encodeSequence),
-                CLIOption("sequence", &encodeSequence),
-                CLIOption("S", &encodeSet),
-                CLIOption("set", &encodeSet),
-                CLIOption("t", &encodeUTCTime),
-                CLIOption("utc", &encodeUTCTime),
-                CLIOption("utc-time", &encodeUTCTime),
-                CLIOption("T", &encodeGeneralizedTime),
-                CLIOption("time", &encodeGeneralizedTime),
-                CLIOption("gen-time", &encodeGeneralizedTime),
-                CLIOption("generalizedtime", &encodeGeneralizedTime),
-                CLIOption("u", &encodeUTF8String),
-                CLIOption("utf8", &encodeUTF8String),
-                CLIOption("utf8-string", &encodeUTF8String),
-                CLIOption("U", &encodeUniversalString),
-                CLIOption("univ", &encodeUniversalString),
-                CLIOption("universal", &encodeUniversalString),
-                CLIOption("universal-string", &encodeUniversalString),
-                CLIOption("V", &encodeVisibleString),
-                CLIOption("visible", &encodeVisibleString),
-                CLIOption("visible-string", &encodeVisibleString),
-                CLIOption("x", &encodeExternal),
-                CLIOption("ext", &encodeExternal),
-                CLIOption("external", &encodeExternal),
-                CLIOption("z", &encodeEndOfContent),
-                CLIOption("eoc", &encodeEndOfContent),
-                CLIOption("end", &encodeEndOfContent),
-                CLIOption("end-of-content", &encodeEndOfContent)
-            )).parse(args[1 .. $]);
-        }
-        catch (CLIException)
-        {
-            return ReturnValue.errorParsingCommandLineArguments;
+            encodedData ~= encode(arg);
         }
 
         stdout.rawWrite(encodedData);
-        return ReturnValue.success;
+        return 0;
     }
 }
