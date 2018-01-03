@@ -58,6 +58,8 @@ version (unittest)
 static assert(char.sizeof == 1u);
 static assert(wchar.sizeof == 2u);
 static assert(dchar.sizeof == 4u);
+static assert(double.sizeof > float.sizeof);
+static assert(real.sizeof >= double.sizeof);
 
 ///
 public alias ASN1Exception = AbstractSyntaxNotation1Exception;

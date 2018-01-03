@@ -1389,8 +1389,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Decodes a float or double. This can never decode directly to a
-        real type, because of the way it works.
+        Decodes a floating-point type.
 
         For the BER-encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
@@ -1473,7 +1472,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             case (0b00000000u): // Character Encoding
             {
                 import std.conv : to;
-                return to!(T)(cast(string) this.value[1 .. $]);
+                import std.string : stripLeft;
+                string numericRepresentation = cast(string) this.value[1 .. $];
+                numericRepresentation = numericRepresentation
+                    .stripLeft()
+                    .replace(",", ".");
+                return to!(T)(numericRepresentation);
             }
             case 0b10000000u, 0b11000000u: // Binary Encoding
             {
@@ -1757,14 +1761,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Encodes a float or double. This can never decode directly to a
-        real type, because of the way it works.
-
-        This is admittedly a pretty slow function, so I would recommend
-        avoiding it, if possible. Also, because it is so complex, it is
-        highly likely to have bugs, so for that reason as well, I highly
-        recommand against encoding or decoding REALs if you do not have
-        to; try using INTEGER instead.
+        Encodes a floating-point type.
 
         For the BER-encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
@@ -2076,102 +2073,167 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assert(el.value == [ cast(ubyte) ASN1SpecialRealValue.minusInfinity ]);
     }
 
-    // Testing Base-10 (Character-Encoded) REALs
-    // @system
-    // unittest
-    // {
-    //     BERElement el = new BERElement();
-    //     BERElement.realEncodingBase = ASN1RealEncodingBase.base10;
+    // Testing Base-10 (Character-Encoded) REALs - NR1 format
+    @system
+    unittest
+    {
+        BERElement el = new BERElement();
+        ubyte infoByte = 0x01u;
 
-    //     // Test that the exponent gets a + sign if it is 0.
-    //     el.realNumber!float = 2.2;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.200000E+0");
-    //     assert(approxEqual(el.realNumber!float, 2.2));
-    //     assert(approxEqual(el.realNumber!double, 2.2));
-    //     el.realNumber!double = 2.2;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.200000000000E+0");
-    //     assert(approxEqual(el.realNumber!float, 2.2));
-    //     assert(approxEqual(el.realNumber!double, 2.2));
+        el.value = [ infoByte ] ~ cast(ubyte[]) "3";
+        assert(approxEqual(el.realNumber!float, 3.0));
+        assert(approxEqual(el.realNumber!double, 3.0));
+        assert(approxEqual(el.realNumber!real, 3.0));
 
-    //     // Decimal + trailing zeros are not added if not necessary.
-    //     el.realNumber!float = 22.0;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.200000E1");
-    //     assert(approxEqual(el.realNumber!float, 22.0));
-    //     assert(approxEqual(el.realNumber!double, 22.0));
-    //     el.realNumber!double = 22.0;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.200000000000E1");
-    //     assert(approxEqual(el.realNumber!float, 22.0));
-    //     assert(approxEqual(el.realNumber!double, 22.0));
+        el.value = [ infoByte ] ~ cast(ubyte[]) "-1";
+        assert(approxEqual(el.realNumber!float, -1.0));
+        assert(approxEqual(el.realNumber!double, -1.0));
+        assert(approxEqual(el.realNumber!real, -1.0));
 
-    //     // Decimal + trailing zeros are added if necessary.
-    //     el.realNumber!float = 22.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.212300E1");
-    //     assert(approxEqual(el.realNumber!float, 22.123));
-    //     assert(approxEqual(el.realNumber!double, 22.123));
-    //     el.realNumber!double = 22.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "2.212300000000E1");
-    //     assert(approxEqual(el.realNumber!float, 22.123));
-    //     assert(approxEqual(el.realNumber!double, 22.123));
+        el.value = [ infoByte ] ~ cast(ubyte[]) "+1000";
+        assert(approxEqual(el.realNumber!float, 1000.0));
+        assert(approxEqual(el.realNumber!double, 1000.0));
+        assert(approxEqual(el.realNumber!real, 1000.0));
+    }
 
-    //     // Negative numbers are encoded correctly.
-    //     el.realNumber!float = -22.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "-2.212300E1");
-    //     assert(approxEqual(el.realNumber!float, -22.123));
-    //     assert(approxEqual(el.realNumber!double, -22.123));
-    //     el.realNumber!double = -22.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "-2.212300000000E1");
-    //     assert(approxEqual(el.realNumber!float, -22.123));
-    //     assert(approxEqual(el.realNumber!double, -22.123));
+    // Testing Base-10 (Character-Encoded) REALs - NR2 format
+    @system
+    unittest
+    {
+        BERElement el = new BERElement();
+        ubyte infoByte = 0x02u;
 
-    //     // Small positive numbers are encoded correctly.
-    //     el.realNumber!float = 0.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "1.230000E-1");
-    //     assert(approxEqual(el.realNumber!float, 0.123));
-    //     assert(approxEqual(el.realNumber!double, 0.123));
-    //     el.realNumber!double = 0.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "1.230000000000E-1");
-    //     assert(approxEqual(el.realNumber!float, 0.123));
-    //     assert(approxEqual(el.realNumber!double, 0.123));
+        el.value = [ infoByte ] ~ cast(ubyte[]) "3.0";
+        assert(approxEqual(el.realNumber!float, 3.0));
+        assert(approxEqual(el.realNumber!double, 3.0));
+        assert(approxEqual(el.realNumber!real, 3.0));
 
-    //     // Small negative numbers are encoded correctly.
-    //     el.realNumber!float = -0.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "-1.230000E-1");
-    //     assert(approxEqual(el.realNumber!float, -0.123));
-    //     assert(approxEqual(el.realNumber!double, -0.123));
-    //     el.realNumber!double = -0.123;
-    //     assert(cast(string) (el.value[1 .. $]) == "-1.230000000000E-1");
-    //     assert(approxEqual(el.realNumber!float, -0.123));
-    //     assert(approxEqual(el.realNumber!double, -0.123));
+        el.value = [ infoByte ] ~ cast(ubyte[]) "-1.3";
+        assert(approxEqual(el.realNumber!float, -1.3));
+        assert(approxEqual(el.realNumber!double, -1.3));
+        assert(approxEqual(el.realNumber!real, -1.3));
 
-    //     BERElement.realEncodingBase = ASN1RealEncodingBase.base2;
-    // }
+        el.value = [ infoByte ] ~ cast(ubyte[]) "-.3";
+        assert(approxEqual(el.realNumber!float, -0.3));
+        assert(approxEqual(el.realNumber!double, -0.3));
+        assert(approxEqual(el.realNumber!real, -0.3));
+    }
+
+    // Testing Base-10 (Character-Encoded) REALs - NR3 format
+    @system
+    unittest
+    {
+        BERElement el = new BERElement();
+        ubyte infoByte = 0x03u;
+
+        el.value = [ infoByte ] ~ cast(ubyte[]) "3.0E1";
+        assert(approxEqual(el.realNumber!float, 30.0));
+        assert(approxEqual(el.realNumber!double, 30.0));
+        assert(approxEqual(el.realNumber!real, 30.0));
+
+        el.value = [ infoByte ] ~ cast(ubyte[]) "123E+10";
+        assert(approxEqual(el.realNumber!float, 123E10));
+        assert(approxEqual(el.realNumber!double, 123E10));
+        assert(approxEqual(el.realNumber!real, 123E10));
+    }
+
+    // Testing the nuances of character encoding
+    @system
+    unittest
+    {
+        BERElement el = new BERElement();
+        ubyte infoByte = 0x01u;
+
+        // Leading Spaces
+        el.value = [ infoByte ] ~ cast(ubyte[]) "   +1000";
+        assert(approxEqual(el.realNumber!float, 1000.0));
+        assert(approxEqual(el.realNumber!double, 1000.0));
+        assert(approxEqual(el.realNumber!real, 1000.0));
+        el.value = [ infoByte ] ~ cast(ubyte[]) "   1000";
+        assert(approxEqual(el.realNumber!float, 1000.0));
+        assert(approxEqual(el.realNumber!double, 1000.0));
+        assert(approxEqual(el.realNumber!real, 1000.0));
+
+        // Leading zeros
+        el.value = [ infoByte ] ~ cast(ubyte[]) "0001000";
+        assert(approxEqual(el.realNumber!float, 1000.0));
+        assert(approxEqual(el.realNumber!double, 1000.0));
+        assert(approxEqual(el.realNumber!real, 1000.0));
+        el.value = [ infoByte ] ~ cast(ubyte[]) "+0001000";
+        assert(approxEqual(el.realNumber!float, 1000.0));
+        assert(approxEqual(el.realNumber!double, 1000.0));
+        assert(approxEqual(el.realNumber!real, 1000.0));
+
+        // Comma instead of period
+        el.value = [ infoByte ] ~ cast(ubyte[]) "0001000,23";
+        assert(approxEqual(el.realNumber!float, 1000.23));
+        assert(approxEqual(el.realNumber!double, 1000.23));
+        assert(approxEqual(el.realNumber!real, 1000.23));
+        el.value = [ infoByte ] ~ cast(ubyte[]) "+0001000,23";
+        assert(approxEqual(el.realNumber!float, 1000.23));
+        assert(approxEqual(el.realNumber!double, 1000.23));
+        assert(approxEqual(el.realNumber!real, 1000.23));
+
+        // A complete abomination
+        el.value = [ infoByte ] ~ cast(ubyte[]) "  00123,4500e0010";
+        assert(approxEqual(el.realNumber!float, 123.45e10));
+        assert(approxEqual(el.realNumber!double, 123.45e10));
+        assert(approxEqual(el.realNumber!real, 123.45e10));
+        el.value = [ infoByte ] ~ cast(ubyte[]) "  +00123,4500e+0010";
+        assert(approxEqual(el.realNumber!float, 123.45e10));
+        assert(approxEqual(el.realNumber!double, 123.45e10));
+        assert(approxEqual(el.realNumber!real, 123.45e10));
+        el.value = [ infoByte ] ~ cast(ubyte[]) "  -00123,4500e+0010";
+        assert(approxEqual(el.realNumber!float, -123.45e10));
+        assert(approxEqual(el.realNumber!double, -123.45e10));
+        assert(approxEqual(el.realNumber!real, -123.45e10));
+    }
 
     // Test "complicated" exponent encoding.
-    // @system
-    // unittest
-    // {
-    //     BERElement el = new BERElement();
+    @system
+    unittest
+    {
+        BERElement el = new BERElement();
 
-    //     el.value = [ 0b10000011u, 0x01u, 0x00u, 0x03u ];
-    //     assert(el.realNumber!float == 3.0);
-    //     assert(el.realNumber!double == 3.0);
+        // Ensure that a well-formed complicated-form exponent decodes correctly.
+        el.value = [ 0b10000011u, 0x01u, 0x05u, 0x03u ];
+        assert(el.realNumber!float == 96.0);
+        assert(el.realNumber!double == 96.0);
+        assert(el.realNumber!real == 96.0);
 
-    //     el.value = [ 0b10000011u, 0x01u, 0x05u, 0x03u ];
-    //     assert(el.realNumber!float == 96.0);
-    //     assert(el.realNumber!double == 96.0);
+        // Ditto, but with a negative exponent
+        el.value = [ 0b10000011u, 0x01u, 0xFBu, 0x03u ];
+        assert(el.realNumber!float == 0.09375);
+        assert(el.realNumber!double == 0.09375);
+        assert(el.realNumber!real == 0.09375);
 
-    //     el.value = [ 0b10000011u, 0x02u, 0x00u, 0x05u, 0x03u ];
-    //     assert(el.realNumber!float == 96.0);
-    //     assert(el.realNumber!double == 96.0);
+        // Ditto, but with an exponent that spans two octets.
+        el.value = [ 0b10000011u, 0x02u, 0x01u, 0x00u, 0x01u ];
+        assert(approxEqual(el.realNumber!double, 2.0^^256.0));
+        assert(approxEqual(el.realNumber!real, 2.0^^256.0));
 
-    //     el.value = [ 0b10000011u ];
-    //     el.value ~= cast(ubyte) size_t.sizeof;
-    //     el.value.length += size_t.sizeof;
-    //     el.value[$-1] = 0x05u;
-    //     el.value ~= 0x03u;
-    //     assert(el.realNumber!float == 96.0);
-    //     assert(el.realNumber!double == 96.0);
-    // }
+        // Ensure that a zero cannot be encoded on complicated form
+        el.value = [ 0b10000011u, 0x01u, 0x00u, 0x03u ];
+        assertThrown!ASN1ValueInvalidException(el.realNumber!float);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!double);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!real);
+
+        // Ensure that the complicated-form exponent must be encoded on the fewest bytes
+        el.value = [ 0b10000011u, 0x02u, 0x00u, 0x05u, 0x03u ];
+        assertThrown!ASN1ValueInvalidException(el.realNumber!float);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!double);
+        assertThrown!ASN1ValueInvalidException(el.realNumber!real);
+
+        // Ensure that large values fail
+        el.value = [ 0b10000011u ];
+        el.value ~= cast(ubyte) size_t.sizeof;
+        el.value.length += size_t.sizeof;
+        el.value[$-1] = 0x05u;
+        el.value ~= 0x03u;
+        assertThrown!ASN1ValueTooBigException(el.realNumber!float);
+        assertThrown!ASN1ValueTooBigException(el.realNumber!double);
+        assertThrown!ASN1ValueTooBigException(el.realNumber!real);
+    }
 
     /**
         Decodes an integer from an ENUMERATED type. In BER, an ENUMERATED
