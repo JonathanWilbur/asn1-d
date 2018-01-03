@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.47](http://semver.org/)
+* Version: [1.0.0-beta.48](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 

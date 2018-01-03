@@ -1397,10 +1397,9 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     /**
-        Decodes a float or double. This can never decode directly to a
-        real type, because of the way it works.
+        Decodes a floating-point type.
 
-        For the DER-encoded REAL, a value of 0x40 means "positive infinity,"
+        For the encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1447,11 +1446,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             ASN1ValueInvalidException = if both bits indicating the base in the
                 information byte of a binary-encoded REAL's information byte
                 are set, which would indicate an invalid base.
-
-        Citations:
-            Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
-            Communication between Heterogeneous Systems, Morgan Kaufmann,
-            2001, pp. 400–402.
     */
     public @property @system
     T realNumber(T)() const
@@ -1753,16 +1747,9 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     /**
-        Encodes a float or double. This can never decode directly to a
-        real type, because of the way it works.
+        Encodes a floating-point type.
 
-        This is admittedly a pretty slow function, so I would recommend
-        avoiding it, if possible. Also, because it is so complex, it is
-        highly likely to have bugs, so for that reason as well, I highly
-        recommand against encoding or decoding REALs if you do not have
-        to; try using INTEGER instead.
-
-        For the DER-encoded REAL, a value of 0x40 means "positive infinity,"
+        For the encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1796,11 +1783,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 in an arithmetic underflow of a signed short.
             ASN1ValueTooBigException = if an attempt to encode would result
                 in an arithmetic overflow of a signed short.
-
-        Citations:
-            Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
-            Communication between Heterogeneous Systems, Morgan Kaufmann,
-            2001, pp. 400–402.
     */
     public @property @system
     void realNumber(T)(in T value)
@@ -2178,33 +2160,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         }
     }
 
-    // Test "complicated" exponent encoding.
-    // @system
-    // unittest
-    // {
-    //     DERElement el = new DERElement();
-
-    //     el.value = [ 0b10000011u, 0x01u, 0x00u, 0x03u ];
-    //     assert(el.realNumber!float == 3.0);
-    //     assert(el.realNumber!double == 3.0);
-
-    //     el.value = [ 0b10000011u, 0x01u, 0x05u, 0x03u ];
-    //     assert(el.realNumber!float == 96.0);
-    //     assert(el.realNumber!double == 96.0);
-
-    //     el.value = [ 0b10000011u, 0x02u, 0x00u, 0x05u, 0x03u ];
-    //     assert(el.realNumber!float == 96.0);
-    //     assert(el.realNumber!double == 96.0);
-
-    //     el.value = [ 0b10000011u ];
-    //     el.value ~= cast(ubyte) size_t.sizeof;
-    //     el.value.length += size_t.sizeof;
-    //     el.value[$-1] = 0x05u;
-    //     el.value ~= 0x03u;
-    //     assert(el.realNumber!float == 96.0);
-    //     assert(el.realNumber!double == 96.0);
-    // }
-
     /**
         Decodes an integer from an ENUMERATED type. In DER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
@@ -2259,7 +2214,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             throw new ASN1ValueInvalidException
             (
                 "This exception was thrown because you attempted to decode " ~
-                "an INTEGER that was encoded on more than the minimum " ~
+                "an ENUMERATED that was encoded on more than the minimum " ~
                 "necessary bytes. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText

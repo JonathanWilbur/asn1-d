@@ -1629,10 +1629,9 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes a float or double. This can never decode directly to a
-        real type, because of the way it works.
+        Decodes a floating-point type.
 
-        For the CER-encoded REAL, a value of 0x40 means "positive infinity,"
+        For the encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1679,11 +1678,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             ASN1ValueInvalidException = if both bits indicating the base in the
                 information byte of a binary-encoded REAL's information byte
                 are set, which would indicate an invalid base.
-
-        Citations:
-            Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
-            Communication between Heterogeneous Systems, Morgan Kaufmann,
-            2001, pp. 400–402.
     */
     public @property @system
     T realNumber(T)() const
@@ -1986,16 +1980,9 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Encodes a float or double. This can never decode directly to a
-        real type, because of the way it works.
+        Encodes a floating-point type.
 
-        This is admittedly a pretty slow function, so I would recommend
-        avoiding it, if possible. Also, because it is so complex, it is
-        highly likely to have bugs, so for that reason as well, I highly
-        recommand against encoding or decoding REALs if you do not have
-        to; try using INTEGER instead.
-
-        For the CER-encoded REAL, a value of 0x40 means "positive infinity,"
+        For the encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -2029,11 +2016,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 in an arithmetic underflow of a signed short.
             ASN1ValueTooBigException = if an attempt to encode would result
                 in an arithmetic overflow of a signed short.
-
-        Citations:
-            Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
-            Communication between Heterogeneous Systems, Morgan Kaufmann,
-            2001, pp. 400–402.
     */
     public @property @system
     void realNumber(T)(in T value)
@@ -2465,7 +2447,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             throw new ASN1ValueInvalidException
             (
                 "This exception was thrown because you attempted to decode " ~
-                "an INTEGER that was encoded on more than the minimum " ~
+                "an ENUMERATED that was encoded on more than the minimum " ~
                 "necessary bytes. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
