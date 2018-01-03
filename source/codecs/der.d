@@ -3325,11 +3325,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         The DER-encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 
-        An UTC Timestamp looks like:
-        $(UL
-            $(LI 9912312359Z)
-            $(LI 991231235959+0200)
-        )
+        When using Distinguished Encoding Rules (DER), only the YYMMDDhhmmssZ
+        format is acceptable for encoding UTCTime.
+
+        A UTCTime does not support milliseconds, unlike GeneralizedTime.
 
         If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,
         meaning that the date refers to the first 80 years of the century, this
@@ -3346,12 +3345,27 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     DateTime coordinatedUniversalTime() const
     {
-        if (this.value.length < 10u)
+        // Mandated in X.690, section 11.8.2
+        if (this.value.length != 13u) // YYMMDDhhmmssZ
             throw new ASN1ValueTooSmallException
             (
                 "This exception was thrown because you attempted to decode a " ~
                 "UTCTime that was encoded on too few bytes to be " ~
-                "correct. A GeneralizedTime needs at least 12 bytes. " ~
+                "correct. When using the Canonical Encoding Rules (CER), or " ~
+                "Distinguished Encoding Rules (DER), the UTCTime must be " ~
+                "encoded on exactly 13 bytes in the format YYMMDDhhmmssZ." ~
+                notWhatYouMeantText ~ forMoreInformationText ~
+                debugInformationText ~ reportBugsText
+            );
+
+        // Mandated in X.690, section 11.8.1
+        if (this.value[$-1] != 'Z')
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "a UTCTime whose encoding did not terminate with a 'Z', as " ~
+                "is expected by the Canonical Encoding Rules (CER) and " ~
+                "Distinguished Encoding Rules (DER). " ~
                 notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
@@ -3373,14 +3387,11 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     /**
         Encodes a DateTime.
 
-        The DER-encoded value is just the ASCII character representation of
+        The encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 
-        An UTC Timestamp looks like:
-        $(UL
-            $(LI 9912312359Z)
-            $(LI 991231235959+0200)
-        )
+        When using Distinguished Encoding Rules (DER), only the YYMMDDhhmmssZ
+        format is acceptable for encoding UTCTime.
 
         See_Also:
             $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
@@ -3389,13 +3400,22 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     void coordinatedUniversalTime(in DateTime value)
     out
     {
-        assert(this.value.length > 0u);
+        // YYMMDDhhmmssZ is the only acceptable format for DER
+        assert(this.value.length == 13u);
+        assert(this.value[$-1] == 'Z');
     }
     body
     {
-        import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
         this.value = cast(ubyte[]) ((st.toUTC()).toISOString()[2 .. $].replace("T", ""));
+    }
+
+    @system
+    unittest
+    {
+        DERElement el = new DERElement();
+        el.utcTime = DateTime(2017, 10, 3);
+        assert(el.visibleString == "171003000000Z");
     }
 
     /**
@@ -3412,13 +3432,17 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             $(LI 19851106210627.3-0500)
         )
 
+        But when using Distinguished Encoding Rules (DER), only timestamps with
+        no trailing periods ('.'), or post-period trailing zeroes are acceptable,
+        and all timestamps must end with a 'Z', indicating UTC time.
+
         Throws:
             DateTimeException = if string cannot be decoded to a DateTime
     */
     override public @property @system
     DateTime generalizedTime() const
     {
-        if (this.value.length < 10u)
+        if (this.value.length < 15u)
             throw new ASN1ValueTooSmallException
             (
                 "This exception was thrown because you attempted to decode a " ~
@@ -3427,6 +3451,52 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 notWhatYouMeantText ~ forMoreInformationText ~
                 debugInformationText ~ reportBugsText
             );
+
+        // Inferred, because YYYYMMDDhhmmss.Z could not be valid.
+        if (this.value.length == 16u)
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode a " ~
+                "GeneralizedTime that was encoded on too few bytes to be " ~
+                "correct. A valid GeneralizedTime cannot be 16 bytes. " ~
+                notWhatYouMeantText ~ forMoreInformationText ~
+                debugInformationText ~ reportBugsText
+            );
+
+        // Mandated in X.690, section 11.7.1
+        if (this.value[$-1] != 'Z')
+            throw new ASN1ValueInvalidException
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "a GeneralizedTime whose encoding did not terminate with a 'Z', " ~
+                "as is expected by the Canonical Encoding Rules (CER) and " ~
+                "Distinguished Encoding Rules (DER). " ~
+                notWhatYouMeantText ~ forMoreInformationText ~
+                debugInformationText ~ reportBugsText
+            );
+
+        ptrdiff_t indexOfDecimalPoint = (cast(string) this.value).indexOf('.');
+        if (indexOfDecimalPoint != -1)
+        {
+            if (this.value[$-2] == '0')
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a GeneralizedTime that contained trailing zeroes in the " ~
+                    "fraction-of-seconds part. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~
+                    debugInformationText ~ reportBugsText
+                );
+
+            if (indexOfDecimalPoint != 14)
+                throw new ASN1ValueInvalidException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a GeneralizedTime whose decimal point was misplaced. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~
+                    debugInformationText ~ reportBugsText
+                );
+        }
 
         /** NOTE:
             .fromISOString() MUST be called from SysTime, not DateTime. There
@@ -3455,18 +3525,60 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             $(LI 19851106210627.3Z)
             $(LI 19851106210627.3-0500)
         )
+
+        But when using Distinguished Encoding Rules (DER), only timestamps with
+        no trailing periods ('.'), or post-period trailing zeroes are acceptable,
+        and all timestamps must end with a 'Z', indicating UTC time.
     */
     override public @property @system
     void generalizedTime(in DateTime value)
     out
     {
         assert(this.value.length > 0u);
+        assert((cast(string) this.value).indexOf("T") == -1);
     }
     body
     {
-        import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
         this.value = cast(ubyte[]) ((st.toUTC()).toISOString().replace("T", ""));
+    }
+
+    // Positive tests
+    @system
+    unittest
+    {
+        DERElement el = new DERElement();
+
+        el.generalizedTime = DateTime(2017, 10, 3);
+        assert(el.visibleString == "20171003000000Z");
+
+        el.visibleString = "20171003000000.003Z";
+        assertNotThrown!Exception(el.generalizedTime);
+
+        el.visibleString = "20171003000000.0000003Z";
+        assertNotThrown!Exception(el.generalizedTime);
+    }
+
+    // Negative tests
+    @system
+    unittest
+    {
+        DERElement el = new DERElement();
+
+        el.visibleString = "20171003000000.Z";
+        assertThrown!ASN1Exception(el.generalizedTime);
+
+        el.visibleString = "20171003000000.0Z";
+        assertThrown!ASN1Exception(el.generalizedTime);
+
+        el.visibleString = "20171003000000.000000Z";
+        assertThrown!ASN1Exception(el.generalizedTime);
+
+        el.visibleString = "0171003000000Z";
+        assertThrown!ASN1Exception(el.generalizedTime);
+
+        el.visibleString = "2017100300000Z"; // Missing 1 trailing zero.
+        assertThrown!ASN1Exception(el.generalizedTime);
     }
 
     /**
@@ -4605,8 +4717,8 @@ unittest
     immutable ubyte[] dataTeletex = [ 0x14u, 0x06u, 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ];
     immutable ubyte[] dataVideotex = [ 0x15u, 0x06u, 0xFFu, 0x05u, 0x04u, 0x03u, 0x02u, 0x01u ];
     immutable ubyte[] dataIA5 = [ 0x16u, 0x08u, 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S' ];
-    immutable ubyte[] dataUTC = [ 0x17u, 0x0Cu, '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0' ];
-    immutable ubyte[] dataGT = [ 0x18u, 0x0Eu, '2', '0', '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0' ];
+    immutable ubyte[] dataUTC = [ 0x17u, 0x0Du, '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0', 'Z' ];
+    immutable ubyte[] dataGT = [ 0x18u, 0x0Fu, '2', '0', '1', '7', '0', '8', '3', '1', '1', '3', '4', '5', '0', '0', 'Z' ];
     immutable ubyte[] dataGraphic = [ 0x19u, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
     immutable ubyte[] dataVisible = [ 0x1Au, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];
     immutable ubyte[] dataGeneral = [ 0x1Bu, 0x0Bu, 'P', 'o', 'w', 'e', 'r', 'T', 'h', 'i', 'r', 's', 't' ];

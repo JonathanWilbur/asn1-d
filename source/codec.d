@@ -21,6 +21,7 @@ public import std.datetime.systime : SysTime;
 public import std.datetime.timezone : TimeZone, UTC;
 private import std.exception : basicExceptionCtors;
 public import std.math : isIdentical, isNaN, log2;
+public import std.string : indexOf;
 public import std.traits : isFloatingPoint, isIntegral, isSigned, isUnsigned;
 
 ///

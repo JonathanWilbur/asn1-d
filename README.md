@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.46](http://semver.org/)
+* Version: [1.0.0-beta.47](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -192,7 +192,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Contracts / Invariants
   - [x] `BOOLEAN`, `INTEGER`, `ENUMERATED`, `OBJECT IDENTIFIER`, `BIT STRING`, `GeneralizedTime` and `UTCTime` are never less than 0 bytes
 - [x] Add further `REAL` special numbers
-- [ ] Review latest version of X.690 (I was accidentally reading the 2002 one...)
+- [x] Review latest version of X.690 (I was accidentally reading the 2002 one...)
+- [x] Implement CER and DER restraints on `UTCTime` and `GeneralizedTime`
 - [ ] Restructure the Exception hierarchy
 - [x] More unit testing of `REAL`
 - [ ] Do some more unit testing for extreme lengths.
@@ -235,7 +236,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [x] Terminology
       - [x] This library uses "mantissa," not "significand," because "mantissa" is in the specification.
     - [x] Class Hierarchy
-    - [ ] Exception Hierarchy
+    - [ ] Exception Hierarchy **Blocked until I actually restructure it.**
     - [x] This library assumes IEEE 754 floating point structure
     - [x] Security Advice
       - [x] Leave note to developers about avoiding recursion problems. (See CVE-2016-4421 and CVE-2010-2284.)

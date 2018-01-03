@@ -1720,8 +1720,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Decodes a float or double. This can never decode directly to a
-        real type, because of the way it works.
+    Decodes a floating-point type.
 
   </p>
 </div>
@@ -1820,21 +1819,14 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Encodes a float or double. This can never decode directly to a
-        real type, because of the way it works.
+    Encodes a floating-point type.
 
   </p>
 </div>
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    This is admittedly a pretty slow function, so I would recommend
-        avoiding it, if possible. Also, because it is so complex, it is
-        highly likely to have bugs, so for that reason as well, I highly
-        recommand against encoding or decoding REALs if you do not have
-        to; try using INTEGER instead.
-<br><br>
-        For the BER-encoded REAL, a <code class="code">value</code> of 0x40 means "positive infinity,"
+    For the BER-encoded REAL, a <code class="code">value</code> of 0x40 means "positive infinity,"
         a <code class="code">value</code> of 0x41 means "negative infinity." An empty <code class="code">value</code> means
         exactly zero. A <code class="code">value</code> whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble

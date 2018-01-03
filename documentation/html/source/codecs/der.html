@@ -3046,10 +3046,10 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     The DER-encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 <br><br>
-        An UTC Timestamp looks like:
-        <ul>            <li>9912312359Z</li>
-            <li>991231235959+0200</li>
-        </ul>
+        When using Distinguished Encoding Rules (DER), only the YYMMDDhhmmssZ
+        format is acceptable for encoding UTCTime.
+<br><br>
+        A UTCTime does not support milliseconds, unlike GeneralizedTime.
 <br><br>
         If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,
         meaning that the date refers to the first 80 years of the century, this
@@ -3109,13 +3109,11 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    The DER-encoded <code class="code">value</code> is just the ASCII character representation of
+    The encoded <code class="code">value</code> is just the ASCII character representation of
         the UTC-formatted timestamp.
 <br><br>
-        An UTC Timestamp looks like:
-        <ul>            <li>9912312359Z</li>
-            <li>991231235959+0200</li>
-        </ul>
+        When using Distinguished Encoding Rules (DER), only the YYMMDDhhmmssZ
+        format is acceptable for encoding UTCTime.
 
 
   </p>
@@ -3170,6 +3168,10 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
             <li>19851106210627.3Z</li>
             <li>19851106210627.3-0500</li>
         </ul>
+<br><br>
+        But when using Distinguished Encoding Rules (DER), only timestamps with
+        no trailing periods ('.'), or post-period trailing zeroes are acceptable,
+        and all timestamps must end with a 'Z', indicating UTC time.
 
 
   </p>
@@ -3223,6 +3225,10 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
             <li>19851106210627.3Z</li>
             <li>19851106210627.3-0500</li>
         </ul>
+<br><br>
+        But when using Distinguished Encoding Rules (DER), only timestamps with
+        no trailing periods ('.'), or post-period trailing zeroes are acceptable,
+        and all timestamps must end with a 'Z', indicating UTC time.
   </p>
 </div>
 
