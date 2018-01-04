@@ -4235,7 +4235,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 form, but the END OF CONTENT octets (two consecutive null
                 octets) cannot be found, or if the value is encoded in fewer
                 octets than indicated by the length byte.
-            ASN1InvalidLengthException = if the length byte is set to 0xFF,
+            ASN1LengthException = if the length byte is set to 0xFF,
                 which is reserved.
             ASN1ValueTooBigException = if the length cannot be represented by
                 the largest unsigned integer.
@@ -4275,7 +4275,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 form, but the END OF CONTENT octets (two consecutive null
                 octets) cannot be found, or if the value is encoded in fewer
                 octets than indicated by the length byte.
-            ASN1InvalidLengthException = if the length byte is set to 0xFF,
+            ASN1LengthException = if the length byte is set to 0xFF,
                 which is reserved.
             ASN1ValueTooBigException = if the length cannot be represented by
                 the largest unsigned integer.
@@ -4307,12 +4307,11 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     size_t fromBytes (in ubyte[] bytes)
     {
         if (bytes.length < 2u)
-            throw new ASN1ValueTooSmallException
+            throw new ASN1TruncationException
             (
-                "This exception was thrown because you attempted to decode " ~
-                "a Distinguished Encoding Rules (DER) encoded element from " ~
-                "fewer than two bytes, which cannot possibly encode a valid " ~
-                "Distinguished Encoding Rules (DER) element. "
+                2u,
+                bytes.length,
+                "decode the tag of a Distinguished Encoding Rules (DER) encoded element"
             );
 
         // Index of what we are currently parsing.
@@ -4320,49 +4319,15 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         switch (bytes[cursor] & 0b11000000u)
         {
-            case (0b00000000u):
-            {
-                this.tagClass = ASN1TagClass.universal;
-                break;
-            }
-            case (0b01000000u):
-            {
-                this.tagClass = ASN1TagClass.application;
-                break;
-            }
-            case (0b10000000u):
-            {
-                this.tagClass = ASN1TagClass.contextSpecific;
-                break;
-            }
-            case (0b11000000u):
-            {
-                this.tagClass = ASN1TagClass.privatelyDefined;
-                break;
-            }
-            default:
-            {
-                assert(0, "Impossible tag class appeared!");
-            }
+            case (0b00000000u): this.tagClass = ASN1TagClass.universal; break;
+            case (0b01000000u): this.tagClass = ASN1TagClass.application; break;
+            case (0b10000000u): this.tagClass = ASN1TagClass.contextSpecific; break;
+            case (0b11000000u): this.tagClass = ASN1TagClass.privatelyDefined; break;
+            default: assert(0, "Impossible tag class appeared!");
         }
 
-        switch (bytes[cursor] & 0b00100000u)
-        {
-            case (0b00000000u):
-            {
-                this.construction = ASN1Construction.primitive;
-                break;
-            }
-            case (0b00100000u):
-            {
-                this.construction = ASN1Construction.constructed;
-                break;
-            }
-            default:
-            {
-                assert(0, "Impossible tag class appeared!");
-            }
-        }
+        this.construction = ((bytes[cursor] & 0b00100000u) ?
+            ASN1Construction.constructed : ASN1Construction.primitive);
 
         this.tagNumber = (bytes[cursor] & 0b00011111u);
         cursor++;
@@ -4430,7 +4395,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             if (numberOfLengthOctets) // Definite Long or Reserved
             {
                 if (numberOfLengthOctets == 0b01111111u) // Reserved
-                    throw new ASN1InvalidLengthException
+                    throw new ASN1LengthException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a Distinguished Encoding Rules (DER) encoded " ~
@@ -4441,7 +4406,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 // Definite Long, if it has made it this far
 
                 if (numberOfLengthOctets > size_t.sizeof)
-                    throw new ASN1ValueTooBigException
+                    throw new ASN1LengthException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a Distinguished Encoding Rules (DER) encoded " ~
@@ -4450,16 +4415,15 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     );
 
                 if (cursor + numberOfLengthOctets >= bytes.length)
-                    throw new ASN1ValueTooSmallException
+                    throw new ASN1TruncationException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a Distinguished Encoding Rules (DER) encoded " ~
-                        "element whose length bytes are too many to decode " ~
-                        "from the deficient bytes supplied."
+                        numberOfLengthOctets,
+                        ((bytes.length - 1) - cursor), // FIXME: You can increment the cursor before this.
+                        "decode the length of a Distinguished Encoding Rules (DER) encoded element"
                     );
 
                 if (bytes[++cursor] == 0x00u)
-                    throw new ASN1InvalidLengthException
+                    throw new ASN1LengthException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a Distinguished Encoding Rules (DER) encoded " ~
@@ -4480,7 +4444,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 size_t length = *cast(size_t *) lengthNumberOctets.ptr;
 
                 if (length <= 127u)
-                    throw new ASN1InvalidLengthException
+                    throw new ASN1LengthException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a Distinguished Encoding Rules (DER) encoded " ~
@@ -4494,11 +4458,11 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         forMoreInformationText ~ debugInformationText ~ reportBugsText
                     );
 
-                if ((cursor + length) < cursor)
-                    throw new ASN1ValueTooBigException
+                if ((cursor + length) < cursor) // This catches an overflow.
+                    throw new ASN1LengthException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode a Basic Encoding Rules (BER) encoded element " ~
+                        "decode a Disinguished Encoding Rules (DER) encoded element " ~
                         "that indicated that it was exceedingly large--so " ~
                         "large, in fact, that it cannot be stored on this " ~
                         "computer (18 exabytes if you are on a 64-bit system). " ~
@@ -4512,12 +4476,11 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 cursor += (numberOfLengthOctets);
 
                 if ((cursor + length) > bytes.length)
-                    throw new ASN1ValueTooSmallException
+                    throw new ASN1TruncationException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a Distinguished Encoding Rules (DER) encoded " ~
-                        "element whose indicated length is too large to decode " ~
-                        "from the deficient bytes supplied."
+                        length,
+                        (bytes.length - cursor),
+                        "decode the value of a Distinguished Encoding Rules (DER) encoded element"
                     );
 
                 this.value = bytes[cursor .. cursor+length].dup;
@@ -4525,7 +4488,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             }
             else // Indefinite
             {
-                throw new ASN1InvalidLengthException
+                throw new ASN1LengthException
                 (
                     "This exception was thrown because an invalid length tag " ~
                     "was encountered. Distinguished Encoding Rules (DER) do not " ~
@@ -4536,18 +4499,17 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         }
         else // Definite Short
         {
-            ubyte length = (bytes[cursor] & 0x7Fu);
+            ubyte length = (bytes[cursor++] & 0x7Fu);
 
-            if (cursor+length >= bytes.length)
-                throw new ASN1ValueTooSmallException
+            if ((cursor + length) > bytes.length)
+                throw new ASN1TruncationException
                 (
-                    "This exception was thrown because you attempted to " ~
-                    "decode a Distinguished Encoding Rules (DER) encoded " ~
-                    "element whose indicated length is too large to decode " ~
-                    "from the deficient bytes supplied."
+                    length,
+                    ((bytes.length - 1) - cursor),
+                    "decode the value of a Distinguished Encoding Rules (DER) encoded element"
                 );
 
-            this.value = bytes[++cursor .. cursor+length].dup;
+            this.value = bytes[cursor .. cursor+length].dup;
             return (cursor + length);
         }
     }
@@ -4861,8 +4823,8 @@ unittest
     data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
 
     size_t i = 0u;
-    assertThrown!ASN1InvalidLengthException(new DERElement(i, data));
-    assertThrown!ASN1InvalidLengthException(new DERElement(data));
+    assertThrown!ASN1LengthException(new DERElement(i, data));
+    assertThrown!ASN1LengthException(new DERElement(data));
 }
 
 /*
@@ -4904,7 +4866,7 @@ unittest
     for (ubyte i = 0x00u; i < ubyte.max; i++)
     {
         ubyte[] data = [i];
-        assertThrown!Exception(new DERElement(data));
+        assertThrown!Exception(new DERElement(data)); // FIXME: Narrow down the exception
     }
 
     size_t index;
@@ -4945,7 +4907,7 @@ unittest
 unittest
 {
     ubyte[] test = [ 0x00u, 0x03u, 0x00u, 0x00u ];
-    assertThrown!ASN1ValueTooSmallException(new DERElement(test));
+    assertThrown!ASN1TruncationException(new DERElement(test));
 }
 
 // Test that a misleading definite-long length byte does not throw a RangeError.
@@ -4953,7 +4915,7 @@ unittest
 unittest
 {
     ubyte[] invalid = [ 0b00000000u, 0b10000001u ];
-    assertThrown!ASN1ValueTooSmallException(new DERElement(invalid));
+    assertThrown!ASN1TruncationException(new DERElement(invalid));
 }
 
 // Test that leading zeroes in definite long length encodings throw exceptions
@@ -4961,7 +4923,7 @@ unittest
 unittest
 {
     ubyte[] invalid = [ 0b00000000u, 0b10000010u, 0b00000000u, 0b00000001u ];
-    assertThrown!ASN1InvalidLengthException(new DERElement(invalid));
+    assertThrown!ASN1LengthException(new DERElement(invalid));
 }
 
 // Test that a very large value does not cause a segfault or something
@@ -4973,7 +4935,7 @@ unittest
     big[1] += cast(ubyte) int.sizeof;
     big ~= cast(ubyte[]) *cast(ubyte[int.sizeof] *) &biggest;
     big ~= [ 0x01u, 0x02u, 0x03u ]; // Plus some arbitrary data.
-    assertThrown!ASN1ValueTooSmallException(new DERElement(big));
+    assertThrown!ASN1TruncationException(new DERElement(big));
 }
 
 // Test that the largest possible item does not cause a segfault or something
@@ -4985,7 +4947,7 @@ unittest
     big[1] += cast(ubyte) size_t.sizeof;
     big ~= cast(ubyte[]) *cast(ubyte[size_t.sizeof] *) &biggest;
     big ~= [ 0x01u, 0x02u, 0x03u ]; // Plus some arbitrary data.
-    assertThrown!ASN1ValueTooBigException(new DERElement(big));
+    assertThrown!ASN1LengthException(new DERElement(big));
 }
 
 // Test that a valueless long-form definite-length element does not throw a RangeError
@@ -4994,7 +4956,7 @@ unittest
 {
     ubyte[] naughty = [ 0x00u, 0x82, 0x00u, 0x01u ];
     size_t bytesRead = 0u;
-    assertThrown!ASN1InvalidLengthException(new DERElement(bytesRead, naughty));
+    assertThrown!ASN1LengthException(new DERElement(bytesRead, naughty));
 }
 
 // PyASN1 Comparison Testing

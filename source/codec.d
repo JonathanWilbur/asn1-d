@@ -39,7 +39,127 @@ public alias ASN1RecursionException = AbstractSyntaxNotation1RecursionException;
 public
 class AbstractSyntaxNotation1RecursionException : ASN1CodecException
 {
-    mixin basicExceptionCtors;
+    immutable size_t recursionLimit;
+
+    this
+    (
+        size_t recursionLimit,
+        string whatYouAttemptedToDo,
+        string file = __FILE__,
+        size_t line = __LINE__
+    )
+    {
+        this.recursionLimit = recursionLimit;
+        string message =
+            "This exception was thrown because you attempted to " ~
+            whatYouAttemptedToDo ~
+            ", which exceeded the recursion limit. " ~
+            "The recursion limit was " ~
+            text(this.recursionLimit) ~ ". This may indicate a malicious " ~
+            "attempt to compromise your application.";
+
+        super(message, file, line);
+    }
+}
+
+// REVIEW: Should you include base and pointer fields?
+///
+public alias ASN1TruncationException = AbstractSyntaxNotation1TruncationException;
+/**
+    An exception that is thrown when the encoded data is truncated. Note that
+    this exception is not necessarily indicative of malicious activity. If
+    encoded ASN.1 data is being transferred over a network to a host that is
+    decoding it, attempting to decode the data before the entirety of the data
+    is transferred could result in this exception.
+*/
+public
+class AbstractSyntaxNotation1TruncationException : ASN1CodecException
+{
+    immutable size_t expectedBytes;
+    immutable size_t actualBytes;
+
+    this
+    (
+        size_t expectedBytes,
+        size_t actualBytes,
+        string whatYouAttemptedToDo,
+        string file = __FILE__,
+        size_t line = __LINE__
+    )
+    {
+        assert(actualBytes < expectedBytes, "AF: " ~ text(actualBytes) ~ ", " ~ text(expectedBytes));
+        this.expectedBytes = expectedBytes;
+        this.actualBytes = actualBytes;
+        string message =
+            "This exception was thrown because you attempted to decode an " ~
+            "encoded ASN.1 element that was encoded on too few bytes. In " ~
+            "other words, it appears to have been truncated. While this " ~
+            "could indicate an attempt to compromise your application, " ~
+            "it is more likely that you were receiving encoded data from " ~
+            "a remote host, and that you have not received the entirety " ~
+            "of the data over the network yet. Based on the data decoded " ~
+            "so far, it looks like you needed at least " ~
+            text(expectedBytes) ~ " byte(s) of data, but only had " ~
+            text(actualBytes) ~ " byte(s) of data. This exception was thrown " ~
+            "when you were trying to " ~ whatYouAttemptedToDo ~ ".";
+
+        super(message, file, line);
+    }
+}
+
+///
+public alias ASN1ConstructionException = AbstractSyntaxNotation1ConstructionException;
+///
+public
+class AbstractSyntaxNotation1ConstructionException : ASN1CodecException
+{
+    immutable ASN1TagClass  expectedTagClass;
+    immutable ASN1TagClass  expectedConstruction;
+    immutable size_t        expectedTagNumber;
+
+    immutable ASN1TagClass  actualTagClass;
+    immutable ASN1TagClass  actualConstruction;
+    immutable size_t        actualTagNumber;
+
+    this
+    (
+        ASN1TagClass expectedTagClass,
+        ASN1TagClass expectedConstruction,
+        size_t expectedTagNumber,
+        ASN1TagClass actualTagClass,
+        ASN1TagClass actualConstruction,
+        size_t actualTagNumber,
+        string file = __FILE__,
+        size_t line = __LINE__
+    )
+    {
+        assert
+        (
+            (expectedTagClass != actualTagClass) ||
+            (expectedConstruction != actualConstruction) ||
+            (expectedTagNumber != actualTagNumber)
+        );
+
+        this.expectedTagClass = expectedTagClass;
+        this.expectedConstruction = expectedConstruction;
+        this.expectedTagNumber = expectedTagNumber;
+        this.actualTagClass = actualTagClass;
+        this.actualConstruction = actualConstruction;
+        this.actualTagNumber = actualTagNumber;
+
+        string message =
+            "This exception was thrown because you attempted to decode an " ~
+            "encoded ASN.1 element that was encoded with the wrong tag class, " ~
+            "construction, or tag number.\n" ~
+            "The expected tag class was " ~ text(expectedTagClass) ~ "but the " ~
+            "actual tag class was " ~ text(actualTagClass) ~ ".\n" ~
+            "The expected construction was " ~ text(expectedConstruction) ~ "but the " ~
+            "actual construction was " ~ text(actualConstruction) ~ ".\n" ~
+            "The expected tag number was " ~ text(expectedTagNumber) ~ "but the " ~
+            "actual tag number was " ~ text(actualTagNumber) ~ ".\n";
+
+        super(message, file, line);
+    }
 }
 
 ///
@@ -47,6 +167,15 @@ public alias ASN1TagException = AbstractSyntaxNotation1TagException;
 ///
 public
 class AbstractSyntaxNotation1TagException : ASN1CodecException
+{
+    mixin basicExceptionCtors;
+}
+
+///
+public alias ASN1LengthException = AbstractSyntaxNotation1LengthException;
+///
+public
+class AbstractSyntaxNotation1LengthException : ASN1CodecException
 {
     mixin basicExceptionCtors;
 }
@@ -116,18 +245,6 @@ public alias ASN1InvalidIndexException = AbstractSyntaxNotation1InvalidIndexExce
 */
 public
 class AbstractSyntaxNotation1InvalidIndexException : ASN1CodecException
-{
-    mixin basicExceptionCtors;
-}
-
-///
-public alias ASN1InvalidLengthException = AbstractSyntaxNotation1InvalidLengthException;
-/**
-    Thrown if an invalid length encoding is encountered, such as when a length byte
-    of 0xFF--which is reserved--is encountered in BER encoding.
-*/
-public
-class AbstractSyntaxNotation1InvalidLengthException : ASN1CodecException
 {
     mixin basicExceptionCtors;
 }

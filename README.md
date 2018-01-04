@@ -194,7 +194,21 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [x] Add further `REAL` special numbers
 - [x] Review latest version of X.690 (I was accidentally reading the 2002 one...)
 - [x] Implement CER and DER restraints on `UTCTime` and `GeneralizedTime`
-- [ ] Restructure the Exception hierarchy
+- [ ] Implement new Exception hierarchy
+  - [x] ASN1Exception
+    - [x] ASN1CodecException
+      - [x] ASN1RecursionException
+      - [x] ASN1TruncationException = tag, length, or value was truncated
+      - [x] ASN1ConstructionException
+      - [x] ASN1TagException = size_t overflow, leading zeroes (bytes)
+      - [x] ASN1LengthException = size_t overflow or reserved length (bytes), leading zeroes
+      - [x] ASN1ValueException
+        - [ ] ASN1ValueSizeException (lower limit, upper limit, actual)
+        - [ ] ASN1ValuePaddingException = leading zero bytes, trailing zero bits
+        - [ ] ASN1ValueCharactersException = (permitted characters description, offending character)
+        - [ ] ASN1ValueIndexException = (valid indices, offending index)
+        - [ ] ASN1ValueOrderingException!Element (elements)
+    - [x] ASN1CompilerException
 - [x] More unit testing of `REAL`
 - [ ] Do some more unit testing for extreme lengths.
 - [ ] Cross-Platform Testing

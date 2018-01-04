@@ -5691,7 +5691,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 form, but the END OF CONTENT octets (two consecutive null
                 octets) cannot be found, or if the value is encoded in fewer
                 octets than indicated by the length byte.
-            ASN1InvalidLengthException = if the length byte is set to 0xFF,
+            ASN1LengthException = if the length byte is set to 0xFF,
                 which is reserved.
             ASN1ValueTooBigException = if the length cannot be represented by
                 the largest unsigned integer.
@@ -5731,7 +5731,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 form, but the END OF CONTENT octets (two consecutive null
                 octets) cannot be found, or if the value is encoded in fewer
                 octets than indicated by the length byte.
-            ASN1InvalidLengthException = if the length byte is set to 0xFF,
+            ASN1LengthException = if the length byte is set to 0xFF,
                 which is reserved.
             ASN1ValueTooBigException = if the length cannot be represented by
                 the largest unsigned integer.
@@ -5763,12 +5763,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     size_t fromBytes (in ubyte[] bytes)
     {
         if (bytes.length < 2u)
-            throw new ASN1ValueTooSmallException
+            throw new ASN1TruncationException
             (
-                "This exception was thrown because you attempted to decode " ~
-                "a Canonical Encoding Rules (CER) encoded element from fewer " ~
-                "than two bytes, which cannot possibly encode a valid Canonical " ~
-                "Encoding Rules (CER) element. "
+                2u,
+                bytes.length,
+                "decode the tag of a Canonical Encoding Rules (CER) encoded element"
             );
 
         // Index of what we are currently parsing.
@@ -5776,49 +5775,15 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         switch (bytes[cursor] & 0b11000000u)
         {
-            case (0b00000000u):
-            {
-                this.tagClass = ASN1TagClass.universal;
-                break;
-            }
-            case (0b01000000u):
-            {
-                this.tagClass = ASN1TagClass.application;
-                break;
-            }
-            case (0b10000000u):
-            {
-                this.tagClass = ASN1TagClass.contextSpecific;
-                break;
-            }
-            case (0b11000000u):
-            {
-                this.tagClass = ASN1TagClass.privatelyDefined;
-                break;
-            }
-            default:
-            {
-                assert(0, "Impossible tag class appeared!");
-            }
+            case (0b00000000u): this.tagClass = ASN1TagClass.universal; break;
+            case (0b01000000u): this.tagClass = ASN1TagClass.application; break;
+            case (0b10000000u): this.tagClass = ASN1TagClass.contextSpecific; break;
+            case (0b11000000u): this.tagClass = ASN1TagClass.privatelyDefined; break;
+            default: assert(0, "Impossible tag class appeared!");
         }
 
-        switch (bytes[cursor] & 0b00100000u)
-        {
-            case (0b00000000u):
-            {
-                this.construction = ASN1Construction.primitive;
-                break;
-            }
-            case (0b00100000u):
-            {
-                this.construction = ASN1Construction.constructed;
-                break;
-            }
-            default:
-            {
-                assert(0, "Impossible tag class appeared!");
-            }
-        }
+        this.construction = ((bytes[cursor] & 0b00100000u) ?
+            ASN1Construction.constructed : ASN1Construction.primitive);
 
         this.tagNumber = (bytes[cursor] & 0b00011111u);
         cursor++;
@@ -5885,7 +5850,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             if (numberOfLengthOctets) // Definite Long or Reserved
             {
                 if (numberOfLengthOctets == 0b01111111u) // Reserved
-                    throw new ASN1InvalidLengthException
+                    throw new ASN1LengthException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a Canonical Encoding Rules (CER) encoded element " ~
@@ -5896,7 +5861,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 // Definite Long, if it has made it this far
 
                 if (numberOfLengthOctets > size_t.sizeof)
-                    throw new ASN1ValueTooBigException
+                    throw new ASN1LengthException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a Canonical Encoding Rules (CER) encoded element " ~
@@ -5905,16 +5870,15 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     );
 
                 if (cursor + numberOfLengthOctets >= bytes.length)
-                    throw new ASN1ValueTooSmallException
+                    throw new ASN1TruncationException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a Canonical Encoding Rules (CER) encoded element " ~
-                        "whose length bytes are too many to decode from " ~
-                        "the deficient bytes supplied."
+                        numberOfLengthOctets,
+                        ((bytes.length - 1) - cursor),
+                        "decode the length of a Basic Encoding Rules (BER) encoded element"
                     );
 
                 if (bytes[++cursor] == 0x00u)
-                    throw new ASN1InvalidLengthException
+                    throw new ASN1LengthException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a Canonical Encoding Rules (CER) encoded " ~
@@ -5935,7 +5899,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 size_t length = *cast(size_t *) lengthNumberOctets.ptr;
 
                 if (length <= 127u)
-                    throw new ASN1InvalidLengthException
+                    throw new ASN1LengthException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a Canonical Encoding Rules (CER) encoded " ~
@@ -5949,8 +5913,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                         forMoreInformationText ~ debugInformationText ~ reportBugsText
                     );
 
-                if ((cursor + length) < cursor)
-                    throw new ASN1ValueTooBigException
+                if ((cursor + length) < cursor) // This catches an overflow.
+                    throw new ASN1LengthException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a Canonical Encoding Rules (CER) encoded element " ~
@@ -5967,12 +5931,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 cursor += (numberOfLengthOctets);
 
                 if ((cursor + length) > bytes.length)
-                    throw new ASN1ValueTooSmallException
+                    throw new ASN1TruncationException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a Canonical Encoding Rules (CER) encoded element " ~
-                        "whose indicated length is too large to decode from " ~
-                        "the deficient bytes supplied."
+                        length,
+                        (bytes.length - cursor),
+                        "decode the value of a Canonical Encoding Rules (CER) encoded element"
                     );
 
                 this.value = bytes[cursor .. cursor+length].dup;
@@ -5985,9 +5948,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     this.nestingRecursionCount = 0u;
                     throw new ASN1RecursionException
                     (
-                        "This exception was thrown because you attempted to " ~
+                        this.nestingRecursionLimit,
                         "decode a Canonical Encoding Rules (CER) encoded element " ~
-                        "that recursed too deep."
+                        "whose value was encoded with indefinite length form " ~
+                        "and constructed recursively from deeply nested elements"
                     );
                 }
 
@@ -6004,40 +5968,16 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                         child.length == 0u
                     )
                     break;
-
-                    if (child.tagClass != this.tagClass)
-                    {
-                        this.nestingRecursionCount = 0u;
-                        throw new ASN1TagException
-                        (
-                            "This exception was thrown because you attempted " ~
-                            "to decode an indefinite-length element that " ~
-                            "contained an element that did not share the same " ~
-                            "tag class."
-                        );
-                    }
-
-                    if (child.tagNumber != this.tagNumber)
-                    {
-                        this.nestingRecursionCount = 0u;
-                        throw new ASN1TagException
-                        (
-                            "This exception was thrown because you attempted " ~
-                            "to decode an indefinite-length element that " ~
-                            "contained an element that did not share the same " ~
-                            "tag number."
-                        );
-                    }
                 }
 
                 if (sentinel == bytes.length && (bytes[sentinel-1] != 0x00u || bytes[sentinel-2] != 0x00u))
-                    throw new ASN1ValueTooSmallException
+                    throw new ASN1TruncationException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a Canonical Encoding Rules (CER) encoded element " ~
-                        "that was encoded using indefinite length form, but " ~
-                        "did not terminate with an END OF CONTENT word (two " ~
-                        "consecutive null bytes)."
+                        length,
+                        (length + 2u),
+                        "find the END OF CONTENT octets (two consecutive null " ~
+                        "bytes) of an indefinite-length encoded " ~
+                        "Canonical Encoding Rules (CER) element"
                     );
 
                 this.nestingRecursionCount--;
@@ -6047,18 +5987,17 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else // Definite Short
         {
-            ubyte length = (bytes[cursor] & 0x7Fu);
+            ubyte length = (bytes[cursor++] & 0x7Fu);
 
-            if (cursor+length >= bytes.length)
-                throw new ASN1ValueTooSmallException
+            if ((cursor + length) > bytes.length)
+                throw new ASN1TruncationException
                 (
-                    "This exception was thrown because you attempted to " ~
-                    "decode a Canonical Encoding Rules (CER) encoded element " ~
-                    "whose indicated length is too large to decode from " ~
-                    "the deficient bytes supplied."
+                    length,
+                    ((bytes.length - 1) - cursor),
+                    "decode the value of a Canonical Encoding Rules (CER) encoded element"
                 );
 
-            this.value = bytes[++cursor .. cursor+length].dup;
+            this.value = bytes[cursor .. cursor+length].dup;
             return (cursor + length);
         }
     }
@@ -6473,28 +6412,6 @@ unittest
     assert((new CERElement(data)).value == [ 0x04u, 0x04u, 0x00u, 0x00u, 0x00u, 0x00u ]);
 }
 
-// Test that a nested element must have the same tag class
-@system
-unittest
-{
-    ubyte[] invalid = [
-        0x2Cu, 0x80u,
-            0xACu, 0x02u, 'H', 'I', // The first byte should be 0x0Cu, not 0xACu.
-            0x00u, 0x00u ];
-    assertThrown!ASN1TagException(new CERElement(invalid));
-}
-
-// Test that a nested element must have the same tag number
-@system
-unittest
-{
-    ubyte[] invalid = [
-        0x2Cu, 0x80u,
-            0x0Du, 0x02u, 'H', 'I', // The first byte should be 0x0Cu, not 0x0Du.
-            0x00u, 0x00u ];
-    assertThrown!ASN1TagException(new CERElement(invalid));
-}
-
 /*
     Test of OCTET STRING encoding on 500 bytes (+4 for type and length tags)
 
@@ -6575,7 +6492,7 @@ unittest
 unittest
 {
     ubyte[] test = [ 0x00u, 0x03u, 0x00u, 0x00u ];
-    assertThrown!ASN1ValueTooSmallException(new CERElement(test));
+    assertThrown!ASN1TruncationException(new CERElement(test));
 }
 
 // Test that a misleading definite-long length byte does not throw a RangeError.
@@ -6583,7 +6500,7 @@ unittest
 unittest
 {
     ubyte[] invalid = [ 0b00000000u, 0b10000001u ];
-    assertThrown!ASN1ValueTooSmallException(new CERElement(invalid));
+    assertThrown!ASN1TruncationException(new CERElement(invalid));
 }
 
 // Test that leading zeroes in definite long length encodings throw exceptions
@@ -6591,7 +6508,7 @@ unittest
 unittest
 {
     ubyte[] invalid = [ 0b00000000u, 0b10000010u, 0b00000000u, 0b00000001u ];
-    assertThrown!ASN1InvalidLengthException(new CERElement(invalid));
+    assertThrown!ASN1LengthException(new CERElement(invalid));
 }
 
 // Test that a very large value does not cause a segfault or something
@@ -6603,7 +6520,7 @@ unittest
     big[1] += cast(ubyte) int.sizeof;
     big ~= cast(ubyte[]) *cast(ubyte[int.sizeof] *) &biggest;
     big ~= [ 0x01u, 0x02u, 0x03u ]; // Plus some arbitrary data.
-    assertThrown!ASN1ValueTooSmallException(new CERElement(big));
+    assertThrown!ASN1TruncationException(new CERElement(big));
 }
 
 // Test that the largest possible item does not cause a segfault or something
@@ -6615,7 +6532,7 @@ unittest
     big[1] += cast(ubyte) size_t.sizeof;
     big ~= cast(ubyte[]) *cast(ubyte[size_t.sizeof] *) &biggest;
     big ~= [ 0x01u, 0x02u, 0x03u ]; // Plus some arbitrary data.
-    assertThrown!ASN1ValueTooBigException(new CERElement(big));
+    assertThrown!ASN1LengthException(new CERElement(big));
 }
 
 // Test that a short indefinite-length element does not throw a RangeError
@@ -6624,7 +6541,7 @@ unittest
 {
     ubyte[] naughty = [ 0x1F, 0x00u, 0x80, 0x00u ];
     size_t bytesRead = 0u;
-    assertThrown!ASN1ValueTooSmallException(new CERElement(bytesRead, naughty));
+    assertThrown!ASN1TruncationException(new CERElement(bytesRead, naughty));
 }
 
 // Test that a short indefinite-length element does not throw a RangeError
@@ -6633,7 +6550,7 @@ unittest
 {
     ubyte[] naughty = [ 0x1F, 0x00u, 0x80, 0x00u, 0x00u ];
     size_t bytesRead = 0u;
-    assertNotThrown!ASN1ValueTooSmallException(new CERElement(bytesRead, naughty));
+    assertNotThrown!ASN1TruncationException(new CERElement(bytesRead, naughty));
 }
 
 // Test that a valueless long-form definite-length element does not throw a RangeError
@@ -6642,7 +6559,7 @@ unittest
 {
     ubyte[] naughty = [ 0x00u, 0x82, 0x00u, 0x01u ];
     size_t bytesRead = 0u;
-    assertThrown!ASN1InvalidLengthException(new CERElement(bytesRead, naughty));
+    assertThrown!ASN1LengthException(new CERElement(bytesRead, naughty));
 }
 
 // PyASN1 Comparison Testing
