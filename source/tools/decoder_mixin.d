@@ -26,7 +26,7 @@ mixin template Decoder(Element)
             while (data.length > 0u)
                 tops ~= new Element(data);
         }
-        catch (ASN1ValueTooSmallException e)
+        catch (ASN1ValueSizeException e)
         {
             writeln("\n", e.msg, "\n");
             return ReturnValue.elementTerminatedPrematurely;
@@ -49,7 +49,7 @@ mixin template Decoder(Element)
             {
                 display(top, 0u);
             }
-            catch (ASN1ValueTooSmallException e)
+            catch (ASN1ValueSizeException e)
             {
                 writeln("\n", e.msg, "\n");
                 return ReturnValue.elementTerminatedPrematurely;

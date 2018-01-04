@@ -151,11 +151,11 @@ class AbstractSyntaxNotation1ConstructionException : ASN1CodecException
             "This exception was thrown because you attempted to decode an " ~
             "encoded ASN.1 element that was encoded with the wrong tag class, " ~
             "construction, or tag number.\n" ~
-            "The expected tag class was " ~ text(expectedTagClass) ~ "but the " ~
+            "The expected tag class was " ~ text(expectedTagClass) ~ " but the " ~
             "actual tag class was " ~ text(actualTagClass) ~ ".\n" ~
-            "The expected construction was " ~ text(expectedConstruction) ~ "but the " ~
+            "The expected construction was " ~ text(expectedConstruction) ~ " but the " ~
             "actual construction was " ~ text(actualConstruction) ~ ".\n" ~
-            "The expected tag number was " ~ text(expectedTagNumber) ~ "but the " ~
+            "The expected tag number was " ~ text(expectedTagNumber) ~ " but the " ~
             "actual tag number was " ~ text(actualTagNumber) ~ ".\n";
 
         super(message, file, line);
@@ -185,24 +185,6 @@ public alias ASN1ValueSizeException = AbstractSyntaxNotation1ValueSizeException;
 ///
 public
 class AbstractSyntaxNotation1ValueSizeException : ASN1CodecException
-{
-    mixin basicExceptionCtors;
-}
-
-///
-public alias ASN1ValueTooBigException = AbstractSyntaxNotation1ValueTooBigException;
-///
-public
-class AbstractSyntaxNotation1ValueTooBigException : ASN1ValueSizeException
-{
-    mixin basicExceptionCtors;
-}
-
-///
-public alias ASN1ValueTooSmallException = AbstractSyntaxNotation1ValueTooSmallException;
-///
-public
-class AbstractSyntaxNotation1ValueTooSmallException : ASN1ValueSizeException
 {
     mixin basicExceptionCtors;
 }
@@ -415,21 +397,21 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.integer!long == 0L);
 
         el.integer!short = 0;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
         assert(el.integer!short == 0);
         assert(el.integer!int == 0);
         assert(el.integer!long == 0L);
 
         el.integer!int = 0;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
         assert(el.integer!int == 0);
         assert(el.integer!long == 0L);
 
         el.integer!long = 0L;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
-        // assertThrown!ASN1ValueTooBigException(el.integer!int);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!int);
         assert(el.integer!long == 0L);
 
         // Tests for small positives
@@ -440,21 +422,21 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.integer!long == 3L);
 
         el.integer!short = 5;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
         assert(el.integer!short == 5);
         assert(el.integer!int == 5);
         assert(el.integer!long == 5L);
 
         el.integer!int = 7;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
         assert(el.integer!int == 7);
         assert(el.integer!long == 7L);
 
         el.integer!long = 9L;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
-        // assertThrown!ASN1ValueTooBigException(el.integer!int);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!int);
         assert(el.integer!long == 9L);
 
         // Tests for small negatives
@@ -465,59 +447,59 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.integer!long == -3L);
 
         el.integer!short = -5;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
         assert(el.integer!short == -5);
         assert(el.integer!int == -5);
         assert(el.integer!long == -5L);
 
         el.integer!int = -7;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
         assert(el.integer!int == -7);
         assert(el.integer!long == -7L);
 
         el.integer!long = -9L;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
-        // assertThrown!ASN1ValueTooBigException(el.integer!int);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!int);
         assert(el.integer!long == -9L);
 
         // Tests for large positives
         el.integer!short = 20000;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
         assert(el.integer!short == 20000);
         assert(el.integer!int == 20000);
         assert(el.integer!long == 20000L);
 
         el.integer!int = 70000;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
         assert(el.integer!int == 70000);
         assert(el.integer!long == 70000L);
 
         el.integer!long = 70000L;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
-        // assertThrown!ASN1ValueTooBigException(el.integer!int);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!int);
         assert(el.integer!long == 70000L);
 
         // Tests for large negatives
         el.integer!short = -20000;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
         assert(el.integer!short == -20000);
         assert(el.integer!int == -20000);
         assert(el.integer!long == -20000L);
 
         el.integer!int = -70000;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
         assert(el.integer!int == -70000);
         assert(el.integer!long == -70000L);
 
         el.integer!long = -70000L;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
-        // assertThrown!ASN1ValueTooBigException(el.integer!int);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!int);
         assert(el.integer!long == -70000L);
 
         // Tests for maximum values
@@ -528,21 +510,21 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.integer!long == byte.max);
 
         el.integer!short = short.max;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
         assert(el.integer!short == short.max);
         assert(el.integer!int == short.max);
         assert(el.integer!long == short.max);
 
         el.integer!int = int.max;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
         assert(el.integer!int == int.max);
         assert(el.integer!long == int.max);
 
         el.integer!long = long.max;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
-        // assertThrown!ASN1ValueTooBigException(el.integer!int);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!int);
         assert(el.integer!long == long.max);
 
         // Tests for minimum values
@@ -553,21 +535,21 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.integer!long == byte.min);
 
         el.integer!short = short.min;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
         assert(el.integer!short == short.min);
         assert(el.integer!int == short.min);
         assert(el.integer!long == short.min);
 
         el.integer!int = int.min;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
         assert(el.integer!int == int.min);
         assert(el.integer!long == int.min);
 
         el.integer!long = long.min;
-        // assertThrown!ASN1ValueTooBigException(el.integer!byte);
-        // assertThrown!ASN1ValueTooBigException(el.integer!short);
-        // assertThrown!ASN1ValueTooBigException(el.integer!int);
+        // assertThrown!ASN1ValueSizeException(el.integer!byte);
+        // assertThrown!ASN1ValueSizeException(el.integer!short);
+        // assertThrown!ASN1ValueSizeException(el.integer!int);
         assert(el.integer!long == long.min);
 
         // Assert that accessor does not mutate state
@@ -1369,21 +1351,21 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.enumerated!long == 0L);
 
         el.enumerated!short = 0;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
         assert(el.enumerated!short == 0);
         assert(el.enumerated!int == 0);
         assert(el.enumerated!long == 0L);
 
         el.enumerated!int = 0;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
         assert(el.enumerated!int == 0);
         assert(el.enumerated!long == 0L);
 
         el.enumerated!long = 0L;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!int);
         assert(el.enumerated!long == 0L);
 
         // Tests for small positives
@@ -1394,21 +1376,21 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.enumerated!long == 3L);
 
         el.enumerated!short = 5;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
         assert(el.enumerated!short == 5);
         assert(el.enumerated!int == 5);
         assert(el.enumerated!long == 5L);
 
         el.enumerated!int = 7;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
         assert(el.enumerated!int == 7);
         assert(el.enumerated!long == 7L);
 
         el.enumerated!long = 9L;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!int);
         assert(el.enumerated!long == 9L);
 
         // Tests for small negatives
@@ -1419,59 +1401,59 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.enumerated!long == -3L);
 
         el.enumerated!short = -5;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
         assert(el.enumerated!short == -5);
         assert(el.enumerated!int == -5);
         assert(el.enumerated!long == -5L);
 
         el.enumerated!int = -7;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
         assert(el.enumerated!int == -7);
         assert(el.enumerated!long == -7L);
 
         el.enumerated!long = -9L;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!int);
         assert(el.enumerated!long == -9L);
 
         // Tests for large positives
         el.enumerated!short = 20000;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
         assert(el.enumerated!short == 20000);
         assert(el.enumerated!int == 20000);
         assert(el.enumerated!long == 20000L);
 
         el.enumerated!int = 70000;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
         assert(el.enumerated!int == 70000);
         assert(el.enumerated!long == 70000L);
 
         el.enumerated!long = 70000L;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!int);
         assert(el.enumerated!long == 70000L);
 
         // Tests for large negatives
         el.enumerated!short = -20000;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
         assert(el.enumerated!short == -20000);
         assert(el.enumerated!int == -20000);
         assert(el.enumerated!long == -20000L);
 
         el.enumerated!int = -70000;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
         assert(el.enumerated!int == -70000);
         assert(el.enumerated!long == -70000L);
 
         el.enumerated!long = -70000L;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!int);
         assert(el.enumerated!long == -70000L);
 
         // Tests for maximum values
@@ -1482,21 +1464,21 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.enumerated!long == byte.max);
 
         el.enumerated!short = short.max;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
         assert(el.enumerated!short == short.max);
         assert(el.enumerated!int == short.max);
         assert(el.enumerated!long == short.max);
 
         el.enumerated!int = int.max;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
         assert(el.enumerated!int == int.max);
         assert(el.enumerated!long == int.max);
 
         el.enumerated!long = long.max;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!int);
         assert(el.enumerated!long == long.max);
 
         // Tests for minimum values
@@ -1507,21 +1489,21 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.enumerated!long == byte.min);
 
         el.enumerated!short = short.min;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
         assert(el.enumerated!short == short.min);
         assert(el.enumerated!int == short.min);
         assert(el.enumerated!long == short.min);
 
         el.enumerated!int = int.min;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
         assert(el.enumerated!int == int.min);
         assert(el.enumerated!long == int.min);
 
         el.enumerated!long = long.min;
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!byte);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!short);
-        // assertThrown!ASN1ValueTooBigException(el.enumerated!int);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!byte);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!short);
+        // assertThrown!ASN1ValueSizeException(el.enumerated!int);
         assert(el.enumerated!long == long.min);
 
         // Assert that accessor does not mutate state

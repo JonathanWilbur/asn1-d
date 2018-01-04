@@ -233,7 +233,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: any chosen signed integral type
         Throws:
-            ASN1ValueTooBigException = if the value is too big to decode
+            ASN1ValueSizeException = if the value is too big to decode
                 to a signed integral type.
     */
     public @property @system
@@ -260,7 +260,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         */
         ubyte[] value = this.value.dup;
         if (value.length > T.sizeof)
-            throw new ASN1ValueTooBigException
+            throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode an " ~
                 "INTEGER that was just too large to decode to any signed " ~
@@ -441,7 +441,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     bool[] bitString() const
     {
         if (this.value.length == 0u)
-            throw new ASN1ValueTooSmallException
+            throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode a " ~
                 "BIT STRING that was encoded on zero bytes. A BIT STRING " ~
@@ -573,9 +573,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         always end with a byte whose most significant bit is cleared.
 
         Throws:
-            ASN1ValueTooSmallException = if an attempt is made to decode
+            ASN1ValueSizeException = if an attempt is made to decode
                 an Object Identifier from zero bytes.
-            ASN1ValueTooBigException = if a single OID number is too big to
+            ASN1ValueSizeException = if a single OID number is too big to
                 decode to a size_t.
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
@@ -589,7 +589,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     body
     {
         if (this.value.length == 0u)
-            throw new ASN1ValueTooSmallException
+            throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an OBJECT IDENTIFIER from no bytes. An OBJECT IDENTIFIER " ~
@@ -660,7 +660,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         foreach (const byteGroup; byteGroups)
         {
             if (byteGroup.length > size_t.sizeof)
-                throw new ASN1ValueTooBigException
+                throw new ASN1ValueSizeException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a OBJECT IDENTIFIER that encoded a number on more than " ~
@@ -915,7 +915,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             ASN1SizeException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
-            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
@@ -1198,7 +1198,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         will be context-specific and numbered from 0 to 2.
 
         Throws:
-            ASN1ValueTooBigException = if encoded INTEGER is too large to decode
+            ASN1ValueSizeException = if encoded INTEGER is too large to decode
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
 
@@ -1431,9 +1431,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             ConvOverflowException = if the character-encoding encodes a
                 number that is too big for the selected floating-point
                 type to express.
-            ASN1ValueTooSmallException = if the binary-encoding contains fewer
+            ASN1ValueSizeException = if the binary-encoding contains fewer
                 bytes than the information byte purports.
-            ASN1ValueTooBigException = if the binary-encoded mantissa is too
+            ASN1ValueSizeException = if the binary-encoded mantissa is too
                 big to be expressed by an unsigned long integer.
             ASN1ValueInvalidException = if both bits indicating the base in the
                 information byte of a binary-encoded REAL's information byte
@@ -1492,7 +1492,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     case 0b00000000u: // Exponent on the following octet
                     {
                         if (this.length < 2u)
-                            throw new ASN1ValueTooSmallException
+                            throw new ASN1ValueSizeException
                             (
                                 "This exception was thrown because you attempted to " ~
                                 "decode a REAL that had either zero or one bytes of data," ~
@@ -1511,7 +1511,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     case 0b00000001u: // Exponent on the following two octets
                     {
                         if (this.length < 3u)
-                            throw new ASN1ValueTooSmallException
+                            throw new ASN1ValueSizeException
                             (
                                 "This exception was thrown because you attempted " ~
                                 "to decode a REAL that had too few bytes. The first " ~
@@ -1532,7 +1532,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     case 0b00000010u: // Exponent on the following three octets
                     {
                         if (this.length < 4u)
-                            throw new ASN1ValueTooSmallException
+                            throw new ASN1ValueSizeException
                             (
                                 "This exception was thrown because you attempted " ~
                                 "to decode a REAL that had too few bytes. The first " ~
@@ -1559,7 +1559,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         }
                         else
                         {
-                            throw new ASN1ValueTooBigException
+                            throw new ASN1ValueSizeException
                             (
                                 "This exception was thrown because you attempted " ~
                                 "to decode a REAL that had an exponent that was " ~
@@ -1583,7 +1583,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         */
 
                         if (this.length < 3u)
-                            throw new ASN1ValueTooSmallException
+                            throw new ASN1ValueSizeException
                             (
                                 "This exception was thrown because you attempted " ~
                                 "to decode a REAL that had too few bytes. The first " ~
@@ -1610,7 +1610,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                             );
 
                         if (exponentLength > (this.length + 2u))
-                            throw new ASN1ValueTooSmallException
+                            throw new ASN1ValueSizeException
                             (
                                 "This exception was thrown because you attempted " ~
                                 "to decode a REAL that had too few bytes. The " ~
@@ -1625,7 +1625,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                             );
 
                         if (exponentLength > 2u)
-                            throw new ASN1ValueTooBigException
+                            throw new ASN1ValueSizeException
                             (
                                 "This exception was thrown because you attempted " ~
                                 "to decode a REAL that had an exponent that was " ~
@@ -1682,7 +1682,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 }
 
                 if (this.value.length - startOfMantissa > 8u)
-                    throw new ASN1ValueTooBigException
+                    throw new ASN1ValueSizeException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a REAL whose mantissa was encoded on too many " ~
@@ -1793,9 +1793,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Throws:
             ASN1ValueInvalidException = if an attempt to encode NaN is made.
-            ASN1ValueTooSmallException = if an attempt to encode would result
+            ASN1ValueSizeException = if an attempt to encode would result
                 in an arithmetic underflow of a signed short.
-            ASN1ValueTooBigException = if an attempt to encode would result
+            ASN1ValueSizeException = if an attempt to encode would result
                 in an arithmetic overflow of a signed short.
 
         Citations:
@@ -2230,9 +2230,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         el.value.length += size_t.sizeof;
         el.value[$-1] = 0x05u;
         el.value ~= 0x03u;
-        assertThrown!ASN1ValueTooBigException(el.realNumber!float);
-        assertThrown!ASN1ValueTooBigException(el.realNumber!double);
-        assertThrown!ASN1ValueTooBigException(el.realNumber!real);
+        assertThrown!ASN1ValueSizeException(el.realNumber!float);
+        assertThrown!ASN1ValueSizeException(el.realNumber!double);
+        assertThrown!ASN1ValueSizeException(el.realNumber!real);
     }
 
     /**
@@ -2241,7 +2241,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: any chosen signed integral type
         Throws:
-            ASN1ValueTooBigException = if the value is too big to decode
+            ASN1ValueSizeException = if the value is too big to decode
                 to a signed integral type.
     */
     public @property @system
@@ -2268,7 +2268,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         */
         ubyte[] value = this.value.dup;
         if (value.length > T.sizeof)
-            throw new ASN1ValueTooBigException
+            throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode an " ~
                 "ENUMERATED that was just too large to decode to any signed " ~
@@ -2464,7 +2464,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             ASN1SizeException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
-            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
@@ -2956,7 +2956,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         foreach (const byteGroup; byteGroups)
         {
             if (byteGroup.length > size_t.sizeof)
-                throw new ASN1ValueTooBigException
+                throw new ASN1ValueSizeException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a RELATIVE OID that encoded a number on more than " ~
@@ -3076,7 +3076,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Throws:
             ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
-            ASN1ValueTooSmallException = if there are fewer value bytes than
+            ASN1ValueSizeException = if there are fewer value bytes than
                 indicated by the length tag.
     */
     override public @property @system
@@ -3110,7 +3110,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Throws:
             ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
-            ASN1ValueTooSmallException = if there are fewer value bytes than
+            ASN1ValueSizeException = if there are fewer value bytes than
                 indicated by the length tag.
     */
     override public @property @system
@@ -3409,7 +3409,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     DateTime coordinatedUniversalTime() const
     {
         if (this.value.length < 10u)
-            throw new ASN1ValueTooSmallException
+            throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode a " ~
                 "UTCTime that was encoded on too few bytes to be " ~
@@ -3481,7 +3481,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     DateTime generalizedTime() const
     {
         if (this.value.length < 10u)
-            throw new ASN1ValueTooSmallException
+            throw new ASN1ValueSizeException
             (
                 "This exception was thrown because you attempted to decode a " ~
                 "GeneralizedTime that was encoded on too few bytes to be " ~
@@ -3835,7 +3835,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             ASN1SizeException = if encoded CharacterString has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
-            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
             ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
                 syntaxes or context-negotiation, or if an unspecified element
@@ -4326,7 +4326,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         generated.
 
         Throws:
-            ASN1ValueTooSmallException = if the bytes supplied are fewer than
+            ASN1ValueSizeException = if the bytes supplied are fewer than
                 two (one or zero, in other words), such that no valid BERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive null
@@ -4334,7 +4334,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 octets than indicated by the length byte.
             ASN1LengthException = if the length byte is set to 0xFF,
                 which is reserved.
-            ASN1ValueTooBigException = if the length cannot be represented by
+            ASN1ValueSizeException = if the length cannot be represented by
                 the largest unsigned integer.
 
         Example:
@@ -4366,7 +4366,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         $(D bytesRead) by the number of bytes read.
 
         Throws:
-            ASN1ValueTooSmallException = if the bytes supplied are fewer than
+            ASN1ValueSizeException = if the bytes supplied are fewer than
                 two (one or zero, in other words), such that no valid BERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive null
@@ -4374,7 +4374,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 octets than indicated by the length byte.
             ASN1LengthException = if the length byte is set to 0xFF,
                 which is reserved.
-            ASN1ValueTooBigException = if the length cannot be represented by
+            ASN1ValueSizeException = if the length cannot be represented by
                 the largest unsigned integer.
 
         Example:
