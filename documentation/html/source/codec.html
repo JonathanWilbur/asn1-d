@@ -708,6 +708,138 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
+  <a href="#ASN1IndexException" id="ASN1IndexException"><code class="code">ASN1IndexException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1IndexException"></span>alias <code class="code">ASN1IndexException</code> = AbstractSyntaxNotation1IndexException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1IndexException" id="AbstractSyntaxNotation1IndexException"><code class="code">AbstractSyntaxNotation1IndexException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1IndexException"></span>class <code class="code">AbstractSyntaxNotation1IndexException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    An exception thrown when a member of a CHOICE or SEQUENCE is given a
+    context-specific index that is not defined for that CHOICE or SEQUENCE.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    For example, if:
+<br><br>
+    TheQuestion := [APPLICATION 5] CHOICE {
+        toBe [0] NULL,
+        notToBe [1] NULL
+    }
+<br><br>
+    This exception should be thrown if TheQuestion were to be decoded from the
+    BER-encoded byte sequence: <code class="code">0x65 0x02 0x83 0x00</code>, because
+    the third byte specifies a third choice in TheQuestion, but there is no
+    choice #3 in TheQuestion--there is only choice #0 and #1.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1OrderingException" id="ASN1OrderingException"><code class="code">ASN1OrderingException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1OrderingException"></span>alias <code class="code">ASN1OrderingException</code> = AbstractSyntaxNotation1OrderingException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1OrderingException" id="AbstractSyntaxNotation1OrderingException"><code class="code">AbstractSyntaxNotation1OrderingException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1OrderingException"></span>class <code class="code">AbstractSyntaxNotation1OrderingException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Thrown if the ordering of elements in a SEQUENCE or SET is incorrect.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
   <a href="#ASN1TagException" id="ASN1TagException"><code class="code">ASN1TagException</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -958,6 +1090,106 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
+  <a href="#ASN1ValuePaddingException" id="ASN1ValuePaddingException"><code class="code">ASN1ValuePaddingException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1ValuePaddingException"></span>alias <code class="code">ASN1ValuePaddingException</code> = AbstractSyntaxNotation1ValuePaddingException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1ValuePaddingException" id="AbstractSyntaxNotation1ValuePaddingException"><code class="code">AbstractSyntaxNotation1ValuePaddingException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValuePaddingException"></span>class <code class="code">AbstractSyntaxNotation1ValuePaddingException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1ValueCharactersException" id="ASN1ValueCharactersException"><code class="code">ASN1ValueCharactersException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1ValueCharactersException"></span>alias <code class="code">ASN1ValueCharactersException</code> = AbstractSyntaxNotation1ValueCharactersException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1ValueCharactersException" id="AbstractSyntaxNotation1ValueCharactersException"><code class="code">AbstractSyntaxNotation1ValueCharactersException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueCharactersException"></span>class <code class="code">AbstractSyntaxNotation1ValueCharactersException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
   <a href="#ASN1ValueInvalidException" id="ASN1ValueInvalidException"><code class="code">ASN1ValueInvalidException</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -1017,81 +1249,6 @@
     </ul>
   </p>
 </div>
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1InvalidIndexException" id="ASN1InvalidIndexException"><code class="code">ASN1InvalidIndexException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1InvalidIndexException"></span>alias <code class="code">ASN1InvalidIndexException</code> = AbstractSyntaxNotation1InvalidIndexException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1InvalidIndexException" id="AbstractSyntaxNotation1InvalidIndexException"><code class="code">AbstractSyntaxNotation1InvalidIndexException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1InvalidIndexException"></span>class <code class="code">AbstractSyntaxNotation1InvalidIndexException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    An exception thrown when a member of a CHOICE or SEQUENCE is given a
-    context-specific index that is not defined for that CHOICE or SEQUENCE.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    For example, if:
-<br><br>
-    TheQuestion := [APPLICATION 5] CHOICE {
-        toBe [0] NULL,
-        notToBe [1] NULL
-    }
-<br><br>
-    This exception should be thrown if TheQuestion were to be decoded from the
-    BER-encoded byte sequence: <code class="code">0x65 0x02 0x83 0x00</code>, because
-    the third byte specifies a third choice in TheQuestion, but there is no
-    choice #3 in TheQuestion--there is only choice #0 and #1.
-  </p>
-</div>
-
 </section>
 
 </div>

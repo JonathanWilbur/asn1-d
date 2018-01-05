@@ -241,7 +241,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 (this.value[0] == 0xFFu && (this.value[1] & 0x80u)) // Unnecessary negative leading bytes
             )
         )
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValuePaddingException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an INTEGER that was encoded on more than the minimum " ~
@@ -861,7 +861,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             foreach (immutable octet; this.value[1 .. $-1])
             {
                 if (octet == 0x80u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValuePaddingException
                     (
                         "This exception was thrown because you attempted to decode " ~
                         "an OBJECT IDENTIFIER that contained a number that was " ~
@@ -1031,26 +1031,26 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         CERElement element = new CERElement();
 
         // Tests for the "leading zero byte," 0x80
-        element.value = [ 0x29u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
         element.value = [ 0x29u, 0x80u, 0x14u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
-        element.value = [ 0x29u, 0x14u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1ValuePaddingException(element.objectIdentifier);
         element.value = [ 0x29u, 0x80u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1ValuePaddingException(element.objectIdentifier);
         element.value = [ 0x80u, 0x80u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1ValuePaddingException(element.objectIdentifier);
 
         // Test for non-terminating components
         element.value = [ 0x29u, 0x81u ];
         assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        element.value = [ 0x29u, 0x80u ];
+        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
         element.value = [ 0x29u, 0x14u, 0x81u ];
+        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        element.value = [ 0x29u, 0x14u, 0x80u ];
         assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
 
         // This one should not fail. 0x80u is valid for the first octet.
         element.value = [ 0x80u, 0x14u, 0x14u ];
-        assertNotThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertNotThrown!ASN1ValuePaddingException(element.objectIdentifier);
     }
 
     /**
@@ -1687,7 +1687,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     "a base-10 encoded REAL that was encoded with improper " ~
                     "format. When using Canonical Encoding Rules (CER) or " ~
                     "Distinguished Encoding Rules (DER), the base-10 encoded " ~
-                    "REAL must be encoded in the NR3 format specified in" ~
+                    "REAL must be encoded in the NR3 format specified in " ~
                     "ISO 6093. Further, there may be no whitespace, no leading " ~
                     "zeroes, no trailing zeroes on the mantissa, before or " ~
                     "after the decimal point, and no plus sign should ever " ~
@@ -1725,7 +1725,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     valueString[0] == '0' ||
                     (valueString[0] == '-' && valueString[1] == '0')
                 )
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValuePaddingException
                     (invalidNR3RealMessage ~ "contained a leading zero.");
 
                 ptrdiff_t indexOfDecimalPoint = valueString.indexOf(".");
@@ -1738,7 +1738,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     (invalidNR3RealMessage ~ "contained no 'E'.");
 
                 if (valueString[indexOfDecimalPoint-1] == '0')
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValuePaddingException
                     (invalidNR3RealMessage ~ "contained a trailing zero on the mantissa.");
 
                 if (valueString[$-2 .. $] != "+0" && canFind(valueString, '+'))
@@ -1746,7 +1746,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     (invalidNR3RealMessage ~ "contained an illegitimate plus sign.");
 
                 if (canFind(valueString, "E0") || canFind(valueString, "E-0"))
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValuePaddingException
                     (invalidNR3RealMessage ~ "contained a leading zero on the exponent.");
 
                 return to!(T)(valueString);
@@ -1782,7 +1782,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                         exponent = *cast(short *) exponentBytes.ptr;
 
                         if (exponent <= byte.max && exponent >= byte.min)
-                            throw new ASN1ValueInvalidException
+                            throw new ASN1ValuePaddingException
                             (
                                 "This exception was thrown because you attempted " ~
                                 "to decode a binary-encoded REAL whose exponent " ~
@@ -1828,7 +1828,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 ubyte[] mantissaBytes = this.value[startOfMantissa .. $].dup;
 
                 if (mantissaBytes[0] == 0x00u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValuePaddingException
                     (
                         "This exception was thrown because you attempted to decode " ~
                         "a REAL mantissa that was encoded on more than the minimum " ~
@@ -2281,9 +2281,9 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         {
             el.value = [ 0b00000011u ];
             el.value ~= cast(ubyte[]) test;
-            assertNotThrown!ASN1ValueInvalidException(el.realNumber!float);
-            assertNotThrown!ASN1ValueInvalidException(el.realNumber!double);
-            assertNotThrown!ASN1ValueInvalidException(el.realNumber!real);
+            assertNotThrown!ASN1ValueException(el.realNumber!float);
+            assertNotThrown!ASN1ValueException(el.realNumber!double);
+            assertNotThrown!ASN1ValueException(el.realNumber!real);
         }
     }
 
@@ -2314,9 +2314,9 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         {
             el.value = [ 0b00000011u ];
             el.value ~= cast(ubyte[]) test;
-            assertThrown!ASN1ValueInvalidException(el.realNumber!float);
-            assertThrown!ASN1ValueInvalidException(el.realNumber!double);
-            assertThrown!ASN1ValueInvalidException(el.realNumber!real);
+            assertThrown!ASN1ValueException(el.realNumber!float);
+            assertThrown!ASN1ValueException(el.realNumber!double);
+            assertThrown!ASN1ValueException(el.realNumber!real);
         }
     }
 
@@ -3044,7 +3044,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         foreach (immutable octet; this.value)
         {
             if (octet == 0x80u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValuePaddingException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a RELATIVE OID that contained a number that was " ~
@@ -3180,16 +3180,16 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         CERElement element = new CERElement();
 
         // Tests for the "leading zero byte," 0x80
-        element.value = [ 0x29u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
         element.value = [ 0x29u, 0x80u, 0x14u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
-        element.value = [ 0x29u, 0x14u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
+        assertThrown!ASN1ValuePaddingException(element.roid);
         element.value = [ 0x29u, 0x80u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
+        assertThrown!ASN1ValuePaddingException(element.roid);
         element.value = [ 0x80u, 0x80u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
+        assertThrown!ASN1ValuePaddingException(element.roid);
+        element.value = [ 0x29u, 0x14u, 0x80u ];
+        assertThrown!ASN1ValuePaddingException(element.roid);
+        element.value = [ 0x29u, 0x80u ];
+        assertThrown!ASN1ValuePaddingException(element.roid);
 
         // Test for non-terminating components
         element.value = [ 0x29u, 0x81u ];
@@ -4154,7 +4154,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         if (indexOfDecimalPoint != -1)
         {
             if (this.value[$-2] == '0')
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValuePaddingException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a GeneralizedTime that contained trailing zeroes in the " ~

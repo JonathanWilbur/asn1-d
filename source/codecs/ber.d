@@ -253,7 +253,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 (this.value[0] == 0xFFu && (this.value[1] & 0x80u)) // Unnecessary negative leading bytes
             )
         )
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValuePaddingException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an INTEGER that was encoded on more than the minimum " ~
@@ -568,7 +568,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             foreach (immutable octet; this.value[1 .. $-1])
             {
                 if (octet == 0x80u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValuePaddingException
                     (
                         "This exception was thrown because you attempted to decode " ~
                         "an OBJECT IDENTIFIER that contained a number that was " ~
@@ -738,26 +738,26 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         BERElement element = new BERElement();
 
         // Tests for the "leading zero byte," 0x80
-        element.value = [ 0x29u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
         element.value = [ 0x29u, 0x80u, 0x14u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
-        element.value = [ 0x29u, 0x14u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1ValuePaddingException(element.objectIdentifier);
         element.value = [ 0x29u, 0x80u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1ValuePaddingException(element.objectIdentifier);
         element.value = [ 0x80u, 0x80u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1ValuePaddingException(element.objectIdentifier);
 
         // Test for non-terminating components
         element.value = [ 0x29u, 0x81u ];
         assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        element.value = [ 0x29u, 0x80u ];
+        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
         element.value = [ 0x29u, 0x14u, 0x81u ];
+        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        element.value = [ 0x29u, 0x14u, 0x80u ];
         assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
 
         // This one should not fail. 0x80u is valid for the first octet.
         element.value = [ 0x80u, 0x14u, 0x14u ];
-        assertNotThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertNotThrown!ASN1ValuePaddingException(element.objectIdentifier);
     }
 
     /**
@@ -1580,7 +1580,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                                 (exponentBytes[0] == 0x00u && (!(exponentBytes[1] & 0x80u))) || // Unnecessary positive leading bytes
                                 (exponentBytes[0] == 0xFFu && (exponentBytes[1] & 0x80u)) // Unnecessary negative leading bytes
                             )
-                                throw new ASN1ValueInvalidException
+                                throw new ASN1ValuePaddingException
                                 (
                                     "This exception was thrown because you attempted to decode " ~
                                     "a REAL exponent that was encoded on more than the minimum " ~
@@ -2125,9 +2125,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         // Ensure that the complicated-form exponent must be encoded on the fewest bytes
         el.value = [ 0b10000011u, 0x02u, 0x00u, 0x05u, 0x03u ];
-        assertThrown!ASN1ValueInvalidException(el.realNumber!float);
-        assertThrown!ASN1ValueInvalidException(el.realNumber!double);
-        assertThrown!ASN1ValueInvalidException(el.realNumber!real);
+        assertThrown!ASN1ValuePaddingException(el.realNumber!float);
+        assertThrown!ASN1ValuePaddingException(el.realNumber!double);
+        assertThrown!ASN1ValuePaddingException(el.realNumber!real);
 
         // Ensure that large values fail
         el.value = [ 0b10000011u ];
@@ -2173,7 +2173,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 (this.value[0] == 0xFFu && (this.value[1] & 0x80u)) // Unnecessary negative leading bytes
             )
         )
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValuePaddingException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an ENUMERATED that was encoded on more than the minimum " ~
@@ -2802,7 +2802,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         foreach (immutable octet; this.value)
         {
             if (octet == 0x80u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValuePaddingException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a RELATIVE OID that contained a number that was " ~
@@ -2938,16 +2938,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         BERElement element = new BERElement();
 
         // Tests for the "leading zero byte," 0x80
-        element.value = [ 0x29u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
         element.value = [ 0x29u, 0x80u, 0x14u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
-        element.value = [ 0x29u, 0x14u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
+        assertThrown!ASN1ValuePaddingException(element.roid);
         element.value = [ 0x29u, 0x80u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
+        assertThrown!ASN1ValuePaddingException(element.roid);
         element.value = [ 0x80u, 0x80u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
+        assertThrown!ASN1ValuePaddingException(element.roid);
+        element.value = [ 0x29u, 0x14u, 0x80u ];
+        assertThrown!ASN1ValuePaddingException(element.roid);
+        element.value = [ 0x29u, 0x80u ];
+        assertThrown!ASN1ValuePaddingException(element.roid);
 
         // Test for non-terminating components
         element.value = [ 0x29u, 0x81u ];

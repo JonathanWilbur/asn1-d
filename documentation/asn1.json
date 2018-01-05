@@ -1228,10 +1228,58 @@
     ]
    },
    {
-    "name" : "ASN1TagException",
+    "name" : "ASN1IndexException",
     "kind" : "alias",
     "comment" : "\n",
     "line" : 166,
+    "char" : 8,
+    "deco" : "C5codec37AbstractSyntaxNotation1IndexException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1IndexException",
+    "kind" : "class",
+    "comment" : "    An exception thrown when a member of a CHOICE or SEQUENCE is given a\n    context-specific index that is not defined for that CHOICE or SEQUENCE.\n\n    For example, if:\n\n    TheQuestion := [APPLICATION 5] CHOICE {\n        toBe [0] NULL,\n        notToBe [1] NULL\n    }\n\n    This exception should be thrown if TheQuestion were to be decoded from the\n    BER-encoded byte sequence: $(D_INLINECODE 0x65 0x02 0x83 0x00), because\n    the third byte specifies a third choice in TheQuestion, but there is no\n    choice #3 in TheQuestion--there is only choice #0 and #1.\n",
+    "line" : 184,
+    "char" : 1,
+    "base" : "codec.AbstractSyntaxNotation1CodecException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 186,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1OrderingException",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 190,
+    "char" : 8,
+    "deco" : "C5codec40AbstractSyntaxNotation1OrderingException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1OrderingException",
+    "kind" : "class",
+    "comment" : "    Thrown if the ordering of elements in a SEQUENCE or SET is incorrect.\n",
+    "line" : 195,
+    "char" : 1,
+    "base" : "codec.AbstractSyntaxNotation1CodecException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 197,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1TagException",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 201,
     "char" : 8,
     "deco" : "C5codec35AbstractSyntaxNotation1TagException"
    },
@@ -1239,14 +1287,14 @@
     "name" : "AbstractSyntaxNotation1TagException",
     "kind" : "class",
     "comment" : "\n",
-    "line" : 169,
+    "line" : 204,
     "char" : 1,
     "base" : "codec.AbstractSyntaxNotation1CodecException",
     "members" : [
      {
       "name" : "basicExceptionCtors!()",
       "kind" : "mixin",
-      "line" : 171,
+      "line" : 206,
       "char" : 5
      }
     ]
@@ -1255,7 +1303,7 @@
     "name" : "ASN1LengthException",
     "kind" : "alias",
     "comment" : "\n",
-    "line" : 175,
+    "line" : 210,
     "char" : 8,
     "deco" : "C5codec38AbstractSyntaxNotation1LengthException"
    },
@@ -1263,14 +1311,14 @@
     "name" : "AbstractSyntaxNotation1LengthException",
     "kind" : "class",
     "comment" : "\n",
-    "line" : 178,
+    "line" : 213,
     "char" : 1,
     "base" : "codec.AbstractSyntaxNotation1CodecException",
     "members" : [
      {
       "name" : "basicExceptionCtors!()",
       "kind" : "mixin",
-      "line" : 180,
+      "line" : 215,
       "char" : 5
      }
     ]
@@ -1279,7 +1327,7 @@
     "name" : "ASN1ValueException",
     "kind" : "alias",
     "comment" : "\n",
-    "line" : 184,
+    "line" : 219,
     "char" : 8,
     "deco" : "C5codec37AbstractSyntaxNotation1ValueException"
    },
@@ -1287,14 +1335,14 @@
     "name" : "AbstractSyntaxNotation1ValueException",
     "kind" : "class",
     "comment" : "\n",
-    "line" : 187,
+    "line" : 222,
     "char" : 1,
     "base" : "codec.AbstractSyntaxNotation1CodecException",
     "members" : [
      {
       "name" : "basicExceptionCtors!()",
       "kind" : "mixin",
-      "line" : 189,
+      "line" : 224,
       "char" : 5
      }
     ]
@@ -1303,7 +1351,7 @@
     "name" : "ASN1ValueSizeException",
     "kind" : "alias",
     "comment" : "\n",
-    "line" : 193,
+    "line" : 228,
     "char" : 8,
     "deco" : "C5codec41AbstractSyntaxNotation1ValueSizeException"
    },
@@ -1311,14 +1359,14 @@
     "name" : "AbstractSyntaxNotation1ValueSizeException",
     "kind" : "class",
     "comment" : "\n",
-    "line" : 196,
+    "line" : 231,
     "char" : 1,
     "base" : "codec.AbstractSyntaxNotation1ValueException",
     "members" : [
      {
       "name" : "min",
       "kind" : "variable",
-      "line" : 198,
+      "line" : 233,
       "char" : 22,
       "storageClass" : [
        "immutable"
@@ -1330,7 +1378,7 @@
      {
       "name" : "max",
       "kind" : "variable",
-      "line" : 199,
+      "line" : 234,
       "char" : 22,
       "storageClass" : [
        "immutable"
@@ -1342,7 +1390,7 @@
      {
       "name" : "actual",
       "kind" : "variable",
-      "line" : 200,
+      "line" : 235,
       "char" : 22,
       "storageClass" : [
        "immutable"
@@ -1354,7 +1402,7 @@
      {
       "name" : "this",
       "kind" : "constructor",
-      "line" : 203,
+      "line" : 238,
       "char" : 5,
       "deco" : "FNbNfmmmAyaQdmZC5codec41AbstractSyntaxNotation1ValueSizeException",
       "originalType" : "nothrow @safe (size_t min, size_t max, size_t actual, string whatYouAttemptedToDo, string file = __FILE__, size_t line = __LINE__)",
@@ -1386,7 +1434,7 @@
         "default" : "cast(ulong)__LINE__"
        }
       ],
-      "endline" : 227,
+      "endline" : 262,
       "endchar" : 5
      }
     ]
@@ -1395,7 +1443,7 @@
     "name" : "ASN1ValueOverflowException",
     "kind" : "alias",
     "comment" : "\n",
-    "line" : 231,
+    "line" : 266,
     "char" : 8,
     "deco" : "C5codec45AbstractSyntaxNotation1ValueOverflowException"
    },
@@ -1403,14 +1451,62 @@
     "name" : "AbstractSyntaxNotation1ValueOverflowException",
     "kind" : "class",
     "comment" : "\n",
-    "line" : 234,
+    "line" : 269,
     "char" : 1,
     "base" : "codec.AbstractSyntaxNotation1ValueException",
     "members" : [
      {
       "name" : "basicExceptionCtors!()",
       "kind" : "mixin",
-      "line" : 236,
+      "line" : 271,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ValuePaddingException",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 275,
+    "char" : 8,
+    "deco" : "C5codec44AbstractSyntaxNotation1ValuePaddingException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1ValuePaddingException",
+    "kind" : "class",
+    "comment" : "\n",
+    "line" : 278,
+    "char" : 1,
+    "base" : "codec.AbstractSyntaxNotation1ValueException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 280,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ValueCharactersException",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 284,
+    "char" : 8,
+    "deco" : "C5codec47AbstractSyntaxNotation1ValueCharactersException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1ValueCharactersException",
+    "kind" : "class",
+    "comment" : "\n",
+    "line" : 287,
+    "char" : 1,
+    "base" : "codec.AbstractSyntaxNotation1ValueException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 289,
       "char" : 5
      }
     ]
@@ -1419,7 +1515,7 @@
     "name" : "ASN1ValueInvalidException",
     "kind" : "alias",
     "comment" : "\n",
-    "line" : 240,
+    "line" : 293,
     "char" : 8,
     "deco" : "C5codec44AbstractSyntaxNotation1ValueInvalidException"
    },
@@ -1427,38 +1523,14 @@
     "name" : "AbstractSyntaxNotation1ValueInvalidException",
     "kind" : "class",
     "comment" : "    Thrown when an encoded value, or a decoded value (attempting to be encoded)\n    takes on a value that the codec cannot encode or decode.\n\n    Examples:\n    $(UL\n        $(LI When a DER codec detects a BOOLEAN encoded in a byte other than 0xFF or 0x00)\n        $(LI When a BER codec finds an invalid character in a string)\n    )\n",
-    "line" : 252,
+    "line" : 305,
     "char" : 1,
     "base" : "codec.AbstractSyntaxNotation1ValueException",
     "members" : [
      {
       "name" : "basicExceptionCtors!()",
       "kind" : "mixin",
-      "line" : 254,
-      "char" : 5
-     }
-    ]
-   },
-   {
-    "name" : "ASN1InvalidIndexException",
-    "kind" : "alias",
-    "comment" : "\n",
-    "line" : 258,
-    "char" : 8,
-    "deco" : "C5codec44AbstractSyntaxNotation1InvalidIndexException"
-   },
-   {
-    "name" : "AbstractSyntaxNotation1InvalidIndexException",
-    "kind" : "class",
-    "comment" : "    An exception thrown when a member of a CHOICE or SEQUENCE is given a\n    context-specific index that is not defined for that CHOICE or SEQUENCE.\n\n    For example, if:\n\n    TheQuestion := [APPLICATION 5] CHOICE {\n        toBe [0] NULL,\n        notToBe [1] NULL\n    }\n\n    This exception should be thrown if TheQuestion were to be decoded from the\n    BER-encoded byte sequence: $(D_INLINECODE 0x65 0x02 0x83 0x00), because\n    the third byte specifies a third choice in TheQuestion, but there is no\n    choice #3 in TheQuestion--there is only choice #0 and #1.\n",
-    "line" : 276,
-    "char" : 1,
-    "base" : "codec.AbstractSyntaxNotation1ValueException",
-    "members" : [
-     {
-      "name" : "basicExceptionCtors!()",
-      "kind" : "mixin",
-      "line" : 278,
+      "line" : 307,
       "char" : 5
      }
     ]
@@ -1467,13 +1539,13 @@
     "name" : "ASN1Element",
     "kind" : "alias",
     "comment" : "\n",
-    "line" : 282,
+    "line" : 311,
     "char" : 8
    },
    {
     "kind" : "template",
     "comment" : "\n",
-    "line" : 285,
+    "line" : 314,
     "char" : 1,
     "name" : "AbstractSyntaxNotation1Element",
     "parameters" : [
@@ -1486,24 +1558,24 @@
      {
       "name" : "AbstractSyntaxNotation1Element",
       "kind" : "class",
-      "line" : 285,
+      "line" : 314,
       "char" : 1,
       "members" : [
        {
-        "name" : "__unittest___source_codec_d_290_0",
+        "name" : "__unittest___source_codec_d_319_0",
         "kind" : "function",
-        "line" : 290,
+        "line" : 319,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 296,
+        "endline" : 325,
         "endchar" : 5
        },
        {
         "name" : "maxUintAsReal",
         "kind" : "variable",
-        "line" : 296,
+        "line" : 325,
         "char" : 30,
         "storageClass" : [
          "immutable"
@@ -1514,7 +1586,7 @@
        {
         "name" : "maxLongAsReal",
         "kind" : "variable",
-        "line" : 297,
+        "line" : 326,
         "char" : 30,
         "storageClass" : [
          "immutable"
@@ -1525,7 +1597,7 @@
        {
         "name" : "logBaseTwoOfTen",
         "kind" : "variable",
-        "line" : 298,
+        "line" : 327,
         "char" : 30,
         "storageClass" : [
          "immutable"
@@ -1536,7 +1608,7 @@
        {
         "name" : "threeByteMax",
         "kind" : "variable",
-        "line" : 299,
+        "line" : 328,
         "char" : 29,
         "storageClass" : [
          "immutable"
@@ -1547,7 +1619,7 @@
        {
         "name" : "threeByteMin",
         "kind" : "variable",
-        "line" : 300,
+        "line" : 329,
         "char" : 29,
         "storageClass" : [
          "immutable"
@@ -1558,7 +1630,7 @@
        {
         "name" : "notWhatYouMeantText",
         "kind" : "variable",
-        "line" : 303,
+        "line" : 332,
         "char" : 22,
         "storageClass" : [
          "immutable"
@@ -1569,7 +1641,7 @@
        {
         "name" : "forMoreInformationText",
         "kind" : "variable",
-        "line" : 310,
+        "line" : 339,
         "char" : 22,
         "storageClass" : [
          "immutable"
@@ -1580,7 +1652,7 @@
        {
         "name" : "debugInformationText",
         "kind" : "variable",
-        "line" : 322,
+        "line" : 351,
         "char" : 22,
         "storageClass" : [
          "immutable"
@@ -1591,7 +1663,7 @@
        {
         "name" : "reportBugsText",
         "kind" : "variable",
-        "line" : 328,
+        "line" : 357,
         "char" : 22,
         "storageClass" : [
          "immutable"
@@ -1603,20 +1675,20 @@
         "name" : "LengthEncodingPreference",
         "kind" : "enum",
         "comment" : "\n",
-        "line" : 335,
+        "line" : 364,
         "char" : 5,
         "baseDeco" : "h",
         "members" : [
          {
           "name" : "definite",
           "kind" : "enum member",
-          "line" : 337,
+          "line" : 366,
           "char" : 9
          },
          {
           "name" : "indefinite",
           "kind" : "enum member",
-          "line" : 338,
+          "line" : 367,
           "char" : 9
          }
         ]
@@ -1625,7 +1697,7 @@
         "name" : "boolean",
         "kind" : "function",
         "comment" : "Decodes a boolean\n",
-        "line" : 343,
+        "line" : 372,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1636,7 +1708,7 @@
         "name" : "boolean",
         "kind" : "function",
         "comment" : "Encodes a boolean\n",
-        "line" : 347,
+        "line" : 376,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1653,20 +1725,20 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_350_0",
+        "name" : "__unittest___source_codec_d_379_0",
         "kind" : "function",
-        "line" : 350,
+        "line" : 379,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 363,
+        "endline" : 392,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Decodes an integer\n",
-        "line" : 364,
+        "line" : 393,
         "char" : 7,
         "name" : "integer",
         "parameters" : [
@@ -1680,7 +1752,7 @@
          {
           "name" : "integer",
           "kind" : "function",
-          "line" : 364,
+          "line" : 393,
           "char" : 7,
           "storageClass" : [
            "abstract"
@@ -1692,7 +1764,7 @@
        {
         "kind" : "template",
         "comment" : "Encodes an integer\n",
-        "line" : 368,
+        "line" : 397,
         "char" : 10,
         "name" : "integer",
         "parameters" : [
@@ -1706,7 +1778,7 @@
          {
           "name" : "integer",
           "kind" : "function",
-          "line" : 368,
+          "line" : 397,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -1725,42 +1797,20 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_372_0",
+        "name" : "__unittest___source_codec_d_401_0",
         "kind" : "function",
-        "line" : 372,
+        "line" : 401,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 389,
+        "endline" : 418,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_390_0",
+        "name" : "__unittest___source_codec_d_419_0",
         "kind" : "function",
-        "line" : 390,
-        "char" : 5,
-        "storageClass" : [
-         "@system"
-        ],
-        "endline" : 405,
-        "endchar" : 5
-       },
-       {
-        "name" : "__unittest___source_codec_d_406_0",
-        "kind" : "function",
-        "line" : 406,
-        "char" : 5,
-        "storageClass" : [
-         "@system"
-        ],
-        "endline" : 423,
-        "endchar" : 5
-       },
-       {
-        "name" : "__unittest___source_codec_d_424_0",
-        "kind" : "function",
-        "line" : 424,
+        "line" : 419,
         "char" : 5,
         "storageClass" : [
          "@system"
@@ -1776,13 +1826,35 @@
         "storageClass" : [
          "@system"
         ],
-        "endline" : 606,
+        "endline" : 452,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest___source_codec_d_453_0",
+        "kind" : "function",
+        "line" : 453,
+        "char" : 5,
+        "storageClass" : [
+         "@system"
+        ],
+        "endline" : 463,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest___source_codec_d_464_0",
+        "kind" : "function",
+        "line" : 464,
+        "char" : 5,
+        "storageClass" : [
+         "@system"
+        ],
+        "endline" : 635,
         "endchar" : 5
        },
        {
         "name" : "bitString",
         "kind" : "function",
-        "line" : 607,
+        "line" : 636,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1792,7 +1864,7 @@
        {
         "name" : "bitString",
         "kind" : "function",
-        "line" : 610,
+        "line" : 639,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1809,21 +1881,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_613_0",
+        "name" : "__unittest___source_codec_d_642_0",
         "kind" : "function",
-        "line" : 613,
+        "line" : 642,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 630,
+        "endline" : 659,
         "endchar" : 5
        },
        {
         "name" : "octetString",
         "kind" : "function",
         "comment" : "Decodes a ubyte[] array\n",
-        "line" : 631,
+        "line" : 660,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -1834,7 +1906,7 @@
         "name" : "octetString",
         "kind" : "function",
         "comment" : "Encodes a ubyte[] array\n",
-        "line" : 635,
+        "line" : 664,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1851,43 +1923,43 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_638_0",
+        "name" : "__unittest___source_codec_d_667_0",
         "kind" : "function",
-        "line" : 638,
+        "line" : 667,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 649,
+        "endline" : 678,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_650_0",
+        "name" : "__unittest___source_codec_d_679_0",
         "kind" : "function",
-        "line" : 650,
+        "line" : 679,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 660,
+        "endline" : 689,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_661_0",
+        "name" : "__unittest___source_codec_d_690_0",
         "kind" : "function",
-        "line" : 661,
+        "line" : 690,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 672,
+        "endline" : 701,
         "endchar" : 5
        },
        {
         "name" : "oid",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 672,
+        "line" : 701,
         "char" : 12,
         "type" : "objectIdentifier"
        },
@@ -1895,7 +1967,7 @@
         "name" : "objectID",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 674,
+        "line" : 703,
         "char" : 12,
         "type" : "objectIdentifier"
        },
@@ -1903,7 +1975,7 @@
         "name" : "objectIdentifier",
         "kind" : "function",
         "comment" : "Decodes an Object Identifier\n",
-        "line" : 677,
+        "line" : 706,
         "char" : 9,
         "storageClass" : [
          "abstract"
@@ -1914,7 +1986,7 @@
         "name" : "objectIdentifier",
         "kind" : "function",
         "comment" : "Encodes an Object Identifier\n",
-        "line" : 681,
+        "line" : 710,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1931,21 +2003,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_684_0",
+        "name" : "__unittest___source_codec_d_713_0",
         "kind" : "function",
-        "line" : 684,
+        "line" : 713,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 765,
+        "endline" : 794,
         "endchar" : 5
        },
        {
         "name" : "objectDescriptor",
         "kind" : "function",
         "comment" : "        Decodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n",
-        "line" : 766,
+        "line" : 795,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -1956,7 +2028,7 @@
         "name" : "objectDescriptor",
         "kind" : "function",
         "comment" : "        Encodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n",
-        "line" : 787,
+        "line" : 816,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1973,21 +2045,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_790_0",
+        "name" : "__unittest___source_codec_d_819_0",
         "kind" : "function",
-        "line" : 790,
+        "line" : 819,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 835,
+        "endline" : 864,
         "endchar" : 5
        },
        {
         "name" : "external",
         "kind" : "function",
         "comment" : "        Decodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK2 https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n",
-        "line" : 836,
+        "line" : 865,
         "char" : 14,
         "storageClass" : [
          "abstract",
@@ -1999,7 +2071,7 @@
         "name" : "external",
         "kind" : "function",
         "comment" : "        Encodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK2 https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n",
-        "line" : 862,
+        "line" : 891,
         "char" : 10,
         "storageClass" : [
          "abstract",
@@ -2017,20 +2089,20 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_866_0",
+        "name" : "__unittest___source_codec_d_895_0",
         "kind" : "function",
-        "line" : 866,
+        "line" : 895,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 905,
+        "endline" : 934,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Encodes a floating-point number\n",
-        "line" : 906,
+        "line" : 935,
         "char" : 7,
         "name" : "realNumber",
         "parameters" : [
@@ -2044,7 +2116,7 @@
          {
           "name" : "realNumber",
           "kind" : "function",
-          "line" : 906,
+          "line" : 935,
           "char" : 7,
           "storageClass" : [
            "abstract"
@@ -2056,7 +2128,7 @@
        {
         "kind" : "template",
         "comment" : "Encodes a floating-point number\n",
-        "line" : 910,
+        "line" : 939,
         "char" : 10,
         "name" : "realNumber",
         "parameters" : [
@@ -2070,7 +2142,7 @@
          {
           "name" : "realNumber",
           "kind" : "function",
-          "line" : 910,
+          "line" : 939,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -2089,86 +2161,86 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_913_0",
+        "name" : "__unittest___source_codec_d_942_0",
         "kind" : "function",
-        "line" : 913,
+        "line" : 942,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 940,
+        "endline" : 969,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_941_0",
+        "name" : "__unittest___source_codec_d_970_0",
         "kind" : "function",
-        "line" : 941,
+        "line" : 970,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 965,
+        "endline" : 994,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_966_0",
+        "name" : "__unittest___source_codec_d_995_0",
         "kind" : "function",
-        "line" : 966,
+        "line" : 995,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1065,
+        "endline" : 1094,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1066_0",
+        "name" : "__unittest___source_codec_d_1095_0",
         "kind" : "function",
-        "line" : 1066,
+        "line" : 1095,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1117,
+        "endline" : 1146,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1118_0",
+        "name" : "__unittest___source_codec_d_1147_0",
         "kind" : "function",
-        "line" : 1118,
+        "line" : 1147,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1153,
+        "endline" : 1182,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1154_0",
+        "name" : "__unittest___source_codec_d_1183_0",
         "kind" : "function",
-        "line" : 1154,
+        "line" : 1183,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1253,
+        "endline" : 1282,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1254_0",
+        "name" : "__unittest___source_codec_d_1283_0",
         "kind" : "function",
-        "line" : 1254,
+        "line" : 1283,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1317,
+        "endline" : 1346,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Encodes an integer that represents an ENUMERATED value\n",
-        "line" : 1318,
+        "line" : 1347,
         "char" : 7,
         "name" : "enumerated",
         "parameters" : [
@@ -2182,7 +2254,7 @@
          {
           "name" : "enumerated",
           "kind" : "function",
-          "line" : 1318,
+          "line" : 1347,
           "char" : 7,
           "storageClass" : [
            "abstract"
@@ -2194,7 +2266,7 @@
        {
         "kind" : "template",
         "comment" : "Decodes an integer that represents an ENUMERATED value\n",
-        "line" : 1322,
+        "line" : 1351,
         "char" : 10,
         "name" : "enumerated",
         "parameters" : [
@@ -2208,7 +2280,7 @@
          {
           "name" : "enumerated",
           "kind" : "function",
-          "line" : 1322,
+          "line" : 1351,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -2227,42 +2299,20 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1326_0",
+        "name" : "__unittest___source_codec_d_1355_0",
         "kind" : "function",
-        "line" : 1326,
+        "line" : 1355,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1343,
+        "endline" : 1372,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1344_0",
+        "name" : "__unittest___source_codec_d_1373_0",
         "kind" : "function",
-        "line" : 1344,
-        "char" : 5,
-        "storageClass" : [
-         "@system"
-        ],
-        "endline" : 1359,
-        "endchar" : 5
-       },
-       {
-        "name" : "__unittest___source_codec_d_1360_0",
-        "kind" : "function",
-        "line" : 1360,
-        "char" : 5,
-        "storageClass" : [
-         "@system"
-        ],
-        "endline" : 1377,
-        "endchar" : 5
-       },
-       {
-        "name" : "__unittest___source_codec_d_1378_0",
-        "kind" : "function",
-        "line" : 1378,
+        "line" : 1373,
         "char" : 5,
         "storageClass" : [
          "@system"
@@ -2278,14 +2328,36 @@
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1561,
+        "endline" : 1406,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest___source_codec_d_1407_0",
+        "kind" : "function",
+        "line" : 1407,
+        "char" : 5,
+        "storageClass" : [
+         "@system"
+        ],
+        "endline" : 1417,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest___source_codec_d_1418_0",
+        "kind" : "function",
+        "line" : 1418,
+        "char" : 5,
+        "storageClass" : [
+         "@system"
+        ],
+        "endline" : 1590,
         "endchar" : 5
        },
        {
         "name" : "embeddedPDV",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1561,
+        "line" : 1590,
         "char" : 12,
         "type" : "embeddedPresentationDataValue"
        },
@@ -2293,7 +2365,7 @@
         "name" : "embeddedPresentationDataValue",
         "kind" : "function",
         "comment" : "        Decodes an EMBEDDED PDV, which is a constructed data type, defined in\n            the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EMBEDDED PDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1592,
+        "line" : 1621,
         "char" : 17,
         "storageClass" : [
          "abstract"
@@ -2304,7 +2376,7 @@
         "name" : "embeddedPresentationDataValue",
         "kind" : "function",
         "comment" : "        Encodes an EMBEDDED PDV, which is a constructed data type, defined in\n            the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EMBEDDED PDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1624,
+        "line" : 1653,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2321,54 +2393,54 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1627_0",
+        "name" : "__unittest___source_codec_d_1656_0",
         "kind" : "function",
-        "line" : 1627,
+        "line" : 1656,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1651,
+        "endline" : 1680,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1652_0",
+        "name" : "__unittest___source_codec_d_1681_0",
         "kind" : "function",
-        "line" : 1652,
+        "line" : 1681,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1668,
+        "endline" : 1697,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1669_0",
+        "name" : "__unittest___source_codec_d_1698_0",
         "kind" : "function",
-        "line" : 1669,
+        "line" : 1698,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1685,
+        "endline" : 1714,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1686_0",
+        "name" : "__unittest___source_codec_d_1715_0",
         "kind" : "function",
-        "line" : 1686,
+        "line" : 1715,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1703,
+        "endline" : 1732,
         "endchar" : 5
        },
        {
         "name" : "utf8String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1703,
+        "line" : 1732,
         "char" : 12,
         "type" : "unicodeTransformationFormat8String"
        },
@@ -2376,7 +2448,7 @@
         "name" : "unicodeTransformationFormat8String",
         "kind" : "function",
         "comment" : "Decodes a UTF-8 String\n",
-        "line" : 1706,
+        "line" : 1735,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2387,7 +2459,7 @@
         "name" : "unicodeTransformationFormat8String",
         "kind" : "function",
         "comment" : "Encodes a UTF-8 String\n",
-        "line" : 1710,
+        "line" : 1739,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2404,32 +2476,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1713_0",
+        "name" : "__unittest___source_codec_d_1742_0",
         "kind" : "function",
-        "line" : 1713,
+        "line" : 1742,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1726,
+        "endline" : 1755,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1727_0",
+        "name" : "__unittest___source_codec_d_1756_0",
         "kind" : "function",
-        "line" : 1727,
+        "line" : 1756,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1737,
+        "endline" : 1766,
         "endchar" : 5
        },
        {
         "name" : "roid",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1737,
+        "line" : 1766,
         "char" : 12,
         "type" : "relativeObjectIdentifier"
        },
@@ -2437,7 +2509,7 @@
         "name" : "relativeOID",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1739,
+        "line" : 1768,
         "char" : 12,
         "type" : "relativeObjectIdentifier"
        },
@@ -2445,7 +2517,7 @@
         "name" : "relativeObjectIdentifier",
         "kind" : "function",
         "comment" : "Decodes a portion of an Object Identifier\n",
-        "line" : 1742,
+        "line" : 1771,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -2456,7 +2528,7 @@
         "name" : "relativeObjectIdentifier",
         "kind" : "function",
         "comment" : "Encodes a porition of an Object Identifier\n",
-        "line" : 1746,
+        "line" : 1775,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2473,21 +2545,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1749_0",
+        "name" : "__unittest___source_codec_d_1778_0",
         "kind" : "function",
-        "line" : 1749,
+        "line" : 1778,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1775,
+        "endline" : 1804,
         "endchar" : 5
        },
        {
         "name" : "sequence",
         "kind" : "function",
         "comment" : "        Decodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1776,
+        "line" : 1805,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -2498,7 +2570,7 @@
         "name" : "sequence",
         "kind" : "function",
         "comment" : "        Encodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1788,
+        "line" : 1817,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2518,7 +2590,7 @@
         "name" : "set",
         "kind" : "function",
         "comment" : "        Decodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1800,
+        "line" : 1829,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -2529,7 +2601,7 @@
         "name" : "set",
         "kind" : "function",
         "comment" : "        Encodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1812,
+        "line" : 1841,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2549,7 +2621,7 @@
         "name" : "numericString",
         "kind" : "function",
         "comment" : "        Decodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n",
-        "line" : 1819,
+        "line" : 1848,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2560,7 +2632,7 @@
         "name" : "numericString",
         "kind" : "function",
         "comment" : "        Encodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n",
-        "line" : 1826,
+        "line" : 1855,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2577,32 +2649,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1829_0",
+        "name" : "__unittest___source_codec_d_1858_0",
         "kind" : "function",
-        "line" : 1829,
+        "line" : 1858,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1846,
+        "endline" : 1875,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1847_0",
+        "name" : "__unittest___source_codec_d_1876_0",
         "kind" : "function",
-        "line" : 1847,
+        "line" : 1876,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1861,
+        "endline" : 1890,
         "endchar" : 5
        },
        {
         "name" : "printableString",
         "kind" : "function",
         "comment" : "        Decodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n",
-        "line" : 1862,
+        "line" : 1891,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2613,7 +2685,7 @@
         "name" : "printableString",
         "kind" : "function",
         "comment" : "        Encodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n",
-        "line" : 1870,
+        "line" : 1899,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2630,32 +2702,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1873_0",
+        "name" : "__unittest___source_codec_d_1902_0",
         "kind" : "function",
-        "line" : 1873,
+        "line" : 1902,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1895,
+        "endline" : 1924,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1896_0",
+        "name" : "__unittest___source_codec_d_1925_0",
         "kind" : "function",
-        "line" : 1896,
+        "line" : 1925,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1906,
+        "endline" : 1935,
         "endchar" : 5
        },
        {
         "name" : "t61String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1906,
+        "line" : 1935,
         "char" : 12,
         "type" : "teletexString"
        },
@@ -2663,7 +2735,7 @@
         "name" : "teletexString",
         "kind" : "function",
         "comment" : "Decodes bytes representing the T.61 Character Set\n",
-        "line" : 1909,
+        "line" : 1938,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -2674,7 +2746,7 @@
         "name" : "teletexString",
         "kind" : "function",
         "comment" : "Encodes bytes representing the T.61 Character Set\n",
-        "line" : 1913,
+        "line" : 1942,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2691,42 +2763,42 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1916_0",
+        "name" : "__unittest___source_codec_d_1945_0",
         "kind" : "function",
-        "line" : 1916,
+        "line" : 1945,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1929,
+        "endline" : 1958,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1930_0",
+        "name" : "__unittest___source_codec_d_1959_0",
         "kind" : "function",
-        "line" : 1930,
+        "line" : 1959,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1940,
+        "endline" : 1969,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1941_0",
+        "name" : "__unittest___source_codec_d_1970_0",
         "kind" : "function",
-        "line" : 1941,
+        "line" : 1970,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1951,
+        "endline" : 1980,
         "endchar" : 5
        },
        {
         "name" : "videotexString",
         "kind" : "function",
-        "line" : 1952,
+        "line" : 1981,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -2736,7 +2808,7 @@
        {
         "name" : "videotexString",
         "kind" : "function",
-        "line" : 1955,
+        "line" : 1984,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2753,43 +2825,43 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1958_0",
+        "name" : "__unittest___source_codec_d_1987_0",
         "kind" : "function",
-        "line" : 1958,
+        "line" : 1987,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1971,
+        "endline" : 2000,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1972_0",
+        "name" : "__unittest___source_codec_d_2001_0",
         "kind" : "function",
-        "line" : 1972,
+        "line" : 2001,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1982,
+        "endline" : 2011,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1983_0",
+        "name" : "__unittest___source_codec_d_2012_0",
         "kind" : "function",
-        "line" : 1983,
+        "line" : 2012,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1994,
+        "endline" : 2023,
         "endchar" : 5
        },
        {
         "name" : "ia5String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1994,
+        "line" : 2023,
         "char" : 12,
         "type" : "internationalAlphabetNumber5String"
        },
@@ -2797,7 +2869,7 @@
         "name" : "internationalAlphabetNumber5String",
         "kind" : "function",
         "comment" : "Decodes a string of ASCII characters\n",
-        "line" : 1997,
+        "line" : 2026,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2808,7 +2880,7 @@
         "name" : "internationalAlphabetNumber5String",
         "kind" : "function",
         "comment" : "Encodes a string of ASCII characters\n",
-        "line" : 2001,
+        "line" : 2030,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2825,32 +2897,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2004_0",
+        "name" : "__unittest___source_codec_d_2033_0",
         "kind" : "function",
-        "line" : 2004,
+        "line" : 2033,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2018,
+        "endline" : 2047,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2019_0",
+        "name" : "__unittest___source_codec_d_2048_0",
         "kind" : "function",
-        "line" : 2019,
+        "line" : 2048,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2029,
+        "endline" : 2058,
         "endchar" : 5
        },
        {
         "name" : "utc",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 2029,
+        "line" : 2058,
         "char" : 12,
         "type" : "coordinatedUniversalTime"
        },
@@ -2858,7 +2930,7 @@
         "name" : "utcTime",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 2031,
+        "line" : 2060,
         "char" : 12,
         "type" : "coordinatedUniversalTime"
        },
@@ -2866,7 +2938,7 @@
         "name" : "coordinatedUniversalTime",
         "kind" : "function",
         "comment" : "Decodes a DateTime\n",
-        "line" : 2034,
+        "line" : 2063,
         "char" : 14,
         "storageClass" : [
          "abstract"
@@ -2877,7 +2949,7 @@
         "name" : "coordinatedUniversalTime",
         "kind" : "function",
         "comment" : "Encodes a DateTime\n",
-        "line" : 2038,
+        "line" : 2067,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2894,21 +2966,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2041_0",
+        "name" : "__unittest___source_codec_d_2070_0",
         "kind" : "function",
-        "line" : 2041,
+        "line" : 2070,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2052,
+        "endline" : 2081,
         "endchar" : 5
        },
        {
         "name" : "generalizedTime",
         "kind" : "function",
         "comment" : "Decodes a DateTime\n",
-        "line" : 2053,
+        "line" : 2082,
         "char" : 14,
         "storageClass" : [
          "abstract"
@@ -2919,7 +2991,7 @@
         "name" : "generalizedTime",
         "kind" : "function",
         "comment" : "Encodes a DateTime\n",
-        "line" : 2057,
+        "line" : 2086,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2936,21 +3008,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2060_0",
+        "name" : "__unittest___source_codec_d_2089_0",
         "kind" : "function",
-        "line" : 2060,
+        "line" : 2089,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2082,
+        "endline" : 2111,
         "endchar" : 5
        },
        {
         "name" : "graphicString",
         "kind" : "function",
         "comment" : "        Decodes an ASCII string that contains only characters between and\n        including 0x20 and 0x75.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n",
-        "line" : 2084,
+        "line" : 2113,
         "char" : 12,
         "storageClass" : [
          "abstract",
@@ -2962,7 +3034,7 @@
         "name" : "graphicString",
         "kind" : "function",
         "comment" : "        Encodes an ASCII string that contains only characters between and\n        including 0x20 and 0x75.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n",
-        "line" : 2100,
+        "line" : 2129,
         "char" : 10,
         "storageClass" : [
          "abstract",
@@ -2980,32 +3052,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2103_0",
+        "name" : "__unittest___source_codec_d_2132_0",
         "kind" : "function",
-        "line" : 2103,
+        "line" : 2132,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2126,
+        "endline" : 2155,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2127_0",
+        "name" : "__unittest___source_codec_d_2156_0",
         "kind" : "function",
-        "line" : 2127,
+        "line" : 2156,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2137,
+        "endline" : 2166,
         "endchar" : 5
        },
        {
         "name" : "iso646String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 2137,
+        "line" : 2166,
         "char" : 12,
         "type" : "visibleString"
        },
@@ -3013,7 +3085,7 @@
         "name" : "visibleString",
         "kind" : "function",
         "comment" : "        Decodes a string that only contains characters between and including\n        0x20 and 0x7E. (Honestly, I don't know how this differs from\n        GraphicalString.)\n",
-        "line" : 2144,
+        "line" : 2173,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -3024,7 +3096,7 @@
         "name" : "visibleString",
         "kind" : "function",
         "comment" : "        Encodes a string that only contains characters between and including\n        0x20 and 0x7E. (Honestly, I don't know how this differs from\n        GraphicalString.)\n",
-        "line" : 2152,
+        "line" : 2181,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3041,32 +3113,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2155_0",
+        "name" : "__unittest___source_codec_d_2184_0",
         "kind" : "function",
-        "line" : 2155,
+        "line" : 2184,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2178,
+        "endline" : 2207,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2179_0",
+        "name" : "__unittest___source_codec_d_2208_0",
         "kind" : "function",
-        "line" : 2179,
+        "line" : 2208,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2189,
+        "endline" : 2218,
         "endchar" : 5
        },
        {
         "name" : "generalString",
         "kind" : "function",
         "comment" : "Decodes a string containing only ASCII characters.\n",
-        "line" : 2191,
+        "line" : 2220,
         "char" : 12,
         "storageClass" : [
          "abstract",
@@ -3078,7 +3150,7 @@
         "name" : "generalString",
         "kind" : "function",
         "comment" : "Encodes a string containing only ASCII characters.\n",
-        "line" : 2196,
+        "line" : 2225,
         "char" : 10,
         "storageClass" : [
          "abstract",
@@ -3096,32 +3168,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2199_0",
+        "name" : "__unittest___source_codec_d_2228_0",
         "kind" : "function",
-        "line" : 2199,
+        "line" : 2228,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2213,
+        "endline" : 2242,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2214_0",
+        "name" : "__unittest___source_codec_d_2243_0",
         "kind" : "function",
-        "line" : 2214,
+        "line" : 2243,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2224,
+        "endline" : 2253,
         "endchar" : 5
        },
        {
         "name" : "universalString",
         "kind" : "function",
         "comment" : "Decodes a string of UTF-32 characters\n",
-        "line" : 2225,
+        "line" : 2254,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -3132,7 +3204,7 @@
         "name" : "universalString",
         "kind" : "function",
         "comment" : "Encodes a string of UTF-32 characters\n",
-        "line" : 2229,
+        "line" : 2258,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3149,32 +3221,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2232_0",
+        "name" : "__unittest___source_codec_d_2261_0",
         "kind" : "function",
-        "line" : 2232,
+        "line" : 2261,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2245,
+        "endline" : 2274,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2246_0",
+        "name" : "__unittest___source_codec_d_2275_0",
         "kind" : "function",
-        "line" : 2246,
+        "line" : 2275,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2282,
+        "endline" : 2311,
         "endchar" : 5
        },
        {
         "name" : "characterString",
         "kind" : "function",
         "comment" : "        Decodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 2283,
+        "line" : 2312,
         "char" : 21,
         "storageClass" : [
          "abstract"
@@ -3185,7 +3257,7 @@
         "name" : "characterString",
         "kind" : "function",
         "comment" : "        Encodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 2313,
+        "line" : 2342,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3202,54 +3274,54 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2316_0",
+        "name" : "__unittest___source_codec_d_2345_0",
         "kind" : "function",
-        "line" : 2316,
+        "line" : 2345,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2338,
+        "endline" : 2367,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2339_0",
+        "name" : "__unittest___source_codec_d_2368_0",
         "kind" : "function",
-        "line" : 2339,
+        "line" : 2368,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2355,
+        "endline" : 2384,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2356_0",
+        "name" : "__unittest___source_codec_d_2385_0",
         "kind" : "function",
-        "line" : 2356,
+        "line" : 2385,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2372,
+        "endline" : 2401,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2373_0",
+        "name" : "__unittest___source_codec_d_2402_0",
         "kind" : "function",
-        "line" : 2373,
+        "line" : 2402,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2393,
+        "endline" : 2422,
         "endchar" : 5
        },
        {
         "name" : "bmpString",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 2393,
+        "line" : 2422,
         "char" : 12,
         "type" : "basicMultilingualPlaneString"
        },
@@ -3257,7 +3329,7 @@
         "name" : "basicMultilingualPlaneString",
         "kind" : "function",
         "comment" : "Decodes a string of UTF-16 characters\n",
-        "line" : 2396,
+        "line" : 2425,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -3268,7 +3340,7 @@
         "name" : "basicMultilingualPlaneString",
         "kind" : "function",
         "comment" : "Encodes a string of UTF-16 characters\n",
-        "line" : 2400,
+        "line" : 2429,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3285,25 +3357,25 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2403_0",
+        "name" : "__unittest___source_codec_d_2432_0",
         "kind" : "function",
-        "line" : 2403,
+        "line" : 2432,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2416,
+        "endline" : 2445,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2417_0",
+        "name" : "__unittest___source_codec_d_2446_0",
         "kind" : "function",
-        "line" : 2417,
+        "line" : 2446,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2426,
+        "endline" : 2455,
         "endchar" : 1
        }
       ]

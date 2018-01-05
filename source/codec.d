@@ -163,6 +163,41 @@ class AbstractSyntaxNotation1ConstructionException : ASN1CodecException
 }
 
 ///
+public alias ASN1IndexException = AbstractSyntaxNotation1IndexException;
+/**
+    An exception thrown when a member of a CHOICE or SEQUENCE is given a
+    context-specific index that is not defined for that CHOICE or SEQUENCE.
+
+    For example, if:
+
+    TheQuestion := [APPLICATION 5] CHOICE {
+        toBe [0] NULL,
+        notToBe [1] NULL
+    }
+
+    This exception should be thrown if TheQuestion were to be decoded from the
+    BER-encoded byte sequence: $(D_INLINECODE 0x65 0x02 0x83 0x00), because
+    the third byte specifies a third choice in TheQuestion, but there is no
+    choice #3 in TheQuestion--there is only choice #0 and #1.
+*/
+public
+class AbstractSyntaxNotation1IndexException : ASN1CodecException
+{
+    mixin basicExceptionCtors;
+}
+
+///
+public alias ASN1OrderingException = AbstractSyntaxNotation1OrderingException;
+/**
+    Thrown if the ordering of elements in a SEQUENCE or SET is incorrect.
+*/
+public
+class AbstractSyntaxNotation1OrderingException : ASN1CodecException
+{
+    mixin basicExceptionCtors;
+}
+
+///
 public alias ASN1TagException = AbstractSyntaxNotation1TagException;
 ///
 public
@@ -237,6 +272,24 @@ class AbstractSyntaxNotation1ValueOverflowException : ASN1ValueException
 }
 
 ///
+public alias ASN1ValuePaddingException = AbstractSyntaxNotation1ValuePaddingException;
+///
+public
+class AbstractSyntaxNotation1ValuePaddingException : ASN1ValueException
+{
+    mixin basicExceptionCtors;
+}
+
+///
+public alias ASN1ValueCharactersException = AbstractSyntaxNotation1ValueCharactersException;
+///
+public
+class AbstractSyntaxNotation1ValueCharactersException : ASN1ValueException
+{
+    mixin basicExceptionCtors;
+}
+
+///
 public alias ASN1ValueInvalidException = AbstractSyntaxNotation1ValueInvalidException;
 /**
     Thrown when an encoded value, or a decoded value (attempting to be encoded)
@@ -250,30 +303,6 @@ public alias ASN1ValueInvalidException = AbstractSyntaxNotation1ValueInvalidExce
 */
 public
 class AbstractSyntaxNotation1ValueInvalidException : ASN1ValueException
-{
-    mixin basicExceptionCtors;
-}
-
-///
-public alias ASN1InvalidIndexException = AbstractSyntaxNotation1InvalidIndexException;
-/**
-    An exception thrown when a member of a CHOICE or SEQUENCE is given a
-    context-specific index that is not defined for that CHOICE or SEQUENCE.
-
-    For example, if:
-
-    TheQuestion := [APPLICATION 5] CHOICE {
-        toBe [0] NULL,
-        notToBe [1] NULL
-    }
-
-    This exception should be thrown if TheQuestion were to be decoded from the
-    BER-encoded byte sequence: $(D_INLINECODE 0x65 0x02 0x83 0x00), because
-    the third byte specifies a third choice in TheQuestion, but there is no
-    choice #3 in TheQuestion--there is only choice #0 and #1.
-*/
-public
-class AbstractSyntaxNotation1InvalidIndexException : ASN1ValueException
 {
     mixin basicExceptionCtors;
 }

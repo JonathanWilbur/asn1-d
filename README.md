@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.50](http://semver.org/)
+* Version: [1.0.0-beta.51](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -203,15 +203,16 @@ Version 1.0.0-beta was released on November 8th, 2017.
       - [x] ASN1RecursionException
       - [x] ASN1TruncationException = tag, length, or value was truncated
       - [x] ASN1ConstructionException
+      - [ ] ASN1IndexException = (valid indices, offending index)
+      - [ ] ASN1OrderingException
       - [x] ASN1TagException = size_t overflow, leading zeroes (bytes)
       - [x] ASN1LengthException = size_t overflow or reserved length (bytes), leading zeroes
       - [x] ASN1ValueException
         - [x] ASN1ValueSizeException (lower limit, upper limit, actual)
-        - [ ] ASN1ValueOverflowException = thrown when a legitimate-sized ASN.1 just can't be decoded to a native type
-        - [ ] ASN1ValuePaddingException = leading zero bytes, trailing zero bits
+        - [x] ASN1ValueOverflowException = thrown when a legitimate-sized ASN.1 just can't be decoded to a native type
+        - [x] ASN1ValuePaddingException = leading zero bytes, trailing zero bits
         - [ ] ASN1ValueCharactersException = (permitted characters description, offending character)
-        - [ ] ASN1ValueIndexException = (valid indices, offending index)
-        - [ ] ASN1ValueOrderingException!Element (elements)
+        - [ ] ASN1UndefinedException = thrown when something is not defined by the specification
     - [x] ASN1CompilerException
 - [x] More unit testing of `REAL`
 - [ ] Do some more unit testing for extreme lengths.
