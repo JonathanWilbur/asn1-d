@@ -1120,16 +1120,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 break;
             }
             default:
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you attempted to decode " ~
-                    "an EXTERNAL that was encoded according to the pre-1994 " ~
-                    "specification (as required by the ITU's X.690 " ~
-                    "specification), but used an invalid choice for the encoding " ~
-                    "component. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
-                );
+                throw new ASN1TagNumberException
+                ([ 0u, 1u, 2u ], components[$-1].tagNumber, "decode an EXTERNAL data-value");
         }
 
         ext.dataValue = components[$-1].value.dup;
@@ -2545,18 +2537,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 break;
             }
             default:
-            {
-                throw new ASN1TagException
+                throw new ASN1TagNumberException
                 (
-                    "This exception was thrown because you attempted to decode " ~
-                    "an EMBEDDED PDV whose identification CHOICE has a tag " ~
-                    "not recognized by the specification of the EMBEDDED PDV. " ~
-                    "The EMBEDDED PDV accepts identification CHOICEs with tag " ~
-                    "numbers from 0 to 5. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    [ 0u, 1u, 2u, 3u, 4u, 5u ],
+                    identificationChoice.tagNumber,
+                    "decode an EMBEDDED PDV identification"
                 );
-            }
         }
 
         EmbeddedPDV pdv = EmbeddedPDV();
@@ -3900,18 +3886,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 break;
             }
             default:
-            {
-                throw new ASN1TagException
+                throw new ASN1TagNumberException
                 (
-                    "This exception was thrown because you attempted to decode " ~
-                    "a CharacterString whose identification CHOICE has a tag " ~
-                    "not recognized by the specification of the CharacterString. " ~
-                    "The CharacterString accepts identification CHOICEs with tag " ~
-                    "numbers from 0 to 5. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    [ 0u, 1u, 2u, 3u, 4u, 5u ],
+                    identificationChoice.tagNumber,
+                    "decode a CharacterString identification"
                 );
-            }
         }
 
         CharacterString cs = CharacterString();
@@ -4318,7 +4298,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 0x80, then it is not encoded on the fewest possible octets.
             */
             if (bytes[cursor] == 0b10000000u)
-                throw new ASN1TagException
+                throw new ASN1TagPaddingException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a Basic Encoding Rules (BER) encoded element whose tag " ~
@@ -4342,13 +4322,23 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             }
 
             if (bytes[cursor-1] & 0x80u)
-                throw new ASN1TagException
-                (
-                    "This exception was thrown because you attempted to decode " ~
-                    "a Basic Encoding Rules (BER) encoded element that encoded " ~
-                    "a tag number that was either too large to decode or " ~
-                    "terminated prematurely."
-                );
+            {
+                if (limit == bytes.length-1)
+                {
+                    throw new ASN1TruncationException
+                    (size_t.max, bytes.length, "decode an ASN.1 tag number");
+                }
+                else
+                {
+                    throw new ASN1TagOverflowException
+                    (
+                        "This exception was thrown because you attempted to decode " ~
+                        "a Basic Encoding Rules (BER) encoded element that encoded " ~
+                        "a tag number that was either too large to decode or " ~
+                        "terminated prematurely."
+                    );
+                }
+            }
 
             for (size_t i = 1; i < cursor; i++)
             {

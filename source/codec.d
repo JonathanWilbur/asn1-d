@@ -108,102 +108,63 @@ class AbstractSyntaxNotation1TruncationException : ASN1CodecException
 }
 
 ///
-public alias ASN1ConstructionException = AbstractSyntaxNotation1ConstructionException;
-///
-public
-class AbstractSyntaxNotation1ConstructionException : ASN1CodecException
-{
-    immutable ASN1TagClass  expectedTagClass;
-    immutable ASN1TagClass  expectedConstruction;
-    immutable size_t        expectedTagNumber;
-
-    immutable ASN1TagClass  actualTagClass;
-    immutable ASN1TagClass  actualConstruction;
-    immutable size_t        actualTagNumber;
-
-    this
-    (
-        ASN1TagClass expectedTagClass,
-        ASN1TagClass expectedConstruction,
-        size_t expectedTagNumber,
-        ASN1TagClass actualTagClass,
-        ASN1TagClass actualConstruction,
-        size_t actualTagNumber,
-        string file = __FILE__,
-        size_t line = __LINE__
-    )
-    {
-        assert
-        (
-            (expectedTagClass != actualTagClass) ||
-            (expectedConstruction != actualConstruction) ||
-            (expectedTagNumber != actualTagNumber)
-        );
-
-        this.expectedTagClass = expectedTagClass;
-        this.expectedConstruction = expectedConstruction;
-        this.expectedTagNumber = expectedTagNumber;
-        this.actualTagClass = actualTagClass;
-        this.actualConstruction = actualConstruction;
-        this.actualTagNumber = actualTagNumber;
-
-        string message =
-            "This exception was thrown because you attempted to decode an " ~
-            "encoded ASN.1 element that was encoded with the wrong tag class, " ~
-            "construction, or tag number.\n" ~
-            "The expected tag class was " ~ text(expectedTagClass) ~ " but the " ~
-            "actual tag class was " ~ text(actualTagClass) ~ ".\n" ~
-            "The expected construction was " ~ text(expectedConstruction) ~ " but the " ~
-            "actual construction was " ~ text(actualConstruction) ~ ".\n" ~
-            "The expected tag number was " ~ text(expectedTagNumber) ~ " but the " ~
-            "actual tag number was " ~ text(actualTagNumber) ~ ".\n";
-
-        super(message, file, line);
-    }
-}
-
-///
-public alias ASN1IndexException = AbstractSyntaxNotation1IndexException;
-/**
-    An exception thrown when a member of a CHOICE or SEQUENCE is given a
-    context-specific index that is not defined for that CHOICE or SEQUENCE.
-
-    For example, if:
-
-    TheQuestion := [APPLICATION 5] CHOICE {
-        toBe [0] NULL,
-        notToBe [1] NULL
-    }
-
-    This exception should be thrown if TheQuestion were to be decoded from the
-    BER-encoded byte sequence: $(D_INLINECODE 0x65 0x02 0x83 0x00), because
-    the third byte specifies a third choice in TheQuestion, but there is no
-    choice #3 in TheQuestion--there is only choice #0 and #1.
-*/
-public
-class AbstractSyntaxNotation1IndexException : ASN1CodecException
-{
-    mixin basicExceptionCtors;
-}
-
-///
-public alias ASN1OrderingException = AbstractSyntaxNotation1OrderingException;
-/**
-    Thrown if the ordering of elements in a SEQUENCE or SET is incorrect.
-*/
-public
-class AbstractSyntaxNotation1OrderingException : ASN1CodecException
-{
-    mixin basicExceptionCtors;
-}
-
-///
 public alias ASN1TagException = AbstractSyntaxNotation1TagException;
 ///
 public
 class AbstractSyntaxNotation1TagException : ASN1CodecException
 {
     mixin basicExceptionCtors;
+}
+
+///
+public alias ASN1TagOverflowException = AbstractSyntaxNotation1TagOverflowException;
+///
+public
+class AbstractSyntaxNotation1TagOverflowException : ASN1TagException
+{
+    mixin basicExceptionCtors;
+}
+
+///
+public alias ASN1TagPaddingException = AbstractSyntaxNotation1TagPaddingException;
+///
+public
+class AbstractSyntaxNotation1TagPaddingException : ASN1TagException
+{
+    mixin basicExceptionCtors;
+}
+
+///
+public alias ASN1TagNumberException = AbstractSyntaxNotation1TagNumberException;
+///
+public
+class AbstractSyntaxNotation1TagNumberException : ASN1TagException
+{
+    immutable size_t            expectedTagNumber;
+    immutable size_t            actualTagNumber;
+
+    this
+    (
+        size_t expectedTagNumbers[],
+        size_t actualTagNumber,
+        string whatYouAttemptedToDo,
+        string file = __FILE__,
+        size_t line = __LINE__
+    )
+    {
+        assert(expectedTagNumber != actualTagNumber);
+        this.expectedTagNumber = expectedTagNumber;
+        this.actualTagNumber = actualTagNumber;
+
+        string message =
+            "This exception was thrown because you attempted to decode an " ~
+            "encoded ASN.1 element that was encoded with the wrong tag number. " ~
+            "This occurred when you were trying to " ~ whatYouAttemptedToDo ~ ". " ~
+            "The offending tag number was: " ~ text(actualTagNumber) ~ "\n" ~
+            "The acceptable tag numbers are: " ~ text(expectedTagNumbers) ~ "\n";
+
+        super(message, file, line);
+    }
 }
 
 ///
