@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.52](http://semver.org/)
+* Version: [1.0.0-beta.53](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -205,12 +205,10 @@ Version 1.0.0-beta was released on November 8th, 2017.
       - [x] ASN1TagException = size_t overflow, leading zeroes (bytes)
         - [x] ASN1TagOverflowException
         - [x] ASN1TagPaddingException
-        - [ ] ASN1LengthUndefinedException
-        - [ ] ASN1TagClassException (valid)
         - [x] ASN1TagNumberException
       - [x] ASN1LengthException = size_t overflow or reserved length (bytes), leading zeroes
-        - [ ] ASN1LengthOverflowException
-        - [ ] ASN1LengthUndefinedException
+        - [x] ASN1LengthOverflowException
+        - [x] ASN1LengthUndefinedException
       - [x] ASN1ValueException
         - [x] ASN1ValueSizeException (lower limit, upper limit, actual)
         - [x] ASN1ValueOverflowException = thrown when a legitimate-sized ASN.1 just can't be decoded to a native type

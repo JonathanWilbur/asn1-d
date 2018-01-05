@@ -5725,24 +5725,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             if (numberOfLengthOctets) // Definite Long or Reserved
             {
                 if (numberOfLengthOctets == 0b01111111u) // Reserved
-                    throw new ASN1LengthException
-                    (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a Canonical Encoding Rules (CER) encoded element " ~
-                        "whose length tag was 0xFF, which is reserved by the " ~
-                        "specification."
-                    );
+                    throw new ASN1LengthUndefinedException();
 
                 // Definite Long, if it has made it this far
 
                 if (numberOfLengthOctets > size_t.sizeof)
-                    throw new ASN1LengthException
-                    (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a Canonical Encoding Rules (CER) encoded element " ~
-                        "whose length tag was encoded on more than size_t." ~
-                        "sizeof bytes, which is too big to decode."
-                    );
+                    throw new ASN1LengthOverflowException();
 
                 if (cursor + numberOfLengthOctets >= bytes.length)
                     throw new ASN1TruncationException

@@ -177,6 +177,40 @@ class AbstractSyntaxNotation1LengthException : ASN1CodecException
 }
 
 ///
+public alias ASN1LengthOverflowException = AbstractSyntaxNotation1LengthOverflowException;
+///
+public
+class AbstractSyntaxNotation1LengthOverflowException : ASN1TagException
+{
+    this (string file = __FILE__, size_t line = __LINE__)
+    {
+        super
+        (
+            "This exception was thrown because you attempted to decode an " ~
+            "ASN.1 encoded element whose length was too large to fit into " ~
+            "size_t.sizeof bytes.", file, line // FIXME: Improve this exception message.
+        );
+    }
+}
+
+///
+public alias ASN1LengthUndefinedException = AbstractSyntaxNotation1LengthUndefinedException;
+///
+public
+class AbstractSyntaxNotation1LengthUndefinedException : ASN1TagException
+{
+    this (string file = __FILE__, size_t line = __LINE__)
+    {
+        super
+        (
+            "This exception was thrown because you attempted to decode an " ~
+            "ASN.1 encoded element whose length tag was 0xFF, which is " ~
+            "reserved by the specification.", file, line
+        );
+    }
+}
+
+///
 public alias ASN1ValueException = AbstractSyntaxNotation1ValueException;
 ///
 public
