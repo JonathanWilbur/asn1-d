@@ -1014,7 +1014,7 @@ assertThrown!ASN1ValueInvalidException(dv.<span class="psymbol">boolean</span>);
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooBigException = if the value is too big to decode
+    ASN1ValueSizeException = if the value is too big to decode
                 to a signed integral type.
   </p>
 </div>
@@ -1277,9 +1277,9 @@ assertThrown!ASN1ValueInvalidException(dv.<span class="psymbol">boolean</span>);
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooSmallException = if an attempt is made to decode
+    ASN1ValueSizeException = if an attempt is made to decode
                 an Object Identifier from zero bytes.
-            ASN1ValueTooBigException = if a single OID number is too big to
+            ASN1ValueSizeException = if a single OID number is too big to
                 decode to a size_t.
 
   </p>
@@ -1692,7 +1692,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
     ASN1SizeException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
-            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
@@ -1761,7 +1761,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooBigException = if encoded INTEGER is too large to decode
+    ASN1ValueSizeException = if encoded INTEGER is too large to decode
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
   </p>
@@ -1794,15 +1794,14 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Decodes a float or double. This can never decode directly to a
-        real type, because of the way it works.
+    Decodes a floating-point type.
 
   </p>
 </div>
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    For the DER-encoded REAL, a value of 0x40 means "positive infinity,"
+    For the encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1847,25 +1846,15 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
             ConvOverflowException = if the character-encoding encodes a
                 number that is too big for the selected floating-point
                 type to express.
-            ASN1ValueTooSmallException = if the binary-encoding contains fewer
+            ASN1ValueSizeException = if the binary-encoding contains fewer
                 bytes than the information byte purports.
-            ASN1ValueTooBigException = if the binary-encoded mantissa is too
+            ASN1ValueSizeException = if the binary-encoded mantissa is too
                 big to be expressed by an unsigned long integer.
             ASN1ValueInvalidException = if both bits indicating the base in the
                 information byte of a binary-encoded REAL's information byte
                 are set, which would indicate an invalid base.
-
-
-  </p>
-</div><div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
-            Communication between Heterogeneous Systems, Morgan Kaufmann,
-            2001, pp. 400–402.
   </p>
 </div>
-
 </section>
 
 </div>
@@ -1894,21 +1883,14 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <section class="section ddoc_sections">
   <div class="ddoc_summary">
   <p class="para">
-    Encodes a float or double. This can never decode directly to a
-        real type, because of the way it works.
+    Encodes a floating-point type.
 
   </p>
 </div>
 <div class="ddoc_description">
   <h4>Discussion</h4>
   <p class="para">
-    This is admittedly a pretty slow function, so I would recommend
-        avoiding it, if possible. Also, because it is so complex, it is
-        highly likely to have bugs, so for that reason as well, I highly
-        recommand against encoding or decoding REALs if you do not have
-        to; try using INTEGER instead.
-<br><br>
-        For the DER-encoded REAL, a <code class="code">value</code> of 0x40 means "positive infinity,"
+    For the encoded REAL, a <code class="code">value</code> of 0x40 means "positive infinity,"
         a <code class="code">value</code> of 0x41 means "negative infinity." An empty <code class="code">value</code> means
         exactly zero. A <code class="code">value</code> whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1943,22 +1925,12 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <h4>Throws</h4>
   <p class="para">
     ASN1ValueInvalidException = if an attempt to encode NaN is made.
-            ASN1ValueTooSmallException = if an attempt to encode would result
+            ASN1ValueSizeException = if an attempt to encode would result
                 in an arithmetic underflow of a signed short.
-            ASN1ValueTooBigException = if an attempt to encode would result
+            ASN1ValueSizeException = if an attempt to encode would result
                 in an arithmetic overflow of a signed short.
-
-
-  </p>
-</div><div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
-            Communication between Heterogeneous Systems, Morgan Kaufmann,
-            2001, pp. 400–402.
   </p>
 </div>
-
 </section>
 
 </div>
@@ -2002,7 +1974,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooBigException = if the value is too big to decode
+    ASN1ValueSizeException = if the value is too big to decode
                 to a signed integral type.
   </p>
 </div>
@@ -2123,7 +2095,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     ASN1SizeException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
-            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
@@ -2443,7 +2415,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <p class="para">
     ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
-            ASN1ValueTooSmallException = if there are fewer value bytes than
+            ASN1ValueSizeException = if there are fewer value bytes than
                 indicated by the length tag.
   </p>
 </div>
@@ -2523,7 +2495,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
   <p class="para">
     ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
-            ASN1ValueTooSmallException = if there are fewer value bytes than
+            ASN1ValueSizeException = if there are fewer value bytes than
                 indicated by the length tag.
   </p>
 </div>
@@ -3718,7 +3690,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
     ASN1SizeException = if encoded CharacterString has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
-            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
             ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
                 syntaxes or context-negotiation, or if an unspecified element
@@ -3933,15 +3905,15 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooSmallException = if the <code class="code">bytes</code> supplied are fewer than
+    ASN1ValueSizeException = if the <code class="code">bytes</code> supplied are fewer than
                 two (one or zero, in other words), such that no valid DERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive <code class="code">null</code>
                 octets) cannot be found, or if the value is encoded in fewer
                 octets than indicated by the length byte.
-            ASN1InvalidLengthException = if the length byte is set to 0xFF,
+            ASN1LengthException = if the length byte is set to 0xFF,
                 which is reserved.
-            ASN1ValueTooBigException = if the length cannot be represented by
+            ASN1ValueSizeException = if the length cannot be represented by
                 the largest unsigned integer.
 
 
@@ -4012,15 +3984,15 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooSmallException = if the <code class="code">bytes</code> supplied are fewer than
+    ASN1ValueSizeException = if the <code class="code">bytes</code> supplied are fewer than
                 two (one or zero, in other words), such that no valid DERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive <code class="code">null</code>
                 octets) cannot be found, or if the value is encoded in fewer
                 octets than indicated by the length byte.
-            ASN1InvalidLengthException = if the length byte is set to 0xFF,
+            ASN1LengthException = if the length byte is set to 0xFF,
                 which is reserved.
-            ASN1ValueTooBigException = if the length cannot be represented by
+            ASN1ValueSizeException = if the length cannot be represented by
                 the largest unsigned integer.
 
 

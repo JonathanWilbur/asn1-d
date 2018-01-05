@@ -1064,7 +1064,7 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooBigException = if the value is too big to decode
+    ASN1ValueSizeException = if the value is too big to decode
                 to a signed integral type.
   </p>
 </div>
@@ -1327,9 +1327,9 @@ assertThrown!ASN1ValueSizeException(bv.<span class="psymbol">boolean</span>);
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooSmallException = if an attempt is made to decode
+    ASN1ValueSizeException = if an attempt is made to decode
                 an Object Identifier from zero bytes.
-            ASN1ValueTooBigException = if a single OID number is too big to
+            ASN1ValueSizeException = if a single OID number is too big to
                 decode to a size_t.
 
   </p>
@@ -1600,7 +1600,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
     ASN1SizeException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
-            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
@@ -1678,7 +1678,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooBigException = if encoded INTEGER is too large to decode
+    ASN1ValueSizeException = if encoded INTEGER is too large to decode
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
 <br><br>
@@ -1772,9 +1772,9 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
             ConvOverflowException = if the character-encoding encodes a
                 number that is too big for the selected floating-point
                 type to express.
-            ASN1ValueTooSmallException = if the binary-encoding contains fewer
+            ASN1ValueSizeException = if the binary-encoding contains fewer
                 bytes than the information byte purports.
-            ASN1ValueTooBigException = if the binary-encoded mantissa is too
+            ASN1ValueSizeException = if the binary-encoded mantissa is too
                 big to be expressed by an unsigned long integer.
             ASN1ValueInvalidException = if both bits indicating the base in the
                 information byte of a binary-encoded REAL's information byte
@@ -1861,9 +1861,9 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
   <h4>Throws</h4>
   <p class="para">
     ASN1ValueInvalidException = if an attempt to encode NaN is made.
-            ASN1ValueTooSmallException = if an attempt to encode would result
+            ASN1ValueSizeException = if an attempt to encode would result
                 in an arithmetic underflow of a signed short.
-            ASN1ValueTooBigException = if an attempt to encode would result
+            ASN1ValueSizeException = if an attempt to encode would result
                 in an arithmetic overflow of a signed short.
 
 
@@ -1920,7 +1920,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooBigException = if the value is too big to decode
+    ASN1ValueSizeException = if the value is too big to decode
                 to a signed integral type.
   </p>
 </div>
@@ -2025,7 +2025,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     ASN1SizeException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
-            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
             ASN1ValueInvalidException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
@@ -2322,7 +2322,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
   <p class="para">
     ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
-            ASN1ValueTooSmallException = if there are fewer value bytes than
+            ASN1ValueSizeException = if there are fewer value bytes than
                 indicated by the length tag.
   </p>
 </div>
@@ -2402,7 +2402,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
   <p class="para">
     ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
-            ASN1ValueTooSmallException = if there are fewer value bytes than
+            ASN1ValueSizeException = if there are fewer value bytes than
                 indicated by the length tag.
   </p>
 </div>
@@ -3591,7 +3591,7 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
     ASN1SizeException = if encoded CharacterString has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
-            ASN1ValueTooBigException = if encoded INTEGER is too large to decode.
+            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
             ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
                 syntaxes or context-negotiation, or if an unspecified element
@@ -3806,15 +3806,15 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooSmallException = if the <code class="code">bytes</code> supplied are fewer than
+    ASN1ValueSizeException = if the <code class="code">bytes</code> supplied are fewer than
                 two (one or zero, in other words), such that no valid BERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive <code class="code">null</code>
                 octets) cannot be found, or if the value is encoded in fewer
                 octets than indicated by the length byte.
-            ASN1InvalidLengthException = if the length byte is set to 0xFF,
+            ASN1LengthException = if the length byte is set to 0xFF,
                 which is reserved.
-            ASN1ValueTooBigException = if the length cannot be represented by
+            ASN1ValueSizeException = if the length cannot be represented by
                 the largest unsigned integer.
 
 
@@ -3885,15 +3885,15 @@ Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueTooSmallException = if the <code class="code">bytes</code> supplied are fewer than
+    ASN1ValueSizeException = if the <code class="code">bytes</code> supplied are fewer than
                 two (one or zero, in other words), such that no valid BERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive <code class="code">null</code>
                 octets) cannot be found, or if the value is encoded in fewer
                 octets than indicated by the length byte.
-            ASN1InvalidLengthException = if the length byte is set to 0xFF,
+            ASN1LengthException = if the length byte is set to 0xFF,
                 which is reserved.
-            ASN1ValueTooBigException = if the length cannot be represented by
+            ASN1ValueSizeException = if the length cannot be represented by
                 the largest unsigned integer.
 
 

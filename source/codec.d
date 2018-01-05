@@ -87,7 +87,7 @@ class AbstractSyntaxNotation1TruncationException : ASN1CodecException
         size_t line = __LINE__
     )
     {
-        assert(actualBytes < expectedBytes, "AF: " ~ text(actualBytes) ~ ", " ~ text(expectedBytes));
+        assert(actualBytes < expectedBytes);
         this.expectedBytes = expectedBytes;
         this.actualBytes = actualBytes;
         string message =
@@ -181,10 +181,57 @@ class AbstractSyntaxNotation1LengthException : ASN1CodecException
 }
 
 ///
+public alias ASN1ValueException = AbstractSyntaxNotation1ValueException;
+///
+public
+class AbstractSyntaxNotation1ValueException : ASN1CodecException
+{
+    mixin basicExceptionCtors;
+}
+
+///
 public alias ASN1ValueSizeException = AbstractSyntaxNotation1ValueSizeException;
 ///
 public
-class AbstractSyntaxNotation1ValueSizeException : ASN1CodecException
+class AbstractSyntaxNotation1ValueSizeException : ASN1ValueException
+{
+    immutable size_t min;
+    immutable size_t max;
+    immutable size_t actual;
+
+    public nothrow @safe
+    this
+    (
+        size_t min,
+        size_t max,
+        size_t actual,
+        string whatYouAttemptedToDo,
+        string file = __FILE__,
+        size_t line = __LINE__
+    )
+    {
+        assert(min <= max);
+        assert((actual < min) || (actual > max));
+        this.min = min;
+        this.max = max;
+        this.actual = actual;
+        string message =
+            "This exception was thrown because you attempted to decode an ASN.1 " ~
+            "element whose value was encoded on too few or too many bytes. The minimum " ~
+            "number of acceptable bytes is " ~ text(min) ~ " and the maximum " ~
+            "number of acceptable bytes is " ~ text(max) ~ ", but what you tried " ~
+            "to decode was " ~ text(actual) ~ " bytes in length. This exception " ~
+            "was thrown when you were trying to " ~ whatYouAttemptedToDo ~ ".";
+
+        super(message, file, line);
+    }
+}
+
+///
+public alias ASN1ValueOverflowException = AbstractSyntaxNotation1ValueOverflowException;
+///
+public
+class AbstractSyntaxNotation1ValueOverflowException : ASN1ValueException
 {
     mixin basicExceptionCtors;
 }
@@ -202,7 +249,7 @@ public alias ASN1ValueInvalidException = AbstractSyntaxNotation1ValueInvalidExce
     )
 */
 public
-class AbstractSyntaxNotation1ValueInvalidException : ASN1CodecException
+class AbstractSyntaxNotation1ValueInvalidException : ASN1ValueException
 {
     mixin basicExceptionCtors;
 }
@@ -226,7 +273,7 @@ public alias ASN1InvalidIndexException = AbstractSyntaxNotation1InvalidIndexExce
     choice #3 in TheQuestion--there is only choice #0 and #1.
 */
 public
-class AbstractSyntaxNotation1InvalidIndexException : ASN1CodecException
+class AbstractSyntaxNotation1InvalidIndexException : ASN1ValueException
 {
     mixin basicExceptionCtors;
 }

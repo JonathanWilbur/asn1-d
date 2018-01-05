@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.49](http://semver.org/)
+* Version: [1.0.0-beta.50](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -193,7 +193,10 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `BOOLEAN`, `INTEGER`, `ENUMERATED`, `OBJECT IDENTIFIER`, `BIT STRING`, `GeneralizedTime` and `UTCTime` are never less than 0 bytes
 - [x] Add further `REAL` special numbers
 - [x] Review latest version of X.690 (I was accidentally reading the 2002 one...)
-- [x] Implement CER and DER restraints on `UTCTime` and `GeneralizedTime`
+- [ ] Implement CER and DER restraints on `UTCTime` and `GeneralizedTime`
+  - [ ] Implement maximum lengths
+    - [ ] `UTCTime` min: 10, max: 17
+    - [ ] `GeneralizedTime` cannot exceed three characters after the decimal point. (min: 10, max: 23)
 - [ ] Implement new Exception hierarchy
   - [x] ASN1Exception
     - [x] ASN1CodecException
@@ -203,7 +206,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
       - [x] ASN1TagException = size_t overflow, leading zeroes (bytes)
       - [x] ASN1LengthException = size_t overflow or reserved length (bytes), leading zeroes
       - [x] ASN1ValueException
-        - [ ] ASN1ValueSizeException (lower limit, upper limit, actual)
+        - [x] ASN1ValueSizeException (lower limit, upper limit, actual)
+        - [ ] ASN1ValueOverflowException = thrown when a legitimate-sized ASN.1 just can't be decoded to a native type
         - [ ] ASN1ValuePaddingException = leading zero bytes, trailing zero bits
         - [ ] ASN1ValueCharactersException = (permitted characters description, offending character)
         - [ ] ASN1ValueIndexException = (valid indices, offending index)
