@@ -1394,7 +1394,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 if (this.value[0] == ASN1SpecialRealValue.minusZero) return -0.0;
                 if (this.value[0] == ASN1SpecialRealValue.plusInfinity) return T.infinity;
                 if (this.value[0] == ASN1SpecialRealValue.minusInfinity) return -T.infinity;
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueUndefinedException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a REAL whose information byte indicated a special value " ~
@@ -1607,7 +1607,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     case (0b00010000u): base = 0x08u; break;
                     case (0b00100000u): base = 0x10u; break;
                     default:
-                        throw new ASN1ValueInvalidException
+                        throw new ASN1ValueUndefinedException
                         (
                             "This exception was thrown because you attempted to " ~
                             "decode a REAL that had both base bits in the " ~

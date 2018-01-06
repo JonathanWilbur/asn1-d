@@ -308,6 +308,15 @@ class AbstractSyntaxNotation1ValueCharactersException : ASN1ValueException
 }
 
 ///
+public alias ASN1ValueUndefinedException = AbstractSyntaxNotation1ValueUndefinedException;
+///
+public
+class AbstractSyntaxNotation1ValueUndefinedException : ASN1ValueException
+{
+    mixin basicExceptionCtors;
+}
+
+///
 public alias ASN1ValueInvalidException = AbstractSyntaxNotation1ValueInvalidException;
 /**
     Thrown when an encoded value, or a decoded value (attempting to be encoded)
