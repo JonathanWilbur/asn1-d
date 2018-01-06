@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.55](http://semver.org/)
+* Version: [1.0.0-beta.56](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -197,7 +197,10 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Implement maximum lengths
     - [ ] `UTCTime` min: 10, max: 17
     - [ ] `GeneralizedTime` cannot exceed three characters after the decimal point. (min: 10, max: 23)
+  - [ ] Throw exception if comma is encountered
 - [ ] Implement new Exception hierarchy
+  - [x] Get rid of ASN1ValueInvalidException
+  - [ ] Get rid of `message` variable in exception constructors
   - [x] ASN1Exception
     - [x] ASN1CodecException
       - [x] ASN1RecursionException
@@ -214,10 +217,11 @@ Version 1.0.0-beta was released on November 8th, 2017.
         - [x] ASN1ValueOverflowException = thrown when a legitimate-sized ASN.1 just can't be decoded to a native type
         - [x] ASN1ValuePaddingException = leading zero bytes, trailing zero bits
         - [x] ASN1ValueCharactersException = (permitted characters description, offending character)
-        - [ ] ASN1UndefinedException = thrown when something is not defined by the specification
+        - [x] ASN1UndefinedException = thrown when something is not defined by the specification
     - [x] ASN1CompilerException
 - [x] More unit testing of `REAL`
 - [ ] Do some more unit testing for extreme lengths.
+- [ ] Check that all assertions only run during `unittest` version
 - [ ] Cross-Platform Testing
   - [ ] Windows (Which is Big-Endian)
     - [ ] 64-Bit
@@ -234,7 +238,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Test [OpenSSL](https://www.openssl.org/)'s [d2i tests](https://github.com/openssl/openssl/tree/master/test/d2i-tests)
 - [x] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) in the [National Vulnerability Database](https://nvd.nist.gov)
 - [x] Change copyright year to 2018
-- [x] Grammar and Styling
+- [ ] Grammar and Styling
   - [x] Check for `a` and `an` mixups
   - [x] Check for duplicated terminal words
   - [x] Check for incorrect data types
@@ -243,6 +247,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Remove trailing spaces
   - [x] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
   - [x] Format numbers consistently (particularly `0b` binary literals)
+  - [ ] Format `switch` statements
 - [ ] Documentation
   - [x] `install.md`
   - [x] `compliance.md`
@@ -286,6 +291,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [ ] Create dynamically-linked libraries as well
   - [ ] [GNU Make](https://www.gnu.org/software/make/) `Makefile`
   - [ ] Generate a `.def` file for Windows?
+  - [ ] Verbose linking
 - [ ] `releases.csv` (Version, Date, LOC, SLOC, Signature)
 
 #### Note 1:

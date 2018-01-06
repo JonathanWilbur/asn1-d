@@ -73,7 +73,7 @@ This is the actual code for the `boolean` accessor from `source/codecs/der.d`:
         }
         else
         {
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode a BOOLEAN " ~
                 "that was encoded on a byte that was not 0xFF or 0x00 using the DER " ~

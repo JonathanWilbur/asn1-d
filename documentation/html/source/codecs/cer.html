@@ -958,7 +958,7 @@ cv.tagNumber = 0x02u; <span class="comment">// "2" means this is an INTEGER
   <p class="para">
     ASN1ValueSizeException = if the encoded value is anything other
                 than exactly 1 byte in size.
-            ASN1ValueInvalidException = if the encoded byte is not 0xFF or 0x00
+            ASN1ValueException = if the encoded byte is not 0xFF or 0x00
   </p>
 </div>
 </section>
@@ -1018,7 +1018,7 @@ assertThrown!ASN1ValueSizeException(cv.<span class="psymbol">boolean</span>);
 cv.<span class="param">value</span> = [];
 assertThrown!ASN1ValueSizeException(cv.<span class="psymbol">boolean</span>);
 cv.<span class="param">value</span> = [ 0x01u ];
-assertThrown!ASN1ValueInvalidException(cv.<span class="psymbol">boolean</span>);
+assertThrown!ASN1ValueException(cv.<span class="psymbol">boolean</span>);
 </code></li>
       </ol>
     </div>
@@ -1174,7 +1174,7 @@ assertThrown!ASN1ValueInvalidException(cv.<span class="psymbol">boolean</span>);
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if the first byte has a value greater
+    ASN1ValueException = if the first byte has a value greater
                 than seven.
   </p>
 </div>
@@ -1475,7 +1475,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if the encoded value contains any bytes
+    ASN1ValueException = if the encoded value contains any bytes
                 outside of 0x20 to 0x7E.
   </p>
 </div>
@@ -1540,7 +1540,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if the string <code class="code">value</code> contains any
+    ASN1ValueException = if the string <code class="code">value</code> contains any
                 character outside of 0x20 to 0x7E, which means any control
                 characters or DELETE.
   </p>
@@ -1615,7 +1615,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+            ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
@@ -1684,7 +1684,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
   <h4>Throws</h4>
   <p class="para">
     ASN1ValueSizeException = if encoded INTEGER is too large to decode
-            ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+            ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
   </p>
 </div>
@@ -1772,7 +1772,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 bytes than the information byte purports.
             ASN1ValueSizeException = if the binary-encoded mantissa is too
                 big to be expressed by an unsigned long integer.
-            ASN1ValueInvalidException = if both bits indicating the base in the
+            ASN1ValueException = if both bits indicating the base in the
                 information byte of a binary-encoded REAL's information byte
                 are set, which would indicate an invalid base.
   </p>
@@ -1846,7 +1846,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if an attempt to encode NaN is made.
+    ASN1ValueException = if an attempt to encode NaN is made.
             ASN1ValueSizeException = if an attempt to encode would result
                 in an arithmetic underflow of a signed short.
             ASN1ValueSizeException = if an attempt to encode would result
@@ -2018,7 +2018,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+            ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
@@ -2115,7 +2115,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+    ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
   </p>
 </div>
@@ -2496,7 +2496,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any character other than 0-9 or
+    ASN1ValueException = if any character other than 0-9 or
                 space is encoded.
   </p>
 </div>
@@ -2536,7 +2536,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any character other than 0-9 or
+    ASN1ValueException = if any character other than 0-9 or
                 space is supplied.
   </p>
 </div>
@@ -2584,7 +2584,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any character other than a-z, A-Z,
+    ASN1ValueException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 encoded.
@@ -2627,7 +2627,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any character other than a-z, A-Z,
+    ASN1ValueException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 supplied.
@@ -2839,7 +2839,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any enecoded character is not ASCII.
+    ASN1ValueException = if any enecoded character is not ASCII.
   </p>
 </div>
 </section>
@@ -2899,7 +2899,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any enecoded character is not ASCII.
+    ASN1ValueException = if any enecoded character is not ASCII.
   </p>
 </div>
 </section>
@@ -3189,7 +3189,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any non-graphical character
+    ASN1ValueException = if any non-graphical character
                 (including space) is encoded.
   </p>
 </div>
@@ -3249,7 +3249,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any non-graphical character
+    ASN1ValueException = if any non-graphical character
                 (including space) is supplied.
   </p>
 </div>
@@ -3297,7 +3297,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any non-graphical character
+    ASN1ValueException = if any non-graphical character
                 (including space) is encoded.
   </p>
 </div>
@@ -3338,7 +3338,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any non-graphical character
+    ASN1ValueException = if any non-graphical character
                 (including space) is supplied.
   </p>
 </div>
@@ -3392,7 +3392,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any enecoded character is not ASCII.
+    ASN1ValueException = if any enecoded character is not ASCII.
 
 
   </p>
@@ -3448,7 +3448,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if any enecoded character is not ASCII.
+    ASN1ValueException = if any enecoded character is not ASCII.
 
 
   </p>
@@ -3503,7 +3503,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if the encoded bytes is not evenly
+    ASN1ValueException = if the encoded bytes is not evenly
                 divisible by four.
   </p>
 </div>
@@ -3721,7 +3721,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 <div class="ddoc_throws">
   <h4>Throws</h4>
   <p class="para">
-    ASN1ValueInvalidException = if the encoded bytes is not evenly
+    ASN1ValueException = if the encoded bytes is not evenly
                 divisible by two.
   </p>
 </div>

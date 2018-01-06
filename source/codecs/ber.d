@@ -409,7 +409,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: an array of booleans.
         Throws:
-            ASN1ValueInvalidException = if the first byte has a value greater
+            ASN1ValueException = if the first byte has a value greater
                 than seven.
     */
     override public @property
@@ -420,7 +420,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             (1u, size_t.max, 0u, "decode a BIT STRING");
 
         if (this.value[0] > 0x07u)
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValueException
             (
                 "In Basic Encoding Rules, the first byte of the encoded " ~
                 "binary value (after the type and length bytes, of course) " ~
@@ -441,7 +441,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             );
 
         if (this.value[0] > 0x00u && this.value.length <= 1u)
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode a " ~
                 "BIT STRING that had a misleading first byte, which indicated " ~
@@ -505,7 +505,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         BERElement el = new BERElement();
         el.value = [ 0x01u ];
-        assertThrown!ASN1ValueInvalidException(el.bitString);
+        assertThrown!ASN1ValueException(el.bitString);
     }
 
     /**
@@ -581,16 +581,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             }
 
             if ((this.value[$-1] & 0x80u) == 0x80u)
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you attempted to decode " ~
-                    "an OBJECT IDENTIFIER whose last byte had the most significant " ~
-                    "bit set, which is used to indicate the continuity of the " ~
-                    "encoding of a number on the next octet. In other words, the " ~
-                    "encoded data appears to be truncated. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
-                );
+                throw new ASN1TruncationException
+                (size_t.max, this.value.length, "decode an OBJECT IDENTIFIER");
         }
 
         size_t[] numbers;
@@ -747,13 +739,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         // Test for non-terminating components
         element.value = [ 0x29u, 0x81u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1TruncationException(element.objectIdentifier);
         element.value = [ 0x29u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1TruncationException(element.objectIdentifier);
         element.value = [ 0x29u, 0x14u, 0x81u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1TruncationException(element.objectIdentifier);
         element.value = [ 0x29u, 0x14u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1TruncationException(element.objectIdentifier);
 
         // This one should not fail. 0x80u is valid for the first octet.
         element.value = [ 0x80u, 0x14u, 0x14u ];
@@ -781,7 +773,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if the encoded value contains any bytes
+            ASN1ValueException = if the encoded value contains any bytes
                 outside of 0x20 to 0x7E.
     */
     override public @property @system
@@ -816,7 +808,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
         Throws:
-            ASN1ValueInvalidException = if the string value contains any
+            ASN1ValueException = if the string value contains any
                 character outside of 0x20 to 0x7E, which means any control
                 characters or DELETE.
     */
@@ -861,7 +853,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+            ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
@@ -902,59 +894,27 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         foreach (const component; components[0 .. $-1])
         {
             if (component.tagClass != ASN1TagClass.universal)
-                throw new ASN1TagException
-                (
-                    "This exception was thrown because you attempted to decode " ~
-                    "an EXTERNAL whose components were not of the correct tag " ~
-                    "class. When using Basic Encoding Rules, all but the last " ~
-                    "component of the encoded EXTERNAL must be of UNIVERSAL " ~
-                    "class. The last component must be of CONTEXT SPECIFIC " ~
-                    "class. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
-                );
+                throw new ASN1TagClassException
+                ([ ASN1TagClass.universal ], component.tagClass, "decode all but the last component of an EXTERNAL");
         }
 
         // The last tag must be context-specific class
         if (components[$-1].tagClass != ASN1TagClass.contextSpecific)
-            throw new ASN1TagException
-            (
-                "This exception was thrown because you attempted to decode " ~
-                "an EXTERNAL whose last component was not of the correct tag " ~
-                "class. When using Basic Encoding Rules, all but the last " ~
-                "component of the encoded EXTERNAL must be of UNIVERSAL " ~
-                "class. The last component must be of CONTEXT SPECIFIC " ~
-                "class. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+            throw new ASN1TagClassException
+            ([ ASN1TagClass.contextSpecific ], components[$-1].tagClass, "decode the last component of an EXTERNAL");
 
         // The first component should always be primitive
         if (components[0].construction != ASN1Construction.primitive)
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because you attempted to decode " ~
-                "an EXTERNAL whose first element was not primitively " ~
-                "constructed. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+            throw new ASN1ConstructionException
+            (components[0].construction, "decode the first component of an EXTERNAL");
 
         if
         (
             components[0].tagNumber != ASN1UniversalType.objectIdentifier &&
             components[0].tagNumber != ASN1UniversalType.integer
         )
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because you attempted to decode " ~
-                "an EXTERNAL whose first component was not an INTEGER or " ~
-                "OBJECT IDENTIFIER. The first component of an EXTERNAL " ~
-                "must be either an OBJECT IDENTIFIER or an INTEGER if it is " ~
-                "encoded using Basic Encoding Rules. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+            throw new ASN1TagNumberException
+            ([ 2u, 6u ], components[0].tagNumber, "decode the first component of an EXTERNAL");
 
         switch (components.length)
         {
@@ -975,16 +935,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 )
                 {
                     if (components[1].construction != ASN1Construction.primitive)
-                        throw new ASN1ValueInvalidException
-                        (
-                            "This exception was thrown because you attempted to " ~
-                            "decode an EXTERNAL whose second element out of " ~
-                            "three was primitively constructed. Whether it is " ~
-                            "an OBJECT IDENTIFIER or an ObjectDescriptor, it " ~
-                            "must be primitively constructed. " ~
-                            notWhatYouMeantText ~ forMoreInformationText ~
-                            debugInformationText ~ reportBugsText
-                        );
+                        throw new ASN1ConstructionException
+                        (components[1].construction, "decode the second component of an EXTERNAL");
 
                     identification.contextNegotiation = ASN1ContextNegotiation(
                         components[1].integer!ptrdiff_t,
@@ -1014,15 +966,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     }
                 }
                 else
-                    throw new ASN1ValueInvalidException
-                    (
-                        "This exception was thrown because you attempted to decode " ~
-                        "an EXTERNAL whose middle component was neither an OBJECT " ~
-                        "IDENTIFIER, INTEGER, nor ObjectDescriptor. This middle " ~
-                        "component of the three must be one of those types. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
-                    );
+                    throw new ASN1TagNumberException
+                    ([ 2u, 6u, 7u ], components[1].tagNumber, "decode the second component of an EXTERNAL");
                 break;
             }
             case (4u):
@@ -1033,7 +978,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     components[1].tagNumber != ASN1UniversalType.integer ||
                     components[2].tagNumber != ASN1UniversalType.objectDescriptor
                 )
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException // FIXME: Use a better exception for this?
                     (
                         "This exception was thrown because you attempted to decode " ~
                         "an external whose components were either misordered or " ~
@@ -1048,14 +993,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     );
 
                 if (components[1].construction != ASN1Construction.primitive)
-                    throw new ASN1TagException
-                    (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EXTERNAL whose second element was not " ~
-                        "primitively constructed, despite being INTEGER type. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
-                    );
+                    throw new ASN1ConstructionException
+                    (components[1].construction, "decode the second component of an EXTERNAL");
 
                 identification.contextNegotiation = ASN1ContextNegotiation(
                     components[1].integer!ptrdiff_t,
@@ -1136,7 +1075,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Throws:
             ASN1ValueSizeException = if encoded INTEGER is too large to decode
-            ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+            ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
 
         EXTERNAL  ::=  [UNIVERSAL 8] IMPLICIT SEQUENCE {
@@ -1271,7 +1210,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             external[2] = i;
             size_t x = 0u;
             BERElement el = new BERElement(x, external);
-            assertThrown!ASN1ValueInvalidException(el.external);
+            assertThrown!ASN1Exception(el.external);
         }
 
         // Valid values for octet[5]: 80 - 82 (Anything else is an invalid value)
@@ -1280,7 +1219,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             external[5] = i;
             size_t x = 0u;
             BERElement el = new BERElement(x, external);
-            assertThrown!ASN1ValueInvalidException(el.external);
+            assertThrown!ASN1Exception(el.external);
         }
     }
 
@@ -1372,7 +1311,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 bytes than the information byte purports.
             ASN1ValueSizeException = if the binary-encoded mantissa is too
                 big to be expressed by an unsigned long integer.
-            ASN1ValueInvalidException = if both bits indicating the base in the
+            ASN1ValueException = if both bits indicating the base in the
                 information byte of a binary-encoded REAL's information byte
                 are set, which would indicate an invalid base.
 
@@ -1499,7 +1438,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         immutable ubyte exponentLength = this.value[1];
 
                         if (exponentLength == 0u)
-                            throw new ASN1ValueInvalidException
+                            throw new ASN1ValueException
                             (
                                 "This exception was thrown because you attempted " ~
                                 "to decode a REAL whose exponent was encoded on " ~
@@ -1533,7 +1472,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         {
                             exponent = cast(short) cast(byte) this.value[2];
                             if (exponent == 0u)
-                                throw new ASN1ValueInvalidException
+                                throw new ASN1ValueException
                                 (
                                     "This exception was thrown because you " ~
                                     "attempted to decode a REAL whose exponent " ~
@@ -1589,7 +1528,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 mantissa = *cast(ulong *) mantissaBytes.ptr;
 
                 if (mantissa == 0u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a REAL that was encoded on more than zero " ~
@@ -1671,7 +1610,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         point format.
 
         Throws:
-            ASN1ValueInvalidException = if an attempt to encode NaN is made.
+            ASN1ValueException = if an attempt to encode NaN is made.
             ASN1ValueSizeException = if an attempt to encode would result
                 in an arithmetic underflow of a signed short.
             ASN1ValueSizeException = if an attempt to encode would result
@@ -2093,9 +2032,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         // Ensure that a zero cannot be encoded on complicated form
         el.value = [ 0b10000011u, 0x01u, 0x00u, 0x03u ];
-        assertThrown!ASN1ValueInvalidException(el.realNumber!float);
-        assertThrown!ASN1ValueInvalidException(el.realNumber!double);
-        assertThrown!ASN1ValueInvalidException(el.realNumber!real);
+        assertThrown!ASN1ValueException(el.realNumber!float);
+        assertThrown!ASN1ValueException(el.realNumber!double);
+        assertThrown!ASN1ValueException(el.realNumber!real);
 
         // Ensure that the complicated-form exponent must be encoded on the fewest bytes
         el.value = [ 0b10000011u, 0x02u, 0x00u, 0x05u, 0x03u ];
@@ -2326,7 +2265,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+            ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
@@ -2352,18 +2291,20 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 debugInformationText ~ reportBugsText
             );
 
-        if
-        (
-            components[0].tagClass != ASN1TagClass.contextSpecific ||
-            components[1].tagClass != ASN1TagClass.contextSpecific
-        )
-            throw new ASN1ValueInvalidException
+        if (components[0].tagClass != ASN1TagClass.contextSpecific)
+            throw new ASN1TagClassException
             (
-                "This exception was thrown because you attempted to decode an " ~
-                "EMBEDDED PDV that contained a tag that was not of CONTEXT-" ~
-                "SPECIFIC class. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
+                [ ASN1TagClass.contextSpecific ],
+                components[0].tagClass,
+                "decode the first component of an EMBEDDED PDV"
+            );
+
+        if (components[1].tagClass != ASN1TagClass.contextSpecific)
+            throw new ASN1TagClassException
+            (
+                [ ASN1TagClass.contextSpecific ],
+                components[1].tagClass,
+                "decode the second component of an EMBEDDED PDV"
             );
 
         /* NOTE:
@@ -2372,16 +2313,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             all automatically-tagged items still have the same numbers as
             though the constrained component were PRESENT.
         */
-        if (components[0].tagNumber != 0u || components[1].tagNumber != 2u)
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because you attempted to decode an " ~
-                "EMBEDDED PDV that contained a component whose tag number " ~
-                "was neither 0 nor 2, which indicate the identification CHOICE " ~
-                "and the string-value OCTET STRING components respectively. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+        if (components[0].tagNumber != 0u)
+            throw new ASN1TagNumberException
+            ([ 0u ], components[0].tagNumber, "decode the first component of an EMBEDDED PDV");
+
+        if (components[1].tagNumber != 2u)
+            throw new ASN1TagNumberException
+            ([ 2u ], components[1].tagNumber, "decode the second component of an EMBEDDED PDV");
 
         ubyte[] bytes = components[0].value.dup;
         const BERElement identificationChoice = new BERElement(bytes);
@@ -2392,7 +2330,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 const BERElement[] syntaxesComponents = identificationChoice.sequence;
 
                 if (syntaxesComponents.length != 2u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException // FIXME: Throw a different exception
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode an EMBEDDED PDV whose syntaxes component " ~
@@ -2403,36 +2341,36 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
-                if
-                (
-                    syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific ||
-                    syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific
-                )
-                    throw new ASN1TagException
+                if (syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose syntaxes contained a " ~
-                        "component whose tag class was not CONTEXT-SPECIFIC. " ~
-                        "All elements of the syntaxes component MUST be of " ~
-                        "CONTEXT-SPECIFIC class. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        syntaxesComponents[0].tagClass,
+                        "decode the first syntaxes component of an EMBEDDED PDV"
                     );
 
-                if
-                (
-                    syntaxesComponents[0].tagNumber != 0u ||
-                    syntaxesComponents[1].tagNumber != 1u
-                )
-                    throw new ASN1TagException
+                if (syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose syntaxes component " ~
-                        "contained a component whose tag number was not correct. " ~
-                        "The tag numbers of the syntaxes component " ~
-                        "must be 0 and 1, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        syntaxesComponents[1].tagClass,
+                        "decode the second syntaxes component of an EMBEDDED PDV"
+                    );
+
+                if (syntaxesComponents[0].tagNumber != 0u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 0u ],
+                        syntaxesComponents[0].tagNumber,
+                        "decode the first syntaxes component of an EMBEDDED PDV"
+                    );
+
+                if (syntaxesComponents[1].tagNumber != 1u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 1u ],
+                        syntaxesComponents[1].tagNumber,
+                        "decode the second syntaxes component of an EMBEDDED PDV"
                     );
 
                 identification.syntaxes  = ASN1Syntaxes(
@@ -2457,7 +2395,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 const BERElement[] contextNegotiationComponents = identificationChoice.sequence;
 
                 if (contextNegotiationComponents.length != 2u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode an EMBEDDED PDV whose context-negotiation " ~
@@ -2469,36 +2407,36 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
-                if
-                (
-                    contextNegotiationComponents[0].tagClass != ASN1TagClass.contextSpecific ||
-                    contextNegotiationComponents[1].tagClass != ASN1TagClass.contextSpecific
-                )
-                    throw new ASN1TagException
+                if (contextNegotiationComponents[0].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose context-negotiation " ~
-                        "contained a component whose tag class was not CONTEXT-" ~
-                        "SPECIFIC. All elements of the context-negotiation " ~
-                        "component MUST be of CONTEXT-SPECIFIC class." ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        contextNegotiationComponents[0].tagClass,
+                        "decode the first context-negotiation component of an EMBEDDED PDV"
                     );
 
-                if
-                (
-                    contextNegotiationComponents[0].tagNumber != 0u ||
-                    contextNegotiationComponents[1].tagNumber != 1u
-                )
-                    throw new ASN1TagException
+                if (contextNegotiationComponents[1].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose context-negotiation " ~
-                        "contained a component whose tag number was not correct. " ~
-                        "The tag numbers of the context-negotiation component " ~
-                        "must be 0 and 1, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        contextNegotiationComponents[1].tagClass,
+                        "decode the second context-negotiation component of an EMBEDDED PDV"
+                    );
+
+                if (contextNegotiationComponents[0].tagNumber != 0u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 0u ],
+                        contextNegotiationComponents[0].tagNumber,
+                        "decode the first context-negotiation component of an EMBEDDED PDV"
+                    );
+
+                if (contextNegotiationComponents[1].tagNumber != 1u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 1u ],
+                        contextNegotiationComponents[1].tagNumber,
+                        "decode the second context-negotiation component of an EMBEDDED PDV"
                     );
 
                 identification.contextNegotiation  = ASN1ContextNegotiation(
@@ -2563,7 +2501,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         will be context-specific and numbered from 0 to 5.
 
         Throws:
-            ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+            ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
     */
     override public @property @system
@@ -2783,16 +2721,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
 
         if (this.value[$-1] > 0x80u)
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because you attempted to decode " ~
-                "a RELATIVE OID whose last byte had the most significant " ~
-                "bit set, which is used to indicate the continuity of the " ~
-                "encoding of a number on the next octet. In other words, the " ~
-                "encoded data appears to be truncated. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+            throw new ASN1TruncationException
+            (size_t.max, this.value.length, "decode a RELATIVE OID");
 
         // Breaks bytes into groups, where each group encodes one OID component.
         ubyte[][] byteGroups;
@@ -2919,9 +2849,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         // Test for non-terminating components
         element.value = [ 0x29u, 0x81u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
+        assertThrown!ASN1TruncationException(element.roid);
         element.value = [ 0x29u, 0x14u, 0x81u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
+        assertThrown!ASN1TruncationException(element.roid);
     }
 
     /**
@@ -2998,7 +2928,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any character other than 0-9 or
+            ASN1ValueException = if any character other than 0-9 or
                 space is encoded.
     */
     override public @property @system
@@ -3018,7 +2948,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         0 - 9 and space.
 
         Throws:
-            ASN1ValueInvalidException = if any character other than 0-9 or
+            ASN1ValueException = if any character other than 0-9 or
                 space is supplied.
     */
     override public @property @system
@@ -3040,7 +2970,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any character other than a-z, A-Z,
+            ASN1ValueException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 encoded.
@@ -3063,7 +2993,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         forward slash, colon, equals, and question mark.
 
         Throws:
-            ASN1ValueInvalidException = if any character other than a-z, A-Z,
+            ASN1ValueException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 supplied.
@@ -3146,7 +3076,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any enecoded character is not ASCII.
+            ASN1ValueException = if any enecoded character is not ASCII.
     */
     override public @property @system
     string internationalAlphabetNumber5String() const
@@ -3182,7 +3112,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         )
 
         Throws:
-            ASN1ValueInvalidException = if any enecoded character is not ASCII.
+            ASN1ValueException = if any enecoded character is not ASCII.
     */
     override public @property @system
     void internationalAlphabetNumber5String(in string value)
@@ -3348,7 +3278,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character
+            ASN1ValueException = if any non-graphical character
                 (including space) is encoded.
     */
     override public @property @system
@@ -3379,7 +3309,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character
+            ASN1ValueException = if any non-graphical character
                 (including space) is supplied.
     */
     override public @property @system
@@ -3401,7 +3331,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character
+            ASN1ValueException = if any non-graphical character
                 (including space) is encoded.
     */
     override public @property @system
@@ -3423,7 +3353,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         GraphicalString.)
 
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character
+            ASN1ValueException = if any non-graphical character
                 (including space) is supplied.
     */
     override public @property @system
@@ -3445,7 +3375,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any enecoded character is not ASCII.
+            ASN1ValueException = if any enecoded character is not ASCII.
 
         Citations:
             Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
@@ -3471,7 +3401,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Deprecated, according to page 182 of the Dubuisson book.
 
         Throws:
-            ASN1ValueInvalidException = if any enecoded character is not ASCII.
+            ASN1ValueException = if any enecoded character is not ASCII.
 
         Citations:
             Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
@@ -3495,7 +3425,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string of UTF-32 characters.
         Throws:
-            ASN1ValueInvalidException = if the encoded bytes is not evenly
+            ASN1ValueException = if the encoded bytes is not evenly
                 divisible by four.
     */
     override public @property @system
@@ -3503,7 +3433,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         if (this.value.length == 0u) return ""d;
         if (this.value.length % 4u)
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you tried to decode " ~
                 "a UniversalString that contained a number of bytes that " ~
@@ -3620,18 +3550,20 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 debugInformationText ~ reportBugsText
             );
 
-        if
-        (
-            components[0].tagClass != ASN1TagClass.contextSpecific ||
-            components[1].tagClass != ASN1TagClass.contextSpecific
-        )
-            throw new ASN1ValueInvalidException
+        if (components[0].tagClass != ASN1TagClass.contextSpecific)
+            throw new ASN1TagClassException
             (
-                "This exception was thrown because you attempted to decode a " ~
-                "CharacterString that contained a tag that was not of CONTEXT-" ~
-                "SPECIFIC class. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
+                [ ASN1TagClass.contextSpecific ],
+                components[0].tagClass,
+                "decode the first component of a CharacterString"
+            );
+
+        if (components[1].tagClass != ASN1TagClass.contextSpecific)
+            throw new ASN1TagClassException
+            (
+                [ ASN1TagClass.contextSpecific ],
+                components[1].tagClass,
+                "decode the second component of a CharacterString"
             );
 
         /* NOTE:
@@ -3640,16 +3572,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             all automatically-tagged items still have the same numbers as
             though the constrained component were PRESENT.
         */
-        if (components[0].tagNumber != 0u || components[1].tagNumber != 2u)
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because you attempted to decode a " ~
-                "CharacterString that contained a component whose tag number " ~
-                "was neither 0 nor 2, which indicate the identification CHOICE " ~
-                "and the string-value OCTET STRING components respectively. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+        if (components[0].tagNumber != 0u)
+            throw new ASN1TagNumberException
+            ([ 0u ], components[0].tagNumber, "decode the first component of a CharacterString");
+
+        if (components[1].tagNumber != 2u)
+            throw new ASN1TagNumberException
+            ([ 2u ], components[1].tagNumber, "decode the second component of a CharacterString");
 
         ubyte[] bytes = components[0].value.dup;
         const BERElement identificationChoice = new BERElement(bytes);
@@ -3660,7 +3589,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 const BERElement[] syntaxesComponents = identificationChoice.sequence;
 
                 if (syntaxesComponents.length != 2u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a CharacterString whose syntaxes component " ~
@@ -3671,36 +3600,36 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
-                if
-                (
-                    syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific ||
-                    syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific
-                )
-                    throw new ASN1TagException
+                if (syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString whose syntaxes contained a " ~
-                        "component whose tag class was not CONTEXT-SPECIFIC. " ~
-                        "All elements of the syntaxes component MUST be of " ~
-                        "CONTEXT-SPECIFIC class. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        syntaxesComponents[0].tagClass,
+                        "decode the first syntaxes component of a CharacterString"
                     );
 
-                if
-                (
-                    syntaxesComponents[0].tagNumber != 0u ||
-                    syntaxesComponents[1].tagNumber != 1u
-                )
-                    throw new ASN1TagException
+                if (syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString whose syntaxes component " ~
-                        "contained a component whose tag number was not correct. " ~
-                        "The tag numbers of the syntaxes component " ~
-                        "must be 0 and 1, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        syntaxesComponents[1].tagClass,
+                        "decode the second syntaxes component of a CharacterString"
+                    );
+
+                if (syntaxesComponents[0].tagNumber != 0u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 0u ],
+                        syntaxesComponents[0].tagNumber,
+                        "decode the first syntaxes component of a CharacterString"
+                    );
+
+                if (syntaxesComponents[1].tagNumber != 1u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 1u ],
+                        syntaxesComponents[1].tagNumber,
+                        "decode the second syntaxes component of a CharacterString"
                     );
 
                 identification.syntaxes = ASN1Syntaxes(
@@ -3725,7 +3654,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 const BERElement[] contextNegotiationComponents = identificationChoice.sequence;
 
                 if (contextNegotiationComponents.length != 2u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a CharacterString whose context-negotiation " ~
@@ -3737,36 +3666,36 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
-                if
-                (
-                    contextNegotiationComponents[0].tagClass != ASN1TagClass.contextSpecific ||
-                    contextNegotiationComponents[1].tagClass != ASN1TagClass.contextSpecific
-                )
-                    throw new ASN1TagException
+                if (contextNegotiationComponents[0].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString whose context-negotiation " ~
-                        "contained a component whose tag class was not CONTEXT-" ~
-                        "SPECIFIC. All elements of the context-negotiation " ~
-                        "component MUST be of CONTEXT-SPECIFIC class." ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        contextNegotiationComponents[0].tagClass,
+                        "decode the first context-negotiation component of a CharacterString"
                     );
 
-                if
-                (
-                    contextNegotiationComponents[0].tagNumber != 0u ||
-                    contextNegotiationComponents[1].tagNumber != 1u
-                )
-                    throw new ASN1TagException
+                if (contextNegotiationComponents[1].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString whose context-negotiation " ~
-                        "contained a component whose tag number was not correct. " ~
-                        "The tag numbers of the context-negotiation component " ~
-                        "must be 0 and 1, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        contextNegotiationComponents[1].tagClass,
+                        "decode the second context-negotiation component of a CharacterString"
+                    );
+
+                if (contextNegotiationComponents[0].tagNumber != 0u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 0u ],
+                        contextNegotiationComponents[0].tagNumber,
+                        "decode the first context-negotiation component of a CharacterString"
+                    );
+
+                if (contextNegotiationComponents[1].tagNumber != 1u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 1u ],
+                        contextNegotiationComponents[1].tagNumber,
+                        "decode the second context-negotiation component of a CharacterString"
                     );
 
                 identification.contextNegotiation = ASN1ContextNegotiation(
@@ -3997,7 +3926,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: an immutable array of UTF-16 characters.
         Throws:
-            ASN1ValueInvalidException = if the encoded bytes is not evenly
+            ASN1ValueException = if the encoded bytes is not evenly
                 divisible by two.
     */
     override public @property @system
@@ -4005,7 +3934,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         if (this.value.length == 0u) return ""w;
         if (this.value.length % 2u)
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you tried to decode " ~
                 "a BMPString that contained a number of bytes that " ~

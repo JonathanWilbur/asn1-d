@@ -1,6 +1,6 @@
 module types.oidtype;
 import asn1;
-import codec : ASN1ValueInvalidException;
+import codec : ASN1ValueException;
 import std.ascii : isGraphical;
 
 ///
@@ -98,7 +98,7 @@ struct ObjectIdentifierNode
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if the encoded value contains any bytes
+            ASN1ValueException = if the encoded value contains any bytes
                 outside of 0x20 to 0x7E.
     */
     public @system
@@ -108,7 +108,7 @@ struct ObjectIdentifierNode
         {
             if ((!character.isGraphical) && (character != ' '))
             {
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you tried to decode " ~
                     "a GraphicString that contained a character that " ~
@@ -138,13 +138,13 @@ struct ObjectIdentifierNode
         assert(b.descriptor == " ");
         immutable OIDNode c = OIDNode(1, "");
         assert(c.descriptor == "");
-        assertThrown!ASN1ValueInvalidException(OIDNode(1, "\xD7"));
-        assertThrown!ASN1ValueInvalidException(OIDNode(1, "\t"));
-        assertThrown!ASN1ValueInvalidException(OIDNode(1, "\r"));
-        assertThrown!ASN1ValueInvalidException(OIDNode(1, "\n"));
-        assertThrown!ASN1ValueInvalidException(OIDNode(1, "\b"));
-        assertThrown!ASN1ValueInvalidException(OIDNode(1, "\v"));
-        assertThrown!ASN1ValueInvalidException(OIDNode(1, "\f"));
-        assertThrown!ASN1ValueInvalidException(OIDNode(1, "\0"));
+        assertThrown!ASN1ValueException(OIDNode(1, "\xD7"));
+        assertThrown!ASN1ValueException(OIDNode(1, "\t"));
+        assertThrown!ASN1ValueException(OIDNode(1, "\r"));
+        assertThrown!ASN1ValueException(OIDNode(1, "\n"));
+        assertThrown!ASN1ValueException(OIDNode(1, "\b"));
+        assertThrown!ASN1ValueException(OIDNode(1, "\v"));
+        assertThrown!ASN1ValueException(OIDNode(1, "\f"));
+        assertThrown!ASN1ValueException(OIDNode(1, "\0"));
     }
 }

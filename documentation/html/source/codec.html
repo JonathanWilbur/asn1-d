@@ -808,6 +808,106 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
+  <a href="#ASN1TagClassException" id="ASN1TagClassException"><code class="code">ASN1TagClassException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1TagClassException"></span>alias <code class="code">ASN1TagClassException</code> = AbstractSyntaxNotation1TagClassException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1TagClassException" id="AbstractSyntaxNotation1TagClassException"><code class="code">AbstractSyntaxNotation1TagClassException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagClassException"></span>class <code class="code">AbstractSyntaxNotation1TagClassException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1ConstructionException" id="ASN1ConstructionException"><code class="code">ASN1ConstructionException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1ConstructionException"></span>alias <code class="code">ASN1ConstructionException</code> = AbstractSyntaxNotation1ConstructionException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1ConstructionException" id="AbstractSyntaxNotation1ConstructionException"><code class="code">AbstractSyntaxNotation1ConstructionException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ConstructionException"></span>class <code class="code">AbstractSyntaxNotation1ConstructionException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
   <a href="#ASN1TagNumberException" id="ASN1TagNumberException"><code class="code">ASN1TagNumberException</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -1302,72 +1402,6 @@
 </div>
 <div class="ddoc_decl">
   
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1ValueInvalidException" id="ASN1ValueInvalidException"><code class="code">ASN1ValueInvalidException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1ValueInvalidException"></span>alias <code class="code">ASN1ValueInvalidException</code> = AbstractSyntaxNotation1ValueInvalidException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1ValueInvalidException" id="AbstractSyntaxNotation1ValueInvalidException"><code class="code">AbstractSyntaxNotation1ValueInvalidException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueInvalidException"></span>class <code class="code">AbstractSyntaxNotation1ValueInvalidException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Thrown when an encoded value, or a decoded value (attempting to be encoded)
-    takes on a value that the codec cannot encode or decode.
-
-  </p>
-</div>
-<div class="ddoc_examples">
-  <h4>Examples</h4>
-  <p class="para">
-    <ul>        <li>When a DER codec detects a BOOLEAN encoded in a byte other than 0xFF or 0x00</li>
-        <li>When a BER codec finds an invalid character in a string</li>
-    </ul>
-  </p>
-</div>
-</section>
 
 </div>
 

@@ -93,7 +93,7 @@ mixin template Encoder(Element)
         {
             element.objectDescriptor = literal;
         }
-        catch (ASN1ValueInvalidException e)
+        catch (ASN1ValueException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
         }
@@ -165,7 +165,7 @@ mixin template Encoder(Element)
         {
             element.numericString = literal;
         }
-        catch (ASN1ValueInvalidException e)
+        catch (ASN1ValueException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
         }
@@ -177,7 +177,7 @@ mixin template Encoder(Element)
         {
             element.printableString = literal;
         }
-        catch (ASN1ValueInvalidException e)
+        catch (ASN1ValueException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
         }
@@ -221,7 +221,7 @@ mixin template Encoder(Element)
         {
             element.ia5String = literal;
         }
-        catch (ASN1ValueInvalidException e)
+        catch (ASN1ValueException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
         }
@@ -258,7 +258,7 @@ mixin template Encoder(Element)
         {
             element.graphicString = literal;
         }
-        catch (ASN1ValueInvalidException e)
+        catch (ASN1ValueException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
         }
@@ -270,7 +270,7 @@ mixin template Encoder(Element)
         {
             element.visibleString = literal;
         }
-        catch (ASN1ValueInvalidException e)
+        catch (ASN1ValueException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
         }
@@ -282,7 +282,7 @@ mixin template Encoder(Element)
         {
             element.generalString = literal;
         }
-        catch (ASN1ValueInvalidException e)
+        catch (ASN1ValueException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
         }
@@ -294,7 +294,7 @@ mixin template Encoder(Element)
         {
             element.universalString = cast(dstring) literal;
         }
-        catch (ASN1ValueInvalidException e)
+        catch (ASN1ValueException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
         }
@@ -307,7 +307,7 @@ mixin template Encoder(Element)
         {
             element.bmpString = cast(wstring) literal;
         }
-        catch (ASN1ValueInvalidException e)
+        catch (ASN1ValueException e)
         {
             stderr.rawWrite(e.msg ~ "\n");
         }

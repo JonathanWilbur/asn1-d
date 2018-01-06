@@ -135,6 +135,66 @@ class AbstractSyntaxNotation1TagPaddingException : ASN1TagException
 }
 
 ///
+public alias ASN1TagClassException = AbstractSyntaxNotation1TagClassException;
+///
+public
+class AbstractSyntaxNotation1TagClassException : ASN1TagException
+{
+    const ASN1TagClass[] expectedTagClasses;
+    immutable ASN1TagClass actualTagClass;
+
+    this
+    (
+        ASN1TagClass[] expectedTagClasses,
+        ASN1TagClass actualTagClass,
+        string whatYouAttemptedToDo,
+        string file = __FILE__,
+        size_t line = __LINE__
+    )
+    {
+        this.expectedTagClasses = expectedTagClasses;
+        this.actualTagClass = actualTagClass;
+
+        string message =
+            "This exception was thrown because you attempted to decode or " ~
+            "encode an ASN.1 element with the wrong tag class. " ~
+            "This occurred when you were trying to " ~ whatYouAttemptedToDo ~ ". " ~
+            "The permitted tag classes are: " ~ text(expectedTagClasses) ~ "\n" ~
+            "The offending tag class was: " ~ text(actualTagClass);
+
+        super(message, file, line);
+    }
+}
+
+///
+public alias ASN1ConstructionException = AbstractSyntaxNotation1ConstructionException;
+///
+public
+class AbstractSyntaxNotation1ConstructionException : ASN1TagException
+{
+    immutable ASN1Construction actualConstruction;
+
+    this
+    (
+        ASN1Construction actualConstruction,
+        string whatYouAttemptedToDo,
+        string file = __FILE__,
+        size_t line = __LINE__
+    )
+    {
+        this.actualConstruction = actualConstruction;
+
+        string message =
+            "This exception was thrown because you attempted to decode an " ~
+            "encoded ASN.1 element that was encoded with the wrong construction. " ~
+            "This occurred when you were trying to " ~ whatYouAttemptedToDo ~ ". " ~
+            "The offending construction was: " ~ text(actualConstruction);
+
+        super(message, file, line);
+    }
+}
+
+///
 public alias ASN1TagNumberException = AbstractSyntaxNotation1TagNumberException;
 ///
 public
@@ -312,24 +372,6 @@ public alias ASN1ValueUndefinedException = AbstractSyntaxNotation1ValueUndefined
 ///
 public
 class AbstractSyntaxNotation1ValueUndefinedException : ASN1ValueException
-{
-    mixin basicExceptionCtors;
-}
-
-///
-public alias ASN1ValueInvalidException = AbstractSyntaxNotation1ValueInvalidException;
-/**
-    Thrown when an encoded value, or a decoded value (attempting to be encoded)
-    takes on a value that the codec cannot encode or decode.
-
-    Examples:
-    $(UL
-        $(LI When a DER codec detects a BOOLEAN encoded in a byte other than 0xFF or 0x00)
-        $(LI When a BER codec finds an invalid character in a string)
-    )
-*/
-public
-class AbstractSyntaxNotation1ValueInvalidException : ASN1ValueException
 {
     mixin basicExceptionCtors;
 }

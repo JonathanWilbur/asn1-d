@@ -142,7 +142,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         Throws:
             ASN1ValueSizeException = if the encoded value is anything other
                 than exactly 1 byte in size.
-            ASN1ValueInvalidException = if the encoded byte is not 0xFF or 0x00
+            ASN1ValueException = if the encoded byte is not 0xFF or 0x00
     */
     override public @property @safe
     bool boolean() const
@@ -161,7 +161,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode a BOOLEAN " ~
                 "that was encoded on a byte that was not 0xFF or 0x00 using the CER " ~
@@ -203,7 +203,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         cv.value = [];
         assertThrown!ASN1ValueSizeException(cv.boolean);
         cv.value = [ 0x01u ];
-        assertThrown!ASN1ValueInvalidException(cv.boolean);
+        assertThrown!ASN1ValueException(cv.boolean);
     }
 
     /**
@@ -397,7 +397,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         Returns: an array of booleans.
         Throws:
-            ASN1ValueInvalidException = if the first byte has a value greater
+            ASN1ValueException = if the first byte has a value greater
                 than seven.
     */
     override public @property @system
@@ -419,7 +419,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 (1u, size_t.max, 0u, "decode a BIT STRING");
 
             if (this.value[0] > 0x07u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "In Canonical Encoding Rules (CER), the first byte of the encoded " ~
                     "binary value (after the type and length bytes, of course) " ~
@@ -440,7 +440,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 );
 
             if (this.value[0] > 0x00u && this.value.length <= 1u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode a " ~
                     "BIT STRING that had a misleading first byte, which indicated " ~
@@ -472,7 +472,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             foreach (immutable bit; ret[$-this.value[0] .. $])
             {
                 if (bit == true)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to decode " ~
                         "a BIT STRING whose padding bits were not entirely zeroes. " ~
@@ -504,7 +504,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     (1u, size_t.max, 0u, "decode a BIT STRING");
 
                 if (primitives[p].value[0] > 0x07u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "In Canonical Encoding Rules (CER), the first byte of the encoded " ~
                         "binary value (after the type and length bytes, of course) " ~
@@ -525,7 +525,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     );
 
                 if (primitives[p].value[0] > 0x00u && primitives[p].value.length <= 1u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to decode a " ~
                         "BIT STRING that had a misleading first byte, which indicated " ~
@@ -557,7 +557,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 foreach (immutable bit; pret[$-primitives[p].value[0] .. $])
                 {
                     if (bit == true)
-                        throw new ASN1ValueInvalidException
+                        throw new ASN1ValueException
                         (
                             "This exception was thrown because you attempted to decode " ~
                             "a BIT STRING whose padding bits were not entirely zeroes. " ~
@@ -682,13 +682,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     {
         CERElement el = new CERElement();
         el.value = [ 0x07u, 0b11000000u ];
-        assertThrown!ASN1ValueInvalidException(el.bitString);
+        assertThrown!ASN1ValueException(el.bitString);
 
         el.value = [ 0x01u, 0b11111111u ];
-        assertThrown!ASN1ValueInvalidException(el.bitString);
+        assertThrown!ASN1ValueException(el.bitString);
 
         el.value = [ 0x00u, 0b11111111u ];
-        assertNotThrown!ASN1ValueInvalidException(el.bitString);
+        assertNotThrown!ASN1ValueException(el.bitString);
     }
 
     // Test a BIT STRING with a deceptive first byte.
@@ -697,7 +697,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     {
         CERElement el = new CERElement();
         el.value = [ 0x01u ];
-        assertThrown!ASN1ValueInvalidException(el.bitString);
+        assertThrown!ASN1ValueException(el.bitString);
     }
 
     /**
@@ -722,7 +722,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "an OCTET STRING encoded via Canonical Encoding Rules (CER) " ~
@@ -874,16 +874,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if ((this.value[$-1] & 0x80u) == 0x80u)
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you attempted to decode " ~
-                    "an OBJECT IDENTIFIER whose last byte had the most significant " ~
-                    "bit set, which is used to indicate the continuity of the " ~
-                    "encoding of a number on the next octet. In other words, the " ~
-                    "encoded data appears to be truncated. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
-                );
+                throw new ASN1TruncationException
+                (size_t.max, this.value.length, "decode an OBJECT IDENTIFIER");
         }
 
         size_t[] numbers;
@@ -1040,13 +1032,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         // Test for non-terminating components
         element.value = [ 0x29u, 0x81u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1TruncationException(element.objectIdentifier);
         element.value = [ 0x29u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1TruncationException(element.objectIdentifier);
         element.value = [ 0x29u, 0x14u, 0x81u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1TruncationException(element.objectIdentifier);
         element.value = [ 0x29u, 0x14u, 0x80u ];
-        assertThrown!ASN1ValueInvalidException(element.objectIdentifier);
+        assertThrown!ASN1TruncationException(element.objectIdentifier);
 
         // This one should not fail. 0x80u is valid for the first octet.
         element.value = [ 0x80u, 0x14u, 0x14u ];
@@ -1074,7 +1066,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if the encoded value contains any bytes
+            ASN1ValueException = if the encoded value contains any bytes
                 outside of 0x20 to 0x7E.
     */
     override public @property @system
@@ -1100,7 +1092,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "an ObjectDescriptor encoded via Canonical Encoding Rules (CER) " ~
@@ -1150,7 +1142,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
         Throws:
-            ASN1ValueInvalidException = if the string value contains any
+            ASN1ValueException = if the string value contains any
                 character outside of 0x20 to 0x7E, which means any control
                 characters or DELETE.
     */
@@ -1253,7 +1245,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+            ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
@@ -1284,73 +1276,33 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         foreach (const component; components[0 .. $-1])
         {
             if (component.tagClass != ASN1TagClass.universal)
-                throw new ASN1TagException
-                (
-                    "This exception was thrown because you attempted to decode " ~
-                    "an EXTERNAL whose components were not of the correct tag " ~
-                    "class. When using Canonical Encoding Rules (CER), all but the last " ~
-                    "component of the encoded EXTERNAL must be of UNIVERSAL " ~
-                    "class. The last component must be of CONTEXT SPECIFIC " ~
-                    "class. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
-                );
+                throw new ASN1TagClassException
+                ([ ASN1TagClass.universal ], component.tagClass, "decode all but the last component of an EXTERNAL");
         }
 
         // The last tag must be context-specific class
         if (components[$-1].tagClass != ASN1TagClass.contextSpecific)
-            throw new ASN1TagException
-            (
-                "This exception was thrown because you attempted to decode " ~
-                "an EXTERNAL whose last component was not of the correct tag " ~
-                "class. When using Canonical Encoding Rules (CER), all but the last " ~
-                "component of the encoded EXTERNAL must be of UNIVERSAL " ~
-                "class. The last component must be of CONTEXT SPECIFIC " ~
-                "class. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+            throw new ASN1TagClassException
+            ([ ASN1TagClass.contextSpecific ], components[$-1].tagClass, "decode the last component of an EXTERNAL");
 
         // The first component should always be primitive
         if (components[0].construction != ASN1Construction.primitive)
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because you attempted to decode " ~
-                "an EXTERNAL whose first element was not primitively " ~
-                "constructed. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+            throw new ASN1ConstructionException
+            (components[0].construction, "decode the first component of an EXTERNAL");
 
         if (components[0].tagNumber != ASN1UniversalType.objectIdentifier)
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because you attempted to decode " ~
-                "an EXTERNAL whose first component was not an " ~
-                "OBJECT IDENTIFIER. The first component of an EXTERNAL " ~
-                "must be an OBJECT IDENTIFIER if it is " ~
-                "encoded using Canonical Encoding Rules (CER). " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+            throw new ASN1TagNumberException
+            ([ 2u, 6u ], components[0].tagNumber, "decode the first component of an EXTERNAL");
 
         identification.directReference = components[0].objectIdentifier;
         if (components.length == 3u)
         {
             if (components[1].tagNumber != ASN1UniversalType.objectDescriptor)
-                throw new ASN1TagException
+                throw new ASN1TagNumberException
                 (
-                    "This exception was thrown because you attempted to " ~
-                    "decode an EXTERNAL whose second element was not an " ~
-                    "ObjectDescriptor. This would not be a problem if you " ~
-                    "were using Basic Encoding Rules (BER), but Canonical " ~
-                    "Encoding Rules (CER) mandates that only the direct-reference " ~
-                    "component can be used to identify EXTERNAL data, so " ~
-                    "the second component must necessarily be the data-" ~
-                    "value-descriptor if the EXTERNAL is composed of three " ~
-                    "components. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    [ ASN1UniversalType.objectDescriptor ],
+                    components[1].tagNumber,
+                    "decode the second of three subcomponents of an EXTERNAL"
                 );
 
             if (components[1].construction == ASN1Construction.primitive)
@@ -1421,7 +1373,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         Throws:
             ASN1ValueSizeException = if encoded INTEGER is too large to decode
-            ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+            ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
     */
     deprecated override public @property @system
@@ -1442,7 +1394,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             components ~= directReference;
         }
         else // it must be the presentationContextID / indirectReference INTEGER
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to encode an " ~
                 "EXTERNAL that used something other than syntax as the CHOICE " ~
@@ -1483,7 +1435,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         input.dataValue = [ 0x01u, 0x02u, 0x03u, 0x04u ];
 
         CERElement el = new CERElement();
-        assertThrown!ASN1ValueInvalidException(el.external = input);
+        assertThrown!ASN1ValueException(el.external = input);
     }
 
     // Inspired by CVE-2017-9023
@@ -1603,7 +1555,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 bytes than the information byte purports.
             ASN1ValueSizeException = if the binary-encoded mantissa is too
                 big to be expressed by an unsigned long integer.
-            ASN1ValueInvalidException = if both bits indicating the base in the
+            ASN1ValueException = if both bits indicating the base in the
                 information byte of a binary-encoded REAL's information byte
                 are set, which would indicate an invalid base.
     */
@@ -1669,11 +1621,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
                 // Smallest possible is '#.E#'. Decimal is necessary.
                 if (this.value.length < 5u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (invalidNR3RealMessage ~ "was too short.");
 
                 if (this.value[0] != 0b00000011u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (invalidNR3RealMessage ~ "was not NR3 format at all.");
 
                 string valueString = cast(string) this.value[1 .. $];
@@ -1687,7 +1639,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                         character == ',' ||
                         character == '_'
                     )
-                        throw new ASN1ValueInvalidException
+                        throw new ASN1ValueException
                         (invalidNR3RealMessage ~ "contained whitespace, commas, or underscores.");
                 }
 
@@ -1701,11 +1653,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
                 ptrdiff_t indexOfDecimalPoint = valueString.indexOf(".");
                 if (indexOfDecimalPoint == -1)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (invalidNR3RealMessage ~ "contained no decimal point.");
 
                 if (valueString[indexOfDecimalPoint+1] != 'E')
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (invalidNR3RealMessage ~ "contained no 'E'.");
 
                 if (valueString[indexOfDecimalPoint-1] == '0')
@@ -1713,7 +1665,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     (invalidNR3RealMessage ~ "contained a trailing zero on the mantissa.");
 
                 if (valueString[$-2 .. $] != "+0" && canFind(valueString, '+'))
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (invalidNR3RealMessage ~ "contained an illegitimate plus sign.");
 
                 if (canFind(valueString, "E0") || canFind(valueString, "E-0"))
@@ -1815,7 +1767,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 mantissa = *cast(ulong *) mantissaBytes.ptr;
 
                 if (mantissa == 0u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a REAL that was encoded on more than zero " ~
@@ -1845,7 +1797,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 }
 
                 if (this.value[0] & 0b00001100u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a REAL whose scale was not zero. This would " ~
@@ -1909,7 +1861,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         point format.
 
         Throws:
-            ASN1ValueInvalidException = if an attempt to encode NaN is made.
+            ASN1ValueException = if an attempt to encode NaN is made.
             ASN1ValueSizeException = if an attempt to encode would result
                 in an arithmetic underflow of a signed short.
             ASN1ValueSizeException = if an attempt to encode would result
@@ -2324,7 +2276,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 (this.value[0] == 0xFFu && (this.value[1] & 0x80u)) // Unnecessary negative leading bytes
             )
         )
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an ENUMERATED that was encoded on more than the minimum " ~
@@ -2521,7 +2473,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+            ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
             ASN1InvalidIndexException = if encoded value selects a choice for
                 identification or uses an unspecified index for an element in
@@ -2547,18 +2499,20 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 debugInformationText ~ reportBugsText
             );
 
-        if
-        (
-            components[0].tagClass != ASN1TagClass.contextSpecific ||
-            components[1].tagClass != ASN1TagClass.contextSpecific
-        )
-            throw new ASN1ValueInvalidException
+        if (components[0].tagClass != ASN1TagClass.contextSpecific)
+            throw new ASN1TagClassException
             (
-                "This exception was thrown because you attempted to decode an " ~
-                "EMBEDDED PDV that contained a tag that was not of CONTEXT-" ~
-                "SPECIFIC class. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
+                [ ASN1TagClass.contextSpecific ],
+                components[0].tagClass,
+                "decode the first component of an EMBEDDED PDV"
+            );
+
+        if (components[1].tagClass != ASN1TagClass.contextSpecific)
+            throw new ASN1TagClassException
+            (
+                [ ASN1TagClass.contextSpecific ],
+                components[1].tagClass,
+                "decode the second component of an EMBEDDED PDV"
             );
 
         /* NOTE:
@@ -2567,16 +2521,14 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             all automatically-tagged items still have the same numbers as
             though the constrained component were PRESENT.
         */
-        if (components[0].tagNumber != 0u || components[1].tagNumber != 2u)
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because you attempted to decode an " ~
-                "EMBEDDED PDV that contained a component whose tag number " ~
-                "was neither 0 nor 2, which indicate the identification CHOICE " ~
-                "and the data-value OCTET STRING components respectively. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+        if (components[0].tagNumber != 0u)
+            throw new ASN1TagNumberException
+            ([ 0u ], components[0].tagNumber, "decode the first component of an EMBEDDED PDV");
+
+        if (components[1].tagNumber != 2u)
+            throw new ASN1TagNumberException
+            ([ 2u ], components[1].tagNumber, "decode the second component of an EMBEDDED PDV");
+
 
         ubyte[] bytes = components[0].value.dup;
         const CERElement identificationChoice = new CERElement(bytes);
@@ -2587,7 +2539,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 const CERElement[] syntaxesComponents = identificationChoice.sequence;
 
                 if (syntaxesComponents.length != 2u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode an EMBEDDED PDV whose syntaxes component " ~
@@ -2598,36 +2550,36 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
-                if
-                (
-                    syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific ||
-                    syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific
-                )
-                    throw new ASN1TagException
+                if (syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose syntaxes contained a " ~
-                        "component whose tag class was not CONTEXT-SPECIFIC. " ~
-                        "All elements of the syntaxes component MUST be of " ~
-                        "CONTEXT-SPECIFIC class. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        syntaxesComponents[0].tagClass,
+                        "decode the first syntaxes component of an EMBEDDED PDV"
                     );
 
-                if
-                (
-                    syntaxesComponents[0].tagNumber != 0u ||
-                    syntaxesComponents[1].tagNumber != 1u
-                )
-                    throw new ASN1TagException
+                if (syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose syntaxes component " ~
-                        "contained a component whose tag number was not correct. " ~
-                        "The tag numbers of the syntaxes component " ~
-                        "must be 0 and 1, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        syntaxesComponents[1].tagClass,
+                        "decode the second syntaxes component of an EMBEDDED PDV"
+                    );
+
+                if (syntaxesComponents[0].tagNumber != 0u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 0u ],
+                        syntaxesComponents[0].tagNumber,
+                        "decode the first syntaxes component of an EMBEDDED PDV"
+                    );
+
+                if (syntaxesComponents[1].tagNumber != 1u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 1u ],
+                        syntaxesComponents[1].tagNumber,
+                        "decode the second syntaxes component of an EMBEDDED PDV"
                     );
 
                 identification.syntaxes  = ASN1Syntaxes(
@@ -2717,7 +2669,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         will be context-specific and numbered from 0 to 5.
 
         Throws:
-            ASN1ValueInvalidException = if encoded ObjectDescriptor contains
+            ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
     */
     override public @property @system
@@ -2892,7 +2844,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "an OCTET STRING encoded via Canonical Encoding Rules (CER) " ~
@@ -3016,16 +2968,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
 
         if (this.value[$-1] > 0x80u)
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because you attempted to decode " ~
-                "a RELATIVE OID whose last byte had the most significant " ~
-                "bit set, which is used to indicate the continuity of the " ~
-                "encoding of a number on the next octet. In other words, the " ~
-                "encoded data appears to be truncated. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+            throw new ASN1TruncationException
+            (size_t.max, this.value.length, "decode a RELATIVE OID");
 
         // Breaks bytes into groups, where each group encodes one OID component.
         ubyte[][] byteGroups;
@@ -3152,9 +3096,9 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         // Test for non-terminating components
         element.value = [ 0x29u, 0x81u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
+        assertThrown!ASN1TruncationException(element.roid);
         element.value = [ 0x29u, 0x14u, 0x81u ];
-        assertThrown!ASN1ValueInvalidException(element.roid);
+        assertThrown!ASN1TruncationException(element.roid);
     }
 
     /**
@@ -3231,7 +3175,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any character other than 0-9 or
+            ASN1ValueException = if any character other than 0-9 or
                 space is encoded.
     */
     override public @property @system
@@ -3257,7 +3201,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "an OCTET STRING encoded via Canonical Encoding Rules (CER) " ~
@@ -3292,7 +3236,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         0 - 9 and space.
 
         Throws:
-            ASN1ValueInvalidException = if any character other than 0-9 or
+            ASN1ValueException = if any character other than 0-9 or
                 space is supplied.
     */
     override public @property @system
@@ -3372,7 +3316,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any character other than a-z, A-Z,
+            ASN1ValueException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 encoded.
@@ -3400,7 +3344,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "an PrintableString encoded via Canonical Encoding Rules (CER) " ~
@@ -3437,7 +3381,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         forward slash, colon, equals, and question mark.
 
         Throws:
-            ASN1ValueInvalidException = if any character other than a-z, A-Z,
+            ASN1ValueException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 supplied.
@@ -3535,7 +3479,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a TeletexString encoded via Canonical Encoding Rules (CER) " ~
@@ -3649,7 +3593,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a VideotexString encoded via Canonical Encoding Rules (CER) " ~
@@ -3762,7 +3706,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any enecoded character is not ASCII.
+            ASN1ValueException = if any enecoded character is not ASCII.
     */
     override public @property @system
     string internationalAlphabetNumber5String() const
@@ -3787,7 +3731,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "an IA5String encoded via Canonical Encoding Rules (CER) " ~
@@ -3839,7 +3783,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         )
 
         Throws:
-            ASN1ValueInvalidException = if any enecoded character is not ASCII.
+            ASN1ValueException = if any enecoded character is not ASCII.
     */
     override public @property @system
     void internationalAlphabetNumber5String(in string value)
@@ -3943,7 +3887,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         // Mandated in X.690, section 11.8.1
         if (this.value[$-1] != 'Z')
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "a UTCTime whose encoding did not terminate with a 'Z', as " ~
@@ -4030,7 +3974,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         // Inferred, because YYYYMMDDhhmmss.Z could not be valid.
         if (this.value.length == 16u)
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode a " ~
                 "GeneralizedTime that was encoded on too few bytes to be " ~
@@ -4041,7 +3985,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         // Mandated in X.690, section 11.7.1
         if (this.value[$-1] != 'Z')
-            throw new ASN1ValueInvalidException
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "a GeneralizedTime whose encoding did not terminate with a 'Z', " ~
@@ -4065,7 +4009,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 );
 
             if (indexOfDecimalPoint != 14)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a GeneralizedTime whose decimal point was misplaced. " ~
@@ -4173,7 +4117,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character
+            ASN1ValueException = if any non-graphical character
                 (including space) is encoded.
     */
     override public @property @system
@@ -4199,7 +4143,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "an GraphicString encoded via Canonical Encoding Rules (CER) " ~
@@ -4245,7 +4189,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character
+            ASN1ValueException = if any non-graphical character
                 (including space) is supplied.
     */
     override public @property @system
@@ -4325,7 +4269,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character
+            ASN1ValueException = if any non-graphical character
                 (including space) is encoded.
     */
     override public @property @system
@@ -4351,7 +4295,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a VisibleString encoded via Canonical Encoding Rules (CER) " ~
@@ -4388,7 +4332,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         GraphicalString.)
 
         Throws:
-            ASN1ValueInvalidException = if any non-graphical character
+            ASN1ValueException = if any non-graphical character
                 (including space) is supplied.
     */
     override public @property @system
@@ -4468,7 +4412,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueInvalidException = if any enecoded character is not ASCII.
+            ASN1ValueException = if any enecoded character is not ASCII.
 
         Citations:
             Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
@@ -4498,7 +4442,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a GeneralString encoded via Canonical Encoding Rules (CER) " ~
@@ -4535,7 +4479,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         Deprecated, according to page 182 of the Dubuisson book.
 
         Throws:
-            ASN1ValueInvalidException = if any enecoded character is not ASCII.
+            ASN1ValueException = if any enecoded character is not ASCII.
 
         Citations:
             Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
@@ -4617,7 +4561,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         Returns: a string of UTF-32 characters.
         Throws:
-            ASN1ValueInvalidException = if the encoded bytes is not evenly
+            ASN1ValueException = if the encoded bytes is not evenly
                 divisible by four.
     */
     override public @property @system
@@ -4627,7 +4571,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         if (this.value.length <= 1000u)
         {
             if (this.value.length % 4u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you tried to decode " ~
                     "a UniversalString that contained a number of bytes that " ~
@@ -4671,7 +4615,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a UniversalString encoded via Canonical Encoding Rules (CER) " ~
@@ -4690,7 +4634,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             for (size_t p = 0u; p < primitives.length-1; p++) // Skip the last element, because it is an EOC
             {
                 if (primitives[p].value.length % 4u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you tried to decode " ~
                         "a UniversalString that contained a number of bytes that " ~
@@ -4899,18 +4843,20 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 debugInformationText ~ reportBugsText
             );
 
-        if
-        (
-            components[0].tagClass != ASN1TagClass.contextSpecific ||
-            components[1].tagClass != ASN1TagClass.contextSpecific
-        )
-            throw new ASN1ValueInvalidException
+        if (components[0].tagClass != ASN1TagClass.contextSpecific)
+            throw new ASN1TagClassException
             (
-                "This exception was thrown because you attempted to decode an " ~
-                "CharacterString that contained a tag that was not of CONTEXT-" ~
-                "SPECIFIC class. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
+                [ ASN1TagClass.contextSpecific ],
+                components[0].tagClass,
+                "decode the first component of a CharacterString"
+            );
+
+        if (components[1].tagClass != ASN1TagClass.contextSpecific)
+            throw new ASN1TagClassException
+            (
+                [ ASN1TagClass.contextSpecific ],
+                components[1].tagClass,
+                "decode the second component of a CharacterString"
             );
 
         /* NOTE:
@@ -4919,16 +4865,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             all automatically-tagged items still have the same numbers as
             though the constrained component were PRESENT.
         */
-        if (components[0].tagNumber != 0u || components[1].tagNumber != 2u)
-            throw new ASN1ValueInvalidException
-            (
-                "This exception was thrown because you attempted to decode a " ~
-                "CharacterString that contained a component whose tag number " ~
-                "was neither 0 nor 2, which indicate the identification CHOICE " ~
-                "and the string-value OCTET STRING components respectively. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+        if (components[0].tagNumber != 0u)
+            throw new ASN1TagNumberException
+            ([ 0u ], components[0].tagNumber, "decode the first component of a CharacterString");
+
+        if (components[1].tagNumber != 2u)
+            throw new ASN1TagNumberException
+            ([ 2u ], components[1].tagNumber, "decode the second component of a CharacterString");
 
         ubyte[] bytes = components[0].value.dup;
         const CERElement identificationChoice = new CERElement(bytes);
@@ -4939,7 +4882,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 const CERElement[] syntaxesComponents = identificationChoice.sequence;
 
                 if (syntaxesComponents.length != 2u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a CharacterString whose syntaxes component " ~
@@ -4950,36 +4893,36 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
-                if
-                (
-                    syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific ||
-                    syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific
-                )
-                    throw new ASN1TagException
+                if (syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString whose syntaxes contained a " ~
-                        "component whose tag class was not CONTEXT-SPECIFIC. " ~
-                        "All elements of the syntaxes component MUST be of " ~
-                        "CONTEXT-SPECIFIC class. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        syntaxesComponents[0].tagClass,
+                        "decode the first syntaxes component of a CharacterString"
                     );
 
-                if
-                (
-                    syntaxesComponents[0].tagNumber != 0u ||
-                    syntaxesComponents[1].tagNumber != 1u
-                )
-                    throw new ASN1TagException
+                if (syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific)
+                    throw new ASN1TagClassException
                     (
-                        "This exception was thrown because you attempted to " ~
-                        "decode a CharacterString whose syntaxes component " ~
-                        "contained a component whose tag number was not correct. " ~
-                        "The tag numbers of the syntaxes component " ~
-                        "must be 0 and 1, in that order. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
+                        [ ASN1TagClass.contextSpecific ],
+                        syntaxesComponents[1].tagClass,
+                        "decode the second syntaxes component of a CharacterString"
+                    );
+
+                if (syntaxesComponents[0].tagNumber != 0u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 0u ],
+                        syntaxesComponents[0].tagNumber,
+                        "decode the first syntaxes component of a CharacterString"
+                    );
+
+                if (syntaxesComponents[1].tagNumber != 1u)
+                    throw new ASN1TagNumberException
+                    (
+                        [ 1u ],
+                        syntaxesComponents[1].tagNumber,
+                        "decode the second syntaxes component of a CharacterString"
                     );
 
                 identification.syntaxes  = ASN1Syntaxes(
@@ -5174,7 +5117,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         Returns: an immutable array of UTF-16 characters.
         Throws:
-            ASN1ValueInvalidException = if the encoded bytes is not evenly
+            ASN1ValueException = if the encoded bytes is not evenly
                 divisible by two.
     */
     override public @property @system
@@ -5184,7 +5127,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         if (this.value.length <= 1000u)
         {
             if (this.value.length % 2u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you tried to decode " ~
                     "a BMPString that contained a number of bytes that " ~
@@ -5226,7 +5169,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
 
             if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
-                throw new ASN1ValueInvalidException
+                throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
                     "a BMPString encoded via Canonical Encoding Rules (CER) " ~
@@ -5245,7 +5188,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             for (size_t p = 0u; p < primitives.length-1; p++) // Skip the last element, because it is an EOC
             {
                 if (primitives[p].value.length % 2u)
-                    throw new ASN1ValueInvalidException
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you tried to decode " ~
                         "a UniversalString that contained a number of bytes that " ~
