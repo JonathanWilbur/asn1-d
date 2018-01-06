@@ -195,6 +195,8 @@ class AbstractSyntaxNotation1ConstructionException : ASN1TagException
 }
 
 ///
+public alias ASN1TypeException = AbstractSyntaxNotation1TagNumberException;
+///
 public alias ASN1TagNumberException = AbstractSyntaxNotation1TagNumberException;
 ///
 public

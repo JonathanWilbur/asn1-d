@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.56](http://semver.org/)
+* Version: [1.0.0-beta.57](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -118,13 +118,14 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - The Dubuisson book uses the term 'arc' and 'node'
     - It sounds like 'arc' refers to the space beneath a 'node'
   - [x] Test string constructor of `OID`
-- [x] Redo Context-Switching Types
+- [x] Improve Context-Switching Types
   - [x] Make them actually work
   - [x] Support the pre-1994 `EXTERNAL`
   - [x] Deprecate `EXTERNAL`
   - [x] Document all of the fields
   - [x] Unittest all variations of `EXTERNAL`'s `encoding`
   - [x] ~~Implement `OBJECT IDENTIFIER` restrictions for `CharacterString`~~ (I can't find documentation of this.)
+  - [x] Enforce construction of subcomponents of CSTs
 - [x] Add Object Identifier constants from Section 12 of X.690
 - [x] Make as much code `const` or `immutable` as possible
 - [x] Make `Byteable` interface, and implement it on all codecs
@@ -201,24 +202,24 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [ ] Implement new Exception hierarchy
   - [x] Get rid of ASN1ValueInvalidException
   - [ ] Get rid of `message` variable in exception constructors
-  - [x] ASN1Exception
-    - [x] ASN1CodecException
-      - [x] ASN1RecursionException
-      - [x] ASN1TruncationException = tag, length, or value was truncated
-      - [x] ASN1TagException = size_t overflow, leading zeroes (bytes)
-        - [x] ASN1TagOverflowException
-        - [x] ASN1TagPaddingException
-        - [x] ASN1TagNumberException
-      - [x] ASN1LengthException = size_t overflow or reserved length (bytes), leading zeroes
-        - [x] ASN1LengthOverflowException
-        - [x] ASN1LengthUndefinedException
-      - [x] ASN1ValueException
-        - [x] ASN1ValueSizeException (lower limit, upper limit, actual)
-        - [x] ASN1ValueOverflowException = thrown when a legitimate-sized ASN.1 just can't be decoded to a native type
-        - [x] ASN1ValuePaddingException = leading zero bytes, trailing zero bits
-        - [x] ASN1ValueCharactersException = (permitted characters description, offending character)
-        - [x] ASN1UndefinedException = thrown when something is not defined by the specification
-    - [x] ASN1CompilerException
+  - [x] `ASN1Exception`
+    - [x] `ASN1CodecException`
+      - [x] `ASN1RecursionException`
+      - [x] `ASN1TruncationException`
+      - [x] `ASN1TagException`
+        - [x] `ASN1TagOverflowException`
+        - [x] `ASN1TagPaddingException`
+        - [x] `ASN1TagNumberException`
+      - [x] `ASN1LengthException`
+        - [x] `ASN1LengthOverflowException`
+        - [x] `ASN1LengthUndefinedException`
+      - [x] `ASN1ValueException`
+        - [x] `ASN1ValueSizeException`
+        - [x] `ASN1ValueOverflowException`
+        - [x] `ASN1ValuePaddingException`
+        - [x] `ASN1ValueCharactersException`
+        - [x] `ASN1UndefinedException`
+    - [x] `ASN1CompilerException`
 - [x] More unit testing of `REAL`
 - [ ] Do some more unit testing for extreme lengths.
 - [ ] Check that all assertions only run during `unittest` version
@@ -248,6 +249,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
   - [x] Format numbers consistently (particularly `0b` binary literals)
   - [ ] Format `switch` statements
+  - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
 - [ ] Documentation
   - [x] `install.md`
   - [x] `compliance.md`

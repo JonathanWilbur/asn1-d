@@ -2327,6 +2327,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         {
             case (0u): // syntaxes
             {
+                if (identificationChoice.construction != ASN1Construction.constructed)
+                    throw new ASN1ConstructionException
+                    (identificationChoice.construction, "decode the syntaxes component of an EMBEDDED PDV");
+
                 const BERElement[] syntaxesComponents = identificationChoice.sequence;
 
                 if (syntaxesComponents.length != 2u)
@@ -2341,6 +2345,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
+                // Class Validation
                 if (syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific)
                     throw new ASN1TagClassException
                     (
@@ -2357,6 +2362,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "decode the second syntaxes component of an EMBEDDED PDV"
                     );
 
+                // Construction Validation
+                if (syntaxesComponents[0].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (syntaxesComponents[0].construction, "decode the first syntaxes component of an EMBEDDED PDV");
+
+                if (syntaxesComponents[1].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (syntaxesComponents[1].construction, "decode the second syntaxes component of an EMBEDDED PDV");
+
+                // Number Validation
                 if (syntaxesComponents[0].tagNumber != 0u)
                     throw new ASN1TagNumberException
                     (
@@ -2392,6 +2407,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             }
             case (3u): // context-negotiation
             {
+                if (identificationChoice.construction != ASN1Construction.constructed)
+                    throw new ASN1ConstructionException
+                    (identificationChoice.construction, "decode the context-negotiation component of an EMBEDDED PDV");
+
                 const BERElement[] contextNegotiationComponents = identificationChoice.sequence;
 
                 if (contextNegotiationComponents.length != 2u)
@@ -2407,6 +2426,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
+                // Class Validation
                 if (contextNegotiationComponents[0].tagClass != ASN1TagClass.contextSpecific)
                     throw new ASN1TagClassException
                     (
@@ -2423,6 +2443,22 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "decode the second context-negotiation component of an EMBEDDED PDV"
                     );
 
+                // Construction Validation
+                if (contextNegotiationComponents[0].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (
+                        contextNegotiationComponents[0].construction,
+                        "decode the first context-negotiation component of an EMBEDDED PDV"
+                    );
+
+                if (contextNegotiationComponents[1].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (
+                        contextNegotiationComponents[1].construction,
+                        "decode the second context-negotiation component of an EMBEDDED PDV"
+                    );
+
+                // Number Validation
                 if (contextNegotiationComponents[0].tagNumber != 0u)
                     throw new ASN1TagNumberException
                     (
@@ -2530,6 +2566,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
+            identificationChoice.construction = ASN1Construction.constructed;
             identificationChoice.tagNumber = 0u;
             identificationChoice.sequence = [ abstractSyntax, transferSyntax ];
         }
@@ -2550,6 +2587,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
 
+            identificationChoice.construction = ASN1Construction.constructed;
             identificationChoice.tagNumber = 3u;
             identificationChoice.sequence = [ presentationContextID, transferSyntax ];
         }
@@ -3586,6 +3624,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         {
             case (0u): // syntaxes
             {
+                if (identificationChoice.construction != ASN1Construction.constructed)
+                    throw new ASN1ConstructionException
+                    (identificationChoice.construction, "decode the syntaxes component of a CharacterString");
+
                 const BERElement[] syntaxesComponents = identificationChoice.sequence;
 
                 if (syntaxesComponents.length != 2u)
@@ -3600,6 +3642,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
+                // Class Validation
                 if (syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific)
                     throw new ASN1TagClassException
                     (
@@ -3616,6 +3659,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "decode the second syntaxes component of a CharacterString"
                     );
 
+                // Construction Validation
+                if (syntaxesComponents[0].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (syntaxesComponents[0].construction, "decode the first syntaxes component of a CharacterString");
+
+                if (syntaxesComponents[1].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (syntaxesComponents[1].construction, "decode the second syntaxes component of a CharacterString");
+
+                // Number Validation
                 if (syntaxesComponents[0].tagNumber != 0u)
                     throw new ASN1TagNumberException
                     (
@@ -3651,6 +3704,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             }
             case (3u): // context-negotiation
             {
+                if (identificationChoice.construction != ASN1Construction.constructed)
+                    throw new ASN1ConstructionException
+                    (identificationChoice.construction, "decode the context-negotiation component of a CharacterString");
+
                 const BERElement[] contextNegotiationComponents = identificationChoice.sequence;
 
                 if (contextNegotiationComponents.length != 2u)
@@ -3666,6 +3723,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
+                // Class Validation
                 if (contextNegotiationComponents[0].tagClass != ASN1TagClass.contextSpecific)
                     throw new ASN1TagClassException
                     (
@@ -3682,6 +3740,22 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "decode the second context-negotiation component of a CharacterString"
                     );
 
+                // Construction Validation
+                if (contextNegotiationComponents[0].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (
+                        contextNegotiationComponents[0].construction,
+                        "decode the first context-negotiation component of a CharacterString"
+                    );
+
+                if (contextNegotiationComponents[1].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (
+                        contextNegotiationComponents[1].construction,
+                        "decode the second context-negotiation component of a CharacterString"
+                    );
+
+                // Number Validation
                 if (contextNegotiationComponents[0].tagNumber != 0u)
                     throw new ASN1TagNumberException
                     (
@@ -3783,6 +3857,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
+            identificationChoice.construction = ASN1Construction.constructed;
             identificationChoice.tagNumber = 0u;
             identificationChoice.sequence = [ abstractSyntax, transferSyntax ];
         }
@@ -3803,6 +3878,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.contextNegotiation.transferSyntax;
 
+            identificationChoice.construction = ASN1Construction.constructed;
             identificationChoice.tagNumber = 3u;
             identificationChoice.sequence = [ presentationContextID, transferSyntax ];
         }

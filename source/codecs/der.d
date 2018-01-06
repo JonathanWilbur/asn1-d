@@ -2308,6 +2308,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         {
             case (0u): // syntaxes
             {
+                if (identificationChoice.construction != ASN1Construction.constructed)
+                    throw new ASN1ConstructionException
+                    (identificationChoice.construction, "decode the syntaxes component of an EMBEDDED PDV");
+
                 const DERElement[] syntaxesComponents = identificationChoice.sequence;
 
                 if (syntaxesComponents.length != 2u)
@@ -2322,6 +2326,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
+                // Class Validation
                 if (syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific)
                     throw new ASN1TagClassException
                     (
@@ -2338,6 +2343,16 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         "decode the second syntaxes component of an EMBEDDED PDV"
                     );
 
+                // Construction Validation
+                if (syntaxesComponents[0].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (syntaxesComponents[0].construction, "decode the first syntaxes component of an EMBEDDED PDV");
+
+                if (syntaxesComponents[1].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (syntaxesComponents[1].construction, "decode the second syntaxes component of an EMBEDDED PDV");
+
+                // Number Validation
                 if (syntaxesComponents[0].tagNumber != 0u)
                     throw new ASN1TagNumberException
                     (
@@ -2474,6 +2489,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
+            identificationChoice.construction = ASN1Construction.constructed;
             identificationChoice.tagNumber = 0u;
             identificationChoice.sequence = [ abstractSyntax, transferSyntax ];
         }
@@ -3627,6 +3643,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         {
             case (0u): // syntaxes
             {
+                if (identificationChoice.construction != ASN1Construction.constructed)
+                    throw new ASN1ConstructionException
+                    (identificationChoice.construction, "decode the syntaxes component of a CharacterString");
+
                 const DERElement[] syntaxesComponents = identificationChoice.sequence;
 
                 if (syntaxesComponents.length != 2u)
@@ -3641,6 +3661,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         debugInformationText ~ reportBugsText
                     );
 
+                // Class Validation
                 if (syntaxesComponents[0].tagClass != ASN1TagClass.contextSpecific)
                     throw new ASN1TagClassException
                     (
@@ -3657,6 +3678,16 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         "decode the second syntaxes component of a CharacterString"
                     );
 
+                // Construction Validation
+                if (syntaxesComponents[0].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (syntaxesComponents[0].construction, "decode the first syntaxes component of a CharacterString");
+
+                if (syntaxesComponents[1].construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (syntaxesComponents[1].construction, "decode the second syntaxes component of a CharacterString");
+
+                // Number Validation
                 if (syntaxesComponents[0].tagNumber != 0u)
                     throw new ASN1TagNumberException
                     (
@@ -3763,6 +3794,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             transferSyntax.tagNumber = 1u;
             transferSyntax.objectIdentifier = value.identification.syntaxes.transferSyntax;
 
+            identificationChoice.construction = ASN1Construction.constructed;
             identificationChoice.tagNumber = 0u;
             identificationChoice.sequence = [ abstractSyntax, transferSyntax ];
         }
