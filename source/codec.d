@@ -281,7 +281,30 @@ public alias ASN1ValueCharactersException = AbstractSyntaxNotation1ValueCharacte
 public
 class AbstractSyntaxNotation1ValueCharactersException : ASN1ValueException
 {
-    mixin basicExceptionCtors;
+    immutable dchar offendingCharacter;
+
+    public @safe
+    this
+    (
+        string descriptionOfPermittedCharacters,
+        dchar offendingCharacter,
+        string typeName,
+        string file = __FILE__,
+        size_t line = __LINE__
+    )
+    {
+        this.offendingCharacter = offendingCharacter;
+        immutable string message =
+            "This exception was thrown because you attempted to encode or " ~
+            "decode an ASN.1 " ~ typeName ~ " that contained a character " ~
+            "that is not permitted for that type.\n" ~
+            "The permitted characters are: " ~
+            descriptionOfPermittedCharacters ~ "\n" ~
+            "The code-point representation of the offending character is: " ~
+            text(cast(uint) offendingCharacter);
+
+        super(message, file, line);
+    }
 }
 
 ///
@@ -820,14 +843,14 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.objectDescriptor == " ");
         el.objectDescriptor = "";
         assert(el.objectDescriptor == "");
-        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\xD7");
-        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\t");
-        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\r");
-        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\n");
-        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\b");
-        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\v");
-        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\f");
-        assertThrown!ASN1ValueInvalidException(el.objectDescriptor = "\0");
+        assertThrown!ASN1ValueCharactersException(el.objectDescriptor = "\xD7");
+        assertThrown!ASN1ValueCharactersException(el.objectDescriptor = "\t");
+        assertThrown!ASN1ValueCharactersException(el.objectDescriptor = "\r");
+        assertThrown!ASN1ValueCharactersException(el.objectDescriptor = "\n");
+        assertThrown!ASN1ValueCharactersException(el.objectDescriptor = "\b");
+        assertThrown!ASN1ValueCharactersException(el.objectDescriptor = "\v");
+        assertThrown!ASN1ValueCharactersException(el.objectDescriptor = "\f");
+        assertThrown!ASN1ValueCharactersException(el.objectDescriptor = "\0");
 
         // Assert that accessor does not mutate state
         assert(el.objectDescriptor == el.objectDescriptor);
@@ -1859,8 +1882,8 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.numericString == "1234567890");
         el.numericString = " ";
         assert(el.numericString == " ");
-        assertThrown!ASN1ValueInvalidException(el.numericString = "hey hey");
-        assertThrown!ASN1ValueInvalidException(el.numericString = "12345676789A");
+        assertThrown!ASN1ValueCharactersException(el.numericString = "hey hey");
+        assertThrown!ASN1ValueCharactersException(el.numericString = "12345676789A");
 
         // Assert that accessor does not mutate state
         assert(el.numericString == el.numericString);
@@ -1903,13 +1926,13 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.printableString == "1234567890 asdfjkl");
         el.printableString = " ";
         assert(el.printableString == " ");
-        assertThrown!ASN1ValueInvalidException(el.printableString = "\t");
-        assertThrown!ASN1ValueInvalidException(el.printableString = "\n");
-        assertThrown!ASN1ValueInvalidException(el.printableString = "\0");
-        assertThrown!ASN1ValueInvalidException(el.printableString = "\v");
-        assertThrown!ASN1ValueInvalidException(el.printableString = "\b");
-        assertThrown!ASN1ValueInvalidException(el.printableString = "\r");
-        assertThrown!ASN1ValueInvalidException(el.printableString = "\x13");
+        assertThrown!ASN1ValueCharactersException(el.printableString = "\t");
+        assertThrown!ASN1ValueCharactersException(el.printableString = "\n");
+        assertThrown!ASN1ValueCharactersException(el.printableString = "\0");
+        assertThrown!ASN1ValueCharactersException(el.printableString = "\v");
+        assertThrown!ASN1ValueCharactersException(el.printableString = "\b");
+        assertThrown!ASN1ValueCharactersException(el.printableString = "\r");
+        assertThrown!ASN1ValueCharactersException(el.printableString = "\x13");
 
         // Assert that accessor does not mutate state
         assert(el.printableString == el.printableString);
@@ -2032,7 +2055,7 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.ia5String == "");
         el.ia5String = "Nitro dubs & T-Rix";
         assert(el.ia5String == "Nitro dubs & T-Rix");
-        assertThrown!ASN1ValueInvalidException(el.ia5String = "Nitro dubs \xD7 T-Rix");
+        assertThrown!ASN1ValueCharactersException(el.ia5String = "Nitro dubs \xD7 T-Rix");
 
         // Assert that accessor does not mutate state
         assert(el.ia5String == el.ia5String);
@@ -2133,14 +2156,14 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.graphicString == "Nitro dubs & T-Rix");
         el.graphicString = " ";
         assert(el.graphicString == " ");
-        assertThrown!ASN1ValueInvalidException(el.graphicString = "\xD7");
-        assertThrown!ASN1ValueInvalidException(el.graphicString = "\t");
-        assertThrown!ASN1ValueInvalidException(el.graphicString = "\r");
-        assertThrown!ASN1ValueInvalidException(el.graphicString = "\n");
-        assertThrown!ASN1ValueInvalidException(el.graphicString = "\b");
-        assertThrown!ASN1ValueInvalidException(el.graphicString = "\v");
-        assertThrown!ASN1ValueInvalidException(el.graphicString = "\f");
-        assertThrown!ASN1ValueInvalidException(el.graphicString = "\0");
+        assertThrown!ASN1ValueCharactersException(el.graphicString = "\xD7");
+        assertThrown!ASN1ValueCharactersException(el.graphicString = "\t");
+        assertThrown!ASN1ValueCharactersException(el.graphicString = "\r");
+        assertThrown!ASN1ValueCharactersException(el.graphicString = "\n");
+        assertThrown!ASN1ValueCharactersException(el.graphicString = "\b");
+        assertThrown!ASN1ValueCharactersException(el.graphicString = "\v");
+        assertThrown!ASN1ValueCharactersException(el.graphicString = "\f");
+        assertThrown!ASN1ValueCharactersException(el.graphicString = "\0");
 
         // Assert that accessor does not mutate state
         assert(el.graphicString == el.graphicString);
@@ -2185,14 +2208,14 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.visibleString == "hey hey");
         el.visibleString = " ";
         assert(el.visibleString == " ");
-        assertThrown!ASN1ValueInvalidException(el.visibleString = "\xD7");
-        assertThrown!ASN1ValueInvalidException(el.visibleString = "\t");
-        assertThrown!ASN1ValueInvalidException(el.visibleString = "\r");
-        assertThrown!ASN1ValueInvalidException(el.visibleString = "\n");
-        assertThrown!ASN1ValueInvalidException(el.visibleString = "\b");
-        assertThrown!ASN1ValueInvalidException(el.visibleString = "\v");
-        assertThrown!ASN1ValueInvalidException(el.visibleString = "\f");
-        assertThrown!ASN1ValueInvalidException(el.visibleString = "\0");
+        assertThrown!ASN1ValueCharactersException(el.visibleString = "\xD7");
+        assertThrown!ASN1ValueCharactersException(el.visibleString = "\t");
+        assertThrown!ASN1ValueCharactersException(el.visibleString = "\r");
+        assertThrown!ASN1ValueCharactersException(el.visibleString = "\n");
+        assertThrown!ASN1ValueCharactersException(el.visibleString = "\b");
+        assertThrown!ASN1ValueCharactersException(el.visibleString = "\v");
+        assertThrown!ASN1ValueCharactersException(el.visibleString = "\f");
+        assertThrown!ASN1ValueCharactersException(el.visibleString = "\0");
 
         // Assert that accessor does not mutate state
         assert(el.visibleString == el.visibleString);
@@ -2227,7 +2250,7 @@ class AbstractSyntaxNotation1Element(Element)
         assert(el.generalString == "");
         el.generalString = "foin-ass sweatpants from BUCCI \0\n\t\b\v\r\f";
         assert(el.generalString == "foin-ass sweatpants from BUCCI \0\n\t\b\v\r\f");
-        assertThrown!ASN1ValueInvalidException(el.generalString = "\xF5");
+        assertThrown!ASN1ValueCharactersException(el.generalString = "\xF5");
 
         // Assert that accessor does not mutate state
         assert(el.generalString == el.generalString);

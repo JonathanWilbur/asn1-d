@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.53](http://semver.org/)
+* Version: [1.0.0-beta.54](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -213,7 +213,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
         - [x] ASN1ValueSizeException (lower limit, upper limit, actual)
         - [x] ASN1ValueOverflowException = thrown when a legitimate-sized ASN.1 just can't be decoded to a native type
         - [x] ASN1ValuePaddingException = leading zero bytes, trailing zero bits
-        - [ ] ASN1ValueCharactersException = (permitted characters description, offending character)
+        - [x] ASN1ValueCharactersException = (permitted characters description, offending character)
         - [ ] ASN1UndefinedException = thrown when something is not defined by the specification
     - [x] ASN1CompilerException
 - [x] More unit testing of `REAL`

@@ -658,188 +658,6 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
-  <a href="#ASN1ConstructionException" id="ASN1ConstructionException"><code class="code">ASN1ConstructionException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1ConstructionException"></span>alias <code class="code">ASN1ConstructionException</code> = AbstractSyntaxNotation1ConstructionException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1ConstructionException" id="AbstractSyntaxNotation1ConstructionException"><code class="code">AbstractSyntaxNotation1ConstructionException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ConstructionException"></span>class <code class="code">AbstractSyntaxNotation1ConstructionException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1IndexException" id="ASN1IndexException"><code class="code">ASN1IndexException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1IndexException"></span>alias <code class="code">ASN1IndexException</code> = AbstractSyntaxNotation1IndexException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1IndexException" id="AbstractSyntaxNotation1IndexException"><code class="code">AbstractSyntaxNotation1IndexException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1IndexException"></span>class <code class="code">AbstractSyntaxNotation1IndexException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    An exception thrown when a member of a CHOICE or SEQUENCE is given a
-    context-specific index that is not defined for that CHOICE or SEQUENCE.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    For example, if:
-<br><br>
-    TheQuestion := [APPLICATION 5] CHOICE {
-        toBe [0] NULL,
-        notToBe [1] NULL
-    }
-<br><br>
-    This exception should be thrown if TheQuestion were to be decoded from the
-    BER-encoded byte sequence: <code class="code">0x65 0x02 0x83 0x00</code>, because
-    the third byte specifies a third choice in TheQuestion, but there is no
-    choice #3 in TheQuestion--there is only choice #0 and #1.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1OrderingException" id="ASN1OrderingException"><code class="code">ASN1OrderingException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1OrderingException"></span>alias <code class="code">ASN1OrderingException</code> = AbstractSyntaxNotation1OrderingException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1OrderingException" id="AbstractSyntaxNotation1OrderingException"><code class="code">AbstractSyntaxNotation1OrderingException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1OrderingException"></span>class <code class="code">AbstractSyntaxNotation1OrderingException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Thrown if the ordering of elements in a SEQUENCE or SET is incorrect.
-  </p>
-</div>
-
-</section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
   <a href="#ASN1TagException" id="ASN1TagException"><code class="code">ASN1TagException</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -890,6 +708,156 @@
 </li><li class="ddoc_member">
   <div class="ddoc_member_header">
   <div class="ddoc_header_anchor">
+  <a href="#ASN1TagOverflowException" id="ASN1TagOverflowException"><code class="code">ASN1TagOverflowException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1TagOverflowException"></span>alias <code class="code">ASN1TagOverflowException</code> = AbstractSyntaxNotation1TagOverflowException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1TagOverflowException" id="AbstractSyntaxNotation1TagOverflowException"><code class="code">AbstractSyntaxNotation1TagOverflowException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagOverflowException"></span>class <code class="code">AbstractSyntaxNotation1TagOverflowException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1TagPaddingException" id="ASN1TagPaddingException"><code class="code">ASN1TagPaddingException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1TagPaddingException"></span>alias <code class="code">ASN1TagPaddingException</code> = AbstractSyntaxNotation1TagPaddingException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1TagPaddingException" id="AbstractSyntaxNotation1TagPaddingException"><code class="code">AbstractSyntaxNotation1TagPaddingException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagPaddingException"></span>class <code class="code">AbstractSyntaxNotation1TagPaddingException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1TagNumberException" id="ASN1TagNumberException"><code class="code">ASN1TagNumberException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1TagNumberException"></span>alias <code class="code">ASN1TagNumberException</code> = AbstractSyntaxNotation1TagNumberException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1TagNumberException" id="AbstractSyntaxNotation1TagNumberException"><code class="code">AbstractSyntaxNotation1TagNumberException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagNumberException"></span>class <code class="code">AbstractSyntaxNotation1TagNumberException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
   <a href="#ASN1LengthException" id="ASN1LengthException"><code class="code">ASN1LengthException</code></a>
 </div>
 </div><div class="ddoc_decl">
@@ -925,6 +893,106 @@
         <p class="para">
           <code class="code">
             <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthException"></span>class <code class="code">AbstractSyntaxNotation1LengthException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1LengthOverflowException" id="ASN1LengthOverflowException"><code class="code">ASN1LengthOverflowException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1LengthOverflowException"></span>alias <code class="code">ASN1LengthOverflowException</code> = AbstractSyntaxNotation1LengthOverflowException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1LengthOverflowException" id="AbstractSyntaxNotation1LengthOverflowException"><code class="code">AbstractSyntaxNotation1LengthOverflowException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthOverflowException"></span>class <code class="code">AbstractSyntaxNotation1LengthOverflowException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#ASN1LengthUndefinedException" id="ASN1LengthUndefinedException"><code class="code">ASN1LengthUndefinedException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="ASN1LengthUndefinedException"></span>alias <code class="code">ASN1LengthUndefinedException</code> = AbstractSyntaxNotation1LengthUndefinedException;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#AbstractSyntaxNotation1LengthUndefinedException" id="AbstractSyntaxNotation1LengthUndefinedException"><code class="code">AbstractSyntaxNotation1LengthUndefinedException</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthUndefinedException"></span>class <code class="code">AbstractSyntaxNotation1LengthUndefinedException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
 
           </code>
         </p>

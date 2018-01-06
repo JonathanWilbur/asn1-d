@@ -800,15 +800,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         {
             if ((!character.isGraphical) && (character != ' '))
             {
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "an ObjectDescriptor that contained a character that " ~
-                    "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E). The encoding of the offending " ~
-                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ notWhatYouMeantText ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                ("all characters within the range 0x20 to 0x7E", character, "ObjectDescriptor");
             }
         }
         return cast(string) this.value;
@@ -844,17 +837,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; value)
         {
             if ((!character.isGraphical) && (character != ' '))
-            {
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "an ObjectDescriptor that contained a character that " ~
-                    "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E). The encoding of the offending " ~
-                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ notWhatYouMeantText ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
-                );
-            }
+                throw new ASN1ValueCharactersException
+                ("all characters within the range 0x20 to 0x7E", character, "ObjectDescriptor");
         }
         this.value = cast(ubyte[]) value;
     }
@@ -2941,14 +2925,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; this.value)
         {
             if (!canFind(numericStringCharacters, character))
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "a NumericString that contained a character that " ~
-                    "is not numeric or space. The encoding of the offending character is '" ~
-                    character ~ "'. " ~ notWhatYouMeantText ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                ("1234567890 ", character, "NumericString");
         }
         return cast(string) this.value;
     }
@@ -2967,14 +2945,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; value)
         {
             if (!canFind(numericStringCharacters, character))
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "a NumericString that contained a character that " ~
-                    "is not numeric or space. The encoding of the offending character is '" ~
-                    character ~ "'. " ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                ("1234567890 ", character, "NumericString");
         }
         this.value = cast(ubyte[]) value.dup;
     }
@@ -2997,16 +2969,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; this.value)
         {
             if (!canFind(printableStringCharacters, character))
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "a PrintableString that contained a character that " ~
-                    "is not considered 'printable' by the specification. " ~
-                    "The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
-                    "The allowed characters are: " ~ printableStringCharacters ~ " " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                (printableStringCharacters, character, "PrintableString");
         }
         return cast(string) this.value;
     }
@@ -3028,15 +2992,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; value)
         {
             if (!canFind(printableStringCharacters, character))
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to encode " ~
-                    "a PrintableString that contained a character that " ~
-                    "is not considered 'printable' by the specification. " ~
-                    "The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
-                    "The allowed characters are: " ~ printableStringCharacters ~ " " ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                (printableStringCharacters, character, "PrintableString");
         }
         this.value = cast(ubyte[]) value.dup;
     }
@@ -3116,14 +3073,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; ret)
         {
             if (!character.isASCII)
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "an IA5String that contained a character that " ~
-                    "is not ASCII. The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                ("all ASCII characters", character, "IA5String");
         }
         return ret;
     }
@@ -3157,13 +3108,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; value)
         {
             if (!character.isASCII)
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "an IA5String that contained a character that " ~
-                    "is not ASCII. The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                ("all ASCII characters", character, "IA5String");
         }
         this.value = cast(ubyte[]) value.dup;
     }
@@ -3440,15 +3386,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; ret)
         {
             if (!character.isGraphical && character != ' ')
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "a GraphicString that contained a character that " ~
-                    "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E). The encoding of the offending " ~
-                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ notWhatYouMeantText ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                ("all characters within the range 0x20 to 0x7E", character, "GraphicString");
         }
         return ret;
     }
@@ -3477,15 +3416,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; value)
         {
             if (!character.isGraphical && character != ' ')
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to encode " ~
-                    "a GraphicString that contained a character that " ~
-                    "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E). The encoding of the offending " ~
-                    "character is '" ~ text(cast(uint) character) ~ "'. " ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                ("all characters within the range 0x20 to 0x7E", character, "GraphicString");
         }
         this.value = cast(ubyte[]) value.dup;
     }
@@ -3507,15 +3439,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; ret)
         {
             if (!character.isGraphical && character != ' ')
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "a VisibleString that contained a character that " ~
-                    "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E) or space. The encoding of the offending " ~
-                    "character is '" ~ text(cast(uint) character) ~ "'. " ~ notWhatYouMeantText ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                ("all characters within the range 0x20 to 0x7E", character, "VisibleString");
         }
         return ret;
     }
@@ -3535,15 +3460,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; value)
         {
             if (!character.isGraphical && character != ' ')
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "a VisibleString that contained a character that " ~
-                    "is not graphical (a character whose ASCII encoding " ~
-                    "is outside of the range 0x20 to 0x7E) or space. The encoding of the offending " ~
-                    "character is '" ~ text(cast(uint) character) ~ "'. " ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                ("all characters within the range 0x20 to 0x7E", character, "VisibleString");
         }
         this.value = cast(ubyte[]) value.dup;
     }
@@ -3569,14 +3487,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; ret)
         {
             if (!character.isASCII)
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "an GeneralString that contained a character that " ~
-                    "is not ASCII. The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                ("all ASCII characters", character, "GeneralString");
         }
         return ret;
     }
@@ -3600,13 +3512,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         foreach (immutable character; value)
         {
             if (!character.isASCII)
-                throw new ASN1ValueInvalidException
-                (
-                    "This exception was thrown because you tried to decode " ~
-                    "an GeneralString that contained a character that " ~
-                    "is not ASCII. The encoding of the offending character is '" ~ text(cast(uint) character) ~ "'. " ~
-                    forMoreInformationText ~ debugInformationText ~ reportBugsText
-                );
+                throw new ASN1ValueCharactersException
+                ("all ASCII characters", character, "GeneralString");
         }
         this.value = cast(ubyte[]) value.dup;
     }
