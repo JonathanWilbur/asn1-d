@@ -39,8 +39,10 @@ public alias ASN1RecursionException = AbstractSyntaxNotation1RecursionException;
 public
 class AbstractSyntaxNotation1RecursionException : ASN1CodecException
 {
+    ///
     immutable size_t recursionLimit;
 
+    ///
     this
     (
         size_t recursionLimit,
@@ -50,19 +52,20 @@ class AbstractSyntaxNotation1RecursionException : ASN1CodecException
     )
     {
         this.recursionLimit = recursionLimit;
-        string message =
+        super
+        (
             "This exception was thrown because you attempted to " ~
             whatYouAttemptedToDo ~
             ", which exceeded the recursion limit. " ~
             "The recursion limit was " ~
             text(this.recursionLimit) ~ ". This may indicate a malicious " ~
-            "attempt to compromise your application.";
-
-        super(message, file, line);
+            "attempt to compromise your application.",
+            file,
+            line
+        );
     }
 }
 
-// REVIEW: Should you include base and pointer fields?
 ///
 public alias ASN1TruncationException = AbstractSyntaxNotation1TruncationException;
 /**
@@ -75,9 +78,12 @@ public alias ASN1TruncationException = AbstractSyntaxNotation1TruncationExceptio
 public
 class AbstractSyntaxNotation1TruncationException : ASN1CodecException
 {
+    ///
     immutable size_t expectedBytes;
+    ///
     immutable size_t actualBytes;
 
+    ///
     this
     (
         size_t expectedBytes,
@@ -87,10 +93,10 @@ class AbstractSyntaxNotation1TruncationException : ASN1CodecException
         size_t line = __LINE__
     )
     {
-        assert(actualBytes < expectedBytes);
+        version(unittest) assert(actualBytes < expectedBytes);
         this.expectedBytes = expectedBytes;
         this.actualBytes = actualBytes;
-        string message =
+        super(
             "This exception was thrown because you attempted to decode an " ~
             "encoded ASN.1 element that was encoded on too few bytes. In " ~
             "other words, it appears to have been truncated. While this " ~
@@ -101,15 +107,16 @@ class AbstractSyntaxNotation1TruncationException : ASN1CodecException
             "so far, it looks like you needed at least " ~
             text(expectedBytes) ~ " byte(s) of data, but only had " ~
             text(actualBytes) ~ " byte(s) of data. This exception was thrown " ~
-            "when you were trying to " ~ whatYouAttemptedToDo ~ ".";
-
-        super(message, file, line);
+            "when you were trying to " ~ whatYouAttemptedToDo ~ ".",
+            file,
+            line
+        );
     }
 }
 
 ///
 public alias ASN1TagException = AbstractSyntaxNotation1TagException;
-///
+/// A generic tag-related exception
 public
 class AbstractSyntaxNotation1TagException : ASN1CodecException
 {
@@ -118,7 +125,7 @@ class AbstractSyntaxNotation1TagException : ASN1CodecException
 
 ///
 public alias ASN1TagOverflowException = AbstractSyntaxNotation1TagOverflowException;
-///
+/// An exception thrown when the decoded tag number cannot fit into a $(D size_t)
 public
 class AbstractSyntaxNotation1TagOverflowException : ASN1TagException
 {
@@ -127,7 +134,7 @@ class AbstractSyntaxNotation1TagOverflowException : ASN1TagException
 
 ///
 public alias ASN1TagPaddingException = AbstractSyntaxNotation1TagPaddingException;
-///
+/// An exception thrown when the decoded tag number contains "leading zero bytes" (0x80)
 public
 class AbstractSyntaxNotation1TagPaddingException : ASN1TagException
 {
@@ -136,13 +143,16 @@ class AbstractSyntaxNotation1TagPaddingException : ASN1TagException
 
 ///
 public alias ASN1TagClassException = AbstractSyntaxNotation1TagClassException;
-///
+/// An exception thrown when the tag class is not what is expected
 public
 class AbstractSyntaxNotation1TagClassException : ASN1TagException
 {
+    ///
     const ASN1TagClass[] expectedTagClasses;
+    ///
     immutable ASN1TagClass actualTagClass;
 
+    ///
     this
     (
         ASN1TagClass[] expectedTagClasses,
@@ -154,26 +164,29 @@ class AbstractSyntaxNotation1TagClassException : ASN1TagException
     {
         this.expectedTagClasses = expectedTagClasses;
         this.actualTagClass = actualTagClass;
-
-        string message =
+        super
+        (
             "This exception was thrown because you attempted to decode or " ~
             "encode an ASN.1 element with the wrong tag class. " ~
             "This occurred when you were trying to " ~ whatYouAttemptedToDo ~ ". " ~
             "The permitted tag classes are: " ~ text(expectedTagClasses) ~ "\n" ~
-            "The offending tag class was: " ~ text(actualTagClass);
-
-        super(message, file, line);
+            "The offending tag class was: " ~ text(actualTagClass),
+            file,
+            line
+        );
     }
 }
 
 ///
 public alias ASN1ConstructionException = AbstractSyntaxNotation1ConstructionException;
-///
+/// An exception thrown when the construction is not what is expected
 public
 class AbstractSyntaxNotation1ConstructionException : ASN1TagException
 {
+    ///
     immutable ASN1Construction actualConstruction;
 
+    ///
     this
     (
         ASN1Construction actualConstruction,
@@ -183,14 +196,15 @@ class AbstractSyntaxNotation1ConstructionException : ASN1TagException
     )
     {
         this.actualConstruction = actualConstruction;
-
-        string message =
+        super
+        (
             "This exception was thrown because you attempted to decode an " ~
             "encoded ASN.1 element that was encoded with the wrong construction. " ~
             "This occurred when you were trying to " ~ whatYouAttemptedToDo ~ ". " ~
-            "The offending construction was: " ~ text(actualConstruction);
-
-        super(message, file, line);
+            "The offending construction was: " ~ text(actualConstruction),
+            file,
+            line
+        );
     }
 }
 
@@ -198,13 +212,16 @@ class AbstractSyntaxNotation1ConstructionException : ASN1TagException
 public alias ASN1TypeException = AbstractSyntaxNotation1TagNumberException;
 ///
 public alias ASN1TagNumberException = AbstractSyntaxNotation1TagNumberException;
-///
+/// An exception thrown when the tag number or type is not what is expected
 public
 class AbstractSyntaxNotation1TagNumberException : ASN1TagException
 {
-    immutable size_t            expectedTagNumber;
-    immutable size_t            actualTagNumber;
+    ///
+    immutable size_t expectedTagNumber;
+    ///
+    immutable size_t actualTagNumber;
 
+    ///
     this
     (
         size_t expectedTagNumbers[],
@@ -214,24 +231,25 @@ class AbstractSyntaxNotation1TagNumberException : ASN1TagException
         size_t line = __LINE__
     )
     {
-        assert(expectedTagNumber != actualTagNumber);
+        version(unittest) assert(expectedTagNumber != actualTagNumber);
         this.expectedTagNumber = expectedTagNumber;
         this.actualTagNumber = actualTagNumber;
-
-        string message =
+        super
+        (
             "This exception was thrown because you attempted to decode an " ~
             "encoded ASN.1 element that was encoded with the wrong tag number. " ~
             "This occurred when you were trying to " ~ whatYouAttemptedToDo ~ ". " ~
             "The offending tag number was: " ~ text(actualTagNumber) ~ "\n" ~
-            "The acceptable tag numbers are: " ~ text(expectedTagNumbers) ~ "\n";
-
-        super(message, file, line);
+            "The acceptable tag numbers are: " ~ text(expectedTagNumbers) ~ "\n",
+            file,
+            line
+        );
     }
 }
 
 ///
 public alias ASN1LengthException = AbstractSyntaxNotation1LengthException;
-///
+/// A generic length-related exception
 public
 class AbstractSyntaxNotation1LengthException : ASN1CodecException
 {
@@ -240,9 +258,9 @@ class AbstractSyntaxNotation1LengthException : ASN1CodecException
 
 ///
 public alias ASN1LengthOverflowException = AbstractSyntaxNotation1LengthOverflowException;
-///
+/// An exception that is thrown when the length cannot fit inside of a $(D size_t)
 public
-class AbstractSyntaxNotation1LengthOverflowException : ASN1TagException
+class AbstractSyntaxNotation1LengthOverflowException : ASN1LengthException
 {
     this (string file = __FILE__, size_t line = __LINE__)
     {
@@ -257,10 +275,11 @@ class AbstractSyntaxNotation1LengthOverflowException : ASN1TagException
 
 ///
 public alias ASN1LengthUndefinedException = AbstractSyntaxNotation1LengthUndefinedException;
-///
+/// An exception thrown when a length encoding that is undefined or reserved by the specification is encountered
 public
-class AbstractSyntaxNotation1LengthUndefinedException : ASN1TagException
+class AbstractSyntaxNotation1LengthUndefinedException : ASN1LengthException
 {
+    ///
     this (string file = __FILE__, size_t line = __LINE__)
     {
         super
@@ -274,7 +293,7 @@ class AbstractSyntaxNotation1LengthUndefinedException : ASN1TagException
 
 ///
 public alias ASN1ValueException = AbstractSyntaxNotation1ValueException;
-///
+/// A generic exception thrown when something is wrong with a value
 public
 class AbstractSyntaxNotation1ValueException : ASN1CodecException
 {
@@ -283,14 +302,18 @@ class AbstractSyntaxNotation1ValueException : ASN1CodecException
 
 ///
 public alias ASN1ValueSizeException = AbstractSyntaxNotation1ValueSizeException;
-///
+/// An exception thrown when a value is too small or too large (in terms of bytes) to decode
 public
 class AbstractSyntaxNotation1ValueSizeException : ASN1ValueException
 {
+    ///
     immutable size_t min;
+    ///
     immutable size_t max;
+    ///
     immutable size_t actual;
 
+    ///
     public nothrow @safe
     this
     (
@@ -302,26 +325,28 @@ class AbstractSyntaxNotation1ValueSizeException : ASN1ValueException
         size_t line = __LINE__
     )
     {
-        assert(min <= max);
-        assert((actual < min) || (actual > max));
+        version (unittest) assert(min <= max);
+        version (unittest) assert((actual < min) || (actual > max));
         this.min = min;
         this.max = max;
         this.actual = actual;
-        string message =
+        super
+        (
             "This exception was thrown because you attempted to decode an ASN.1 " ~
             "element whose value was encoded on too few or too many bytes. The minimum " ~
             "number of acceptable bytes is " ~ text(min) ~ " and the maximum " ~
             "number of acceptable bytes is " ~ text(max) ~ ", but what you tried " ~
             "to decode was " ~ text(actual) ~ " bytes in length. This exception " ~
-            "was thrown when you were trying to " ~ whatYouAttemptedToDo ~ ".";
-
-        super(message, file, line);
+            "was thrown when you were trying to " ~ whatYouAttemptedToDo ~ ".",
+            file,
+            line
+        );
     }
 }
 
 ///
 public alias ASN1ValueOverflowException = AbstractSyntaxNotation1ValueOverflowException;
-///
+/// An exception that is thrown when a value or part of a value does not fit into a native type
 public
 class AbstractSyntaxNotation1ValueOverflowException : ASN1ValueException
 {
@@ -330,7 +355,7 @@ class AbstractSyntaxNotation1ValueOverflowException : ASN1ValueException
 
 ///
 public alias ASN1ValuePaddingException = AbstractSyntaxNotation1ValuePaddingException;
-///
+/// An exception thrown when a value contains invalid leading or trailing zeroes or whitespace
 public
 class AbstractSyntaxNotation1ValuePaddingException : ASN1ValueException
 {
@@ -339,12 +364,14 @@ class AbstractSyntaxNotation1ValuePaddingException : ASN1ValueException
 
 ///
 public alias ASN1ValueCharactersException = AbstractSyntaxNotation1ValueCharactersException;
-///
+/// An exception thrown when a chatacter-string type contains invalid characters
 public
 class AbstractSyntaxNotation1ValueCharactersException : ASN1ValueException
 {
+    ///
     immutable dchar offendingCharacter;
 
+    ///
     public @safe
     this
     (
@@ -356,22 +383,24 @@ class AbstractSyntaxNotation1ValueCharactersException : ASN1ValueException
     )
     {
         this.offendingCharacter = offendingCharacter;
-        immutable string message =
+        super
+        (
             "This exception was thrown because you attempted to encode or " ~
             "decode an ASN.1 " ~ typeName ~ " that contained a character " ~
             "that is not permitted for that type.\n" ~
             "The permitted characters are: " ~
             descriptionOfPermittedCharacters ~ "\n" ~
             "The code-point representation of the offending character is: " ~
-            text(cast(uint) offendingCharacter);
-
-        super(message, file, line);
+            text(cast(uint) offendingCharacter),
+            file,
+            line
+        );
     }
 }
 
 ///
 public alias ASN1ValueUndefinedException = AbstractSyntaxNotation1ValueUndefinedException;
-///
+/// An exception that is thrown when a value is encoded in a way that is undefined or reserved by the specification
 public
 class AbstractSyntaxNotation1ValueUndefinedException : ASN1ValueException
 {
@@ -380,7 +409,7 @@ class AbstractSyntaxNotation1ValueUndefinedException : ASN1ValueException
 
 ///
 public alias ASN1Element = AbstractSyntaxNotation1Element;
-///
+/// The generic element from which all other elements will inherit
 abstract public
 class AbstractSyntaxNotation1Element(Element)
 {

@@ -1395,8 +1395,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
                 // Smallest possible is '#.E#'. Decimal is necessary.
                 if (this.value.length < 5u)
-                    throw new ASN1ValueException
-                    (invalidNR3RealMessage ~ "was too short.");
+                    throw new ASN1ValueSizeException
+                    (5u, size_t.max, this.value.length, "decode a base-10 encoded REAL");
 
                 if (this.value[0] != 0b00000011u)
                     throw new ASN1ValueException
@@ -1413,8 +1413,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                         character == ',' ||
                         character == '_'
                     )
-                        throw new ASN1ValueException
-                        (invalidNR3RealMessage ~ "contained whitespace, commas, or underscores.");
+                        throw new ASN1ValueCharactersException
+                        ("1234567890+-.E", character, "decode a base-10 encoded REAL");
                 }
 
                 if
@@ -2315,7 +2315,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 const DERElement[] syntaxesComponents = identificationChoice.sequence;
 
                 if (syntaxesComponents.length != 2u)
-                    throw new ASN1ValueException // FIXME:
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode an EMBEDDED PDV whose syntaxes component " ~
@@ -3234,6 +3234,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
+        }
+        else
+        {
+            if ((cast(string) this.value).indexOf(',') != -1)
+                throw new ASN1ValueCharactersException
+                ("1234567890Z.", ',', "decode a GeneralizedTime");
         }
 
         /** NOTE:

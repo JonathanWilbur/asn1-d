@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.57](http://semver.org/)
+* Version: [1.0.0-beta.58](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -194,14 +194,14 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `BOOLEAN`, `INTEGER`, `ENUMERATED`, `OBJECT IDENTIFIER`, `BIT STRING`, `GeneralizedTime` and `UTCTime` are never less than 0 bytes
 - [x] Add further `REAL` special numbers
 - [x] Review latest version of X.690 (I was accidentally reading the 2002 one...)
-- [ ] Implement CER and DER restraints on `UTCTime` and `GeneralizedTime`
-  - [ ] Implement maximum lengths
-    - [ ] `UTCTime` min: 10, max: 17
-    - [ ] `GeneralizedTime` cannot exceed three characters after the decimal point. (min: 10, max: 23)
-  - [ ] Throw exception if comma is encountered
-- [ ] Implement new Exception hierarchy
-  - [x] Get rid of ASN1ValueInvalidException
-  - [ ] Get rid of `message` variable in exception constructors
+- [x] Implement CER and DER restraints on `UTCTime` and `GeneralizedTime`
+  - [x] Implement maximum lengths
+    - [x] `UTCTime` min: 10, max: 17
+    - [x] `GeneralizedTime` cannot exceed three characters after the decimal point. (min: 10, max: 23)
+  - [x] Throw exception if comma is encountered
+- [x] Implement new Exception hierarchy
+  - [x] Get rid of `ASN1ValueInvalidException`
+  - [x] Get rid of `message` variable in exception constructors
   - [x] `ASN1Exception`
     - [x] `ASN1CodecException`
       - [x] `ASN1RecursionException`
@@ -250,7 +250,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Format numbers consistently (particularly `0b` binary literals)
   - [ ] Format `switch` statements
   - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
-- [ ] Documentation
+- [x] Documentation
   - [x] `install.md`
   - [x] `compliance.md`
     - [x] Create a checklist for every bullet point of X.690.
@@ -264,7 +264,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [x] Terminology
       - [x] This library uses "mantissa," not "significand," because "mantissa" is in the specification.
     - [x] Class Hierarchy
-    - [ ] Exception Hierarchy **Blocked until I actually restructure it.**
+    - [x] Exception Hierarchy
     - [x] This library assumes IEEE 754 floating point structure
     - [x] Security Advice
       - [x] Leave note to developers about avoiding recursion problems. (See CVE-2016-4421 and CVE-2010-2284.)

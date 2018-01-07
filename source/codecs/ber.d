@@ -878,7 +878,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
 
         if (components.length < 2u || components.length > 4u)
-            throw new ASN1ValueException // FIXME: Make this a different exception?
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an EXTERNAL that contained too many or too few elements. " ~
@@ -978,7 +978,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     components[1].tagNumber != ASN1UniversalType.integer ||
                     components[2].tagNumber != ASN1UniversalType.objectDescriptor
                 )
-                    throw new ASN1ValueException // FIXME: Use a better exception for this?
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to decode " ~
                         "an external whose components were either misordered or " ~
@@ -2280,7 +2280,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
 
         if (components.length != 2u)
-            throw new ASN1ValueException // FIXME: Throw a different exception
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "an EMBEDDED PDV that contained too many or too few elements. " ~
@@ -2334,7 +2334,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 const BERElement[] syntaxesComponents = identificationChoice.sequence;
 
                 if (syntaxesComponents.length != 2u)
-                    throw new ASN1ValueException // FIXME: Throw a different exception
+                    throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode an EMBEDDED PDV whose syntaxes component " ~
@@ -3256,8 +3256,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     DateTime generalizedTime() const
     {
-        if ((this.value.length < 10u) || (this.value.length > 23u))
-            throw new ASN1ValueSizeException(10u, 23u, this.value.length, "decode a GeneralizedTime");
+        if (this.value.length < 10u)
+            throw new ASN1ValueSizeException(10u, size_t.max, this.value.length, "decode a GeneralizedTime");
 
         /** NOTE:
             .fromISOString() MUST be called from SysTime, not DateTime. There
@@ -3269,7 +3269,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             whose cryptic message reads "Invalid ISO String: " followed,
             strangely, by only the last six characters of the string.
         */
-        immutable string dt = cast(string) this.value;
+        immutable string dt = (cast(string) this.value).replace(",", ".");
         return cast(DateTime) SysTime.fromISOString(dt[0 .. 8].idup ~ "T" ~ dt[8 .. $].idup);
     }
 
@@ -3577,7 +3577,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
 
         if (components.length != 2u)
-            throw new ASN1ValueException // FIXME: Use some other exception
+            throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode " ~
                 "a CharacterString that contained too many or too few elements. " ~

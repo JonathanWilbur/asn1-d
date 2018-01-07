@@ -317,7 +317,30 @@ This is encoded the same way that `SEQUENCE` is encoded.
 
 ### Error Handling
 
-_Skipped for now. I will be redoing the exception hierarchy._
+This is the exception hierarchy:
+
+- `ASN1Exception`
+  - `ASN1CodecException`
+    - `ASN1RecursionException`
+    - `ASN1TruncationException`
+    - `ASN1TagException`
+      - `ASN1TagOverflowException`
+      - `ASN1TagPaddingException`
+      - `ASN1TagNumberException`
+    - `ASN1LengthException`
+      - `ASN1LengthOverflowException`
+      - `ASN1LengthUndefinedException`
+    - `ASN1ValueException`
+      - `ASN1ValueSizeException`
+      - `ASN1ValueOverflowException`
+      - `ASN1ValuePaddingException`
+      - `ASN1ValueCharactersException`
+      - `ASN1UndefinedException`
+  - `ASN1CompilerException`
+
+The names are pretty self-explanatory (at least I think so). To learn the
+usage of each one, consult the generated HTML documentation in
+`documentation/html`.
 
 ## Security Tips
 
