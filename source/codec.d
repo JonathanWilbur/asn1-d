@@ -187,6 +187,7 @@ class AbstractSyntaxNotation1ConstructionException : ASN1TagException
     immutable ASN1Construction actualConstruction;
 
     ///
+    public @safe
     this
     (
         ASN1Construction actualConstruction,

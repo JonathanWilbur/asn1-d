@@ -141,6 +141,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @safe
     bool boolean() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a BOOLEAN");
+
         if (this.value.length != 1u)
             throw new ASN1ValueSizeException
             (1u, 1u, this.value.length, "decode a BOOLEAN");
@@ -211,6 +215,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     T integer(T)() const
     if (isIntegral!T && isSigned!T)
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an INTEGER");
+
         if (this.value.length == 1u)
             return cast(T) cast(byte) this.value[0];
 
@@ -394,6 +402,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property
     bool[] bitString() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a BIT STRING");
+
         if (this.value.length == 0u)
             throw new ASN1ValueSizeException
             (1u, size_t.max, 0u, "decode a BIT STRING");
@@ -528,6 +540,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @safe
     ubyte[] octetString() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an OCTET STRING");
+
         return this.value.dup;
     }
 
@@ -570,6 +586,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
     body
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an OBJECT IDENTIFIER");
+
         if (this.value.length == 0u)
             throw new ASN1ValueSizeException
             (1u, size_t.max, 0u, "decode an OBJECT IDENTIFIER");
@@ -793,6 +813,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     string objectDescriptor() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an ObjectDescriptor");
+
         foreach (immutable character; this.value)
         {
             if ((!character.isGraphical) && (character != ' '))
@@ -1036,6 +1060,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     deprecated override public @property @system
     External external() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an EXTERNAL");
+
         const DERElement[] components = this.sequence;
         External ext = External();
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
@@ -1344,6 +1372,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     T realNumber(T)() const
     if (isFloatingPoint!T)
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a REAL");
+
         if (this.value.length == 0u) return cast(T) 0.0;
         switch (this.value[0] & 0b11000000u)
         {
@@ -2037,6 +2069,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     T enumerated(T)() const
     if (isIntegral!T && isSigned!T)
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an ENUMERATED");
+
         if (this.value.length == 1u)
             return cast(T) cast(byte) this.value[0];
 
@@ -2266,6 +2302,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     EmbeddedPDV embeddedPresentationDataValue() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a EMBEDDED PDV");
+
         const DERElement[] components = this.sequence;
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
 
@@ -2632,6 +2672,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     string unicodeTransformationFormat8String() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a UTF8String");
+
         return cast(string) this.value;
     }
 
@@ -2662,6 +2706,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     OIDNode[] relativeObjectIdentifier() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a RELATIVE OID");
+
         if (this.value.length == 0u) return [];
         foreach (immutable octet; this.value)
         {
@@ -2826,6 +2874,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     DERElement[] sequence() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a SEQUENCE");
+
         ubyte[] data = this.value.dup;
         DERElement[] result;
         while (data.length > 0u)
@@ -2861,6 +2913,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     DERElement[] set() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a SET");
+
         ubyte[] data = this.value.dup;
         DERElement[] result;
         while (data.length > 0u)
@@ -2895,6 +2951,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     string numericString() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a NumericString");
+
         foreach (immutable character; this.value)
         {
             if (!canFind(numericStringCharacters, character))
@@ -2940,6 +3000,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     string printableString() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a PrintableString");
+
         foreach (immutable character; this.value)
         {
             if (!canFind(printableStringCharacters, character))
@@ -2978,9 +3042,13 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Returns: an unsigned byte array, where each byte is a T.61 character.
     */
-    override public @property @safe nothrow
+    override public @property @safe
     ubyte[] teletexString() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a TeletexString (T61String)");
+
         return this.value.dup;
     }
 
@@ -2999,9 +3067,13 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Returns: an unsigned byte array.
     */
-    override public @property @safe nothrow
+    override public @property @safe
     ubyte[] videotexString() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a VideotexString");
+
         return this.value.dup;
     }
 
@@ -3042,6 +3114,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     string internationalAlphabetNumber5String() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an IA5String");
+
         string ret = cast(string) this.value;
         foreach (immutable character; ret)
         {
@@ -3114,6 +3190,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     DateTime coordinatedUniversalTime() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a UTCTime");
+
         // Mandated in X.690, section 11.8.2
         if (this.value.length != 13u) // YYMMDDhhmmssZ
             throw new ASN1ValueSizeException(13u, 13u, this.value.length, "decode a UTCTime");
@@ -3203,6 +3283,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     DateTime generalizedTime() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a GeneralizedTime");
+
         if (this.value.length < 15u)
             throw new ASN1ValueSizeException(15u, size_t.max, this.value.length, "decode a GeneralizedTime");
 
@@ -3364,6 +3448,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     string graphicString() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a GraphicString");
+
         string ret = cast(string) this.value;
         foreach (immutable character; ret)
         {
@@ -3418,6 +3506,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     string visibleString() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a VisibleString");
+
         string ret = cast(string) this.value;
         foreach (immutable character; ret)
         {
@@ -3467,6 +3559,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     string generalString() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a GeneralString");
+
         string ret = cast(string) this.value;
         foreach (immutable character; ret)
         {
@@ -3514,6 +3610,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     dstring universalString() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a UniversalString");
+
         if (this.value.length == 0u) return ""d;
         if (this.value.length % 4u)
             throw new ASN1ValueException
@@ -3619,6 +3719,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     CharacterString characterString() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a CharacterString");
+
         const DERElement[] components = this.sequence;
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
 
@@ -3931,6 +4035,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     wstring basicMultilingualPlaneString() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a BMPString");
+
         if (this.value.length == 0u) return ""w;
         if (this.value.length % 2u)
             throw new ASN1ValueException
@@ -4395,12 +4503,12 @@ unittest
     immutable ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
     immutable ubyte[] dataOD = [ 0x07u, 0x05u, 'H', 'N', 'E', 'L', 'O' ];
     immutable ubyte[] dataExternal = [
-        0x08u, 0x0Bu, 0x06u, 0x03u, 0x29u, 0x05u, 0x07u, 0x82u,
+        0x28u, 0x0Bu, 0x06u, 0x03u, 0x29u, 0x05u, 0x07u, 0x82u,
         0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
     immutable ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
     immutable ubyte[] dataEnum = [ 0x0Au, 0x01u, 0x3Fu ];
     immutable ubyte[] dataEmbeddedPDV = [
-        0x0Bu, 0x0Au, 0x80u, 0x02u, 0x85u, 0x00u, 0x82u, 0x04u,
+        0x2Bu, 0x0Au, 0x80u, 0x02u, 0x85u, 0x00u, 0x82u, 0x04u,
         0x01u, 0x02u, 0x03u, 0x04u ];
     immutable ubyte[] dataUTF8 = [ 0x0Cu, 0x05u, 'H', 'E', 'N', 'L', 'O' ];
     immutable ubyte[] dataROID = [ 0x0Du, 0x03u, 0x06u, 0x04u, 0x01u ];
@@ -4424,7 +4532,7 @@ unittest
         0x00u, 0x00u, 0x00u, 0x64u
     ]; // Big-endian "abcd"
     immutable ubyte[] dataCharacter = [
-        0x1Du, 0x0Fu, 0x80u, 0x06u, 0x81u, 0x04u, 0x29u, 0x06u,
+        0x3Du, 0x0Fu, 0x80u, 0x06u, 0x81u, 0x04u, 0x29u, 0x06u,
         0x04u, 0x01u, 0x82u, 0x05u, 0x48u, 0x45u, 0x4Eu, 0x4Cu,
         0x4Fu ];
     immutable ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"

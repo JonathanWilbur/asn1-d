@@ -129,13 +129,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         LengthEncodingPreference.definite;
 
     /// The number of recursions used for parsing constructed elements.
-    static protected size_t nestingRecursionCount = 0u;
+    static protected ubyte nestingRecursionCount = 0u;
 
     /// The number of recursions used for parsing the values of constructed elements.
-    static protected size_t valueRecursionCount = 0u;
+    static protected ubyte valueRecursionCount = 0u;
 
     /// The limit of recursions permitted for parsing constructed elements.
-    static immutable size_t nestingRecursionLimit = 5u;
+    static immutable ubyte nestingRecursionLimit = 5u;
 
     public ASN1TagClass tagClass;
     public ASN1Construction construction;
@@ -180,6 +180,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @safe
     bool boolean() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a BOOLEAN");
+
         if (this.value.length != 1u)
             throw new ASN1ValueSizeException
             (1u, 1u, this.value.length, "decode a BOOLEAN");
@@ -237,6 +241,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     T integer(T)() const
     if (isIntegral!T && isSigned!T)
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an INTEGER");
+
         if (this.value.length == 1u)
             return cast(T) cast(byte) this.value[0];
 
@@ -420,62 +428,107 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property
     bool[] bitString() const
     {
-        if (this.value.length == 0u)
-            throw new ASN1ValueSizeException
-            (1u, size_t.max, 0u, "decode a BIT STRING");
-
-        if (this.value[0] > 0x07u)
-            throw new ASN1ValueException
-            (
-                "In Basic Encoding Rules, the first byte of the encoded " ~
-                "binary value (after the type and length bytes, of course) " ~
-                "is used to indicate how many unused bits there are at the " ~
-                "end of the BIT STRING. Since everything is encoded in bytes " ~
-                "in Basic Encoding Rules, but a BIT STRING may not " ~
-                "necessarily encode a number of bits, divisible by eight " ~
-                "there may be bits at the end of the BIT STRING that will " ~
-                "need to be identified as padding instead of meaningful data." ~
-                "Since a byte is eight bits, the largest number that the " ~
-                "first byte should encode is 7, since, if you have eight " ~
-                "unused bits or more, you may as well truncate an entire " ~
-                "byte from the encoded data. This exception was thrown because " ~
-                "you attempted to decode a BIT STRING whose first byte " ~
-                "had a value greater than seven. The value was: " ~
-                text(this.value[0]) ~ ". " ~ notWhatYouMeantText ~
-                forMoreInformationText ~ debugInformationText ~ reportBugsText
-            );
-
-        if (this.value[0] > 0x00u && this.value.length <= 1u)
-            throw new ASN1ValueException
-            (
-                "This exception was thrown because you attempted to decode a " ~
-                "BIT STRING that had a misleading first byte, which indicated " ~
-                "that there were more than zero padding bits, but there were " ~
-                "no subsequent octets supplied, which contain the octet-" ~
-                "aligned bits and padding. This may have been a mistake on " ~
-                "the part of the encoder, but this looks really suspicious: " ~
-                "it is likely that an attempt was made to hack your systems " ~
-                "by inducing an out-of-bounds read from an array. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
-
-        bool[] ret;
-        for (size_t i = 1; i < this.value.length; i++)
+        if (this.construction == ASN1Construction.primitive)
         {
-            ret ~= [
-                (this.value[i] & 0b10000000u ? true : false),
-                (this.value[i] & 0b01000000u ? true : false),
-                (this.value[i] & 0b00100000u ? true : false),
-                (this.value[i] & 0b00010000u ? true : false),
-                (this.value[i] & 0b00001000u ? true : false),
-                (this.value[i] & 0b00000100u ? true : false),
-                (this.value[i] & 0b00000010u ? true : false),
-                (this.value[i] & 0b00000001u ? true : false)
-            ];
+            if (this.value.length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, size_t.max, 0u, "decode a BIT STRING");
+
+            if (this.value[0] > 0x07u)
+                throw new ASN1ValueException
+                (
+                    "In Basic Encoding Rules, the first byte of the encoded " ~
+                    "binary value (after the type and length bytes, of course) " ~
+                    "is used to indicate how many unused bits there are at the " ~
+                    "end of the BIT STRING. Since everything is encoded in bytes " ~
+                    "in Basic Encoding Rules, but a BIT STRING may not " ~
+                    "necessarily encode a number of bits, divisible by eight " ~
+                    "there may be bits at the end of the BIT STRING that will " ~
+                    "need to be identified as padding instead of meaningful data." ~
+                    "Since a byte is eight bits, the largest number that the " ~
+                    "first byte should encode is 7, since, if you have eight " ~
+                    "unused bits or more, you may as well truncate an entire " ~
+                    "byte from the encoded data. This exception was thrown because " ~
+                    "you attempted to decode a BIT STRING whose first byte " ~
+                    "had a value greater than seven. The value was: " ~
+                    text(this.value[0]) ~ ". " ~ notWhatYouMeantText ~
+                    forMoreInformationText ~ debugInformationText ~ reportBugsText
+                );
+
+            if (this.value[0] > 0x00u && this.value.length <= 1u)
+                throw new ASN1ValueException
+                (
+                    "This exception was thrown because you attempted to decode a " ~
+                    "BIT STRING that had a misleading first byte, which indicated " ~
+                    "that there were more than zero padding bits, but there were " ~
+                    "no subsequent octets supplied, which contain the octet-" ~
+                    "aligned bits and padding. This may have been a mistake on " ~
+                    "the part of the encoder, but this looks really suspicious: " ~
+                    "it is likely that an attempt was made to hack your systems " ~
+                    "by inducing an out-of-bounds read from an array. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~
+                    debugInformationText ~ reportBugsText
+                );
+
+            bool[] ret;
+            for (size_t i = 1; i < this.value.length; i++)
+            {
+                ret ~= [
+                    (this.value[i] & 0b10000000u ? true : false),
+                    (this.value[i] & 0b01000000u ? true : false),
+                    (this.value[i] & 0b00100000u ? true : false),
+                    (this.value[i] & 0b00010000u ? true : false),
+                    (this.value[i] & 0b00001000u ? true : false),
+                    (this.value[i] & 0b00000100u ? true : false),
+                    (this.value[i] & 0b00000010u ? true : false),
+                    (this.value[i] & 0b00000001u ? true : false)
+                ];
+            }
+            ret.length -= this.value[0];
+            return ret;
         }
-        ret.length -= this.value[0];
-        return ret;
+        else
+        {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a BIT STRING");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!(bool[]) appendy = appender!(bool[])();
+            BERElement[] substrings = this.sequence;
+            if (substrings.length == 0u) return [];
+            foreach (substring; substrings[0 .. $-1])
+            {
+                if
+                (
+                    substring.construction == ASN1Construction.primitive &&
+                    substring.length > 0u &&
+                    substring.value[0] != 0x00u
+                )
+                    throw new ASN1ValueException
+                    (
+                        "This exception was thrown because you attempted to " ~
+                        "decode a constructed BIT STRING that contained a " ~
+                        "substring whose first byte indicated a non-zero " ~
+                        "number of padding bits, despite not being the " ~
+                        "last substring of the constructed BIT STRING. " ~
+                        "Only the last substring may have padding bits. "
+                    );
+            }
+
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed BIT STRING");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed BIT STRING");
+
+                appendy.put(substring.bitString);
+            }
+            return appendy.data;
+        }
     }
 
     /**
@@ -514,12 +567,61 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assertThrown!ASN1ValueException(el.bitString);
     }
 
+    @system
+    unittest
+    {
+        ubyte[] data = [
+            0x23u, 0x0Eu,
+                0x03u, 0x02u, 0x00u, 0x0Fu,
+                0x23u, 0x04u,
+                    0x03u, 0x02u, 0x00u, 0x0Fu,
+                0x03u, 0x02u, 0x05u, 0xF0u
+        ];
+
+        BERElement element = new BERElement(data);
+        assert(element.bitString == [
+            false, false, false, false, true, true, true, true,
+            false, false, false, false, true, true, true, true,
+            true, true, true
+        ]);
+    }
+
+    @system
+    unittest
+    {
+        ubyte[] data = [
+            0x23u, 0x0Eu,
+                0x03u, 0x02u, 0x03u, 0x0Fu, // Non-zero first byte!
+                0x23u, 0x04u,
+                    0x03u, 0x02u, 0x00u, 0x0Fu,
+                0x03u, 0x02u, 0x05u, 0xF0u
+        ];
+
+        BERElement element = new BERElement(data);
+        assertThrown!ASN1ValueException(element.bitString);
+    }
+
+    @system
+    unittest
+    {
+        ubyte[] data = [
+            0x23u, 0x0Cu,
+                0x03u, 0x00u, // Empty first element!
+                0x23u, 0x04u,
+                    0x03u, 0x02u, 0x00u, 0x0Fu,
+                0x03u, 0x02u, 0x05u, 0xF0u
+        ];
+
+        BERElement element = new BERElement(data);
+        assertThrown!ASN1ValueSizeException(element.bitString);
+    }
+
     /**
         Decodes an OCTET STRING into an unsigned byte array.
 
         Returns: an unsigned byte array.
     */
-    override public @property @safe
+    override public @property @system
     ubyte[] octetString() const
     {
         if (this.construction == ASN1Construction.primitive)
@@ -528,7 +630,25 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
         else
         {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse an OCTET STRING");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
+            Appender!(ubyte[]) appendy = appender!(ubyte[])();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed OCTET STRING");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed OCTET STRING");
+
+                appendy.put(substring.octetString);
+            }
+            return appendy.data;
         }
     }
 
@@ -540,6 +660,56 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         scope(success) this.construction = ASN1Construction.primitive;
         this.value = value.dup;
+    }
+
+    @system
+    unittest
+    {
+        ubyte[] data = [
+            0x24u, 0x11u,
+                0x04u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u,
+                0x24u, 0x05u,
+                    0x04u, 0x03u, 0x05u, 0x06u, 0x07u,
+                0x04u, 0x02u, 0x08u, 0x09u
+        ];
+
+        BERElement element = new BERElement(data);
+        assert(element.octetString == [
+            0x01u, 0x02u, 0x03u, 0x04u, 0x05u, 0x06u, 0x07u, 0x08u, 0x09u
+        ]);
+    }
+
+    @system
+    unittest
+    {
+        ubyte[] data = [
+            0x24u, 0x11u,
+                0x04u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u,
+                0x24u, 0x05u,
+                    0x05u, 0x03u, 0x05u, 0x06u, 0x07u, // Different Tag Number
+                0x04u, 0x02u, 0x08u, 0x09u
+        ];
+
+        BERElement element = new BERElement(data);
+        assertThrown!ASN1TagNumberException(element.octetString);
+    }
+
+    @system
+    unittest
+    {
+        if (this.nestingRecursionLimit < 128u) // This test will break above this number.
+        {
+            ubyte[] data;
+            for (size_t i = 0u; i < this.nestingRecursionLimit; i++)
+            {
+                data = ([ cast(ubyte) 0x24u, cast(ubyte) data.length ] ~ data);
+            }
+            BERElement element = new BERElement();
+            element.tagNumber = 4u;
+            element.construction = ASN1Construction.constructed;
+            element.value = data;
+            assertThrown!ASN1RecursionException(element.octetString);
+        }
     }
 
     /**
@@ -571,6 +741,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
     body
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an OBJECT IDENTIFIER");
+
         if (this.value.length == 0u)
             throw new ASN1ValueSizeException
             (1u, size_t.max, 0u, "decode an OBJECT IDENTIFIER");
@@ -794,13 +968,38 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     string objectDescriptor() const
     {
-        foreach (immutable character; this.value)
+        if (this.construction == ASN1Construction.primitive)
         {
-            if ((!character.isGraphical) && (character != ' '))
-                throw new ASN1ValueCharactersException
-                ("all characters within the range 0x20 to 0x7E", character, "ObjectDescriptor");
+            foreach (immutable character; this.value)
+            {
+                if ((!character.isGraphical) && (character != ' '))
+                    throw new ASN1ValueCharactersException
+                    ("all characters within the range 0x20 to 0x7E", character, "ObjectDescriptor");
+            }
+            return cast(string) this.value;
         }
-        return cast(string) this.value;
+        else
+        {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse an ObjectDescriptor");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!string appendy = appender!string();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed ObjectDescriptor");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed ObjectDescriptor");
+
+                appendy.put(substring.objectDescriptor);
+            }
+            return appendy.data;
+        }
     }
 
     /**
@@ -838,6 +1037,34 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 ("all characters within the range 0x20 to 0x7E", character, "ObjectDescriptor");
         }
         this.value = cast(ubyte[]) value;
+    }
+
+    @system
+    unittest
+    {
+        ubyte[] data = [
+            0x27u, 0x12u,
+                0x07u, 0x04u, 'S', 'h', 'i', 'a',
+                0x27u, 0x04u,
+                    0x07u, 0x02u, 'L', 'a',
+                0x07u, 0x04u, 'B', 'T', 'F', 'O'
+        ];
+
+        BERElement element = new BERElement(data);
+        assert(element.objectDescriptor == "ShiaLaBTFO");
+    }
+
+    // Make sure that exceptions do not leave behind a residual recursion count.
+    @system
+    unittest
+    {
+        ubyte[] data = [ 0x27u, 0x03u, 0x07u, 0x01u, 0x03u ];
+        for (size_t i = 0u; i <= this.nestingRecursionLimit; i++)
+        {
+            size_t sentinel = 0u;
+            BERElement element = new BERElement(sentinel, data);
+            assertThrown!ASN1ValueCharactersException(element.objectDescriptor);
+        }
     }
 
     /**
@@ -889,6 +1116,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     deprecated override public @property @system
     External external() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an EXTERNAL");
+
         const BERElement[] components = this.sequence;
         External ext = External();
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
@@ -1341,6 +1572,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     T realNumber(T)() const
     if (isFloatingPoint!T)
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a REAL");
+
         if (this.value.length == 0u) return cast(T) 0.0;
         switch (this.value[0] & 0b11000000u)
         {
@@ -2084,6 +2319,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     T enumerated(T)() const
     if (isIntegral!T && isSigned!T)
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an ENUMERATED");
+
         if (this.value.length == 1u)
             return cast(T) cast(byte) this.value[0];
 
@@ -2295,6 +2534,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     EmbeddedPDV embeddedPresentationDataValue() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an EMBEDDED PDV");
+
         const BERElement[] components = this.sequence;
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
 
@@ -2733,7 +2976,32 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     string unicodeTransformationFormat8String() const
     {
-        return cast(string) this.value;
+        if (this.construction == ASN1Construction.primitive)
+        {
+            return cast(string) this.value;
+        }
+        else
+        {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a UTF8String");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!string appendy = appender!string();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed UTF8String");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed UTF8String");
+
+                appendy.put(substring.utf8String);
+            }
+            return appendy.data;
+        }
     }
 
     /**
@@ -2744,6 +3012,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         scope(success) this.construction = ASN1Construction.primitive;
         this.value = cast(ubyte[]) value.dup;
+    }
+
+    @system
+    unittest
+    {
+        ubyte[] data = [
+            0x2Cu, 0x12u,
+                0x0Cu, 0x04u, 'S', 'h', 'i', 'a',
+                0x2Cu, 0x04u,
+                    0x0Cu, 0x02u, 'L', 'a',
+                0x0Cu, 0x04u, 'B', 'T', 'F', 'O'
+        ];
+
+        BERElement element = new BERElement(data);
+        assert(element.utf8String == "ShiaLaBTFO");
     }
 
     /**
@@ -2763,6 +3046,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     OIDNode[] relativeObjectIdentifier() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a RELATIVE OID");
+
         if (this.value.length == 0u) return [];
         foreach (immutable octet; this.value)
         {
@@ -2927,6 +3214,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     BERElement[] sequence() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a SEQUENCE");
+
         ubyte[] data = this.value.dup;
         BERElement[] result;
         while (data.length > 0u)
@@ -2962,6 +3253,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     BERElement[] set() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a SET");
+
         ubyte[] data = this.value.dup;
         BERElement[] result;
         while (data.length > 0u)
@@ -2996,13 +3291,38 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     string numericString() const
     {
-        foreach (immutable character; this.value)
+        if (this.construction == ASN1Construction.primitive)
         {
-            if (!canFind(numericStringCharacters, character))
-                throw new ASN1ValueCharactersException
-                ("1234567890 ", character, "NumericString");
+            foreach (immutable character; this.value)
+            {
+                if (!canFind(numericStringCharacters, character))
+                    throw new ASN1ValueCharactersException
+                    ("1234567890 ", character, "NumericString");
+            }
+            return cast(string) this.value;
         }
-        return cast(string) this.value;
+        else
+        {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a NumericString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!string appendy = appender!string();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed NumericString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed NumericString");
+
+                appendy.put(substring.numericString);
+            }
+            return appendy.data;
+        }
     }
 
     /**
@@ -3041,13 +3361,38 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     string printableString() const
     {
-        foreach (immutable character; this.value)
+        if (this.construction == ASN1Construction.primitive)
         {
-            if (!canFind(printableStringCharacters, character))
-                throw new ASN1ValueCharactersException
-                (printableStringCharacters, character, "PrintableString");
+            foreach (immutable character; this.value)
+            {
+                if (!canFind(printableStringCharacters, character))
+                    throw new ASN1ValueCharactersException
+                    (printableStringCharacters, character, "PrintableString");
+            }
+            return cast(string) this.value;
         }
-        return cast(string) this.value;
+        else
+        {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a PrintableString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!string appendy = appender!string();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed PrintableString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed PrintableString");
+
+                appendy.put(substring.printableString);
+            }
+            return appendy.data;
+        }
     }
 
     /**
@@ -3079,10 +3424,35 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: an unsigned byte array, where each byte is a T.61 character.
     */
-    override public @property @safe nothrow
+    override public @property @system
     ubyte[] teletexString() const
     {
-        return this.value.dup;
+        if (this.construction == ASN1Construction.primitive)
+        {
+            return this.value.dup;
+        }
+        else
+        {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a TeletexString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!(ubyte[]) appendy = appender!(ubyte[])();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed TeletexString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed TeletexString");
+
+                appendy.put(substring.teletexString);
+            }
+            return appendy.data;
+        }
     }
 
     /**
@@ -3100,10 +3470,35 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: an unsigned byte array.
     */
-    override public @property @safe nothrow
+    override public @property @system
     ubyte[] videotexString() const
     {
-        return this.value.dup;
+        if (this.construction == ASN1Construction.primitive)
+        {
+            return this.value.dup;
+        }
+        else
+        {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a VideotexString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!(ubyte[]) appendy = appender!(ubyte[])();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed VideotexString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed VideotexString");
+
+                appendy.put(substring.videotexString);
+            }
+            return appendy.data;
+        }
     }
 
     /**
@@ -3143,14 +3538,39 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     string internationalAlphabetNumber5String() const
     {
-        string ret = cast(string) this.value;
-        foreach (immutable character; ret)
+        if (this.construction == ASN1Construction.primitive)
         {
-            if (!character.isASCII)
-                throw new ASN1ValueCharactersException
-                ("all ASCII characters", character, "IA5String");
+            string ret = cast(string) this.value;
+            foreach (immutable character; ret)
+            {
+                if (!character.isASCII)
+                    throw new ASN1ValueCharactersException
+                    ("all ASCII characters", character, "IA5String");
+            }
+            return ret;
         }
-        return ret;
+        else
+        {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a IA5String");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!string appendy = appender!string();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed IA5String");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed IA5String");
+
+                appendy.put(substring.ia5String);
+            }
+            return appendy.data;
+        }
     }
 
     /**
@@ -3349,14 +3769,39 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     string graphicString() const
     {
-        string ret = cast(string) this.value;
-        foreach (immutable character; ret)
+        if (this.construction == ASN1Construction.primitive)
         {
-            if (!character.isGraphical && character != ' ')
-                throw new ASN1ValueCharactersException
-                ("all characters within the range 0x20 to 0x7E", character, "GraphicString");
+            string ret = cast(string) this.value;
+            foreach (immutable character; ret)
+            {
+                if (!character.isGraphical && character != ' ')
+                    throw new ASN1ValueCharactersException
+                    ("all characters within the range 0x20 to 0x7E", character, "GraphicString");
+            }
+            return ret;
         }
-        return ret;
+        else
+        {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a GraphicString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!string appendy = appender!string();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed GraphicString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed GraphicString");
+
+                appendy.put(substring.graphicString);
+            }
+            return appendy.data;
+        }
     }
 
     /**
@@ -3403,14 +3848,39 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     string visibleString() const
     {
-        string ret = cast(string) this.value;
-        foreach (immutable character; ret)
+        if (this.construction == ASN1Construction.primitive)
         {
-            if (!character.isGraphical && character != ' ')
-                throw new ASN1ValueCharactersException
-                ("all characters within the range 0x20 to 0x7E", character, "VisibleString");
+            string ret = cast(string) this.value;
+            foreach (immutable character; ret)
+            {
+                if (!character.isGraphical && character != ' ')
+                    throw new ASN1ValueCharactersException
+                    ("all characters within the range 0x20 to 0x7E", character, "VisibleString");
+            }
+            return ret;
         }
-        return ret;
+        else
+        {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a VisibleString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!string appendy = appender!string();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed VisibleString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed VisibleString");
+
+                appendy.put(substring.visibleString);
+            }
+            return appendy.data;
+        }
     }
 
     /**
@@ -3452,14 +3922,39 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     string generalString() const
     {
-        string ret = cast(string) this.value;
-        foreach (immutable character; ret)
+        if (this.construction == ASN1Construction.primitive)
         {
-            if (!character.isASCII)
-                throw new ASN1ValueCharactersException
-                ("all ASCII characters", character, "GeneralString");
+            string ret = cast(string) this.value;
+            foreach (immutable character; ret)
+            {
+                if (!character.isASCII)
+                    throw new ASN1ValueCharactersException
+                    ("all ASCII characters", character, "GeneralString");
+            }
+            return ret;
         }
-        return ret;
+        else
+        {
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a GeneralString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!string appendy = appender!string();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed GeneralString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed GeneralString");
+
+                appendy.put(substring.generalString);
+            }
+            return appendy.data;
+        }
     }
 
     /**
@@ -3499,40 +3994,65 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     dstring universalString() const
     {
-        if (this.value.length == 0u) return ""d;
-        if (this.value.length % 4u)
-            throw new ASN1ValueException
-            (
-                "This exception was thrown because you tried to decode " ~
-                "a UniversalString that contained a number of bytes that " ~
-                "is not divisible by four. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+        if (this.construction == ASN1Construction.primitive)
+        {
+            if (this.value.length == 0u) return ""d;
+            if (this.value.length % 4u)
+                throw new ASN1ValueException
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "a UniversalString that contained a number of bytes that " ~
+                    "is not divisible by four. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~
+                    debugInformationText ~ reportBugsText
+                );
 
-        version (BigEndian)
-        {
-            return cast(dstring) this.value;
-        }
-        else version (LittleEndian)
-        {
-            dstring ret;
-            size_t i = 0u;
-            while (i < this.value.length-3)
+            version (BigEndian)
             {
-                ubyte[] character;
-                character.length = 4u;
-                character[3] = this.value[i++];
-                character[2] = this.value[i++];
-                character[1] = this.value[i++];
-                character[0] = this.value[i++];
-                ret ~= (*cast(dchar *) character.ptr);
+                return cast(dstring) this.value;
             }
-            return ret;
+            else version (LittleEndian)
+            {
+                dstring ret;
+                size_t i = 0u;
+                while (i < this.value.length-3)
+                {
+                    ubyte[] character;
+                    character.length = 4u;
+                    character[3] = this.value[i++];
+                    character[2] = this.value[i++];
+                    character[1] = this.value[i++];
+                    character[0] = this.value[i++];
+                    ret ~= (*cast(dchar *) character.ptr);
+                }
+                return ret;
+            }
+            else
+            {
+                static assert(0, "Could not determine endianness!");
+            }
         }
         else
         {
-            static assert(0, "Could not determine endianness!");
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a UniversalString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!dstring appendy = appender!dstring();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed UniversalString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed UniversalString");
+
+                appendy.put(substring.universalString);
+            }
+            return appendy.data;
         }
     }
 
@@ -3604,6 +4124,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     CharacterString characterString() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a CharacterString");
+
         const BERElement[] components = this.sequence;
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
 
@@ -4040,38 +4564,63 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     wstring basicMultilingualPlaneString() const
     {
-        if (this.value.length == 0u) return ""w;
-        if (this.value.length % 2u)
-            throw new ASN1ValueException
-            (
-                "This exception was thrown because you tried to decode " ~
-                "a BMPString that contained a number of bytes that " ~
-                "is not divisible by two. " ~
-                notWhatYouMeantText ~ forMoreInformationText ~
-                debugInformationText ~ reportBugsText
-            );
+        if (this.construction == ASN1Construction.primitive)
+        {
+            if (this.value.length == 0u) return ""w;
+            if (this.value.length % 2u)
+                throw new ASN1ValueException
+                (
+                    "This exception was thrown because you tried to decode " ~
+                    "a BMPString that contained a number of bytes that " ~
+                    "is not divisible by two. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~
+                    debugInformationText ~ reportBugsText
+                );
 
-        version (BigEndian)
-        {
-            return cast(wstring) this.value;
-        }
-        else version (LittleEndian)
-        {
-            wstring ret;
-            size_t i = 0u;
-            while (i < this.value.length-1)
+            version (BigEndian)
             {
-                ubyte[] character;
-                character.length = 2u;
-                character[1] = this.value[i++];
-                character[0] = this.value[i++];
-                ret ~= (*cast(wchar *) character.ptr);
+                return cast(wstring) this.value;
             }
-            return ret;
+            else version (LittleEndian)
+            {
+                wstring ret;
+                size_t i = 0u;
+                while (i < this.value.length-1)
+                {
+                    ubyte[] character;
+                    character.length = 2u;
+                    character[1] = this.value[i++];
+                    character[0] = this.value[i++];
+                    ret ~= (*cast(wchar *) character.ptr);
+                }
+                return ret;
+            }
+            else
+            {
+                static assert(0, "Could not determine endianness!");
+            }
         }
         else
         {
-            static assert(0, "Could not determine endianness!");
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a BMPString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            Appender!wstring appendy = appender!wstring();
+            BERElement[] substrings = this.sequence;
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed BMPString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed BMPString");
+
+                appendy.put(substring.universalString);
+            }
+            return appendy.data;
         }
     }
 
@@ -4524,12 +5073,12 @@ unittest
     immutable ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
     immutable ubyte[] dataOD = [ 0x07u, 0x05u, 'H', 'N', 'E', 'L', 'O' ];
     immutable ubyte[] dataExternal = [
-        0x08u, 0x09u, 0x02u, 0x01u, 0x1Bu, 0x81, 0x04u, 0x01u,
+        0x28u, 0x09u, 0x02u, 0x01u, 0x1Bu, 0x81, 0x04u, 0x01u,
         0x02u, 0x03u, 0x04u ];
     immutable ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
     immutable ubyte[] dataEnum = [ 0x0Au, 0x01u, 0x3Fu ];
     immutable ubyte[] dataEmbeddedPDV = [
-        0x0Bu, 0x0Bu, 0x80u, 0x03u, 0x82u, 0x01u, 0x1Bu, 0x82u,
+        0x2Bu, 0x0Bu, 0x80u, 0x03u, 0x82u, 0x01u, 0x1Bu, 0x82u,
         0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
     immutable ubyte[] dataUTF8 = [ 0x0Cu, 0x05u, 'H', 'E', 'N', 'L', 'O' ];
     immutable ubyte[] dataROID = [ 0x0Du, 0x03u, 0x06u, 0x04u, 0x01u ];
@@ -4553,7 +5102,7 @@ unittest
         0x00u, 0x00u, 0x00u, 0x64u
     ]; // Big-endian "abcd"
     immutable ubyte[] dataCharacter = [
-        0x1Du, 0x0Cu, 0x80u, 0x03u, 0x82u, 0x01u, 0x3Fu, 0x82u,
+        0x3Du, 0x0Cu, 0x80u, 0x03u, 0x82u, 0x01u, 0x3Fu, 0x82u,
         0x05u, 0x48u, 0x45u, 0x4Eu, 0x4Cu, 0x4Fu ];
     immutable ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"
 
@@ -4727,25 +5276,24 @@ unittest
 
     data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
 
-    BERElement[] result;
+    BERElement[] results;
     size_t i = 0u;
-    while (i < data.length)
-        result ~= new BERElement(i, data);
+    while (i < data.length) results ~= new BERElement(i, data);
+    assert(results.length == 3);
+    foreach (result; results)
+    {
+        assert(result.length == 216u);
+        assert(result.utf8String[0 .. 16] == "AMREN BORTHERS!\n");
+    }
 
-    assert(result.length == 3);
-    assert(result[0].length == 216u);
-    assert(result[0].utf8String[2 .. 7] == "AMREN");
-    assert(result[1].utf8String[8 .. 16] == "BORTHERS");
-    assert(result[2].utf8String[$-2] == '!');
-
-    result = [];
-    while (data.length > 0)
-        result ~= new BERElement(data);
-
-    assert(result.length == 3);
-    assert(result[0].utf8String[2 .. 7] == "AMREN");
-    assert(result[1].utf8String[8 .. 16] == "BORTHERS");
-    assert(result[2].utf8String[$-2] == '!');
+    results = [];
+    while (data.length > 0) results ~= new BERElement(data);
+    assert(results.length == 3);
+    foreach (result; results)
+    {
+        assert(result.length == 216u);
+        assert(result.utf8String[0 .. 16] == "AMREN BORTHERS!\n");
+    }
 }
 
 // Test deeply (but not too deeply) nested indefinite-length elements
