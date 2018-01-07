@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.60](http://semver.org/)
+* Version: [1.0.0-beta.61](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -221,7 +221,11 @@ Version 1.0.0-beta was released on November 8th, 2017.
         - [x] `ASN1UndefinedException`
     - [x] `ASN1CompilerException`
 - [x] More unit testing of `REAL`
+- [ ] Enforce correct construction
+  - [ ] Support constructed time types
+  - [ ] Make BER and CER enforce `this.value[0] == 0x00u` for each substring of a constructed `BIT STRING`
 - [ ] Do some more unit testing for extreme lengths.
+- [ ] Make properties for `END OF CONTENT` and `NULL` that just throw exceptions if its wrong?
 - [ ] Check that all assertions only run during `unittest` version
 - [ ] Cross-Platform Testing
   - [ ] Windows (Which is Big-Endian)

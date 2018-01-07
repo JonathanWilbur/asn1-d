@@ -422,6 +422,24 @@ class AbstractSyntaxNotation1Element(Element)
         writeln("Running unit tests for ASN1Element template for codec: " ~ Element.stringof);
     }
 
+    // Configuration Parameters
+
+    /// The number of recursions used for parsing constructed elements.
+    static protected ubyte nestingRecursionCount = 0u;
+
+    /// The number of recursions used for parsing the values of constructed elements.
+    static protected ubyte valueRecursionCount = 0u;
+
+    /**
+        The limit of recursions permitted for parsing constructed elements.
+        Feel free to increase this, if you are not afraid of your system parsing
+        deeply-nested elements, but you probably do not need to change this.
+        You probably do not want to exceed 20, because doing so could make your
+        application vulnerable to denial-of-service attacks, and you should
+        absolutely never set this to 255.
+    */
+    static immutable ubyte nestingRecursionLimit = 5u;
+
     // Constants used to save CPU cycles
     protected immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realNumber()
     protected immutable real maxLongAsReal = cast(real) long.max; // Saves CPU cycles in realNumber()

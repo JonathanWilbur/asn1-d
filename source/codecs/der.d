@@ -1113,20 +1113,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     "decode the second of three subcomponents of an EXTERNAL"
                 );
 
-            if (components[1].construction == ASN1Construction.primitive)
-            {
-                ext.dataValueDescriptor = components[1].objectDescriptor;
-            }
-            else
-            {
-                Appender!string descriptor = appender!string();
-                DERElement[] substrings = components[1].sequence;
-                foreach (substring; substrings)
-                {
-                    descriptor.put(substring.objectDescriptor);
-                }
-                ext.dataValueDescriptor = descriptor.data;
-            }
+            ext.dataValueDescriptor = components[1].objectDescriptor;
         }
 
         switch (components[$-1].tagNumber)

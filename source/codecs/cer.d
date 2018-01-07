@@ -112,12 +112,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     /// The base of encoded REALs. May be 2, 8, 10, or 16.
     static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
 
-    /// The number of recursions used for parsing constructed elements.
-    static protected size_t nestingRecursionCount = 0u;
-
-    /// The limit of recursions permitted for parsing constructed elements.
-    static immutable size_t nestingRecursionLimit = 5u;
-
     public ASN1TagClass tagClass;
     public ASN1Construction construction;
     public size_t tagNumber;
@@ -147,6 +141,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @safe
     bool boolean() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a BOOLEAN");
+
         if (this.value.length != 1u)
             throw new ASN1ValueSizeException
             (1u, 1u, this.value.length, "decode a BOOLEAN");
@@ -222,6 +220,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     T integer(T)() const
     if (isIntegral!T && isSigned!T)
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an INTEGER");
+
         if (this.value.length == 1u)
             return cast(T) cast(byte) this.value[0];
 
@@ -852,6 +854,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
     body
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an OBJECT IDENTIFIER");
+
         if (this.value.length == 0u)
             throw new ASN1ValueSizeException
             (1u, size_t.max, 0u, "decode an OBJECT IDENTIFIER");
@@ -1259,6 +1265,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     deprecated override public @property @system
     External external() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an EXTERNAL");
+
         const CERElement[] components = this.sequence;
         External ext = External();
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
@@ -1308,20 +1318,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     "decode the second of three subcomponents of an EXTERNAL"
                 );
 
-            if (components[1].construction == ASN1Construction.primitive)
-            {
-                ext.dataValueDescriptor = components[1].objectDescriptor;
-            }
-            else
-            {
-                Appender!string descriptor = appender!string();
-                CERElement[] substrings = components[1].sequence;
-                foreach (substring; substrings)
-                {
-                    descriptor.put(substring.objectDescriptor);
-                }
-                ext.dataValueDescriptor = descriptor.data;
-            }
+            ext.dataValueDescriptor = components[1].objectDescriptor;
         }
 
         switch (components[$-1].tagNumber)
@@ -1567,6 +1564,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     T realNumber(T)() const
     if (isFloatingPoint!T)
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a REAL");
+
         if (this.value.length == 0u) return cast(T) 0.0;
         switch (this.value[0] & 0b11000000u)
         {
@@ -2261,6 +2262,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     T enumerated(T)() const
     if (isIntegral!T && isSigned!T)
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an ENUMERATED");
+
         if (this.value.length == 1u)
             return cast(T) cast(byte) this.value[0];
 
@@ -2490,6 +2495,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     EmbeddedPDV embeddedPresentationDataValue() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an EMBEDDED PDV");
+
         const CERElement[] components = this.sequence;
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
 
@@ -2974,6 +2983,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     OIDNode[] relativeObjectIdentifier() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an RELATIVE OID");
+
         if (this.value.length == 0u) return [];
         foreach (immutable octet; this.value)
         {
@@ -3138,6 +3151,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     CERElement[] sequence() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a SEQUENCE");
+
         ubyte[] data = this.value.dup;
         CERElement[] result;
         while (data.length > 0u)
@@ -3173,6 +3190,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     CERElement[] set() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a SET");
+
         ubyte[] data = this.value.dup;
         CERElement[] result;
         while (data.length > 0u)
@@ -4858,6 +4879,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     CharacterString characterString() const
     {
+        if (this.construction != ASN1Construction.constructed)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an INTEGER");
+
         const CERElement[] components = this.sequence;
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
 
@@ -5841,12 +5866,12 @@ unittest
     immutable ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
     immutable ubyte[] dataOD = [ 0x07u, 0x05u, 'H', 'N', 'E', 'L', 'O' ];
     immutable ubyte[] dataExternal = [
-        0x08u, 0x0Bu, 0x06u, 0x03u, 0x29u, 0x05u, 0x07u, 0x82u,
+        0x28u, 0x0Bu, 0x06u, 0x03u, 0x29u, 0x05u, 0x07u, 0x82u,
         0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
     immutable ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
     immutable ubyte[] dataEnum = [ 0x0Au, 0x01u, 0x3Fu ];
     immutable ubyte[] dataEmbeddedPDV = [
-        0x0Bu, 0x0Au, 0x80u, 0x02u, 0x85u, 0x00u, 0x82u, 0x04u,
+        0x2Bu, 0x0Au, 0x80u, 0x02u, 0x85u, 0x00u, 0x82u, 0x04u,
         0x01u, 0x02u, 0x03u, 0x04u ];
     immutable ubyte[] dataUTF8 = [ 0x0Cu, 0x05u, 'H', 'E', 'N', 'L', 'O' ];
     immutable ubyte[] dataROID = [ 0x0Du, 0x03u, 0x06u, 0x04u, 0x01u ];
@@ -5870,7 +5895,7 @@ unittest
         0x00u, 0x00u, 0x00u, 0x64u
     ]; // Big-endian "abcd"
     immutable ubyte[] dataCharacter = [
-        0x1Du, 0x0Fu, 0x80u, 0x06u, 0x81u, 0x04u, 0x29u, 0x06u,
+        0x3Du, 0x0Fu, 0x80u, 0x06u, 0x81u, 0x04u, 0x29u, 0x06u,
         0x04u, 0x01u, 0x82u, 0x05u, 0x48u, 0x45u, 0x4Eu, 0x4Cu,
         0x4Fu ];
     immutable ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"

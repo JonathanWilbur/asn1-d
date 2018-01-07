@@ -128,15 +128,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     public LengthEncodingPreference lengthEncodingPreference =
         LengthEncodingPreference.definite;
 
-    /// The number of recursions used for parsing constructed elements.
-    static protected ubyte nestingRecursionCount = 0u;
-
-    /// The number of recursions used for parsing the values of constructed elements.
-    static protected ubyte valueRecursionCount = 0u;
-
-    /// The limit of recursions permitted for parsing constructed elements.
-    static immutable ubyte nestingRecursionLimit = 5u;
-
     public ASN1TagClass tagClass;
     public ASN1Construction construction;
     public size_t tagNumber;
@@ -1197,20 +1188,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     else
                         identification.indirectReference = components[0].integer!ptrdiff_t;
 
-                    if (components[1].construction == ASN1Construction.primitive)
-                    {
-                        ext.dataValueDescriptor = components[1].objectDescriptor;
-                    }
-                    else
-                    {
-                        Appender!string descriptor = appender!string();
-                        BERElement[] substrings = components[1].sequence;
-                        foreach (substring; substrings)
-                        {
-                            descriptor.put(substring.objectDescriptor);
-                        }
-                        ext.dataValueDescriptor = descriptor.data;
-                    }
+                    ext.dataValueDescriptor = components[1].objectDescriptor;
                 }
                 else
                     throw new ASN1TagNumberException
@@ -1248,20 +1226,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     components[0].objectIdentifier
                 );
 
-                if (components[2].construction == ASN1Construction.primitive)
-                {
-                    ext.dataValueDescriptor = components[2].objectDescriptor;
-                }
-                else
-                {
-                    Appender!string descriptor = appender!string();
-                    BERElement[] substrings = components[2].sequence;
-                    foreach (substring; substrings)
-                    {
-                        descriptor.put(substring.objectDescriptor);
-                    }
-                    ext.dataValueDescriptor = descriptor.data;
-                }
+                ext.dataValueDescriptor = components[2].objectDescriptor;
                 break;
             }
             default:
