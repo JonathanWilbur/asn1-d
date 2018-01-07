@@ -175,6 +175,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         this.value = [(value ? 0xFFu : 0x00u)];
     }
 
@@ -278,6 +279,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         if (value <= byte.max && value >= byte.min)
         {
             this.value = [ cast(ubyte) cast(byte) value ];
@@ -482,6 +484,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         ubyte[] ub;
         ub.length = ((value.length / 8u) + (value.length % 8u ? 1u : 0u));
         for (size_t i = 0u; i < value.length; i++)
@@ -534,6 +537,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @safe
     void octetString(in ubyte[] value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         this.value = value.dup;
     }
 
@@ -684,6 +688,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         size_t[] numbers = value.numericArray();
         this.value = [ cast(ubyte) (numbers[0] * 40u + numbers[1]) ];
         if (numbers.length > 2u)
@@ -826,6 +831,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     void objectDescriptor(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if ((!character.isGraphical) && (character != ' '))
@@ -1158,6 +1164,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         DERElement[] components = [];
 
         if (!(value.identification.syntax.isNull))
@@ -1644,6 +1651,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     void realNumber(T)(in T value)
     if (isFloatingPoint!T)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         /* NOTE:
             You must use isIdentical() to compare FP types to negative zero,
             because the basic == operator does not distinguish between zero
@@ -2094,6 +2102,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         if (value <= byte.max && value >= byte.min)
         {
             this.value = [ cast(ubyte) cast(byte) value ];
@@ -2471,6 +2480,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         DERElement identification = new DERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
         identification.tagNumber = 0u; // CHOICE is EXPLICIT, even with automatic tagging.
@@ -2631,6 +2641,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system nothrow
     void unicodeTransformationFormat8String(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         this.value = cast(ubyte[]) value.dup;
     }
 
@@ -2732,6 +2743,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system nothrow
     void relativeObjectIdentifier(in OIDNode[] value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (node; value)
         {
             size_t number = node.number;
@@ -2827,6 +2839,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     void sequence(in DERElement[] value)
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         ubyte[] result;
         foreach (dv; value)
         {
@@ -2861,6 +2874,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     void set(in DERElement[] value)
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         ubyte[] result;
         foreach (dv; value)
         {
@@ -2901,6 +2915,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     void numericString(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!canFind(numericStringCharacters, character))
@@ -2948,6 +2963,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     void printableString(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!canFind(printableStringCharacters, character))
@@ -2965,7 +2981,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @safe nothrow
     ubyte[] teletexString() const
     {
-        // TODO: Validation.
         return this.value.dup;
     }
 
@@ -2975,7 +2990,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @safe nothrow
     void teletexString(in ubyte[] value)
     {
-        // TODO: Validation.
+        scope(success) this.construction = ASN1Construction.primitive;
         this.value = value.dup;
     }
 
@@ -2987,7 +3002,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @safe nothrow
     ubyte[] videotexString() const
     {
-        // TODO: Validation.
         return this.value.dup;
     }
 
@@ -2997,7 +3011,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @safe nothrow
     void videotexString(in ubyte[] value)
     {
-        // TODO: Validation.
+        scope(success) this.construction = ASN1Construction.primitive;
         this.value = value.dup;
     }
 
@@ -3064,6 +3078,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     void internationalAlphabetNumber5String(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!character.isASCII)
@@ -3151,6 +3166,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         immutable SysTime st = SysTime(value, UTC());
         this.value = cast(ubyte[]) ((st.toUTC()).toISOString()[2 .. $].replace("T", ""));
     }
@@ -3283,6 +3299,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         immutable SysTime st = SysTime(value, UTC());
         this.value = cast(ubyte[]) ((st.toUTC()).toISOString().replace("T", ""));
     }
@@ -3378,6 +3395,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     void graphicString(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!character.isGraphical && character != ' ')
@@ -3422,6 +3440,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     void visibleString(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!character.isGraphical && character != ' ')
@@ -3474,6 +3493,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     void generalString(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!character.isASCII)
@@ -3537,6 +3557,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     void universalString(in dstring value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         version (BigEndian)
         {
             this.value = cast(ubyte[]) value.dup;
@@ -3782,6 +3803,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         DERElement identification = new DERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
         identification.tagNumber = 0u; // CHOICE is EXPLICIT, even with automatic tagging.
@@ -3950,6 +3972,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     override public @property @system
     void basicMultilingualPlaneString(in wstring value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         version (BigEndian)
         {
             this.value = cast(ubyte[]) value.dup;

@@ -131,6 +131,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     /// The number of recursions used for parsing constructed elements.
     static protected size_t nestingRecursionCount = 0u;
 
+    /// The number of recursions used for parsing the values of constructed elements.
+    static protected size_t valueRecursionCount = 0u;
+
     /// The limit of recursions permitted for parsing constructed elements.
     static immutable size_t nestingRecursionLimit = 5u;
 
@@ -198,6 +201,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         this.value = [(value ? 0xFFu : 0x00u)];
     }
 
@@ -301,6 +305,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         if (value <= byte.max && value >= byte.min)
         {
             this.value = [ cast(ubyte) cast(byte) value ];
@@ -488,6 +493,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         ubyte[] ub;
         ub.length = ((value.length / 8u) + (value.length % 8u ? 1u : 0u));
         for (size_t i = 0u; i < value.length; i++)
@@ -516,7 +522,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @safe
     ubyte[] octetString() const
     {
-        return this.value.dup;
+        if (this.construction == ASN1Construction.primitive)
+        {
+            return this.value.dup;
+        }
+        else
+        {
+
+        }
     }
 
     /**
@@ -525,6 +538,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @safe
     void octetString(in ubyte[] value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         this.value = value.dup;
     }
 
@@ -675,6 +689,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         size_t[] numbers = value.numericArray();
         this.value = [ cast(ubyte) (numbers[0] * 40u + numbers[1]) ];
         if (numbers.length > 2u)
@@ -815,6 +830,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     void objectDescriptor(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if ((!character.isGraphical) && (character != ' '))
@@ -1095,6 +1111,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         BERElement[] components = [];
 
         if (!(value.identification.syntax.isNull))
@@ -1625,6 +1642,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     void realNumber(T)(in T value)
     if (isFloatingPoint!T)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         /* NOTE:
             You must use isIdentical() to compare FP types to negative zero,
             because the basic == operator does not distinguish between zero
@@ -2131,6 +2149,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         if (value <= byte.max && value >= byte.min)
         {
             this.value = [ cast(ubyte) cast(byte) value ];
@@ -2548,6 +2567,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         BERElement identification = new BERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
         identification.tagNumber = 0u; // CHOICE is EXPLICIT, even with automatic tagging.
@@ -2722,6 +2742,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system nothrow
     void unicodeTransformationFormat8String(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         this.value = cast(ubyte[]) value.dup;
     }
 
@@ -2823,6 +2844,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system nothrow
     void relativeObjectIdentifier(in OIDNode[] value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (node; value)
         {
             size_t number = node.number;
@@ -2918,6 +2940,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     void sequence(in BERElement[] value)
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         ubyte[] result;
         foreach (bv; value)
         {
@@ -2952,6 +2975,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     void set(in BERElement[] value)
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         ubyte[] result;
         foreach (bv; value)
         {
@@ -2992,6 +3016,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     void numericString(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!canFind(numericStringCharacters, character))
@@ -3039,6 +3064,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     void printableString(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!canFind(printableStringCharacters, character))
@@ -3056,7 +3082,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @safe nothrow
     ubyte[] teletexString() const
     {
-        // TODO: Validation.
         return this.value.dup;
     }
 
@@ -3066,7 +3091,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @safe nothrow
     void teletexString(in ubyte[] value)
     {
-        // TODO: Validation.
+        scope(success) this.construction = ASN1Construction.primitive;
         this.value = value.dup;
     }
 
@@ -3078,7 +3103,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @safe nothrow
     ubyte[] videotexString() const
     {
-        // TODO: Validation.
         return this.value.dup;
     }
 
@@ -3088,7 +3112,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @safe nothrow
     void videotexString(in ubyte[] value)
     {
-        // TODO: Validation.
+        scope(success) this.construction = ASN1Construction.primitive;
         this.value = value.dup;
     }
 
@@ -3155,6 +3179,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     void internationalAlphabetNumber5String(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!character.isASCII)
@@ -3231,6 +3256,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
         this.value = cast(ubyte[]) ((st.toUTC()).toISOString()[2 .. $].replace("T", ""));
@@ -3295,6 +3321,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         import std.string : replace;
         immutable SysTime st = SysTime(value, UTC());
         this.value = cast(ubyte[]) ((st.toUTC()).toISOString().replace("T", ""));
@@ -3353,6 +3380,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     void graphicString(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!character.isGraphical && character != ' ')
@@ -3397,6 +3425,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     void visibleString(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!character.isGraphical && character != ' ')
@@ -3449,6 +3478,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     void generalString(in string value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (immutable character; value)
         {
             if (!character.isASCII)
@@ -3512,6 +3542,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     void universalString(in dstring value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         version (BigEndian)
         {
             this.value = cast(ubyte[]) value.dup;
@@ -3839,6 +3870,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         BERElement identification = new BERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
         identification.tagNumber = 0u; // CHOICE is EXPLICIT, even with automatic tagging.
@@ -4049,6 +4081,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     void basicMultilingualPlaneString(in wstring value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         version (BigEndian)
         {
             this.value = cast(ubyte[]) value.dup;

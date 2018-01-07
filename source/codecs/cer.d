@@ -186,6 +186,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         this.value = [(value ? 0xFFu : 0x00u)];
     }
 
@@ -289,6 +290,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         if (value <= byte.max && value >= byte.min)
         {
             this.value = [ cast(ubyte) cast(byte) value ];
@@ -968,6 +970,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         size_t[] numbers = value.numericArray();
         this.value = [ cast(ubyte) (numbers[0] * 40u + numbers[1]) ];
         if (numbers.length > 2u)
@@ -1384,6 +1387,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         CERElement[] components = [];
 
         if (!(value.identification.syntax.isNull))
@@ -1871,6 +1875,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     void realNumber(T)(in T value)
     if (isFloatingPoint!T)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         /* NOTE:
             You must use isIdentical() to compare FP types to negative zero,
             because the basic == operator does not distinguish between zero
@@ -2321,6 +2326,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         if (value <= byte.max && value >= byte.min)
         {
             this.value = [ cast(ubyte) cast(byte) value ];
@@ -2695,6 +2701,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         CERElement identification = new CERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
         identification.tagNumber = 0u; // CHOICE is EXPLICIT, even with automatic tagging.
@@ -3048,6 +3055,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system nothrow
     void relativeObjectIdentifier(in OIDNode[] value)
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         foreach (node; value)
         {
             size_t number = node.number;
@@ -3143,6 +3151,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     void sequence(in CERElement[] value)
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         ubyte[] result;
         foreach (cv; value)
         {
@@ -3177,6 +3186,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     void set(in CERElement[] value)
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         ubyte[] result;
         foreach (cv; value)
         {
@@ -3480,7 +3490,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     ubyte[] teletexString() const
     {
-        // TODO: Validation.
         if (this.value.length <= 1000u)
         {
             return this.value.dup;
@@ -3525,7 +3534,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     void teletexString(in ubyte[] value)
     {
-        // TODO: Validation.
         if (value.length <= 1000u)
         {
             this.value = value.dup;
@@ -3594,7 +3602,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     ubyte[] videotexString() const
     {
-        // TODO: Validation.
         if (this.value.length <= 1000u)
         {
             return this.value.dup;
@@ -3639,7 +3646,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     void videotexString(in ubyte[] value)
     {
-        // TODO: Validation.
         if (value.length <= 1000u)
         {
             this.value = value.dup;
@@ -3949,6 +3955,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         immutable SysTime st = SysTime(value, UTC());
         this.value = cast(ubyte[]) ((st.toUTC()).toISOString()[2 .. $].replace("T", ""));
     }
@@ -4081,6 +4088,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.primitive;
         immutable SysTime st = SysTime(value, UTC());
         this.value = cast(ubyte[]) ((st.toUTC()).toISOString().replace("T", ""));
     }
@@ -5034,6 +5042,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
     body
     {
+        scope(success) this.construction = ASN1Construction.constructed;
         CERElement identification = new CERElement();
         identification.tagClass = ASN1TagClass.contextSpecific;
         identification.tagNumber = 0u; // CHOICE is EXPLICIT, even with automatic tagging.
