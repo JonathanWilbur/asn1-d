@@ -3,9 +3,11 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.61](http://semver.org/)
+* Version: [1.0.0-beta.62](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
+
+_(Yes, I am running behind schedule.)_
 
 ## What is ASN.1?
 
@@ -222,8 +224,13 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [x] `ASN1CompilerException`
 - [x] More unit testing of `REAL`
 - [ ] Enforce correct construction
-  - [ ] Support constructed time types
-  - [ ] Make BER and CER enforce `this.value[0] == 0x00u` for each substring of a constructed `BIT STRING`
+  - [x] Support constructed time types
+  - [x] Make BER and CER enforce `this.value[0] == 0x00u` for each substring of a constructed `BIT STRING`
+  - [ ] Canonical Encoding Rules
+    - [ ] If encoding is constructed, accept only indefinite-length encoding
+    - [ ] If encoding is primitive, accept only definite-length encoding
+  - [ ] All rules (BER, CER, and DER)
+    - [ ] If using indefinite-length, accept only constructed form
 - [ ] Do some more unit testing for extreme lengths.
 - [ ] Make properties for `END OF CONTENT` and `NULL` that just throw exceptions if its wrong?
 - [ ] Check that all assertions only run during `unittest` version

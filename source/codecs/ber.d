@@ -3601,8 +3601,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     DateTime coordinatedUniversalTime() const
     {
-        if ((this.value.length < 10u) || (this.value.length > 17u))
-            throw new ASN1ValueSizeException(10u, 17u, this.value.length, "decode a UTCTime");
+        string value = this.visibleString;
+        if ((value.length < 10u) || (value.length > 17u))
+            throw new ASN1ValueSizeException(10u, 17u, value.length, "decode a UTCTime");
 
         /** NOTE:
             .fromISOString() MUST be called from SysTime, not DateTime. There
@@ -3614,8 +3615,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             whose cryptic message reads "Invalid ISO String: " followed,
             strangely, by only the last six characters of the string.
         */
-        immutable string dt = (((this.value[0] <= '7') ? "20" : "19") ~ cast(string) this.value);
-        return cast(DateTime) SysTime.fromISOString(dt[0 .. 8].idup ~ "T" ~ dt[8 .. $].idup);
+        value = (((value[0] <= '7') ? "20" : "19") ~ value);
+        return cast(DateTime) SysTime.fromISOString(value[0 .. 8] ~ "T" ~ value[8 .. $]);
     }
 
     /**
@@ -3647,6 +3648,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         this.value = cast(ubyte[]) ((st.toUTC()).toISOString()[2 .. $].replace("T", ""));
     }
 
+    @system
+    unittest
+    {
+        ubyte[] data = [
+            0x37u, 0x19u,
+                0x17u, 0x02u, '1', '8',
+                0x37u, 0x80u, 0x17u, 0x02u, '0', '1', 0x00u, 0x00u, // Just an extra test for funsies
+                0x17u, 0x02u, '0', '7',
+                0x17u, 0x07u, '0', '0', '0', '0', '0', '0', 'Z'
+        ];
+
+        BERElement element = new BERElement(data);
+        assert(element.utcTime == DateTime(2018, 1, 7, 0, 0, 0));
+    }
+
     /**
         Decodes a DateTime.
 
@@ -3667,8 +3683,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     override public @property @system
     DateTime generalizedTime() const
     {
-        if (this.value.length < 10u)
-            throw new ASN1ValueSizeException(10u, size_t.max, this.value.length, "decode a GeneralizedTime");
+        string value = this.visibleString.replace(",", ".");
+        if (value.length < 10u)
+            throw new ASN1ValueSizeException(10u, size_t.max, value.length, "decode a GeneralizedTime");
 
         /** NOTE:
             .fromISOString() MUST be called from SysTime, not DateTime. There
@@ -3680,8 +3697,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             whose cryptic message reads "Invalid ISO String: " followed,
             strangely, by only the last six characters of the string.
         */
-        immutable string dt = (cast(string) this.value).replace(",", ".");
-        return cast(DateTime) SysTime.fromISOString(dt[0 .. 8].idup ~ "T" ~ dt[8 .. $].idup);
+        return cast(DateTime) SysTime.fromISOString(value[0 .. 8] ~ "T" ~ value[8 .. $]);
     }
 
     /**

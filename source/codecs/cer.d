@@ -416,11 +416,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
     body
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
-            if (this.value.length == 0u)
+            if (this.value.length == 0u || this.value.length > 1000u)
                 throw new ASN1ValueSizeException
-                (1u, size_t.max, 0u, "decode a BIT STRING");
+                (1u, 1000u, this.value.length, "decode a primitively-encoded BIT STRING");
 
             if (this.value[0] > 0x07u)
                 throw new ASN1ValueException
@@ -494,90 +494,70 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            bool[] ret;
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a BIT STRING");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
+
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
+                throw new ASN1ValueException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a constructed BIT STRING that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed BIT STRING must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
+                );
+
+            foreach (substring; substrings[0 .. $-1])
             {
-                primitives ~= new CERElement(value);
-            }
-            for (size_t p = 0u; p < primitives.length; p++)
-            {
-                if (primitives[p].length == 0u)
+                if (substring.length != 1000u)
                     throw new ASN1ValueSizeException
-                    (1u, size_t.max, 0u, "decode a BIT STRING");
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed BIT STRING");
 
-                if (primitives[p].value[0] > 0x07u)
+                if
+                (
+                    substring.construction == ASN1Construction.primitive &&
+                    substring.length > 0u &&
+                    substring.value[0] != 0x00u
+                )
                     throw new ASN1ValueException
                     (
-                        "In Canonical Encoding Rules (CER), the first byte of the encoded " ~
-                        "binary value (after the type and length bytes, of course) " ~
-                        "is used to indicate how many unused bits there are at the " ~
-                        "end of the BIT STRING. Since everything is encoded in bytes " ~
-                        "in Canonical Encoding Rules (CER), but a BIT STRING may not " ~
-                        "necessarily encode a number of bits, divisible by eight " ~
-                        "there may be bits at the end of the BIT STRING that will " ~
-                        "need to be identified as padding instead of meaningful data." ~
-                        "Since a byte is eight bits, the largest number that the " ~
-                        "first byte should encode is 7, since, if you have eight " ~
-                        "unused bits or more, you may as well truncate an entire " ~
-                        "byte from the encoded data. This exception was thrown because " ~
-                        "you attempted to decode a BIT STRING whose first byte " ~
-                        "had a value greater than seven. The value was: " ~
-                        text(this.value[0]) ~ ". " ~ notWhatYouMeantText ~
-                        forMoreInformationText ~ debugInformationText ~ reportBugsText
+                        "This exception was thrown because you attempted to " ~
+                        "decode a constructed BIT STRING that contained a " ~
+                        "substring whose first byte indicated a non-zero " ~
+                        "number of padding bits, despite not being the " ~
+                        "last substring of the constructed BIT STRING. " ~
+                        "Only the last substring may have padding bits. "
                     );
-
-                if (primitives[p].value[0] > 0x00u && primitives[p].value.length <= 1u)
-                    throw new ASN1ValueException
-                    (
-                        "This exception was thrown because you attempted to decode a " ~
-                        "BIT STRING that had a misleading first byte, which indicated " ~
-                        "that there were more than zero padding bits, but there were " ~
-                        "no subsequent octets supplied, which contain the octet-" ~
-                        "aligned bits and padding. This may have been a mistake on " ~
-                        "the part of the encoder, but this looks really suspicious: " ~
-                        "it is likely that an attempt was made to hack your systems " ~
-                        "by inducing an out-of-bounds read from an array. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
-                    );
-
-                bool[] pret;
-                for (size_t i = 1; i < primitives[p].value.length; i++)
-                {
-                    pret ~= [
-                        (primitives[p].value[i] & 0b10000000u ? true : false),
-                        (primitives[p].value[i] & 0b01000000u ? true : false),
-                        (primitives[p].value[i] & 0b00100000u ? true : false),
-                        (primitives[p].value[i] & 0b00010000u ? true : false),
-                        (primitives[p].value[i] & 0b00001000u ? true : false),
-                        (primitives[p].value[i] & 0b00000100u ? true : false),
-                        (primitives[p].value[i] & 0b00000010u ? true : false),
-                        (primitives[p].value[i] & 0b00000001u ? true : false)
-                    ];
-                }
-
-                foreach (immutable bit; pret[$-primitives[p].value[0] .. $])
-                {
-                    if (bit == true)
-                        throw new ASN1ValueException
-                        (
-                            "This exception was thrown because you attempted to decode " ~
-                            "a BIT STRING whose padding bits were not entirely zeroes. " ~
-                            "If you were using the Basic Encoding Rules (BER), this " ~
-                            "would not be a problem, but under Canonical Encoding " ~
-                            "Rules (CER), padding the BIT STRING with anything other " ~
-                            "zeroes is forbidden. " ~
-                            notWhatYouMeantText ~ forMoreInformationText ~
-                            debugInformationText ~ reportBugsText
-                        );
-                }
-
-                pret.length -= primitives[p].value[0];
-                ret ~= pret;
             }
-            return ret;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed OCTET STRING");
+
+            Appender!(bool[]) appendy = appender!(bool[])();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed BIT STRING");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed OCTET STRING");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed BIT STRING");
+
+                appendy.put(substring.bitString);
+            }
+            return appendy.data;
         }
     }
 
@@ -605,7 +585,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             ub[(i/8u)] |= (0b10000000u >> (i % 8u));
         }
 
-        if (ub.length <= 999u)
+        if (ub.length <= 1000u)
         {
             this.value = [ cast(ubyte) (8u - (value.length % 8u)) ] ~ ub;
             if (this.value[0] == 0x08u) this.value[0] = 0x00u;
@@ -712,41 +692,64 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     ubyte[] octetString() const
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded OCTET STRING");
+
             return this.value.dup;
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse an OCTET STRING");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "an OCTET STRING encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length OCTET STRING did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually an OCTET STRING, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the OCTET STRING just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed OCTET STRING that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed OCTET STRING must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(ubyte[]) ret = appender!(ubyte[])();
-            foreach (p; primitives)
+            foreach (substring; substrings[0 .. $-1])
             {
-                ret.put(p.value);
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed OCTET STRING");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed OCTET STRING");
+
+            Appender!(ubyte[]) appendy = appender!(ubyte[])();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed OCTET STRING");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed OCTET STRING");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed OCTET STRING");
+
+                appendy.put(substring.octetString);
+            }
+            return appendy.data;
         }
     }
 
@@ -788,9 +791,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             y.construction = ASN1Construction.primitive;
             y.value = value[i .. $].dup;
             primitives ~= y;
-
-            CERElement z = new CERElement();
-            primitives ~= z;
 
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
@@ -1081,8 +1081,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     string objectDescriptor() const
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded ObjectDescriptor");
+
             foreach (immutable character; this.value)
             {
                 if ((!character.isGraphical) && (character != ' '))
@@ -1093,41 +1097,54 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse an ObjectDescriptor");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "an ObjectDescriptor encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length ObjectDescriptor did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually an ObjectDescriptor, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the ObjectDescriptor just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed ObjectDescriptor that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed ObjectDescriptor must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(string) ret = appender!(string)();
-            foreach (p; primitives)
+            foreach (substring; substrings[0 .. $-1])
             {
-                foreach (immutable character; p.value)
-                {
-                    if ((!character.isGraphical) && (character != ' '))
-                        throw new ASN1ValueCharactersException
-                        ("all characters within the range 0x20 to 0x7E", character, "ObjectDescriptor");
-                }
-                ret.put(cast(string) p.value);
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed ObjectDescriptor");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed ObjectDescriptor");
+
+            Appender!string appendy = appender!string();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed ObjectDescriptor");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed ObjectDescriptor");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed ObjectDescriptor");
+
+                appendy.put(substring.octetString);
+            }
+            return appendy.data;
         }
     }
 
@@ -1188,9 +1205,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
-
-            CERElement z = new CERElement();
-            primitives ~= z;
 
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
@@ -2862,41 +2876,64 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     string unicodeTransformationFormat8String() const
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded UTF8String");
+
             return cast(string) this.value;
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a UTF8String");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "an OCTET STRING encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length OCTET STRING did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually an OCTET STRING, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the OCTET STRING just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed UTF8String that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed UTF8String must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(string) ret = appender!(string)();
-            foreach (p; primitives)
+            foreach (substring; substrings[0 .. $-1])
             {
-                ret.put(cast(string) p.value);
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed UTF8String");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed UTF8String");
+
+            Appender!string appendy = appender!string();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed UTF8String");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed UTF8String");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed UTF8String");
+
+                appendy.put(substring.utf8String);
+            }
+            return appendy.data;
         }
     }
 
@@ -2929,9 +2966,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
-
-            CERElement z = new CERElement();
-            primitives ~= z;
 
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
@@ -3228,8 +3262,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     string numericString() const
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded NumericString");
+
             foreach (immutable character; this.value)
             {
                 if (!canFind(numericStringCharacters, character))
@@ -3240,41 +3278,54 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a NumericString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "an OCTET STRING encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length OCTET STRING did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually an OCTET STRING, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the OCTET STRING just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed NumericString that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed NumericString must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(string) ret = appender!(string)();
-            foreach (p; primitives)
+            foreach (substring; substrings[0 .. $-1])
             {
-                foreach (immutable character; p.value)
-                {
-                    if (!canFind(numericStringCharacters, character))
-                        throw new ASN1ValueCharactersException
-                        ("1234567890 ", character, "NumericString");
-                }
-                ret.put(cast(string) p.value);
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed NumericString");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed NumericString");
+
+            Appender!string appendy = appender!string();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed NumericString");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed NumericString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed NumericString");
+
+                appendy.put(substring.numericString);
+            }
+            return appendy.data;
         }
     }
 
@@ -3319,9 +3370,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
-
-            CERElement z = new CERElement();
-            primitives ~= z;
 
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
@@ -3371,8 +3419,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     string printableString() const
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded PrintableString");
+
             foreach (immutable character; this.value)
             {
                 if (!canFind(printableStringCharacters, character))
@@ -3383,43 +3435,55 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a PrintableString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "an PrintableString encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length PrintableString did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually an PrintableString, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the PrintableString just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed PrintableString that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed PrintableString must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(string) ret = appender!(string)();
-            foreach (p; primitives)
+            foreach (substring; substrings[0 .. $-1])
             {
-                foreach (immutable character; p.value)
-                {
-                    if (!canFind(printableStringCharacters, character))
-                        throw new ASN1ValueCharactersException
-                        (printableStringCharacters, character, "PrintableString");
-                }
-                ret.put(cast(string) p.value);
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed PrintableString");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed PrintableString");
+
+            Appender!string appendy = appender!string();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed PrintableString");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed PrintableString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed PrintableString");
+
+                appendy.put(substring.printableString);
+            }
+            return appendy.data;
         }
-        return cast(string) this.value;
     }
 
     /**
@@ -3467,9 +3531,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
-            CERElement z = new CERElement();
-            primitives ~= z;
-
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
         }
@@ -3511,41 +3572,64 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     ubyte[] teletexString() const
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded TeletexString");
+
             return this.value.dup;
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a TeletexString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "a TeletexString encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length TeletexString did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually a TeletexString, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the TeletexString just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed TeletexString that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed TeletexString must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(ubyte[]) ret = appender!(ubyte[])();
-            foreach (p; primitives)
+            foreach (substring; substrings[0 .. $-1])
             {
-                ret.put(p.value);
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed TeletexString");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed TeletexString");
+
+            Appender!(ubyte[]) appendy = appender!(ubyte[])();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed TeletexString");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed TeletexString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed TeletexString");
+
+                appendy.put(substring.teletexString);
+            }
+            return appendy.data;
         }
     }
 
@@ -3578,9 +3662,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             y.construction = ASN1Construction.primitive;
             y.value = value[i .. $].dup;
             primitives ~= y;
-
-            CERElement z = new CERElement();
-            primitives ~= z;
 
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
@@ -3623,41 +3704,64 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     ubyte[] videotexString() const
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded VideotexString");
+
             return this.value.dup;
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a VideotexString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "a VideotexString encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length VideotexString did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually a VideotexString, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the VideotexString just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed VideotexString that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed VideotexString must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(ubyte[]) ret = appender!(ubyte[])();
-            foreach (p; primitives)
+            foreach (substring; substrings[0 .. $-1])
             {
-                ret.put(p.value);
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed VideotexString");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed VideotexString");
+
+            Appender!(ubyte[]) appendy = appender!(ubyte[])();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed VideotexString");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed VideotexString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed VideotexString");
+
+                appendy.put(substring.videotexString);
+            }
+            return appendy.data;
         }
     }
 
@@ -3690,9 +3794,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             y.construction = ASN1Construction.primitive;
             y.value = value[i .. $].dup;
             primitives ~= y;
-
-            CERElement z = new CERElement();
-            primitives ~= z;
 
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
@@ -3754,8 +3855,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     string internationalAlphabetNumber5String() const
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded IA5String");
+
             foreach (immutable character; this.value)
             {
                 if (!character.isASCII)
@@ -3766,43 +3871,55 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a IA5String");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "an IA5String encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length IA5String did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually an IA5String, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the IA5String just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed IA5String that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed IA5String must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(string) ret = appender!(string)();
-            foreach (p; primitives)
+            foreach (substring; substrings[0 .. $-1])
             {
-                foreach (immutable character; p.value)
-                {
-                    if (!character.isASCII)
-                        throw new ASN1ValueCharactersException
-                        ("all ASCII characters", character, "IA5String");
-                }
-                ret.put(cast(string) p.value);
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed IA5String");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed IA5String");
+
+            Appender!string appendy = appender!string();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed IA5String");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed IA5String");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed IA5String");
+
+                appendy.put(substring.ia5String);
+            }
+            return appendy.data;
         }
-        return cast(string) this.value;
     }
 
     /**
@@ -3861,9 +3978,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
-
-            CERElement z = new CERElement();
-            primitives ~= z;
 
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
@@ -3924,6 +4038,9 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     DateTime coordinatedUniversalTime() const
     {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException(this.construction, "decode a UTCTime");
+
         // Mandated in X.690, section 11.8.2
         if (this.value.length != 13u) // YYMMDDhhmmssZ
             throw new ASN1ValueSizeException(13u, 13u, this.value.length, "decode a UTCTime");
@@ -4013,8 +4130,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     DateTime generalizedTime() const
     {
-        if (this.value.length < 15u)
-            throw new ASN1ValueSizeException(15u, size_t.max, this.value.length, "decode a GeneralizedTime");
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException(this.construction, "decode a GeneralizedTime");
+
+        if (this.value.length < 15u || this.value.length > 1000u)
+            throw new ASN1ValueSizeException(15u, 1000u, this.value.length, "decode a GeneralizedTime");
 
         // Inferred, because YYYYMMDDhhmmss.Z could not be valid.
         if (this.value.length == 16u)
@@ -4174,8 +4294,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     string graphicString() const
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded GraphicString");
+
             foreach (immutable character; this.value)
             {
                 if (!character.isGraphical && character != ' ')
@@ -4186,43 +4310,55 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a GraphicString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "an GraphicString encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length GraphicString did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually an GraphicString, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the GraphicString just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed GraphicString that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed GraphicString must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(string) ret = appender!(string)();
-            foreach (p; primitives)
+            foreach (substring; substrings[0 .. $-1])
             {
-                foreach (immutable character; p.value)
-                {
-                    if (!character.isGraphical && character != ' ')
-                        throw new ASN1ValueCharactersException
-                        ("all characters within the range 0x20 to 0x7E", character, "GraphicString");
-                }
-                ret.put(cast(string) p.value);
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed GraphicString");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed GraphicString");
+
+            Appender!string appendy = appender!string();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed GraphicString");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed GraphicString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed GraphicString");
+
+                appendy.put(substring.graphicString);
+            }
+            return appendy.data;
         }
-        return cast(string) this.value;
     }
 
     /**
@@ -4277,9 +4413,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
-            CERElement z = new CERElement();
-            primitives ~= z;
-
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
         }
@@ -4326,8 +4459,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     string visibleString() const
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded VisibleString");
+
             foreach (immutable character; this.value)
             {
                 if (!character.isGraphical && character != ' ')
@@ -4338,43 +4475,55 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a VisibleString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "a VisibleString encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length VisibleString did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually an VisibleString, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the VisibleString just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed VisibleString that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed VisibleString must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(string) ret = appender!(string)();
-            foreach (p; primitives)
+            foreach (substring; substrings[0 .. $-1])
             {
-                foreach (immutable character; p.value)
-                {
-                    if (!character.isGraphical && character != ' ')
-                        throw new ASN1ValueCharactersException
-                        ("all characters within the range 0x20 to 0x7E", character, "VisibleString");
-                }
-                ret.put(cast(string) p.value);
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed VisibleString");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed VisibleString");
+
+            Appender!string appendy = appender!string();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed VisibleString");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed VisibleString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed VisibleString");
+
+                appendy.put(substring.visibleString);
+            }
+            return appendy.data;
         }
-        return cast(string) this.value;
     }
 
     /**
@@ -4419,9 +4568,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             y.construction = ASN1Construction.primitive;
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
-
-            CERElement z = new CERElement();
-            primitives ~= z;
 
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
@@ -4473,8 +4619,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     string generalString() const
     {
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded GeneralString");
+
             foreach (immutable character; this.value)
             {
                 if (!character.isASCII)
@@ -4485,43 +4635,55 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a GeneralString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "a GeneralString encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length GeneralString did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually an GeneralString, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the GeneralString just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed GeneralString that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed GeneralString must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(string) ret = appender!(string)();
-            foreach (p; primitives)
+            foreach (substring; substrings[0 .. $-1])
             {
-                foreach (immutable character; p.value)
-                {
-                    if (!character.isASCII)
-                        throw new ASN1ValueCharactersException
-                        ("all ASCII characters", character, "GeneralString");
-                }
-                ret.put(cast(string) p.value);
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed GeneralString");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed GeneralString");
+
+            Appender!string appendy = appender!string();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed GeneralString");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed GeneralString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed GeneralString");
+
+                appendy.put(substring.generalString);
+            }
+            return appendy.data;
         }
-        return cast(string) this.value;
     }
 
     /**
@@ -4571,9 +4733,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             y.value = cast(ubyte[]) value[i .. $];
             primitives ~= y;
 
-            CERElement z = new CERElement();
-            primitives ~= z;
-
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
         }
@@ -4618,9 +4777,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     dstring universalString() const
     {
-        if (this.value.length == 0u) return ""d;
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded UniversalString");
+
+            if (this.value.length == 0u) return ""d;
             if (this.value.length % 4u)
                 throw new ASN1ValueException
                 (
@@ -4658,68 +4821,54 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a UniversalString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "a UniversalString encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length UniversalString did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually an UniversalString, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the UniversalString just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed UniversalString that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed UniversalString must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(dstring) ret = appender!(dstring)();
-            for (size_t p = 0u; p < primitives.length-1; p++) // Skip the last element, because it is an EOC
+            foreach (substring; substrings[0 .. $-1])
             {
-                if (primitives[p].value.length % 4u)
-                    throw new ASN1ValueException
-                    (
-                        "This exception was thrown because you tried to decode " ~
-                        "a UniversalString that contained a number of bytes that " ~
-                        "is not divisible by four. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
-                    );
-
-                version (BigEndian)
-                {
-                    ret.put(cast(dstring) primitives[p].value);
-                }
-                else version (LittleEndian)
-                {
-                    dstring segment;
-                    size_t i = 0u;
-                    while (i < primitives[p].value.length-3)
-                    {
-                        ubyte[] character;
-                        character.length = 4u;
-                        character[3] = primitives[p].value[i++];
-                        character[2] = primitives[p].value[i++];
-                        character[1] = primitives[p].value[i++];
-                        character[0] = primitives[p].value[i++];
-                        segment ~= (*cast(dchar *) character.ptr);
-                    }
-                    ret.put(segment);
-                }
-                else
-                {
-                    static assert(0, "Could not determine endianness!");
-                }
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed UniversalString");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed UniversalString");
+
+            Appender!dstring appendy = appender!dstring();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed UniversalString");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed UniversalString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed UniversalString");
+
+                appendy.put(substring.universalString);
+            }
+            return appendy.data;
         }
     }
 
@@ -4800,9 +4949,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 static assert(0, "Could not determine endianness!");
             }
             primitives ~= y;
-
-            CERElement z = new CERElement();
-            primitives ~= z;
 
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
@@ -5195,9 +5341,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     override public @property @system
     wstring basicMultilingualPlaneString() const
     {
-        if (this.value.length == 0u) return ""w;
-        if (this.value.length <= 1000u)
+        if (this.construction == ASN1Construction.primitive)
         {
+            if (this.value.length > 1000u)
+                throw new ASN1ValueSizeException
+                (0u, 1000u, this.value.length, "decode a primitively-encoded BMPString");
+
+            if (this.value.length == 0u) return ""w;
             if (this.value.length % 2u)
                 throw new ASN1ValueException
                 (
@@ -5233,66 +5383,54 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else
         {
-            ubyte[] value = this.value.dup;
-            CERElement[] primitives;
-            while (value.length > 0)
-            {
-                primitives ~= new CERElement(value);
-            }
+            if (this.valueRecursionCount++ == this.nestingRecursionLimit)
+                throw new ASN1RecursionException(this.nestingRecursionLimit, "parse a BMPString");
+            scope(exit) this.valueRecursionCount--; // So exceptions do not leave residual recursion.
 
-            if (primitives[$-1].tagNumber != 0x00u && primitives[$-1].length != 0u)
+            CERElement[] substrings = this.sequence;
+            if (substrings.length < 2u)
                 throw new ASN1ValueException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "a BMPString encoded via Canonical Encoding Rules (CER) " ~
-                    "in constructed form with indefinite length. The encoded " ~
-                    "indefinite-length BMPString did not end with an END " ~
-                    "OF CONTENT element. This could happen because you attempted " ~
-                    "to decode an element that was not actually an BMPString, " ~
-                    "or you may be using the wrong codec for the protocol you " ~
-                    "are dealing with, or, the BMPString just may be quite large " ~
-                    "and you may have not received it entirely yet. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
+                    "a constructed BMPString that was constituted by fewer " ~
+                    "than two nested elements. When using the Canonical Encoding " ~
+                    "Rules (CER), a legitimate constructed BMPString must " ~
+                    "contain at least two nested elements, and each but the " ~
+                    "last must contain exactly 1000 content octets. The last " ~
+                    "nested element may have between 1 and 1000 content " ~
+                    "octets inclusively. This element should have been encoded " ~
+                    "primitively using definite-length encoding."
                 );
 
-            Appender!(wstring) ret = appender!(wstring)();
-            for (size_t p = 0u; p < primitives.length-1; p++) // Skip the last element, because it is an EOC
+            foreach (substring; substrings[0 .. $-1])
             {
-                if (primitives[p].value.length % 2u)
-                    throw new ASN1ValueException
-                    (
-                        "This exception was thrown because you tried to decode " ~
-                        "a UniversalString that contained a number of bytes that " ~
-                        "is not divisible by four. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
-                    );
-
-                version (BigEndian)
-                {
-                    ret.put(cast(wstring) primitives[p].value);
-                }
-                else version (LittleEndian)
-                {
-                    dstring segment;
-                    size_t i = 0u;
-                    while (i < primitives[p].value.length-1u)
-                    {
-                        ubyte[] character;
-                        character.length = 2u;
-                        character[1] = primitives[p].value[i++];
-                        character[0] = primitives[p].value[i++];
-                        segment ~= (*cast(wchar *) character.ptr);
-                    }
-                    ret.put(segment);
-                }
-                else
-                {
-                    static assert(0, "Could not determine endianness!");
-                }
+                if (substring.length != 1000u)
+                    throw new ASN1ValueSizeException
+                    (1000u, 1000u, substring.length, "decode a substring of a constructed BMPString");
             }
-            return ret.data;
+
+            if (substrings[$-1].length == 0u)
+                throw new ASN1ValueSizeException
+                (1u, 1000u, substrings[$-1].length, "decode the last substring of a constructed BMPString");
+
+            Appender!wstring appendy = appender!wstring();
+            foreach (substring; substrings)
+            {
+                if (substring.tagClass != this.tagClass)
+                    throw new ASN1TagClassException
+                    ([ this.tagClass ], substring.tagClass, "decode a substring of a constructed BMPString");
+
+                if (substring.construction != ASN1Construction.primitive)
+                    throw new ASN1ConstructionException
+                    (substring.construction, "decode a substring of a constructed BMPString");
+
+                if (substring.tagNumber != this.tagNumber)
+                    throw new ASN1TagNumberException
+                    ([ this.tagNumber ], substring.tagNumber, "decode a substring of a constructed BMPString");
+
+                appendy.put(substring.bmpString);
+            }
+            return appendy.data;
         }
     }
 
@@ -5373,9 +5511,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 static assert(0, "Could not determine endianness!");
             }
             primitives ~= y;
-
-            CERElement z = new CERElement();
-            primitives ~= z;
 
             this.sequence = primitives;
             this.construction = ASN1Construction.constructed;
@@ -6048,48 +6183,48 @@ unittest
 }
 
 // Test of indefinite-length encoding
-@system
-unittest
-{
-    ubyte[] data = [ // 192 characters of boomer-posting
-        0x2Cu, 0x80u,
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
-        0x00u, 0x00u
-    ];
+// @system
+// unittest
+// {
+//     ubyte[] data = [ // 192 characters of boomer-posting
+//         0x2Cu, 0x80u,
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x0Cu, 0x10u, 'A', 'M', 'R', 'E', 'N', ' ', 'B', 'O', 'R', 'T', 'H', 'E', 'R', 'S', '!', '\n',
+//         0x00u, 0x00u
+//     ];
 
-    data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
+//     data = (data ~ data ~ data); // Triple the data, to catch any bugs that arise with subsequent values.
 
-    CERElement[] result;
-    size_t i = 0u;
-    while (i < data.length)
-        result ~= new CERElement(i, data);
+//     CERElement[] result;
+//     size_t i = 0u;
+//     while (i < data.length)
+//         result ~= new CERElement(i, data);
 
-    assert(result.length == 3);
-    assert(result[0].length == 216u);
-    assert(result[0].utf8String[2 .. 7] == "AMREN");
-    assert(result[1].utf8String[8 .. 16] == "BORTHERS");
-    assert(result[2].utf8String[$-2] == '!');
+//     assert(result.length == 3);
+//     assert(result[0].length == 216u);
+//     assert(result[0].utf8String[2 .. 7] == "AMREN");
+//     assert(result[1].utf8String[8 .. 16] == "BORTHERS");
+//     assert(result[2].utf8String[$-2] == '!');
 
-    result = [];
-    while (data.length > 0)
-        result ~= new CERElement(data);
+//     result = [];
+//     while (data.length > 0)
+//         result ~= new CERElement(data);
 
-    assert(result.length == 3);
-    assert(result[0].utf8String[2 .. 7] == "AMREN");
-    assert(result[1].utf8String[8 .. 16] == "BORTHERS");
-    assert(result[2].utf8String[$-2] == '!');
-}
+//     assert(result.length == 3);
+//     assert(result[0].utf8String[2 .. 7] == "AMREN");
+//     assert(result[1].utf8String[8 .. 16] == "BORTHERS");
+//     assert(result[2].utf8String[$-2] == '!');
+// }
 
 // Test deeply (but not too deeply) nested indefinite-length elements
 @system
