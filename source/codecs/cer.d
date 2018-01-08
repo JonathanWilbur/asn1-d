@@ -1503,7 +1503,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         ubyte[] external = [ // This is valid
             0x08u, 0x09u, // EXTERNAL, Length 9
                 0x02u, 0x01u, 0x1Bu, // INTEGER 27
-                0x81, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+                0x81u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
         ];
 
         // Valid values for octet[2]: 02 06

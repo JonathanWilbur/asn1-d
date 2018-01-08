@@ -185,8 +185,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a boolean
         Throws:
-            ASN1ValueSizeException = if the encoded value is anything other
-                than exactly 1 byte in size.
+            ASN1ConstructionException = if the encoded value is not primitively-constructed
+            ASN1ValueSizeException = if the encoded value is not exactly 1 byte in size
     */
     override public @property @safe
     bool boolean() const
@@ -202,12 +202,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         return (this.value[0] ? true : false);
     }
 
-    /**
-        Encodes a boolean.
-
-        Any non-zero value will be interpreted as TRUE. Only zero will be
-        interpreted as FALSE.
-    */
+    /// Encodes a boolean
     override public @property @safe nothrow
     void boolean(in bool value)
     out
@@ -220,7 +215,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         this.value = [(value ? 0xFFu : 0x00u)];
     }
 
-    ///
     @safe
     unittest
     {
@@ -240,13 +234,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     /**
         Decodes a signed integer.
 
-        Bytes are stored in big-endian order, where the bytes represent
-        the two's complement encoding of the integer.
-
-        Returns: any chosen signed integral type
         Throws:
+            ASN1ConstructionException = if the encoded value is not primitively-constructed
             ASN1ValueSizeException = if the value is too big to decode
-                to a signed integral type.
+                to a signed integral type, or if the value is zero bytes.
+            ASN1ValuePaddingException = if there are padding bytes
     */
     public @property @system
     T integer(T)() const
@@ -309,12 +301,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         return *cast(T *) value.ptr;
     }
 
-    /**
-        Encodes an integer.
-
-        Bytes are stored in big-endian order, where the bytes represent
-        the two's complement encoding of the integer.
-    */
+    /// Encodes a signed integral data type
     public @property @system nothrow
     void integer(T)(in T value)
     if (isIntegral!T && isSigned!T)
@@ -425,16 +412,23 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Encodes an array of $(D bool)s representing a string of bits.
+        Decodes an array of $(D bool)s representing a string of bits.
 
-        In Basic Encoding Rules, the first byte is an unsigned
-        integral byte indicating the number of unused bits at the end of
-        the BIT STRING. The unused bits can be anything.
+        Returns: an array of booleans, where each boolean represents a bit
+            in the encoded bit string
 
-        Returns: an array of booleans.
         Throws:
+            ASN1ValueSizeException = if the any primitive contains 0 bytes
             ASN1ValueException = if the first byte has a value greater
-                than seven.
+                than seven, or if the first byte indicates the presence of
+                padding bits when no subsequent bytes exist, or if any primitive
+                but the last in a constructed BIT STRING uses padding bits
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property
     bool[] bitString() const
@@ -542,13 +536,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
     }
 
-    /**
-        Encodes an array of $(D bool)s representing a string of bits.
-
-        In Basic Encoding Rules, the first byte is an unsigned
-        integral byte indicating the number of unused bits at the end of
-        the BIT STRING. The unused bits can be anything.
-    */
+    /// Encodes an array of $(D bool)s representing a string of bits.
     override public @property
     void bitString(in bool[] value)
     out
@@ -630,7 +618,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     /**
         Decodes an OCTET STRING into an unsigned byte array.
 
-        Returns: an unsigned byte array.
+        Throws:
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     ubyte[] octetString() const
@@ -663,9 +657,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
     }
 
-    /**
-        Encodes an OCTET STRING from an unsigned byte array.
-    */
+    /// Encodes an OCTET STRING from an unsigned byte ($(D ubyte)) array.
     override public @property @safe
     void octetString(in ubyte[] value)
     {
@@ -749,21 +741,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     /**
         Decodes an OBJECT IDENTIFIER.
         See source/types/universal/objectidentifier.d for information about
-        the ObjectIdentifier class (aliased as "OID").
-
-        The encoded OBJECT IDENTIFIER's first byte contains the first number
-        of the OID multiplied by 40 and added to the second number of the OID.
-        The subsequent bytes have all the remaining number encoded in base-128
-        on the least significant 7 bits of each byte. For these bytes, the most
-        significant bit is set if the next byte continues the encoding of the
-        current OID number. In other words, the bytes encoding each number
-        always end with a byte whose most significant bit is cleared.
+        the $(D ObjectIdentifier) class (aliased as $(D OID)).
 
         Throws:
-            ASN1ValueSizeException = if an attempt is made to decode
-                an Object Identifier from zero bytes.
-            ASN1ValueSizeException = if a single OID number is too big to
-                decode to a size_t.
+            ASN1ConstructionException = if the element is marked as "constructed"
+            ASN1ValueSizeException = if there are no value bytes
+            ASN1ValuePaddingException = if a single OID number is encoded with
+                "leading zero bytes" ($(D 0x80u))
+            ASN1ValueOverflowException = if a single OID number is too big to
+                decode to a size_t
+            ASN1TruncationException = if a single OID number is "cut off"
+
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
@@ -996,8 +984,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueException = if the encoded value contains any bytes
+            ASN1ValueCharactersException = if the encoded value contains any bytes
                 outside of 0x20 to 0x7E.
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     string objectDescriptor() const
@@ -1056,7 +1050,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
         Throws:
-            ASN1ValueException = if the string value contains any
+            ASN1ValueCharactersException = if the string value contains any
                 character outside of 0x20 to 0x7E, which means any control
                 characters or DELETE.
     */
@@ -1102,15 +1096,50 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Decodes an EXTERNAL, which is a constructed data type, defined in
-        the $(LINK2 https://www.itu.int,
-            International Telecommunications Union)'s
-        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        Decodes an EXTERNAL.
 
-        The specification defines EXTERNAL as:
+        According to the
+        $(LINK2 http://www.itu.int/en/pages/default.aspx,
+            International Telecommunications Union)'s
+        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en,
+            X.680 - Abstract Syntax Notation One (ASN.1)),
+        the abstract definition for an EXTERNAL, after removing the comments in the
+        specification, is as follows:
 
         $(I
-            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            syntaxes ABSENT,
+                            transfer-syntax ABSENT,
+                            fixed ABSENT } ) } )
+        )
+
+        Note that the abstract syntax resembles that of EMBEDDED PDV and
+        CharacterString, except with a WITH COMPONENTS constraint that removes some
+        of our choices of identification.
+        As can be seen on page 303 of Olivier Dubuisson's
+        $(I $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
+            ASN.1: Communication Between Heterogeneous Systems)),
+        after applying the WITH COMPONENTS constraint, our reduced syntax becomes:
+
+        $(I
+            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER,
                     presentation-context-id INTEGER,
@@ -1121,31 +1150,47 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 data-value OCTET STRING }
         )
 
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 2.
+        But, according to the
+        $(LINK2 http://www.itu.int/en/pages/default.aspx,
+        International Telecommunications Union)'s
+        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),
+        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
+        follows, for compatibility reasons:
 
-        Returns: an External, defined in types.universal.external.
+        $(I
+            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                direct-reference  OBJECT IDENTIFIER OPTIONAL,
+                indirect-reference  INTEGER OPTIONAL,
+                data-value-descriptor  ObjectDescriptor  OPTIONAL,
+                encoding  CHOICE {
+                    single-ASN1-type  [0] ANY,
+                    octet-aligned     [1] IMPLICIT OCTET STRING,
+                    arbitrary         [2] IMPLICIT BIT STRING } }
+        )
+
+        The definition above is the pre-1994 definition of EXTERNAL. The syntax
+        field of the post-1994 definition maps to the direct-reference field of
+        the pre-1994 definition. The presentation-context-id field of the post-1994
+        definition maps to the indirect-reference field of the pre-1994 definition.
+        If context-negotiation is used, per the abstract syntax, then the
+        presentation-context-id field of the context-negotiation SEQUENCE in the
+        post-1994 definition maps to the indirect-reference field of the pre-1994
+        definition, and the transfer-syntax field of the context-negotiation
+        SEQUENCE maps to the direct-reference field of the pre-1994 definition.
+
+        Returns: an $(D External), defined in types.universal.external.
+
         Throws:
-            ASN1SizeException = if encoded EmbeddedPDV has too few or too many
-                elements, or if syntaxes or context-negotiation element has
-                too few or too many elements.
-            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueException = if encoded ObjectDescriptor contains
-                invalid characters.
-            ASN1InvalidIndexException = if encoded value selects a choice for
-                identification or uses an unspecified index for an element in
-                syntaxes or context-negotiation, or if an unspecified element
-                of EMBEDDED PDV itself is referenced by an out-of-range
-                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
-
-        EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
-            direct-reference  OBJECT IDENTIFIER OPTIONAL,
-            indirect-reference  INTEGER OPTIONAL,
-            data-value-descriptor  ObjectDescriptor  OPTIONAL,
-            encoding  CHOICE {
-                single-ASN1-type  [0] ANY,
-                octet-aligned     [1] IMPLICIT OCTET STRING,
-                arbitrary         [2] IMPLICIT BIT STRING } }
+            ASN1ValueException = if the SEQUENCE does not contain two to four elements
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not have the
+                correct tag class
+            ASN1ConstructionException = if any element has the wrong construction
+            ASN1TagNumberException = if any nested primitives do not have the
+                correct tag number
+            ASN1ValueCharactersException = if a data-value-descriptor is supplied
+                with invalid characters
     */
     deprecated override public @property @system
     External external() const
@@ -1306,15 +1351,50 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Encodes an EXTERNAL, which is a constructed data type, defined in
-        the $(LINK2 https://www.itu.int,
-            International Telecommunications Union)'s
-        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        Encodes an EXTERNAL.
 
-        The specification defines EXTERNAL as:
+        According to the
+        $(LINK2 http://www.itu.int/en/pages/default.aspx,
+            International Telecommunications Union)'s
+        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en,
+            X.680 - Abstract Syntax Notation One (ASN.1)),
+        the abstract definition for an EXTERNAL, after removing the comments in the
+        specification, is as follows:
 
         $(I
-            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            syntaxes ABSENT,
+                            transfer-syntax ABSENT,
+                            fixed ABSENT } ) } )
+        )
+
+        Note that the abstract syntax resembles that of EMBEDDED PDV and
+        CharacterString, except with a WITH COMPONENTS constraint that removes some
+        of our choices of identification.
+        As can be seen on page 303 of Olivier Dubuisson's
+        $(I $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
+            ASN.1: Communication Between Heterogeneous Systems)),
+        after applying the WITH COMPONENTS constraint, our reduced syntax becomes:
+
+        $(I
+            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER,
                     presentation-context-id INTEGER,
@@ -1325,22 +1405,37 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 data-value OCTET STRING }
         )
 
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 2.
+        But, according to the
+        $(LINK2 http://www.itu.int/en/pages/default.aspx,
+        International Telecommunications Union)'s
+        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),
+        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
+        follows, for compatibility reasons:
+
+        $(I
+            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                direct-reference  OBJECT IDENTIFIER OPTIONAL,
+                indirect-reference  INTEGER OPTIONAL,
+                data-value-descriptor  ObjectDescriptor  OPTIONAL,
+                encoding  CHOICE {
+                    single-ASN1-type  [0] ANY,
+                    octet-aligned     [1] IMPLICIT OCTET STRING,
+                    arbitrary         [2] IMPLICIT BIT STRING } }
+        )
+
+        The definition above is the pre-1994 definition of EXTERNAL. The syntax
+        field of the post-1994 definition maps to the direct-reference field of
+        the pre-1994 definition. The presentation-context-id field of the post-1994
+        definition maps to the indirect-reference field of the pre-1994 definition.
+        If context-negotiation is used, per the abstract syntax, then the
+        presentation-context-id field of the context-negotiation SEQUENCE in the
+        post-1994 definition maps to the indirect-reference field of the pre-1994
+        definition, and the transfer-syntax field of the context-negotiation
+        SEQUENCE maps to the direct-reference field of the pre-1994 definition.
 
         Throws:
-            ASN1ValueSizeException = if encoded INTEGER is too large to decode
-            ASN1ValueException = if encoded ObjectDescriptor contains
-                invalid characters.
-
-        EXTERNAL  ::=  [UNIVERSAL 8] IMPLICIT SEQUENCE {
-            direct-reference  OBJECT IDENTIFIER OPTIONAL,
-            indirect-reference  INTEGER OPTIONAL,
-            data-value-descriptor  ObjectDescriptor  OPTIONAL,
-            encoding  CHOICE {
-                single-ASN1-type  [0] ANY,
-                octet-aligned     [1] IMPLICIT OCTET STRING,
-                arbitrary         [2] IMPLICIT BIT STRING } }
+            ASN1ValueCharactersException = if the data-value-descriptor
+                contains invalid characters
     */
     deprecated override public @property @system
     void external(in External value)
@@ -1394,11 +1489,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         this.sequence = components;
     }
 
-    /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished
-        Encoding Rules (DER) does not permit EXTERNALs to use an identification
-        CHOICE of presentation-context-id or context-negotiation
-    */
     @system
     unittest
     {
@@ -1418,11 +1508,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
     }
 
-    /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished
-        Encoding Rules (DER) does not permit EXTERNALs to use an identification
-        CHOICE of presentation-context-id or context-negotiation
-    */
     @system
     unittest
     {
@@ -1457,7 +1542,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         ubyte[] external = [ // This is valid
             0x08u, 0x09u, // EXTERNAL, Length 9
                 0x02u, 0x01u, 0x1Bu, // INTEGER 27
-                0x81, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
+                0x81u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u // OCTET STRING 1,2,3,4
         ];
 
         // Valid values for octet[2]: 02 06
@@ -1558,18 +1643,23 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         the transmitted value is in base-8 or base-16.
 
         Throws:
+            ASN1ConstructionException = if the element is marked as "constructed"
+            ASN1TruncationException = if the value appears to be "cut off"
             ConvException = if character-encoding cannot be converted to
-                the selected floating-point type, T.
+                the selected floating-point type, T
             ConvOverflowException = if the character-encoding encodes a
                 number that is too big for the selected floating-point
-                type to express.
+                type to express
             ASN1ValueSizeException = if the binary-encoding contains fewer
-                bytes than the information byte purports.
-            ASN1ValueSizeException = if the binary-encoded mantissa is too
-                big to be expressed by an unsigned long integer.
-            ASN1ValueException = if both bits indicating the base in the
+                bytes than the information byte purports, or if the
+                binary-encoded mantissa is too big to be expressed by an
+                unsigned long integer
+            ASN1ValueException = if a complicated-form exponent or a
+                non-zero-byte mantissa encodes a zero
+            ASN1ValueUndefinedException = if both bits indicating the base in the
                 information byte of a binary-encoded REAL's information byte
-                are set, which would indicate an invalid base.
+                are set, which would indicate an invalid base, or if a special
+                value has been indicated that is not defined by the specification
 
         Citations:
             Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
@@ -1869,19 +1959,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Note that this method assumes that your machine uses IEEE 754 floating
         point format.
 
-        Throws:
-            ASN1ValueException = if an attempt to encode NaN is made.
-            ASN1ValueSizeException = if an attempt to encode would result
-                in an arithmetic underflow of a signed short.
-            ASN1ValueSizeException = if an attempt to encode would result
-                in an arithmetic overflow of a signed short.
-
         Citations:
             Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
             Communication between Heterogeneous Systems, Morgan Kaufmann,
             2001, pp. 400–402.
     */
-    public @property @system
+    public @property @system nothrow
     void realNumber(T)(in T value)
     if (isFloatingPoint!T)
     {
@@ -2315,13 +2398,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Decodes an integer from an ENUMERATED type. In BER, an ENUMERATED
-        type is encoded the exact same way that an INTEGER is.
+        Decodes a signed integer, which represents a selection from an
+        enumeration of choices.
 
-        Returns: any chosen signed integral type
         Throws:
+            ASN1ConstructionException = if the encoded value is not primitively-constructed
             ASN1ValueSizeException = if the value is too big to decode
-                to a signed integral type.
+                to a signed integral type, or if the value is zero bytes.
+            ASN1ValuePaddingException = if there are padding bytes
     */
     public @property @system
     T enumerated(T)() const
@@ -2384,10 +2468,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         return *cast(T *) value.ptr;
     }
 
-    /**
-        Encodes an ENUMERATED type from an integer. In BER, an ENUMERATED
-        type is encoded the exact same way that an INTEGER is.
-    */
+    /// Encodes an ENUMERATED type from an integer.
     public @property @system nothrow
     void enumerated(T)(in T value)
     out
@@ -2527,17 +2608,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         will be context-specific and numbered from 0 to 5.
 
         Throws:
-            ASN1SizeException = if encoded EmbeddedPDV has too few or too many
+            ASN1ValueException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueException = if encoded ObjectDescriptor contains
-                invalid characters.
-            ASN1InvalidIndexException = if encoded value selects a choice for
-                identification or uses an unspecified index for an element in
-                syntaxes or context-negotiation, or if an unspecified element
-                of EMBEDDED PDV itself is referenced by an out-of-range
-                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not have the
+                correct tag class
+            ASN1ConstructionException = if any element has the wrong construction
+            ASN1TagNumberException = if any nested primitives do not have the
+                correct tag number
     */
     override public @property @system
     EmbeddedPDV embeddedPresentationDataValue() const
@@ -2889,10 +2970,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         this.sequence = [ identification, dataValue ];
     }
 
-    /* NOTE:
-        This unit test had to be moved out of ASN1Element because DER and CER
-        do not support encoding of presentation-context-id in EMBEDDED PDV.
-    */
     @system
     unittest
     {
@@ -2911,10 +2988,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assert(output.dataValue == [ 0x01u, 0x02u, 0x03u, 0x04u ]);
     }
 
-    /* NOTE:
-        This unit test had to be moved out of ASN1Element because DER and CER
-        do not support encoding of context-negotiation in EMBEDDED PDV.
-    */
     @system
     unittest
     {
@@ -2980,6 +3053,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Throws:
             UTF8Exception if it does not decode correctly.
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     string unicodeTransformationFormat8String() const
@@ -3040,13 +3119,15 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     /**
         Decodes a RELATIVE OBJECT IDENTIFIER.
         See source/types/universal/objectidentifier.d for information about
-        the ObjectIdentifier class (aliased as "OID").
+        the $(D ObjectIdentifier) class (aliased as $(D OID)).
 
-        The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
-        on the least significant 7 bits of each byte. For these bytes, the most
-        significant bit is set if the next byte continues the encoding of the
-        current OID number. In other words, the bytes encoding each number
-        always end with a byte whose most significant bit is cleared.
+        Throws:
+            ASN1ConstructionException = if the element is marked as "constructed"
+            ASN1ValuePaddingException = if a single OID number is encoded with
+                "leading zero bytes" ($(D 0x80u))
+            ASN1ValueOverflowException = if a single OID number is too big to
+                decode to a size_t
+            ASN1TruncationException = if a single OID number is "cut off"
 
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
@@ -3125,13 +3206,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     /**
         Encodes a RELATIVE OBJECT IDENTIFIER.
         See source/types/universal/objectidentifier.d for information about
-        the ObjectIdentifier class (aliased as "OID").
-
-        The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
-        on the least significant 7 bits of each byte. For these bytes, the most
-        significant bit is set if the next byte continues the encoding of the
-        current OID number. In other words, the bytes encoding each number
-        always end with a byte whose most significant bit is cleared.
+        the $(D ObjectIdentifier) class (aliased as $(D OID)).
 
         Standards:
             $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
@@ -3210,14 +3285,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Decodes a sequence of BERElements.
+        Decodes a sequence of elements
 
-        Returns: an array of BERElements.
         Throws:
-            ASN1ValueSizeException = if long definite-length is too big to be
-                decoded to an unsigned integral type.
-            ASN1ValueSizeException = if there are fewer value bytes than
-                indicated by the length tag.
+            ASN1ConstructionException = if the element is marked as "primitive"
+            And all of the exceptions thrown by the constructor
     */
     override public @property @system
     BERElement[] sequence() const
@@ -3233,9 +3305,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         return result;
     }
 
-    /**
-        Encodes a sequence of BERElements.
-    */
+    /// Encodes a sequence of elements
     override public @property @system
     void sequence(in BERElement[] value)
     {
@@ -3249,14 +3319,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Decodes a set of BERElements.
+        Decodes a set of elements
 
-        Returns: an array of BERElements.
         Throws:
-            ASN1ValueSizeException = if long definite-length is too big to be
-                decoded to an unsigned integral type.
-            ASN1ValueSizeException = if there are fewer value bytes than
-                indicated by the length tag.
+            ASN1ConstructionException = if the element is marked as "primitive"
+            And all of the exceptions thrown by the constructor
     */
     override public @property @system
     BERElement[] set() const
@@ -3272,9 +3339,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         return result;
     }
 
-    /**
-        Encodes a set of BERElements.
-    */
+    /// Encodes a set of elements
     override public @property @system
     void set(in BERElement[] value)
     {
@@ -3293,8 +3358,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueException = if any character other than 0-9 or
+            ASN1ValueCharactersException = if any character other than 0-9 or
                 space is encoded.
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     string numericString() const
@@ -3338,7 +3409,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         0 - 9 and space.
 
         Throws:
-            ASN1ValueException = if any character other than 0-9 or
+            ASN1ValueCharactersException = if any character other than 0-9 or
                 space is supplied.
     */
     override public @property @system
@@ -3359,12 +3430,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         space, apostrophe, parentheses, comma, minus, plus, period,
         forward slash, colon, equals, and question mark.
 
-        Returns: a string.
         Throws:
-            ASN1ValueException = if any character other than a-z, A-Z,
+            ASN1ValueCharactersException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 encoded.
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     string printableString() const
@@ -3409,7 +3485,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         forward slash, colon, equals, and question mark.
 
         Throws:
-            ASN1ValueException = if any character other than a-z, A-Z,
+            ASN1ValueCharactersException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 supplied.
@@ -3431,6 +3507,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Literally just returns the value bytes.
 
         Returns: an unsigned byte array, where each byte is a T.61 character.
+
+        Throws:
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     ubyte[] teletexString() const
@@ -3463,9 +3547,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
     }
 
-    /**
-        Literally just sets the value bytes.
-    */
+    /// Literally just sets the value bytes.
     override public @property @safe nothrow
     void teletexString(in ubyte[] value)
     {
@@ -3477,6 +3559,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Literally just returns the value bytes.
 
         Returns: an unsigned byte array.
+
+        Throws:
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     ubyte[] videotexString() const
@@ -3509,9 +3599,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
     }
 
-    /**
-        Literally just sets the value bytes.
-    */
+    /// Literally just sets the value bytes.
     override public @property @safe nothrow
     void videotexString(in ubyte[] value)
     {
@@ -3541,7 +3629,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueException = if any enecoded character is not ASCII.
+            ASN1ValueCharactersException = if any enecoded character is not ASCII.
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     string internationalAlphabetNumber5String() const
@@ -3602,7 +3696,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         )
 
         Throws:
-            ASN1ValueException = if any enecoded character is not ASCII.
+            ASN1ValueCharactersException = if any enecoded character is not ASCII.
     */
     override public @property @system
     void internationalAlphabetNumber5String(in string value)
@@ -3640,6 +3734,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Throws:
             DateTimeException = if string cannot be decoded to a DateTime
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
+            ASN1ValueCharactersException = if any character is not valid in a
+                Visiblestring
     */
     override public @property @system
     DateTime coordinatedUniversalTime() const
@@ -3722,6 +3824,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Throws:
             DateTimeException = if string cannot be decoded to a DateTime
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
+            ASN1ValueCharactersException = if any character is not valid in a
+                Visiblestring
     */
     override public @property @system
     DateTime generalizedTime() const
@@ -3787,8 +3897,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueException = if any non-graphical character
+            ASN1ValueCharactersException = if any non-graphical character
                 (including space) is encoded.
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     string graphicString() const
@@ -3843,7 +3959,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
 
         Throws:
-            ASN1ValueException = if any non-graphical character
+            ASN1ValueCharactersException = if any non-graphical character
                 (including space) is supplied.
     */
     override public @property @system
@@ -3866,8 +3982,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueException = if any non-graphical character
+            ASN1ValueCharactersException = if any non-graphical character
                 (including space) is encoded.
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     string visibleString() const
@@ -3913,7 +4035,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         GraphicalString.)
 
         Throws:
-            ASN1ValueException = if any non-graphical character
+            ASN1ValueCharactersException = if any non-graphical character
                 (including space) is supplied.
     */
     override public @property @system
@@ -3936,7 +4058,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Returns: a string.
         Throws:
-            ASN1ValueException = if any enecoded character is not ASCII.
+            ASN1ValueCharactersException = if any enecoded character is not ASCII.
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
 
         Citations:
             Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
@@ -3987,7 +4115,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Deprecated, according to page 182 of the Dubuisson book.
 
         Throws:
-            ASN1ValueException = if any enecoded character is not ASCII.
+            ASN1ValueCharactersException = if any enecoded character is not ASCII.
 
         Citations:
             Dubuisson, Olivier. “Basic Encoding Rules (BER).” ASN.1:
@@ -4014,6 +4142,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Throws:
             ASN1ValueException = if the encoded bytes is not evenly
                 divisible by four.
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     dstring universalString() const
@@ -4080,9 +4214,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
     }
 
-    /**
-        Encodes a dstring of UTF-32 characters.
-    */
+    /// Encodes a dstring of UTF-32 characters.
     override public @property @system
     void universalString(in dstring value)
     {
@@ -4134,16 +4266,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         will be context-specific and numbered from 0 to 5.
 
         Returns: an instance of types.universal.CharacterString.
+
         Throws:
-            ASN1SizeException = if encoded CharacterString has too few or too many
+            ASN1ValueException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1InvalidIndexException = if encoded value selects a choice for
-                identification or uses an unspecified index for an element in
-                syntaxes or context-negotiation, or if an unspecified element
-                of CharacterString itself is referenced by an out-of-range
-                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not have the
+                correct tag class
+            ASN1ConstructionException = if any element has the wrong construction
+            ASN1TagNumberException = if any nested primitives do not have the
+                correct tag number
     */
     override public @property @system
     CharacterString characterString() const
@@ -4489,11 +4624,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         this.sequence = [ identification, stringValue ];
     }
 
-    /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished
-        Encoding Rules (DER) does not permit CharacterStrings to use an identification
-        CHOICE of presentation-context-id or context-negotiation
-    */
     @system
     unittest
     {
@@ -4512,11 +4642,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         assert(output.stringValue == [ 'H', 'E', 'N', 'L', 'O' ]);
     }
 
-    /* NOTE:
-        This unit test had to be moved out of ASN1Element, because Distinguished
-        Encoding Rules (DER) does not permit CharacterStrings to use an identification
-        CHOICE of presentation-context-id or context-negotiation
-    */
     @system
     unittest
     {
@@ -4584,6 +4709,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         Throws:
             ASN1ValueException = if the encoded bytes is not evenly
                 divisible by two.
+            ASN1RecursionException = if using constructed form and the element
+                is constructed of too many nested constructed elements
+            ASN1TagClassException = if any nested primitives do not share the
+                same tag class as their outer constructed element
+            ASN1TagNumberException = if any nested primitives do not share the
+                same tag number as their outer constructed element
     */
     override public @property @system
     wstring basicMultilingualPlaneString() const
@@ -4648,9 +4779,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
     }
 
-    /**
-        Encodes a wstring of UTF-16 characters.
-    */
+    /// Encodes a wstring of UTF-16 characters.
     override public @property @system
     void basicMultilingualPlaneString(in wstring value)
     {
@@ -4674,9 +4803,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
     }
 
-    /**
-        Creates an EndOfContent BER Value.
-    */
+    /// Creates an END OF CONTENT
     public @safe @nogc nothrow
     this()
     {
@@ -4691,16 +4818,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         generated.
 
         Throws:
-            ASN1ValueSizeException = if the bytes supplied are fewer than
-                two (one or zero, in other words), such that no valid BERElement
-                can be decoded, or if the length is encoded in indefinite
-                form, but the END OF CONTENT octets (two consecutive null
-                octets) cannot be found, or if the value is encoded in fewer
-                octets than indicated by the length byte.
-            ASN1LengthException = if the length byte is set to 0xFF,
-                which is reserved.
-            ASN1ValueSizeException = if the length cannot be represented by
-                the largest unsigned integer.
+            All of the same exceptions as $(D fromBytes())
 
         Example:
         ---
@@ -4731,16 +4849,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         $(D bytesRead) by the number of bytes read.
 
         Throws:
-            ASN1ValueSizeException = if the bytes supplied are fewer than
-                two (one or zero, in other words), such that no valid BERElement
-                can be decoded, or if the length is encoded in indefinite
-                form, but the END OF CONTENT octets (two consecutive null
-                octets) cannot be found, or if the value is encoded in fewer
-                octets than indicated by the length byte.
-            ASN1LengthException = if the length byte is set to 0xFF,
-                which is reserved.
-            ASN1ValueSizeException = if the length cannot be represented by
-                the largest unsigned integer.
+            All of the same exceptions as $(D fromBytes())
 
         Example:
         ---
@@ -4764,7 +4873,26 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         bytesRead += this.fromBytes(bytes[bytesRead .. $].dup);
     }
 
-    // Returns the number of bytes read
+    /**
+        Returns: the number of bytes read
+
+        Throws:
+            ASN1TagPaddingException = if the tag number is "padded" with
+                "leading zero bytes" (0x80u)
+            ASN1TagOverflowException = if the tag number is too large to
+                fit into a size_t
+            ASN1LengthUndefinedException = if the reserved length byte of
+                0xFF is encountered
+            ASN1LengthOverflowException = if the length is too large to fit
+                into a size_t
+            ASN1TruncationException = if the tag, length, or value appear to
+                be truncated
+            ASN1ConstructionException = if the length is indefinite, but the
+                element is marked as being encoded primitively
+            ASN1RecursionException = if, when trying to determine the end of
+                an indefinite-length encoded element, the parser has to recurse
+                too deep
+    */
     public
     size_t fromBytes (in ubyte[] bytes)
     {
@@ -4892,7 +5020,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 size_t length = *cast(size_t *) lengthNumberOctets.ptr;
 
                 if ((cursor + length) < cursor) // This catches an overflow.
-                    throw new ASN1LengthException
+                    throw new ASN1LengthException // REVIEW: Should this be a different exception?
                     (
                         "This exception was thrown because you attempted to " ~
                         "decode a Basic Encoding Rules (BER) encoded element " ~
