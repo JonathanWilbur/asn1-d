@@ -127,6 +127,26 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     public ubyte[] value;
 
     /**
+        "Decodes" an END OF CONTENT, by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+
+        Throws:
+            ASN1ConstructionException = if the element is marked as "constructed"
+            ASN1ValueSizeException = if there are any content octets
+    */
+    override public @property @safe
+    void endOfContent() const
+    {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode an END OF CONTENT");
+
+        if (this.value.length != 0u)
+            throw new ASN1ValueSizeException
+            (0u, 0u, this.value.length, "decode an END OF CONTENT");
+    }
+
+    /**
         Decodes a boolean.
 
         Any non-zero value will be interpreted as TRUE. Only zero will be
@@ -555,6 +575,29 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     {
         scope(success) this.construction = ASN1Construction.primitive;
         this.value = value.dup;
+    }
+
+    /**
+        "Decodes" a NULL, by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+
+        Note:
+            I had to name this method "nill," because "NULL" is a keyword in D.
+
+        Throws:
+            ASN1ConstructionException = if the element is marked as "constructed"
+            ASN1ValueSizeException = if there are any content octets
+    */
+    override public @property @safe
+    void nill() const
+    {
+        if (this.construction != ASN1Construction.primitive)
+            throw new ASN1ConstructionException
+            (this.construction, "decode a NULL");
+
+        if (this.value.length != 0u)
+            throw new ASN1ValueSizeException
+            (0u, 0u, this.value.length, "decode a NULL");
     }
 
     /**

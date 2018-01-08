@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.62](http://semver.org/)
+* Version: [1.0.0-beta.63](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: December 31st, 2017**
 
@@ -231,8 +231,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [x] If encoding is primitive, accept only definite-length encoding
   - [x] All rules (BER, CER, and DER)
     - [x] If using indefinite-length, accept only constructed form
-- [ ] Make properties for `END OF CONTENT` and `NULL` that just throw exceptions if its wrong?
-- [ ] Check that all assertions only run during `unittest` version
+- [x] Make properties for `END OF CONTENT` and `NULL` that just throw exceptions if its wrong
 - [ ] Cross-Platform Testing
   - [ ] Windows (Which is Big-Endian)
     - [ ] 64-Bit
@@ -260,7 +259,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Format numbers consistently (particularly `0b` binary literals)
   - [ ] Format `switch` statements
   - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
-- [x] Documentation
+- [ ] Documentation
+  - [ ] Redo embedded documentation
   - [x] `install.md`
   - [x] `compliance.md`
     - [x] Create a checklist for every bullet point of X.690.
@@ -280,6 +280,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
       - [x] Leave note to developers about avoiding recursion problems. (See CVE-2016-4421 and CVE-2010-2284.)
       - [x] About constructed types (See CVE-2010-3445.)
     - [x] How to encode and decode
+      - [x] `END OF CONTENT`
+      - [x] `NULL`
       - [x] `ANY`
       - [x] `CHOICE`
       - [x] `INSTANCE OF`
@@ -350,6 +352,12 @@ I tried doing this for the following properties:
   - [ ] Suggestions for Inclusions in D Libraries
     - [ ] [Botan](https://github.com/etcimon/botan)
     - [ ] [ldap](https://github.com/WebFreak001/ldap)
+
+### 1.0.1 Release
+
+- [ ] Unit tests based on examples from X.690
+- [ ] Unit tests based on examples from the Dubuisson book
+- [ ] Comparison tests to Go's ASN.1 library module
 
 ## Suggestions
 

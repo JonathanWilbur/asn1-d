@@ -486,6 +486,17 @@ class AbstractSyntaxNotation1Element(Element)
         indefinite
     }
 
+    /**
+        "Decodes" an END OF CONTENT, by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+
+        Throws:
+            ASN1ConstructionException = if the element is marked as "constructed"
+            ASN1ValueSizeException = if there are any content octets
+    */
+    abstract public @property
+    void endOfContent() const;
+
     /// Decodes a boolean
     abstract public @property
     bool boolean() const;
@@ -815,6 +826,20 @@ class AbstractSyntaxNotation1Element(Element)
         el.value[4] = 0x88u;
         assert(test[4] == 0x00u);
     }
+
+    /**
+        "Decodes" a NULL, by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+
+        Note:
+            I had to name this method "nill," because "NULL" is a keyword in D.
+
+        Throws:
+            ASN1ConstructionException = if the element is marked as "constructed"
+            ASN1ValueSizeException = if there are any content octets
+    */
+    abstract public @property
+    void nill() const;
 
     ///
     public alias oid = objectIdentifier;

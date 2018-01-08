@@ -290,6 +290,42 @@ enum AbstractSyntaxNotation1Construction : ubyte
 
 ### Encoding Selected Types
 
+#### `END OF CONTENT`
+
+Just calling the default constructor produces an `END OF CONTENT` element. For
+example:
+
+```d
+BERElement ber = new BERElement();
+assert(ber.toBytes == [ 0x00u, 0x00u ]); // Passes
+```
+
+However, you should not need to do this. When you encode data in indefinite-
+length form, the codec should append the `END OF CONTENT` octets for you.
+
+If for some reason, you do need to decode an `END OF CONTENT` yourself,
+consider using the method `endOfContent`, which returns nothing, but
+throws an exception if something is wrong with the tag or length encoding.
+For example:
+
+```d
+BERElement ber = new BERElement();
+assertNotThrown!ASN1Exception(ber.endOfContent);
+
+ber.value = [ 0x01u ];
+assertThrown!ASN1Exception(ber.endOfContent);
+ber.value = [];
+
+ber.construction = ASN1Construction.constructed;
+assertThrown!ASN1Exception(ber.endOfContent);
+```
+
+#### `NULL`
+
+This is the same as `END OF CONTENT`, described above, but instead, the method
+is named `nill`. It is named `nill` and not `null`, because `null` is a keyword
+in D.
+
 #### `ANY`
 
 You just encode any data type like normal, then cast the element to a `ubyte[]`.
