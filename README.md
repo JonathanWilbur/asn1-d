@@ -223,15 +223,14 @@ Version 1.0.0-beta was released on November 8th, 2017.
         - [x] `ASN1UndefinedException`
     - [x] `ASN1CompilerException`
 - [x] More unit testing of `REAL`
-- [ ] Enforce correct construction
+- [x] Enforce correct construction
   - [x] Support constructed time types
   - [x] Make BER and CER enforce `this.value[0] == 0x00u` for each substring of a constructed `BIT STRING`
-  - [ ] Canonical Encoding Rules
-    - [ ] If encoding is constructed, accept only indefinite-length encoding
-    - [ ] If encoding is primitive, accept only definite-length encoding
-  - [ ] All rules (BER, CER, and DER)
-    - [ ] If using indefinite-length, accept only constructed form
-- [ ] Do some more unit testing for extreme lengths.
+  - [x] Canonical Encoding Rules
+    - [x] If encoding is constructed, accept only indefinite-length encoding
+    - [x] If encoding is primitive, accept only definite-length encoding
+  - [x] All rules (BER, CER, and DER)
+    - [x] If using indefinite-length, accept only constructed form
 - [ ] Make properties for `END OF CONTENT` and `NULL` that just throw exceptions if its wrong?
 - [ ] Check that all assertions only run during `unittest` version
 - [ ] Cross-Platform Testing

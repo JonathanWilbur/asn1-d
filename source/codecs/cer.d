@@ -5741,6 +5741,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
                 // Definite Long, if it has made it this far
 
+                if (this.construction == ASN1Construction.constructed)
+                    throw new ASN1ConstructionException
+                    (this.construction, "decode a long definite-length Canonical Encoding Rules (CER) encoded element");
+
                 if (numberOfLengthOctets > size_t.sizeof)
                     throw new ASN1LengthOverflowException();
 
@@ -5818,6 +5822,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
             else // Indefinite
             {
+                if (this.construction != ASN1Construction.constructed)
+                    throw new ASN1ConstructionException
+                    (this.construction, "decode an indefinite-length element");
+
                 if (++(this.nestingRecursionCount) > this.nestingRecursionLimit)
                 {
                     this.nestingRecursionCount = 0u;
@@ -5862,6 +5870,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
         else // Definite Short
         {
+            if (this.construction == ASN1Construction.constructed)
+                throw new ASN1ConstructionException
+                (this.construction, "decode a short definite-length Canonical Encoding Rules (CER) encoded element");
+
             ubyte length = (bytes[cursor++] & 0x7Fu);
 
             if ((cursor + length) > bytes.length)
@@ -6001,13 +6013,13 @@ unittest
     immutable ubyte[] dataOID = [ 0x06u, 0x04u, 0x2Bu, 0x06u, 0x04u, 0x01u ];
     immutable ubyte[] dataOD = [ 0x07u, 0x05u, 'H', 'N', 'E', 'L', 'O' ];
     immutable ubyte[] dataExternal = [
-        0x28u, 0x0Bu, 0x06u, 0x03u, 0x29u, 0x05u, 0x07u, 0x82u,
-        0x04u, 0x01u, 0x02u, 0x03u, 0x04u ];
+        0x28u, 0x80u, 0x06u, 0x03u, 0x29u, 0x05u, 0x07u, 0x82u,
+        0x04u, 0x01u, 0x02u, 0x03u, 0x04u, 0x00u, 0x00u ];
     immutable ubyte[] dataReal = [ 0x09u, 0x03u, 0x80u, 0xFBu, 0x05u ]; // 0.15625 (From StackOverflow question)
     immutable ubyte[] dataEnum = [ 0x0Au, 0x01u, 0x3Fu ];
     immutable ubyte[] dataEmbeddedPDV = [
-        0x2Bu, 0x0Au, 0x80u, 0x02u, 0x85u, 0x00u, 0x82u, 0x04u,
-        0x01u, 0x02u, 0x03u, 0x04u ];
+        0x2Bu, 0x80u, 0x80u, 0x02u, 0x85u, 0x00u, 0x82u, 0x04u,
+        0x01u, 0x02u, 0x03u, 0x04u, 0x00u, 0x00u ];
     immutable ubyte[] dataUTF8 = [ 0x0Cu, 0x05u, 'H', 'E', 'N', 'L', 'O' ];
     immutable ubyte[] dataROID = [ 0x0Du, 0x03u, 0x06u, 0x04u, 0x01u ];
     // sequence
@@ -6030,9 +6042,9 @@ unittest
         0x00u, 0x00u, 0x00u, 0x64u
     ]; // Big-endian "abcd"
     immutable ubyte[] dataCharacter = [
-        0x3Du, 0x0Fu, 0x80u, 0x06u, 0x81u, 0x04u, 0x29u, 0x06u,
+        0x3Du, 0x80u, 0x80u, 0x06u, 0x81u, 0x04u, 0x29u, 0x06u,
         0x04u, 0x01u, 0x82u, 0x05u, 0x48u, 0x45u, 0x4Eu, 0x4Cu,
-        0x4Fu ];
+        0x4Fu, 0x00u, 0x00u ];
     immutable ubyte[] dataBMP = [ 0x1Eu, 0x08u, 0x00u, 0x61u, 0x00u, 0x62u, 0x00u, 0x63u, 0x00u, 0x64u ]; // Big-endian "abcd"
 
     // Combine it all
@@ -6239,20 +6251,6 @@ unittest
     assertNotThrown!ASN1Exception(new CERElement(data));
 }
 
-// Test nested DL within IL within DL within IL elements
-@system
-unittest
-{
-    ubyte[] data = [
-        0x2Cu, 0x80u, // IL
-            0x2Cu, 0x06u, // DL
-                0x2Cu, 0x80u, // IL
-                    0x0Cu, 0x02u, 'H', 'I',
-                    0x00u, 0x00u,
-            0x00u, 0x00u ];
-    assertNotThrown!ASN1Exception(new CERElement(data));
-}
-
 // Try to induce infinite recursion for an indefinite-length element
 @system
 unittest
@@ -6281,7 +6279,7 @@ unittest
 unittest
 {
     ubyte[] data = [
-        0x04u, 0x80u,
+        0x24u, 0x80u,
             0x04u, 0x04u, 0x00u, 0x00u, 0x00u, 0x00u, // These should not indicate the end.
             0x00u, 0x00u ]; // These should.
     assert((new CERElement(data)).value == [ 0x04u, 0x04u, 0x00u, 0x00u, 0x00u, 0x00u ]);
@@ -6414,7 +6412,7 @@ unittest
 @system
 unittest
 {
-    ubyte[] naughty = [ 0x1F, 0x00u, 0x80, 0x00u ];
+    ubyte[] naughty = [ 0x3F, 0x00u, 0x80, 0x00u ];
     size_t bytesRead = 0u;
     assertThrown!ASN1TruncationException(new CERElement(bytesRead, naughty));
 }
@@ -6423,7 +6421,7 @@ unittest
 @system
 unittest
 {
-    ubyte[] naughty = [ 0x1F, 0x00u, 0x80, 0x00u, 0x00u ];
+    ubyte[] naughty = [ 0x3F, 0x00u, 0x80, 0x00u, 0x00u ];
     size_t bytesRead = 0u;
     assertNotThrown!ASN1TruncationException(new CERElement(bytesRead, naughty));
 }

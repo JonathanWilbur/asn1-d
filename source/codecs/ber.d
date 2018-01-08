@@ -4878,6 +4878,10 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             }
             else // Indefinite
             {
+                if (this.construction != ASN1Construction.constructed)
+                    throw new ASN1ConstructionException
+                    (this.construction, "decode an indefinite-length element");
+
                 if (++(this.nestingRecursionCount) > this.nestingRecursionLimit)
                 {
                     this.nestingRecursionCount = 0u;
@@ -5332,7 +5336,7 @@ unittest
 unittest
 {
     ubyte[] data = [
-        0x04u, 0x80u,
+        0x24u, 0x80u,
             0x04u, 0x04u, 0x00u, 0x00u, 0x00u, 0x00u, // These should not indicate the end.
             0x00u, 0x00u ]; // These should.
     assert((new BERElement(data)).value == [ 0x04u, 0x04u, 0x00u, 0x00u, 0x00u, 0x00u ]);
@@ -5469,7 +5473,7 @@ unittest
 @system
 unittest
 {
-    ubyte[] naughty = [ 0x1F, 0x00u, 0x80, 0x00u ];
+    ubyte[] naughty = [ 0x3F, 0x00u, 0x80, 0x00u ];
     size_t bytesRead = 0u;
     assertThrown!ASN1TruncationException(new BERElement(bytesRead, naughty));
 }
@@ -5478,7 +5482,7 @@ unittest
 @system
 unittest
 {
-    ubyte[] naughty = [ 0x1F, 0x00u, 0x80, 0x00u, 0x00u ];
+    ubyte[] naughty = [ 0x3F, 0x00u, 0x80, 0x00u, 0x00u ];
     size_t bytesRead = 0u;
     assertNotThrown!ASN1TruncationException(new BERElement(bytesRead, naughty));
 }
