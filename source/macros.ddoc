@@ -1,0 +1,388 @@
+PROJECT_NAME = ASN.1 D Library
+PROJECT_DESCRIPTION = ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER
+PROJECT_KEYWORDS = asn1,asn.1,x690,x.690,ber,cer,der,per,basic encoding rules,codec,dlang,d
+GITHUB_REPO = https://github.com/JonathanWilbur/asn1-d
+GITHUB_PROFILE = https://github.com/JonathanWilbur
+PROJECT_AUTHOR_NAME = Jonathan M. Wilbur
+PROJECT_AUTHOR_EMAIL = jonathan@wilbur.space
+PERSON = <span class="person">
+    <a href="$3">$1</a>
+    <span>&lt;<a href="mailto:$2">$2</a>&gt;</span>
+</span>
+
+LPAREN = (
+RPAREN = )
+BACKTICK = `
+DOLLAR = $
+LF =
+$(LF)
+
+ESCAPES =
+    /</&lt;/
+    />/&gt;/
+    /&/&amp;/
+
+B = <b>$0</b>
+I = <i>$0</i>
+U = <u>$0</u>
+P = <p>$0</p>
+DL = <dl>$0</dl>
+DT = <dt>$0</dt>
+DD = <dd>$0</dd>
+TABLE = <table>$0</table>
+TR = <tr>$0</tr>
+TH = <th>$0</th>
+TD = <td>$0</td>
+OL = <ol>$0</ol>
+UL = <ul>$0</ul>
+LI = <li>$0</li>
+BR = <br>
+LINK = <a href="$1">$+</a>
+PRE = <pre>$0</pre>
+MONO = <span class="mono">$0</span>
+
+D_KEYWORD = $0
+D_PSYMBOL = $0
+D_PARAM = $0
+DBLOCK = <pre><code class="d block">$0</code></pre>
+D = <code class="d inline">$0</code>
+D_CODE = $(DBLOCK $0)
+CODEBLOCK = <pre><code class="block">$0</code></pre>
+CODESPAN = <pre><code class="inline">$0</code></pre>
+
+DDOC_BLANKLINE = <br><br>
+DDOC_COMMENT = <!-- $0 -->
+DDOC_BACKQUOTED = $(D_INLINE $0)
+
+DDOC_PSYMBOL = $0
+DDOC_KEYWORD = $0
+DDOC_PARAM = $0
+
+DDOC =
+<html>
+    <head>
+        <!-- Standard -->
+        <title>$(TITLE)</title>
+        <meta charset="utf-8">
+        <meta name="author" content="$(PROJECT_AUTHOR_NAME) $(PROJECT_AUTHOR_EMAIL)">
+        <meta name="description" content="$(PROJECT_DESCRIPTION)">
+        <meta name="keywords" content="$(TITLE),$(PROJECT_KEYWORDS)">
+        <meta name="theme-color" content="#FFFFFF">
+
+        <!-- Google -->
+        <meta name="application-url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta name="audience" content="grownup">
+        <meta itemprop="name" content="$(TITLE) - $(PROJECT_NAME)">
+        <meta itemprop="description" content="$(PROJECT_DESCRIPTION)">
+
+        <!-- Apple -->
+        <meta name="apple-mobile-web-app-title" content="$(TITLE)">
+        <meta name="apple-mobile-web-app-status-bar-style" content="white">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-touch-fullscreen" content="yes">
+        <meta name="format-detection" content="telephone=yes">
+
+        <!-- Microsoft -->
+        <meta name="msapplication-tooltip" content="$(TITLE) - $(PROJECT_NAME)">
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+
+        <!-- Miscellaneous -->
+        <meta name="designer" content="Jonathan M. Wilbur jonathan@wilbur.space">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="version" content="1.0.0">
+        <meta name="copyright" content="Copyright $(YEAR) (C) $(PROJECT_AUTHOR_NAME).">
+        <meta name="language" content="English">
+
+        <!-- Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="$(GITHUB_REPO)">
+        <meta property="og:title" content="$(TITLE) - $(PROJECT_NAME)">
+        <meta property="og:description" content="$(PROJECT_DESCRIPTION)">
+        <meta property="og:site_name" content="GitHub">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="website">
+        <meta name="twitter:url" content="$(GITHUB_REPO)">
+        <meta name="twitter:title" content="$(TITLE) - $(PROJECT_NAME)">
+        <meta name="twitter:description" content="$(PROJECT_DESCRIPTION)">
+
+        <!-- Application -->
+        <style type="text/css">
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #661515;
+    background-image: linear-gradient(to right, #FFFFEE 0%, #FFCCBB 100%);
+    margin: 20px;
+}
+
+a {
+    color: #AA0000;
+	font-weight: 500;
+	-webkit-transition: color 0.2s;
+    transition: color 0.2s;
+    text-decoration-style: none;
+}
+
+a:hover {
+	color: #FF2222;
+}
+
+a::before,a::after {
+	font-weight: 100;
+	font-size: 110%;
+	line-height: 1;
+	opacity: 0;
+	-webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
+	transition: opacity 0.2s, transform 0.2s;
+}
+
+a::before {
+	left: -0.1em;
+	content: '[';
+	-webkit-transform: translateX(-100%);
+	transform: translateX(-100%);
+}
+
+a::after {
+	right: -0.1em;
+	content: ']';
+	-webkit-transform: translateX(100%);
+	transform: translateX(100%);
+}
+
+a:hover::before,a:hover::after {
+	opacity: 1;
+	-webkit-transform: translateX(0);
+	transform: translateX(0);
+}
+
+code, .mono {
+    font-family: Courier New, Courier, monospace;
+}
+
+.d.inline {
+    display: inline-block;
+}
+
+.d.block .declaration {
+    display: block;
+    padding: 10px;
+    margin: 10px;
+}
+
+.declaration {
+    background-color: #FFFFEE;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+
+#summary, .description {
+    margin: 5px;
+    padding: 5px;
+}
+
+.module-info {
+	margin-bottom: 100px;
+}
+
+.member {
+	font-weight: bold;
+}
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <h1>$(TITLE)</h1>
+            <h2>$(PROJECT_DESCRIPTION)</h2>
+        </div>
+        <div id="content">
+            $(BODY)
+        </div>
+        <div id="footer">
+            <span id="timestamp">$(DATETIME)</span>
+        </div>
+    </body>
+</html>$(LF)
+
+
+
+
+
+
+
+
+DDOC_SECTIONS = <section class="module-info">$0</section>$(LF)
+DDOC_SUMMARY = <section id="summary">$0</section>$(LF)
+DDOC_DESCRIPTION = <div class="description">$0</div>$(LF)
+
+
+
+
+DDOC_MODULE_MEMBERS = <section class="module-members">
+    $(DDOC_MEMBERS $0)
+</section>$(LF)
+
+DDOC_CLASS_MEMBERS = $(DDOC_MEMBERS $0)$(LF)
+DDOC_STRUCT_MEMBERS = $(DDOC_MEMBERS $0)$(LF)
+DDOC_ENUM_MEMBERS = $(DDOC_MEMBERS $0)$(LF)
+DDOC_TEMPLATE_MEMBERS = $(DDOC_MEMBERS $0)$(LF)
+
+DDOC_MEMBERS = <ul class="ddoc_members">
+	$0
+</ul>
+
+DDOC_MEMBER = <li class="ddoc_member">$0</li>
+DDOC_MEMBER_HEADER = $0
+DDOC_HEADER_ANCHOR = <a href="#$1" id="$1"><code class="member">$2</code></a>
+
+DDOC_DECL =
+<section class="declaration">
+    <code>
+        $0
+    </code>
+</section>
+
+DDOC_ANCHOR = <span class="ddoc_anchor" id="$1"></span>
+
+DDOC_AUTHORS = <div class="ddoc_authors">
+	<h4>Authors</h4>
+	<p class="para">
+		$0
+	</p>
+</div>$(LF)
+
+DDOC_DECL_DD = <div>$0</div>
+
+DDOC_EXAMPLES = <div class="ddoc_examples">
+	<h4>Examples</h4>
+	<p class="para">
+		$0
+	</p>
+</div>
+
+DDOC_LICENSE = <div class="ddoc_license">
+	<h4>License</h4>
+	<p class="para">
+		$0
+	</p>
+</div>$(LF)
+
+DDOC_RETURNS = <div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		$0
+	</p>
+</div>$(LF)
+
+DDOC_PARAMS = <div class="ddoc_params">
+	<h4>Parameters</h4>
+	<table cellspacing="0" cellpadding="5" border="0" class="graybox">
+		<tbody>
+			$0
+		</tbody>
+	</table>
+</div>$(LF)
+
+DDOC_PARAM_ROW = <tr class="ddoc_param_row">
+	$0
+</tr>$(LF)
+
+DDOC_PARAM_ID = <td scope="ddoc_param_id">
+	<code class="code">
+		<em class="term">$0</em>
+	</code>
+</td>$(LF)
+
+DDOC_PARAM_DESC = <td>
+	<div class="ddoc_param_desc">
+		<p class="para">
+			$0
+		</p>
+	</div>
+</td>
+
+DDOC_BUGS = <div class="ddoc_bugs">
+	<h4>Bugs</h4>
+	<p class="para">
+		$0
+	</p>
+</div>$(LF)
+
+DDOC_COPYRIGHT = <div class="ddoc_copyright">
+	<h4>Copyright</h4>
+	<p class="para">
+		$0
+	</p>
+</div>$(LF)
+
+DDOC_DATE = <div class="ddoc_date">
+	<h4>Date</h4>
+	<p class="para">
+		$0
+	</p>
+</div>$(LF)
+
+DDOC_DEPRECATED = <div class="ddoc_deprecated">
+	<h4>Deprecated</h4>
+	<p class="para">
+		$0
+	</p>
+</div>$(LF)
+
+DDOC_HISTORY = <div class="ddoc_history">
+	<h4>History</h4>
+	<p class="para">
+		$0
+	</p>
+</div>$(LF)
+
+DDOC_SEE_ALSO = <div class="ddoc_see_also">
+	<h4>See Also</h4>
+	<p class="para">
+		$0
+	</p>
+</div>$(LF)
+
+DDOC_STANDARDS = <div class="ddoc_standards">
+	<h4>Standards</h4>
+	<p class="para">
+		$0
+	</p>
+</div>
+
+DDOC_THROWS = <div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		$0
+	</p>
+</div>
+
+DDOC_VERSION = <div class="ddoc_version">
+	<h4>Version</h4>
+	<p class="para">
+		$0
+	</p>
+</div>
+
+DDOC_SECTION = <div class="ddoc_section">
+	<p class="para">
+		$0
+	</p>
+</div>$(LF)
+
+DDOC_SECTION_H = <span class="ddoc_section_h">$0:</span>$(LF)
+
+DDOC_DITTO = <br>
+$0
+
+DDOC_PSYMBOL = <code class="code">$0</code>
+DDOC_ENUM_BASETYPE = $0
+DDOC_PSUPER_SYMBOL = <span class="ddoc_psuper_symbol">$0</span>
+DDOC_KEYWORD = <code class="code">$0</code>
+DDOC_PARAM = <code class="code">$0</code>
+DDOC_CONSTRAINT = $(DDOC_CONSTRAINT) if ($0)
+DDOC_OVERLOAD_SEPARATOR = $0
+DDOC_TEMPLATE_PARAM_LIST = $0
+DDOC_TEMPLATE_PARAM = $0

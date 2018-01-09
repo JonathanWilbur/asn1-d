@@ -1,473 +1,144 @@
 
-<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>codecs.der</title>
-    <style type="text/css" media="screen">
-      html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
-      blockquote, pre, a, abbr, address, cite, code, del, dfn, em, figure,
-      img, ins, kbd, q, s, samp, small, strong, sub, sup, var, b, u, i, dl,
-      dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption,
-      tbody, tfoot, thead, tr, th, td {
-        background: transparent none repeat scroll 0 0;
-        border: 0 none;
-        font-size: 100%;
-        margin: 0;
-        outline: 0 none;
-        padding: 0;
-        vertical-align: baseline;
-      }
-
-      .color_red { color: #dc322f; }
-      .color_blue { color: #268bd2; }
-      .color_green { color: #859901; }
-      .color_yellow { color: #b58901; }
-      .color_black { color: black; }
-      .color_white { color: white; }
-
-      .font_big {
-        font-size: 1.2em;
-      }
-
-      .ddoc_section_h {
-        font-weight: bold;
-        font-size: 13px;
-        line-height: 19.5px;
-        margin-top: 11px;
-        display: block;
-      }
-
-      body.dlang .dlang {
-        display: inline-block;
-      }
-
-      body.dlang .declaration .dlang {
-          display: block;
-      }
-
-      body.dlang .ddoc_header_anchor a.dlang {
-        display: block;
-        color: rgba(0, 136, 204, 1);
-        text-decoration: none;
-      }
-
-      body.dlang .ddoc_header_anchor .code {
-        color: rgba(0, 136, 204, 1);
-      }
-
-      #ddoc_main .module {
-          border-color: currentColor rgba(233, 233, 233, 1) rgba(233, 233, 233, 1);
-          border-style: none solid solid;
-          border-width: 0 1px 1px;
-          overflow-x: hidden;
-          padding: 15px;
-      }
-
-      #ddoc_main .section .section {
-        margin-top: 0;
-      }
-
-      #ddoc_main .ddoc_module_members_section {
-          padding: 1px 0 0;
-          transition: transform 0.3s ease 0s;
-      }
-
-      #ddoc_main .ddoc_member, #ddoc_main .ddoc_module_members section.intro {
-          background: #fff none repeat scroll 0 0;
-          list-style-type: none;
-          width: 100%;
-      }
-
-      #ddoc_main .ddoc_header_anchor {
-          font-size: 1.4em;
-          transition: transform 0.3s ease 0s;
-      }
-
-      #ddoc_main .ddoc_header_anchor > .code {
-          display: inline-block;
-
-      }
-
-      #ddoc_main .ddoc_decl {
-        background-color: transparent;
-        height: 100%;
-        left: 0;
-        top: 0;
-        padding: 0;
-        padding-left: 15px;
-      }
-
-      #ddoc_main .ddoc_decl .section, #ddoc_main .section.ddoc_sections {
-        background: white none repeat scroll 0 0;
-        margin: 0;
-        padding: 5px;
-        position: relative;
-        border-radius: 5px;
-      }
-
-      #ddoc_main .ddoc_decl .section h4, #ddoc_main .section.ddoc_sections h4 {
-        font-size: 13px;
-        line-height: 1.5;
-        margin-top: 21px;
-      }
-
-      #ddoc_main .section .declaration {
-          margin-top: 21px;
-      }
-
-      #ddoc_main .section .declaration .code {
-          color: rgba(0, 0, 0, 1);
-          margin-bottom: 15px;
-          padding-bottom: 6px;
-      }
-
-      #ddoc_main .declaration div .para {
-          margin-bottom: 0;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr td:first-of-type {
-        padding: 7px;
-        text-align: right;
-        vertical-align: top;
-        word-break: normal;
-        white-space: nowrap;
-      }
-
-      #ddoc_main .ddoc_params .graybox {
-        border: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox td {
-        border-color: rgba(214, 214, 214, 1);
-      }
-
-      #ddoc_main .ddoc_params .graybox tr:first-child > td {
-        border-top: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr:last-child > td {
-        border-bottom: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr > td:first-child {
-        border-left: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr > td:last-child {
-        border-right: 0 none;
-        width: 100%;
-      }
-
-      #ddoc_main em.term, #ddoc_main em.term .code {
-        color: rgba(65, 65, 65, 1);
-        font-size: 12px;
-        font-style: italic;
-        line-height: 1.5;
-      }
-
-      #ddoc_main .see-also {
-        cursor: pointer;
-        font-family: Menlo,monospace;
-      }
-
-      #ddoc_main .ddoc_decl .section > div:last-of-type {
-        margin-bottom: 15px;
-      }
-
-      #ddoc_main .ddoc_member, #ddoc_main .ddoc_module_members {
-          transition: transform 0.3s ease 0s;
-      }
-
-      #ddoc_main .code_sample {
-        background: inherit;
-      }
-
-      #ddoc_main .declaration .code-line {
-          display: block;
-          font: 1em Menlo,monospace;
-      }
-
-      #ddoc_main a[name] {
-        margin: -112px 0 0;
-        padding-top: 112px;
-      }
-
-      #ddoc_main .ddoc_decl td {
-        max-width: inherit;
-      }
-
-      #ddoc_main .declaration a {
-        color: inherit;
-      }
-
-      #ddoc_main .declaration a:hover {
-          color: rgba(0, 136, 204, 1);
-          text-decoration: underline;
-      }
-
-      body.ddoc {
-        background-color: transparent;
-        color: rgba(0, 0, 0, 1);
-        font-family: Helvetica,Arial,sans-serif;
-        font-size: 62.5%;
-        margin: 0;
-        border: 0;
-        left: 0;
-        top: 0;
-        padding: 0;
-      }
-
-      .ddoc a[name] {
-        display: block;
-        height: 0;
-        margin: -85px 0 0;
-        padding-top: 85px;
-        width: 0;
-      }
-
-      .ddoc .module {
-          border-color: transparent;
-          background-color: rgba(255, 255, 255, 1);
-          border-color: currentColor rgba(233, 233, 233, 1) rgba(233, 233, 233, 1);
-          border-image: none;
-          border-style: none solid solid;
-          border-width: 0 1px 1px;
-          box-shadow: 0 0 1px rgba(0, 0, 0, 0.07);
-          display: block;
-          margin-left: 0;
-          min-height: calc(100% - 173px);
-          overflow: auto;
-          padding-bottom: 100px;
-      }
-
-      .ddoc .content_wrapper {
-          background-color: rgba(242, 242, 242, 1);
-          margin: 0 auto;
-          max-width: 980px;
-      }
-
-      .ddoc .section {
-        padding: 15px 25px 30px;
-      }
-
-      .ddoc .section .section {
-        margin: 30px 0 0;
-        padding: 0;
-      }
-
-      .ddoc .para {
-        color: rgba(65, 65, 65, 1);
-        font-size: 1.4em;
-        line-height: 145%;
-        margin-bottom: 15px;
-      }
-
-      .ddoc .ddoc_examples .para {
-        margin-bottom: 0;
-      }
-
-      .ddoc .module_name {
-          color: rgba(0, 0, 0, 1);
-          display: block;
-          font-family: Helvetica;
-          font-size: 2.8em;
-          font-weight: 100;
-          margin-bottom: 0;
-          padding: 15px 0;
-      }
-
-      .ddoc .module a {
-          color: rgba(0, 136, 204, 1);
-          text-decoration: none;
-      }
-
-      .ddoc .code {
-        color: rgba(128, 128, 128, 1);
-        font-family: Menlo,monospace;
-        font-size: 0.85em;
-        word-wrap: break-word;
-      }
-
-      .ddoc .code i {
-        font-style: normal;
-      }
-
-      .ddoc .code .code {
-        font-size: 1em;
-      }
-
-      .ddoc .code_sample {
-        background-clip: padding-box;
-        margin: 1px 0;
-        text-align: left;
-      }
-
-      .ddoc .code_sample {
-        display: block;
-        font-size: 1.4em;
-        margin-left: 21px;
-      }
-
-      .ddoc ol .code_sample {
-        font-size: 1em;
-      }
-
-      .ddoc .code_lines {
-        counter-reset: li;
-        line-height: 1.6em;
-        list-style: outside none none;
-        margin: 0;
-        padding: 0;
-      }
-
-      .ddoc .code_listing .code_sample div {
-        margin-left: 13px;
-        width: 93%;
-      }
-
-      .ddoc .code_listing .code_sample div .code_lines li {
-        list-style-type: none;
-        margin: 0;
-        padding-right: 10px;
-      }
-
-      .ddoc .code_sample div .code_lines li::before {
-        margin-left: -33px;
-        margin-right: 25px;
-      }
-
-      .ddoc .code_sample div .code_lines li:nth-child(n+10)::before {
-        margin-left: -39px;
-        margin-right: 25px;
-      }
-
-      .ddoc .code_sample div .code_lines li:nth-child(n+100)::before {
-        margin-left: -46px;
-        margin-right: 25px;
-      }
-
-      .ddoc .code_sample .code_lines .code {
-        color: #000;
-      }
-
-      .ddoc div.dlang {
-        margin: 10px 0 21px;
-        padding: 4px 0 2px 10px;
-      }
-
-      .ddoc div.dlang {
-          margin: 10px 0 21px;
-          padding: 4px 0 2px 10px;
-      }
-
-      .ddoc div.dlang {
-        border-left: 5px solid rgba(0, 155, 51, 0.2);
-      }
-
-      .ddoc .code_lines li::before {
-        color: rgba(128, 128, 128, 1);
-        content: counter(li, decimal);
-        counter-increment: li;
-        font-family: Menlo,monospace;
-        font-size: 0.9em;
-        margin-right: 16px;
-      }
-
-      .ddoc .code_lines li {
-        padding-left: 0;
-        white-space: pre-wrap;
-      }
-
-      .ddoc .code_lines li:only-of-type::before {
-        color: rgba(255, 255, 255, 1);
-        content: " ";
-      }
-
-      .ddoc .code_lines li:only-of-type {
-        color: rgba(255, 255, 255, 1);
-        content: " ";
-      }
-
-      .ddoc .code_lines li:nth-child(n+10) {
-        text-indent: -17px;
-      }
-
-      .ddoc .code_lines li:nth-child(n+10)::before {
-        margin-right: 12px;
-      }
-
-      .ddoc .graybox {
-        border: 1px solid rgba(233, 233, 233, 1);
-        border-collapse: collapse;
-        border-spacing: 0;
-        empty-cells: hide;
-        margin: 20px 0 36px;
-        text-align: left;
-      }
-
-      .ddoc .graybox p {
-        margin: 0;
-        min-width: 50px;
-      }
-
-      .ddoc td {
-        border: 1px solid rgba(233, 233, 233, 1);
-        margin: 0;
-        max-width: 260px;
-        padding: 5px 25px 5px 10px;
-        vertical-align: middle;
-      }
-
-      .punctuation {
-        color: rgba(0, 0, 0, 1);
-      }
-
-      .comment {
-        color: rgba(0, 131, 18, 1);
-      }
-
-      .operator {
-        color: #000;
-      }
-
-      .keyword {
-        color: rgba(170, 13, 145, 1);
-      }
-
-      .keyword_type {
-        color: rgba(170, 51, 145, 1);
-      }
-
-      .string_literal {
-        color: rgba(196, 26, 22, 1);
-      }
-
-      .ddoc_psuper_symbol {
-        color: rgba(92, 38, 153, 1);
-      }
-
-      .param {
-        color: rgba(0, 0, 0, 1);
-      }
-
-      .psymbol {
-        color: rgba(0, 0, 0, 1);
-      }
-
-      .ddoc_member_header .ddoc_header_anchor .code {
-        font-size: 1em;
-      }
-    </style>
-  </head>
-  <body id="ddoc_main" class="ddoc dlang">
-    <div class="content_wrapper">
-      <article class="module">
-        <h1 class="module_name">codecs.der</h1>
-        <section id="module_content"><section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Distinguished Encoding Rules (DER) is a standard for encoding ASN.1 data.
+    <head>
+        <!-- Standard -->
+        <title>codecs.der</title>
+        <meta charset="utf-8">
+        <meta name="author" content="Jonathan M. Wilbur jonathan@wilbur.space">
+        <meta name="description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+        <meta name="keywords" content="codecs.der,asn1,asn.1,x690,x.690,ber,cer,der,per,basic encoding rules,codec,dlang,d">
+        <meta name="theme-color" content="#FFFFFF">
+
+        <!-- Google -->
+        <meta name="application-url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta name="audience" content="grownup">
+        <meta itemprop="name" content="codecs.der - ASN.1 D Library">
+        <meta itemprop="description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+
+        <!-- Apple -->
+        <meta name="apple-mobile-web-app-title" content="codecs.der">
+        <meta name="apple-mobile-web-app-status-bar-style" content="white">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-touch-fullscreen" content="yes">
+        <meta name="format-detection" content="telephone=yes">
+
+        <!-- Microsoft -->
+        <meta name="msapplication-tooltip" content="codecs.der - ASN.1 D Library">
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+
+        <!-- Miscellaneous -->
+        <meta name="designer" content="Jonathan M. Wilbur jonathan@wilbur.space">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="version" content="1.0.0">
+        <meta name="copyright" content="Copyright 2018 (C) Jonathan M. Wilbur.">
+        <meta name="language" content="English">
+
+        <!-- Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta property="og:title" content="codecs.der - ASN.1 D Library">
+        <meta property="og:description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+        <meta property="og:site_name" content="GitHub">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="website">
+        <meta name="twitter:url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta name="twitter:title" content="codecs.der - ASN.1 D Library">
+        <meta name="twitter:description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+
+        <!-- Application -->
+        <style type="text/css">
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #661515;
+    background-image: linear-gradient(to right, #FFFFEE 0%, #FFCCBB 100%);
+    margin: 20px;
+}
+
+a {
+    color: #AA0000;
+	font-weight: 500;
+	-webkit-transition: color 0.2s;
+    transition: color 0.2s;
+    text-decoration-style: none;
+}
+
+a:hover {
+	color: #FF2222;
+}
+
+a::before,a::after {
+	font-weight: 100;
+	font-size: 110%;
+	line-height: 1;
+	opacity: 0;
+	-webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
+	transition: opacity 0.2s, transform 0.2s;
+}
+
+a::before {
+	left: -0.1em;
+	content: '[';
+	-webkit-transform: translateX(-100%);
+	transform: translateX(-100%);
+}
+
+a::after {
+	right: -0.1em;
+	content: ']';
+	-webkit-transform: translateX(100%);
+	transform: translateX(100%);
+}
+
+a:hover::before,a:hover::after {
+	opacity: 1;
+	-webkit-transform: translateX(0);
+	transform: translateX(0);
+}
+
+code, .mono {
+    font-family: Courier New, Courier, monospace;
+}
+
+.d.inline {
+    display: inline-block;
+}
+
+.d.block .declaration {
+    display: block;
+    padding: 10px;
+    margin: 10px;
+}
+
+.declaration {
+    background-color: #FFFFEE;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+
+#summary, .description {
+    margin: 5px;
+    padding: 5px;
+}
+
+.module-info {
+	margin-bottom: 100px;
+}
+
+.member {
+	font-weight: bold;
+}
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <h1>codecs.der</h1>
+            <h2>ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER</h2>
+        </div>
+        <div id="content">
+            <section class="module-info"><section id="summary">Distinguished Encoding Rules (DER) is a standard for encoding ASN.1 data.
     DER is often used for cryptgraphically-signed data, such as X.509
     certificates, because DER's defining feature is that there is only one way
     to encode each data type, which means that two encodings of the same data
@@ -479,218 +150,101 @@
     <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>,
     and specified in
     <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
-
-  </p>
-</div>
+</section>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Author:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Author:</span>
 <a href="http://jonathan.wilbur.space">Jonathan M. Wilbur</a>
             <a href="mailto:jonathan@wilbur.space">jonathan@wilbur.space</a>
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_license">
-  <h4>License</h4>
-  <p class="para">
-    <a href="https://mit-license.org/">MIT License</a>
+	<h4>License</h4>
+	<p class="para">
+		<a href="https://mit-license.org/">MIT License</a>
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_standards">
-  <h4>Standards</h4>
-  <p class="para">
-    <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680 - Abstract Syntax Notation One (ASN.1)</a>
+	<h4>Standards</h4>
+	<p class="para">
+		<a href="https://www.itu.int/rec/T-REC-X.680/en">X.680 - Abstract Syntax Notation One (ASN.1)</a>
         <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
 
-  </p>
+	</p>
 </div><div class="ddoc_see_also">
-  <h4>See Also</h4>
-  <p class="para">
-    <a href="https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One">The Wikipedia Page on ASN.1</a>
+	<h4>See Also</h4>
+	<p class="para">
+		<a href="https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One">The Wikipedia Page on ASN.1</a>
         <a href="https://en.wikipedia.org/wiki/X.690">The Wikipedia Page on X.690</a>
         <a href="https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf">ASN.1 By Simple Words</a>
         <a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">ASN.1: Communication Between Heterogeneous Systems</a>
-  </p>
+	</p>
 </div>
-
 </section>
-<section class="section ddoc_module_members_section">
-  <div class="ddoc_module_members">
+<section class="module-members">
     <ul class="ddoc_members">
-  <li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#derOID" id="derOID"><code class="code">derOID</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="derOID"></span>alias <code class="code">derOID</code> = distinguishedEncodingRulesObjectIdentifier;
+	<li class="ddoc_member"><a href="#derOID" id="derOID"><code class="member">derOID</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="derOID"></span>alias <code class="code">derOID</code> = distinguishedEncodingRulesObjectIdentifier;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+    </code>
+</section>
+<div>
 </div>
-<div class="ddoc_decl">
-  
+</li><li class="ddoc_member"><a href="#derObjectID" id="derObjectID"><code class="member">derObjectID</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="derObjectID"></span>alias <code class="code">derObjectID</code> = distinguishedEncodingRulesObjectIdentifier;
 
+    </code>
+</section>
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#derObjectIdentifier" id="derObjectIdentifier"><code class="member">derObjectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="derObjectIdentifier"></span>alias <code class="code">derObjectIdentifier</code> = distinguishedEncodingRulesObjectIdentifier;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#derObjectID" id="derObjectID"><code class="code">derObjectID</code></a>
+    </code>
+</section>
+<div>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="derObjectID"></span>alias <code class="code">derObjectID</code> = distinguishedEncodingRulesObjectIdentifier;
+</li><li class="ddoc_member"><a href="#distinguishedEncodingRulesObjectIdentifier" id="distinguishedEncodingRulesObjectIdentifier"><code class="member">distinguishedEncodingRulesObjectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="distinguishedEncodingRulesObjectIdentifier"></span>immutable OID <code class="code">distinguishedEncodingRulesObjectIdentifier</code>;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#derObjectIdentifier" id="derObjectIdentifier"><code class="code">derObjectIdentifier</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="derObjectIdentifier"></span>alias <code class="code">derObjectIdentifier</code> = distinguishedEncodingRulesObjectIdentifier;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#distinguishedEncodingRulesObjectIdentifier" id="distinguishedEncodingRulesObjectIdentifier"><code class="code">distinguishedEncodingRulesObjectIdentifier</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="distinguishedEncodingRulesObjectIdentifier"></span>immutable OID <code class="code">distinguishedEncodingRulesObjectIdentifier</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    The object identifier assigned to the Distinguished Encoding Rules (DER), per the
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The object identifier assigned to the Distinguished Encoding Rules (DER), per the
     <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>'s,
     <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    <i>{joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)} </i>
-  </p>
-</div>
-
 </section>
-
+<div class="description"><i>{joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)} </i></div>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#DERElement" id="DERElement"><code class="member">DERElement</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DERElement"></span>alias <code class="code">DERElement</code> = DistinguishedEncodingRulesElement;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DERElement" id="DERElement"><code class="code">DERElement</code></a>
+    </code>
+</section>
+<div>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DERElement"></span>alias <code class="code">DERElement</code> = DistinguishedEncodingRulesElement;
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement" id="DistinguishedEncodingRulesElement"><code class="member">DistinguishedEncodingRulesElement</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement"></span>class <code class="code">DistinguishedEncodingRulesElement</code>: <span class="ddoc_psuper_symbol">codec.ASN1Element!(<code class="code">DistinguishedEncodingRulesElement</code>).AbstractSyntaxNotation1Element</span>, <span class="ddoc_psuper_symbol">interfaces.Byteable</span>;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement" id="DistinguishedEncodingRulesElement"><code class="code">DistinguishedEncodingRulesElement</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement"></span>class <code class="code">DistinguishedEncodingRulesElement</code>: <span class="ddoc_psuper_symbol">codec.ASN1Element!(<code class="code">DistinguishedEncodingRulesElement</code>).AbstractSyntaxNotation1Element</span>, <span class="ddoc_psuper_symbol">interfaces.Byteable</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    The unit of encoding and decoding for Distinguished Encoding Rules (DER).
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-        There are three parts to an element encoded according to the Distinguished
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The unit of encoding and decoding for Distinguished Encoding Rules (DER).
+</section>
+<div class="description">    There are three parts to an element encoded according to the Distinguished
     Encoding Rules (DER):
 <br><br>
     <ul>        <li>A Type Tag, which specifies what data type is encoded</li>
@@ -707,563 +261,283 @@
 <br><br>
     As an example, this is what encoding a simple INTEGER looks like:
 <br><br>
-
-<section class="code_listing">
-  <div class="code_sample">
-    <div class="dlang">
-      <ol class="code_lines">
-        <li><code class="code">DERElement dv = <span class="keyword">new</span> DERElement();
+<pre><code class="d block">DERElement dv = new DERElement();
 dv.tagNumber = 0x02u; <span class="comment">// "2" means this is an INTEGER
 </span>dv.integer = 1433; <span class="comment">// Now the data is encoded.
-</span>transmit(<span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) dv); <span class="comment">// transmit() is a made-up function.
-</span></code></li>
-      </ol>
-    </div>
-  </div>
-</section>
+</span>transmit(cast(ubyte[]) dv); <span class="comment">// transmit() is a made-up function.
+</span></code></pre>
 <br><br>
     And this is what decoding looks like:
 <br><br>
+<pre><code class="d block">ubyte[] data = receive(); <span class="comment">// receive() is a made-up function.
+</span>DERElement dv2 = new DERElement(data);
 
-<section class="code_listing">
-  <div class="code_sample">
-    <div class="dlang">
-      <ol class="code_lines">
-        <li><code class="code"><span class="keyword">ubyte</span>[] data = receive(); <span class="comment">// receive() is a made-up function.
-</span>DERElement dv2 = <span class="keyword">new</span> DERElement(data);
-
-<span class="keyword">long</span> x;
-<span class="keyword">if</span> (dv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
+long x;
+if (dv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
 </span>{
     x = dv.integer;
 }
 <span class="comment">// Now x is 1433!
-</span></code></li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-  </p>
+</span></code></pre>
 </div>
-
 </section>
 <ul class="ddoc_members">
-  <li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.realEncodingBase" id="DistinguishedEncodingRulesElement.realEncodingBase"><code class="code">realEncodingBase</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realEncodingBase"></span>static ASN1RealEncodingBase <code class="code">realEncodingBase</code>;
+	<li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.realEncodingBase" id="DistinguishedEncodingRulesElement.realEncodingBase"><code class="member">realEncodingBase</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realEncodingBase"></span>static ASN1RealEncodingBase <code class="code">realEncodingBase</code>;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    The base of encoded REALs. May be 2, 8, 10, or 16.
-  </p>
-</div>
-
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.length" id="DistinguishedEncodingRulesElement.length"><code class="code">length</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.length"></span>final const nothrow @property @safe size_t <code class="code">length</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    The <code class="code">length</code> of the value in octets
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">The base of encoded REALs. May be 2, 8, 10, or 16.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.length" id="DistinguishedEncodingRulesElement.length"><code class="member">length</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.length"></span>final const nothrow @property @safe size_t <code class="code">length</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.value" id="DistinguishedEncodingRulesElement.value"><code class="code">value</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.value"></span>ubyte[] <code class="code">value</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    The octets of the encoded <code class="code">value</code>.
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div><section class="module-info"><section id="summary">The <code class="code">length</code> of the value in octets</section>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.value" id="DistinguishedEncodingRulesElement.value"><code class="member">value</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.value"></span>ubyte[] <code class="code">value</code>;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.boolean" id="DistinguishedEncodingRulesElement.boolean"><code class="code">boolean</code></a>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The octets of the encoded <code class="code">value</code>.</section>
+</section>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.boolean"></span>const @property @safe bool <code class="code">boolean</code>();
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.endOfContent" id="DistinguishedEncodingRulesElement.endOfContent"><code class="member">endOfContent</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.endOfContent"></span>const @property @safe void <code class="code">endOfContent</code>();
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">"Decodes" an END OF CONTENT, by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ConstructionException = if the element is marked as "constructed"
+            ASN1ValueSizeException = if there are any content octets
+	</p>
+</div></section>
 </div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a <code class="code">boolean</code>.
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.boolean" id="DistinguishedEncodingRulesElement.boolean"><code class="member">boolean</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.boolean"></span>const @property @safe bool <code class="code">boolean</code>();
 
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    Any non-zero value will be interpreted as TRUE. Only zero will be
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a <code class="code">boolean</code>.
+</section>
+<div class="description">Any non-zero value will be interpreted as TRUE. Only zero will be
         interpreted as FALSE.
 
-
-  </p>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    a <code class="code">boolean</code>
+	<h4>Return Value</h4>
+	<p class="para">
+		a <code class="code">boolean</code>
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueSizeException = if the encoded value is anything other
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueSizeException = if the encoded value is anything other
                 than exactly 1 byte in size.
             ASN1ValueException = if the encoded byte is not 0xFF or 0x00
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.boolean" id="DistinguishedEncodingRulesElement.boolean"><code class="member">boolean</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.boolean.2"></span>nothrow @property @safe void <code class="code">boolean</code>(in bool <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.boolean" id="DistinguishedEncodingRulesElement.boolean"><code class="code">boolean</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.boolean.2"></span>nothrow @property @safe void <code class="code">boolean</code>(in bool <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a <code class="code">boolean</code>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    Any non-zero <code class="code">value</code> will be interpreted as TRUE. Only zero will be
-        interpreted as FALSE.
-  </p>
-</div>
+<div><section class="module-info"><section id="summary">Encodes a <code class="code">boolean</code>.
+</section>
+<div class="description">Any non-zero <code class="code">value</code> will be interpreted as TRUE. Only zero will be
+        interpreted as FALSE.</div>
 <div class="ddoc_examples">
-  <h4>Examples</h4>
-  <p class="para">
-    
-<section class="code_listing">
-  <div class="code_sample">
-    <div class="dlang">
-      <ol class="code_lines">
-        <li><code class="code">DERElement dv = <span class="keyword">new</span> DERElement();
-dv.<span class="param">value</span> = [ 0xFFu ];
-<span class="keyword">assert</span>(dv.<span class="psymbol">boolean</span> == <span class="keyword">true</span>);
-dv.<span class="param">value</span> = [ 0x00u ];
-<span class="keyword">assert</span>(dv.<span class="psymbol">boolean</span> == <span class="keyword">false</span>);
-dv.<span class="param">value</span> = [ 0x01u, 0x00u ];
-assertThrown!ASN1ValueSizeException(dv.<span class="psymbol">boolean</span>);
-dv.<span class="param">value</span> = [];
-assertThrown!ASN1ValueSizeException(dv.<span class="psymbol">boolean</span>);
-dv.<span class="param">value</span> = [ 0x01u ];
-assertThrown!ASN1ValueException(dv.<span class="psymbol">boolean</span>);
-</code></li>
-      </ol>
-    </div>
-  </div>
+	<h4>Examples</h4>
+	<p class="para">
+		<pre><code class="d block">DERElement dv = new DERElement();
+dv.value = [ 0xFFu ];
+assert(dv.boolean == true);
+dv.value = [ 0x00u ];
+assert(dv.boolean == false);
+dv.value = [ 0x01u, 0x00u ];
+assertThrown!ASN1ValueSizeException(dv.boolean);
+dv.value = [];
+assertThrown!ASN1ValueSizeException(dv.boolean);
+dv.value = [ 0x01u ];
+assertThrown!ASN1ValueException(dv.boolean);
+</code></pre>
+
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.integer" id="DistinguishedEncodingRulesElement.integer"><code class="member">integer</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.integer"></span>const @property @system T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
+
+    </code>
 </section>
-
-  </p>
-</div>
+<div><section class="module-info"><section id="summary">Decodes a signed <code class="code">integer</code>.
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.integer" id="DistinguishedEncodingRulesElement.integer"><code class="code">integer</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.integer"></span>const @property @system T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a signed <code class="code">integer</code>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The <code class="code">integer</code> is encoded big endian in two's complement form on the
+<div class="description">The <code class="code">integer</code> is encoded big endian in two's complement form on the
         smallest number of bytes that can encode it.
 
-
-  </p>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    any chosen signed integral type
+	<h4>Return Value</h4>
+	<p class="para">
+		any chosen signed integral type
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueSizeException = if the value is too big to decode
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueSizeException = if the value is too big to decode
                 to a signed integral type.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.integer" id="DistinguishedEncodingRulesElement.integer"><code class="member">integer</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.integer.2"></span>nothrow @property @system void <code class="code">integer</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.integer" id="DistinguishedEncodingRulesElement.integer"><code class="code">integer</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.integer.2"></span>nothrow @property @system void <code class="code">integer</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an <code class="code">integer</code>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The <code class="code">integer</code> is encoded big endian in two's complement form on the
-        smallest number of bytes that can encode it.
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Encodes an <code class="code">integer</code>.
 </section>
-
+<div class="description">The <code class="code">integer</code> is encoded big endian in two's complement form on the
+        smallest number of bytes that can encode it.</div>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.bitString" id="DistinguishedEncodingRulesElement.bitString"><code class="member">bitString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.bitString"></span>const @property bool[] <code class="code">bitString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.bitString" id="DistinguishedEncodingRulesElement.bitString"><code class="code">bitString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.bitString"></span>const @property bool[] <code class="code">bitString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an array of s representing a string of bits.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    In Distinguished Encoding Rules (DER), the first byte is an unsigned
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an array of <code class="d inline">bool</code>s representing a string of bits.
+</section>
+<div class="description">In Distinguished Encoding Rules (DER), the first byte is an unsigned
         integral byte indicating the number of unused bits at the end of
         the BIT STRING. The unused bits must be zeroed.
 
-
-  </p>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    an array of booleans.
+	<h4>Return Value</h4>
+	<p class="para">
+		an array of booleans.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if the first byte has a value greater
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if the first byte has a value greater
                 than seven.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.bitString" id="DistinguishedEncodingRulesElement.bitString"><code class="member">bitString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.bitString.2"></span>@property void <code class="code">bitString</code>(in bool[] <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.bitString" id="DistinguishedEncodingRulesElement.bitString"><code class="code">bitString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.bitString.2"></span>@property void <code class="code">bitString</code>(in bool[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an array of s representing a string of bits.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    In Distinguished Encoding Rules (DER), the first byte is an unsigned
+<div><section class="module-info"><section id="summary">Encodes an array of <code class="d inline">bool</code>s representing a string of bits.
+</section>
+<div class="description">In Distinguished Encoding Rules (DER), the first byte is an unsigned
         integral byte indicating the number of unused bits at the end of
-        the BIT STRING. The unused bits must be zeroed.
-  </p>
-</div>
-
+        the BIT STRING. The unused bits must be zeroed.</div>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.octetString" id="DistinguishedEncodingRulesElement.octetString"><code class="member">octetString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.octetString"></span>const @property @safe ubyte[] <code class="code">octetString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.octetString" id="DistinguishedEncodingRulesElement.octetString"><code class="code">octetString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.octetString"></span>const @property @safe ubyte[] <code class="code">octetString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an OCTET STRING into an unsigned byte array.
-
-  </p>
-</div>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an OCTET STRING into an unsigned byte array.
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    an unsigned byte array.
-  </p>
+	<h4>Return Value</h4>
+	<p class="para">
+		an unsigned byte array.
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.octetString" id="DistinguishedEncodingRulesElement.octetString"><code class="member">octetString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.octetString.2"></span>@property @safe void <code class="code">octetString</code>(in ubyte[] <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.octetString" id="DistinguishedEncodingRulesElement.octetString"><code class="code">octetString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.octetString.2"></span>@property @safe void <code class="code">octetString</code>(in ubyte[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an OCTET STRING from an unsigned byte array.
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div><section class="module-info"><section id="summary">Encodes an OCTET STRING from an unsigned byte array.</section>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.nill" id="DistinguishedEncodingRulesElement.nill"><code class="member">nill</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.nill"></span>const @property @safe void <code class="code">nill</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.objectIdentifier" id="DistinguishedEncodingRulesElement.objectIdentifier"><code class="code">objectIdentifier</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectIdentifier"></span>const @property @system OID <code class="code">objectIdentifier</code>();
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">"Decodes" a NULL, by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+</section>
+<div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Note:</span>
+I had to name this method "<code class="code">nill</code>," because "NULL" is a keyword in D.
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+
+	</p>
 </div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an OBJECT IDENTIFIER.
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ConstructionException = if the element is marked as "constructed"
+            ASN1ValueSizeException = if there are any content octets
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.objectIdentifier" id="DistinguishedEncodingRulesElement.objectIdentifier"><code class="member">objectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectIdentifier"></span>const @property @system OID <code class="code">objectIdentifier</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an OBJECT IDENTIFIER.
         See source/types/universal/objectidentifier.d for information about
         the ObjectIdentifier class (aliased as "OID").
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The encoded OBJECT IDENTIFIER's first byte contains the first number
+</section>
+<div class="description">The encoded OBJECT IDENTIFIER's first byte contains the first number
         of the OID multiplied by 40 and added to the second number of the OID.
         The subsequent bytes have all the remaining number encoded in base-128
         on the least significant 7 bits of each byte. For these bytes, the most
@@ -1271,62 +545,35 @@ assertThrown!ASN1ValueException(dv.<span class="psymbol">boolean</span>);
         current OID number. In other words, the bytes encoding each number
         always end with a byte whose most significant bit is cleared.
 
-
-  </p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueSizeException = if an attempt is made to decode
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueSizeException = if an attempt is made to decode
                 an Object Identifier from zero bytes.
             ASN1ValueSizeException = if a single OID number is too big to
                 decode to a size_t.
 
-  </p>
+	</p>
 </div><div class="ddoc_standards">
-  <h4>Standards</h4>
-  <p class="para">
-    <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
-  </p>
+	<h4>Standards</h4>
+	<p class="para">
+		<a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.objectIdentifier" id="DistinguishedEncodingRulesElement.objectIdentifier"><code class="member">objectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectIdentifier.2"></span>@property @system void <code class="code">objectIdentifier</code>(in OID <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.objectIdentifier" id="DistinguishedEncodingRulesElement.objectIdentifier"><code class="code">objectIdentifier</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectIdentifier.2"></span>@property @system void <code class="code">objectIdentifier</code>(in OID <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an OBJECT IDENTIFIER.
+<div><section class="module-info"><section id="summary">Encodes an OBJECT IDENTIFIER.
         See source/types/universal/objectidentifier.d for information about
         the ObjectIdentifier class (aliased as "OID").
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The encoded OBJECT IDENTIFIER's first byte contains the first number
+</section>
+<div class="description">The encoded OBJECT IDENTIFIER's first byte contains the first number
         of the OID multiplied by 40 and added to the second number of the OID.
         The subsequent bytes have all the remaining number encoded in base-128
         on the least significant 7 bits of each byte. For these bytes, the most
@@ -1334,64 +581,35 @@ assertThrown!ASN1ValueException(dv.<span class="psymbol">boolean</span>);
         current OID number. In other words, the bytes encoding each number
         always end with a byte whose most significant bit is cleared.
 
-
-  </p>
 </div>
 <div class="ddoc_standards">
-  <h4>Standards</h4>
-  <p class="para">
-    <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
-  </p>
+	<h4>Standards</h4>
+	<p class="para">
+		<a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.objectDescriptor" id="DistinguishedEncodingRulesElement.objectDescriptor"><code class="member">objectDescriptor</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectDescriptor"></span>const @property @system string <code class="code">objectDescriptor</code>();
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.objectDescriptor" id="DistinguishedEncodingRulesElement.objectDescriptor"><code class="code">objectDescriptor</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectDescriptor"></span>const @property @system string <code class="code">objectDescriptor</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an ObjectDescriptor, which is a string consisting of only
+<div><section class="module-info"><section id="summary">Decodes an ObjectDescriptor, which is a string consisting of only
         graphical characters. In fact, ObjectDescriptor is actually implicitly
         just a GraphicString! The formal specification for an ObjectDescriptor
         is:
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    <i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+</section>
+<div class="description"><i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
 <br><br>
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
-
-  </p>
 </div>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Citations:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
 Dubuisson, Olivier. “Character String Types.” ASN.1:
                 Communication between Heterogeneous Systems, Morgan
                 Kaufmann, 2001, pp. 175-178.
@@ -1399,71 +617,44 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
             <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
 
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    a string.
+	<h4>Return Value</h4>
+	<p class="para">
+		a string.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if the encoded value contains any bytes
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if the encoded value contains any bytes
                 outside of 0x20 to 0x7E.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.objectDescriptor" id="DistinguishedEncodingRulesElement.objectDescriptor"><code class="member">objectDescriptor</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectDescriptor.2"></span>@property @system void <code class="code">objectDescriptor</code>(in string <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.objectDescriptor" id="DistinguishedEncodingRulesElement.objectDescriptor"><code class="code">objectDescriptor</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.objectDescriptor.2"></span>@property @system void <code class="code">objectDescriptor</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an ObjectDescriptor, which is a string consisting of only
+<div><section class="module-info"><section id="summary">Encodes an ObjectDescriptor, which is a string consisting of only
         graphical characters. In fact, ObjectDescriptor is actually implicitly
         just a GraphicString! The formal specification for an ObjectDescriptor
         is:
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    <i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+</section>
+<div class="description"><i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
 <br><br>
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
-
-  </p>
 </div>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Citations:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
 Dubuisson, Olivier. “Character String Types.” ASN.1:
                 Communication between Heterogeneous Systems, Morgan
                 Kaufmann, 2001, pp. 175-178.
@@ -1471,54 +662,29 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
             <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
 
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if the string <code class="code">value</code> contains any
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if the string <code class="code">value</code> contains any
                 character outside of 0x20 to 0x7E, which means any control
                 characters or DELETE.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.external" id="DistinguishedEncodingRulesElement.external"><code class="member">external</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.external"></span>deprecated const @property @system External <code class="code">external</code>();
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.external" id="DistinguishedEncodingRulesElement.external"><code class="code">external</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.external"></span>deprecated const @property @system External <code class="code">external</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an EXTERNAL, which is a constructed data type, defined in
+<div><section class="module-info"><section id="summary">Decodes an EXTERNAL, which is a constructed data type, defined in
         the <a href="https://www.itu.int">            International Telecommunications Union</a>'s
         <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    According to the
+</section>
+<div class="description">According to the
         <a href="http://www.itu.int/en/pages/default.aspx">            International Telecommunications Union</a>'s
         <a href="https://www.itu.int/rec/T-REC-X.680/en">            X.680 - Abstract Syntax Notation One (ASN.1)</a>,
         the abstract definition for an EXTERNAL, after removing the comments in the
@@ -1676,20 +842,18 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         tagging is NOT used when encoding with Basic Encoding Rules (BER),
         Canonical Encoding Rules (CER), or Distinguished Encoding Rules (DER).
 
-
-  </p>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    an External, defined in types.universal.<code class="code">external</code>.
+	<h4>Return Value</h4>
+	<p class="para">
+		an External, defined in types.universal.<code class="code">external</code>.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1SizeException = if encoded EmbeddedPDV has too few or too many
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1SizeException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueSizeException = if encoded INTEGER is too large to decode.
@@ -1700,46 +864,21 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 syntaxes or context-negotiation, or if an unspecified element
                 of EMBEDDED PDV itself is referenced by an out-of-range
                 context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.external" id="DistinguishedEncodingRulesElement.external"><code class="member">external</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.external.2"></span>deprecated @property @system void <code class="code">external</code>(in External <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.external" id="DistinguishedEncodingRulesElement.external"><code class="code">external</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.external.2"></span>deprecated @property @system void <code class="code">external</code>(in External <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an EXTERNAL, which is a constructed data type, defined in
+<div><section class="module-info"><section id="summary">Encodes an EXTERNAL, which is a constructed data type, defined in
         the <a href="https://www.itu.int">            International Telecommunications Union</a>'s
         <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The specification defines EXTERNAL as:
+</section>
+<div class="description">The specification defines EXTERNAL as:
 <br><br>
         <i>            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 identification CHOICE {
@@ -1755,53 +894,26 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.
 
-
-  </p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueSizeException = if encoded INTEGER is too large to decode
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueSizeException = if encoded INTEGER is too large to decode
             ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.realNumber" id="DistinguishedEncodingRulesElement.realNumber"><code class="member">realNumber</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realNumber"></span>const @property @system T <code class="code">realNumber</code>(T)() if (isFloatingPoint!T);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.realNumber" id="DistinguishedEncodingRulesElement.realNumber"><code class="code">realNumber</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realNumber"></span>const @property @system T <code class="code">realNumber</code>(T)() if (isFloatingPoint!T);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a floating-point type.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    For the encoded REAL, a value of 0x40 means "positive infinity,"
+<div><section class="module-info"><section id="summary">Decodes a floating-point type.
+</section>
+<div class="description">For the encoded REAL, a value of 0x40 means "positive infinity,"
         a value of 0x41 means "negative infinity." An empty value means
         exactly zero. A value whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1835,13 +947,11 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         cannot happen if the transmitted value is in base-2, but it can happen if
         the transmitted value is in base-8 or base-16.
 
-
-  </p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ConvException = if character-encoding cannot be converted to
+	<h4>Throws</h4>
+	<p class="para">
+		ConvException = if character-encoding cannot be converted to
                 the selected floating-point type, T.
             ConvOverflowException = if the character-encoding encodes a
                 number that is too big for the selected floating-point
@@ -1853,44 +963,19 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
             ASN1ValueException = if both bits indicating the base in the
                 information byte of a binary-encoded REAL's information byte
                 are set, which would indicate an invalid base.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.realNumber" id="DistinguishedEncodingRulesElement.realNumber"><code class="member">realNumber</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realNumber.2"></span>@property @system void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (isFloatingPoint!T);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.realNumber" id="DistinguishedEncodingRulesElement.realNumber"><code class="code">realNumber</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realNumber.2"></span>@property @system void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (isFloatingPoint!T);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a floating-point type.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    For the encoded REAL, a <code class="code">value</code> of 0x40 means "positive infinity,"
+<div><section class="module-info"><section id="summary">Encodes a floating-point type.
+</section>
+<div class="description">For the encoded REAL, a <code class="code">value</code> of 0x40 means "positive infinity,"
         a <code class="code">value</code> of 0x41 means "negative infinity." An empty <code class="code">value</code> means
         exactly zero. A <code class="code">value</code> whose first byte starts with two cleared bits
         encodes the real as a string of characters, where the latter nybble
@@ -1918,137 +1003,66 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         Note that this method assumes that your machine uses IEEE 754 floating
         point format.
 
-
-  </p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if an attempt to encode NaN is made.
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if an attempt to encode NaN is made.
             ASN1ValueSizeException = if an attempt to encode would result
                 in an arithmetic underflow of a signed short.
             ASN1ValueSizeException = if an attempt to encode would result
                 in an arithmetic overflow of a signed short.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.enumerated" id="DistinguishedEncodingRulesElement.enumerated"><code class="member">enumerated</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.enumerated"></span>const @property @system T <code class="code">enumerated</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.enumerated" id="DistinguishedEncodingRulesElement.enumerated"><code class="code">enumerated</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.enumerated"></span>const @property @system T <code class="code">enumerated</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an integer from an ENUMERATED type. In DER, an ENUMERATED
+<div><section class="module-info"><section id="summary">Decodes an integer from an ENUMERATED type. In DER, an ENUMERATED
         type is encoded the exact same way that an INTEGER is.
-
-  </p>
-</div>
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    any chosen signed integral type
+	<h4>Return Value</h4>
+	<p class="para">
+		any chosen signed integral type
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueSizeException = if the value is too big to decode
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueSizeException = if the value is too big to decode
                 to a signed integral type.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.enumerated" id="DistinguishedEncodingRulesElement.enumerated"><code class="member">enumerated</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.enumerated.2"></span>nothrow @property @system void <code class="code">enumerated</code>(T)(in T <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.enumerated" id="DistinguishedEncodingRulesElement.enumerated"><code class="code">enumerated</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.enumerated.2"></span>nothrow @property @system void <code class="code">enumerated</code>(T)(in T <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an ENUMERATED type from an integer. In DER, an ENUMERATED
-        type is encoded the exact same way that an INTEGER is.
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Encodes an ENUMERATED type from an integer. In DER, an ENUMERATED
+        type is encoded the exact same way that an INTEGER is.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.embeddedPresentationDataValue" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue"><code class="member">embeddedPresentationDataValue</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue"></span>const @property @system EmbeddedPDV <code class="code">embeddedPresentationDataValue</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.embeddedPresentationDataValue" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue"></span>const @property @system EmbeddedPDV <code class="code">embeddedPresentationDataValue</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an EMBEDDED PDV, which is a constructed data type, defined in
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an EMBEDDED PDV, which is a constructed data type, defined in
             the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The specification defines EMBEDDED PDV as:
+</section>
+<div class="description">The specification defines EMBEDDED PDV as:
 <br><br>
         <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
@@ -2086,13 +1100,11 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 data-value [2] OCTET STRING }
         </i>
 
-
-  </p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1SizeException = if encoded EmbeddedPDV has too few or too many
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1SizeException = if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueSizeException = if encoded INTEGER is too large to decode.
@@ -2103,46 +1115,21 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 syntaxes or context-negotiation, or if an unspecified element
                 of EMBEDDED PDV itself is referenced by an out-of-range
                 context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.embeddedPresentationDataValue" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue"><code class="member">embeddedPresentationDataValue</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue.2"></span>@property @system void <code class="code">embeddedPresentationDataValue</code>(in EmbeddedPDV <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.embeddedPresentationDataValue" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.embeddedPresentationDataValue.2"></span>@property @system void <code class="code">embeddedPresentationDataValue</code>(in EmbeddedPDV <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an EMBEDDED PDV, which is a constructed data type, defined in
+<div><section class="module-info"><section id="summary">Encodes an EMBEDDED PDV, which is a constructed data type, defined in
             the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The specification defines EMBEDDED PDV as:
+</section>
+<div class="description">The specification defines EMBEDDED PDV as:
 <br><br>
         <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
@@ -2187,708 +1174,319 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 
-
-  </p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if encoded ObjectDescriptor contains
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if encoded ObjectDescriptor contains
                 invalid characters.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.unicodeTransformationFormat8String" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String"><code class="member">unicodeTransformationFormat8String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String"></span>const @property @system string <code class="code">unicodeTransformationFormat8String</code>();
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.unicodeTransformationFormat8String" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String"></span>const @property @system string <code class="code">unicodeTransformationFormat8String</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes the value to UTF-8 characters.
-
-  </p>
-</div>
+<div><section class="module-info"><section id="summary">Decodes the value to UTF-8 characters.
+</section>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    UTF8Exception if it does not decode correctly.
-  </p>
+	<h4>Throws</h4>
+	<p class="para">
+		UTF8Exception if it does not decode correctly.
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.unicodeTransformationFormat8String" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String"><code class="member">unicodeTransformationFormat8String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String.2"></span>nothrow @property @system void <code class="code">unicodeTransformationFormat8String</code>(in string <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.unicodeTransformationFormat8String" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.unicodeTransformationFormat8String.2"></span>nothrow @property @system void <code class="code">unicodeTransformationFormat8String</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a UTF-8 string to bytes. No checks are performed.
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Encodes a UTF-8 string to bytes. No checks are performed.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.relativeObjectIdentifier" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier"><code class="member">relativeObjectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier"></span>const @property @system OIDNode[] <code class="code">relativeObjectIdentifier</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.relativeObjectIdentifier" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier"></span>const @property @system OIDNode[] <code class="code">relativeObjectIdentifier</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a RELATIVE OBJECT IDENTIFIER.
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a RELATIVE OBJECT IDENTIFIER.
         See source/types/universal/objectidentifier.d for information about
         the ObjectIdentifier class (aliased as "OID").
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
+</section>
+<div class="description">The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
         on the least significant 7 bits of each byte. For these bytes, the most
         significant bit is set if the next byte continues the encoding of the
         current OID number. In other words, the bytes encoding each number
         always end with a byte whose most significant bit is cleared.
 
-
-  </p>
 </div>
 <div class="ddoc_standards">
-  <h4>Standards</h4>
-  <p class="para">
-    <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
-  </p>
+	<h4>Standards</h4>
+	<p class="para">
+		<a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.relativeObjectIdentifier" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier"><code class="member">relativeObjectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier.2"></span>nothrow @property @system void <code class="code">relativeObjectIdentifier</code>(in OIDNode[] <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.relativeObjectIdentifier" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.relativeObjectIdentifier.2"></span>nothrow @property @system void <code class="code">relativeObjectIdentifier</code>(in OIDNode[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a RELATIVE OBJECT IDENTIFIER.
+<div><section class="module-info"><section id="summary">Encodes a RELATIVE OBJECT IDENTIFIER.
         See source/types/universal/objectidentifier.d for information about
         the ObjectIdentifier class (aliased as "OID").
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
+</section>
+<div class="description">The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
         on the least significant 7 bits of each byte. For these bytes, the most
         significant bit is set if the next byte continues the encoding of the
         current OID number. In other words, the bytes encoding each number
         always end with a byte whose most significant bit is cleared.
 
-
-  </p>
 </div>
 <div class="ddoc_standards">
-  <h4>Standards</h4>
-  <p class="para">
-    <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
-  </p>
+	<h4>Standards</h4>
+	<p class="para">
+		<a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.sequence" id="DistinguishedEncodingRulesElement.sequence"><code class="member">sequence</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.sequence"></span>const @property @system DERElement[] <code class="code">sequence</code>();
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.sequence" id="DistinguishedEncodingRulesElement.sequence"><code class="code">sequence</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.sequence"></span>const @property @system DERElement[] <code class="code">sequence</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a <code class="code">sequence</code> of DERElements.
-
-  </p>
-</div>
+<div><section class="module-info"><section id="summary">Decodes a <code class="code">sequence</code> of DERElements.
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    an array of DERElements.
+	<h4>Return Value</h4>
+	<p class="para">
+		an array of DERElements.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueSizeException = if long definite-length is too big to be
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
             ASN1ValueSizeException = if there are fewer value bytes than
                 indicated by the length tag.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.sequence" id="DistinguishedEncodingRulesElement.sequence"><code class="member">sequence</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.sequence.2"></span>@property @system void <code class="code">sequence</code>(in DERElement[] <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.sequence" id="DistinguishedEncodingRulesElement.sequence"><code class="code">sequence</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.sequence.2"></span>@property @system void <code class="code">sequence</code>(in DERElement[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a <code class="code">sequence</code> of DERElements.
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Encodes a <code class="code">sequence</code> of DERElements.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.set" id="DistinguishedEncodingRulesElement.set"><code class="member">set</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.set"></span>const @property @system DERElement[] <code class="code">set</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.set" id="DistinguishedEncodingRulesElement.set"><code class="code">set</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.set"></span>const @property @system DERElement[] <code class="code">set</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a <code class="code">set</code> of DERElements.
-
-  </p>
-</div>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a <code class="code">set</code> of DERElements.
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    an array of DERElements.
+	<h4>Return Value</h4>
+	<p class="para">
+		an array of DERElements.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueSizeException = if long definite-length is too big to be
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueSizeException = if long definite-length is too big to be
                 decoded to an unsigned integral type.
             ASN1ValueSizeException = if there are fewer value bytes than
                 indicated by the length tag.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.set" id="DistinguishedEncodingRulesElement.set"><code class="member">set</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.set.2"></span>@property @system void <code class="code">set</code>(in DERElement[] <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.set" id="DistinguishedEncodingRulesElement.set"><code class="code">set</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.set.2"></span>@property @system void <code class="code">set</code>(in DERElement[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a <code class="code">set</code> of DERElements.
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Encodes a <code class="code">set</code> of DERElements.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.numericString" id="DistinguishedEncodingRulesElement.numericString"><code class="member">numericString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.numericString"></span>const @property @system string <code class="code">numericString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.numericString" id="DistinguishedEncodingRulesElement.numericString"><code class="code">numericString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.numericString"></span>const @property @system string <code class="code">numericString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string, where the characters of the string are limited to
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a string, where the characters of the string are limited to
         0 - 9 and space.
-
-  </p>
-</div>
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    a string.
+	<h4>Return Value</h4>
+	<p class="para">
+		a string.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any character other than 0-9 or
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any character other than 0-9 or
                 space is encoded.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.numericString" id="DistinguishedEncodingRulesElement.numericString"><code class="member">numericString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.numericString.2"></span>@property @system void <code class="code">numericString</code>(in string <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.numericString" id="DistinguishedEncodingRulesElement.numericString"><code class="code">numericString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.numericString.2"></span>@property @system void <code class="code">numericString</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string, where the characters of the string are limited to
+<div><section class="module-info"><section id="summary">Encodes a string, where the characters of the string are limited to
         0 - 9 and space.
-
-  </p>
-</div>
-<div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any character other than 0-9 or
-                space is supplied.
-  </p>
-</div>
 </section>
-
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any character other than 0-9 or
+                space is supplied.
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.printableString" id="DistinguishedEncodingRulesElement.printableString"><code class="member">printableString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.printableString"></span>const @property @system string <code class="code">printableString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.printableString" id="DistinguishedEncodingRulesElement.printableString"><code class="code">printableString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.printableString"></span>const @property @system string <code class="code">printableString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string that will only contain characters a-z, A-Z, 0-9,
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a string that will only contain characters a-z, A-Z, 0-9,
         space, apostrophe, parentheses, comma, minus, plus, period,
         forward slash, colon, equals, and question mark.
-
-  </p>
-</div>
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    a string.
+	<h4>Return Value</h4>
+	<p class="para">
+		a string.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any character other than a-z, A-Z,
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 encoded.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.printableString" id="DistinguishedEncodingRulesElement.printableString"><code class="member">printableString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.printableString.2"></span>@property @system void <code class="code">printableString</code>(in string <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.printableString" id="DistinguishedEncodingRulesElement.printableString"><code class="code">printableString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.printableString.2"></span>@property @system void <code class="code">printableString</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string that may only contain characters a-z, A-Z, 0-9,
+<div><section class="module-info"><section id="summary">Encodes a string that may only contain characters a-z, A-Z, 0-9,
         space, apostrophe, parentheses, comma, minus, plus, period,
         forward slash, colon, equals, and question mark.
-
-  </p>
-</div>
+</section>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any character other than a-z, A-Z,
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 supplied.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.teletexString" id="DistinguishedEncodingRulesElement.teletexString"><code class="member">teletexString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.teletexString"></span>const @property @safe ubyte[] <code class="code">teletexString</code>();
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.teletexString" id="DistinguishedEncodingRulesElement.teletexString"><code class="code">teletexString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.teletexString"></span>const nothrow @property @safe ubyte[] <code class="code">teletexString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Literally just returns the value bytes.
-
-  </p>
-</div>
+<div><section class="module-info"><section id="summary">Literally just returns the value bytes.
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    an unsigned byte array, where each byte is a T.61 character.
-  </p>
+	<h4>Return Value</h4>
+	<p class="para">
+		an unsigned byte array, where each byte is a T.61 character.
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.teletexString" id="DistinguishedEncodingRulesElement.teletexString"><code class="member">teletexString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.teletexString.2"></span>nothrow @property @safe void <code class="code">teletexString</code>(in ubyte[] <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.teletexString" id="DistinguishedEncodingRulesElement.teletexString"><code class="code">teletexString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.teletexString.2"></span>nothrow @property @safe void <code class="code">teletexString</code>(in ubyte[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Literally just sets the <code class="code">value</code> bytes.
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div><section class="module-info"><section id="summary">Literally just sets the <code class="code">value</code> bytes.</section>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.videotexString" id="DistinguishedEncodingRulesElement.videotexString"><code class="member">videotexString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.videotexString"></span>const @property @safe ubyte[] <code class="code">videotexString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.videotexString" id="DistinguishedEncodingRulesElement.videotexString"><code class="code">videotexString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.videotexString"></span>const nothrow @property @safe ubyte[] <code class="code">videotexString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Literally just returns the value bytes.
-
-  </p>
-</div>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Literally just returns the value bytes.
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    an unsigned byte array.
-  </p>
+	<h4>Return Value</h4>
+	<p class="para">
+		an unsigned byte array.
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.videotexString" id="DistinguishedEncodingRulesElement.videotexString"><code class="member">videotexString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.videotexString.2"></span>nothrow @property @safe void <code class="code">videotexString</code>(in ubyte[] <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.videotexString" id="DistinguishedEncodingRulesElement.videotexString"><code class="code">videotexString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.videotexString.2"></span>nothrow @property @safe void <code class="code">videotexString</code>(in ubyte[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Literally just sets the <code class="code">value</code> bytes.
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div><section class="module-info"><section id="summary">Literally just sets the <code class="code">value</code> bytes.</section>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.internationalAlphabetNumber5String" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String"><code class="member">internationalAlphabetNumber5String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String"></span>const @property @system string <code class="code">internationalAlphabetNumber5String</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.internationalAlphabetNumber5String" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String"></span>const @property @system string <code class="code">internationalAlphabetNumber5String</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string that only contains ASCII characters.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    IA5String differs from ASCII ever so slightly: IA5 is international,
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a string that only contains ASCII characters.
+</section>
+<div class="description">IA5String differs from ASCII ever so slightly: IA5 is international,
         leaving 10 characters up to be locale-specific:
 <br><br>
         <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
@@ -2904,58 +1502,31 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
             <tr><td>0x7E</td> <td>~</td></tr>
         </table>
 
-
-  </p>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    a string.
+	<h4>Return Value</h4>
+	<p class="para">
+		a string.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any enecoded character is not ASCII.
-  </p>
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any enecoded character is not ASCII.
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.internationalAlphabetNumber5String" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String"><code class="member">internationalAlphabetNumber5String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String.2"></span>@property @system void <code class="code">internationalAlphabetNumber5String</code>(in string <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.internationalAlphabetNumber5String" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.internationalAlphabetNumber5String.2"></span>@property @system void <code class="code">internationalAlphabetNumber5String</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string that may only contain ASCII characters.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    IA5String differs from ASCII ever so slightly: IA5 is international,
+<div><section class="module-info"><section id="summary">Encodes a string that may only contain ASCII characters.
+</section>
+<div class="description">IA5String differs from ASCII ever so slightly: IA5 is international,
         leaving 10 characters up to be locale-specific:
 <br><br>
         <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
@@ -2971,51 +1542,24 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
             <tr><td>0x7E</td> <td>~</td></tr>
         </table>
 
-
-  </p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any enecoded character is not ASCII.
-  </p>
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any enecoded character is not ASCII.
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.coordinatedUniversalTime" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime"><code class="member">coordinatedUniversalTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime"></span>const @property @system DateTime <code class="code">coordinatedUniversalTime</code>();
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.coordinatedUniversalTime" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime"></span>const @property @system DateTime <code class="code">coordinatedUniversalTime</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a DateTime.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The DER-encoded value is just the ASCII character representation of
+<div><section class="module-info"><section id="summary">Decodes a DateTime.
+</section>
+<div class="description">The DER-encoded value is just the ASCII character representation of
         the UTC-formatted timestamp.
 <br><br>
         When using Distinguished Encoding Rules (DER), only the YYMMDDhhmmssZ
@@ -3029,110 +1573,56 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         creating the ISO Date String. Otherwise, it assumes we are talking
         about the 20th century, and prepend '19' when creating the string.
 
-
-  </p>
 </div>
 <div class="ddoc_see_also">
-  <h4>See Also</h4>
-  <p class="para">
-    <a href="https://www.obj-sys.com/asn1tutorial/node15.html">UTCTime</a>
+	<h4>See Also</h4>
+	<p class="para">
+		<a href="https://www.obj-sys.com/asn1tutorial/node15.html">UTCTime</a>
 
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    DateTimeException = if string cannot be decoded to a DateTime
-  </p>
+	<h4>Throws</h4>
+	<p class="para">
+		DateTimeException = if string cannot be decoded to a DateTime
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.coordinatedUniversalTime" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime"><code class="member">coordinatedUniversalTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime.2"></span>@property @system void <code class="code">coordinatedUniversalTime</code>(in DateTime <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.coordinatedUniversalTime" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.coordinatedUniversalTime.2"></span>@property @system void <code class="code">coordinatedUniversalTime</code>(in DateTime <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a DateTime.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The encoded <code class="code">value</code> is just the ASCII character representation of
+<div><section class="module-info"><section id="summary">Encodes a DateTime.
+</section>
+<div class="description">The encoded <code class="code">value</code> is just the ASCII character representation of
         the UTC-formatted timestamp.
 <br><br>
         When using Distinguished Encoding Rules (DER), only the YYMMDDhhmmssZ
         format is acceptable for encoding UTCTime.
 
-
-  </p>
 </div>
 <div class="ddoc_see_also">
-  <h4>See Also</h4>
-  <p class="para">
-    <a href="https://www.obj-sys.com/asn1tutorial/node15.html">UTCTime</a>
-  </p>
+	<h4>See Also</h4>
+	<p class="para">
+		<a href="https://www.obj-sys.com/asn1tutorial/node15.html">UTCTime</a>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.generalizedTime" id="DistinguishedEncodingRulesElement.generalizedTime"><code class="member">generalizedTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalizedTime"></span>const @property @system DateTime <code class="code">generalizedTime</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.generalizedTime" id="DistinguishedEncodingRulesElement.generalizedTime"><code class="code">generalizedTime</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalizedTime"></span>const @property @system DateTime <code class="code">generalizedTime</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a DateTime.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The DER-encoded value is just the ASCII character representation of
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a DateTime.
+</section>
+<div class="description">The DER-encoded value is just the ASCII character representation of
         the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">        ISO 8601</a>-formatted timestamp.
 <br><br>
         An ISO-8601 Timestamp looks like:
@@ -3145,51 +1635,24 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         no trailing periods ('.'), or post-period trailing zeroes are acceptable,
         and all timestamps must end with a 'Z', indicating UTC time.
 
-
-  </p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    DateTimeException = if string cannot be decoded to a DateTime
-  </p>
+	<h4>Throws</h4>
+	<p class="para">
+		DateTimeException = if string cannot be decoded to a DateTime
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.generalizedTime" id="DistinguishedEncodingRulesElement.generalizedTime"><code class="member">generalizedTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalizedTime.2"></span>@property @system void <code class="code">generalizedTime</code>(in DateTime <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.generalizedTime" id="DistinguishedEncodingRulesElement.generalizedTime"><code class="code">generalizedTime</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalizedTime.2"></span>@property @system void <code class="code">generalizedTime</code>(in DateTime <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a DateTime.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The DER-encoded <code class="code">value</code> is just the ASCII character representation of
+<div><section class="module-info"><section id="summary">Encodes a DateTime.
+</section>
+<div class="description">The DER-encoded <code class="code">value</code> is just the ASCII character representation of
         the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">        ISO 8601</a>-formatted timestamp.
 <br><br>
         An ISO-8601 Timestamp looks like:
@@ -3200,54 +1663,25 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 <br><br>
         But when using Distinguished Encoding Rules (DER), only timestamps with
         no trailing periods ('.'), or post-period trailing zeroes are acceptable,
-        and all timestamps must end with a 'Z', indicating UTC time.
-  </p>
-</div>
-
+        and all timestamps must end with a 'Z', indicating UTC time.</div>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.graphicString" id="DistinguishedEncodingRulesElement.graphicString"><code class="member">graphicString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.graphicString"></span>const @property @system string <code class="code">graphicString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.graphicString" id="DistinguishedEncodingRulesElement.graphicString"><code class="code">graphicString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.graphicString"></span>const @property @system string <code class="code">graphicString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an ASCII string that contains only characters between and
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an ASCII string that contains only characters between and
         including 0x20 and 0x75.
+</section>
+<div class="description">Deprecated, according to page 182 of the Dubuisson book.
 
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    Deprecated, according to page 182 of the Dubuisson book.
-
-
-  </p>
 </div>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Citations:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
 Dubuisson, Olivier. “Character String Types.” ASN.1:
                 Communication between Heterogeneous Systems, Morgan
                 Kaufmann, 2001, pp. 175-178.
@@ -3255,66 +1689,39 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
             <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
 
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    a string.
+	<h4>Return Value</h4>
+	<p class="para">
+		a string.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any non-graphical character
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any non-graphical character
                 (including space) is encoded.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.graphicString" id="DistinguishedEncodingRulesElement.graphicString"><code class="member">graphicString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.graphicString.2"></span>@property @system void <code class="code">graphicString</code>(in string <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.graphicString" id="DistinguishedEncodingRulesElement.graphicString"><code class="code">graphicString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.graphicString.2"></span>@property @system void <code class="code">graphicString</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an ASCII string that may contain only characters between and
+<div><section class="module-info"><section id="summary">Encodes an ASCII string that may contain only characters between and
         including 0x20 and 0x75.
+</section>
+<div class="description">Deprecated, according to page 182 of the Dubuisson book.
 
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    Deprecated, according to page 182 of the Dubuisson book.
-
-
-  </p>
 </div>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Citations:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
 Dubuisson, Olivier. “Character String Types.” ASN.1:
                 Communication between Heterogeneous Systems, Morgan
                 Kaufmann, 2001, pp. 175-178.
@@ -3322,339 +1729,172 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
             <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
 
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any non-graphical character
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any non-graphical character
                 (including space) is supplied.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.visibleString" id="DistinguishedEncodingRulesElement.visibleString"><code class="member">visibleString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.visibleString"></span>const @property @system string <code class="code">visibleString</code>();
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.visibleString" id="DistinguishedEncodingRulesElement.visibleString"><code class="code">visibleString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.visibleString"></span>const @property @system string <code class="code">visibleString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string that only contains characters between and including
+<div><section class="module-info"><section id="summary">Decodes a string that only contains characters between and including
         0x20 and 0x7E. (Honestly, I don't know how this differs from
         GraphicalString.)
-
-  </p>
-</div>
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    a string.
+	<h4>Return Value</h4>
+	<p class="para">
+		a string.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any non-graphical character
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any non-graphical character
                 (including space) is encoded.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.visibleString" id="DistinguishedEncodingRulesElement.visibleString"><code class="member">visibleString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.visibleString.2"></span>@property @system void <code class="code">visibleString</code>(in string <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.visibleString" id="DistinguishedEncodingRulesElement.visibleString"><code class="code">visibleString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.visibleString.2"></span>@property @system void <code class="code">visibleString</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string that only contains characters between and including
+<div><section class="module-info"><section id="summary">Encodes a string that only contains characters between and including
         0x20 and 0x7E. (Honestly, I don't know how this differs from
         GraphicalString.)
-
-  </p>
-</div>
+</section>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any non-graphical character
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any non-graphical character
                 (including space) is supplied.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.generalString" id="DistinguishedEncodingRulesElement.generalString"><code class="member">generalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalString"></span>const @property @system string <code class="code">generalString</code>();
+
+    </code>
 </section>
+<div><section class="module-info"><section id="summary">Decodes a string containing only ASCII characters.
+</section>
+<div class="description">Deprecated, according to page 182 of the Dubuisson book.
 
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.generalString" id="DistinguishedEncodingRulesElement.generalString"><code class="code">generalString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalString"></span>const @property @system string <code class="code">generalString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string containing only ASCII characters.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    Deprecated, according to page 182 of the Dubuisson book.
-
-
-  </p>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    a string.
+	<h4>Return Value</h4>
+	<p class="para">
+		a string.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any enecoded character is not ASCII.
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any enecoded character is not ASCII.
 
 
-  </p>
+	</p>
 </div><div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Citations:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
 Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
             Communication between Heterogeneous Systems, Morgan Kaufmann,
             2001, p. 182.
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.generalString" id="DistinguishedEncodingRulesElement.generalString"><code class="member">generalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalString.2"></span>@property @system void <code class="code">generalString</code>(in string <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.generalString" id="DistinguishedEncodingRulesElement.generalString"><code class="code">generalString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.generalString.2"></span>@property @system void <code class="code">generalString</code>(in string <code class="code">value</code>);
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string containing only ASCII characters.
+</section>
+<div class="description">Deprecated, according to page 182 of the Dubuisson book.
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string containing only ASCII characters.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    Deprecated, according to page 182 of the Dubuisson book.
-
-
-  </p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if any enecoded character is not ASCII.
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if any enecoded character is not ASCII.
 
 
-  </p>
+	</p>
 </div><div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Citations:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
 Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
             Communication between Heterogeneous Systems, Morgan Kaufmann,
             2001, p. 182.
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.universalString" id="DistinguishedEncodingRulesElement.universalString"><code class="member">universalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.universalString"></span>const @property @system dstring <code class="code">universalString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.universalString" id="DistinguishedEncodingRulesElement.universalString"><code class="code">universalString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.universalString"></span>const @property @system dstring <code class="code">universalString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a dstring of UTF-32 characters.
-
-  </p>
-</div>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a dstring of UTF-32 characters.
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    a string of UTF-32 characters.
+	<h4>Return Value</h4>
+	<p class="para">
+		a string of UTF-32 characters.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if the encoded bytes is not evenly
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if the encoded bytes is not evenly
                 divisible by four.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.universalString" id="DistinguishedEncodingRulesElement.universalString"><code class="member">universalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.universalString.2"></span>@property @system void <code class="code">universalString</code>(in dstring <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.universalString" id="DistinguishedEncodingRulesElement.universalString"><code class="code">universalString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.universalString.2"></span>@property @system void <code class="code">universalString</code>(in dstring <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a dstring of UTF-32 characters.
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Encodes a dstring of UTF-32 characters.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.characterString" id="DistinguishedEncodingRulesElement.characterString"><code class="member">characterString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.characterString"></span>const @property @system CharacterString <code class="code">characterString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.characterString" id="DistinguishedEncodingRulesElement.characterString"><code class="code">characterString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.characterString"></span>const @property @system CharacterString <code class="code">characterString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a CHARACTER STRING, which is a constructed data type, defined
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a CHARACTER STRING, which is a constructed data type, defined
         in the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The specification defines CHARACTER as:
+</section>
+<div class="description">The specification defines CHARACTER as:
 <br><br>
         <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
@@ -3674,20 +1914,18 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
 
-
-  </p>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    an instance of types.universal.CharacterString.
+	<h4>Return Value</h4>
+	<p class="para">
+		an instance of types.universal.CharacterString.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1SizeException = if encoded CharacterString has too few or too many
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1SizeException = if encoded CharacterString has too few or too many
                 elements, or if syntaxes or context-negotiation element has
                 too few or too many elements.
             ASN1ValueSizeException = if encoded INTEGER is too large to decode.
@@ -3696,46 +1934,21 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 syntaxes or context-negotiation, or if an unspecified element
                 of CharacterString itself is referenced by an out-of-range
                 context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.characterString" id="DistinguishedEncodingRulesElement.characterString"><code class="member">characterString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.characterString.2"></span>@property @system void <code class="code">characterString</code>(in CharacterString <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.characterString" id="DistinguishedEncodingRulesElement.characterString"><code class="code">characterString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.characterString.2"></span>@property @system void <code class="code">characterString</code>(in CharacterString <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a CHARACTER STRING, which is a constructed data type, defined
+<div><section class="module-info"><section id="summary">Encodes a CHARACTER STRING, which is a constructed data type, defined
         in the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The specification defines CHARACTER as:
+</section>
+<div class="description">The specification defines CHARACTER as:
 <br><br>
         <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
@@ -3753,159 +1966,69 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
         </i>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
-  </p>
-</div>
-
+        will be context-specific and numbered from 0 to 5.</div>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.basicMultilingualPlaneString" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString"><code class="member">basicMultilingualPlaneString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString"></span>const @property @system wstring <code class="code">basicMultilingualPlaneString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.basicMultilingualPlaneString" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString"></span>const @property @system wstring <code class="code">basicMultilingualPlaneString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a wstring of UTF-16 characters.
-
-  </p>
-</div>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a wstring of UTF-16 characters.
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    an immutable array of UTF-16 characters.
+	<h4>Return Value</h4>
+	<p class="para">
+		an immutable array of UTF-16 characters.
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueException = if the encoded bytes is not evenly
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueException = if the encoded bytes is not evenly
                 divisible by two.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.basicMultilingualPlaneString" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString"><code class="member">basicMultilingualPlaneString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString.2"></span>@property @system void <code class="code">basicMultilingualPlaneString</code>(in wstring <code class="code">value</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.basicMultilingualPlaneString" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.basicMultilingualPlaneString.2"></span>@property @system void <code class="code">basicMultilingualPlaneString</code>(in wstring <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a wstring of UTF-16 characters.
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Encodes a wstring of UTF-16 characters.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.this" id="DistinguishedEncodingRulesElement.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this"></span>nothrow @nogc @safe this();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.this" id="DistinguishedEncodingRulesElement.this"><code class="code">this</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this"></span>nothrow @nogc @safe this();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Creates an EndOfContent DER Value.
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div><section class="module-info"><section id="summary">Creates an EndOfContent DER Value.</section>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.this" id="DistinguishedEncodingRulesElement.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this.2"></span>@system this(ref ubyte[] <code class="code">bytes</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.this" id="DistinguishedEncodingRulesElement.this"><code class="code">this</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this.2"></span>@system this(ref ubyte[] <code class="code">bytes</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Creates a DERElement from the supplied <code class="code">bytes</code>, inferring that the first
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Creates a DERElement from the supplied <code class="code">bytes</code>, inferring that the first
         byte is the type tag. The supplied ubyte[] array is "chomped" by
         reference, so the original array will grow shorter as DERElements are
         generated.
-
-  </p>
-</div>
+</section>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueSizeException = if the <code class="code">bytes</code> supplied are fewer than
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueSizeException = if the <code class="code">bytes</code> supplied are fewer than
                 two (one or zero, in other words), such that no valid DERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive <code class="code">null</code>
@@ -3917,74 +2040,43 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 the largest unsigned integer.
 
 
-  </p>
+	</p>
 </div><div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Example:</span>
-
-<section class="code_listing">
-  <div class="code_sample">
-    <div class="dlang">
-      <ol class="code_lines">
-        <li><code class="code"><span class="comment">// Decoding looks like:
+	<p class="para">
+		<span class="ddoc_section_h">Example:</span>
+<pre><code class="d block"><span class="comment">// Decoding looks like:
 </span>DERElement[] result;
-<span class="keyword">while</span> (<span class="param">bytes</span>.length &gt; 0)
-    result ~= <span class="keyword">new</span> DERElement(<span class="param">bytes</span>);
+while (bytes.length &gt; 0)
+    result ~= new DERElement(bytes);
 
 <span class="comment">// Encoding looks like:
-</span><span class="keyword">ubyte</span>[] result;
-<span class="keyword">foreach</span> (dv; bervalues)
+</span>ubyte[] result;
+foreach (dv; bervalues)
 {
-    result ~= <span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) dv;
+    result ~= cast(ubyte[]) dv;
 }
-</code></li>
-      </ol>
-    </div>
-  </div>
+</code></pre>
+
+	</p>
+</div>
 </section>
-
-  </p>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.this" id="DistinguishedEncodingRulesElement.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this.3"></span>@system this(ref size_t <code class="code">bytesRead</code>, in ubyte[] <code class="code">bytes</code>);
 
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.this" id="DistinguishedEncodingRulesElement.this"><code class="code">this</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this.3"></span>@system this(ref size_t <code class="code">bytesRead</code>, in ubyte[] <code class="code">bytes</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Creates a DERElement from the supplied <code class="code">bytes</code>, inferring that the first
+<div><section class="module-info"><section id="summary">Creates a DERElement from the supplied <code class="code">bytes</code>, inferring that the first
         byte is the type tag. The supplied ubyte[] array is read, starting
-        from the index specified by , and increments
-         by the number of <code class="code">bytes</code> read.
-
-  </p>
-</div>
+        from the index specified by <code class="d inline"><code class="code">bytesRead</code></code>, and increments
+        <code class="d inline"><code class="code">bytesRead</code></code> by the number of <code class="code">bytes</code> read.
+</section>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    ASN1ValueSizeException = if the <code class="code">bytes</code> supplied are fewer than
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ValueSizeException = if the <code class="code">bytes</code> supplied are fewer than
                 two (one or zero, in other words), such that no valid DERElement
                 can be decoded, or if the length is encoded in indefinite
                 form, but the END OF CONTENT octets (two consecutive <code class="code">null</code>
@@ -3996,151 +2088,85 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                 the largest unsigned integer.
 
 
-  </p>
+	</p>
 </div><div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Example:</span>
-
-<section class="code_listing">
-  <div class="code_sample">
-    <div class="dlang">
-      <ol class="code_lines">
-        <li><code class="code"><span class="comment">// Decoding looks like:
+	<p class="para">
+		<span class="ddoc_section_h">Example:</span>
+<pre><code class="d block"><span class="comment">// Decoding looks like:
 </span>DERElement[] result;
 size_t i = 0u;
-<span class="keyword">while</span> (i &lt; <span class="param">bytes</span>.length)
-    result ~= <span class="keyword">new</span> DERElement(i, <span class="param">bytes</span>);
+while (i &lt; bytes.length)
+    result ~= new DERElement(i, bytes);
 
 <span class="comment">// Encoding looks like:
-</span><span class="keyword">ubyte</span>[] result;
-<span class="keyword">foreach</span> (dv; bervalues)
+</span>ubyte[] result;
+foreach (dv; bervalues)
 {
-    result ~= <span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) dv;
+    result ~= cast(ubyte[]) dv;
 }
-</code></li>
-      </ol>
-    </div>
-  </div>
+</code></pre>
+
+	</p>
+</div>
 </section>
-
-  </p>
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.toBytes" id="DistinguishedEncodingRulesElement.toBytes"><code class="member">toBytes</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.toBytes"></span>const nothrow @property @system ubyte[] <code class="code">toBytes</code>();
 
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.toBytes" id="DistinguishedEncodingRulesElement.toBytes"><code class="code">toBytes</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.toBytes"></span>const nothrow @property @system ubyte[] <code class="code">toBytes</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    This differs from <code class="code">this.value</code> in that
+<div><section class="module-info"><section id="summary">This differs from <code class="code">this.value</code> in that
         <code class="code">this.value</code> only returns the value octets, whereas
         <code class="code">this.<code class="code">toBytes</code></code> returns the type tag, length tag / octets,
         and the value octets, all concatenated.
+</section>
+<div class="description">This is the exact same as <code class="code">this.opCast!(ubyte[])()</code>.
 
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    This is the exact same as <code class="code">this.opCast!(ubyte[])()</code>.
-
-
-  </p>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    type tag, length tag, and value, all concatenated as a ubyte array.
-  </p>
+	<h4>Return Value</h4>
+	<p class="para">
+		type tag, length tag, and value, all concatenated as a ubyte array.
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.opCast" id="DistinguishedEncodingRulesElement.opCast"><code class="member">opCast</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.opCast"></span>nothrow @system ubyte[] <code class="code">opCast</code>(T = ubyte[])();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#DistinguishedEncodingRulesElement.opCast" id="DistinguishedEncodingRulesElement.opCast"><code class="code">opCast</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.opCast"></span>nothrow @system ubyte[] <code class="code">opCast</code>(T = ubyte[])();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    This differs from <code class="code">this.value</code> in that
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">This differs from <code class="code">this.value</code> in that
         <code class="code">this.value</code> only returns the value octets, whereas
         <code class="code">this.toBytes</code> returns the type tag, length tag / octets,
         and the value octets, all concatenated.
+</section>
+<div class="description">This is the exact same as <code class="code">this.toBytes()</code>.
 
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    This is the exact same as <code class="code">this.toBytes()</code>.
-
-
-  </p>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    type tag, length tag, and value, all concatenated as a ubyte array.
-  </p>
+	<h4>Return Value</h4>
+	<p class="para">
+		type tag, length tag, and value, all concatenated as a ubyte array.
+	</p>
 </div>
-
 </section>
-
 </div>
-
 </li>
 </ul>
-
 </div>
-
 </li>
 </ul>
-  </div>
 </section>
-</section>
-      </article>
-    </div>
-  </body>
+
+        </div>
+        <div id="footer">
+            <span id="timestamp">Mon Jan  8 22:05:54 2018
+</span>
+        </div>
+    </body>
 </html>

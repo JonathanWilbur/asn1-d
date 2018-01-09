@@ -1,1423 +1,616 @@
 
-<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>types.universal.objectidentifier</title>
-    <style type="text/css" media="screen">
-      html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
-      blockquote, pre, a, abbr, address, cite, code, del, dfn, em, figure,
-      img, ins, kbd, q, s, samp, small, strong, sub, sup, var, b, u, i, dl,
-      dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption,
-      tbody, tfoot, thead, tr, th, td {
-        background: transparent none repeat scroll 0 0;
-        border: 0 none;
-        font-size: 100%;
-        margin: 0;
-        outline: 0 none;
-        padding: 0;
-        vertical-align: baseline;
-      }
-
-      .color_red { color: #dc322f; }
-      .color_blue { color: #268bd2; }
-      .color_green { color: #859901; }
-      .color_yellow { color: #b58901; }
-      .color_black { color: black; }
-      .color_white { color: white; }
-
-      .font_big {
-        font-size: 1.2em;
-      }
-
-      .ddoc_section_h {
-        font-weight: bold;
-        font-size: 13px;
-        line-height: 19.5px;
-        margin-top: 11px;
-        display: block;
-      }
-
-      body.dlang .dlang {
-        display: inline-block;
-      }
-
-      body.dlang .declaration .dlang {
-          display: block;
-      }
-
-      body.dlang .ddoc_header_anchor a.dlang {
-        display: block;
-        color: rgba(0, 136, 204, 1);
-        text-decoration: none;
-      }
-
-      body.dlang .ddoc_header_anchor .code {
-        color: rgba(0, 136, 204, 1);
-      }
-
-      #ddoc_main .module {
-          border-color: currentColor rgba(233, 233, 233, 1) rgba(233, 233, 233, 1);
-          border-style: none solid solid;
-          border-width: 0 1px 1px;
-          overflow-x: hidden;
-          padding: 15px;
-      }
-
-      #ddoc_main .section .section {
-        margin-top: 0;
-      }
-
-      #ddoc_main .ddoc_module_members_section {
-          padding: 1px 0 0;
-          transition: transform 0.3s ease 0s;
-      }
-
-      #ddoc_main .ddoc_member, #ddoc_main .ddoc_module_members section.intro {
-          background: #fff none repeat scroll 0 0;
-          list-style-type: none;
-          width: 100%;
-      }
-
-      #ddoc_main .ddoc_header_anchor {
-          font-size: 1.4em;
-          transition: transform 0.3s ease 0s;
-      }
-
-      #ddoc_main .ddoc_header_anchor > .code {
-          display: inline-block;
-
-      }
-
-      #ddoc_main .ddoc_decl {
-        background-color: transparent;
-        height: 100%;
-        left: 0;
-        top: 0;
-        padding: 0;
-        padding-left: 15px;
-      }
-
-      #ddoc_main .ddoc_decl .section, #ddoc_main .section.ddoc_sections {
-        background: white none repeat scroll 0 0;
-        margin: 0;
-        padding: 5px;
-        position: relative;
-        border-radius: 5px;
-      }
-
-      #ddoc_main .ddoc_decl .section h4, #ddoc_main .section.ddoc_sections h4 {
-        font-size: 13px;
-        line-height: 1.5;
-        margin-top: 21px;
-      }
-
-      #ddoc_main .section .declaration {
-          margin-top: 21px;
-      }
-
-      #ddoc_main .section .declaration .code {
-          color: rgba(0, 0, 0, 1);
-          margin-bottom: 15px;
-          padding-bottom: 6px;
-      }
-
-      #ddoc_main .declaration div .para {
-          margin-bottom: 0;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr td:first-of-type {
-        padding: 7px;
-        text-align: right;
-        vertical-align: top;
-        word-break: normal;
-        white-space: nowrap;
-      }
-
-      #ddoc_main .ddoc_params .graybox {
-        border: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox td {
-        border-color: rgba(214, 214, 214, 1);
-      }
-
-      #ddoc_main .ddoc_params .graybox tr:first-child > td {
-        border-top: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr:last-child > td {
-        border-bottom: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr > td:first-child {
-        border-left: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr > td:last-child {
-        border-right: 0 none;
-        width: 100%;
-      }
-
-      #ddoc_main em.term, #ddoc_main em.term .code {
-        color: rgba(65, 65, 65, 1);
-        font-size: 12px;
-        font-style: italic;
-        line-height: 1.5;
-      }
-
-      #ddoc_main .see-also {
-        cursor: pointer;
-        font-family: Menlo,monospace;
-      }
-
-      #ddoc_main .ddoc_decl .section > div:last-of-type {
-        margin-bottom: 15px;
-      }
-
-      #ddoc_main .ddoc_member, #ddoc_main .ddoc_module_members {
-          transition: transform 0.3s ease 0s;
-      }
-
-      #ddoc_main .code_sample {
-        background: inherit;
-      }
-
-      #ddoc_main .declaration .code-line {
-          display: block;
-          font: 1em Menlo,monospace;
-      }
-
-      #ddoc_main a[name] {
-        margin: -112px 0 0;
-        padding-top: 112px;
-      }
-
-      #ddoc_main .ddoc_decl td {
-        max-width: inherit;
-      }
-
-      #ddoc_main .declaration a {
-        color: inherit;
-      }
-
-      #ddoc_main .declaration a:hover {
-          color: rgba(0, 136, 204, 1);
-          text-decoration: underline;
-      }
-
-      body.ddoc {
-        background-color: transparent;
-        color: rgba(0, 0, 0, 1);
-        font-family: Helvetica,Arial,sans-serif;
-        font-size: 62.5%;
-        margin: 0;
-        border: 0;
-        left: 0;
-        top: 0;
-        padding: 0;
-      }
-
-      .ddoc a[name] {
-        display: block;
-        height: 0;
-        margin: -85px 0 0;
-        padding-top: 85px;
-        width: 0;
-      }
-
-      .ddoc .module {
-          border-color: transparent;
-          background-color: rgba(255, 255, 255, 1);
-          border-color: currentColor rgba(233, 233, 233, 1) rgba(233, 233, 233, 1);
-          border-image: none;
-          border-style: none solid solid;
-          border-width: 0 1px 1px;
-          box-shadow: 0 0 1px rgba(0, 0, 0, 0.07);
-          display: block;
-          margin-left: 0;
-          min-height: calc(100% - 173px);
-          overflow: auto;
-          padding-bottom: 100px;
-      }
-
-      .ddoc .content_wrapper {
-          background-color: rgba(242, 242, 242, 1);
-          margin: 0 auto;
-          max-width: 980px;
-      }
-
-      .ddoc .section {
-        padding: 15px 25px 30px;
-      }
-
-      .ddoc .section .section {
-        margin: 30px 0 0;
-        padding: 0;
-      }
-
-      .ddoc .para {
-        color: rgba(65, 65, 65, 1);
-        font-size: 1.4em;
-        line-height: 145%;
-        margin-bottom: 15px;
-      }
-
-      .ddoc .ddoc_examples .para {
-        margin-bottom: 0;
-      }
-
-      .ddoc .module_name {
-          color: rgba(0, 0, 0, 1);
-          display: block;
-          font-family: Helvetica;
-          font-size: 2.8em;
-          font-weight: 100;
-          margin-bottom: 0;
-          padding: 15px 0;
-      }
-
-      .ddoc .module a {
-          color: rgba(0, 136, 204, 1);
-          text-decoration: none;
-      }
-
-      .ddoc .code {
-        color: rgba(128, 128, 128, 1);
-        font-family: Menlo,monospace;
-        font-size: 0.85em;
-        word-wrap: break-word;
-      }
-
-      .ddoc .code i {
-        font-style: normal;
-      }
-
-      .ddoc .code .code {
-        font-size: 1em;
-      }
-
-      .ddoc .code_sample {
-        background-clip: padding-box;
-        margin: 1px 0;
-        text-align: left;
-      }
-
-      .ddoc .code_sample {
-        display: block;
-        font-size: 1.4em;
-        margin-left: 21px;
-      }
-
-      .ddoc ol .code_sample {
-        font-size: 1em;
-      }
-
-      .ddoc .code_lines {
-        counter-reset: li;
-        line-height: 1.6em;
-        list-style: outside none none;
-        margin: 0;
-        padding: 0;
-      }
-
-      .ddoc .code_listing .code_sample div {
-        margin-left: 13px;
-        width: 93%;
-      }
-
-      .ddoc .code_listing .code_sample div .code_lines li {
-        list-style-type: none;
-        margin: 0;
-        padding-right: 10px;
-      }
-
-      .ddoc .code_sample div .code_lines li::before {
-        margin-left: -33px;
-        margin-right: 25px;
-      }
-
-      .ddoc .code_sample div .code_lines li:nth-child(n+10)::before {
-        margin-left: -39px;
-        margin-right: 25px;
-      }
-
-      .ddoc .code_sample div .code_lines li:nth-child(n+100)::before {
-        margin-left: -46px;
-        margin-right: 25px;
-      }
-
-      .ddoc .code_sample .code_lines .code {
-        color: #000;
-      }
-
-      .ddoc div.dlang {
-        margin: 10px 0 21px;
-        padding: 4px 0 2px 10px;
-      }
-
-      .ddoc div.dlang {
-          margin: 10px 0 21px;
-          padding: 4px 0 2px 10px;
-      }
-
-      .ddoc div.dlang {
-        border-left: 5px solid rgba(0, 155, 51, 0.2);
-      }
-
-      .ddoc .code_lines li::before {
-        color: rgba(128, 128, 128, 1);
-        content: counter(li, decimal);
-        counter-increment: li;
-        font-family: Menlo,monospace;
-        font-size: 0.9em;
-        margin-right: 16px;
-      }
-
-      .ddoc .code_lines li {
-        padding-left: 0;
-        white-space: pre-wrap;
-      }
-
-      .ddoc .code_lines li:only-of-type::before {
-        color: rgba(255, 255, 255, 1);
-        content: " ";
-      }
-
-      .ddoc .code_lines li:only-of-type {
-        color: rgba(255, 255, 255, 1);
-        content: " ";
-      }
-
-      .ddoc .code_lines li:nth-child(n+10) {
-        text-indent: -17px;
-      }
-
-      .ddoc .code_lines li:nth-child(n+10)::before {
-        margin-right: 12px;
-      }
-
-      .ddoc .graybox {
-        border: 1px solid rgba(233, 233, 233, 1);
-        border-collapse: collapse;
-        border-spacing: 0;
-        empty-cells: hide;
-        margin: 20px 0 36px;
-        text-align: left;
-      }
-
-      .ddoc .graybox p {
-        margin: 0;
-        min-width: 50px;
-      }
-
-      .ddoc td {
-        border: 1px solid rgba(233, 233, 233, 1);
-        margin: 0;
-        max-width: 260px;
-        padding: 5px 25px 5px 10px;
-        vertical-align: middle;
-      }
-
-      .punctuation {
-        color: rgba(0, 0, 0, 1);
-      }
-
-      .comment {
-        color: rgba(0, 131, 18, 1);
-      }
-
-      .operator {
-        color: #000;
-      }
-
-      .keyword {
-        color: rgba(170, 13, 145, 1);
-      }
-
-      .keyword_type {
-        color: rgba(170, 51, 145, 1);
-      }
-
-      .string_literal {
-        color: rgba(196, 26, 22, 1);
-      }
-
-      .ddoc_psuper_symbol {
-        color: rgba(92, 38, 153, 1);
-      }
-
-      .param {
-        color: rgba(0, 0, 0, 1);
-      }
-
-      .psymbol {
-        color: rgba(0, 0, 0, 1);
-      }
-
-      .ddoc_member_header .ddoc_header_anchor .code {
-        font-size: 1em;
-      }
-    </style>
-  </head>
-  <body id="ddoc_main" class="ddoc dlang">
-    <div class="content_wrapper">
-      <article class="module">
-        <h1 class="module_name">types.universal.objectidentifier</h1>
-        <section id="module_content">
-<section class="section ddoc_module_members_section">
-  <div class="ddoc_module_members">
+    <head>
+        <!-- Standard -->
+        <title>types.universal.objectidentifier</title>
+        <meta charset="utf-8">
+        <meta name="author" content="Jonathan M. Wilbur jonathan@wilbur.space">
+        <meta name="description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+        <meta name="keywords" content="types.universal.objectidentifier,asn1,asn.1,x690,x.690,ber,cer,der,per,basic encoding rules,codec,dlang,d">
+        <meta name="theme-color" content="#FFFFFF">
+
+        <!-- Google -->
+        <meta name="application-url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta name="audience" content="grownup">
+        <meta itemprop="name" content="types.universal.objectidentifier - ASN.1 D Library">
+        <meta itemprop="description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+
+        <!-- Apple -->
+        <meta name="apple-mobile-web-app-title" content="types.universal.objectidentifier">
+        <meta name="apple-mobile-web-app-status-bar-style" content="white">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-touch-fullscreen" content="yes">
+        <meta name="format-detection" content="telephone=yes">
+
+        <!-- Microsoft -->
+        <meta name="msapplication-tooltip" content="types.universal.objectidentifier - ASN.1 D Library">
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+
+        <!-- Miscellaneous -->
+        <meta name="designer" content="Jonathan M. Wilbur jonathan@wilbur.space">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="version" content="1.0.0">
+        <meta name="copyright" content="Copyright 2018 (C) Jonathan M. Wilbur.">
+        <meta name="language" content="English">
+
+        <!-- Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta property="og:title" content="types.universal.objectidentifier - ASN.1 D Library">
+        <meta property="og:description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+        <meta property="og:site_name" content="GitHub">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="website">
+        <meta name="twitter:url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta name="twitter:title" content="types.universal.objectidentifier - ASN.1 D Library">
+        <meta name="twitter:description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+
+        <!-- Application -->
+        <style type="text/css">
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #661515;
+    background-image: linear-gradient(to right, #FFFFEE 0%, #FFCCBB 100%);
+    margin: 20px;
+}
+
+a {
+    color: #AA0000;
+	font-weight: 500;
+	-webkit-transition: color 0.2s;
+    transition: color 0.2s;
+    text-decoration-style: none;
+}
+
+a:hover {
+	color: #FF2222;
+}
+
+a::before,a::after {
+	font-weight: 100;
+	font-size: 110%;
+	line-height: 1;
+	opacity: 0;
+	-webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
+	transition: opacity 0.2s, transform 0.2s;
+}
+
+a::before {
+	left: -0.1em;
+	content: '[';
+	-webkit-transform: translateX(-100%);
+	transform: translateX(-100%);
+}
+
+a::after {
+	right: -0.1em;
+	content: ']';
+	-webkit-transform: translateX(100%);
+	transform: translateX(100%);
+}
+
+a:hover::before,a:hover::after {
+	opacity: 1;
+	-webkit-transform: translateX(0);
+	transform: translateX(0);
+}
+
+code, .mono {
+    font-family: Courier New, Courier, monospace;
+}
+
+.d.inline {
+    display: inline-block;
+}
+
+.d.block .declaration {
+    display: block;
+    padding: 10px;
+    margin: 10px;
+}
+
+.declaration {
+    background-color: #FFFFEE;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+
+#summary, .description {
+    margin: 5px;
+    padding: 5px;
+}
+
+.module-info {
+	margin-bottom: 100px;
+}
+
+.member {
+	font-weight: bold;
+}
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <h1>types.universal.objectidentifier</h1>
+            <h2>ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER</h2>
+        </div>
+        <div id="content">
+            
+<section class="module-members">
     <ul class="ddoc_members">
-  <li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#OIDException" id="OIDException"><code class="code">OIDException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="OIDException"></span>alias <code class="code">OIDException</code> = ObjectIdentifierException;
+	<li class="ddoc_member"><a href="#OIDException" id="OIDException"><code class="member">OIDException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="OIDException"></span>alias <code class="code">OIDException</code> = ObjectIdentifierException;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+    </code>
+</section>
+<div>
 </div>
-<div class="ddoc_decl">
-  
+</li><li class="ddoc_member"><a href="#ObjectIDException" id="ObjectIDException"><code class="member">ObjectIDException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIDException"></span>alias <code class="code">ObjectIDException</code> = ObjectIdentifierException;
 
+    </code>
+</section>
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifierException" id="ObjectIdentifierException"><code class="member">ObjectIdentifierException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifierException"></span>class <code class="code">ObjectIdentifierException</code>: <span class="ddoc_psuper_symbol">asn1.AbstractSyntaxNotation1Exception</span>;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIDException" id="ObjectIDException"><code class="code">ObjectIDException</code></a>
+    </code>
+</section>
+<div>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIDException"></span>alias <code class="code">ObjectIDException</code> = ObjectIdentifierException;
+</li><li class="ddoc_member"><a href="#OID" id="OID"><code class="member">OID</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="OID"></span>alias <code class="code">OID</code> = ObjectIdentifier;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+    </code>
+</section>
+<div>
 </div>
-<div class="ddoc_decl">
-  
+</li><li class="ddoc_member"><a href="#ObjectID" id="ObjectID"><code class="member">ObjectID</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectID"></span>alias <code class="code">ObjectID</code> = ObjectIdentifier;
 
+    </code>
+</section>
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier" id="ObjectIdentifier"><code class="member">ObjectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier"></span>class <code class="code">ObjectIdentifier</code>;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifierException" id="ObjectIdentifierException"><code class="code">ObjectIdentifierException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifierException"></span>class <code class="code">ObjectIdentifierException</code>: <span class="ddoc_psuper_symbol">asn1.AbstractSyntaxNotation1Exception</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#OID" id="OID"><code class="code">OID</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="OID"></span>alias <code class="code">OID</code> = ObjectIdentifier;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectID" id="ObjectID"><code class="code">ObjectID</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectID"></span>alias <code class="code">ObjectID</code> = ObjectIdentifier;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier" id="ObjectIdentifier"><code class="code">ObjectIdentifier</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier"></span>class <code class="code">ObjectIdentifier</code>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    A class for Object Identifiers, that supports object descriptors and various
-    output formatting.
-  </p>
-</div>
-
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">A class for Object Identifiers, that supports object descriptors and various
+    output formatting.</section>
 </section>
 <ul class="ddoc_members">
-  <li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.length" id="ObjectIdentifier.length"><code class="code">length</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.length"></span>const @property @safe size_t <code class="code">length</code>();
+	<li class="ddoc_member"><a href="#ObjectIdentifier.length" id="ObjectIdentifier.length"><code class="member">length</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.length"></span>const @property @safe size_t <code class="code">length</code>();
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    the number of nodes in the OID.
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		the number of nodes in the OID.
+	</p>
 </div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.this" id="ObjectIdentifier.this"><code class="code">this</code></a>
+</section>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.this"></span>@safe this(in size_t[] <code class="code">numbers</code>...);
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.this" id="ObjectIdentifier.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.this"></span>@safe this(in size_t[] <code class="code">numbers</code>...);
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Constructor for an Object Identifier
-
-  </p>
-</div>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Constructor for an Object Identifier
+</section>
 <div class="ddoc_params">
-  <h4>Parameters</h4>
-  <table cellspacing="0" cellpadding="5" border="0" class="graybox">
-    <tbody>
-      <tr class="ddoc_param_row">
-  <td scope="ddoc_param_id">
-  <code class="code">
-    <em class="term">size_t[] <code class="code">numbers</code></em>
-  </code>
+	<h4>Parameters</h4>
+	<table cellspacing="0" cellpadding="5" border="0" class="graybox">
+		<tbody>
+			<tr class="ddoc_param_row">
+	<td scope="ddoc_param_id">
+	<code class="code">
+		<em class="term">size_t[] <code class="code">numbers</code></em>
+	</code>
 </td>
 <td>
-  <div class="ddoc_param_desc">
-    <p class="para">
-      an array of unsigned integer representing the Object Identifier
-    </p>
-  </div>
+	<div class="ddoc_param_desc">
+		<p class="para">
+			an array of unsigned integer representing the Object Identifier
+		</p>
+	</div>
 </td>
 </tr>
 
-    </tbody>
-  </table>
+		</tbody>
+	</table>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    An OID object
+	<h4>Return Value</h4>
+	<p class="para">
+		An OID object
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    OIDException = if fewer than three <code class="code">numbers</code> are provided, or if the
+	<h4>Throws</h4>
+	<p class="para">
+		OIDException = if fewer than three <code class="code">numbers</code> are provided, or if the
                 first number is not 0, 1, or 2, or if the second number is
                 greater than 39.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.this" id="ObjectIdentifier.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.this.2"></span>@safe this(OIDNode[] <code class="code">nodes</code>...);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.this" id="ObjectIdentifier.this"><code class="code">this</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.this.2"></span>@safe this(OIDNode[] <code class="code">nodes</code>...);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Constructor for an Object Identifier
-
-  </p>
-</div>
+<div><section class="module-info"><section id="summary">Constructor for an Object Identifier
+</section>
 <div class="ddoc_params">
-  <h4>Parameters</h4>
-  <table cellspacing="0" cellpadding="5" border="0" class="graybox">
-    <tbody>
-      <tr class="ddoc_param_row">
-  <td scope="ddoc_param_id">
-  <code class="code">
-    <em class="term">OIDNode[] <code class="code">nodes</code></em>
-  </code>
+	<h4>Parameters</h4>
+	<table cellspacing="0" cellpadding="5" border="0" class="graybox">
+		<tbody>
+			<tr class="ddoc_param_row">
+	<td scope="ddoc_param_id">
+	<code class="code">
+		<em class="term">OIDNode[] <code class="code">nodes</code></em>
+	</code>
 </td>
 <td>
-  <div class="ddoc_param_desc">
-    <p class="para">
-      An array of OIDNodes
-    </p>
-  </div>
+	<div class="ddoc_param_desc">
+		<p class="para">
+			An array of OIDNodes
+		</p>
+	</div>
 </td>
 </tr>
 
-    </tbody>
-  </table>
+		</tbody>
+	</table>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    An OID object
+	<h4>Return Value</h4>
+	<p class="para">
+		An OID object
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    OIDException = if fewer than three <code class="code">nodes</code> are provided, or if the
+	<h4>Throws</h4>
+	<p class="para">
+		OIDException = if fewer than three <code class="code">nodes</code> are provided, or if the
                 first node is not 0, 1, or 2, or if the second node is greater
                 than 39.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.this" id="ObjectIdentifier.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.this.3"></span>@safe this(in string <code class="code">str</code>);
+
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.this" id="ObjectIdentifier.this"><code class="code">this</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.this.3"></span>@safe this(in string <code class="code">str</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Constructor for an Object Identifier
-
-  </p>
-</div>
+<div><section class="module-info"><section id="summary">Constructor for an Object Identifier
+</section>
 <div class="ddoc_params">
-  <h4>Parameters</h4>
-  <table cellspacing="0" cellpadding="5" border="0" class="graybox">
-    <tbody>
-      <tr class="ddoc_param_row">
-  <td scope="ddoc_param_id">
-  <code class="code">
-    <em class="term">nodes</em>
-  </code>
+	<h4>Parameters</h4>
+	<table cellspacing="0" cellpadding="5" border="0" class="graybox">
+		<tbody>
+			<tr class="ddoc_param_row">
+	<td scope="ddoc_param_id">
+	<code class="code">
+		<em class="term">nodes</em>
+	</code>
 </td>
 <td>
-  <div class="ddoc_param_desc">
-    <p class="para">
-      An array of OIDNodes
-    </p>
-  </div>
+	<div class="ddoc_param_desc">
+		<p class="para">
+			An array of OIDNodes
+		</p>
+	</div>
 </td>
 </tr>
 
-    </tbody>
-  </table>
+		</tbody>
+	</table>
 </div>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    An OID object
+	<h4>Return Value</h4>
+	<p class="para">
+		An OID object
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    OIDException = if fewer than three nodes are provided, or if the
+	<h4>Throws</h4>
+	<p class="para">
+		OIDException = if fewer than three nodes are provided, or if the
                 first node is not 0, 1, or 2, or if the second node is greater
                 than 39.
-  </p>
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.opIndex" id="ObjectIdentifier.opIndex"><code class="member">opIndex</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.opIndex"></span>const nothrow @nogc @safe OIDNode <code class="code">opIndex</code>(in ptrdiff_t <code class="code">index</code>);
+
+    </code>
 </section>
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		the OIDNode at the specified <code class="code">index</code>.
 
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.opIndex" id="ObjectIdentifier.opIndex"><code class="code">opIndex</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.opIndex"></span>const nothrow @nogc @safe OIDNode <code class="code">opIndex</code>(in ptrdiff_t <code class="code">index</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    the OIDNode at the specified <code class="code">index</code>.
-
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    RangeError = if invalid <code class="code">index</code> specified.
-  </p>
+	<h4>Throws</h4>
+	<p class="para">
+		RangeError = if invalid <code class="code">index</code> specified.
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.opSlice" id="ObjectIdentifier.opSlice"><code class="member">opSlice</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.opSlice"></span>const nothrow @nogc @system OIDNode[] <code class="code">opSlice</code>(in ptrdiff_t <code class="code">index1</code>, in ptrdiff_t <code class="code">index2</code>);
+
+    </code>
 </section>
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		a range of OIDNodes from the OID.
 
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.opSlice" id="ObjectIdentifier.opSlice"><code class="code">opSlice</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.opSlice"></span>const nothrow @nogc @system OIDNode[] <code class="code">opSlice</code>(in ptrdiff_t <code class="code">index1</code>, in ptrdiff_t <code class="code">index2</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    a range of OIDNodes from the OID.
-
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    RangeError = if invalid indices are specified.
-  </p>
+	<h4>Throws</h4>
+	<p class="para">
+		RangeError = if invalid indices are specified.
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.opDollar" id="ObjectIdentifier.opDollar"><code class="member">opDollar</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.opDollar"></span>const nothrow @nogc @safe size_t <code class="code">opDollar</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		the length of the OID.
+	</p>
 </div>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.descriptor" id="ObjectIdentifier.descriptor"><code class="member">descriptor</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.descriptor"></span>const nothrow @nogc @safe string <code class="code">descriptor</code>(in size_t <code class="code">index</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.opDollar" id="ObjectIdentifier.opDollar"><code class="code">opDollar</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.opDollar"></span>const nothrow @nogc @safe size_t <code class="code">opDollar</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    the length of the OID.
-  </p>
-</div>
-
+    </code>
 </section>
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		The <code class="code">descriptor</code> at the specified <code class="code">index</code>.
 
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.descriptor" id="ObjectIdentifier.descriptor"><code class="code">descriptor</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.descriptor"></span>const nothrow @nogc @safe string <code class="code">descriptor</code>(in size_t <code class="code">index</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    The <code class="code">descriptor</code> at the specified <code class="code">index</code>.
-
-  </p>
+	</p>
 </div>
 <div class="ddoc_throws">
-  <h4>Throws</h4>
-  <p class="para">
-    RangeError = if invalid <code class="code">index</code> specified.
-  </p>
+	<h4>Throws</h4>
+	<p class="para">
+		RangeError = if invalid <code class="code">index</code> specified.
+	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.numbers" id="ObjectIdentifier.numbers"><code class="member">numbers</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.numbers"></span>alias <code class="code">numbers</code> = numericArray;
+
+    </code>
 </section>
-
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.numericArray" id="ObjectIdentifier.numericArray"><code class="member">numericArray</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.numericArray"></span>const nothrow @property @safe size_t[] <code class="code">numericArray</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.numbers" id="ObjectIdentifier.numbers"><code class="code">numbers</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.numbers"></span>alias <code class="code">numbers</code> = numericArray;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.numericArray" id="ObjectIdentifier.numericArray"><code class="code">numericArray</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.numericArray"></span>const nothrow @property @safe size_t[] <code class="code">numericArray</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    an array of s representing the dot-delimited sequence of
+    </code>
+</section>
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		an array of <code class="d inline">size_t</code>s representing the dot-delimited sequence of
             integers that constitute the numeric OID.
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.asn1Notation" id="ObjectIdentifier.asn1Notation"><code class="member">asn1Notation</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.asn1Notation"></span>alias <code class="code">asn1Notation</code> = abstractSyntaxNotation1Notation;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.asn1Notation" id="ObjectIdentifier.asn1Notation"><code class="code">asn1Notation</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.asn1Notation"></span>alias <code class="code">asn1Notation</code> = abstractSyntaxNotation1Notation;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.abstractSyntaxNotation1Notation" id="ObjectIdentifier.abstractSyntaxNotation1Notation"><code class="code">abstractSyntaxNotation1Notation</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.abstractSyntaxNotation1Notation"></span>const nothrow @property @safe string <code class="code">abstractSyntaxNotation1Notation</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    the OID in ASN.1 Notation
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.abstractSyntaxNotation1Notation" id="ObjectIdentifier.abstractSyntaxNotation1Notation"><code class="member">abstractSyntaxNotation1Notation</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.abstractSyntaxNotation1Notation"></span>const nothrow @property @safe string <code class="code">abstractSyntaxNotation1Notation</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.dotNotation" id="ObjectIdentifier.dotNotation"><code class="code">dotNotation</code></a>
+    </code>
+</section>
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		the OID in ASN.1 Notation
+	</p>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.dotNotation"></span>const nothrow @property @safe string <code class="code">dotNotation</code>();
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.dotNotation" id="ObjectIdentifier.dotNotation"><code class="member">dotNotation</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.dotNotation"></span>const nothrow @property @safe string <code class="code">dotNotation</code>();
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    the OID as a dot-delimited string, where all nodes with descriptors
+    </code>
+</section>
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		the OID as a dot-delimited string, where all nodes with descriptors
             are represented as descriptors instead of numbers
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.iriNotation" id="ObjectIdentifier.iriNotation"><code class="member">iriNotation</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.iriNotation"></span>alias <code class="code">iriNotation</code> = internationalizedResourceIdentifierNotation;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.iriNotation" id="ObjectIdentifier.iriNotation"><code class="code">iriNotation</code></a>
+    </code>
+</section>
+<div>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.iriNotation"></span>alias <code class="code">iriNotation</code> = internationalizedResourceIdentifierNotation;
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.uriNotation" id="ObjectIdentifier.uriNotation"><code class="member">uriNotation</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.uriNotation"></span>alias <code class="code">uriNotation</code> = internationalizedResourceIdentifierNotation;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+    </code>
+</section>
+<div>
 </div>
-<div class="ddoc_decl">
-  
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.uniformResourceIdentifierNotation" id="ObjectIdentifier.uniformResourceIdentifierNotation"><code class="member">uniformResourceIdentifierNotation</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.uniformResourceIdentifierNotation"></span>alias <code class="code">uniformResourceIdentifierNotation</code> = internationalizedResourceIdentifierNotation;
 
+    </code>
+</section>
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.internationalizedResourceIdentifierNotation" id="ObjectIdentifier.internationalizedResourceIdentifierNotation"><code class="member">internationalizedResourceIdentifierNotation</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.internationalizedResourceIdentifierNotation"></span>const @property @system string <code class="code">internationalizedResourceIdentifierNotation</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.uriNotation" id="ObjectIdentifier.uriNotation"><code class="code">uriNotation</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.uriNotation"></span>alias <code class="code">uriNotation</code> = internationalizedResourceIdentifierNotation;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.uniformResourceIdentifierNotation" id="ObjectIdentifier.uniformResourceIdentifierNotation"><code class="code">uniformResourceIdentifierNotation</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.uniformResourceIdentifierNotation"></span>alias <code class="code">uniformResourceIdentifierNotation</code> = internationalizedResourceIdentifierNotation;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.internationalizedResourceIdentifierNotation" id="ObjectIdentifier.internationalizedResourceIdentifierNotation"><code class="code">internationalizedResourceIdentifierNotation</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.internationalizedResourceIdentifierNotation"></span>const @property @system string <code class="code">internationalizedResourceIdentifierNotation</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    the OID as a forward-slash-delimited string (as one might expect in
+    </code>
+</section>
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		the OID as a forward-slash-delimited string (as one might expect in
             a URI / IRI path), where all nodes with descriptors are represented
             as descriptors instead of numbers
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.urnNotation" id="ObjectIdentifier.urnNotation"><code class="member">urnNotation</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.urnNotation"></span>alias <code class="code">urnNotation</code> = uniformResourceNameNotation;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.urnNotation" id="ObjectIdentifier.urnNotation"><code class="code">urnNotation</code></a>
+    </code>
+</section>
+<div>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.urnNotation"></span>alias <code class="code">urnNotation</code> = uniformResourceNameNotation;
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.uniformResourceNameNotation" id="ObjectIdentifier.uniformResourceNameNotation"><code class="member">uniformResourceNameNotation</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.uniformResourceNameNotation"></span>const nothrow @property @safe string <code class="code">uniformResourceNameNotation</code>();
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.uniformResourceNameNotation" id="ObjectIdentifier.uniformResourceNameNotation"><code class="code">uniformResourceNameNotation</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.uniformResourceNameNotation"></span>const nothrow @property @safe string <code class="code">uniformResourceNameNotation</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    the OID as a URN, where all nodes of the OID are translated to a
+    </code>
+</section>
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		the OID as a URN, where all nodes of the OID are translated to a
             segment in the URN path, and where all nodes are represented as
             numbers regardless of whether or not they have a descriptor
 
-  </p>
+	</p>
 </div>
 <div class="ddoc_see_also">
-  <h4>See Also</h4>
-  <p class="para">
-    <a href="https://www.ietf.org/rfc/rfc3061.txt">RFC 3061</a>
-  </p>
+	<h4>See Also</h4>
+	<p class="para">
+		<a href="https://www.ietf.org/rfc/rfc3061.txt">RFC 3061</a>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.toString" id="ObjectIdentifier.toString"><code class="member">toString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.toString"></span>@property string <code class="code">toString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.toString" id="ObjectIdentifier.toString"><code class="code">toString</code></a>
+    </code>
+</section>
+<div>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.toString"></span>@property string <code class="code">toString</code>();
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.toHash" id="ObjectIdentifier.toHash"><code class="member">toHash</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.toHash"></span>const nothrow @trusted size_t <code class="code">toHash</code>();
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ObjectIdentifier.toHash" id="ObjectIdentifier.toHash"><code class="code">toHash</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ObjectIdentifier.toHash"></span>const nothrow @trusted size_t <code class="code">toHash</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    An override so that associative arrays can use an OIDNode as a
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An override so that associative arrays can use an OIDNode as a
         key.
-
-  </p>
-</div>
+</section>
 <div class="ddoc_returns">
-  <h4>Return Value</h4>
-  <p class="para">
-    A size_t that represents a hash of the OIDNode
-  </p>
+	<h4>Return Value</h4>
+	<p class="para">
+		A size_t that represents a hash of the OIDNode
+	</p>
 </div>
-
 </section>
-
 </div>
-
 </li>
 </ul>
-
 </div>
-
 </li>
 </ul>
-  </div>
 </section>
-</section>
-      </article>
-    </div>
-  </body>
+
+        </div>
+        <div id="footer">
+            <span id="timestamp">Mon Jan  8 22:05:54 2018
+</span>
+        </div>
+    </body>
 </html>

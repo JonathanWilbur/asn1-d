@@ -30,6 +30,7 @@ mkdir -p ./build/scripts
 
 echo "Building the ASN.1 Library (static)... \c"
 if dmd \
+ ./source/macros.ddoc \
  ./source/asn1.d \
  ./source/codec.d \
  ./source/interfaces.d \

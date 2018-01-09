@@ -1,1933 +1,984 @@
 
-<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>codec</title>
-    <style type="text/css" media="screen">
-      html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
-      blockquote, pre, a, abbr, address, cite, code, del, dfn, em, figure,
-      img, ins, kbd, q, s, samp, small, strong, sub, sup, var, b, u, i, dl,
-      dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption,
-      tbody, tfoot, thead, tr, th, td {
-        background: transparent none repeat scroll 0 0;
-        border: 0 none;
-        font-size: 100%;
-        margin: 0;
-        outline: 0 none;
-        padding: 0;
-        vertical-align: baseline;
-      }
-
-      .color_red { color: #dc322f; }
-      .color_blue { color: #268bd2; }
-      .color_green { color: #859901; }
-      .color_yellow { color: #b58901; }
-      .color_black { color: black; }
-      .color_white { color: white; }
-
-      .font_big {
-        font-size: 1.2em;
-      }
-
-      .ddoc_section_h {
-        font-weight: bold;
-        font-size: 13px;
-        line-height: 19.5px;
-        margin-top: 11px;
-        display: block;
-      }
-
-      body.dlang .dlang {
-        display: inline-block;
-      }
-
-      body.dlang .declaration .dlang {
-          display: block;
-      }
-
-      body.dlang .ddoc_header_anchor a.dlang {
-        display: block;
-        color: rgba(0, 136, 204, 1);
-        text-decoration: none;
-      }
-
-      body.dlang .ddoc_header_anchor .code {
-        color: rgba(0, 136, 204, 1);
-      }
-
-      #ddoc_main .module {
-          border-color: currentColor rgba(233, 233, 233, 1) rgba(233, 233, 233, 1);
-          border-style: none solid solid;
-          border-width: 0 1px 1px;
-          overflow-x: hidden;
-          padding: 15px;
-      }
-
-      #ddoc_main .section .section {
-        margin-top: 0;
-      }
-
-      #ddoc_main .ddoc_module_members_section {
-          padding: 1px 0 0;
-          transition: transform 0.3s ease 0s;
-      }
-
-      #ddoc_main .ddoc_member, #ddoc_main .ddoc_module_members section.intro {
-          background: #fff none repeat scroll 0 0;
-          list-style-type: none;
-          width: 100%;
-      }
-
-      #ddoc_main .ddoc_header_anchor {
-          font-size: 1.4em;
-          transition: transform 0.3s ease 0s;
-      }
-
-      #ddoc_main .ddoc_header_anchor > .code {
-          display: inline-block;
-
-      }
-
-      #ddoc_main .ddoc_decl {
-        background-color: transparent;
-        height: 100%;
-        left: 0;
-        top: 0;
-        padding: 0;
-        padding-left: 15px;
-      }
-
-      #ddoc_main .ddoc_decl .section, #ddoc_main .section.ddoc_sections {
-        background: white none repeat scroll 0 0;
-        margin: 0;
-        padding: 5px;
-        position: relative;
-        border-radius: 5px;
-      }
-
-      #ddoc_main .ddoc_decl .section h4, #ddoc_main .section.ddoc_sections h4 {
-        font-size: 13px;
-        line-height: 1.5;
-        margin-top: 21px;
-      }
-
-      #ddoc_main .section .declaration {
-          margin-top: 21px;
-      }
-
-      #ddoc_main .section .declaration .code {
-          color: rgba(0, 0, 0, 1);
-          margin-bottom: 15px;
-          padding-bottom: 6px;
-      }
-
-      #ddoc_main .declaration div .para {
-          margin-bottom: 0;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr td:first-of-type {
-        padding: 7px;
-        text-align: right;
-        vertical-align: top;
-        word-break: normal;
-        white-space: nowrap;
-      }
-
-      #ddoc_main .ddoc_params .graybox {
-        border: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox td {
-        border-color: rgba(214, 214, 214, 1);
-      }
-
-      #ddoc_main .ddoc_params .graybox tr:first-child > td {
-        border-top: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr:last-child > td {
-        border-bottom: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr > td:first-child {
-        border-left: 0 none;
-      }
-
-      #ddoc_main .ddoc_params .graybox tr > td:last-child {
-        border-right: 0 none;
-        width: 100%;
-      }
-
-      #ddoc_main em.term, #ddoc_main em.term .code {
-        color: rgba(65, 65, 65, 1);
-        font-size: 12px;
-        font-style: italic;
-        line-height: 1.5;
-      }
-
-      #ddoc_main .see-also {
-        cursor: pointer;
-        font-family: Menlo,monospace;
-      }
-
-      #ddoc_main .ddoc_decl .section > div:last-of-type {
-        margin-bottom: 15px;
-      }
-
-      #ddoc_main .ddoc_member, #ddoc_main .ddoc_module_members {
-          transition: transform 0.3s ease 0s;
-      }
-
-      #ddoc_main .code_sample {
-        background: inherit;
-      }
-
-      #ddoc_main .declaration .code-line {
-          display: block;
-          font: 1em Menlo,monospace;
-      }
-
-      #ddoc_main a[name] {
-        margin: -112px 0 0;
-        padding-top: 112px;
-      }
-
-      #ddoc_main .ddoc_decl td {
-        max-width: inherit;
-      }
-
-      #ddoc_main .declaration a {
-        color: inherit;
-      }
-
-      #ddoc_main .declaration a:hover {
-          color: rgba(0, 136, 204, 1);
-          text-decoration: underline;
-      }
-
-      body.ddoc {
-        background-color: transparent;
-        color: rgba(0, 0, 0, 1);
-        font-family: Helvetica,Arial,sans-serif;
-        font-size: 62.5%;
-        margin: 0;
-        border: 0;
-        left: 0;
-        top: 0;
-        padding: 0;
-      }
-
-      .ddoc a[name] {
-        display: block;
-        height: 0;
-        margin: -85px 0 0;
-        padding-top: 85px;
-        width: 0;
-      }
-
-      .ddoc .module {
-          border-color: transparent;
-          background-color: rgba(255, 255, 255, 1);
-          border-color: currentColor rgba(233, 233, 233, 1) rgba(233, 233, 233, 1);
-          border-image: none;
-          border-style: none solid solid;
-          border-width: 0 1px 1px;
-          box-shadow: 0 0 1px rgba(0, 0, 0, 0.07);
-          display: block;
-          margin-left: 0;
-          min-height: calc(100% - 173px);
-          overflow: auto;
-          padding-bottom: 100px;
-      }
-
-      .ddoc .content_wrapper {
-          background-color: rgba(242, 242, 242, 1);
-          margin: 0 auto;
-          max-width: 980px;
-      }
-
-      .ddoc .section {
-        padding: 15px 25px 30px;
-      }
-
-      .ddoc .section .section {
-        margin: 30px 0 0;
-        padding: 0;
-      }
-
-      .ddoc .para {
-        color: rgba(65, 65, 65, 1);
-        font-size: 1.4em;
-        line-height: 145%;
-        margin-bottom: 15px;
-      }
-
-      .ddoc .ddoc_examples .para {
-        margin-bottom: 0;
-      }
-
-      .ddoc .module_name {
-          color: rgba(0, 0, 0, 1);
-          display: block;
-          font-family: Helvetica;
-          font-size: 2.8em;
-          font-weight: 100;
-          margin-bottom: 0;
-          padding: 15px 0;
-      }
-
-      .ddoc .module a {
-          color: rgba(0, 136, 204, 1);
-          text-decoration: none;
-      }
-
-      .ddoc .code {
-        color: rgba(128, 128, 128, 1);
-        font-family: Menlo,monospace;
-        font-size: 0.85em;
-        word-wrap: break-word;
-      }
-
-      .ddoc .code i {
-        font-style: normal;
-      }
-
-      .ddoc .code .code {
-        font-size: 1em;
-      }
-
-      .ddoc .code_sample {
-        background-clip: padding-box;
-        margin: 1px 0;
-        text-align: left;
-      }
-
-      .ddoc .code_sample {
-        display: block;
-        font-size: 1.4em;
-        margin-left: 21px;
-      }
-
-      .ddoc ol .code_sample {
-        font-size: 1em;
-      }
-
-      .ddoc .code_lines {
-        counter-reset: li;
-        line-height: 1.6em;
-        list-style: outside none none;
-        margin: 0;
-        padding: 0;
-      }
-
-      .ddoc .code_listing .code_sample div {
-        margin-left: 13px;
-        width: 93%;
-      }
-
-      .ddoc .code_listing .code_sample div .code_lines li {
-        list-style-type: none;
-        margin: 0;
-        padding-right: 10px;
-      }
-
-      .ddoc .code_sample div .code_lines li::before {
-        margin-left: -33px;
-        margin-right: 25px;
-      }
-
-      .ddoc .code_sample div .code_lines li:nth-child(n+10)::before {
-        margin-left: -39px;
-        margin-right: 25px;
-      }
-
-      .ddoc .code_sample div .code_lines li:nth-child(n+100)::before {
-        margin-left: -46px;
-        margin-right: 25px;
-      }
-
-      .ddoc .code_sample .code_lines .code {
-        color: #000;
-      }
-
-      .ddoc div.dlang {
-        margin: 10px 0 21px;
-        padding: 4px 0 2px 10px;
-      }
-
-      .ddoc div.dlang {
-          margin: 10px 0 21px;
-          padding: 4px 0 2px 10px;
-      }
-
-      .ddoc div.dlang {
-        border-left: 5px solid rgba(0, 155, 51, 0.2);
-      }
-
-      .ddoc .code_lines li::before {
-        color: rgba(128, 128, 128, 1);
-        content: counter(li, decimal);
-        counter-increment: li;
-        font-family: Menlo,monospace;
-        font-size: 0.9em;
-        margin-right: 16px;
-      }
-
-      .ddoc .code_lines li {
-        padding-left: 0;
-        white-space: pre-wrap;
-      }
-
-      .ddoc .code_lines li:only-of-type::before {
-        color: rgba(255, 255, 255, 1);
-        content: " ";
-      }
-
-      .ddoc .code_lines li:only-of-type {
-        color: rgba(255, 255, 255, 1);
-        content: " ";
-      }
-
-      .ddoc .code_lines li:nth-child(n+10) {
-        text-indent: -17px;
-      }
-
-      .ddoc .code_lines li:nth-child(n+10)::before {
-        margin-right: 12px;
-      }
-
-      .ddoc .graybox {
-        border: 1px solid rgba(233, 233, 233, 1);
-        border-collapse: collapse;
-        border-spacing: 0;
-        empty-cells: hide;
-        margin: 20px 0 36px;
-        text-align: left;
-      }
-
-      .ddoc .graybox p {
-        margin: 0;
-        min-width: 50px;
-      }
-
-      .ddoc td {
-        border: 1px solid rgba(233, 233, 233, 1);
-        margin: 0;
-        max-width: 260px;
-        padding: 5px 25px 5px 10px;
-        vertical-align: middle;
-      }
-
-      .punctuation {
-        color: rgba(0, 0, 0, 1);
-      }
-
-      .comment {
-        color: rgba(0, 131, 18, 1);
-      }
-
-      .operator {
-        color: #000;
-      }
-
-      .keyword {
-        color: rgba(170, 13, 145, 1);
-      }
-
-      .keyword_type {
-        color: rgba(170, 51, 145, 1);
-      }
-
-      .string_literal {
-        color: rgba(196, 26, 22, 1);
-      }
-
-      .ddoc_psuper_symbol {
-        color: rgba(92, 38, 153, 1);
-      }
-
-      .param {
-        color: rgba(0, 0, 0, 1);
-      }
-
-      .psymbol {
-        color: rgba(0, 0, 0, 1);
-      }
-
-      .ddoc_member_header .ddoc_header_anchor .code {
-        font-size: 1em;
-      }
-    </style>
-  </head>
-  <body id="ddoc_main" class="ddoc dlang">
-    <div class="content_wrapper">
-      <article class="module">
-        <h1 class="module_name">codec</h1>
-        <section id="module_content"><section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    The codecs in this library are values of an ASN1 encoding scheme.
+    <head>
+        <!-- Standard -->
+        <title>codec</title>
+        <meta charset="utf-8">
+        <meta name="author" content="Jonathan M. Wilbur jonathan@wilbur.space">
+        <meta name="description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+        <meta name="keywords" content="codec,asn1,asn.1,x690,x.690,ber,cer,der,per,basic encoding rules,codec,dlang,d">
+        <meta name="theme-color" content="#FFFFFF">
+
+        <!-- Google -->
+        <meta name="application-url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta name="audience" content="grownup">
+        <meta itemprop="name" content="codec - ASN.1 D Library">
+        <meta itemprop="description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+
+        <!-- Apple -->
+        <meta name="apple-mobile-web-app-title" content="codec">
+        <meta name="apple-mobile-web-app-status-bar-style" content="white">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-touch-fullscreen" content="yes">
+        <meta name="format-detection" content="telephone=yes">
+
+        <!-- Microsoft -->
+        <meta name="msapplication-tooltip" content="codec - ASN.1 D Library">
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+
+        <!-- Miscellaneous -->
+        <meta name="designer" content="Jonathan M. Wilbur jonathan@wilbur.space">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="version" content="1.0.0">
+        <meta name="copyright" content="Copyright 2018 (C) Jonathan M. Wilbur.">
+        <meta name="language" content="English">
+
+        <!-- Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta property="og:title" content="codec - ASN.1 D Library">
+        <meta property="og:description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+        <meta property="og:site_name" content="GitHub">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="website">
+        <meta name="twitter:url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta name="twitter:title" content="codec - ASN.1 D Library">
+        <meta name="twitter:description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+
+        <!-- Application -->
+        <style type="text/css">
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #661515;
+    background-image: linear-gradient(to right, #FFFFEE 0%, #FFCCBB 100%);
+    margin: 20px;
+}
+
+a {
+    color: #AA0000;
+	font-weight: 500;
+	-webkit-transition: color 0.2s;
+    transition: color 0.2s;
+    text-decoration-style: none;
+}
+
+a:hover {
+	color: #FF2222;
+}
+
+a::before,a::after {
+	font-weight: 100;
+	font-size: 110%;
+	line-height: 1;
+	opacity: 0;
+	-webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
+	transition: opacity 0.2s, transform 0.2s;
+}
+
+a::before {
+	left: -0.1em;
+	content: '[';
+	-webkit-transform: translateX(-100%);
+	transform: translateX(-100%);
+}
+
+a::after {
+	right: -0.1em;
+	content: ']';
+	-webkit-transform: translateX(100%);
+	transform: translateX(100%);
+}
+
+a:hover::before,a:hover::after {
+	opacity: 1;
+	-webkit-transform: translateX(0);
+	transform: translateX(0);
+}
+
+code, .mono {
+    font-family: Courier New, Courier, monospace;
+}
+
+.d.inline {
+    display: inline-block;
+}
+
+.d.block .declaration {
+    display: block;
+    padding: 10px;
+    margin: 10px;
+}
+
+.declaration {
+    background-color: #FFFFEE;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+
+#summary, .description {
+    margin: 5px;
+    padding: 5px;
+}
+
+.module-info {
+	margin-bottom: 100px;
+}
+
+.member {
+	font-weight: bold;
+}
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <h1>codec</h1>
+            <h2>ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER</h2>
+        </div>
+        <div id="content">
+            <section class="module-info"><section id="summary">The codecs in this library are values of an ASN1 encoding scheme.
     The type, length, and value are set using properties defined on
     abstract classes from which the encoding-specific values inherit.
     This module contains those abstract classes, and with these classes,
     it serves as the root module from which all other <code class="code">codec</code> modules will
-    inherit.
-  </p>
-</div>
-
+    inherit.</section>
 </section>
-<section class="section ddoc_module_members_section">
-  <div class="ddoc_module_members">
+<section class="module-members">
     <ul class="ddoc_members">
-  <li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1CodecException" id="ASN1CodecException"><code class="code">ASN1CodecException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1CodecException"></span>alias <code class="code">ASN1CodecException</code> = AbstractSyntaxNotation1CodecException;
+	<li class="ddoc_member"><a href="#ASN1CodecException" id="ASN1CodecException"><code class="member">ASN1CodecException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1CodecException"></span>alias <code class="code">ASN1CodecException</code> = AbstractSyntaxNotation1CodecException;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1CodecException" id="AbstractSyntaxNotation1CodecException"><code class="code">AbstractSyntaxNotation1CodecException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1CodecException"></span>class <code class="code">AbstractSyntaxNotation1CodecException</code>: <span class="ddoc_psuper_symbol">asn1.AbstractSyntaxNotation1Exception</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    A generic exception from which any ASN.1 codec exception may inherit
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1CodecException" id="AbstractSyntaxNotation1CodecException"><code class="member">AbstractSyntaxNotation1CodecException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1CodecException"></span>class <code class="code">AbstractSyntaxNotation1CodecException</code>: <span class="ddoc_psuper_symbol">asn1.AbstractSyntaxNotation1Exception</span>;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1RecursionException" id="ASN1RecursionException"><code class="code">ASN1RecursionException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1RecursionException"></span>alias <code class="code">ASN1RecursionException</code> = AbstractSyntaxNotation1RecursionException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1RecursionException" id="AbstractSyntaxNotation1RecursionException"><code class="code">AbstractSyntaxNotation1RecursionException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1RecursionException"></span>class <code class="code">AbstractSyntaxNotation1RecursionException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    An exception that is thrown when excessively deep recursion occurs.
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div><section class="module-info"><section id="summary">A generic exception from which any ASN.1 codec exception may inherit</section>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#ASN1RecursionException" id="ASN1RecursionException"><code class="member">ASN1RecursionException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1RecursionException"></span>alias <code class="code">ASN1RecursionException</code> = AbstractSyntaxNotation1RecursionException;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1TruncationException" id="ASN1TruncationException"><code class="code">ASN1TruncationException</code></a>
+    </code>
+</section>
+<div>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1TruncationException"></span>alias <code class="code">ASN1TruncationException</code> = AbstractSyntaxNotation1TruncationException;
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1RecursionException" id="AbstractSyntaxNotation1RecursionException"><code class="member">AbstractSyntaxNotation1RecursionException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1RecursionException"></span>class <code class="code">AbstractSyntaxNotation1RecursionException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception that is thrown when excessively deep recursion occurs.</section>
+</section>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#AbstractSyntaxNotation1RecursionException.recursionLimit" id="AbstractSyntaxNotation1RecursionException.recursionLimit"><code class="member">recursionLimit</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1RecursionException.recursionLimit"></span>immutable size_t <code class="code">recursionLimit</code>;
 
+    </code>
+</section>
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1RecursionException.this" id="AbstractSyntaxNotation1RecursionException.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1RecursionException.this"></span>this(size_t <code class="code">recursionLimit</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1TruncationException" id="AbstractSyntaxNotation1TruncationException"><code class="code">AbstractSyntaxNotation1TruncationException</code></a>
+    </code>
+</section>
+<div>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TruncationException"></span>class <code class="code">AbstractSyntaxNotation1TruncationException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
+</li>
+</ul>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1TruncationException" id="ASN1TruncationException"><code class="member">ASN1TruncationException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1TruncationException"></span>alias <code class="code">ASN1TruncationException</code> = AbstractSyntaxNotation1TruncationException;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+    </code>
+</section>
+<div>
 </div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    An exception that is thrown when the encoded data is truncated. Note that
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TruncationException" id="AbstractSyntaxNotation1TruncationException"><code class="member">AbstractSyntaxNotation1TruncationException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TruncationException"></span>class <code class="code">AbstractSyntaxNotation1TruncationException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception that is thrown when the encoded data is truncated. Note that
     this exception is not necessarily indicative of malicious activity. If
     encoded ASN.1 data is being transferred over a network to a host that is
     decoding it, attempting to decode the data before the entirety of the data
-    is transferred could result in this exception.
-  </p>
-</div>
-
+    is transferred could result in this exception.</section>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1TagException" id="ASN1TagException"><code class="code">ASN1TagException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1TagException"></span>alias <code class="code">ASN1TagException</code> = AbstractSyntaxNotation1TagException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1TagException" id="AbstractSyntaxNotation1TagException"><code class="code">AbstractSyntaxNotation1TagException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagException"></span>class <code class="code">AbstractSyntaxNotation1TagException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1TagOverflowException" id="ASN1TagOverflowException"><code class="code">ASN1TagOverflowException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1TagOverflowException"></span>alias <code class="code">ASN1TagOverflowException</code> = AbstractSyntaxNotation1TagOverflowException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1TagOverflowException" id="AbstractSyntaxNotation1TagOverflowException"><code class="code">AbstractSyntaxNotation1TagOverflowException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagOverflowException"></span>class <code class="code">AbstractSyntaxNotation1TagOverflowException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1TagPaddingException" id="ASN1TagPaddingException"><code class="code">ASN1TagPaddingException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1TagPaddingException"></span>alias <code class="code">ASN1TagPaddingException</code> = AbstractSyntaxNotation1TagPaddingException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1TagPaddingException" id="AbstractSyntaxNotation1TagPaddingException"><code class="code">AbstractSyntaxNotation1TagPaddingException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagPaddingException"></span>class <code class="code">AbstractSyntaxNotation1TagPaddingException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1TagClassException" id="ASN1TagClassException"><code class="code">ASN1TagClassException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1TagClassException"></span>alias <code class="code">ASN1TagClassException</code> = AbstractSyntaxNotation1TagClassException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1TagClassException" id="AbstractSyntaxNotation1TagClassException"><code class="code">AbstractSyntaxNotation1TagClassException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagClassException"></span>class <code class="code">AbstractSyntaxNotation1TagClassException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1ConstructionException" id="ASN1ConstructionException"><code class="code">ASN1ConstructionException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1ConstructionException"></span>alias <code class="code">ASN1ConstructionException</code> = AbstractSyntaxNotation1ConstructionException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1ConstructionException" id="AbstractSyntaxNotation1ConstructionException"><code class="code">AbstractSyntaxNotation1ConstructionException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ConstructionException"></span>class <code class="code">AbstractSyntaxNotation1ConstructionException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1TagNumberException" id="ASN1TagNumberException"><code class="code">ASN1TagNumberException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1TagNumberException"></span>alias <code class="code">ASN1TagNumberException</code> = AbstractSyntaxNotation1TagNumberException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1TagNumberException" id="AbstractSyntaxNotation1TagNumberException"><code class="code">AbstractSyntaxNotation1TagNumberException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagNumberException"></span>class <code class="code">AbstractSyntaxNotation1TagNumberException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1LengthException" id="ASN1LengthException"><code class="code">ASN1LengthException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1LengthException"></span>alias <code class="code">ASN1LengthException</code> = AbstractSyntaxNotation1LengthException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1LengthException" id="AbstractSyntaxNotation1LengthException"><code class="code">AbstractSyntaxNotation1LengthException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthException"></span>class <code class="code">AbstractSyntaxNotation1LengthException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1LengthOverflowException" id="ASN1LengthOverflowException"><code class="code">ASN1LengthOverflowException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1LengthOverflowException"></span>alias <code class="code">ASN1LengthOverflowException</code> = AbstractSyntaxNotation1LengthOverflowException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1LengthOverflowException" id="AbstractSyntaxNotation1LengthOverflowException"><code class="code">AbstractSyntaxNotation1LengthOverflowException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthOverflowException"></span>class <code class="code">AbstractSyntaxNotation1LengthOverflowException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1LengthUndefinedException" id="ASN1LengthUndefinedException"><code class="code">ASN1LengthUndefinedException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1LengthUndefinedException"></span>alias <code class="code">ASN1LengthUndefinedException</code> = AbstractSyntaxNotation1LengthUndefinedException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1LengthUndefinedException" id="AbstractSyntaxNotation1LengthUndefinedException"><code class="code">AbstractSyntaxNotation1LengthUndefinedException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthUndefinedException"></span>class <code class="code">AbstractSyntaxNotation1LengthUndefinedException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1ValueException" id="ASN1ValueException"><code class="code">ASN1ValueException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1ValueException"></span>alias <code class="code">ASN1ValueException</code> = AbstractSyntaxNotation1ValueException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1ValueException" id="AbstractSyntaxNotation1ValueException"><code class="code">AbstractSyntaxNotation1ValueException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueException"></span>class <code class="code">AbstractSyntaxNotation1ValueException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1ValueSizeException" id="ASN1ValueSizeException"><code class="code">ASN1ValueSizeException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1ValueSizeException"></span>alias <code class="code">ASN1ValueSizeException</code> = AbstractSyntaxNotation1ValueSizeException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1ValueSizeException" id="AbstractSyntaxNotation1ValueSizeException"><code class="code">AbstractSyntaxNotation1ValueSizeException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueSizeException"></span>class <code class="code">AbstractSyntaxNotation1ValueSizeException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1ValueOverflowException" id="ASN1ValueOverflowException"><code class="code">ASN1ValueOverflowException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1ValueOverflowException"></span>alias <code class="code">ASN1ValueOverflowException</code> = AbstractSyntaxNotation1ValueOverflowException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1ValueOverflowException" id="AbstractSyntaxNotation1ValueOverflowException"><code class="code">AbstractSyntaxNotation1ValueOverflowException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueOverflowException"></span>class <code class="code">AbstractSyntaxNotation1ValueOverflowException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1ValuePaddingException" id="ASN1ValuePaddingException"><code class="code">ASN1ValuePaddingException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1ValuePaddingException"></span>alias <code class="code">ASN1ValuePaddingException</code> = AbstractSyntaxNotation1ValuePaddingException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1ValuePaddingException" id="AbstractSyntaxNotation1ValuePaddingException"><code class="code">AbstractSyntaxNotation1ValuePaddingException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValuePaddingException"></span>class <code class="code">AbstractSyntaxNotation1ValuePaddingException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1ValueCharactersException" id="ASN1ValueCharactersException"><code class="code">ASN1ValueCharactersException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1ValueCharactersException"></span>alias <code class="code">ASN1ValueCharactersException</code> = AbstractSyntaxNotation1ValueCharactersException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1ValueCharactersException" id="AbstractSyntaxNotation1ValueCharactersException"><code class="code">AbstractSyntaxNotation1ValueCharactersException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueCharactersException"></span>class <code class="code">AbstractSyntaxNotation1ValueCharactersException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1ValueUndefinedException" id="ASN1ValueUndefinedException"><code class="code">ASN1ValueUndefinedException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1ValueUndefinedException"></span>alias <code class="code">ASN1ValueUndefinedException</code> = AbstractSyntaxNotation1ValueUndefinedException;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1ValueUndefinedException" id="AbstractSyntaxNotation1ValueUndefinedException"><code class="code">AbstractSyntaxNotation1ValueUndefinedException</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueUndefinedException"></span>class <code class="code">AbstractSyntaxNotation1ValueUndefinedException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#ASN1Element" id="ASN1Element"><code class="code">ASN1Element</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="ASN1Element"></span>alias <code class="code">ASN1Element</code> = AbstractSyntaxNotation1Element(Element);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element" id="AbstractSyntaxNotation1Element"><code class="code">AbstractSyntaxNotation1Element</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element"></span>class <code class="code">AbstractSyntaxNotation1Element</code>(Element);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
 <ul class="ddoc_members">
-  <li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.LengthEncodingPreference" id="AbstractSyntaxNotation1Element.LengthEncodingPreference"><code class="code">LengthEncodingPreference</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.LengthEncodingPreference"></span>enum <code class="code">LengthEncodingPreference</code>: ubyte;
+	<li class="ddoc_member"><a href="#AbstractSyntaxNotation1TruncationException.expectedBytes" id="AbstractSyntaxNotation1TruncationException.expectedBytes"><code class="member">expectedBytes</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TruncationException.expectedBytes"></span>immutable size_t <code class="code">expectedBytes</code>;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.boolean" id="AbstractSyntaxNotation1Element.boolean"><code class="code">boolean</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.boolean"></span>abstract const @property bool <code class="code">boolean</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a <code class="code">boolean</code>
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TruncationException.actualBytes" id="AbstractSyntaxNotation1TruncationException.actualBytes"><code class="member">actualBytes</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TruncationException.actualBytes"></span>immutable size_t <code class="code">actualBytes</code>;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.boolean" id="AbstractSyntaxNotation1Element.boolean"><code class="code">boolean</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.boolean.2"></span>abstract @property void <code class="code">boolean</code>(in bool <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a <code class="code">boolean</code>
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TruncationException.this" id="AbstractSyntaxNotation1TruncationException.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TruncationException.this"></span>this(size_t <code class="code">expectedBytes</code>, size_t <code class="code">actualBytes</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.integer" id="AbstractSyntaxNotation1Element.integer"><code class="code">integer</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.integer"></span>abstract const @property T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an <code class="code">integer</code>
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div>
 </div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.integer" id="AbstractSyntaxNotation1Element.integer"><code class="code">integer</code></a>
+</li>
+</ul>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.integer.2"></span>abstract @property void <code class="code">integer</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
+</li><li class="ddoc_member"><a href="#ASN1TagException" id="ASN1TagException"><code class="member">ASN1TagException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1TagException"></span>alias <code class="code">ASN1TagException</code> = AbstractSyntaxNotation1TagException;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an <code class="code">integer</code>
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagException" id="AbstractSyntaxNotation1TagException"><code class="member">AbstractSyntaxNotation1TagException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagException"></span>class <code class="code">AbstractSyntaxNotation1TagException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.octetString" id="AbstractSyntaxNotation1Element.octetString"><code class="code">octetString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.octetString"></span>abstract const @property ubyte[] <code class="code">octetString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a ubyte[] array
-  </p>
-</div>
-
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.octetString" id="AbstractSyntaxNotation1Element.octetString"><code class="code">octetString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.octetString.2"></span>abstract @property void <code class="code">octetString</code>(in ubyte[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a ubyte[] array
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">A generic tag-related exception</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#ASN1TagOverflowException" id="ASN1TagOverflowException"><code class="member">ASN1TagOverflowException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1TagOverflowException"></span>alias <code class="code">ASN1TagOverflowException</code> = AbstractSyntaxNotation1TagOverflowException;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.oid" id="AbstractSyntaxNotation1Element.oid"><code class="code">oid</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.oid"></span>alias <code class="code">oid</code> = objectIdentifier;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.objectID" id="AbstractSyntaxNotation1Element.objectID"><code class="code">objectID</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectID"></span>alias <code class="code">objectID</code> = objectIdentifier;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.objectIdentifier" id="AbstractSyntaxNotation1Element.objectIdentifier"><code class="code">objectIdentifier</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectIdentifier"></span>abstract const @property OID <code class="code">objectIdentifier</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an Object Identifier
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagOverflowException" id="AbstractSyntaxNotation1TagOverflowException"><code class="member">AbstractSyntaxNotation1TagOverflowException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagOverflowException"></span>class <code class="code">AbstractSyntaxNotation1TagOverflowException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.objectIdentifier" id="AbstractSyntaxNotation1Element.objectIdentifier"><code class="code">objectIdentifier</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectIdentifier.2"></span>abstract @property void <code class="code">objectIdentifier</code>(in OID <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an Object Identifier
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div><section class="module-info"><section id="summary">An exception thrown when the decoded tag number cannot fit into a <code class="d inline">size_t</code></section>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#ASN1TagPaddingException" id="ASN1TagPaddingException"><code class="member">ASN1TagPaddingException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1TagPaddingException"></span>alias <code class="code">ASN1TagPaddingException</code> = AbstractSyntaxNotation1TagPaddingException;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.objectDescriptor" id="AbstractSyntaxNotation1Element.objectDescriptor"><code class="code">objectDescriptor</code></a>
+    </code>
+</section>
+<div>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectDescriptor"></span>abstract const @property string <code class="code">objectDescriptor</code>();
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagPaddingException" id="AbstractSyntaxNotation1TagPaddingException"><code class="member">AbstractSyntaxNotation1TagPaddingException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagPaddingException"></span>class <code class="code">AbstractSyntaxNotation1TagPaddingException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception thrown when the decoded tag number contains "leading zero bytes" (0x80)</section>
+</section>
 </div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an ObjectDescriptor, which is a string consisting of only
+</li><li class="ddoc_member"><a href="#ASN1TagClassException" id="ASN1TagClassException"><code class="member">ASN1TagClassException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1TagClassException"></span>alias <code class="code">ASN1TagClassException</code> = AbstractSyntaxNotation1TagClassException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagClassException" id="AbstractSyntaxNotation1TagClassException"><code class="member">AbstractSyntaxNotation1TagClassException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagClassException"></span>class <code class="code">AbstractSyntaxNotation1TagClassException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception thrown when the tag class is not what is expected</section>
+</section>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagClassException.expectedTagClasses" id="AbstractSyntaxNotation1TagClassException.expectedTagClasses"><code class="member">expectedTagClasses</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagClassException.expectedTagClasses"></span>const ASN1TagClass[] <code class="code">expectedTagClasses</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagClassException.actualTagClass" id="AbstractSyntaxNotation1TagClassException.actualTagClass"><code class="member">actualTagClass</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagClassException.actualTagClass"></span>immutable ASN1TagClass <code class="code">actualTagClass</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagClassException.this" id="AbstractSyntaxNotation1TagClassException.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagClassException.this"></span>this(ASN1TagClass[] <code class="code">expectedTagClasses</code>, ASN1TagClass <code class="code">actualTagClass</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+
+    </code>
+</section>
+<div>
+</div>
+</li>
+</ul>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ConstructionException" id="ASN1ConstructionException"><code class="member">ASN1ConstructionException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ConstructionException"></span>alias <code class="code">ASN1ConstructionException</code> = AbstractSyntaxNotation1ConstructionException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ConstructionException" id="AbstractSyntaxNotation1ConstructionException"><code class="member">AbstractSyntaxNotation1ConstructionException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ConstructionException"></span>class <code class="code">AbstractSyntaxNotation1ConstructionException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception thrown when the construction is not what is expected</section>
+</section>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#AbstractSyntaxNotation1ConstructionException.actualConstruction" id="AbstractSyntaxNotation1ConstructionException.actualConstruction"><code class="member">actualConstruction</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ConstructionException.actualConstruction"></span>immutable ASN1Construction <code class="code">actualConstruction</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ConstructionException.this" id="AbstractSyntaxNotation1ConstructionException.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ConstructionException.this"></span>@safe this(ASN1Construction <code class="code">actualConstruction</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+
+    </code>
+</section>
+<div>
+</div>
+</li>
+</ul>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1TypeException" id="ASN1TypeException"><code class="member">ASN1TypeException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1TypeException"></span>alias <code class="code">ASN1TypeException</code> = AbstractSyntaxNotation1TagNumberException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1TagNumberException" id="ASN1TagNumberException"><code class="member">ASN1TagNumberException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1TagNumberException"></span>alias <code class="code">ASN1TagNumberException</code> = AbstractSyntaxNotation1TagNumberException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagNumberException" id="AbstractSyntaxNotation1TagNumberException"><code class="member">AbstractSyntaxNotation1TagNumberException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagNumberException"></span>class <code class="code">AbstractSyntaxNotation1TagNumberException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1TagException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception thrown when the tag number or type is not what is expected</section>
+</section>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagNumberException.expectedTagNumber" id="AbstractSyntaxNotation1TagNumberException.expectedTagNumber"><code class="member">expectedTagNumber</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagNumberException.expectedTagNumber"></span>immutable size_t <code class="code">expectedTagNumber</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagNumberException.actualTagNumber" id="AbstractSyntaxNotation1TagNumberException.actualTagNumber"><code class="member">actualTagNumber</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagNumberException.actualTagNumber"></span>immutable size_t <code class="code">actualTagNumber</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagNumberException.this" id="AbstractSyntaxNotation1TagNumberException.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagNumberException.this"></span>this(size_t[] <code class="code">expectedTagNumbers</code>, size_t <code class="code">actualTagNumber</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+
+    </code>
+</section>
+<div>
+</div>
+</li>
+</ul>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1LengthException" id="ASN1LengthException"><code class="member">ASN1LengthException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1LengthException"></span>alias <code class="code">ASN1LengthException</code> = AbstractSyntaxNotation1LengthException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1LengthException" id="AbstractSyntaxNotation1LengthException"><code class="member">AbstractSyntaxNotation1LengthException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthException"></span>class <code class="code">AbstractSyntaxNotation1LengthException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">A generic length-related exception</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1LengthOverflowException" id="ASN1LengthOverflowException"><code class="member">ASN1LengthOverflowException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1LengthOverflowException"></span>alias <code class="code">ASN1LengthOverflowException</code> = AbstractSyntaxNotation1LengthOverflowException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1LengthOverflowException" id="AbstractSyntaxNotation1LengthOverflowException"><code class="member">AbstractSyntaxNotation1LengthOverflowException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthOverflowException"></span>class <code class="code">AbstractSyntaxNotation1LengthOverflowException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1LengthException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception that is thrown when the length cannot fit inside of a <code class="d inline">size_t</code></section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1LengthUndefinedException" id="ASN1LengthUndefinedException"><code class="member">ASN1LengthUndefinedException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1LengthUndefinedException"></span>alias <code class="code">ASN1LengthUndefinedException</code> = AbstractSyntaxNotation1LengthUndefinedException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1LengthUndefinedException" id="AbstractSyntaxNotation1LengthUndefinedException"><code class="member">AbstractSyntaxNotation1LengthUndefinedException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthUndefinedException"></span>class <code class="code">AbstractSyntaxNotation1LengthUndefinedException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1LengthException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception thrown when a length encoding that is undefined or reserved by the specification is encountered</section>
+</section>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#AbstractSyntaxNotation1LengthUndefinedException.this" id="AbstractSyntaxNotation1LengthUndefinedException.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthUndefinedException.this"></span>this(string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+
+    </code>
+</section>
+<div>
+</div>
+</li>
+</ul>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ValueException" id="ASN1ValueException"><code class="member">ASN1ValueException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ValueException"></span>alias <code class="code">ASN1ValueException</code> = AbstractSyntaxNotation1ValueException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueException" id="AbstractSyntaxNotation1ValueException"><code class="member">AbstractSyntaxNotation1ValueException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueException"></span>class <code class="code">AbstractSyntaxNotation1ValueException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1CodecException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">A generic exception thrown when something is wrong with a value</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ValueSizeException" id="ASN1ValueSizeException"><code class="member">ASN1ValueSizeException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ValueSizeException"></span>alias <code class="code">ASN1ValueSizeException</code> = AbstractSyntaxNotation1ValueSizeException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueSizeException" id="AbstractSyntaxNotation1ValueSizeException"><code class="member">AbstractSyntaxNotation1ValueSizeException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueSizeException"></span>class <code class="code">AbstractSyntaxNotation1ValueSizeException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception thrown when a value is too small or too large (in terms of bytes) to decode</section>
+</section>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueSizeException.min" id="AbstractSyntaxNotation1ValueSizeException.min"><code class="member">min</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueSizeException.min"></span>immutable size_t <code class="code">min</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueSizeException.max" id="AbstractSyntaxNotation1ValueSizeException.max"><code class="member">max</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueSizeException.max"></span>immutable size_t <code class="code">max</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueSizeException.actual" id="AbstractSyntaxNotation1ValueSizeException.actual"><code class="member">actual</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueSizeException.actual"></span>immutable size_t <code class="code">actual</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueSizeException.this" id="AbstractSyntaxNotation1ValueSizeException.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueSizeException.this"></span>nothrow @safe this(size_t <code class="code">min</code>, size_t <code class="code">max</code>, size_t <code class="code">actual</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+
+    </code>
+</section>
+<div>
+</div>
+</li>
+</ul>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ValueOverflowException" id="ASN1ValueOverflowException"><code class="member">ASN1ValueOverflowException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ValueOverflowException"></span>alias <code class="code">ASN1ValueOverflowException</code> = AbstractSyntaxNotation1ValueOverflowException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueOverflowException" id="AbstractSyntaxNotation1ValueOverflowException"><code class="member">AbstractSyntaxNotation1ValueOverflowException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueOverflowException"></span>class <code class="code">AbstractSyntaxNotation1ValueOverflowException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception that is thrown when a value or part of a value does not fit into a native type</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ValuePaddingException" id="ASN1ValuePaddingException"><code class="member">ASN1ValuePaddingException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ValuePaddingException"></span>alias <code class="code">ASN1ValuePaddingException</code> = AbstractSyntaxNotation1ValuePaddingException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValuePaddingException" id="AbstractSyntaxNotation1ValuePaddingException"><code class="member">AbstractSyntaxNotation1ValuePaddingException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValuePaddingException"></span>class <code class="code">AbstractSyntaxNotation1ValuePaddingException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception thrown when a value contains invalid leading or trailing zeroes or whitespace</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ValueCharactersException" id="ASN1ValueCharactersException"><code class="member">ASN1ValueCharactersException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ValueCharactersException"></span>alias <code class="code">ASN1ValueCharactersException</code> = AbstractSyntaxNotation1ValueCharactersException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueCharactersException" id="AbstractSyntaxNotation1ValueCharactersException"><code class="member">AbstractSyntaxNotation1ValueCharactersException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueCharactersException"></span>class <code class="code">AbstractSyntaxNotation1ValueCharactersException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception thrown when a chatacter-string type contains invalid characters</section>
+</section>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueCharactersException.offendingCharacter" id="AbstractSyntaxNotation1ValueCharactersException.offendingCharacter"><code class="member">offendingCharacter</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueCharactersException.offendingCharacter"></span>immutable dchar <code class="code">offendingCharacter</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueCharactersException.this" id="AbstractSyntaxNotation1ValueCharactersException.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueCharactersException.this"></span>@safe this(string <code class="code">descriptionOfPermittedCharacters</code>, dchar <code class="code">offendingCharacter</code>, string <code class="code">typeName</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+
+    </code>
+</section>
+<div>
+</div>
+</li>
+</ul>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ValueUndefinedException" id="ASN1ValueUndefinedException"><code class="member">ASN1ValueUndefinedException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ValueUndefinedException"></span>alias <code class="code">ASN1ValueUndefinedException</code> = AbstractSyntaxNotation1ValueUndefinedException;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueUndefinedException" id="AbstractSyntaxNotation1ValueUndefinedException"><code class="member">AbstractSyntaxNotation1ValueUndefinedException</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueUndefinedException"></span>class <code class="code">AbstractSyntaxNotation1ValueUndefinedException</code>: <span class="ddoc_psuper_symbol">codec.AbstractSyntaxNotation1ValueException</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">An exception that is thrown when a value is encoded in a way that is undefined or reserved by the specification</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1Element" id="ASN1Element"><code class="member">ASN1Element</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1Element"></span>alias <code class="code">ASN1Element</code> = AbstractSyntaxNotation1Element(Element);
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element" id="AbstractSyntaxNotation1Element"><code class="member">AbstractSyntaxNotation1Element</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element"></span>class <code class="code">AbstractSyntaxNotation1Element</code>(Element);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The generic element from which all other elements will inherit</section>
+</section>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.nestingRecursionCount" id="AbstractSyntaxNotation1Element.nestingRecursionCount"><code class="member">nestingRecursionCount</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.nestingRecursionCount"></span>static ubyte <code class="code">nestingRecursionCount</code>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The number of recursions used for parsing constructed elements.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.valueRecursionCount" id="AbstractSyntaxNotation1Element.valueRecursionCount"><code class="member">valueRecursionCount</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.valueRecursionCount"></span>static ubyte <code class="code">valueRecursionCount</code>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The number of recursions used for parsing the values of constructed elements.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.nestingRecursionLimit" id="AbstractSyntaxNotation1Element.nestingRecursionLimit"><code class="member">nestingRecursionLimit</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.nestingRecursionLimit"></span>static immutable ubyte <code class="code">nestingRecursionLimit</code>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The limit of recursions permitted for parsing constructed elements.
+        Feel free to increase this, if you are not afraid of your system parsing
+        deeply-nested elements, but you probably do not need to change this.
+        You probably do not want to exceed 20, because doing so could make your
+        application vulnerable to denial-of-service attacks, and you should
+        absolutely never set this to 255.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.LengthEncodingPreference" id="AbstractSyntaxNotation1Element.LengthEncodingPreference"><code class="member">LengthEncodingPreference</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.LengthEncodingPreference"></span>enum <code class="code">LengthEncodingPreference</code>: ubyte;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.endOfContent" id="AbstractSyntaxNotation1Element.endOfContent"><code class="member">endOfContent</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.endOfContent"></span>abstract const @property void <code class="code">endOfContent</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">"Decodes" an END OF CONTENT, by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ConstructionException = if the element is marked as "constructed"
+            ASN1ValueSizeException = if there are any content octets
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.boolean" id="AbstractSyntaxNotation1Element.boolean"><code class="member">boolean</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.boolean"></span>abstract const @property bool <code class="code">boolean</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a <code class="code">boolean</code></section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.boolean" id="AbstractSyntaxNotation1Element.boolean"><code class="member">boolean</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.boolean.2"></span>abstract @property void <code class="code">boolean</code>(in bool <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a <code class="code">boolean</code></section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.integer" id="AbstractSyntaxNotation1Element.integer"><code class="member">integer</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.integer"></span>abstract const @property T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an <code class="code">integer</code></section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.integer" id="AbstractSyntaxNotation1Element.integer"><code class="member">integer</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.integer.2"></span>abstract @property void <code class="code">integer</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an <code class="code">integer</code></section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.octetString" id="AbstractSyntaxNotation1Element.octetString"><code class="member">octetString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.octetString"></span>abstract const @property ubyte[] <code class="code">octetString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a ubyte[] array</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.octetString" id="AbstractSyntaxNotation1Element.octetString"><code class="member">octetString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.octetString.2"></span>abstract @property void <code class="code">octetString</code>(in ubyte[] <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a ubyte[] array</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.nill" id="AbstractSyntaxNotation1Element.nill"><code class="member">nill</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.nill"></span>abstract const @property void <code class="code">nill</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">"Decodes" a NULL, by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+</section>
+<div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Note:</span>
+I had to name this method "<code class="code">nill</code>," because "NULL" is a keyword in D.
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		ASN1ConstructionException = if the element is marked as "constructed"
+            ASN1ValueSizeException = if there are any content octets
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.oid" id="AbstractSyntaxNotation1Element.oid"><code class="member">oid</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.oid"></span>alias <code class="code">oid</code> = objectIdentifier;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.objectID" id="AbstractSyntaxNotation1Element.objectID"><code class="member">objectID</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectID"></span>alias <code class="code">objectID</code> = objectIdentifier;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.objectIdentifier" id="AbstractSyntaxNotation1Element.objectIdentifier"><code class="member">objectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectIdentifier"></span>abstract const @property OID <code class="code">objectIdentifier</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an Object Identifier</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.objectIdentifier" id="AbstractSyntaxNotation1Element.objectIdentifier"><code class="member">objectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectIdentifier.2"></span>abstract @property void <code class="code">objectIdentifier</code>(in OID <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an Object Identifier</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.objectDescriptor" id="AbstractSyntaxNotation1Element.objectDescriptor"><code class="member">objectDescriptor</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectDescriptor"></span>abstract const @property string <code class="code">objectDescriptor</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an ObjectDescriptor, which is a string consisting of only
         graphical characters. In fact, ObjectDescriptor is actually implicitly
         just a GraphicString! The formal specification for an ObjectDescriptor
         is:
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    <i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+</section>
+<div class="description"><i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
 <br><br>
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
-
-  </p>
 </div>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Sources:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Sources:</span>
 <a href="">                ASN.1: Communication Between Heterogeneous Systems, pages 175-178</a>
             <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">                The Wikipedia Page on ISO 2022</a>
             <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.objectDescriptor" id="AbstractSyntaxNotation1Element.objectDescriptor"><code class="member">objectDescriptor</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectDescriptor.2"></span>abstract @property void <code class="code">objectDescriptor</code>(in string <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.objectDescriptor" id="AbstractSyntaxNotation1Element.objectDescriptor"><code class="code">objectDescriptor</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.objectDescriptor.2"></span>abstract @property void <code class="code">objectDescriptor</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an ObjectDescriptor, which is a string consisting of only
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an ObjectDescriptor, which is a string consisting of only
         graphical characters. In fact, ObjectDescriptor is actually implicitly
         just a GraphicString! The formal specification for an ObjectDescriptor
         is:
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    <i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+</section>
+<div class="description"><i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
 <br><br>
         GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
         0x20 to 0x7E.
 
-
-  </p>
 </div>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Sources:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Sources:</span>
 <a href="">                ASN.1: Communication Between Heterogeneous Systems, pages 175-178</a>
             <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">                The Wikipedia Page on ISO 2022</a>
             <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.external" id="AbstractSyntaxNotation1Element.external"><code class="member">external</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.external"></span>deprecated abstract const @property External <code class="code">external</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.external" id="AbstractSyntaxNotation1Element.external"><code class="code">external</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.external"></span>deprecated abstract const @property External <code class="code">external</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an EXTERNAL, which is a constructed data type, defined in
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an EXTERNAL, which is a constructed data type, defined in
         the <a href="https://www.itu.int">            International Telecommunications Union</a>'s
         <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The specification defines EXTERNAL as:
+</section>
+<div class="description">The specification defines EXTERNAL as:
 <br><br>
         <i>        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
             identification CHOICE {
@@ -1941,48 +992,21 @@
         </i>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 2.
-  </p>
-</div>
-
+        will be context-specific and numbered from 0 to 2.</div>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.external" id="AbstractSyntaxNotation1Element.external"><code class="member">external</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.external.2"></span>deprecated abstract @property void <code class="code">external</code>(in External <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.external" id="AbstractSyntaxNotation1Element.external"><code class="code">external</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.external.2"></span>deprecated abstract @property void <code class="code">external</code>(in External <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an EXTERNAL, which is a constructed data type, defined in
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an EXTERNAL, which is a constructed data type, defined in
         the <a href="https://www.itu.int">            International Telecommunications Union</a>'s
         <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The specification defines EXTERNAL as:
+</section>
+<div class="description">The specification defines EXTERNAL as:
 <br><br>
         <i>        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
             identification CHOICE {
@@ -1996,201 +1020,70 @@
         </i>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 2.
-  </p>
-</div>
-
+        will be context-specific and numbered from 0 to 2.</div>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.realNumber" id="AbstractSyntaxNotation1Element.realNumber"><code class="member">realNumber</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.realNumber"></span>abstract const @property T <code class="code">realNumber</code>(T)() if (isFloatingPoint!T);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.realNumber" id="AbstractSyntaxNotation1Element.realNumber"><code class="code">realNumber</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.realNumber"></span>abstract const @property T <code class="code">realNumber</code>(T)() if (isFloatingPoint!T);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a floating-point number
-  </p>
-</div>
-
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.realNumber" id="AbstractSyntaxNotation1Element.realNumber"><code class="code">realNumber</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.realNumber.2"></span>abstract @property void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (isFloatingPoint!T);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a floating-point number
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Encodes a floating-point number</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.realNumber" id="AbstractSyntaxNotation1Element.realNumber"><code class="member">realNumber</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.realNumber.2"></span>abstract @property void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (isFloatingPoint!T);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.enumerated" id="AbstractSyntaxNotation1Element.enumerated"><code class="code">enumerated</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.enumerated"></span>abstract const @property T <code class="code">enumerated</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an integer that represents an ENUMERATED value
-  </p>
-</div>
-
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.enumerated" id="AbstractSyntaxNotation1Element.enumerated"><code class="code">enumerated</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.enumerated.2"></span>abstract @property void <code class="code">enumerated</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an integer that represents an ENUMERATED <code class="code">value</code>
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Encodes a floating-point number</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.enumerated" id="AbstractSyntaxNotation1Element.enumerated"><code class="member">enumerated</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.enumerated"></span>abstract const @property T <code class="code">enumerated</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.embeddedPDV" id="AbstractSyntaxNotation1Element.embeddedPDV"><code class="code">embeddedPDV</code></a>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an integer that represents an ENUMERATED value</section>
+</section>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.embeddedPDV"></span>alias <code class="code">embeddedPDV</code> = embeddedPresentationDataValue;
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.enumerated" id="AbstractSyntaxNotation1Element.enumerated"><code class="member">enumerated</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.enumerated.2"></span>abstract @property void <code class="code">enumerated</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an integer that represents an ENUMERATED <code class="code">value</code></section>
+</section>
 </div>
-<div class="ddoc_decl">
-  
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.embeddedPDV" id="AbstractSyntaxNotation1Element.embeddedPDV"><code class="member">embeddedPDV</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.embeddedPDV"></span>alias <code class="code">embeddedPDV</code> = embeddedPresentationDataValue;
 
+    </code>
+</section>
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.embeddedPresentationDataValue" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue"><code class="member">embeddedPresentationDataValue</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue"></span>abstract const @property EmbeddedPDV <code class="code">embeddedPresentationDataValue</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.embeddedPresentationDataValue" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue"></span>abstract const @property EmbeddedPDV <code class="code">embeddedPresentationDataValue</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an EMBEDDED PDV, which is a constructed data type, defined in
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an EMBEDDED PDV, which is a constructed data type, defined in
             the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The specification defines EMBEDDED PDV as:
+</section>
+<div class="description">The specification defines EMBEDDED PDV as:
 <br><br>
         <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
@@ -2210,48 +1103,21 @@
         </i>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
-  </p>
-</div>
-
+        will be context-specific and numbered from 0 to 5.</div>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.embeddedPresentationDataValue" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue"><code class="member">embeddedPresentationDataValue</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue.2"></span>abstract @property void <code class="code">embeddedPresentationDataValue</code>(in EmbeddedPDV <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.embeddedPresentationDataValue" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.embeddedPresentationDataValue.2"></span>abstract @property void <code class="code">embeddedPresentationDataValue</code>(in EmbeddedPDV <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an EMBEDDED PDV, which is a constructed data type, defined in
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an EMBEDDED PDV, which is a constructed data type, defined in
             the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The specification defines EMBEDDED PDV as:
+</section>
+<div class="description">The specification defines EMBEDDED PDV as:
 <br><br>
         <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
@@ -2271,1214 +1137,443 @@
         </i>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
-  </p>
-</div>
-
+        will be context-specific and numbered from 0 to 5.</div>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.utf8String" id="AbstractSyntaxNotation1Element.utf8String"><code class="member">utf8String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.utf8String"></span>alias <code class="code">utf8String</code> = unicodeTransformationFormat8String;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.utf8String" id="AbstractSyntaxNotation1Element.utf8String"><code class="code">utf8String</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.utf8String"></span>alias <code class="code">utf8String</code> = unicodeTransformationFormat8String;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.unicodeTransformationFormat8String" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"></span>abstract const @property string <code class="code">unicodeTransformationFormat8String</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a UTF-8 String
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.unicodeTransformationFormat8String" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"><code class="member">unicodeTransformationFormat8String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"></span>abstract const @property string <code class="code">unicodeTransformationFormat8String</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.unicodeTransformationFormat8String" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String.2"></span>abstract @property void <code class="code">unicodeTransformationFormat8String</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a UTF-8 String
-  </p>
-</div>
-
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.roid" id="AbstractSyntaxNotation1Element.roid"><code class="code">roid</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.roid"></span>alias <code class="code">roid</code> = relativeObjectIdentifier;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.relativeOID" id="AbstractSyntaxNotation1Element.relativeOID"><code class="code">relativeOID</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.relativeOID"></span>alias <code class="code">relativeOID</code> = relativeObjectIdentifier;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.relativeObjectIdentifier" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier"></span>abstract const @property OIDNode[] <code class="code">relativeObjectIdentifier</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a portion of an Object Identifier
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Decodes a UTF-8 String</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.unicodeTransformationFormat8String" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"><code class="member">unicodeTransformationFormat8String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.unicodeTransformationFormat8String.2"></span>abstract @property void <code class="code">unicodeTransformationFormat8String</code>(in string <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.relativeObjectIdentifier" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier.2"></span>abstract @property void <code class="code">relativeObjectIdentifier</code>(in OIDNode[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a porition of an Object Identifier
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div><section class="module-info"><section id="summary">Encodes a UTF-8 String</section>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.roid" id="AbstractSyntaxNotation1Element.roid"><code class="member">roid</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.roid"></span>alias <code class="code">roid</code> = relativeObjectIdentifier;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.sequence" id="AbstractSyntaxNotation1Element.sequence"><code class="code">sequence</code></a>
+    </code>
+</section>
+<div>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.sequence"></span>abstract const @property Element[] <code class="code">sequence</code>();
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.relativeOID" id="AbstractSyntaxNotation1Element.relativeOID"><code class="member">relativeOID</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.relativeOID"></span>alias <code class="code">relativeOID</code> = relativeObjectIdentifier;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+    </code>
+</section>
+<div>
 </div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an array of elements.
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.relativeObjectIdentifier" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier"><code class="member">relativeObjectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier"></span>abstract const @property OIDNode[] <code class="code">relativeObjectIdentifier</code>();
 
-  </p>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a portion of an Object Identifier</section>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.relativeObjectIdentifier" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier"><code class="member">relativeObjectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.relativeObjectIdentifier.2"></span>abstract @property void <code class="code">relativeObjectIdentifier</code>(in OIDNode[] <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a porition of an Object Identifier</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.sequence" id="AbstractSyntaxNotation1Element.sequence"><code class="member">sequence</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.sequence"></span>abstract const @property Element[] <code class="code">sequence</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an array of elements.
+</section>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Credits:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Credits:</span>
 Thanks to StackOverflow user
             <a href="https://stackoverflow.com/users/359297/biotronic">BioTronic</a>
             for teaching me how to create the abstract method that uses the
             child class as a template.
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.sequence" id="AbstractSyntaxNotation1Element.sequence"><code class="member">sequence</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.sequence.2"></span>abstract @property void <code class="code">sequence</code>(in Element[] <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.sequence" id="AbstractSyntaxNotation1Element.sequence"><code class="code">sequence</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.sequence.2"></span>abstract @property void <code class="code">sequence</code>(in Element[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an array of elements.
-
-  </p>
-</div>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an array of elements.
+</section>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Credits:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Credits:</span>
 Thanks to StackOverflow user
             <a href="https://stackoverflow.com/users/359297/biotronic">BioTronic</a>
             for teaching me how to create the abstract method that uses the
             child class as a template.
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.set" id="AbstractSyntaxNotation1Element.set"><code class="member">set</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.set"></span>abstract const @property Element[] <code class="code">set</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.set" id="AbstractSyntaxNotation1Element.set"><code class="code">set</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.set"></span>abstract const @property Element[] <code class="code">set</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an array of elements.
-
-  </p>
-</div>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an array of elements.
+</section>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Credits:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Credits:</span>
 Thanks to StackOverflow user
             <a href="https://stackoverflow.com/users/359297/biotronic">BioTronic</a>
             for teaching me how to create the abstract method that uses the
             child class as a template.
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.set" id="AbstractSyntaxNotation1Element.set"><code class="member">set</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.set.2"></span>abstract @property void <code class="code">set</code>(in Element[] <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.set" id="AbstractSyntaxNotation1Element.set"><code class="code">set</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.set.2"></span>abstract @property void <code class="code">set</code>(in Element[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an array of elements.
-
-  </p>
-</div>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an array of elements.
+</section>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Credits:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Credits:</span>
 Thanks to StackOverflow user
             <a href="https://stackoverflow.com/users/359297/biotronic">BioTronic</a>
             for teaching me how to create the abstract method that uses the
             child class as a template.
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.numericString" id="AbstractSyntaxNotation1Element.numericString"><code class="member">numericString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.numericString"></span>abstract const @property string <code class="code">numericString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.numericString" id="AbstractSyntaxNotation1Element.numericString"><code class="code">numericString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.numericString"></span>abstract const @property string <code class="code">numericString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string, where the characters of the string are limited to
-        0 - 9 and space.
-  </p>
-</div>
-
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.numericString" id="AbstractSyntaxNotation1Element.numericString"><code class="code">numericString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.numericString.2"></span>abstract @property void <code class="code">numericString</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string, where the characters of the string are limited to
-        0 - 9 and space.
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Decodes a string, where the characters of the string are limited to
+        0 - 9 and space.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.numericString" id="AbstractSyntaxNotation1Element.numericString"><code class="member">numericString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.numericString.2"></span>abstract @property void <code class="code">numericString</code>(in string <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.printableString" id="AbstractSyntaxNotation1Element.printableString"><code class="code">printableString</code></a>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string, where the characters of the string are limited to
+        0 - 9 and space.</section>
+</section>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.printableString"></span>abstract const @property string <code class="code">printableString</code>();
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.printableString" id="AbstractSyntaxNotation1Element.printableString"><code class="member">printableString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.printableString"></span>abstract const @property string <code class="code">printableString</code>();
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string that will only contain characters a-z, A-Z, 0-9,
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a string that will only contain characters a-z, A-Z, 0-9,
         space, apostrophe, parentheses, comma, minus, plus, period,
-        forward slash, colon, equals, and question mark.
-  </p>
-</div>
-
+        forward slash, colon, equals, and question mark.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.printableString" id="AbstractSyntaxNotation1Element.printableString"><code class="member">printableString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.printableString.2"></span>abstract @property void <code class="code">printableString</code>(in string <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.printableString" id="AbstractSyntaxNotation1Element.printableString"><code class="code">printableString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.printableString.2"></span>abstract @property void <code class="code">printableString</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string that will only contain characters a-z, A-Z, 0-9,
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string that will only contain characters a-z, A-Z, 0-9,
         space, apostrophe, parentheses, comma, minus, plus, period,
-        forward slash, colon, equals, and question mark.
-  </p>
-</div>
-
+        forward slash, colon, equals, and question mark.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.t61String" id="AbstractSyntaxNotation1Element.t61String"><code class="member">t61String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.t61String"></span>alias <code class="code">t61String</code> = teletexString;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.t61String" id="AbstractSyntaxNotation1Element.t61String"><code class="code">t61String</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.t61String"></span>alias <code class="code">t61String</code> = teletexString;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.teletexString" id="AbstractSyntaxNotation1Element.teletexString"><code class="code">teletexString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.teletexString"></span>abstract const @property ubyte[] <code class="code">teletexString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes bytes representing the T.61 Character Set
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.teletexString" id="AbstractSyntaxNotation1Element.teletexString"><code class="member">teletexString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.teletexString"></span>abstract const @property ubyte[] <code class="code">teletexString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.teletexString" id="AbstractSyntaxNotation1Element.teletexString"><code class="code">teletexString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.teletexString.2"></span>abstract @property void <code class="code">teletexString</code>(in ubyte[] <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes bytes representing the T.61 Character Set
-  </p>
-</div>
-
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.ia5String" id="AbstractSyntaxNotation1Element.ia5String"><code class="code">ia5String</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.ia5String"></span>alias <code class="code">ia5String</code> = internationalAlphabetNumber5String;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.internationalAlphabetNumber5String" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"></span>abstract const @property string <code class="code">internationalAlphabetNumber5String</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string of ASCII characters
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Decodes bytes representing the T.61 Character Set</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.teletexString" id="AbstractSyntaxNotation1Element.teletexString"><code class="member">teletexString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.teletexString.2"></span>abstract @property void <code class="code">teletexString</code>(in ubyte[] <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.internationalAlphabetNumber5String" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String.2"></span>abstract @property void <code class="code">internationalAlphabetNumber5String</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string of ASCII characters
-  </p>
-</div>
-
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.utc" id="AbstractSyntaxNotation1Element.utc"><code class="code">utc</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.utc"></span>alias <code class="code">utc</code> = coordinatedUniversalTime;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.utcTime" id="AbstractSyntaxNotation1Element.utcTime"><code class="code">utcTime</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.utcTime"></span>alias <code class="code">utcTime</code> = coordinatedUniversalTime;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.coordinatedUniversalTime" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime"></span>abstract const @property DateTime <code class="code">coordinatedUniversalTime</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a DateTime
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Encodes bytes representing the T.61 Character Set</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.ia5String" id="AbstractSyntaxNotation1Element.ia5String"><code class="member">ia5String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.ia5String"></span>alias <code class="code">ia5String</code> = internationalAlphabetNumber5String;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.coordinatedUniversalTime" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime.2"></span>abstract @property void <code class="code">coordinatedUniversalTime</code>(in DateTime <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a DateTime
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.internationalAlphabetNumber5String" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"><code class="member">internationalAlphabetNumber5String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"></span>abstract const @property string <code class="code">internationalAlphabetNumber5String</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.generalizedTime" id="AbstractSyntaxNotation1Element.generalizedTime"><code class="code">generalizedTime</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalizedTime"></span>abstract const @property DateTime <code class="code">generalizedTime</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a DateTime
-  </p>
-</div>
-
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.generalizedTime" id="AbstractSyntaxNotation1Element.generalizedTime"><code class="code">generalizedTime</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalizedTime.2"></span>abstract @property void <code class="code">generalizedTime</code>(in DateTime <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a DateTime
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Decodes a string of ASCII characters</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.internationalAlphabetNumber5String" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"><code class="member">internationalAlphabetNumber5String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.internationalAlphabetNumber5String.2"></span>abstract @property void <code class="code">internationalAlphabetNumber5String</code>(in string <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.graphicString" id="AbstractSyntaxNotation1Element.graphicString"><code class="code">graphicString</code></a>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string of ASCII characters</section>
+</section>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.graphicString"></span>deprecated abstract const @property string <code class="code">graphicString</code>();
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.utc" id="AbstractSyntaxNotation1Element.utc"><code class="member">utc</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.utc"></span>alias <code class="code">utc</code> = coordinatedUniversalTime;
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+    </code>
+</section>
+<div>
 </div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes an ASCII string that contains only characters between and
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.utcTime" id="AbstractSyntaxNotation1Element.utcTime"><code class="member">utcTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.utcTime"></span>alias <code class="code">utcTime</code> = coordinatedUniversalTime;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.coordinatedUniversalTime" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime"><code class="member">coordinatedUniversalTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime"></span>abstract const @property DateTime <code class="code">coordinatedUniversalTime</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a DateTime</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.coordinatedUniversalTime" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime"><code class="member">coordinatedUniversalTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.coordinatedUniversalTime.2"></span>abstract @property void <code class="code">coordinatedUniversalTime</code>(in DateTime <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a DateTime</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.generalizedTime" id="AbstractSyntaxNotation1Element.generalizedTime"><code class="member">generalizedTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalizedTime"></span>abstract const @property DateTime <code class="code">generalizedTime</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a DateTime</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.generalizedTime" id="AbstractSyntaxNotation1Element.generalizedTime"><code class="member">generalizedTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalizedTime.2"></span>abstract @property void <code class="code">generalizedTime</code>(in DateTime <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a DateTime</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.graphicString" id="AbstractSyntaxNotation1Element.graphicString"><code class="member">graphicString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.graphicString"></span>deprecated abstract const @property string <code class="code">graphicString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an ASCII string that contains only characters between and
         including 0x20 and 0x75.
-
-  </p>
-</div>
+</section>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Sources:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Sources:</span>
 <a href="">                ASN.1: Communication Between Heterogeneous Systems, pages 175-178</a>
             <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">                The Wikipedia Page on ISO 2022</a>
             <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.graphicString" id="AbstractSyntaxNotation1Element.graphicString"><code class="member">graphicString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.graphicString.2"></span>deprecated abstract @property void <code class="code">graphicString</code>(in string <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.graphicString" id="AbstractSyntaxNotation1Element.graphicString"><code class="code">graphicString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.graphicString.2"></span>deprecated abstract @property void <code class="code">graphicString</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes an ASCII string that contains only characters between and
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an ASCII string that contains only characters between and
         including 0x20 and 0x75.
-
-  </p>
-</div>
+</section>
 <div class="ddoc_section">
-  <p class="para">
-    <span class="ddoc_section_h">Sources:</span>
+	<p class="para">
+		<span class="ddoc_section_h">Sources:</span>
 <a href="">                ASN.1: Communication Between Heterogeneous Systems, pages 175-178</a>
             <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">                The Wikipedia Page on ISO 2022</a>
             <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
-  </p>
+	</p>
 </div>
-
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.iso646String" id="AbstractSyntaxNotation1Element.iso646String"><code class="member">iso646String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.iso646String"></span>alias <code class="code">iso646String</code> = visibleString;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.iso646String" id="AbstractSyntaxNotation1Element.iso646String"><code class="code">iso646String</code></a>
+    </code>
+</section>
+<div>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.iso646String"></span>alias <code class="code">iso646String</code> = visibleString;
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.visibleString" id="AbstractSyntaxNotation1Element.visibleString"><code class="member">visibleString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.visibleString"></span>abstract const @property string <code class="code">visibleString</code>();
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.visibleString" id="AbstractSyntaxNotation1Element.visibleString"><code class="code">visibleString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.visibleString"></span>abstract const @property string <code class="code">visibleString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string that only contains characters between and including
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a string that only contains characters between and including
         0x20 and 0x7E. (Honestly, I don't know how this differs from
-        GraphicalString.)
-  </p>
-</div>
-
+        GraphicalString.)</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.visibleString" id="AbstractSyntaxNotation1Element.visibleString"><code class="member">visibleString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.visibleString.2"></span>abstract @property void <code class="code">visibleString</code>(in string <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.visibleString" id="AbstractSyntaxNotation1Element.visibleString"><code class="code">visibleString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.visibleString.2"></span>abstract @property void <code class="code">visibleString</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string that only contains characters between and including
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string that only contains characters between and including
         0x20 and 0x7E. (Honestly, I don't know how this differs from
-        GraphicalString.)
-  </p>
-</div>
-
+        GraphicalString.)</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.generalString" id="AbstractSyntaxNotation1Element.generalString"><code class="member">generalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalString"></span>deprecated abstract @property string <code class="code">generalString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.generalString" id="AbstractSyntaxNotation1Element.generalString"><code class="code">generalString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalString"></span>deprecated abstract @property string <code class="code">generalString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string containing only ASCII characters.
-  </p>
-</div>
-
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.generalString" id="AbstractSyntaxNotation1Element.generalString"><code class="code">generalString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalString.2"></span>deprecated abstract @property void <code class="code">generalString</code>(in string <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string containing only ASCII characters.
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Decodes a string containing only ASCII characters.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.generalString" id="AbstractSyntaxNotation1Element.generalString"><code class="member">generalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.generalString.2"></span>deprecated abstract @property void <code class="code">generalString</code>(in string <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.universalString" id="AbstractSyntaxNotation1Element.universalString"><code class="code">universalString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.universalString"></span>abstract const @property dstring <code class="code">universalString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string of UTF-32 characters
-  </p>
-</div>
-
+    </code>
 </section>
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.universalString" id="AbstractSyntaxNotation1Element.universalString"><code class="code">universalString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.universalString.2"></span>abstract @property void <code class="code">universalString</code>(in dstring <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string of UTF-32 characters
-  </p>
-</div>
-
+<div><section class="module-info"><section id="summary">Encodes a string containing only ASCII characters.</section>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.universalString" id="AbstractSyntaxNotation1Element.universalString"><code class="member">universalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.universalString"></span>abstract const @property dstring <code class="code">universalString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.characterString" id="AbstractSyntaxNotation1Element.characterString"><code class="code">characterString</code></a>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a string of UTF-32 characters</section>
+</section>
 </div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.characterString"></span>abstract const @property CharacterString <code class="code">characterString</code>();
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.universalString" id="AbstractSyntaxNotation1Element.universalString"><code class="member">universalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.universalString.2"></span>abstract @property void <code class="code">universalString</code>(in dstring <code class="code">value</code>);
 
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string of UTF-32 characters</section>
+</section>
 </div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a CHARACTER STRING, which is a constructed data type, defined
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.characterString" id="AbstractSyntaxNotation1Element.characterString"><code class="member">characterString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.characterString"></span>abstract const @property CharacterString <code class="code">characterString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a CHARACTER STRING, which is a constructed data type, defined
         in the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The specification defines CHARACTER as:
+</section>
+<div class="description">The specification defines CHARACTER as:
 <br><br>
         <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
@@ -3496,48 +1591,21 @@ Thanks to StackOverflow user
         </i>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
-  </p>
-</div>
-
+        will be context-specific and numbered from 0 to 5.</div>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.characterString" id="AbstractSyntaxNotation1Element.characterString"><code class="member">characterString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.characterString.2"></span>abstract @property void <code class="code">characterString</code>(in CharacterString <code class="code">value</code>);
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.characterString" id="AbstractSyntaxNotation1Element.characterString"><code class="code">characterString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.characterString.2"></span>abstract @property void <code class="code">characterString</code>(in CharacterString <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a CHARACTER STRING, which is a constructed data type, defined
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a CHARACTER STRING, which is a constructed data type, defined
         in the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
-
-  </p>
-</div>
-<div class="ddoc_description">
-  <h4>Discussion</h4>
-  <p class="para">
-    The specification defines CHARACTER as:
+</section>
+<div class="description">The specification defines CHARACTER as:
 <br><br>
         <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
@@ -3555,114 +1623,49 @@ Thanks to StackOverflow user
         </i>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
-  </p>
-</div>
-
+        will be context-specific and numbered from 0 to 5.</div>
 </section>
-
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.bmpString" id="AbstractSyntaxNotation1Element.bmpString"><code class="member">bmpString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.bmpString"></span>alias <code class="code">bmpString</code> = basicMultilingualPlaneString;
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.bmpString" id="AbstractSyntaxNotation1Element.bmpString"><code class="code">bmpString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.bmpString"></span>alias <code class="code">bmpString</code> = basicMultilingualPlaneString;
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  
-
-</div>
-
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.basicMultilingualPlaneString" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString"></span>abstract const @property wstring <code class="code">basicMultilingualPlaneString</code>();
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Decodes a string of UTF-16 characters
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.basicMultilingualPlaneString" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString"><code class="member">basicMultilingualPlaneString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString"></span>abstract const @property wstring <code class="code">basicMultilingualPlaneString</code>();
 
-</li><li class="ddoc_member">
-  <div class="ddoc_member_header">
-  <div class="ddoc_header_anchor">
-  <a href="#AbstractSyntaxNotation1Element.basicMultilingualPlaneString" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
-</div>
-</div><div class="ddoc_decl">
-  <section class="section">
-    <div class="declaration">
-      <h4>Declaration</h4>
-      <div class="dlang">
-        <p class="para">
-          <code class="code">
-            <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString.2"></span>abstract @property void <code class="code">basicMultilingualPlaneString</code>(in wstring <code class="code">value</code>);
-
-          </code>
-        </p>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="ddoc_decl">
-  <section class="section ddoc_sections">
-  <div class="ddoc_summary">
-  <p class="para">
-    Encodes a string of UTF-16 characters
-  </p>
-</div>
-
+    </code>
 </section>
-
+<div><section class="module-info"><section id="summary">Decodes a string of UTF-16 characters</section>
+</section>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.basicMultilingualPlaneString" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString"><code class="member">basicMultilingualPlaneString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.basicMultilingualPlaneString.2"></span>abstract @property void <code class="code">basicMultilingualPlaneString</code>(in wstring <code class="code">value</code>);
 
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string of UTF-16 characters</section>
+</section>
+</div>
 </li>
 </ul>
-
 </div>
-
 </li>
 </ul>
-  </div>
 </section>
-</section>
-      </article>
-    </div>
-  </body>
+
+        </div>
+        <div id="footer">
+            <span id="timestamp">Mon Jan  8 22:05:54 2018
+</span>
+        </div>
+    </body>
 </html>
