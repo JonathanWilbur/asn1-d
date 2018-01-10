@@ -8,23 +8,28 @@
     Like Basic Encoding Rules (BER), Canonical Encoding Rules (CER), and
     Packed Encoding Rules (PER), Distinguished Encoding Rules (DER) is a
     specification created by the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx,
-        International Telecommunications Union),
+    $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union),
     and specified in
-    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
+    $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
 
-    Author:
-        $(LINK2 http://jonathan.wilbur.space, Jonathan M. Wilbur)
-            $(LINK2 mailto:jonathan@wilbur.space, jonathan@wilbur.space)
-    License: $(LINK2 https://mit-license.org/, MIT License)
+    Authors:
+    $(UL
+        $(LI $(PERSON Jonathan M. Wilbur, jonathan@wilbur.space, http://jonathan.wilbur.space))
+    )
+    Copyright: Copyright (C) Jonathan M. Wilbur
+    License: $(LINK https://mit-license.org/, MIT License)
     Standards:
-        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1))
-        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
+    $(UL
+        $(LI $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)))
+        $(LI $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules))
+    )
     See_Also:
-        $(LINK2 https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One, The Wikipedia Page on ASN.1)
-        $(LINK2 https://en.wikipedia.org/wiki/X.690, The Wikipedia Page on X.690)
-        $(LINK2 https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf, ASN.1 By Simple Words)
-        $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems)
+    $(UL
+        $(LI $(LINK https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One, The Wikipedia Page on ASN.1))
+        $(LI $(LINK https://en.wikipedia.org/wiki/X.690, The Wikipedia Page on X.690))
+        $(LI $(LINK https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf, ASN.1 By Simple Words))
+        $(LI $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems))
+    )
 */
 module codecs.der;
 public import codec;
@@ -39,11 +44,11 @@ public alias derObjectID = distinguishedEncodingRulesObjectIdentifier;
 public alias derObjectIdentifier = distinguishedEncodingRulesObjectIdentifier;
 /**
     The object identifier assigned to the Distinguished Encoding Rules (DER), per the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx,
+    $(LINK http://www.itu.int/en/pages/default.aspx,
         International Telecommunications Union)'s,
-    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
+    $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
 
-    $(I {joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)} )
+    $(MONO {joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)} )
 */
 public immutable OID distinguishedEncodingRulesObjectIdentifier = cast(immutable(OID)) new OID(2, 1, 2, 1);
 
@@ -109,11 +114,11 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         writeln("Running unit tests for codec: " ~ typeof(this).stringof);
     }
 
-    /// The base of encoded REALs. May be 2, 8, 10, or 16.
-    static public ASN1RealEncodingBase realEncodingBase = ASN1RealEncodingBase.base2;
-
+    ///
     public ASN1TagClass tagClass;
+    ///
     public ASN1Construction construction;
+    ///
     public size_t tagNumber;
 
     /// The length of the value in octets
@@ -127,12 +132,14 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     public ubyte[] value;
 
     /**
-        "Decodes" an END OF CONTENT, by which I mean: returns nothing, but
+        "Decodes" an $(MONO END OF CONTENT), by which I mean: returns nothing, but
         throws exceptions if the element is not correct.
 
         Throws:
-            ASN1ConstructionException = if the element is marked as "constructed"
-            ASN1ValueSizeException = if there are any content octets
+        $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
+            $(LI $(D ASN1ValueSizeException) if there are any content octets)
+        )
     */
     override public @property @safe
     void endOfContent() const
@@ -147,16 +154,21 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     /**
-        Decodes a boolean.
+        Decodes a $(D bool).
 
-        Any non-zero value will be interpreted as TRUE. Only zero will be
-        interpreted as FALSE.
+        A $(D 0xFF) byte will be interpreted as $(MONO TRUE). A zero byte
+        ($(D 0x00)) will be interpreted as $(MONO FALSE). Any other value,
+        or any length other than 1 byte will throw an exception.
 
-        Returns: a boolean
         Throws:
-            ASN1ValueSizeException = if the encoded value is anything other
-                than exactly 1 byte in size.
-            ASN1ValueException = if the encoded byte is not 0xFF or 0x00
+        $(UL
+            $(LI $(D ASN1ConstructionException)
+                if the encoded value is not primitively-constructed)
+            $(LI $(D ASN1ValueSizeException)
+                if the encoded value is not exactly 1 byte in size)
+            $(LI $(D ASN1ValueException)
+                if the encoded value is not either 0xFF or 0x00)
+        )
     */
     override public @property @safe
     bool boolean() const
@@ -185,12 +197,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         }
     }
 
-    /**
-        Encodes a boolean.
-
-        Any non-zero value will be interpreted as TRUE. Only zero will be
-        interpreted as FALSE.
-    */
+    /// Encodes a $(D bool)
     override public @property @safe nothrow
     void boolean(in bool value)
     out
@@ -223,13 +230,16 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     /**
         Decodes a signed integer.
 
-        The integer is encoded big endian in two's complement form on the
-        smallest number of bytes that can encode it.
-
-        Returns: any chosen signed integral type
         Throws:
-            ASN1ValueSizeException = if the value is too big to decode
-                to a signed integral type.
+        $(UL
+            $(LI $(D ASN1ConstructionException)
+                if the encoded value is not primitively-constructed)
+            $(LI $(D ASN1ValueSizeException)
+                if the value is too big to decode to a signed integral type,
+                or if the value is zero bytes)
+            $(LI $(D ASN1ValuePaddingException)
+                if there are padding bytes)
+        )
     */
     public @property @system
     T integer(T)() const
@@ -292,12 +302,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         return *cast(T *) value.ptr;
     }
 
-    /**
-        Encodes an integer.
-
-        The integer is encoded big endian in two's complement form on the
-        smallest number of bytes that can encode it.
-    */
+    /// Encodes a signed integral type
     public @property @system nothrow
     void integer(T)(in T value)
     if (isIntegral!T && isSigned!T)
@@ -410,14 +415,29 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     /**
         Decodes an array of $(D bool)s representing a string of bits.
 
-        In Distinguished Encoding Rules (DER), the first byte is an unsigned
-        integral byte indicating the number of unused bits at the end of
-        the BIT STRING. The unused bits must be zeroed.
+        Returns: an array of $(D bool)s, where each $(D bool) represents a bit
+            in the encoded bit string
 
-        Returns: an array of booleans.
         Throws:
-            ASN1ValueException = if the first byte has a value greater
-                than seven.
+        $(UL
+            $(LI $(D ASN1ValueSizeException)
+                if the any primitive contains 0 bytes)
+            $(LI $(D ASN1ValueException)
+                if the first byte has a value greater
+                than seven, or if the first byte indicates the presence of
+                padding bits when no subsequent bytes exist, or if any primitive
+                but the last in a constructed BIT STRING uses padding bits, or
+                if any of the padding bits are set)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property
     bool[] bitString() const
@@ -501,13 +521,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         return ret;
     }
 
-    /**
-        Encodes an array of $(D bool)s representing a string of bits.
-
-        In Distinguished Encoding Rules (DER), the first byte is an unsigned
-        integral byte indicating the number of unused bits at the end of
-        the BIT STRING. The unused bits must be zeroed.
-    */
+    /// Encodes an array of $(D bool)s representing a string of bits.
     override public @property
     void bitString(in bool[] value)
     out
@@ -553,9 +567,20 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     /**
-        Decodes an OCTET STRING into an unsigned byte array.
+        Decodes an $(MONO OCTET STRING) into an unsigned byte array.
 
-        Returns: an unsigned byte array.
+        Throws:
+        $(UL
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property @safe
     ubyte[] octetString() const
@@ -567,9 +592,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         return this.value.dup;
     }
 
-    /**
-        Encodes an OCTET STRING from an unsigned byte array.
-    */
+    /// Encodes an $(MONO OCTET STRING) from an unsigned byte ($(D ubyte)) array.
     override public @property @safe
     void octetString(in ubyte[] value)
     {
@@ -578,15 +601,17 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     /**
-        "Decodes" a NULL, by which I mean: returns nothing, but
+        "Decodes" a $(D null), by which I mean: returns nothing, but
         throws exceptions if the element is not correct.
 
         Note:
-            I had to name this method "nill," because "NULL" is a keyword in D.
+            I had to name this method $(D nill), because $(D null) is a keyword in D.
 
         Throws:
-            ASN1ConstructionException = if the element is marked as "constructed"
-            ASN1ValueSizeException = if there are any content octets
+        $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
+            $(LI $(D ASN1ValueSizeException) if there are any content octets)
+        )
     */
     override public @property @safe
     void nill() const
@@ -601,25 +626,25 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     /**
-        Decodes an OBJECT IDENTIFIER.
-        See source/types/universal/objectidentifier.d for information about
-        the ObjectIdentifier class (aliased as "OID").
-
-        The encoded OBJECT IDENTIFIER's first byte contains the first number
-        of the OID multiplied by 40 and added to the second number of the OID.
-        The subsequent bytes have all the remaining number encoded in base-128
-        on the least significant 7 bits of each byte. For these bytes, the most
-        significant bit is set if the next byte continues the encoding of the
-        current OID number. In other words, the bytes encoding each number
-        always end with a byte whose most significant bit is cleared.
+        Decodes an $(MONO OBJECT IDENTIFIER).
+        See $(MONO source/types/universal/objectidentifier.d) for information about
+        the $(D ObjectIdentifier) class (aliased as $(D OID)).
 
         Throws:
-            ASN1ValueSizeException = if an attempt is made to decode
-                an Object Identifier from zero bytes.
-            ASN1ValueSizeException = if a single OID number is too big to
-                decode to a size_t.
+        $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
+            $(LI $(D ASN1ValueSizeException) if there are no value bytes)
+            $(LI $(D ASN1ValuePaddingException) if a single OID number is encoded with
+                "leading zero bytes" ($(D 0x80u)))
+            $(LI $(D ASN1ValueOverflowException) if a single OID number is too big to
+                decode to a $(D size_t))
+            $(LI $(D ASN1TruncationException) if a single OID number is "cut off")
+        )
+
         Standards:
-            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
+        $(UL
+            $(LI $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660))
+        )
     */
     override public @property @system
     OID objectIdentifier() const
@@ -719,20 +744,14 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     /**
-        Encodes an OBJECT IDENTIFIER.
-        See source/types/universal/objectidentifier.d for information about
-        the ObjectIdentifier class (aliased as "OID").
-
-        The encoded OBJECT IDENTIFIER's first byte contains the first number
-        of the OID multiplied by 40 and added to the second number of the OID.
-        The subsequent bytes have all the remaining number encoded in base-128
-        on the least significant 7 bits of each byte. For these bytes, the most
-        significant bit is set if the next byte continues the encoding of the
-        current OID number. In other words, the bytes encoding each number
-        always end with a byte whose most significant bit is cleared.
+        Encodes an $(MONO OBJECT IDENTIFIER).
+        See $(MONO source/types/universal/objectidentifier.d) for information about
+        the $(D ObjectIdentifier) class (aliased as $(OID)).
 
         Standards:
-            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
+        $(UL
+            $(LI $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660))
+        )
     */
     override public @property @system
     void objectIdentifier(in OID value)
@@ -830,28 +849,41 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     /**
-        Decodes an ObjectDescriptor, which is a string consisting of only
-        graphical characters. In fact, ObjectDescriptor is actually implicitly
-        just a GraphicString! The formal specification for an ObjectDescriptor
+        Decodes an $(D ObjectDescriptor), which is a string consisting of only
+        graphical characters. In fact, $(D ObjectDescriptor) is actually implicitly
+        just a $(MONO GraphicString)! The formal specification for an $(D ObjectDescriptor)
         is:
 
-        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
+        $(MONO ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
 
-        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
-        0x20 to 0x7E.
+        $(MONO GraphicString) is just a string containing only characters between
+        and including $(D 0x20) and $(D 0x7E), therefore ObjectDescriptor is just
+        $(D 0x20) and $(D 0x7E).
+
+        Throws:
+        $(UL
+            $(LI $(D ASN1ValueCharactersException)
+                if the encoded value contains any character outside of
+                $(D 0x20) to $(D 0x7E), which means any control characters or $(MONO DELETE))
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
 
         Citations:
-            Dubuisson, Olivier. “Character String Types.” ASN.1:
-                Communication between Heterogeneous Systems, Morgan
-                Kaufmann, 2001, pp. 175-178.
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
-                The Wikipedia Page on ISO 2022)
-            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
-
-        Returns: a string.
-        Throws:
-            ASN1ValueException = if the encoded value contains any bytes
-                outside of 0x20 to 0x7E.
+        $(UL
+            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                $(I ASN.1: Communication between Heterogeneous Systems),
+                Morgan Kaufmann, 2001, pp. 175-178.)
+            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))
+            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))
+        )
     */
     override public @property @system
     string objectDescriptor() const
@@ -872,28 +904,32 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     /**
-        Encodes an ObjectDescriptor, which is a string consisting of only
-        graphical characters. In fact, ObjectDescriptor is actually implicitly
-        just a GraphicString! The formal specification for an ObjectDescriptor
+        Encodes an $(D ObjectDescriptor), which is a string consisting of only
+        graphical characters. In fact, $(D ObjectDescriptor) is actually implicitly
+        just a $(MONO GraphicString)! The formal specification for an $(D ObjectDescriptor)
         is:
 
-        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
+        $(MONO ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
 
-        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
-        0x20 to 0x7E.
-
-        Citations:
-            Dubuisson, Olivier. “Character String Types.” ASN.1:
-                Communication between Heterogeneous Systems, Morgan
-                Kaufmann, 2001, pp. 175-178.
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
-                The Wikipedia Page on ISO 2022)
-            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+        $(MONO GraphicString) is just a string containing only characters between
+        and including $(D 0x20) and $(D 0x7E), therefore ObjectDescriptor is just
+        $(D 0x20) and $(D 0x7E).
 
         Throws:
-            ASN1ValueException = if the string value contains any
-                character outside of 0x20 to 0x7E, which means any control
-                characters or DELETE.
+        $(UL
+            $(LI $(D ASN1ValueCharactersException)
+                if the string value contains any character outside of
+                $(D 0x20) to $(D 0x7E), which means any control characters or $(MONO DELETE))
+        )
+
+        Citations:
+        $(UL
+            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                $(I ASN.1: Communication between Heterogeneous Systems),
+                Morgan Kaufmann, 2001, pp. 175-178.)
+            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))
+            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))
+        )
     */
     override public @property @system
     void objectDescriptor(in string value)
@@ -909,20 +945,15 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     /**
-        Decodes an EXTERNAL, which is a constructed data type, defined in
-        the $(LINK2 https://www.itu.int,
-            International Telecommunications Union)'s
-        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        Decodes an $(MONO EXTERNAL).
 
         According to the
-        $(LINK2 http://www.itu.int/en/pages/default.aspx,
-            International Telecommunications Union)'s
-        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en,
-            X.680 - Abstract Syntax Notation One (ASN.1)),
-        the abstract definition for an EXTERNAL, after removing the comments in the
+        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),
+        the abstract definition for an $(MONO EXTERNAL), after removing the comments in the
         specification, is as follows:
 
-        $(I
+        $(PRE
             EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -946,15 +977,15 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                             fixed ABSENT } ) } )
         )
 
-        Note that the abstract syntax resembles that of EMBEDDED PDV and
-        CharacterString, except with a WITH COMPONENTS constraint that removes some
-        of our choices of identification.
+        Note that the abstract syntax resembles that of $(MONO EMBEDDED PDV) and
+        $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some
+        of our choices of $(MONO identification).
         As can be seen on page 303 of Olivier Dubuisson's
-        $(I $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
+        $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
             ASN.1: Communication Between Heterogeneous Systems)),
-        after applying the WITH COMPONENTS constraint, our reduced syntax becomes:
+        after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:
 
-        $(I
+        $(PRE
             EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER,
@@ -967,13 +998,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         )
 
         But, according to the
-        $(LINK2 http://www.itu.int/en/pages/default.aspx,
-        International Telecommunications Union)'s
-        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),
+        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),
         section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
         follows, for compatibility reasons:
 
-        $(I
+        $(PRE
             EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 direct-reference  OBJECT IDENTIFIER OPTIONAL,
                 indirect-reference  INTEGER OPTIONAL,
@@ -984,24 +1014,24 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     arbitrary         [2] IMPLICIT BIT STRING } }
         )
 
-        The definition above is the pre-1994 definition of EXTERNAL. The syntax
-        field of the post-1994 definition maps to the direct-reference field of
-        the pre-1994 definition. The presentation-context-id field of the post-1994
-        definition maps to the indirect-reference field of the pre-1994 definition.
-        If context-negotiation is used, per the abstract syntax, then the
-        presentation-context-id field of the context-negotiation SEQUENCE in the
-        post-1994 definition maps to the indirect-reference field of the pre-1994
-        definition, and the transfer-syntax field of the context-negotiation
-        SEQUENCE maps to the direct-reference field of the pre-1994 definition.
+        The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)
+        field of the post-1994 definition maps to the $(MONO direct-reference) field of
+        the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994
+        definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.
+        If $(MONO context-negotiation) is used, per the abstract syntax, then the
+        $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the
+        post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994
+        definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)
+        $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.
 
         The following additional constraints are applied to the abstract syntax
-        when using Canonical Encoding Rules (CER) or Distinguished Encoding Rules (DER),
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
         which are also defined in the
         $(LINK2 http://www.itu.int/en/pages/default.aspx,
         International Telecommunications Union)'s
         $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
 
-        $(I
+        $(PRE
             EXTERNAL ( WITH COMPONENTS {
                 ... ,
                 identification ( WITH COMPONENTS {
@@ -1011,12 +1041,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         )
 
         The stated purpose of the constraints shown above is to restrict the use of
-        the presentation-context-id, either by itself or within the
-        context-negotiation, which makes the following the effective abstract
-        syntax of EXTERNAL when using Canonical Encoding Rules (CER) or
-        Distinguished Encoding Rules (DER):
+        the $(MONO presentation-context-id), either by itself or within the
+        $(MONO context-negotiation), which makes the following the effective abstract
+        syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
 
-        $(I
+        $(PRE
             EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -1042,10 +1072,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                             fixed ABSENT } ) } )
         )
 
-        With the constraints applied, the abstract syntax for EXTERNALs encoded
-        using Canonical Encoding Rules (CER) or Distinguished Encoding Rules (DER) becomes:
+        With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
 
-        $(I
+        $(PRE
             EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER },
@@ -1053,52 +1083,35 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 data-value OCTET STRING }
         )
 
-        Upon removing the CHOICE tag (since you have no choice but to use syntax
+        Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax
         at this point), the encoding definition when using
-        Canonical Encoding Rules (CER) or Distinguished Encoding Rules (DER):
+        Canonical Encoding Rules or Distinguished Encoding Rules:
 
-        $(I
+        $(PRE
             EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
                 syntax OBJECT IDENTIFIER,
                 data-value-descriptor ObjectDescriptor OPTIONAL,
                 data-value OCTET STRING }
         )
 
-        Which, using the pre-1994 definition, becomes:
+        Returns: an instance of $(D types.universal.external.External)
 
-        $(I
-            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
-                direct-reference  OBJECT IDENTIFIER,
-                data-value-descriptor  ObjectDescriptor  OPTIONAL,
-                encoding  CHOICE {
-                    single-ASN1-type  [0] ANY,
-                    octet-aligned     [1] IMPLICIT OCTET STRING,
-                    arbitrary         [2] IMPLICIT BIT STRING } }
-        )
-
-        For all encoding rules defined in the
-        $(LINK2 http://www.itu.int/en/pages/default.aspx,
-        International Telecommunications Union)'s
-        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
-        (meaning Basic Encoding Rules (BER), Canonical Encoding Rules (CER), and
-        Distinguished Encoding Rules (DER)), EXPLICIT tagging must be used when encoding
-        the EXTERNAL type. Unlike the other Context-Switching Types, automatic
-        tagging is NOT used when encoding with Basic Encoding Rules (BER),
-        Canonical Encoding Rules (CER), or Distinguished Encoding Rules (DER).
-
-        Returns: an External, defined in types.universal.external.
         Throws:
-            ASN1SizeException = if encoded EmbeddedPDV has too few or too many
-                elements, or if syntaxes or context-negotiation element has
-                too few or too many elements.
-            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueException = if encoded ObjectDescriptor contains
-                invalid characters.
-            ASN1InvalidIndexException = if encoded value selects a choice for
-                identification or uses an unspecified index for an element in
-                syntaxes or context-negotiation, or if an unspecified element
-                of EMBEDDED PDV itself is referenced by an out-of-range
-                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
+        $(UL
+            $(LI $(D ASN1ValueException)
+                if the SEQUENCE does not contain two to four elements)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not have the correct tag class)
+            $(LI $(D ASN1ConstructionException)
+                if any element has the wrong construction)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not have the correct tag number)
+            $(LI $(D ASN1ValueCharactersException)
+                if a data-value-descriptor is supplied with invalid characters)
+        )
     */
     deprecated override public @property @system
     External external() const
@@ -1187,15 +1200,48 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     }
 
     /**
-        Encodes an EXTERNAL, which is a constructed data type, defined in
-        the $(LINK2 https://www.itu.int,
-            International Telecommunications Union)'s
-        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        Encodes an $(MONO EXTERNAL).
 
-        The specification defines EXTERNAL as:
+        According to the
+        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),
+        the abstract definition for an $(MONO EXTERNAL), after removing the comments in the
+        specification, is as follows:
 
-        $(I
-            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+        $(PRE
+            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            syntaxes ABSENT,
+                            transfer-syntax ABSENT,
+                            fixed ABSENT } ) } )
+        )
+
+        Note that the abstract syntax resembles that of $(MONO EMBEDDED PDV) and
+        $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some
+        of our choices of $(MONO identification).
+        As can be seen on page 303 of Olivier Dubuisson's
+        $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
+            ASN.1: Communication Between Heterogeneous Systems)),
+        after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:
+
+        $(PRE
+            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER,
                     presentation-context-id INTEGER,
@@ -1206,13 +1252,112 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 data-value OCTET STRING }
         )
 
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 2.
+        But, according to the
+        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),
+        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
+        follows, for compatibility reasons:
+
+        $(PRE
+            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                direct-reference  OBJECT IDENTIFIER OPTIONAL,
+                indirect-reference  INTEGER OPTIONAL,
+                data-value-descriptor  ObjectDescriptor  OPTIONAL,
+                encoding  CHOICE {
+                    single-ASN1-type  [0] ANY,
+                    octet-aligned     [1] IMPLICIT OCTET STRING,
+                    arbitrary         [2] IMPLICIT BIT STRING } }
+        )
+
+        The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)
+        field of the post-1994 definition maps to the $(MONO direct-reference) field of
+        the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994
+        definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.
+        If $(MONO context-negotiation) is used, per the abstract syntax, then the
+        $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the
+        post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994
+        definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)
+        $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.
+
+        The following additional constraints are applied to the abstract syntax
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
+        which are also defined in the
+        $(LINK2 http://www.itu.int/en/pages/default.aspx,
+        International Telecommunications Union)'s
+        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
+
+        $(PRE
+            EXTERNAL ( WITH COMPONENTS {
+                ... ,
+                identification ( WITH COMPONENTS {
+                    ... ,
+                    presentation-context-id ABSENT,
+                    context-negotiation ABSENT } ) } )
+        )
+
+        The stated purpose of the constraints shown above is to restrict the use of
+        the $(MONO presentation-context-id), either by itself or within the
+        $(MONO context-negotiation), which makes the following the effective abstract
+        syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
+
+        $(PRE
+            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            syntaxes ABSENT,
+                            presentation-context-id ABSENT,
+                            context-negotiation ABSENT,
+                            transfer-syntax ABSENT,
+                            fixed ABSENT } ) } )
+        )
+
+        With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+
+        $(PRE
+            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+        )
+
+        Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax
+        at this point), the encoding definition when using
+        Canonical Encoding Rules or Distinguished Encoding Rules:
+
+        $(PRE
+            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                syntax OBJECT IDENTIFIER,
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+        )
+
+        Returns: an instance of $(D types.universal.external.External)
 
         Throws:
-            ASN1ValueSizeException = if encoded INTEGER is too large to decode
-            ASN1ValueException = if encoded ObjectDescriptor contains
-                invalid characters.
+        $(UL
+            $(LI $(D ASN1ValueException)
+                if something other than $(D syntax) is used for $(MONO identification))
+            $(LI $(D ASN1ValueCharactersException)
+                if a data-value-descriptor is supplied with invalid characters)
+        )
     */
     deprecated override public @property @system
     void external(in External value)
@@ -1356,7 +1501,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         encodes the real as a string of characters, where the latter nybble
         takes on values of 0x1, 0x2, or 0x3 to indicate that the string
         representation conforms to
-        $(LINK2 https://www.iso.org/standard/12285.html, ISO 6093)
+        $(LINK https://www.iso.org/standard/12285.html, ISO 6093)
         Numeric Representation 1, 2, or 3 respectively.
 
         If the first bit is set, then the first byte is an "information block"
@@ -1680,7 +1825,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         encodes the real as a string of characters, where the latter nybble
         takes on values of 0x1, 0x2, or 0x3 to indicate that the string
         representation conforms to
-        $(LINK2 , ISO 6093) Numeric Representation 1, 2, or 3 respectively.
+        $(LINK , ISO 6093) Numeric Representation 1, 2, or 3 respectively.
 
         If the first bit is set, then the first byte is an "information block"
         that describes the binary encoding of the REAL on the subsequent bytes.
@@ -2272,13 +2417,13 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     ///
     /**
         Decodes an EMBEDDED PDV, which is a constructed data type, defined in
-            the $(LINK2 https://www.itu.int,
+            the $(LINK https://www.itu.int,
                 International Telecommunications Union)'s
-            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EMBEDDED PDV as:
 
-        $(I
+        $(MONO
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -2304,7 +2449,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         must appear in the exact order of the specification. With these
         constraints in mind, the specification effectively becomes:
 
-        $(I
+        $(MONO
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification [0] CHOICE {
                     syntaxes [0] SEQUENCE {
@@ -2487,13 +2632,13 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
     /**
         Encodes an EMBEDDED PDV, which is a constructed data type, defined in
-            the $(LINK2 https://www.itu.int,
+            the $(LINK https://www.itu.int,
                 International Telecommunications Union)'s
-            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EMBEDDED PDV as:
 
-        $(I
+        $(MONO
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -2519,7 +2664,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         must appear in the exact order of the specification. With these
         constraints in mind, the specification effectively becomes:
 
-        $(I
+        $(MONO
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification [0] CHOICE {
                     syntaxes [0] SEQUENCE {
@@ -2731,7 +2876,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         always end with a byte whose most significant bit is cleared.
 
         Standards:
-            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
+            $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     override public @property @system
     OIDNode[] relativeObjectIdentifier() const
@@ -2816,7 +2961,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         always end with a byte whose most significant bit is cleared.
 
         Standards:
-            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
+            $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     override public @property @system nothrow
     void relativeObjectIdentifier(in OIDNode[] value)
@@ -3212,7 +3357,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         about the 20th century, and prepend '19' when creating the string.
 
         See_Also:
-            $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
+            $(LINK https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
 
         Throws:
             DateTimeException = if string cannot be decoded to a DateTime
@@ -3264,7 +3409,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         format is acceptable for encoding UTCTime.
 
         See_Also:
-            $(LINK2 https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
+            $(LINK https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
     */
     override public @property @system
     void coordinatedUniversalTime(in DateTime value)
@@ -3293,7 +3438,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         Decodes a DateTime.
 
         The DER-encoded value is just the ASCII character representation of
-        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,
+        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html,
         ISO 8601)-formatted timestamp.
 
         An ISO-8601 Timestamp looks like:
@@ -3390,7 +3535,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         Encodes a DateTime.
 
         The DER-encoded value is just the ASCII character representation of
-        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,
+        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html,
         ISO 8601)-formatted timestamp.
 
         An ISO-8601 Timestamp looks like:
@@ -3466,9 +3611,9 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             Dubuisson, Olivier. “Character String Types.” ASN.1:
                 Communication between Heterogeneous Systems, Morgan
                 Kaufmann, 2001, pp. 175-178.
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
+            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
-            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)
 
         Returns: a string.
         Throws:
@@ -3502,9 +3647,9 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             Dubuisson, Olivier. “Character String Types.” ASN.1:
                 Communication between Heterogeneous Systems, Morgan
                 Kaufmann, 2001, pp. 175-178.
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
+            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
-            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)
 
         Throws:
             ASN1ValueException = if any non-graphical character
@@ -3709,13 +3854,13 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
     /**
         Decodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK2 https://www.itu.int,
+        in the $(LINK https://www.itu.int,
                 International Telecommunications Union)'s
-            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines CHARACTER as:
 
-        $(I
+        $(MONO
             CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -3904,13 +4049,13 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
     /**
         Encodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK2 https://www.itu.int,
+        in the $(LINK https://www.itu.int,
                 International Telecommunications Union)'s
-            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines CHARACTER as:
 
-        $(I
+        $(MONO
             CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {

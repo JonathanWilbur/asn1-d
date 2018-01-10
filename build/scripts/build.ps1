@@ -7,6 +7,7 @@ mkdir .\build\libraries 2>&1 | Out-Null
 mkdir .\build\objects 2>&1 | Out-Null
 
 dmd `
+.\source\macros.ddoc `
 .\source\asn1.d `
 .\source\codec.d `
 .\source\interfaces.d `
@@ -18,56 +19,89 @@ dmd `
 .\source\types\universal\external.d `
 .\source\types\universal\objectidentifier.d `
 .\source\codecs\ber.d `
+.\source\codecs\cer.d `
+.\source\codecs\der.d `
 -Dd".\\documentation\\html\\" `
 -Hd".\\build\\interfaces" `
 -op `
 -of".\\build\\libraries\\asn1.lib" `
 -Xf".\\documentation\\asn1.json" `
 -lib `
--cov `
 -O `
--profile `
--release
+-release `
+-d
 
 # Build decode-ber
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
+ .\source\tools\decoder_mixin.d `
  .\source\tools\decode_ber.d `
- -L".\\build\\libraries\\asn1.lib" `
+ -L+".\\build\\libraries\\asn1.lib" `
  -of".\\build\\executables\\decode-ber" `
  -O `
- -release
+ -release `
+ -d
 
 # Build decode-cer
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
+ .\source\tools\decoder_mixin.d `
  .\source\tools\decode_cer.d `
- -L".\\build\\libraries\\asn1.lib" `
+ -L+".\\build\\libraries\\asn1.lib" `
  -of".\\build\\executables\\decode-cer" `
  -O `
- -release
+ -release `
+ -d
 
 # Build decode-der
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
+ .\source\tools\decoder_mixin.d `
  .\source\tools\decode_der.d `
- -L".\\build\\libraries\\asn1.lib" `
+ -L+".\\build\\libraries\\asn1.lib" `
  -of".\\build\\executables\\decode-der" `
  -O `
- -release
+ -release `
+ -d
 
 # Build encode-ber
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
+ .\source\tools\encoder_mixin.d `
  .\source\tools\encode_ber.d `
- -L".\\build\\libraries\\asn1.lib" `
+ -L+".\\build\\libraries\\asn1.lib" `
  -of".\\build\\executables\\encode-ber" `
  -O `
- -release
+ -release `
+ -d
+
+# Build encode-cer
+dmd `
+ -I".\\build\\interfaces\\source" `
+ -I".\\build\\interfaces\\source\\codecs" `
+ .\source\tools\encoder_mixin.d `
+ .\source\tools\encode_cer.d `
+ -L+".\\build\\libraries\\asn1.lib" `
+ -of".\\build\\executables\\encode-cer" `
+ -O `
+ -release `
+ -d
+
+# Build encode-der
+dmd `
+ -I".\\build\\interfaces\\source" `
+ -I".\\build\\interfaces\\source\\codecs" `
+ .\source\tools\encoder_mixin.d `
+ .\source\tools\encode_der.d `
+ -L+".\\build\\libraries\\asn1.lib" `
+ -of".\\build\\executables\\encode-der" `
+ -O `
+ -release `
+ -d
 
 # Delete object files that get created.
 # Yes, I tried -o- already. It does not create the executable either.

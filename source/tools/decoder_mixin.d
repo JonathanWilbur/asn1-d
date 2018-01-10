@@ -19,6 +19,16 @@ mixin template Decoder(Element)
         }
 
         ubyte[] data = stdin.rawRead!ubyte(new ubyte[500000]);
+
+        if
+        (
+            args.length == 2u &&
+            args[1] == "-n" &&
+            data.length > 0u &&
+            data[$-1] == '\n'
+        )
+            data = data[0 .. $-1];
+
         Element[] tops;
 
         try

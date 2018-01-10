@@ -147,15 +147,18 @@ code, .mono {
     Like Basic Encoding Rules (BER), Canonical Encoding Rules (CER), and
     Packed Encoding Rules (PER), Distinguished Encoding Rules (DER) is a
     specification created by the
-    <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>,
+    <a href="http://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>,
     and specified in
     <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
 </section>
-<div class="ddoc_section">
+<div class="ddoc_authors">
+	<h4>Authors</h4>
 	<p class="para">
-		<span class="ddoc_section_h">Author:</span>
-<a href="http://jonathan.wilbur.space">Jonathan M. Wilbur</a>
-            <a href="mailto:jonathan@wilbur.space">jonathan@wilbur.space</a>
+		<ul>        <li><span class="person">
+    <a href="http://jonathan.wilbur.space">Jonathan M. Wilbur</a>
+    <span>&lt;<a href="mailto:jonathan@wilbur.space">jonathan@wilbur.space</a>&gt;</span>
+</span></li>
+    </ul>
 
 	</p>
 </div>
@@ -169,17 +172,19 @@ code, .mono {
 <div class="ddoc_standards">
 	<h4>Standards</h4>
 	<p class="para">
-		<a href="https://www.itu.int/rec/T-REC-X.680/en">X.680 - Abstract Syntax Notation One (ASN.1)</a>
-        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
+		<ul>        <li><a href="https://www.itu.int/rec/T-REC-X.680/en">X.680 - Abstract Syntax Notation One (ASN.1)</a></li>
+        <li><a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a></li>
+    </ul>
 
 	</p>
 </div><div class="ddoc_see_also">
 	<h4>See Also</h4>
 	<p class="para">
-		<a href="https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One">The Wikipedia Page on ASN.1</a>
-        <a href="https://en.wikipedia.org/wiki/X.690">The Wikipedia Page on X.690</a>
-        <a href="https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf">ASN.1 By Simple Words</a>
-        <a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">ASN.1: Communication Between Heterogeneous Systems</a>
+		<ul>        <li><a href="https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One">The Wikipedia Page on ASN.1</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/X.690">The Wikipedia Page on X.690</a></li>
+        <li><a href="https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf">ASN.1 By Simple Words</a></li>
+        <li><a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">ASN.1: Communication Between Heterogeneous Systems</a></li>
+    </ul>
 	</p>
 </div>
 </section>
@@ -223,7 +228,7 @@ code, .mono {
     <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>'s,
     <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
 </section>
-<div class="description"><i>{joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)} </i></div>
+<div class="description"><span class="mono">{joint-iso-itu-t asn1(1) ber-derived(2) distinguished-encoding(1)} </span></div>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#DERElement" id="DERElement"><code class="member">DERElement</code></a>
@@ -282,15 +287,32 @@ if (dv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
 </div>
 </section>
 <ul class="ddoc_members">
-	<li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.realEncodingBase" id="DistinguishedEncodingRulesElement.realEncodingBase"><code class="member">realEncodingBase</code></a>
+	<li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.tagClass" id="DistinguishedEncodingRulesElement.tagClass"><code class="member">tagClass</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.realEncodingBase"></span>static ASN1RealEncodingBase <code class="code">realEncodingBase</code>;
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.tagClass"></span>ASN1TagClass <code class="code">tagClass</code>;
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">The base of encoded REALs. May be 2, 8, 10, or 16.</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.construction" id="DistinguishedEncodingRulesElement.construction"><code class="member">construction</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.construction"></span>ASN1Construction <code class="code">construction</code>;
+
+    </code>
 </section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.tagNumber" id="DistinguishedEncodingRulesElement.tagNumber"><code class="member">tagNumber</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.tagNumber"></span>size_t <code class="code">tagNumber</code>;
+
+    </code>
+</section>
+<div>
 </div>
 </li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.length" id="DistinguishedEncodingRulesElement.length"><code class="member">length</code></a>
 <section class="declaration">
@@ -319,14 +341,15 @@ if (dv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">"Decodes" an END OF CONTENT, by which I mean: returns nothing, but
+<div><section class="module-info"><section id="summary">"Decodes" an <span class="mono">END OF CONTENT</span>, by which I mean: returns nothing, but
         throws exceptions if the element is not correct.
 </section>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ConstructionException = if the element is marked as "constructed"
-            ASN1ValueSizeException = if there are any content octets
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if there are any content octets</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -337,25 +360,23 @@ if (dv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a <code class="code">boolean</code>.
+<div><section class="module-info"><section id="summary">Decodes a <code class="d inline">bool</code>.
 </section>
-<div class="description">Any non-zero value will be interpreted as TRUE. Only zero will be
-        interpreted as FALSE.
+<div class="description">A <code class="d inline">0xFF</code> byte will be interpreted as <span class="mono">TRUE</span>. A zero byte
+        (<code class="d inline">0x00</code>) will be interpreted as <span class="mono">FALSE</span>. Any other value,
+        or any length other than 1 byte will throw an exception.
 
-</div>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		a <code class="code">boolean</code>
-
-	</p>
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueSizeException = if the encoded value is anything other
-                than exactly 1 byte in size.
-            ASN1ValueException = if the encoded byte is not 0xFF or 0x00
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code>
+                if the encoded value is not primitively-constructed</li>
+            <li><code class="d inline">ASN1ValueSizeException</code>
+                if the encoded value is not exactly 1 byte in size</li>
+            <li><code class="d inline">ASN1ValueException</code>
+                if the encoded value is not either 0xFF or 0x00</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -366,10 +387,7 @@ if (dv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a <code class="code">boolean</code>.
-</section>
-<div class="description">Any non-zero <code class="code">value</code> will be interpreted as TRUE. Only zero will be
-        interpreted as FALSE.</div>
+<div><section class="module-info"><section id="summary">Encodes a <code class="d inline">bool</code></section>
 <div class="ddoc_examples">
 	<h4>Examples</h4>
 	<p class="para">
@@ -398,22 +416,17 @@ assertThrown!ASN1ValueException(dv.boolean);
 </section>
 <div><section class="module-info"><section id="summary">Decodes a signed <code class="code">integer</code>.
 </section>
-<div class="description">The <code class="code">integer</code> is encoded big endian in two's complement form on the
-        smallest number of bytes that can encode it.
-
-</div>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		any chosen signed integral type
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueSizeException = if the value is too big to decode
-                to a signed integral type.
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code>
+                if the encoded value is not primitively-constructed</li>
+            <li><code class="d inline">ASN1ValueSizeException</code>
+                if the value is too big to decode to a signed integral type,
+                or if the value is zero bytes</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code>
+                if there are padding bytes</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -424,10 +437,7 @@ assertThrown!ASN1ValueException(dv.boolean);
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an <code class="code">integer</code>.
-</section>
-<div class="description">The <code class="code">integer</code> is encoded big endian in two's complement form on the
-        smallest number of bytes that can encode it.</div>
+<div><section class="module-info"><section id="summary">Encodes a signed integral type</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.bitString" id="DistinguishedEncodingRulesElement.bitString"><code class="member">bitString</code></a>
@@ -439,23 +449,36 @@ assertThrown!ASN1ValueException(dv.boolean);
 </section>
 <div><section class="module-info"><section id="summary">Decodes an array of <code class="d inline">bool</code>s representing a string of bits.
 </section>
-<div class="description">In Distinguished Encoding Rules (DER), the first byte is an unsigned
-        integral byte indicating the number of unused bits at the end of
-        the BIT STRING. The unused bits must be zeroed.
-
-</div>
 <div class="ddoc_returns">
 	<h4>Return Value</h4>
 	<p class="para">
-		an array of booleans.
+		an array of <code class="d inline">bool</code>s, where each <code class="d inline">bool</code> represents a bit
+            in the encoded bit string
+
 
 	</p>
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if the first byte has a value greater
-                than seven.
+		<ul>            <li><code class="d inline">ASN1ValueSizeException</code>
+                if the any primitive contains 0 bytes</li>
+            <li><code class="d inline">ASN1ValueException</code>
+                if the first byte has a value greater
+                than seven, or if the first byte indicates the presence of
+                padding bits when no subsequent bytes exist, or if any primitive
+                but the last in a constructed BIT STRING uses padding bits, or
+                if any of the padding bits are set</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -466,11 +489,7 @@ assertThrown!ASN1ValueException(dv.boolean);
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an array of <code class="d inline">bool</code>s representing a string of bits.
-</section>
-<div class="description">In Distinguished Encoding Rules (DER), the first byte is an unsigned
-        integral byte indicating the number of unused bits at the end of
-        the BIT STRING. The unused bits must be zeroed.</div>
+<div><section class="module-info"><section id="summary">Encodes an array of <code class="d inline">bool</code>s representing a string of bits.</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.octetString" id="DistinguishedEncodingRulesElement.octetString"><code class="member">octetString</code></a>
@@ -480,15 +499,23 @@ assertThrown!ASN1ValueException(dv.boolean);
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes an OCTET STRING into an unsigned byte array.
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">OCTET STRING</span> into an unsigned byte array.
 </section>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
 	<p class="para">
-		an unsigned byte array.
+		<ul>            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
 	</p>
-</div>
-</section>
+</div></section>
 </div>
 </li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.octetString" id="DistinguishedEncodingRulesElement.octetString"><code class="member">octetString</code></a>
 <section class="declaration">
@@ -497,7 +524,7 @@ assertThrown!ASN1ValueException(dv.boolean);
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an OCTET STRING from an unsigned byte array.</section>
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">OCTET STRING</span> from an unsigned byte (<code class="d inline">ubyte</code>) array.</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.nill" id="DistinguishedEncodingRulesElement.nill"><code class="member">nill</code></a>
@@ -507,13 +534,13 @@ assertThrown!ASN1ValueException(dv.boolean);
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">"Decodes" a NULL, by which I mean: returns nothing, but
+<div><section class="module-info"><section id="summary">"Decodes" a <code class="d inline"><code class="code">null</code></code>, by which I mean: returns nothing, but
         throws exceptions if the element is not correct.
 </section>
 <div class="ddoc_section">
 	<p class="para">
 		<span class="ddoc_section_h">Note:</span>
-I had to name this method "<code class="code">nill</code>," because "NULL" is a keyword in D.
+I had to name this method <code class="d inline"><code class="code">nill</code></code>, because <code class="d inline"><code class="code">null</code></code> is a keyword in D.
 
 
 	</p>
@@ -521,8 +548,9 @@ I had to name this method "<code class="code">nill</code>," because "NULL" is a 
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ConstructionException = if the element is marked as "constructed"
-            ASN1ValueSizeException = if there are any content octets
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if there are any content octets</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -533,32 +561,29 @@ I had to name this method "<code class="code">nill</code>," because "NULL" is a 
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes an OBJECT IDENTIFIER.
-        See source/types/universal/objectidentifier.d for information about
-        the ObjectIdentifier class (aliased as "OID").
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">OBJECT IDENTIFIER</span>.
+        See <span class="mono">source/types/universal/objectidentifier.d</span> for information about
+        the <code class="d inline">ObjectIdentifier</code> class (aliased as <code class="d inline">OID</code>).
 </section>
-<div class="description">The encoded OBJECT IDENTIFIER's first byte contains the first number
-        of the OID multiplied by 40 and added to the second number of the OID.
-        The subsequent bytes have all the remaining number encoded in base-128
-        on the least significant 7 bits of each byte. For these bytes, the most
-        significant bit is set if the next byte continues the encoding of the
-        current OID number. In other words, the bytes encoding each number
-        always end with a byte whose most significant bit is cleared.
-
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueSizeException = if an attempt is made to decode
-                an Object Identifier from zero bytes.
-            ASN1ValueSizeException = if a single OID number is too big to
-                decode to a size_t.
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if there are no value bytes</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code> if a single OID number is encoded with
+                "leading zero bytes" (<code class="d inline">0x80u</code>)</li>
+            <li><code class="d inline">ASN1ValueOverflowException</code> if a single OID number is too big to
+                decode to a <code class="d inline">size_t</code></li>
+            <li><code class="d inline">ASN1TruncationException</code> if a single OID number is "cut off"</li>
+        </ul>
+
 
 	</p>
 </div><div class="ddoc_standards">
 	<h4>Standards</h4>
 	<p class="para">
-		<a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
+		<ul>            <li><a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a></li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -569,23 +594,15 @@ I had to name this method "<code class="code">nill</code>," because "NULL" is a 
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an OBJECT IDENTIFIER.
-        See source/types/universal/objectidentifier.d for information about
-        the ObjectIdentifier class (aliased as "OID").
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">OBJECT IDENTIFIER</span>.
+        See <span class="mono">source/types/universal/objectidentifier.d</span> for information about
+        the <code class="d inline">ObjectIdentifier</code> class (aliased as ).
 </section>
-<div class="description">The encoded OBJECT IDENTIFIER's first byte contains the first number
-        of the OID multiplied by 40 and added to the second number of the OID.
-        The subsequent bytes have all the remaining number encoded in base-128
-        on the least significant 7 bits of each byte. For these bytes, the most
-        significant bit is set if the next byte continues the encoding of the
-        current OID number. In other words, the bytes encoding each number
-        always end with a byte whose most significant bit is cleared.
-
-</div>
 <div class="ddoc_standards">
 	<h4>Standards</h4>
 	<p class="para">
-		<a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
+		<ul>            <li><a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a></li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -596,43 +613,49 @@ I had to name this method "<code class="code">nill</code>," because "NULL" is a 
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes an ObjectDescriptor, which is a string consisting of only
-        graphical characters. In fact, ObjectDescriptor is actually implicitly
-        just a GraphicString! The formal specification for an ObjectDescriptor
+<div><section class="module-info"><section id="summary">Decodes an <code class="d inline">ObjectDescriptor</code>, which is a string consisting of only
+        graphical characters. In fact, <code class="d inline">ObjectDescriptor</code> is actually implicitly
+        just a <span class="mono">GraphicString</span>! The formal specification for an <code class="d inline">ObjectDescriptor</code>
         is:
 </section>
-<div class="description"><i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+<div class="description"><span class="mono">ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</span>
 <br><br>
-        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
-        0x20 to 0x7E.
+        <span class="mono">GraphicString</span> is just a string containing only characters between
+        and including <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>, therefore ObjectDescriptor is just
+        <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>.
 
-</div>
-<div class="ddoc_section">
-	<p class="para">
-		<span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Character String Types.” ASN.1:
-                Communication between Heterogeneous Systems, Morgan
-                Kaufmann, 2001, pp. 175-178.
-            <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">                The Wikipedia Page on ISO 2022</a>
-            <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
-
-
-	</p>
-</div>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		a string.
-
-	</p>
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if the encoded value contains any bytes
-                outside of 0x20 to 0x7E.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if the encoded value contains any character outside of
+                <code class="d inline">0x20</code> to <code class="d inline">0x7E</code>, which means any control characters or <span class="mono">DELETE</span></li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+
+
 	</p>
-</div></section>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html">ISO 2022</a></li>
+        </ul>
+	</p>
+</div>
+</section>
 </div>
 </li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.objectDescriptor" id="DistinguishedEncodingRulesElement.objectDescriptor"><code class="member">objectDescriptor</code></a>
 <section class="declaration">
@@ -641,37 +664,40 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an ObjectDescriptor, which is a string consisting of only
-        graphical characters. In fact, ObjectDescriptor is actually implicitly
-        just a GraphicString! The formal specification for an ObjectDescriptor
+<div><section class="module-info"><section id="summary">Encodes an <code class="d inline">ObjectDescriptor</code>, which is a string consisting of only
+        graphical characters. In fact, <code class="d inline">ObjectDescriptor</code> is actually implicitly
+        just a <span class="mono">GraphicString</span>! The formal specification for an <code class="d inline">ObjectDescriptor</code>
         is:
 </section>
-<div class="description"><i>ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</i>
+<div class="description"><span class="mono">ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</span>
 <br><br>
-        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
-        0x20 to 0x7E.
+        <span class="mono">GraphicString</span> is just a string containing only characters between
+        and including <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>, therefore ObjectDescriptor is just
+        <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>.
 
-</div>
-<div class="ddoc_section">
-	<p class="para">
-		<span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Character String Types.” ASN.1:
-                Communication between Heterogeneous Systems, Morgan
-                Kaufmann, 2001, pp. 175-178.
-            <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">                The Wikipedia Page on ISO 2022</a>
-            <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
-
-
-	</p>
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if the string <code class="code">value</code> contains any
-                character outside of 0x20 to 0x7E, which means any control
-                characters or DELETE.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if the string <code class="code">value</code> contains any character outside of
+                <code class="d inline">0x20</code> to <code class="d inline">0x7E</code>, which means any control characters or <span class="mono">DELETE</span></li>
+        </ul>
+
+
 	</p>
-</div></section>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html">ISO 2022</a></li>
+        </ul>
+	</p>
+</div>
+</section>
 </div>
 </li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.external" id="DistinguishedEncodingRulesElement.external"><code class="member">external</code></a>
 <section class="declaration">
@@ -680,17 +706,15 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes an EXTERNAL, which is a constructed data type, defined in
-        the <a href="https://www.itu.int">            International Telecommunications Union</a>'s
-        <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">EXTERNAL</span>.
 </section>
 <div class="description">According to the
-        <a href="http://www.itu.int/en/pages/default.aspx">            International Telecommunications Union</a>'s
-        <a href="https://www.itu.int/rec/T-REC-X.680/en">            X.680 - Abstract Syntax Notation One (ASN.1)</a>,
-        the abstract definition for an EXTERNAL, after removing the comments in the
+        <a href="http://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+        <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680 - Abstract Syntax Notation One (ASN.1)</a>,
+        the abstract definition for an <span class="mono">EXTERNAL</span>, after removing the comments in the
         specification, is as follows:
 <br><br>
-        <i>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -711,16 +735,16 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                             syntaxes ABSENT,
                             transfer-syntax ABSENT,
                             fixed ABSENT } ) } )
-        </i>
+        </pre>
 <br><br>
-        Note that the abstract syntax resembles that of EMBEDDED PDV and
-        CharacterString, except with a WITH COMPONENTS constraint that removes some
-        of our choices of identification.
+        Note that the abstract syntax resembles that of <span class="mono">EMBEDDED PDV</span> and
+        <span class="mono">CharacterString</span>, except with a <span class="mono">WITH COMPONENTS</span> constraint that removes some
+        of our choices of <span class="mono">identification</span>.
         As can be seen on page 303 of Olivier Dubuisson's
         <i><a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">            ASN.1: Communication Between Heterogeneous Systems</a></i>,
-        after applying the WITH COMPONENTS constraint, our reduced syntax becomes:
+        after applying the <span class="mono">WITH COMPONENTS</span> constraint, our reduced syntax becomes:
 <br><br>
-        <i>            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER,
                     presentation-context-id INTEGER,
@@ -729,15 +753,15 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                         transfer-syntax OBJECT IDENTIFIER } },
                 data-value-descriptor ObjectDescriptor OPTIONAL,
                 data-value OCTET STRING }
-        </i>
+        </pre>
 <br><br>
         But, according to the
-        <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
         <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>,
         section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
         follows, for compatibility reasons:
 <br><br>
-        <i>            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 direct-reference  OBJECT IDENTIFIER OPTIONAL,
                 indirect-reference  INTEGER OPTIONAL,
                 data-value-descriptor  ObjectDescriptor  OPTIONAL,
@@ -745,39 +769,39 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                     single-ASN1-type  [0] ANY,
                     octet-aligned     [1] IMPLICIT OCTET STRING,
                     arbitrary         [2] IMPLICIT BIT STRING } }
-        </i>
+        </pre>
 <br><br>
-        The definition above is the pre-1994 definition of EXTERNAL. The syntax
-        field of the post-1994 definition maps to the direct-reference field of
-        the pre-1994 definition. The presentation-context-id field of the post-1994
-        definition maps to the indirect-reference field of the pre-1994 definition.
-        If context-negotiation is used, per the abstract syntax, then the
-        presentation-context-id field of the context-negotiation SEQUENCE in the
-        post-1994 definition maps to the indirect-reference field of the pre-1994
-        definition, and the transfer-syntax field of the context-negotiation
-        SEQUENCE maps to the direct-reference field of the pre-1994 definition.
+        The definition above is the pre-1994 definition of <span class="mono">EXTERNAL</span>. The <span class="mono">syntax</span>
+        field of the post-1994 definition maps to the <span class="mono">direct-reference</span> field of
+        the pre-1994 definition. The <span class="mono">presentation-context-id</span> field of the post-1994
+        definition maps to the <span class="mono">indirect-reference</span> field of the pre-1994 definition.
+        If <span class="mono">context-negotiation</span> is used, per the abstract syntax, then the
+        <span class="mono">presentation-context-id</span> field of the <span class="mono">context-negotiation</span> <span class="mono">SEQUENCE</span> in the
+        post-1994 definition maps to the <span class="mono">indirect-reference</span> field of the pre-1994
+        definition, and the <span class="mono">transfer-syntax</span> field of the <span class="mono">context-negotiation</span>
+        <span class="mono">SEQUENCE</span> maps to the <span class="mono">direct-reference</span> field of the pre-1994 definition.
 <br><br>
         The following additional constraints are applied to the abstract syntax
-        when using Canonical Encoding Rules (CER) or Distinguished Encoding Rules (DER),
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
         which are also defined in the
         <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>'s
         <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>:
 <br><br>
-        <i>            EXTERNAL ( WITH COMPONENTS {
+        <pre>            EXTERNAL ( WITH COMPONENTS {
                 ... ,
                 identification ( WITH COMPONENTS {
                     ... ,
                     presentation-context-id ABSENT,
                     context-negotiation ABSENT } ) } )
-        </i>
+        </pre>
 <br><br>
         The stated purpose of the constraints shown above is to restrict the use of
-        the presentation-context-id, either by itself or within the
-        context-negotiation, which makes the following the effective abstract
-        syntax of EXTERNAL when using Canonical Encoding Rules (CER) or
-        Distinguished Encoding Rules (DER):
+        the <span class="mono">presentation-context-id</span>, either by itself or within the
+        <span class="mono">context-negotiation</span>, which makes the following the effective abstract
+        syntax of <span class="mono">EXTERNAL</span> when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
 <br><br>
-        <i>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -800,70 +824,54 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                             context-negotiation ABSENT,
                             transfer-syntax ABSENT,
                             fixed ABSENT } ) } )
-        </i>
+        </pre>
 <br><br>
-        With the constraints applied, the abstract syntax for EXTERNALs encoded
-        using Canonical Encoding Rules (CER) or Distinguished Encoding Rules (DER) becomes:
+        With the constraints applied, the abstract syntax for <span class="mono">EXTERNAL</span>s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
 <br><br>
-        <i>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER },
                 data-value-descriptor ObjectDescriptor OPTIONAL,
                 data-value OCTET STRING }
-        </i>
+        </pre>
 <br><br>
-        Upon removing the CHOICE tag (since you have no choice but to use syntax
+        Upon removing the <span class="mono">CHOICE</span> tag (since you have no choice but to use syntax
         at this point), the encoding definition when using
-        Canonical Encoding Rules (CER) or Distinguished Encoding Rules (DER):
+        Canonical Encoding Rules or Distinguished Encoding Rules:
 <br><br>
-        <i>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
                 syntax OBJECT IDENTIFIER,
                 data-value-descriptor ObjectDescriptor OPTIONAL,
                 data-value OCTET STRING }
-        </i>
-<br><br>
-        Which, using the pre-1994 definition, becomes:
-<br><br>
-        <i>            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
-                direct-reference  OBJECT IDENTIFIER,
-                data-value-descriptor  ObjectDescriptor  OPTIONAL,
-                encoding  CHOICE {
-                    single-ASN1-type  [0] ANY,
-                    octet-aligned     [1] IMPLICIT OCTET STRING,
-                    arbitrary         [2] IMPLICIT BIT STRING } }
-        </i>
-<br><br>
-        For all encoding rules defined in the
-        <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>'s
-        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
-        (meaning Basic Encoding Rules (BER), Canonical Encoding Rules (CER), and
-        Distinguished Encoding Rules (DER)), EXPLICIT tagging must be used when encoding
-        the EXTERNAL type. Unlike the other Context-Switching Types, automatic
-        tagging is NOT used when encoding with Basic Encoding Rules (BER),
-        Canonical Encoding Rules (CER), or Distinguished Encoding Rules (DER).
+        </pre>
 
 </div>
 <div class="ddoc_returns">
 	<h4>Return Value</h4>
 	<p class="para">
-		an External, defined in types.universal.<code class="code">external</code>.
+		an instance of <code class="d inline">types.universal.<code class="code">external</code>.External</code>
+
 
 	</p>
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1SizeException = if encoded EmbeddedPDV has too few or too many
-                elements, or if syntaxes or context-negotiation element has
-                too few or too many elements.
-            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueException = if encoded ObjectDescriptor contains
-                invalid characters.
-            ASN1InvalidIndexException = if encoded value selects a choice for
-                identification or uses an unspecified index for an element in
-                syntaxes or context-negotiation, or if an unspecified element
-                of EMBEDDED PDV itself is referenced by an out-of-range
-                context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
+		<ul>            <li><code class="d inline">ASN1ValueException</code>
+                if the SEQUENCE does not contain two to four elements</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not have the correct tag class</li>
+            <li><code class="d inline">ASN1ConstructionException</code>
+                if any element has the wrong construction</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not have the correct tag number</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if a data-value-descriptor is supplied with invalid characters</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -874,13 +882,45 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an EXTERNAL, which is a constructed data type, defined in
-        the <a href="https://www.itu.int">            International Telecommunications Union</a>'s
-        <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">EXTERNAL</span>.
 </section>
-<div class="description">The specification defines EXTERNAL as:
+<div class="description">According to the
+        <a href="http://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+        <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680 - Abstract Syntax Notation One (ASN.1)</a>,
+        the abstract definition for an <span class="mono">EXTERNAL</span>, after removing the comments in the
+        specification, is as follows:
 <br><br>
-        <i>            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            syntaxes ABSENT,
+                            transfer-syntax ABSENT,
+                            fixed ABSENT } ) } )
+        </pre>
+<br><br>
+        Note that the abstract syntax resembles that of <span class="mono">EMBEDDED PDV</span> and
+        <span class="mono">CharacterString</span>, except with a <span class="mono">WITH COMPONENTS</span> constraint that removes some
+        of our choices of <span class="mono">identification</span>.
+        As can be seen on page 303 of Olivier Dubuisson's
+        <i><a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">            ASN.1: Communication Between Heterogeneous Systems</a></i>,
+        after applying the <span class="mono">WITH COMPONENTS</span> constraint, our reduced syntax becomes:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntax OBJECT IDENTIFIER,
                     presentation-context-id INTEGER,
@@ -889,18 +929,116 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                         transfer-syntax OBJECT IDENTIFIER } },
                 data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
                 data-<code class="code">value</code> OCTET STRING }
-        </i>
+        </pre>
 <br><br>
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 2.
+        But, according to the
+        <a href="http://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>,
+        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
+        follows, for compatibility reasons:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                direct-reference  OBJECT IDENTIFIER OPTIONAL,
+                indirect-reference  INTEGER OPTIONAL,
+                data-<code class="code">value</code>-descriptor  ObjectDescriptor  OPTIONAL,
+                encoding  CHOICE {
+                    single-ASN1-type  [0] ANY,
+                    octet-aligned     [1] IMPLICIT OCTET STRING,
+                    arbitrary         [2] IMPLICIT BIT STRING } }
+        </pre>
+<br><br>
+        The definition above is the pre-1994 definition of <span class="mono">EXTERNAL</span>. The <span class="mono">syntax</span>
+        field of the post-1994 definition maps to the <span class="mono">direct-reference</span> field of
+        the pre-1994 definition. The <span class="mono">presentation-context-id</span> field of the post-1994
+        definition maps to the <span class="mono">indirect-reference</span> field of the pre-1994 definition.
+        If <span class="mono">context-negotiation</span> is used, per the abstract syntax, then the
+        <span class="mono">presentation-context-id</span> field of the <span class="mono">context-negotiation</span> <span class="mono">SEQUENCE</span> in the
+        post-1994 definition maps to the <span class="mono">indirect-reference</span> field of the pre-1994
+        definition, and the <span class="mono">transfer-syntax</span> field of the <span class="mono">context-negotiation</span>
+        <span class="mono">SEQUENCE</span> maps to the <span class="mono">direct-reference</span> field of the pre-1994 definition.
+<br><br>
+        The following additional constraints are applied to the abstract syntax
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
+        which are also defined in the
+        <a href="http://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>:
+<br><br>
+        <pre>            EXTERNAL ( WITH COMPONENTS {
+                ... ,
+                identification ( WITH COMPONENTS {
+                    ... ,
+                    presentation-context-id ABSENT,
+                    context-negotiation ABSENT } ) } )
+        </pre>
+<br><br>
+        The stated purpose of the constraints shown above is to restrict the use of
+        the <span class="mono">presentation-context-id</span>, either by itself or within the
+        <span class="mono">context-negotiation</span>, which makes the following the effective abstract
+        syntax of <span class="mono">EXTERNAL</span> when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            syntaxes ABSENT,
+                            presentation-context-id ABSENT,
+                            context-negotiation ABSENT,
+                            transfer-syntax ABSENT,
+                            fixed ABSENT } ) } )
+        </pre>
+<br><br>
+        With the constraints applied, the abstract syntax for <span class="mono">EXTERNAL</span>s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+        </pre>
+<br><br>
+        Upon removing the <span class="mono">CHOICE</span> tag (since you have no choice but to use syntax
+        at this point), the encoding definition when using
+        Canonical Encoding Rules or Distinguished Encoding Rules:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                syntax OBJECT IDENTIFIER,
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+        </pre>
 
+</div>
+<div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		an instance of <code class="d inline">types.universal.<code class="code">external</code>.External</code>
+
+
+	</p>
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueSizeException = if encoded INTEGER is too large to decode
-            ASN1ValueException = if encoded ObjectDescriptor contains
-                invalid characters.
+		<ul>            <li><code class="d inline">ASN1ValueException</code>
+                if something other than <code class="d inline">syntax</code> is used for <span class="mono">identification</span></li>
+            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if a data-<code class="code">value</code>-descriptor is supplied with invalid characters</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1064,7 +1202,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </section>
 <div class="description">The specification defines EMBEDDED PDV as:
 <br><br>
-        <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+        <span class="mono">            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -1079,7 +1217,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 data-value-descriptor ObjectDescriptor OPTIONAL,
                 data-value OCTET STRING }
             (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
-        </i>
+        </span>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
@@ -1089,7 +1227,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         must appear in the exact order of the specification. With these
         constraints in mind, the specification effectively becomes:
 <br><br>
-        <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+        <span class="mono">            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification [0] CHOICE {
                     syntaxes [0] SEQUENCE {
                         abstract [0] OBJECT IDENTIFIER,
@@ -1098,7 +1236,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                     transfer-syntax [4] OBJECT IDENTIFIER,
                     fixed [5] NULL },
                 data-value [2] OCTET STRING }
-        </i>
+        </span>
 
 </div>
 <div class="ddoc_throws">
@@ -1131,7 +1269,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 </section>
 <div class="description">The specification defines EMBEDDED PDV as:
 <br><br>
-        <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+        <span class="mono">            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -1146,7 +1284,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                 data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
                 data-<code class="code">value</code> OCTET STRING }
             (WITH COMPONENTS { ... , data-<code class="code">value</code>-descriptor ABSENT })
-        </i>
+        </span>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
@@ -1156,7 +1294,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
         must appear in the exact order of the specification. With these
         constraints in mind, the specification effectively becomes:
 <br><br>
-        <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+        <span class="mono">            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification [0] CHOICE {
                     syntaxes [0] SEQUENCE {
                         abstract [0] OBJECT IDENTIFIER,
@@ -1165,7 +1303,7 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
                     transfer-syntax [4] OBJECT IDENTIFIER,
                     fixed [5] NULL },
                 data-<code class="code">value</code> [2] OCTET STRING }
-        </i>
+        </span>
 <br><br>
         If the supplied identification for the EmbeddedPDV is a
         presentation-context-id or a context-negotiation, no exception will be
@@ -1896,7 +2034,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </section>
 <div class="description">The specification defines CHARACTER as:
 <br><br>
-        <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+        <span class="mono">            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -1909,7 +2047,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                     transfer-syntax OBJECT IDENTIFIER,
                     fixed NULL },
                 string-value OCTET STRING }
-        </i>
+        </span>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.
@@ -1950,7 +2088,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
 </section>
 <div class="description">The specification defines CHARACTER as:
 <br><br>
-        <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+        <span class="mono">            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -1963,7 +2101,7 @@ Dubuisson, Olivier. “Distinguished Encoding Rules (DER).” ASN.1:
                     transfer-syntax OBJECT IDENTIFIER,
                     fixed NULL },
                 string-<code class="code">value</code> OCTET STRING }
-        </i>
+        </span>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.</div>
@@ -2165,7 +2303,7 @@ foreach (dv; bervalues)
 
         </div>
         <div id="footer">
-            <span id="timestamp">Mon Jan  8 22:05:54 2018
+            <span id="timestamp">Tue Jan  9 21:10:22 2018
 </span>
         </div>
     </body>

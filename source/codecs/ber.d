@@ -443,7 +443,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 if any nested primitives do not share the
                 same tag number as their outer constructed element)
         )
-
     */
     override public @property
     bool[] bitString() const
@@ -645,7 +644,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 if any nested primitives do not share the
                 same tag number as their outer constructed element)
         )
-
     */
     override public @property @system
     ubyte[] octetString() const
@@ -1643,8 +1641,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     /**
         Decodes a floating-point type.
 
-        Note that this method assumes that your machine uses IEEE 754 floating
-        point format.
+        Note that this method assumes that your machine uses
+        $(LINK http://ieeexplore.ieee.org/document/4610935/, IEEE 754-2008)
+        floating point format.
 
         Throws:
         $(UL
@@ -1940,8 +1939,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     /**
         Encodes a floating-point type, using base-2 binary encoding.
 
-        Note that this method assumes that your machine uses IEEE 754 floating
-        point format.
+        Note that this method assumes that your machine uses
+        $(LINK http://ieeexplore.ieee.org/document/4610935/, IEEE 754-2008)
+        floating point format.
 
         Citations:
         $(UL

@@ -3,11 +3,9 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.65](http://semver.org/)
+* Version: [1.0.0-beta.66](http://semver.org/)
 
-**Expected Version 1.0.0 Release Date: December 31st, 2017**
-
-_(Yes, I am running behind schedule.)_
+**Expected Version 1.0.0 Release Date: January 12th, 2018**
 
 ## What is ASN.1?
 
