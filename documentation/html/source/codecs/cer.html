@@ -1053,7 +1053,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
                 binary-encoded mantissa is too big to be expressed by an
                 unsigned long integer</li>
             <li><code class="d inline">ASN1ValueException</code> if a complicated-form exponent or a
-                non-zero-byte mantissa encodes a zero, of if a base-10
+                non-zero-byte mantissa encodes a zero or even number, of if a base-10
                 (character-encoded) REAL is has something wrong that is not
                 covered by <code class="d inline">ASN1ValueCharactersException</code> or
                 <code class="d inline">ASN1ValuePaddingException</code></li>
@@ -2447,7 +2447,7 @@ foreach (cv; cervalues)
 
         </div>
         <div id="footer">
-            <span id="timestamp">Wed Jan 10 12:51:03 2018
+            <span id="timestamp">Wed Jan 10 12:57:59 2018
 </span>
         </div>
     </body>

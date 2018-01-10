@@ -1885,7 +1885,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 binary-encoded mantissa is too big to be expressed by an
                 unsigned long integer)
             $(LI $(D ASN1ValueException) if a complicated-form exponent or a
-                non-zero-byte mantissa encodes a zero, of if a base-10
+                non-zero-byte mantissa encodes a zero or even number, of if a base-10
                 (character-encoded) REAL is has something wrong that is not
                 covered by $(D ASN1ValueCharactersException) or
                 $(D ASN1ValuePaddingException))
@@ -2136,7 +2136,27 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
                 switch (this.value[0] & 0b00110000u)
                 {
-                    case (0b00000000u): base = 0x02u; break;
+                    case (0b00000000u):
+                    {
+                        /* NOTE:
+                            Section 11.3.1 of X.690 states that, for Canonical Encoding Rules
+                            (CER) and Distinguished Encoding Rules (DER), the mantissa must be
+                            zero or odd.
+                        */
+                        if (!(mantissa & 1u))
+                            throw new ASN1ValueException
+                            (
+                                "This exception was thrown because you attempted to " ~
+                                "decode a base-2 encoded REAL whose mantissa was " ~
+                                "not zero or odd. Both Canonical Encoding Rules (CER) " ~
+                                "and Distinguished Encoding Rules (DER) require that " ~
+                                "a base-2 encoded REAL's mantissa be shifted so that " ~
+                                "it is either zero or odd. "
+                            );
+
+                        base = 0x02u;
+                        break;
+                    }
                     case (0b00010000u): base = 0x08u; break;
                     case (0b00100000u): base = 0x10u; break;
                     default:
