@@ -1733,12 +1733,12 @@ class AbstractSyntaxNotation1Element(Element)
     ///
     public alias embeddedPDV = embeddedPresentationDataValue;
     /**
-        Decodes an EMBEDDED PDV, which is a constructed data type, defined in
+        Decodes an EmbeddedPDV, which is a constructed data type, defined in
             the $(LINK2 https://www.itu.int,
                 International Telecommunications Union)'s
             $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines EMBEDDED PDV as:
+        The specification defines EmbeddedPDV as:
 
         $(I
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
@@ -1765,12 +1765,12 @@ class AbstractSyntaxNotation1Element(Element)
     EmbeddedPDV embeddedPresentationDataValue() const;
 
     /**
-        Encodes an EMBEDDED PDV, which is a constructed data type, defined in
+        Encodes an EmbeddedPDV, which is a constructed data type, defined in
             the $(LINK2 https://www.itu.int,
                 International Telecommunications Union)'s
             $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines EMBEDDED PDV as:
+        The specification defines EmbeddedPDV as:
 
         $(I
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {

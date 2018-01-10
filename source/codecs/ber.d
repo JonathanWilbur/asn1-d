@@ -1158,7 +1158,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                             fixed ABSENT } ) } )
         )
 
-        Note that the abstract syntax resembles that of $(MONO EMBEDDED PDV) and
+        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and
         $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some
         of our choices of $(MONO identification).
         As can be seen on page 303 of Olivier Dubuisson's
@@ -1415,7 +1415,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                             fixed ABSENT } ) } )
         )
 
-        Note that the abstract syntax resembles that of $(MONO EMBEDDED PDV) and
+        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and
         $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some
         of our choices of $(MONO identification).
         As can be seen on page 303 of Olivier Dubuisson's
@@ -2571,11 +2571,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Decodes an $(MONO EMBEDDED PDV), which is a constructed data type, defined in
+        Decodes an $(MONO EmbeddedPDV), which is a constructed data type, defined in
             the $(LINK https://www.itu.int, International Telecommunications Union)'s
             $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines $(MONO EMBEDDED PDV) as:
+        The specification defines $(MONO EmbeddedPDV) as:
 
         $(PRE
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
@@ -2620,7 +2620,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         if (this.construction != ASN1Construction.constructed)
             throw new ASN1ConstructionException
-            (this.construction, "decode an EMBEDDED PDV");
+            (this.construction, "decode an EmbeddedPDV");
 
         const BERElement[] components = this.sequence;
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
@@ -2629,8 +2629,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode " ~
-                "an EMBEDDED PDV that contained too many or too few elements. " ~
-                "An EMBEDDED PDV should have only two elements: " ~
+                "an EmbeddedPDV that contained too many or too few elements. " ~
+                "An EmbeddedPDV should have only two elements: " ~
                 "an identification CHOICE, and a data-value OCTET STRING, " ~
                 "in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~
@@ -2642,7 +2642,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             (
                 [ ASN1TagClass.contextSpecific ],
                 components[0].tagClass,
-                "decode the first component of an EMBEDDED PDV"
+                "decode the first component of an EmbeddedPDV"
             );
 
         if (components[1].tagClass != ASN1TagClass.contextSpecific)
@@ -2650,7 +2650,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             (
                 [ ASN1TagClass.contextSpecific ],
                 components[1].tagClass,
-                "decode the second component of an EMBEDDED PDV"
+                "decode the second component of an EmbeddedPDV"
             );
 
         /* NOTE:
@@ -2661,11 +2661,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         */
         if (components[0].tagNumber != 0u)
             throw new ASN1TagNumberException
-            ([ 0u ], components[0].tagNumber, "decode the first component of an EMBEDDED PDV");
+            ([ 0u ], components[0].tagNumber, "decode the first component of an EmbeddedPDV");
 
         if (components[1].tagNumber != 2u)
             throw new ASN1TagNumberException
-            ([ 2u ], components[1].tagNumber, "decode the second component of an EMBEDDED PDV");
+            ([ 2u ], components[1].tagNumber, "decode the second component of an EmbeddedPDV");
 
         ubyte[] bytes = components[0].value.dup;
         const BERElement identificationChoice = new BERElement(bytes);
@@ -2675,7 +2675,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             {
                 if (identificationChoice.construction != ASN1Construction.constructed)
                     throw new ASN1ConstructionException
-                    (identificationChoice.construction, "decode the syntaxes component of an EMBEDDED PDV");
+                    (identificationChoice.construction, "decode the syntaxes component of an EmbeddedPDV");
 
                 const BERElement[] syntaxesComponents = identificationChoice.sequence;
 
@@ -2683,7 +2683,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose syntaxes component " ~
+                        "decode an EmbeddedPDV whose syntaxes component " ~
                         "contained an invalid number of elements. The " ~
                         "syntaxes component should contain abstract and transfer " ~
                         "syntax OBJECT IDENTIFIERS, in that order. " ~
@@ -2697,7 +2697,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     (
                         [ ASN1TagClass.contextSpecific ],
                         syntaxesComponents[0].tagClass,
-                        "decode the first syntaxes component of an EMBEDDED PDV"
+                        "decode the first syntaxes component of an EmbeddedPDV"
                     );
 
                 if (syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific)
@@ -2705,17 +2705,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     (
                         [ ASN1TagClass.contextSpecific ],
                         syntaxesComponents[1].tagClass,
-                        "decode the second syntaxes component of an EMBEDDED PDV"
+                        "decode the second syntaxes component of an EmbeddedPDV"
                     );
 
                 // Construction Validation
                 if (syntaxesComponents[0].construction != ASN1Construction.primitive)
                     throw new ASN1ConstructionException
-                    (syntaxesComponents[0].construction, "decode the first syntaxes component of an EMBEDDED PDV");
+                    (syntaxesComponents[0].construction, "decode the first syntaxes component of an EmbeddedPDV");
 
                 if (syntaxesComponents[1].construction != ASN1Construction.primitive)
                     throw new ASN1ConstructionException
-                    (syntaxesComponents[1].construction, "decode the second syntaxes component of an EMBEDDED PDV");
+                    (syntaxesComponents[1].construction, "decode the second syntaxes component of an EmbeddedPDV");
 
                 // Number Validation
                 if (syntaxesComponents[0].tagNumber != 0u)
@@ -2723,7 +2723,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     (
                         [ 0u ],
                         syntaxesComponents[0].tagNumber,
-                        "decode the first syntaxes component of an EMBEDDED PDV"
+                        "decode the first syntaxes component of an EmbeddedPDV"
                     );
 
                 if (syntaxesComponents[1].tagNumber != 1u)
@@ -2731,7 +2731,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     (
                         [ 1u ],
                         syntaxesComponents[1].tagNumber,
-                        "decode the second syntaxes component of an EMBEDDED PDV"
+                        "decode the second syntaxes component of an EmbeddedPDV"
                     );
 
                 identification.syntaxes  = ASN1Syntaxes(
@@ -2755,7 +2755,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             {
                 if (identificationChoice.construction != ASN1Construction.constructed)
                     throw new ASN1ConstructionException
-                    (identificationChoice.construction, "decode the context-negotiation component of an EMBEDDED PDV");
+                    (identificationChoice.construction, "decode the context-negotiation component of an EmbeddedPDV");
 
                 const BERElement[] contextNegotiationComponents = identificationChoice.sequence;
 
@@ -2763,7 +2763,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose context-negotiation " ~
+                        "decode an EmbeddedPDV whose context-negotiation " ~
                         "contained an invalid number of elements. The " ~
                         "context-negotiation component should contain a " ~
                         "presentation-context-id INTEGER and transfer-syntax " ~
@@ -2778,7 +2778,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     (
                         [ ASN1TagClass.contextSpecific ],
                         contextNegotiationComponents[0].tagClass,
-                        "decode the first context-negotiation component of an EMBEDDED PDV"
+                        "decode the first context-negotiation component of an EmbeddedPDV"
                     );
 
                 if (contextNegotiationComponents[1].tagClass != ASN1TagClass.contextSpecific)
@@ -2786,7 +2786,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     (
                         [ ASN1TagClass.contextSpecific ],
                         contextNegotiationComponents[1].tagClass,
-                        "decode the second context-negotiation component of an EMBEDDED PDV"
+                        "decode the second context-negotiation component of an EmbeddedPDV"
                     );
 
                 // Construction Validation
@@ -2794,14 +2794,14 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1ConstructionException
                     (
                         contextNegotiationComponents[0].construction,
-                        "decode the first context-negotiation component of an EMBEDDED PDV"
+                        "decode the first context-negotiation component of an EmbeddedPDV"
                     );
 
                 if (contextNegotiationComponents[1].construction != ASN1Construction.primitive)
                     throw new ASN1ConstructionException
                     (
                         contextNegotiationComponents[1].construction,
-                        "decode the second context-negotiation component of an EMBEDDED PDV"
+                        "decode the second context-negotiation component of an EmbeddedPDV"
                     );
 
                 // Number Validation
@@ -2810,7 +2810,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     (
                         [ 0u ],
                         contextNegotiationComponents[0].tagNumber,
-                        "decode the first context-negotiation component of an EMBEDDED PDV"
+                        "decode the first context-negotiation component of an EmbeddedPDV"
                     );
 
                 if (contextNegotiationComponents[1].tagNumber != 1u)
@@ -2818,7 +2818,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     (
                         [ 1u ],
                         contextNegotiationComponents[1].tagNumber,
-                        "decode the second context-negotiation component of an EMBEDDED PDV"
+                        "decode the second context-negotiation component of an EmbeddedPDV"
                     );
 
                 identification.contextNegotiation  = ASN1ContextNegotiation(
@@ -2843,7 +2843,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 (
                     [ 0u, 1u, 2u, 3u, 4u, 5u ],
                     identificationChoice.tagNumber,
-                    "decode an EMBEDDED PDV identification"
+                    "decode an EmbeddedPDV identification"
                 );
         }
 
@@ -2854,11 +2854,11 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Encodes an $(MONO EMBEDDED PDV), which is a constructed data type, defined in
+        Encodes an $(MONO EmbeddedPDV), which is a constructed data type, defined in
             the $(LINK https://www.itu.int, International Telecommunications Union)'s
             $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines $(MONO EMBEDDED PDV) as:
+        The specification defines $(MONO EmbeddedPDV) as:
 
         $(PRE
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
@@ -3011,7 +3011,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     unittest
     {
         ubyte[] data = [ // This is valid.
-            0x0Bu, 0x0Au, // EMBEDDED PDV, Length 11
+            0x0Bu, 0x0Au, // EmbeddedPDV, Length 11
                 0x80u, 0x02u, // CHOICE
                     0x85u, 0x00u, // NULL
                 0x82u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u ]; // OCTET STRING
@@ -3800,8 +3800,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Encodes a DateTime. The value is just the ASCII character representation of
-        the UTC-formatted timestamp.
+        Encodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).
+        The value is just the ASCII character representation of the UTC-formatted timestamp.
 
         An UTC Timestamp looks like:
         $(UL
@@ -3842,7 +3842,8 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Decodes a DateTime. The value is just the ASCII character representation of
+        Decodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).
+        The value is just the ASCII character representation of
         the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601)-formatted timestamp.
 
         An ISO-8601 Timestamp looks like:
@@ -3893,7 +3894,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     }
 
     /**
-        Encodes a DateTime.
+        Encodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).
 
         The value is just the ASCII character representation of
         the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,

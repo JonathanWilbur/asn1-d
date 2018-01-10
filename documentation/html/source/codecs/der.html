@@ -698,7 +698,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
                             fixed ABSENT } ) } )
         </pre>
 <br><br>
-        Note that the abstract syntax resembles that of <span class="mono">EMBEDDED PDV</span> and
+        Note that the abstract syntax resembles that of <span class="mono">EmbeddedPDV</span> and
         <span class="mono">CharacterString</span>, except with a <span class="mono">WITH COMPONENTS</span> constraint that removes some
         of our choices of <span class="mono">identification</span>.
         As can be seen on page 303 of Olivier Dubuisson's
@@ -875,7 +875,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
                             fixed ABSENT } ) } )
         </pre>
 <br><br>
-        Note that the abstract syntax resembles that of <span class="mono">EMBEDDED PDV</span> and
+        Note that the abstract syntax resembles that of <span class="mono">EmbeddedPDV</span> and
         <span class="mono">CharacterString</span>, except with a <span class="mono">WITH COMPONENTS</span> constraint that removes some
         of our choices of <span class="mono">identification</span>.
         As can be seen on page 303 of Olivier Dubuisson's
@@ -1131,11 +1131,11 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes an <span class="mono">EMBEDDED PDV</span>, which is a constructed data type, defined in
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">EmbeddedPDV</span>, which is a constructed data type, defined in
             the <a href="https://www.itu.int">International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines <span class="mono">EMBEDDED PDV</span> as:
+<div class="description">The specification defines <span class="mono">EmbeddedPDV</span> as:
 <br><br>
         <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
@@ -1156,6 +1156,63 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <br><br>
         This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
         choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.
+<br><br>
+        The following additional constraints are applied to the abstract syntax
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
+        which are also defined in the
+        <a href="http://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>:
+<br><br>
+        <pre>            EmbeddedPDV ( WITH COMPONENTS {
+                ... ,
+                identification ( WITH COMPONENTS {
+                    ... ,
+                    presentation-context-id ABSENT,
+                    context-negotiation ABSENT } ) } )
+        </pre>
+<br><br>
+        The stated purpose of the constraints shown above is to restrict the use of
+        the <span class="mono">presentation-context-id</span>, either by itself or within the
+        context-negotiation, which makes the following the effective abstract
+        syntax of <span class="mono">EmbeddedPDV</span> when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
+<br><br>
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            presentation-context-id ABSENT,
+                            context-negotiation ABSENT } ) } )
+        </pre>
+<br><br>
+        With the constraints applied, the abstract syntax for <span class="mono">EmbeddedPDV</span>s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+<br><br>
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+        </pre>
 
 </div>
 <div class="ddoc_returns">
@@ -1191,11 +1248,11 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an <span class="mono">EMBEDDED PDV</span>, which is a constructed data type, defined in
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">EmbeddedPDV</span>, which is a constructed data type, defined in
             the <a href="https://www.itu.int">International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines <span class="mono">EMBEDDED PDV</span> as:
+<div class="description">The specification defines <span class="mono">EmbeddedPDV</span> as:
 <br><br>
         <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
@@ -1214,20 +1271,76 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
             (WITH COMPONENTS { ... , data-<code class="code">value</code>-descriptor ABSENT })
         </pre>
 <br><br>
+        This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
+        choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.
+<br><br>
+        The following additional constraints are applied to the abstract syntax
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
+        which are also defined in the
+        <a href="http://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>:
+<br><br>
+        <pre>            EmbeddedPDV ( WITH COMPONENTS {
+                ... ,
+                identification ( WITH COMPONENTS {
+                    ... ,
+                    presentation-context-id ABSENT,
+                    context-negotiation ABSENT } ) } )
+        </pre>
+<br><br>
+        The stated purpose of the constraints shown above is to restrict the use of
+        the <span class="mono">presentation-context-id</span>, either by itself or within the
+        context-negotiation, which makes the following the effective abstract
+        syntax of <span class="mono">EmbeddedPDV</span> when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
+<br><br>
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            presentation-context-id ABSENT,
+                            context-negotiation ABSENT } ) } )
+        </pre>
+<br><br>
+        With the constraints applied, the abstract syntax for <span class="mono">EmbeddedPDV</span>s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+<br><br>
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+        </pre>
+<br><br>
         If the supplied <span class="mono">identification</span> for the EmbeddedPDV is a
         <span class="mono">presentation-context-id</span> or a <span class="mono">context-negotiation</span>,
         no exception will be thrown; the <span class="mono">identification</span> will be set to
         <span class="mono">fixed</span> silently.
-<br><br>
-        This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
-        choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.
 
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueException</code> if encoded ObjectDescriptor contains
-                invalid characters</li>
+		<ul>            <li><code class="d inline">ASN1ValueException</code> if encoded ObjectDescriptor contains invalid characters</li>
         </ul>
 	</p>
 </div></section>
@@ -1635,7 +1748,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a DateTime. The <code class="code">value</code> is just the ASCII character representation of
+<div><section class="module-info"><section id="summary">Encodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime">DateTime</a>.
+        The <code class="code">value</code> is just the ASCII character representation of
         the UTC-formatted timestamp.
 </section>
 <div class="description">An UTC Timestamp looks like:
@@ -1659,7 +1773,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a DateTime. The value is just the ASCII character representation of
+<div><section class="module-info"><section id="summary">Decodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime">DateTime</a>.
+        The value is just the ASCII character representation of
         the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a>-formatted timestamp.
 </section>
 <div class="description">An ISO-8601 Timestamp looks like:
@@ -1706,7 +1821,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a DateTime.
+<div><section class="module-info"><section id="summary">Encodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime">DateTime</a>.
 </section>
 <div class="description">The <code class="code">value</code> is just the ASCII character representation of
         the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">        ISO 8601</a>-formatted timestamp.
@@ -2218,7 +2333,7 @@ foreach (dv; dervalues)
 
         </div>
         <div id="footer">
-            <span id="timestamp">Wed Jan 10 08:52:43 2018
+            <span id="timestamp">Wed Jan 10 12:51:03 2018
 </span>
         </div>
     </body>

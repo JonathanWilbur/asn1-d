@@ -25,7 +25,7 @@ inherit from `ASN1Element`. The `BERElement` class, for instance, can be found i
 [International Telecommunications Union](http://www.itu.int/en/pages/default.aspx)'s
 [X.690 - ASN.1 encoding rules](http://www.itu.int/rec/T-REC-X.690/en).
 
-The codecs rely upon a few ASN.1-specific data types, such as `EMBEDDED PDV`,
+The codecs rely upon a few ASN.1-specific data types, such as `EmbeddedPDV`,
 and these data types have their own classes or structs somewhere in the
 `source/types` directory. In `source/types`, you will find `alltypes.d`, which
 just provides a convenient way to import all data types instead of having

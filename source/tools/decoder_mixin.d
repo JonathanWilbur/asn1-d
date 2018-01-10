@@ -155,7 +155,7 @@ mixin template Decoder(Element)
             case (8u): return "EXTERNAL"; // This should never be executed.
             case (9u): return text(element.realNumber!double);
             case (10u): return text(element.enumerated!ptrdiff_t);
-            case (11u): return "EMBEDDED PDV"; // This should never be executed.
+            case (11u): return "EmbeddedPDV"; // This should never be executed.
             case (12u): return element.utf8String;
             case (13u): return ("RELATIVE OID: " ~ text(element.value));
             case (14u): return "!!! INVALID TYPE : RESERVED 14 !!!";

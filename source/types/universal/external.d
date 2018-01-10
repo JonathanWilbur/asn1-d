@@ -34,7 +34,7 @@ import types.identification;
                         fixed ABSENT } ) } )
     )
 
-    Note that the abstract syntax resembles that of EMBEDDED PDV and
+    Note that the abstract syntax resembles that of EmbeddedPDV and
     CharacterString, except with a WITH COMPONENTS constraint that removes some
     of our choices of identification.
     As can be seen on page 303 of Olivier Dubuisson's

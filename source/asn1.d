@@ -114,7 +114,7 @@ public alias ASN1UniversalType = AbstractSyntaxNotation1UniversalType;
         $(TR $(TD EXTERNAL)	            $(TD Constructed)       $(TD 0x08))
         $(TR $(TD REAL)            	    $(TD Primitive)         $(TD 0x09))
         $(TR $(TD ENUMERATED)	        $(TD Primitive)         $(TD 0x0A))
-        $(TR $(TD EMBEDDED PDV)	        $(TD Constructed)       $(TD 0x0B))
+        $(TR $(TD EmbeddedPDV)	        $(TD Constructed)       $(TD 0x0B))
         $(TR $(TD UTF8String)	        $(TD Both)              $(TD 0x0C))
         $(TR $(TD RELATIVE-OID)	        $(TD Primitive)         $(TD 0x0D))
         $(TR $(TD SEQUENCE)	            $(TD Constructed)       $(TD 0x10))

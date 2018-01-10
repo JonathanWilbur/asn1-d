@@ -744,7 +744,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
                             fixed ABSENT } ) } )
         </pre>
 <br><br>
-        Note that the abstract syntax resembles that of <span class="mono">EMBEDDED PDV</span> and
+        Note that the abstract syntax resembles that of <span class="mono">EmbeddedPDV</span> and
         <span class="mono">CharacterString</span>, except with a <span class="mono">WITH COMPONENTS</span> constraint that removes some
         of our choices of <span class="mono">identification</span>.
         As can be seen on page 303 of Olivier Dubuisson's
@@ -855,7 +855,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
                             fixed ABSENT } ) } )
         </pre>
 <br><br>
-        Note that the abstract syntax resembles that of <span class="mono">EMBEDDED PDV</span> and
+        Note that the abstract syntax resembles that of <span class="mono">EmbeddedPDV</span> and
         <span class="mono">CharacterString</span>, except with a <span class="mono">WITH COMPONENTS</span> constraint that removes some
         of our choices of <span class="mono">identification</span>.
         As can be seen on page 303 of Olivier Dubuisson's
@@ -1034,11 +1034,11 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes an <span class="mono">EMBEDDED PDV</span>, which is a constructed data type, defined in
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">EmbeddedPDV</span>, which is a constructed data type, defined in
             the <a href="https://www.itu.int">International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines <span class="mono">EMBEDDED PDV</span> as:
+<div class="description">The specification defines <span class="mono">EmbeddedPDV</span> as:
 <br><br>
         <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
@@ -1094,11 +1094,11 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an <span class="mono">EMBEDDED PDV</span>, which is a constructed data type, defined in
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">EmbeddedPDV</span>, which is a constructed data type, defined in
             the <a href="https://www.itu.int">International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines <span class="mono">EMBEDDED PDV</span> as:
+<div class="description">The specification defines <span class="mono">EmbeddedPDV</span> as:
 <br><br>
         <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
@@ -1587,8 +1587,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a DateTime. The <code class="code">value</code> is just the ASCII character representation of
-        the UTC-formatted timestamp.
+<div><section class="module-info"><section id="summary">Encodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime">DateTime</a>.
+        The <code class="code">value</code> is just the ASCII character representation of the UTC-formatted timestamp.
 </section>
 <div class="description">An UTC Timestamp looks like:
         <ul>            <li><span class="mono">9912312359Z</span></li>
@@ -1611,7 +1611,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a DateTime. The value is just the ASCII character representation of
+<div><section class="module-info"><section id="summary">Decodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime">DateTime</a>.
+        The value is just the ASCII character representation of
         the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a>-formatted timestamp.
 </section>
 <div class="description">An ISO-8601 Timestamp looks like:
@@ -1654,7 +1655,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a DateTime.
+<div><section class="module-info"><section id="summary">Encodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime">DateTime</a>.
 </section>
 <div class="description">The <code class="code">value</code> is just the ASCII character representation of
         the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">        ISO 8601</a>-formatted timestamp.
@@ -2208,7 +2209,7 @@ foreach (bv; bervalues)
 
         </div>
         <div id="footer">
-            <span id="timestamp">Wed Jan 10 08:52:43 2018
+            <span id="timestamp">Wed Jan 10 12:51:03 2018
 </span>
         </div>
     </body>

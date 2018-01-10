@@ -121,7 +121,7 @@ user-information: 1 item
         indirect-reference: 3
         encoding: single-ASN1-type (0)
 
-And here is an EMBEDDED PDV:
+And here is an EmbeddedPDV:
 
 0000   30 41 02 01 01 a0 3c 60 3a a1 06 06 04 56 00 01  0A....<`:....V..
 0010   06 be 30 28 2e 06 02 51 01 02 01 03 a0 25 b0 23  ..0(...Q.....%.#

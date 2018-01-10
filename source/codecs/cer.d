@@ -1349,7 +1349,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                             fixed ABSENT } ) } )
         )
 
-        Note that the abstract syntax resembles that of $(MONO EMBEDDED PDV) and
+        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and
         $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some
         of our choices of $(MONO identification).
         As can be seen on page 303 of Olivier Dubuisson's
@@ -1604,7 +1604,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                             fixed ABSENT } ) } )
         )
 
-        Note that the abstract syntax resembles that of $(MONO EMBEDDED PDV) and
+        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and
         $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some
         of our choices of $(MONO identification).
         As can be seen on page 303 of Olivier Dubuisson's
@@ -2763,11 +2763,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes an $(MONO EMBEDDED PDV), which is a constructed data type, defined in
+        Decodes an $(MONO EmbeddedPDV), which is a constructed data type, defined in
             the $(LINK https://www.itu.int, International Telecommunications Union)'s
             $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines $(MONO EMBEDDED PDV) as:
+        The specification defines $(MONO EmbeddedPDV) as:
 
         $(PRE
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
@@ -2789,6 +2789,66 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)
         choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.
+
+        The following additional constraints are applied to the abstract syntax
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
+        which are also defined in the
+        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
+
+        $(PRE
+            EmbeddedPDV ( WITH COMPONENTS {
+                ... ,
+                identification ( WITH COMPONENTS {
+                    ... ,
+                    presentation-context-id ABSENT,
+                    context-negotiation ABSENT } ) } )
+        )
+
+        The stated purpose of the constraints shown above is to restrict the use of
+        the $(MONO presentation-context-id), either by itself or within the
+        context-negotiation, which makes the following the effective abstract
+        syntax of $(MONO EmbeddedPDV) when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
+
+        $(PRE
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            presentation-context-id ABSENT,
+                            context-negotiation ABSENT } ) } )
+        )
+
+        With the constraints applied, the abstract syntax for $(MONO EmbeddedPDV)s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+
+        $(PRE
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+        )
 
         Returns: an instance of $(D types.universal.embeddedpdv.EmbeddedPDV)
 
@@ -2812,7 +2872,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     {
         if (this.construction != ASN1Construction.constructed)
             throw new ASN1ConstructionException
-            (this.construction, "decode an EMBEDDED PDV");
+            (this.construction, "decode an EmbeddedPDV");
 
         const CERElement[] components = this.sequence;
         ASN1ContextSwitchingTypeID identification = ASN1ContextSwitchingTypeID();
@@ -2821,8 +2881,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             throw new ASN1ValueException
             (
                 "This exception was thrown because you attempted to decode " ~
-                "an EMBEDDED PDV that contained too many or too few elements. " ~
-                "An EMBEDDED PDV should have only two elements: " ~
+                "an EmbeddedPDV that contained too many or too few elements. " ~
+                "An EmbeddedPDV should have only two elements: " ~
                 "an identification CHOICE, and a data-value OCTET STRING, " ~
                 "in that order. " ~
                 notWhatYouMeantText ~ forMoreInformationText ~
@@ -2834,7 +2894,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             (
                 [ ASN1TagClass.contextSpecific ],
                 components[0].tagClass,
-                "decode the first component of an EMBEDDED PDV"
+                "decode the first component of an EmbeddedPDV"
             );
 
         if (components[1].tagClass != ASN1TagClass.contextSpecific)
@@ -2842,7 +2902,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             (
                 [ ASN1TagClass.contextSpecific ],
                 components[1].tagClass,
-                "decode the second component of an EMBEDDED PDV"
+                "decode the second component of an EmbeddedPDV"
             );
 
         /* NOTE:
@@ -2853,11 +2913,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         */
         if (components[0].tagNumber != 0u)
             throw new ASN1TagNumberException
-            ([ 0u ], components[0].tagNumber, "decode the first component of an EMBEDDED PDV");
+            ([ 0u ], components[0].tagNumber, "decode the first component of an EmbeddedPDV");
 
         if (components[1].tagNumber != 2u)
             throw new ASN1TagNumberException
-            ([ 2u ], components[1].tagNumber, "decode the second component of an EMBEDDED PDV");
+            ([ 2u ], components[1].tagNumber, "decode the second component of an EmbeddedPDV");
 
 
         ubyte[] bytes = components[0].value.dup;
@@ -2868,7 +2928,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             {
                 if (identificationChoice.construction != ASN1Construction.constructed)
                     throw new ASN1ConstructionException
-                    (identificationChoice.construction, "decode the syntaxes component of an EMBEDDED PDV");
+                    (identificationChoice.construction, "decode the syntaxes component of an EmbeddedPDV");
 
                 const CERElement[] syntaxesComponents = identificationChoice.sequence;
 
@@ -2876,7 +2936,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     throw new ASN1ValueException
                     (
                         "This exception was thrown because you attempted to " ~
-                        "decode an EMBEDDED PDV whose syntaxes component " ~
+                        "decode an EmbeddedPDV whose syntaxes component " ~
                         "contained an invalid number of elements. The " ~
                         "syntaxes component should contain abstract and transfer " ~
                         "syntax OBJECT IDENTIFIERS, in that order. " ~
@@ -2890,7 +2950,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     (
                         [ ASN1TagClass.contextSpecific ],
                         syntaxesComponents[0].tagClass,
-                        "decode the first syntaxes component of an EMBEDDED PDV"
+                        "decode the first syntaxes component of an EmbeddedPDV"
                     );
 
                 if (syntaxesComponents[1].tagClass != ASN1TagClass.contextSpecific)
@@ -2898,17 +2958,17 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     (
                         [ ASN1TagClass.contextSpecific ],
                         syntaxesComponents[1].tagClass,
-                        "decode the second syntaxes component of an EMBEDDED PDV"
+                        "decode the second syntaxes component of an EmbeddedPDV"
                     );
 
                 // Construction Validation
                 if (syntaxesComponents[0].construction != ASN1Construction.primitive)
                     throw new ASN1ConstructionException
-                    (syntaxesComponents[0].construction, "decode the first syntaxes component of an EMBEDDED PDV");
+                    (syntaxesComponents[0].construction, "decode the first syntaxes component of an EmbeddedPDV");
 
                 if (syntaxesComponents[1].construction != ASN1Construction.primitive)
                     throw new ASN1ConstructionException
-                    (syntaxesComponents[1].construction, "decode the second syntaxes component of an EMBEDDED PDV");
+                    (syntaxesComponents[1].construction, "decode the second syntaxes component of an EmbeddedPDV");
 
                 // Number Validation
                 if (syntaxesComponents[0].tagNumber != 0u)
@@ -2916,7 +2976,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     (
                         [ 0u ],
                         syntaxesComponents[0].tagNumber,
-                        "decode the first syntaxes component of an EMBEDDED PDV"
+                        "decode the first syntaxes component of an EmbeddedPDV"
                     );
 
                 if (syntaxesComponents[1].tagNumber != 1u)
@@ -2924,7 +2984,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                     (
                         [ 1u ],
                         syntaxesComponents[1].tagNumber,
-                        "decode the second syntaxes component of an EMBEDDED PDV"
+                        "decode the second syntaxes component of an EmbeddedPDV"
                     );
 
                 identification.syntaxes  = ASN1Syntaxes(
@@ -2951,7 +3011,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             }
             default:
                 throw new ASN1TagNumberException
-                ([ 0u, 1u, 4u, 5u ], identificationChoice.tagNumber, "decode an EMBEDDED PDV identification");
+                ([ 0u, 1u, 4u, 5u ], identificationChoice.tagNumber, "decode an EmbeddedPDV identification");
         }
 
         EmbeddedPDV pdv = EmbeddedPDV();
@@ -2961,11 +3021,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Encodes an $(MONO EMBEDDED PDV), which is a constructed data type, defined in
+        Encodes an $(MONO EmbeddedPDV), which is a constructed data type, defined in
             the $(LINK https://www.itu.int, International Telecommunications Union)'s
             $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines $(MONO EMBEDDED PDV) as:
+        The specification defines $(MONO EmbeddedPDV) as:
 
         $(PRE
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
@@ -2985,18 +3045,77 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
         )
 
+        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)
+        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.
+
+        The following additional constraints are applied to the abstract syntax
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
+        which are also defined in the
+        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
+
+        $(PRE
+            EmbeddedPDV ( WITH COMPONENTS {
+                ... ,
+                identification ( WITH COMPONENTS {
+                    ... ,
+                    presentation-context-id ABSENT,
+                    context-negotiation ABSENT } ) } )
+        )
+
+        The stated purpose of the constraints shown above is to restrict the use of
+        the $(MONO presentation-context-id), either by itself or within the
+        context-negotiation, which makes the following the effective abstract
+        syntax of $(MONO EmbeddedPDV) when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
+
+        $(PRE
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            presentation-context-id ABSENT,
+                            context-negotiation ABSENT } ) } )
+        )
+
+        With the constraints applied, the abstract syntax for $(MONO EmbeddedPDV)s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+
+        $(PRE
+            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+        )
+
         If the supplied $(MONO identification) for the EmbeddedPDV is a
         $(MONO presentation-context-id) or a $(MONO context-negotiation),
         no exception will be thrown; the $(MONO identification) will be set to
         $(MONO fixed) silently.
 
-        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)
-        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.
-
         Throws:
         $(UL
-            $(LI $(D ASN1ValueException) if encoded ObjectDescriptor contains
-                invalid characters)
+            $(LI $(D ASN1ValueException) if encoded ObjectDescriptor contains invalid characters)
         )
     */
     override public @property @system
@@ -3059,11 +3178,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
     /* NOTE:
         This unit test had to be moved out of ASN1Element because CER and CER
-        do not support encoding of presentation-context-id in EMBEDDED PDV.
+        do not support encoding of presentation-context-id in EmbeddedPDV.
 
-        This unit test ensures that, if you attempt to create an EMBEDDED PDV
+        This unit test ensures that, if you attempt to create an EmbeddedPDV
         with presentation-context-id as the CHOICE of identification, the
-        encoded EMBEDDED PDV's identification defaults to fixed.
+        encoded EmbeddedPDV's identification defaults to fixed.
     */
     @system
     unittest
@@ -3085,11 +3204,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
     /* NOTE:
         This unit test had to be moved out of ASN1Element because CER and CER
-        do not support encoding of context-negotiation in EMBEDDED PDV.
+        do not support encoding of context-negotiation in EmbeddedPDV.
 
-        This unit test ensures that, if you attempt to create an EMBEDDED PDV
+        This unit test ensures that, if you attempt to create an EmbeddedPDV
         with context-negotiation as the CHOICE of identification, the
-        encoded EMBEDDED PDV's identification defaults to fixed.
+        encoded EmbeddedPDV's identification defaults to fixed.
     */
     @system
     unittest
@@ -3117,7 +3236,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     unittest
     {
         ubyte[] data = [ // This is valid.
-            0x0Bu, 0x0Au, // EMBEDDED PDV, Length 11
+            0x0Bu, 0x0Au, // EmbeddedPDV, Length 11
                 0x80u, 0x02u, // CHOICE
                     0x85u, 0x00u, // NULL
                 0x82u, 0x04u, 0x01u, 0x02u, 0x03u, 0x04u ]; // OCTET STRING

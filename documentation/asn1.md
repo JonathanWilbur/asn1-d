@@ -104,7 +104,7 @@ ASN.1 defines 27 universal data types:
 * EXTERNAL
 * REAL
 * ENUMERATED
-* EMBEDDED PDV
+* EmbeddedPDV
 * UTF8String
 * RELATIVE-OID
 * SEQUENCE
@@ -217,8 +217,8 @@ for a `GraphicString`.
 `OBJECT IDENTIFIER`s and `RELATIVE OID`s are encoded in a very similar way, and
 essentially encode conceptually similar ideas.
 
-The context-switching types, `EXTERNAL`, `EMBEDDED PDV`, and `CharacterString`,
-are also all encoded in similar ways. In fact, `EMBEDDED PDV` and
+The context-switching types, `EXTERNAL`, `EmbeddedPDV`, and `CharacterString`,
+are also all encoded in similar ways. In fact, `EmbeddedPDV` and
 `CharacterString` differ only by the name of one of their parts.
 
 And finally, almost all string types are redundant, because the existents of

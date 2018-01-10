@@ -102,7 +102,7 @@ DistributionPointName ::= CHOICE {
 > and `CertificatePolicies` (since 4.5.1).
 
 This concrete issue does not affect this library, but the implementations for 
-`EXTERNAL`, `EMBEDDED PDV`, and `CharacterString` need to be reviewed and 
+`EXTERNAL`, `EmbeddedPDV`, and `CharacterString` need to be reviewed and 
 tested for this vulnerability.
 
 This did actually result in me finding a bug in the Basic Encoding Rules encoding

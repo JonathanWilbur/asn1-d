@@ -4,7 +4,7 @@ import types.identification;
 /* REVIEW:
     I am going to need some help with this one. I cannot decide
     what the WITH COMPONENTS line means below. I hope it does
-    not mean that ANYTHING can be in an Embedded PDV.
+    not mean that ANYTHING can be in an EmbeddedPDV.
 */
 ///
 public alias EmbeddedPDV = EmbeddedPresentationDataValue;
