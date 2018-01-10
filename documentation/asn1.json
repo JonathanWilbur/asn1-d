@@ -1797,7 +1797,7 @@
         "endchar" : 5
        },
        {
-        "name" : "nestingRecursionCount",
+        "name" : "lengthRecursionCount",
         "kind" : "variable",
         "comment" : "The number of recursions used for parsing constructed elements.\n",
         "line" : 428,

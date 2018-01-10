@@ -425,7 +425,7 @@ class AbstractSyntaxNotation1Element(Element)
     // Configuration Parameters
 
     /// The number of recursions used for parsing constructed elements.
-    static protected ubyte nestingRecursionCount = 0u;
+    static protected ubyte lengthRecursionCount = 0u;
 
     /// The number of recursions used for parsing the values of constructed elements.
     static protected ubyte valueRecursionCount = 0u;

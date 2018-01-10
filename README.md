@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.70](http://semver.org/)
+* Version: [1.0.0-beta.71](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: January 12th, 2018**
 
@@ -177,6 +177,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Enforce exponent encoding on the fewest possible octets
   - [x] Enforce mantissa > 0. (X.690 8.5.2)
   - [x] Test for odd using a bitmask of 0x01 instead of modulus.
+  - [x] Enforce odd mantissa for CER and DER when decoding.
   - [x] Note that you are assuming IEEE 754 Floating Points.
   - [x] Banish the term "significand" to the shadow realm.
   - [x] Change the property's name to `realNumber`.
@@ -268,6 +269,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [x] What the different classes are for
     - [x] What it means to be primitive or constructed
     - [x] "Don't use ASN.1 unless you absolutely MUST use ASN.1."
+  - [x] `design.md`
   - [x] `library.md`
     - [x] Terminology
       - [x] This library uses "mantissa," not "significand," because "mantissa" is in the specification.

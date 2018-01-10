@@ -5128,9 +5128,9 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     throw new ASN1ConstructionException
                     (this.construction, "decode an indefinite-length element");
 
-                if (++(this.nestingRecursionCount) > this.nestingRecursionLimit)
+                if (++(this.lengthRecursionCount) > this.nestingRecursionLimit)
                 {
-                    this.nestingRecursionCount = 0u;
+                    this.lengthRecursionCount = 0u;
                     throw new ASN1RecursionException
                     (
                         this.nestingRecursionLimit,
@@ -5165,7 +5165,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                         "Basic Encoding Rules (BER) element"
                     );
 
-                this.nestingRecursionCount--;
+                this.lengthRecursionCount--;
                 this.value = bytes[startOfValue .. sentinel-2u].dup;
                 return (sentinel);
             }
