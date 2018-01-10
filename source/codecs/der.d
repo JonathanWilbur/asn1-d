@@ -427,15 +427,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 padding bits when no subsequent bytes exist, or if any primitive
                 but the last in a constructed BIT STRING uses padding bits, or
                 if any of the padding bits are set)
-            $(LI $(D ASN1RecursionException)
-                if using constructed form and the element
-                is constructed of too many nested constructed elements)
-            $(LI $(D ASN1TagClassException)
-                if any nested primitives do not share the
-                same tag class as their outer constructed element)
-            $(LI $(D ASN1TagNumberException)
-                if any nested primitives do not share the
-                same tag number as their outer constructed element)
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
         )
     */
     override public @property
@@ -570,15 +562,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
-            $(LI $(D ASN1RecursionException)
-                if using constructed form and the element
-                is constructed of too many nested constructed elements)
-            $(LI $(D ASN1TagClassException)
-                if any nested primitives do not share the
-                same tag class as their outer constructed element)
-            $(LI $(D ASN1TagNumberException)
-                if any nested primitives do not share the
-                same tag number as their outer constructed element)
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
         )
     */
     override public @property @safe
@@ -749,6 +733,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Standards:
         $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660))
         )
     */
@@ -864,15 +849,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             $(LI $(D ASN1ValueCharactersException)
                 if the encoded value contains any character outside of
                 $(D 0x20) to $(D 0x7E), which means any control characters or $(MONO DELETE))
-            $(LI $(D ASN1RecursionException)
-                if using constructed form and the element
-                is constructed of too many nested constructed elements)
-            $(LI $(D ASN1TagClassException)
-                if any nested primitives do not share the
-                same tag class as their outer constructed element)
-            $(LI $(D ASN1TagNumberException)
-                if any nested primitives do not share the
-                same tag number as their outer constructed element)
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
         )
 
         Citations:
@@ -919,6 +896,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             $(LI $(D ASN1ValueCharactersException)
                 if the string value contains any character outside of
                 $(D 0x20) to $(D 0x7E), which means any control characters or $(MONO DELETE))
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
         )
 
         Citations:
@@ -1110,6 +1088,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 if any nested primitives do not have the correct tag number)
             $(LI $(D ASN1ValueCharactersException)
                 if a data-value-descriptor is supplied with invalid characters)
+            $(LI $(D ASN1ConstructionException) if the element is not marked as "constructed")
         )
     */
     deprecated override public @property @system
@@ -2786,6 +2765,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         $(UL
             $(LI $(D UTF8Exception)
                 if the encoded value does not decode to UTF-8)
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
         )
     */
     override public @property @system
@@ -3052,6 +3032,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(D ASN1ValueCharactersException) if any character other than 0-9 or space is encoded.)
         )
     */
@@ -3100,6 +3081,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(D ASN1ValueCharactersException)
                 if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
@@ -3129,6 +3111,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         forward slash, colon, equals, and question mark.
 
         Throws:
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(D ASN1ValueCharactersException) if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
@@ -3154,7 +3137,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
-
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
         )
     */
     override public @property @safe
@@ -3182,7 +3165,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
-
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
         )
     */
     override public @property @safe
@@ -3225,6 +3208,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)
         )
     */
@@ -3307,6 +3291,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(D ASN1ValueException) if the encoded value does not end with a 'Z')
             $(LI $(D ASN1ValueCharactersException) if any character is not valid in a $(MONO Visiblestring))
             $(LI $(D DateTimeException) if the encoded string cannot be decoded to a DateTime)
@@ -3398,6 +3383,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(D ASN1ValueException) if the encoded value did not end with a 'Z'
                 or contained a misplaced or unnecessary decimal point)
             $(LI $(D ASN1ValueCharactersException) if any character is not valid in a $(MONO Visiblestring))
@@ -3573,6 +3559,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(D ASN1ValueCharactersException) if any non-graphical character (including space) is encoded)
         )
 
@@ -3641,6 +3628,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(D ASN1ValueCharactersException)
                 if any non-graphical character (including space) is encoded)
         )
@@ -3692,6 +3680,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)
         )
 
@@ -3755,6 +3744,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(D ASN1ValueException)
                 if the encoded bytes is not evenly divisible by four)
         )
@@ -4182,6 +4172,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
         Throws:
         $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
             $(LI $(D ASN1ValueException)
                 if the encoded bytes is not evenly divisible by two)
         )

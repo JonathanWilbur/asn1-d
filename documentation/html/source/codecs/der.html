@@ -452,15 +452,7 @@ if (dv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
                 padding bits when no subsequent bytes exist, or if any primitive
                 but the last in a constructed BIT STRING uses padding bits, or
                 if any of the padding bits are set</li>
-            <li><code class="d inline">ASN1RecursionException</code>
-                if using constructed form and the element
-                is constructed of too many nested constructed elements</li>
-            <li><code class="d inline">ASN1TagClassException</code>
-                if any nested primitives do not share the
-                same tag class as their outer constructed element</li>
-            <li><code class="d inline">ASN1TagNumberException</code>
-                if any nested primitives do not share the
-                same tag number as their outer constructed element</li>
+            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
         </ul>
 	</p>
 </div></section>
@@ -487,15 +479,7 @@ if (dv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1RecursionException</code>
-                if using constructed form and the element
-                is constructed of too many nested constructed elements</li>
-            <li><code class="d inline">ASN1TagClassException</code>
-                if any nested primitives do not share the
-                same tag class as their outer constructed element</li>
-            <li><code class="d inline">ASN1TagNumberException</code>
-                if any nested primitives do not share the
-                same tag number as their outer constructed element</li>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
         </ul>
 	</p>
 </div></section>
@@ -584,7 +568,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_standards">
 	<h4>Standards</h4>
 	<p class="para">
-		<ul>            <li><a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a></li>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a></li>
         </ul>
 	</p>
 </div></section>
@@ -614,15 +599,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
                 if the encoded value contains any character outside of
                 <code class="d inline">0x20</code> to <code class="d inline">0x7E</code>, which means any control characters or <span class="mono">DELETE</span></li>
-            <li><code class="d inline">ASN1RecursionException</code>
-                if using constructed form and the element
-                is constructed of too many nested constructed elements</li>
-            <li><code class="d inline">ASN1TagClassException</code>
-                if any nested primitives do not share the
-                same tag class as their outer constructed element</li>
-            <li><code class="d inline">ASN1TagNumberException</code>
-                if any nested primitives do not share the
-                same tag number as their outer constructed element</li>
+            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
         </ul>
 
 
@@ -665,6 +642,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
                 if the string <code class="code">value</code> contains any character outside of
                 <code class="d inline">0x20</code> to <code class="d inline">0x7E</code>, which means any control characters or <span class="mono">DELETE</span></li>
+            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
         </ul>
 
 
@@ -854,6 +832,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
                 if any nested primitives do not have the correct tag number</li>
             <li><code class="d inline">ASN1ValueCharactersException</code>
                 if a data-value-descriptor is supplied with invalid characters</li>
+            <li><code class="d inline">ASN1ConstructionException</code> if the element is not marked as "constructed"</li>
         </ul>
 	</p>
 </div></section>
@@ -1267,6 +1246,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 	<p class="para">
 		<ul>            <li><code class="d inline">UTF8Exception</code>
                 if the encoded value does not decode to UTF-8</li>
+            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
         </ul>
 	</p>
 </div></section>
@@ -1396,7 +1376,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any character other than 0-9 or space is encoded.</li>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code> if any character other than 0-9 or space is encoded.</li>
         </ul>
 	</p>
 </div></section>
@@ -1433,7 +1414,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code>
                 if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
@@ -1456,7 +1438,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<li><code class="d inline">ASN1ValueCharactersException</code> if any character other than a-z, A-Z,
+		<li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code> if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
                 supplied</li>
@@ -1483,7 +1466,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul><br><br>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
         </ul>
 	</p>
 </div></section>
@@ -1518,7 +1501,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul><br><br>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
         </ul>
 	</p>
 </div></section>
@@ -1562,7 +1545,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
         </ul>
 	</p>
 </div></section>
@@ -1636,7 +1620,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueException</code> if the encoded value does not end with a 'Z'</li>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueException</code> if the encoded value does not end with a 'Z'</li>
             <li><code class="d inline">ASN1ValueCharactersException</code> if any character is not valid in a <span class="mono">Visiblestring</span></li>
             <li><code class="d inline">DateTimeException</code> if the encoded string cannot be decoded to a DateTime</li>
         </ul>
@@ -1687,7 +1672,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueException</code> if the encoded value did not end with a 'Z'
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueException</code> if the encoded value did not end with a 'Z'
                 or contained a misplaced or unnecessary decimal point</li>
             <li><code class="d inline">ASN1ValueCharactersException</code> if any character is not valid in a <span class="mono">Visiblestring</span></li>
             <li><code class="d inline">DateTimeException</code> if the encoded string cannot be decoded to a DateTime</li>
@@ -1754,7 +1740,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any non-graphical character (including space) is encoded</li>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code> if any non-graphical character (including space) is encoded</li>
         </ul>
 
 
@@ -1818,7 +1805,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code>
                 if any non-graphical character (including space) is encoded</li>
         </ul>
 	</p>
@@ -1857,7 +1845,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
         </ul>
 
 
@@ -1916,7 +1905,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueException</code>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueException</code>
                 if the encoded bytes is not evenly divisible by four</li>
         </ul>
 	</p>
@@ -2034,7 +2024,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueException</code>
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueException</code>
                 if the encoded bytes is not evenly divisible by two</li>
         </ul>
 	</p>
@@ -2227,7 +2218,7 @@ foreach (dv; dervalues)
 
         </div>
         <div id="footer">
-            <span id="timestamp">Wed Jan 10 08:39:54 2018
+            <span id="timestamp">Wed Jan 10 08:52:43 2018
 </span>
         </div>
     </body>
