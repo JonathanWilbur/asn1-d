@@ -20,6 +20,8 @@ dmd ^
 .\source\types\universal\external.d ^
 .\source\types\universal\objectidentifier.d ^
 .\source\codecs\ber.d ^
+.\source\codecs\cer.d ^
+.\source\codecs\der.d ^
 -Dd.\documentation\html\ ^
 -Hd.\build\interfaces ^
 -op ^
