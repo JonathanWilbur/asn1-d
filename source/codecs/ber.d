@@ -4204,7 +4204,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Throws:
         $(UL
-            $(LI $(D ASN1ValueCharactersException)
+            $(LI $(D ASN1ValueException)
                 if the encoded bytes is not evenly divisible by four)
             $(LI $(D ASN1RecursionException)
                 if using constructed form and the element
@@ -4775,7 +4775,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         Throws:
         $(UL
-            $(LI $(D ASN1ValueCharactersException)
+            $(LI $(D ASN1ValueException)
                 if the encoded bytes is not evenly divisible by two)
             $(LI $(D ASN1RecursionException)
                 if using constructed form and the element
@@ -4886,7 +4886,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     /**
         Creates a $(D BERElement) from the supplied bytes, inferring that the first
         byte is the type tag. The supplied $(D ubyte[]) array is "chomped" by
-        reference, so the original array will grow shorter as $(D BERElements) are
+        reference, so the original array will grow shorter as $(D BERElement)s are
         generated.
 
         Throws:

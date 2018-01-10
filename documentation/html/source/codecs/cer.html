@@ -387,24 +387,7 @@ if (cv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
     </code>
 </section>
 <div><section class="module-info"><section id="summary">Encodes a <code class="d inline">bool</code></section>
-<div class="ddoc_examples">
-	<h4>Examples</h4>
-	<p class="para">
-		<pre><code class="d block">CERElement cv = new CERElement();
-cv.value = [ 0xFFu ];
-assert(cv.boolean == true);
-cv.value = [ 0x00u ];
-assert(cv.boolean == false);
-cv.value = [ 0x01u, 0x00u ];
-assertThrown!ASN1ValueSizeException(cv.boolean);
-cv.value = [];
-assertThrown!ASN1ValueSizeException(cv.boolean);
-cv.value = [ 0x01u ];
-assertThrown!ASN1ValueException(cv.boolean);
-</code></pre>
-
-	</p>
-</div></section>
+</section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.integer" id="CanonicalEncodingRulesElement.integer"><code class="member">integer</code></a>
 <section class="declaration">
@@ -1050,107 +1033,82 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 </section>
 <div><section class="module-info"><section id="summary">Decodes a floating-point type.
 </section>
-<div class="description">For the encoded REAL, a value of 0x40 means "positive infinity,"
-        a value of 0x41 means "negative infinity." An empty value means
-        exactly zero. A value whose first byte starts with two cleared bits
-        encodes the real as a string of characters, where the latter nybble
-        takes on values of 0x1, 0x2, or 0x3 to indicate that the string
-        representation conforms to
-        <a href="https://www.iso.org/standard/12285.html">ISO 6093</a>
-        Numeric Representation 1, 2, or 3 respectively.
-<br><br>
-        If the first bit is set, then the first byte is an "information block"
-        that describes the binary encoding of the REAL on the subsequent bytes.
-        If bit 6 is set, the value is negative; if clear, the value is
-        positive. Bits 4 and 5 determine the base, with a value of 0 indicating
-        a base of 2, a value of 1 indicating a base of 8, and a value of 2
-        indicating a base of 16. Bits 2 and 3 indicates that the value should
-        be scaled by 1, 2, 4, or 8 for values of 1, 2, 3, or 4 respectively.
-        Bits 0 and 1 determine how the exponent is encoded, with 0 indicating
-        that the exponent is encoded as a signed byte on the second byte of
-        the value, with 1 indicating that the exponent is encoded as a signed
-        short on the subsequent two bytes, with 2 indicating that the exponent
-        is encoded as a three-byte signed integer on the subsequent three
-        bytes, and with 4 indicating that the subsequent byte encodes the
-        unsigned length of the exponent on the following bytes. The remaining
-        bytes encode an unsigned integer, N, such that mantissa is equal to
-        sign * N * 2^scale.
-<br><br>
-        Note that this method assumes that your machine uses IEEE 754 floating
-        point format.
-<br><br>
-        If you attempt to decode a REAL that is too big to fit into the selected
-        floating point type, the value of the real will quietly set to zero. This
-        cannot happen if the transmitted value is in base-2, but it can happen if
-        the transmitted value is in base-8 or base-16.
+<div class="description">Note that this method assumes that your machine uses
+        <a href="http://ieeexplore.ieee.org/document/4610935/">IEEE 754-2008</a>
+        floating point format.
 
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ConvException = if character-encoding cannot be converted to
-                the selected floating-point type, T.
-            ConvOverflowException = if the character-encoding encodes a
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1TruncationException</code> if the value appears to be "cut off"</li>
+            <li><code class="d inline">ConvException</code> if character-encoding cannot be converted to
+                the selected floating-point type, T</li>
+            <li><code class="d inline">ConvOverflowException</code> if the character-encoding encodes a
                 number that is too big for the selected floating-point
-                type to express.
-            ASN1ValueSizeException = if the binary-encoding contains fewer
-                bytes than the information byte purports.
-            ASN1ValueSizeException = if the binary-encoded mantissa is too
-                big to be expressed by an unsigned long integer.
-            ASN1ValueException = if both bits indicating the base in the
-                information byte of a binary-encoded REAL's information byte
-                are set, which would indicate an invalid base.
+                type to express</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if the binary-encoding contains fewer
+                bytes than the information byte purports, or if the
+                binary-encoded mantissa is too big to be expressed by an
+                unsigned long integer</li>
+            <li><code class="d inline">ASN1ValueException</code> if a complicated-form exponent or a
+                non-zero-byte mantissa encodes a zero, of if a base-10
+                (character-encoded) REAL is has something wrong that is not
+                covered by <code class="d inline">ASN1ValueCharactersException</code> or
+                <code class="d inline">ASN1ValuePaddingException</code></li>
+            <li><code class="d inline">ASN1ValueUndefinedException</code> if both bits indicating the base in the
+                information byte of a binary-encoded <span class="mono">REAL</span>'s information byte
+                are set, which would indicate an invalid base, or if a special
+                value has been indicated that is not defined by the specification</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code> if a base-10 (character-encoded)
+                REAL is encoded with leading zeroes, or trailing zeroes on the
+                mantissa, or if the mantissa is encoded on more than the minimal
+                necessary octets</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code> if a base-10 (character-encoded)
+                REAL is encoded with characters that are not numeric, a decimal, E,
+                or plus or minus</li>
+        </ul>
+
+
 	</p>
-</div></section>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 400-402.</li>
+            <li><a href="https://www.iso.org/standard/12285.html">ISO 6093</a></li>
+        </ul>
+	</p>
+</div>
+</section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.realNumber" id="CanonicalEncodingRulesElement.realNumber"><code class="member">realNumber</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.realNumber.2"></span>@property @system void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (isFloatingPoint!T);
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.realNumber.2"></span>nothrow @property @system void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (isFloatingPoint!T);
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a floating-point type.
+<div><section class="module-info"><section id="summary">Encodes a floating-point type, using base-2 binary encoding.
 </section>
-<div class="description">For the encoded REAL, a <code class="code">value</code> of 0x40 means "positive infinity,"
-        a <code class="code">value</code> of 0x41 means "negative infinity." An empty <code class="code">value</code> means
-        exactly zero. A <code class="code">value</code> whose first byte starts with two cleared bits
-        encodes the real as a string of characters, where the latter nybble
-        takes on values of 0x1, 0x2, or 0x3 to indicate that the string
-        representation conforms to
-        <a href="">ISO 6093</a> Numeric Representation 1, 2, or 3 respectively.
-<br><br>
-        If the first bit is set, then the first byte is an "information block"
-        that describes the binary encoding of the REAL on the subsequent bytes.
-        If bit 6 is set, the <code class="code">value</code> is negative; if clear, the <code class="code">value</code> is
-        positive. Bits 4 and 5 determine the base, with a <code class="code">value</code> of 0 indicating
-        a base of 2, a <code class="code">value</code> of 1 indicating a base of 8, and a <code class="code">value</code> of 2
-        indicating a base of 16. Bits 2 and 3 indicates that the <code class="code">value</code> should
-        be scaled by 1, 2, 4, or 8 for values of 1, 2, 3, or 4 respectively.
-        Bits 0 and 1 determine how the exponent is encoded, with 0 indicating
-        that the exponent is encoded as a signed byte on the second byte of
-        the <code class="code">value</code>, with 1 indicating that the exponent is encoded as a signed
-        short on the subsequent two bytes, with 2 indicating that the exponent
-        is encoded as a three-byte signed integer on the subsequent three
-        bytes, and with 4 indicating that the subsequent byte encodes the
-        unsigned length of the exponent on the following bytes. The remaining
-        bytes encode an unsigned integer, N, such that mantissa is equal to
-        sign * N * 2^scale.
-<br><br>
-        Note that this method assumes that your machine uses IEEE 754 floating
-        point format.
+<div class="description">Note that this method assumes that your machine uses
+        <a href="http://ieeexplore.ieee.org/document/4610935/">IEEE 754-2008</a>
+        floating point format.
 
 </div>
-<div class="ddoc_throws">
-	<h4>Throws</h4>
+<div class="ddoc_section">
 	<p class="para">
-		ASN1ValueException = if an attempt to encode NaN is made.
-            ASN1ValueSizeException = if an attempt to encode would result
-                in an arithmetic underflow of a signed short.
-            ASN1ValueSizeException = if an attempt to encode would result
-                in an arithmetic overflow of a signed short.
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 400-402.</li>
+            <li><a href="https://www.iso.org/standard/12285.html">ISO 6093</a></li>
+        </ul>
 	</p>
-</div></section>
+</div>
+</section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.enumerated" id="CanonicalEncodingRulesElement.enumerated"><code class="member">enumerated</code></a>
 <section class="declaration">
@@ -1159,21 +1117,20 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes an integer from an ENUMERATED type. In CER, an ENUMERATED
-        type is encoded the exact same way that an INTEGER is.
+<div><section class="module-info"><section id="summary">Decodes a signed integer, which represents a selection from an
+        <span class="mono">ENUMERATION</span> of choices.
 </section>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		any chosen signed integral type
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueSizeException = if the value is too big to decode
-                to a signed integral type.
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code>
+                if the encoded value is not primitively-constructed</li>
+            <li><code class="d inline">ASN1ValueSizeException</code>
+                if the value is too big to decode to a signed integral type,
+                or if the value is zero bytes</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code>
+                if there are padding bytes</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1184,8 +1141,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an ENUMERATED type from an integer. In CER, an ENUMERATED
-        type is encoded the exact same way that an INTEGER is.</section>
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">ENUMERATED</span> type from an integer.</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.embeddedPresentationDataValue" id="CanonicalEncodingRulesElement.embeddedPresentationDataValue"><code class="member">embeddedPresentationDataValue</code></a>
@@ -1195,13 +1151,13 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes an EMBEDDED PDV, which is a constructed data type, defined in
-            the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">EMBEDDED PDV</span>, which is a constructed data type, defined in
+            the <a href="https://www.itu.int">International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines EMBEDDED PDV as:
+<div class="description">The specification defines <span class="mono">EMBEDDED PDV</span> as:
 <br><br>
-        <span class="mono">            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -1216,42 +1172,35 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
                 data-value-descriptor ObjectDescriptor OPTIONAL,
                 data-value OCTET STRING }
             (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
-        </span>
+        </pre>
 <br><br>
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
-<br><br>
-        In Canonical Encoding Rules (CER), the identification CHOICE cannot be
-        presentation-context-id, nor context-negotiation. Also, the elements
-        must appear in the exact order of the specification. With these
-        constraints in mind, the specification effectively becomes:
-<br><br>
-        <span class="mono">            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
-                identification [0] CHOICE {
-                    syntaxes [0] SEQUENCE {
-                        abstract [0] OBJECT IDENTIFIER,
-                        transfer [1] OBJECT IDENTIFIER },
-                    syntax [1] OBJECT IDENTIFIER,
-                    transfer-syntax [4] OBJECT IDENTIFIER,
-                    fixed [5] NULL },
-                data-value [2] OCTET STRING }
-        </span>
+        This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
+        choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.
 
+</div>
+<div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		an instance of <code class="d inline">types.universal.embeddedpdv.EmbeddedPDV</code>
+
+
+	</p>
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1SizeException = if encoded EmbeddedPDV has too few or too many
+		<ul>            <li><code class="d inline">ASN1ValueException</code> if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
-                too few or too many elements.
-            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueException = if encoded ObjectDescriptor contains
-                invalid characters.
-            ASN1InvalidIndexException = if encoded value selects a choice for
-                identification or uses an unspecified index for an element in
-                syntaxes or context-negotiation, or if an unspecified element
-                of EMBEDDED PDV itself is referenced by an out-of-range
-                context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
+                too few or too many elements</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if encoded INTEGER is too large to decode</li>
+            <li><code class="d inline">ASN1RecursionException</code> if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code> if any nested primitives do not have the
+                correct tag class</li>
+            <li><code class="d inline">ASN1ConstructionException</code> if any element has the wrong construction</li>
+            <li><code class="d inline">ASN1TagNumberException</code> if any nested primitives do not have the
+                correct tag number</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1262,13 +1211,13 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an EMBEDDED PDV, which is a constructed data type, defined in
-            the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">EMBEDDED PDV</span>, which is a constructed data type, defined in
+            the <a href="https://www.itu.int">International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines EMBEDDED PDV as:
+<div class="description">The specification defines <span class="mono">EMBEDDED PDV</span> as:
 <br><br>
-        <span class="mono">            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -1283,40 +1232,23 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
                 data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
                 data-<code class="code">value</code> OCTET STRING }
             (WITH COMPONENTS { ... , data-<code class="code">value</code>-descriptor ABSENT })
-        </span>
+        </pre>
 <br><br>
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
+        If the supplied <span class="mono">identification</span> for the EmbeddedPDV is a
+        <span class="mono">presentation-context-id</span> or a <span class="mono">context-negotiation</span>,
+        no exception will be thrown; the <span class="mono">identification</span> will be set to
+        <span class="mono">fixed</span> silently.
 <br><br>
-        In Canonical Encoding Rules (CER), the identification CHOICE cannot be
-        presentation-context-id, nor context-negotiation. Also, the elements
-        must appear in the exact order of the specification. With these
-        constraints in mind, the specification effectively becomes:
-<br><br>
-        <span class="mono">            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
-                identification [0] CHOICE {
-                    syntaxes [0] SEQUENCE {
-                        abstract [0] OBJECT IDENTIFIER,
-                        transfer [1] OBJECT IDENTIFIER },
-                    syntax [1] OBJECT IDENTIFIER,
-                    transfer-syntax [4] OBJECT IDENTIFIER,
-                    fixed [5] NULL },
-                data-<code class="code">value</code> [2] OCTET STRING }
-        </span>
-<br><br>
-        If the supplied identification for the EmbeddedPDV is a
-        presentation-context-id or a context-negotiation, no exception will be
-        thrown; the identification will be set to fixed silently.
-<br><br>
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
+        This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
+        choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.
 
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if encoded ObjectDescriptor contains
-                invalid characters.
+		<ul>            <li><code class="d inline">ASN1ValueException</code> if encoded ObjectDescriptor contains
+                invalid characters</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1332,7 +1264,18 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		UTF8Exception if it does not decode correctly.
+		<ul>            <li><code class="d inline">UTF8Exception</code>
+                if the encoded value does not decode to UTF-8</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1343,7 +1286,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a UTF-8 string to bytes. No checks are performed.</section>
+<div><section class="module-info"><section id="summary">Encodes a UTF-8 string to bytes.</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.relativeObjectIdentifier" id="CanonicalEncodingRulesElement.relativeObjectIdentifier"><code class="member">relativeObjectIdentifier</code></a>
@@ -1353,21 +1296,26 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a RELATIVE OBJECT IDENTIFIER.
-        See source/types/universal/objectidentifier.d for information about
-        the ObjectIdentifier class (aliased as "OID").
+<div><section class="module-info"><section id="summary">Decodes a <span class="mono">RELATIVE OBJECT IDENTIFIER</span>.
 </section>
-<div class="description">The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
-        on the least significant 7 bits of each byte. For these bytes, the most
-        significant bit is set if the next byte continues the encoding of the
-        current OID number. In other words, the bytes encoding each number
-        always end with a byte whose most significant bit is cleared.
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code> if a single OID number is encoded with
+                "leading zero bytes" (<code class="d inline">0x80u</code>)</li>
+            <li><code class="d inline">ASN1ValueOverflowException</code> if a single OID number is too big to
+                decode to a <code class="d inline">size_t</code></li>
+            <li><code class="d inline">ASN1TruncationException</code> if a single OID number is "cut off"</li>
+        </ul>
 
-</div>
-<div class="ddoc_standards">
+
+	</p>
+</div><div class="ddoc_standards">
 	<h4>Standards</h4>
 	<p class="para">
-		<a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
+		<ul>            <li><a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a></li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1378,17 +1326,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a RELATIVE OBJECT IDENTIFIER.
-        See source/types/universal/objectidentifier.d for information about
-        the ObjectIdentifier class (aliased as "OID").
+<div><section class="module-info"><section id="summary">Encodes a <span class="mono">RELATIVE OBJECT IDENTIFIER</span>.
 </section>
-<div class="description">The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
-        on the least significant 7 bits of each byte. For these bytes, the most
-        significant bit is set if the next byte continues the encoding of the
-        current OID number. In other words, the bytes encoding each number
-        always end with a byte whose most significant bit is cleared.
-
-</div>
 <div class="ddoc_standards">
 	<h4>Standards</h4>
 	<p class="para">
@@ -1403,22 +1342,14 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a <code class="code">sequence</code> of CERElements.
+<div><section class="module-info"><section id="summary">Decodes a <code class="code">sequence</code> of elements
 </section>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		an array of CERElements.
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueSizeException = if long definite-length is too big to be
-                decoded to an unsigned integral type.
-            ASN1ValueSizeException = if there are fewer value bytes than
-                indicated by the length tag.
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "primitive"</li>
+            <li>And all of the exceptions thrown by the constructor</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1429,7 +1360,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a <code class="code">sequence</code> of CERElements.</section>
+<div><section class="module-info"><section id="summary">Encodes a <code class="code">sequence</code> of elements</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.set" id="CanonicalEncodingRulesElement.set"><code class="member">set</code></a>
@@ -1439,22 +1370,14 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a <code class="code">set</code> of CERElements.
+<div><section class="module-info"><section id="summary">Decodes a <code class="code">set</code> of elements
 </section>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		an array of CERElements.
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueSizeException = if long definite-length is too big to be
-                decoded to an unsigned integral type.
-            ASN1ValueSizeException = if there are fewer value bytes than
-                indicated by the length tag.
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "primitive"</li>
+            <li>And all of the exceptions thrown by the constructor</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1465,7 +1388,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a <code class="code">set</code> of CERElements.</section>
+<div><section class="module-info"><section id="summary">Encodes a <code class="code">set</code> of elements</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.numericString" id="CanonicalEncodingRulesElement.numericString"><code class="member">numericString</code></a>
@@ -1476,20 +1399,22 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
     </code>
 </section>
 <div><section class="module-info"><section id="summary">Decodes a string, where the characters of the string are limited to
-        0 - 9 and space.
+        0 - 9 and <span class="mono">SPACE</span>.
 </section>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		a string.
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any character other than 0-9 or
-                space is encoded.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any character other than 0-9 or space is encoded.</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1506,8 +1431,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any character other than 0-9 or
-                space is supplied.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any character other than 0-9 or space is supplied.</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1522,20 +1447,24 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
         space, apostrophe, parentheses, comma, minus, plus, period,
         forward slash, colon, equals, and question mark.
 </section>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		a string.
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any character other than a-z, A-Z,
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
-                encoded.
+                encoded</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1553,10 +1482,10 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any character other than a-z, A-Z,
+		<li><code class="d inline">ASN1ValueCharactersException</code> if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
-                supplied.
+                supplied</li>
 	</p>
 </div></section>
 </div>
@@ -1573,9 +1502,25 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 	<h4>Return Value</h4>
 	<p class="para">
 		an unsigned byte array, where each byte is a T.61 character.
+
+
 	</p>
 </div>
-</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.teletexString" id="CanonicalEncodingRulesElement.teletexString"><code class="member">teletexString</code></a>
 <section class="declaration">
@@ -1599,10 +1544,26 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_returns">
 	<h4>Return Value</h4>
 	<p class="para">
-		an unsigned byte array.
+		an unsigned byte array, where each byte is a Videotex character.
+
+
 	</p>
 </div>
-</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.videotexString" id="CanonicalEncodingRulesElement.videotexString"><code class="member">videotexString</code></a>
 <section class="declaration">
@@ -1623,7 +1584,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 </section>
 <div><section class="module-info"><section id="summary">Decodes a string that only contains ASCII characters.
 </section>
-<div class="description">IA5String differs from ASCII ever so slightly: IA5 is international,
+<div class="description"><span class="mono">IA5String</span> differs from ASCII ever so slightly: IA5 is international,
         leaving 10 characters up to be locale-specific:
 <br><br>
         <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
@@ -1640,17 +1601,20 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
         </table>
 
 </div>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		a string.
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any enecoded character is not ASCII.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1663,7 +1627,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 </section>
 <div><section class="module-info"><section id="summary">Encodes a string that may only contain ASCII characters.
 </section>
-<div class="description">IA5String differs from ASCII ever so slightly: IA5 is international,
+<div class="description"><span class="mono">IA5String</span> differs from ASCII ever so slightly: IA5 is international,
         leaving 10 characters up to be locale-specific:
 <br><br>
         <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
@@ -1683,7 +1647,8 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any enecoded character is not ASCII.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1694,15 +1659,13 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a DateTime.
+<div><section class="module-info"><section id="summary">Decodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime">DateTime</a>.
+        The value is just the ASCII character representation of the UTC-formatted timestamp.
 </section>
-<div class="description">The encoded value is just the ASCII character representation of
-        the UTC-formatted timestamp.
-<br><br>
-        When using Canonical Encoding Rules (CER), only the YYMMDDhhmmssZ
-        format is acceptable for encoding UTCTime.
-<br><br>
-        A UTCTime does not support milliseconds, unlike GeneralizedTime.
+<div class="description">An UTC Timestamp looks like:
+        <ul>            <li><span class="mono">9912312359Z</span></li>
+            <li><span class="mono">991231235959+0200</span></li>
+        </ul>
 <br><br>
         If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,
         meaning that the date refers to the first 80 years of the century, this
@@ -1714,7 +1677,9 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_see_also">
 	<h4>See Also</h4>
 	<p class="para">
-		<a href="https://www.obj-sys.com/asn1tutorial/node15.html">UTCTime</a>
+		<ul>            <li><a href="https://www.obj-sys.com/asn1tutorial/node15.html">UTCTime</a></li>
+            <li><a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime">DateTime</a></li>
+        </ul>
 
 
 	</p>
@@ -1722,7 +1687,19 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		DateTimeException = if string cannot be decoded to a DateTime
+		<ul>            <li><code class="d inline">ASN1ValueException</code> if the encoded value does not end with a 'Z'</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code> if any character is not valid in a <span class="mono">Visiblestring</span></li>
+            <li><code class="d inline">DateTimeException</code> if the encoded string cannot be decoded to a DateTime</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1733,13 +1710,13 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a DateTime.
-</section>
-<div class="description">The encoded <code class="code">value</code> is just the ASCII character representation of
+<div><section class="module-info"><section id="summary">Encodes a DateTime. The <code class="code">value</code> is just the ASCII character representation of
         the UTC-formatted timestamp.
-<br><br>
-        When using Canonical Encoding Rules (CER), only the YYMMDDhhmmssZ
-        format is acceptable for encoding UTCTime.
+</section>
+<div class="description">An UTC Timestamp looks like:
+        <ul>            <li><span class="mono">9912312359Z</span></li>
+            <li><span class="mono">991231235959+0200</span></li>
+        </ul>
 
 </div>
 <div class="ddoc_see_also">
@@ -1757,26 +1734,42 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a DateTime.
+<div><section class="module-info"><section id="summary">Decodes a DateTime. The value is just the ASCII character representation of
+        the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a>-formatted timestamp.
 </section>
-<div class="description">The CER-encoded value is just the ASCII character representation of
-        the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">        ISO 8601</a>-formatted timestamp.
-<br><br>
-        An ISO-8601 Timestamp looks like:
-        <ul>            <li>19851106210627.3</li>
-            <li>19851106210627.3Z</li>
-            <li>19851106210627.3-0500</li>
+<div class="description">An ISO-8601 Timestamp looks like:
+        <ul>            <li><span class="mono">19851106210627.3</span></li>
+            <li><span class="mono">19851106210627.3Z</span></li>
+            <li><span class="mono">19851106210627.3-0500</span></li>
         </ul>
-<br><br>
-        But when using Canonical Encoding Rules (CER), only timestamps with
-        no trailing periods ('.'), or post-period trailing zeroes are acceptable,
-        and all timestamps must end with a 'Z', indicating UTC time.
 
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		DateTimeException = if string cannot be decoded to a DateTime
+		<ul>            <li><code class="d inline">ASN1ValueException</code> if the encoded value did not end with a 'Z'
+                or contained a misplaced or unnecessary decimal point</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code> if any character is not valid in a <span class="mono">Visiblestring</span></li>
+            <li><code class="d inline">DateTimeException</code> if the encoded string cannot be decoded to a DateTime</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code> if the seconds fraction contains trailing zeroes</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+
+
+	</p>
+</div><div class="ddoc_standards">
+	<h4>Standards</h4>
+	<p class="para">
+		<ul>            <li><a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a></li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1789,19 +1782,23 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 </section>
 <div><section class="module-info"><section id="summary">Encodes a DateTime.
 </section>
-<div class="description">The CER-encoded <code class="code">value</code> is just the ASCII character representation of
+<div class="description">The <code class="code">value</code> is just the ASCII character representation of
         the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">        ISO 8601</a>-formatted timestamp.
 <br><br>
         An ISO-8601 Timestamp looks like:
-        <ul>            <li>19851106210627.3</li>
-            <li>19851106210627.3Z</li>
-            <li>19851106210627.3-0500</li>
+        <ul>            <li><span class="mono">19851106210627.3</span></li>
+            <li><span class="mono">19851106210627.3Z</span></li>
+            <li><span class="mono">19851106210627.3-0500</span></li>
         </ul>
-<br><br>
-        But when using Canonical Encoding Rules (CER), only timestamps with
-        no trailing periods ('.'), or post-period trailing zeroes are acceptable,
-        and all timestamps must end with a 'Z', indicating UTC time.</div>
-</section>
+
+</div>
+<div class="ddoc_standards">
+	<h4>Standards</h4>
+	<p class="para">
+		<ul>            <li><a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a></li>
+        </ul>
+	</p>
+</div></section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.graphicString" id="CanonicalEncodingRulesElement.graphicString"><code class="member">graphicString</code></a>
 <section class="declaration">
@@ -1811,37 +1808,38 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
     </code>
 </section>
 <div><section class="module-info"><section id="summary">Decodes an ASCII string that contains only characters between and
-        including 0x20 and 0x75.
+        including <code class="d inline">0x20</code> and <code class="d inline">0x75</code>. Deprecated, according to page 182 of the
+        Dubuisson book.
 </section>
-<div class="description">Deprecated, according to page 182 of the Dubuisson book.
-
-</div>
-<div class="ddoc_section">
-	<p class="para">
-		<span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Character String Types.” ASN.1:
-                Communication between Heterogeneous Systems, Morgan
-                Kaufmann, 2001, pp. 175-178.
-            <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">                The Wikipedia Page on ISO 2022</a>
-            <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
-
-
-	</p>
-</div>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		a string.
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any non-graphical character
-                (including space) is encoded.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any non-graphical character (including space) is encoded</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+
+
 	</p>
-</div></section>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html">ISO 2022</a></li>
+        </ul>
+	</p>
+</div>
+</section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.graphicString" id="CanonicalEncodingRulesElement.graphicString"><code class="member">graphicString</code></a>
 <section class="declaration">
@@ -1851,30 +1849,29 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
     </code>
 </section>
 <div><section class="module-info"><section id="summary">Encodes an ASCII string that may contain only characters between and
-        including 0x20 and 0x75.
+        including <code class="d inline">0x20</code> and <code class="d inline">0x75</code>. Deprecated, according to page 182
+        of the Dubuisson book.
 </section>
-<div class="description">Deprecated, according to page 182 of the Dubuisson book.
-
-</div>
-<div class="ddoc_section">
-	<p class="para">
-		<span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Character String Types.” ASN.1:
-                Communication between Heterogeneous Systems, Morgan
-                Kaufmann, 2001, pp. 175-178.
-            <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">                The Wikipedia Page on ISO 2022</a>
-            <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
-
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any non-graphical character
-                (including space) is supplied.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any non-graphical character (including space) is supplied</li>
+        </ul>
+
+
 	</p>
-</div></section>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html">ISO 2022</a></li>
+        </ul>
+	</p>
+</div>
+</section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.visibleString" id="CanonicalEncodingRulesElement.visibleString"><code class="member">visibleString</code></a>
 <section class="declaration">
@@ -1884,21 +1881,24 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
     </code>
 </section>
 <div><section class="module-info"><section id="summary">Decodes a string that only contains characters between and including
-        0x20 and 0x7E. (Honestly, I don't know how this differs from
-        GraphicalString.)
+        <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>. (Honestly, I don't know how this differs from
+        <span class="mono">GraphicalString</span>.)
 </section>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		a string.
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any non-graphical character
-                (including space) is encoded.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if any non-graphical character (including space) is encoded</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1910,14 +1910,15 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
     </code>
 </section>
 <div><section class="module-info"><section id="summary">Encodes a string that only contains characters between and including
-        0x20 and 0x7E. (Honestly, I don't know how this differs from
-        GraphicalString.)
+        <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>. (Honestly, I don't know how this differs from
+        <span class="mono">GraphicalString</span>.)
 </section>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any non-graphical character
-                (including space) is supplied.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if any non-graphical character (including space) is supplied.</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -1928,31 +1929,35 @@ Dubuisson, Olivier. “Character String Types.” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a string containing only ASCII characters.
+<div><section class="module-info"><section id="summary">Decodes a string containing only ASCII characters. Deprecated, according
+        to page 182 of the Dubuisson book.
 </section>
-<div class="description">Deprecated, according to page 182 of the Dubuisson book.
-
-</div>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		a string.
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any enecoded character is not ASCII.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
 
 
 	</p>
 </div><div class="ddoc_section">
 	<p class="para">
 		<span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
-            Communication between Heterogeneous Systems, Morgan Kaufmann,
-            2001, p. 182.
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, p. 182.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html">ISO 2022</a></li>
+        </ul>
 	</p>
 </div>
 </section>
@@ -1964,24 +1969,24 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a string containing only ASCII characters.
+<div><section class="module-info"><section id="summary">Encodes a string containing only ASCII characters. Deprecated,
+        according to page 182 of the Dubuisson book.
 </section>
-<div class="description">Deprecated, according to page 182 of the Dubuisson book.
-
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if any enecoded character is not ASCII.
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
+        </ul>
 
 
 	</p>
 </div><div class="ddoc_section">
 	<p class="para">
 		<span class="ddoc_section_h">Citations:</span>
-Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
-            Communication between Heterogeneous Systems, Morgan Kaufmann,
-            2001, p. 182.
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, p. 182.</li>
+        </ul>
 	</p>
 </div>
 </section>
@@ -1993,20 +1998,23 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a dstring of UTF-32 characters.
+<div><section class="module-info"><section id="summary">Decodes a <span class="mono">dstring</span> of UTF-32 characters.
 </section>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		a string of UTF-32 characters.
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if the encoded bytes is not evenly
-                divisible by four.
+		<ul>            <li><code class="d inline">ASN1ValueException</code>
+                if the encoded bytes is not evenly divisible by four</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -2017,7 +2025,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a dstring of UTF-32 characters.</section>
+<div><section class="module-info"><section id="summary">Encodes a <span class="mono">dstring</span> of UTF-32 characters.</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.characterString" id="CanonicalEncodingRulesElement.characterString"><code class="member">characterString</code></a>
@@ -2027,13 +2035,13 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a CHARACTER STRING, which is a constructed data type, defined
-        in the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
+<div><section class="module-info"><section id="summary">Decodes a <span class="mono">CharacterString</span>, which is a constructed data type, defined
+        in the <a href="https://www.itu.int">International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines CHARACTER as:
+<div class="description">The specification defines <span class="mono">CharacterString</span> as:
 <br><br>
-        <span class="mono">            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+        <pre>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -2046,31 +2054,35 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
                     transfer-syntax OBJECT IDENTIFIER,
                     fixed NULL },
                 string-value OCTET STRING }
-        </span>
+        </pre>
 <br><br>
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
+        This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
+        choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.
 
 </div>
 <div class="ddoc_returns">
 	<h4>Return Value</h4>
 	<p class="para">
-		an instance of types.universal.CharacterString.
+		an instance of <code class="d inline">types.universal.characterstring.CharacterString</code>.
+
 
 	</p>
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1SizeException = if encoded CharacterString has too few or too many
-                elements, or if syntaxes or context-negotiation element has
-                too few or too many elements.
-            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1InvalidIndexException = if encoded value selects a choice for
-                identification or uses an unspecified index for an element in
-                syntaxes or context-negotiation, or if an unspecified element
-                of CharacterString itself is referenced by an out-of-range
-                context-specific index. (See <code class="code">ASN1InvalidIndexException</code>.)
+		<ul>            <li><code class="d inline">ASN1ValueException</code> if encoded <span class="mono">CharacterString</span> has too few or too many
+                elements, or if <span class="mono">syntaxes</span> or <span class="mono">context-negotiation</span> element has
+                too few or too many elements</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if encoded <span class="mono">INTEGER</span> is too large to decode</li>
+            <li><code class="d inline">ASN1RecursionException</code> if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code> if any nested primitives do not have the
+                correct tag class</li>
+            <li><code class="d inline">ASN1ConstructionException</code> if any element has the wrong construction</li>
+            <li><code class="d inline">ASN1TagNumberException</code> if any nested primitives do not have the
+                correct tag number</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -2081,13 +2093,13 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a CHARACTER STRING, which is a constructed data type, defined
-        in the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
+<div><section class="module-info"><section id="summary">Encodes a <span class="mono">CharacterString</span>, which is a constructed data type, defined
+        in the <a href="https://www.itu.int">International Telecommunications Union</a>'s
             <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines CHARACTER as:
+<div class="description">The specification defines <span class="mono">CharacterString</span> as:
 <br><br>
-        <span class="mono">            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+        <pre>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -2100,10 +2112,10 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
                     transfer-syntax OBJECT IDENTIFIER,
                     fixed NULL },
                 string-<code class="code">value</code> OCTET STRING }
-        </span>
+        </pre>
 <br><br>
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.</div>
+        This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
+        choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.</div>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.basicMultilingualPlaneString" id="CanonicalEncodingRulesElement.basicMultilingualPlaneString"><code class="member">basicMultilingualPlaneString</code></a>
@@ -2113,20 +2125,23 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a wstring of UTF-16 characters.
+<div><section class="module-info"><section id="summary">Decodes a <span class="mono">wstring</span> of UTF-16 characters.
 </section>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		an immutable array of UTF-16 characters.
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueException = if the encoded bytes is not evenly
-                divisible by two.
+		<ul>            <li><code class="d inline">ASN1ValueException</code>
+                if the encoded bytes is not evenly divisible by two</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -2137,7 +2152,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a wstring of UTF-16 characters.</section>
+<div><section class="module-info"><section id="summary">Encodes a <span class="mono">wstring</span> of UTF-16 characters.</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.this" id="CanonicalEncodingRulesElement.this"><code class="member">this</code></a>
@@ -2147,7 +2162,7 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Creates an EndOfContent CER Value.</section>
+<div><section class="module-info"><section id="summary">Creates an <span class="mono">END OF CONTENT</span></section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.this" id="CanonicalEncodingRulesElement.this"><code class="member">this</code></a>
@@ -2157,46 +2172,36 @@ Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Creates a CERElement from the supplied <code class="code">bytes</code>, inferring that the first
-        byte is the type tag. The supplied ubyte[] array is "chomped" by
-        reference, so the original array will grow shorter as CERElements are
+<div><section class="module-info"><section id="summary">Creates a <code class="d inline">CERElement</code> from the supplied <code class="code">bytes</code>, inferring that the first
+        byte is the type tag. The supplied <code class="d inline">ubyte[]</code> array is "chomped" by
+        reference, so the original array will grow shorter as <code class="d inline">CERElement</code>s are
         generated.
 </section>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueSizeException = if the <code class="code">bytes</code> supplied are fewer than
-                two (one or zero, in other words), such that no valid CERElement
-                can be decoded, or if the length is encoded in indefinite
-                form, but the END OF CONTENT octets (two consecutive <code class="code">null</code>
-                octets) cannot be found, or if the value is encoded in fewer
-                octets than indicated by the length byte.
-            ASN1LengthException = if the length byte is set to 0xFF,
-                which is reserved.
-            ASN1ValueSizeException = if the length cannot be represented by
-                the largest unsigned integer.
+		All of the same exceptions as <code class="d inline">fromBytes()</code>
 
 
 	</p>
-</div><div class="ddoc_section">
+</div><div class="ddoc_examples">
+	<h4>Examples</h4>
 	<p class="para">
-		<span class="ddoc_section_h">Example:</span>
-<pre><code class="d block"><span class="comment">// Decoding looks like:
+		<pre><code class="d block"><span class="comment">// Decoding looks like:
 </span>CERElement[] result;
 while (bytes.length &gt; 0)
     result ~= new CERElement(bytes);
 
 <span class="comment">// Encoding looks like:
 </span>ubyte[] result;
-foreach (cv; bervalues)
+foreach (cv; cervalues)
 {
     result ~= cast(ubyte[]) cv;
 }
 </code></pre>
 
 	</p>
-</div>
-</section>
+</div></section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.this" id="CanonicalEncodingRulesElement.this"><code class="member">this</code></a>
 <section class="declaration">
@@ -2205,31 +2210,22 @@ foreach (cv; bervalues)
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Creates a CERElement from the supplied <code class="code">bytes</code>, inferring that the first
-        byte is the type tag. The supplied ubyte[] array is read, starting
+<div><section class="module-info"><section id="summary">Creates a <code class="d inline">CERElement</code> from the supplied <code class="code">bytes</code>, inferring that the first
+        byte is the type tag. The supplied <code class="d inline">ubyte[]</code> array is read, starting
         from the index specified by <code class="d inline"><code class="code">bytesRead</code></code>, and increments
         <code class="d inline"><code class="code">bytesRead</code></code> by the number of <code class="code">bytes</code> read.
 </section>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ValueSizeException = if the <code class="code">bytes</code> supplied are fewer than
-                two (one or zero, in other words), such that no valid CERElement
-                can be decoded, or if the length is encoded in indefinite
-                form, but the END OF CONTENT octets (two consecutive <code class="code">null</code>
-                octets) cannot be found, or if the value is encoded in fewer
-                octets than indicated by the length byte.
-            ASN1LengthException = if the length byte is set to 0xFF,
-                which is reserved.
-            ASN1ValueSizeException = if the length cannot be represented by
-                the largest unsigned integer.
+		All of the same exceptions as <code class="d inline">fromBytes()</code>
 
 
 	</p>
-</div><div class="ddoc_section">
+</div><div class="ddoc_examples">
+	<h4>Examples</h4>
 	<p class="para">
-		<span class="ddoc_section_h">Example:</span>
-<pre><code class="d block"><span class="comment">// Decoding looks like:
+		<pre><code class="d block"><span class="comment">// Decoding looks like:
 </span>CERElement[] result;
 size_t i = 0u;
 while (i &lt; bytes.length)
@@ -2237,15 +2233,51 @@ while (i &lt; bytes.length)
 
 <span class="comment">// Encoding looks like:
 </span>ubyte[] result;
-foreach (cv; bervalues)
+foreach (cv; cervalues)
 {
     result ~= cast(ubyte[]) cv;
 }
 </code></pre>
 
 	</p>
+</div></section>
 </div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.fromBytes" id="CanonicalEncodingRulesElement.fromBytes"><code class="member">fromBytes</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.fromBytes"></span>size_t <code class="code">fromBytes</code>(in ubyte[] <code class="code">bytes</code>);
+
+    </code>
 </section>
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		the number of <code class="code">bytes</code> read
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1TagPaddingException</code> if the tag number is "padded" with
+                "leading zero <code class="code">bytes</code>" (<code class="d inline">0x80u</code>)</li>
+            <li><code class="d inline">ASN1TagOverflowException</code> if the tag number is too large to
+                fit into a <code class="d inline">size_t</code></li>
+            <li><code class="d inline">ASN1LengthUndefinedException</code> if the reserved length byte of
+                <code class="d inline">0xFF</code> is encountered</li>
+            <li><code class="d inline">ASN1LengthOverflowException</code> if the length is too large to fit
+                into a <code class="d inline">size_t</code></li>
+            <li><code class="d inline">ASN1TruncationException</code> if the tag, length, or value appear to
+                be truncated</li>
+            <li><code class="d inline">ASN1ConstructionException</code> if the length is indefinite, but the
+                element is marked as being encoded primitively</li>
+            <li><code class="d inline">ASN1RecursionException</code> if, when trying to determine the end of
+                an indefinite-length encoded element, the parser has to recurse
+                too deep</li>
+        </ul>
+	</p>
+</div></section>
 </div>
 </li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.toBytes" id="CanonicalEncodingRulesElement.toBytes"><code class="member">toBytes</code></a>
 <section class="declaration">
@@ -2254,18 +2286,18 @@ foreach (cv; bervalues)
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">This differs from <code class="code">this.value</code> in that
-        <code class="code">this.value</code> only returns the value octets, whereas
-        <code class="code">this.<code class="code">toBytes</code></code> returns the type tag, length tag / octets,
+<div><section class="module-info"><section id="summary">This differs from <code class="d inline">this.value</code> in that
+        <code class="d inline">this.value</code> only returns the value octets, whereas
+        <code class="d inline">this.<code class="code">toBytes</code></code> returns the type tag, length tag / octets,
         and the value octets, all concatenated.
 </section>
-<div class="description">This is the exact same as <code class="code">this.opCast!(ubyte[])()</code>.
+<div class="description">This is the exact same as <code class="d inline">this.opCast!(ubyte[])()</code>.
 
 </div>
 <div class="ddoc_returns">
 	<h4>Return Value</h4>
 	<p class="para">
-		type tag, length tag, and value, all concatenated as a ubyte array.
+		type tag, length tag, and value, all concatenated as a <code class="d inline">ubyte</code> array.
 	</p>
 </div>
 </section>
@@ -2277,18 +2309,18 @@ foreach (cv; bervalues)
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">This differs from <code class="code">this.value</code> in that
-        <code class="code">this.value</code> only returns the value octets, whereas
-        <code class="code">this.toBytes</code> returns the type tag, length tag / octets,
+<div><section class="module-info"><section id="summary">This differs from <code class="d inline">this.value</code> in that
+        <code class="d inline">this.value</code> only returns the value octets, whereas
+        <code class="d inline">this.toBytes</code> returns the type tag, length tag / octets,
         and the value octets, all concatenated.
 </section>
-<div class="description">This is the exact same as <code class="code">this.toBytes()</code>.
+<div class="description">This is the exact same as <code class="d inline">this.toBytes()</code>.
 
 </div>
 <div class="ddoc_returns">
 	<h4>Return Value</h4>
 	<p class="para">
-		type tag, length tag, and value, all concatenated as a ubyte array.
+		type tag, length tag, and value, all concatenated as a <code class="d inline">ubyte</code> array.
 	</p>
 </div>
 </section>
@@ -2302,7 +2334,7 @@ foreach (cv; bervalues)
 
         </div>
         <div id="footer">
-            <span id="timestamp">Tue Jan  9 21:10:22 2018
+            <span id="timestamp">Wed Jan 10 08:39:54 2018
 </span>
         </div>
     </body>

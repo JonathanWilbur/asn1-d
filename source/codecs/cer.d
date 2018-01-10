@@ -214,7 +214,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         this.value = [(value ? 0xFFu : 0x00u)];
     }
 
-    ///
     @safe
     unittest
     {
@@ -1868,53 +1867,48 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     /**
         Decodes a floating-point type.
 
-        For the encoded REAL, a value of 0x40 means "positive infinity,"
-        a value of 0x41 means "negative infinity." An empty value means
-        exactly zero. A value whose first byte starts with two cleared bits
-        encodes the real as a string of characters, where the latter nybble
-        takes on values of 0x1, 0x2, or 0x3 to indicate that the string
-        representation conforms to
-        $(LINK https://www.iso.org/standard/12285.html, ISO 6093)
-        Numeric Representation 1, 2, or 3 respectively.
-
-        If the first bit is set, then the first byte is an "information block"
-        that describes the binary encoding of the REAL on the subsequent bytes.
-        If bit 6 is set, the value is negative; if clear, the value is
-        positive. Bits 4 and 5 determine the base, with a value of 0 indicating
-        a base of 2, a value of 1 indicating a base of 8, and a value of 2
-        indicating a base of 16. Bits 2 and 3 indicates that the value should
-        be scaled by 1, 2, 4, or 8 for values of 1, 2, 3, or 4 respectively.
-        Bits 0 and 1 determine how the exponent is encoded, with 0 indicating
-        that the exponent is encoded as a signed byte on the second byte of
-        the value, with 1 indicating that the exponent is encoded as a signed
-        short on the subsequent two bytes, with 2 indicating that the exponent
-        is encoded as a three-byte signed integer on the subsequent three
-        bytes, and with 4 indicating that the subsequent byte encodes the
-        unsigned length of the exponent on the following bytes. The remaining
-        bytes encode an unsigned integer, N, such that mantissa is equal to
-        sign * N * 2^scale.
-
-        Note that this method assumes that your machine uses IEEE 754 floating
-        point format.
-
-        If you attempt to decode a REAL that is too big to fit into the selected
-        floating point type, the value of the real will quietly set to zero. This
-        cannot happen if the transmitted value is in base-2, but it can happen if
-        the transmitted value is in base-8 or base-16.
+        Note that this method assumes that your machine uses
+        $(LINK http://ieeexplore.ieee.org/document/4610935/, IEEE 754-2008)
+        floating point format.
 
         Throws:
-            ConvException = if character-encoding cannot be converted to
-                the selected floating-point type, T.
-            ConvOverflowException = if the character-encoding encodes a
+        $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
+            $(LI $(D ASN1TruncationException) if the value appears to be "cut off")
+            $(LI $(D ConvException) if character-encoding cannot be converted to
+                the selected floating-point type, T)
+            $(LI $(D ConvOverflowException) if the character-encoding encodes a
                 number that is too big for the selected floating-point
-                type to express.
-            ASN1ValueSizeException = if the binary-encoding contains fewer
-                bytes than the information byte purports.
-            ASN1ValueSizeException = if the binary-encoded mantissa is too
-                big to be expressed by an unsigned long integer.
-            ASN1ValueException = if both bits indicating the base in the
-                information byte of a binary-encoded REAL's information byte
-                are set, which would indicate an invalid base.
+                type to express)
+            $(LI $(D ASN1ValueSizeException) if the binary-encoding contains fewer
+                bytes than the information byte purports, or if the
+                binary-encoded mantissa is too big to be expressed by an
+                unsigned long integer)
+            $(LI $(D ASN1ValueException) if a complicated-form exponent or a
+                non-zero-byte mantissa encodes a zero, of if a base-10
+                (character-encoded) REAL is has something wrong that is not
+                covered by $(D ASN1ValueCharactersException) or
+                $(D ASN1ValuePaddingException))
+            $(LI $(D ASN1ValueUndefinedException) if both bits indicating the base in the
+                information byte of a binary-encoded $(MONO REAL)'s information byte
+                are set, which would indicate an invalid base, or if a special
+                value has been indicated that is not defined by the specification)
+            $(LI $(D ASN1ValuePaddingException) if a base-10 (character-encoded)
+                REAL is encoded with leading zeroes, or trailing zeroes on the
+                mantissa, or if the mantissa is encoded on more than the minimal
+                necessary octets)
+            $(LI $(D ASN1ValueCharactersException) if a base-10 (character-encoded)
+                REAL is encoded with characters that are not numeric, a decimal, E,
+                or plus or minus)
+        )
+
+        Citations:
+        $(UL
+            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                $(I ASN.1: Communication between Heterogeneous Systems),
+                Morgan Kaufmann, 2001, pp. 400-402.)
+            $(LI $(LINK https://www.iso.org/standard/12285.html, ISO 6093))
+        )
     */
     public @property @system
     T realNumber(T)() const
@@ -2191,44 +2185,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Encodes a floating-point type.
+        Encodes a floating-point type, using base-2 binary encoding.
 
-        For the encoded REAL, a value of 0x40 means "positive infinity,"
-        a value of 0x41 means "negative infinity." An empty value means
-        exactly zero. A value whose first byte starts with two cleared bits
-        encodes the real as a string of characters, where the latter nybble
-        takes on values of 0x1, 0x2, or 0x3 to indicate that the string
-        representation conforms to
-        $(LINK , ISO 6093) Numeric Representation 1, 2, or 3 respectively.
+        Note that this method assumes that your machine uses
+        $(LINK http://ieeexplore.ieee.org/document/4610935/, IEEE 754-2008)
+        floating point format.
 
-        If the first bit is set, then the first byte is an "information block"
-        that describes the binary encoding of the REAL on the subsequent bytes.
-        If bit 6 is set, the value is negative; if clear, the value is
-        positive. Bits 4 and 5 determine the base, with a value of 0 indicating
-        a base of 2, a value of 1 indicating a base of 8, and a value of 2
-        indicating a base of 16. Bits 2 and 3 indicates that the value should
-        be scaled by 1, 2, 4, or 8 for values of 1, 2, 3, or 4 respectively.
-        Bits 0 and 1 determine how the exponent is encoded, with 0 indicating
-        that the exponent is encoded as a signed byte on the second byte of
-        the value, with 1 indicating that the exponent is encoded as a signed
-        short on the subsequent two bytes, with 2 indicating that the exponent
-        is encoded as a three-byte signed integer on the subsequent three
-        bytes, and with 4 indicating that the subsequent byte encodes the
-        unsigned length of the exponent on the following bytes. The remaining
-        bytes encode an unsigned integer, N, such that mantissa is equal to
-        sign * N * 2^scale.
-
-        Note that this method assumes that your machine uses IEEE 754 floating
-        point format.
-
-        Throws:
-            ASN1ValueException = if an attempt to encode NaN is made.
-            ASN1ValueSizeException = if an attempt to encode would result
-                in an arithmetic underflow of a signed short.
-            ASN1ValueSizeException = if an attempt to encode would result
-                in an arithmetic overflow of a signed short.
+        Citations:
+        $(UL
+            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                $(I ASN.1: Communication between Heterogeneous Systems),
+                Morgan Kaufmann, 2001, pp. 400-402.)
+            $(LI $(LINK https://www.iso.org/standard/12285.html, ISO 6093))
+        )
     */
-    public @property @system
+    public @property @system nothrow
     void realNumber(T)(in T value)
     if (isFloatingPoint!T)
     {
@@ -2606,13 +2577,19 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes an integer from an ENUMERATED type. In CER, an ENUMERATED
-        type is encoded the exact same way that an INTEGER is.
+        Decodes a signed integer, which represents a selection from an
+        $(MONO ENUMERATION) of choices.
 
-        Returns: any chosen signed integral type
         Throws:
-            ASN1ValueSizeException = if the value is too big to decode
-                to a signed integral type.
+        $(UL
+            $(LI $(D ASN1ConstructionException)
+                if the encoded value is not primitively-constructed)
+            $(LI $(D ASN1ValueSizeException)
+                if the value is too big to decode to a signed integral type,
+                or if the value is zero bytes)
+            $(LI $(D ASN1ValuePaddingException)
+                if there are padding bytes)
+        )
     */
     public @property @system
     T enumerated(T)() const
@@ -2675,10 +2652,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         return *cast(T *) value.ptr;
     }
 
-    /**
-        Encodes an ENUMERATED type from an integer. In CER, an ENUMERATED
-        type is encoded the exact same way that an INTEGER is.
-    */
+    /// Encodes an $(MONO ENUMERATED) type from an integer.
     public @property @system nothrow
     void enumerated(T)(in T value)
     out
@@ -2788,16 +2762,14 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         assertNotThrown!ASN1Exception(el.enumerated!long);
     }
 
-    ///
     /**
-        Decodes an EMBEDDED PDV, which is a constructed data type, defined in
-            the $(LINK https://www.itu.int,
-                International Telecommunications Union)'s
+        Decodes an $(MONO EMBEDDED PDV), which is a constructed data type, defined in
+            the $(LINK https://www.itu.int, International Telecommunications Union)'s
             $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines EMBEDDED PDV as:
+        The specification defines $(MONO EMBEDDED PDV) as:
 
-        $(MONO
+        $(PRE
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -2815,38 +2787,25 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
         )
 
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
+        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)
+        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.
 
-        In Canonical Encoding Rules (CER), the identification CHOICE cannot be
-        presentation-context-id, nor context-negotiation. Also, the elements
-        must appear in the exact order of the specification. With these
-        constraints in mind, the specification effectively becomes:
-
-        $(MONO
-            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
-                identification [0] CHOICE {
-                    syntaxes [0] SEQUENCE {
-                        abstract [0] OBJECT IDENTIFIER,
-                        transfer [1] OBJECT IDENTIFIER },
-                    syntax [1] OBJECT IDENTIFIER,
-                    transfer-syntax [4] OBJECT IDENTIFIER,
-                    fixed [5] NULL },
-                data-value [2] OCTET STRING }
-        )
+        Returns: an instance of $(D types.universal.embeddedpdv.EmbeddedPDV)
 
         Throws:
-            ASN1SizeException = if encoded EmbeddedPDV has too few or too many
+        $(UL
+            $(LI $(D ASN1ValueException) if encoded EmbeddedPDV has too few or too many
                 elements, or if syntaxes or context-negotiation element has
-                too few or too many elements.
-            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1ValueException = if encoded ObjectDescriptor contains
-                invalid characters.
-            ASN1InvalidIndexException = if encoded value selects a choice for
-                identification or uses an unspecified index for an element in
-                syntaxes or context-negotiation, or if an unspecified element
-                of EMBEDDED PDV itself is referenced by an out-of-range
-                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
+                too few or too many elements)
+            $(LI $(D ASN1ValueSizeException) if encoded INTEGER is too large to decode)
+            $(LI $(D ASN1RecursionException) if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException) if any nested primitives do not have the
+                correct tag class)
+            $(LI $(D ASN1ConstructionException) if any element has the wrong construction)
+            $(LI $(D ASN1TagNumberException) if any nested primitives do not have the
+                correct tag number)
+        )
     */
     override public @property @system
     EmbeddedPDV embeddedPresentationDataValue() const
@@ -3002,14 +2961,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Encodes an EMBEDDED PDV, which is a constructed data type, defined in
-            the $(LINK https://www.itu.int,
-                International Telecommunications Union)'s
+        Encodes an $(MONO EMBEDDED PDV), which is a constructed data type, defined in
+            the $(LINK https://www.itu.int, International Telecommunications Union)'s
             $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines EMBEDDED PDV as:
+        The specification defines $(MONO EMBEDDED PDV) as:
 
-        $(MONO
+        $(PRE
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -3027,36 +2985,19 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
         )
 
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
+        If the supplied $(MONO identification) for the EmbeddedPDV is a
+        $(MONO presentation-context-id) or a $(MONO context-negotiation),
+        no exception will be thrown; the $(MONO identification) will be set to
+        $(MONO fixed) silently.
 
-        In Canonical Encoding Rules (CER), the identification CHOICE cannot be
-        presentation-context-id, nor context-negotiation. Also, the elements
-        must appear in the exact order of the specification. With these
-        constraints in mind, the specification effectively becomes:
-
-        $(MONO
-            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
-                identification [0] CHOICE {
-                    syntaxes [0] SEQUENCE {
-                        abstract [0] OBJECT IDENTIFIER,
-                        transfer [1] OBJECT IDENTIFIER },
-                    syntax [1] OBJECT IDENTIFIER,
-                    transfer-syntax [4] OBJECT IDENTIFIER,
-                    fixed [5] NULL },
-                data-value [2] OCTET STRING }
-        )
-
-        If the supplied identification for the EmbeddedPDV is a
-        presentation-context-id or a context-negotiation, no exception will be
-        thrown; the identification will be set to fixed silently.
-
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
+        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)
+        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.
 
         Throws:
-            ASN1ValueException = if encoded ObjectDescriptor contains
-                invalid characters.
+        $(UL
+            $(LI $(D ASN1ValueException) if encoded ObjectDescriptor contains
+                invalid characters)
+        )
     */
     override public @property @system
     void embeddedPresentationDataValue(in EmbeddedPDV value)
@@ -3213,7 +3154,19 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         Decodes the value to UTF-8 characters.
 
         Throws:
-            UTF8Exception if it does not decode correctly.
+        $(UL
+            $(LI $(D UTF8Exception)
+                if the encoded value does not decode to UTF-8)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property @system
     string unicodeTransformationFormat8String() const
@@ -3279,9 +3232,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
     }
 
-    /**
-        Encodes a UTF-8 string to bytes. No checks are performed.
-    */
+    /// Encodes a UTF-8 string to bytes.
     override public @property @system
     void unicodeTransformationFormat8String(in string value)
     {
@@ -3343,18 +3294,22 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes a RELATIVE OBJECT IDENTIFIER.
-        See source/types/universal/objectidentifier.d for information about
-        the ObjectIdentifier class (aliased as "OID").
+        Decodes a $(MONO RELATIVE OBJECT IDENTIFIER).
 
-        The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
-        on the least significant 7 bits of each byte. For these bytes, the most
-        significant bit is set if the next byte continues the encoding of the
-        current OID number. In other words, the bytes encoding each number
-        always end with a byte whose most significant bit is cleared.
+        Throws:
+        $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
+            $(LI $(D ASN1ValuePaddingException) if a single OID number is encoded with
+                "leading zero bytes" ($(D 0x80u)))
+            $(LI $(D ASN1ValueOverflowException) if a single OID number is too big to
+                decode to a $(D size_t))
+            $(LI $(D ASN1TruncationException) if a single OID number is "cut off")
+        )
 
         Standards:
-            $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
+        $(UL
+            $(LI $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660))
+        )
     */
     override public @property @system
     OIDNode[] relativeObjectIdentifier() const
@@ -3428,18 +3383,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Encodes a RELATIVE OBJECT IDENTIFIER.
-        See source/types/universal/objectidentifier.d for information about
-        the ObjectIdentifier class (aliased as "OID").
-
-        The RELATIVE OBJECT IDENTIFIER's numbers are encoded in base-128
-        on the least significant 7 bits of each byte. For these bytes, the most
-        significant bit is set if the next byte continues the encoding of the
-        current OID number. In other words, the bytes encoding each number
-        always end with a byte whose most significant bit is cleared.
+        Encodes a $(MONO RELATIVE OBJECT IDENTIFIER).
 
         Standards:
-            $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
+            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     override public @property @system nothrow
     void relativeObjectIdentifier(in OIDNode[] value)
@@ -3515,14 +3462,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes a sequence of CERElements.
+        Decodes a sequence of elements
 
-        Returns: an array of CERElements.
         Throws:
-            ASN1ValueSizeException = if long definite-length is too big to be
-                decoded to an unsigned integral type.
-            ASN1ValueSizeException = if there are fewer value bytes than
-                indicated by the length tag.
+        $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "primitive")
+            $(LI And all of the exceptions thrown by the constructor)
+        )
     */
     override public @property @system
     CERElement[] sequence() const
@@ -3538,9 +3484,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         return result;
     }
 
-    /**
-        Encodes a sequence of CERElements.
-    */
+    /// Encodes a sequence of elements
     override public @property @system
     void sequence(in CERElement[] value)
     {
@@ -3554,14 +3498,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes a set of CERElements.
+        Decodes a set of elements
 
-        Returns: an array of CERElements.
         Throws:
-            ASN1ValueSizeException = if long definite-length is too big to be
-                decoded to an unsigned integral type.
-            ASN1ValueSizeException = if there are fewer value bytes than
-                indicated by the length tag.
+        $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "primitive")
+            $(LI And all of the exceptions thrown by the constructor)
+        )
     */
     override public @property @system
     CERElement[] set() const
@@ -3577,9 +3520,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         return result;
     }
 
-    /**
-        Encodes a set of CERElements.
-    */
+    /// Encodes a set of elements
     override public @property @system
     void set(in CERElement[] value)
     {
@@ -3594,12 +3535,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
     /**
         Decodes a string, where the characters of the string are limited to
-        0 - 9 and space.
+        0 - 9 and $(MONO SPACE).
 
-        Returns: a string.
         Throws:
-            ASN1ValueException = if any character other than 0-9 or
-                space is encoded.
+        $(UL
+            $(LI $(D ASN1ValueCharactersException) if any character other than 0-9 or space is encoded.)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property @system
     string numericString() const
@@ -3676,8 +3626,9 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         0 - 9 and space.
 
         Throws:
-            ASN1ValueException = if any character other than 0-9 or
-                space is supplied.
+        $(UL
+            $(LI $(D ASN1ValueCharactersException) if any character other than 0-9 or space is supplied.)
+        )
     */
     override public @property @system
     void numericString(in string value)
@@ -3751,12 +3702,23 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         space, apostrophe, parentheses, comma, minus, plus, period,
         forward slash, colon, equals, and question mark.
 
-        Returns: a string.
         Throws:
-            ASN1ValueException = if any character other than a-z, A-Z,
+        $(UL
+            $(LI $(D ASN1ValueCharactersException)
+                if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
-                encoded.
+                encoded)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property @system
     string printableString() const
@@ -3834,10 +3796,10 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         forward slash, colon, equals, and question mark.
 
         Throws:
-            ASN1ValueException = if any character other than a-z, A-Z,
+            $(LI $(D ASN1ValueCharactersException) if any character other than a-z, A-Z,
                 0-9, space, apostrophe, parentheses, comma, minus, plus,
                 period, forward slash, colon, equals, or question mark are
-                supplied.
+                supplied)
     */
     override public @property @system
     void printableString(in string value)
@@ -3910,6 +3872,19 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         Literally just returns the value bytes.
 
         Returns: an unsigned byte array, where each byte is a T.61 character.
+
+        Throws:
+        $(UL
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property @system
     ubyte[] teletexString() const
@@ -3975,9 +3950,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
     }
 
-    /**
-        Literally just sets the value bytes.
-    */
+    /// Literally just sets the value bytes.
     override public @property @system
     void teletexString(in ubyte[] value)
     {
@@ -4041,7 +4014,20 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     /**
         Literally just returns the value bytes.
 
-        Returns: an unsigned byte array.
+        Returns: an unsigned byte array, where each byte is a Videotex character.
+
+        Throws:
+        $(UL
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property @system
     ubyte[] videotexString() const
@@ -4107,9 +4093,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
     }
 
-    /**
-        Literally just sets the value bytes.
-    */
+    /// Literally just sets the value bytes.
     override public @property @system
     void videotexString(in ubyte[] value)
     {
@@ -4173,7 +4157,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     /**
         Decodes a string that only contains ASCII characters.
 
-        IA5String differs from ASCII ever so slightly: IA5 is international,
+        $(MONO IA5String) differs from ASCII ever so slightly: IA5 is international,
         leaving 10 characters up to be locale-specific:
 
         $(TABLE
@@ -4190,9 +4174,19 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             $(TR $(TD 0x7E) $(TD ~))
         )
 
-        Returns: a string.
         Throws:
-            ASN1ValueException = if any enecoded character is not ASCII.
+        $(UL
+            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property @system
     string internationalAlphabetNumber5String() const
@@ -4267,7 +4261,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     /**
         Encodes a string that may only contain ASCII characters.
 
-        IA5String differs from ASCII ever so slightly: IA5 is international,
+        $(MONO IA5String) differs from ASCII ever so slightly: IA5 is international,
         leaving 10 characters up to be locale-specific:
 
         $(TABLE
@@ -4285,7 +4279,9 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         )
 
         Throws:
-            ASN1ValueException = if any enecoded character is not ASCII.
+        $(UL
+            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)
+        )
     */
     override public @property @system
     void internationalAlphabetNumber5String(in string value)
@@ -4355,15 +4351,14 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes a DateTime.
+        Decodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).
+        The value is just the ASCII character representation of the UTC-formatted timestamp.
 
-        The encoded value is just the ASCII character representation of
-        the UTC-formatted timestamp.
-
-        When using Canonical Encoding Rules (CER), only the YYMMDDhhmmssZ
-        format is acceptable for encoding UTCTime.
-
-        A UTCTime does not support milliseconds, unlike GeneralizedTime.
+        An UTC Timestamp looks like:
+        $(UL
+            $(LI $(MONO 9912312359Z))
+            $(LI $(MONO 991231235959+0200))
+        )
 
         If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,
         meaning that the date refers to the first 80 years of the century, this
@@ -4372,10 +4367,26 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         about the 20th century, and prepend '19' when creating the string.
 
         See_Also:
-            $(LINK https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
+        $(UL
+            $(LI $(LINK https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime))
+            $(LI $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime))
+        )
 
         Throws:
-            DateTimeException = if string cannot be decoded to a DateTime
+        $(UL
+            $(LI $(D ASN1ValueException) if the encoded value does not end with a 'Z')
+            $(LI $(D ASN1ValueCharactersException) if any character is not valid in a $(MONO Visiblestring))
+            $(LI $(D DateTimeException) if the encoded string cannot be decoded to a DateTime)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property @system
     DateTime coordinatedUniversalTime() const
@@ -4414,13 +4425,14 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Encodes a DateTime.
-
-        The encoded value is just the ASCII character representation of
+        Encodes a DateTime. The value is just the ASCII character representation of
         the UTC-formatted timestamp.
 
-        When using Canonical Encoding Rules (CER), only the YYMMDDhhmmssZ
-        format is acceptable for encoding UTCTime.
+        An UTC Timestamp looks like:
+        $(UL
+            $(LI $(MONO 9912312359Z))
+            $(LI $(MONO 991231235959+0200))
+        )
 
         See_Also:
             $(LINK https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)
@@ -4449,25 +4461,38 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes a DateTime.
-
-        The CER-encoded value is just the ASCII character representation of
-        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html,
-        ISO 8601)-formatted timestamp.
+        Decodes a DateTime. The value is just the ASCII character representation of
+        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601)-formatted timestamp.
 
         An ISO-8601 Timestamp looks like:
         $(UL
-            $(LI 19851106210627.3)
-            $(LI 19851106210627.3Z)
-            $(LI 19851106210627.3-0500)
+            $(LI $(MONO 19851106210627.3))
+            $(LI $(MONO 19851106210627.3Z))
+            $(LI $(MONO 19851106210627.3-0500))
         )
 
-        But when using Canonical Encoding Rules (CER), only timestamps with
-        no trailing periods ('.'), or post-period trailing zeroes are acceptable,
-        and all timestamps must end with a 'Z', indicating UTC time.
-
         Throws:
-            DateTimeException = if string cannot be decoded to a DateTime
+        $(UL
+            $(LI $(D ASN1ValueException) if the encoded value did not end with a 'Z'
+                or contained a misplaced or unnecessary decimal point)
+            $(LI $(D ASN1ValueCharactersException) if any character is not valid in a $(MONO Visiblestring))
+            $(LI $(D DateTimeException) if the encoded string cannot be decoded to a DateTime)
+            $(LI $(D ASN1ValuePaddingException) if the seconds fraction contains trailing zeroes)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
+
+        Standards:
+        $(UL
+            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))
+        )
     */
     override public @property @system
     DateTime generalizedTime() const
@@ -4547,20 +4572,21 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     /**
         Encodes a DateTime.
 
-        The CER-encoded value is just the ASCII character representation of
-        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html,
+        The value is just the ASCII character representation of
+        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,
         ISO 8601)-formatted timestamp.
 
         An ISO-8601 Timestamp looks like:
         $(UL
-            $(LI 19851106210627.3)
-            $(LI 19851106210627.3Z)
-            $(LI 19851106210627.3-0500)
+            $(LI $(MONO 19851106210627.3))
+            $(LI $(MONO 19851106210627.3Z))
+            $(LI $(MONO 19851106210627.3-0500))
         )
 
-        But when using Canonical Encoding Rules (CER), only timestamps with
-        no trailing periods ('.'), or post-period trailing zeroes are acceptable,
-        and all timestamps must end with a 'Z', indicating UTC time.
+        Standards:
+        $(UL
+            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))
+        )
     */
     override public @property @system
     void generalizedTime(in DateTime value)
@@ -4616,22 +4642,31 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
     /**
         Decodes an ASCII string that contains only characters between and
-        including 0x20 and 0x75.
+        including $(D 0x20) and $(D 0x75). Deprecated, according to page 182 of the
+        Dubuisson book.
 
-        Deprecated, according to page 182 of the Dubuisson book.
+        Throws:
+        $(UL
+            $(LI $(D ASN1ValueCharactersException) if any non-graphical character (including space) is encoded)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
 
         Citations:
-            Dubuisson, Olivier. “Character String Types.” ASN.1:
-                Communication between Heterogeneous Systems, Morgan
-                Kaufmann, 2001, pp. 175-178.
-            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,
-                The Wikipedia Page on ISO 2022)
-            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)
-
-        Returns: a string.
-        Throws:
-            ASN1ValueException = if any non-graphical character
-                (including space) is encoded.
+        $(UL
+            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                $(I ASN.1: Communication between Heterogeneous Systems),
+                Morgan Kaufmann, 2001, pp. 175-178.)
+            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))
+            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))
+        )
     */
     override public @property @system
     string graphicString() const
@@ -4705,21 +4740,22 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
     /**
         Encodes an ASCII string that may contain only characters between and
-        including 0x20 and 0x75.
-
-        Deprecated, according to page 182 of the Dubuisson book.
-
-        Citations:
-            Dubuisson, Olivier. “Character String Types.” ASN.1:
-                Communication between Heterogeneous Systems, Morgan
-                Kaufmann, 2001, pp. 175-178.
-            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,
-                The Wikipedia Page on ISO 2022)
-            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)
+        including $(D 0x20) and $(D 0x75). Deprecated, according to page 182
+        of the Dubuisson book.
 
         Throws:
-            ASN1ValueException = if any non-graphical character
-                (including space) is supplied.
+        $(UL
+            $(LI $(D ASN1ValueCharactersException) if any non-graphical character (including space) is supplied)
+        )
+
+        Citations:
+        $(UL
+            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                $(I ASN.1: Communication between Heterogeneous Systems),
+                Morgan Kaufmann, 2001, pp. 175-178.)
+            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))
+            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))
+        )
     */
     override public @property @system
     void graphicString(in string value)
@@ -4790,13 +4826,23 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
     /**
         Decodes a string that only contains characters between and including
-        0x20 and 0x7E. (Honestly, I don't know how this differs from
-        GraphicalString.)
+        $(D 0x20) and $(D 0x7E). (Honestly, I don't know how this differs from
+        $(MONO GraphicalString).)
 
-        Returns: a string.
         Throws:
-            ASN1ValueException = if any non-graphical character
-                (including space) is encoded.
+        $(UL
+            $(LI $(D ASN1ValueCharactersException)
+                if any non-graphical character (including space) is encoded)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property @system
     string visibleString() const
@@ -4870,12 +4916,14 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
     /**
         Encodes a string that only contains characters between and including
-        0x20 and 0x7E. (Honestly, I don't know how this differs from
-        GraphicalString.)
+        $(D 0x20) and $(D 0x7E). (Honestly, I don't know how this differs from
+        $(MONO GraphicalString).)
 
         Throws:
-            ASN1ValueException = if any non-graphical character
-                (including space) is supplied.
+        $(UL
+            $(LI $(D ASN1ValueCharactersException)
+                if any non-graphical character (including space) is supplied.)
+        )
     */
     override public @property @system
     void visibleString(in string value)
@@ -4945,18 +4993,31 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes a string containing only ASCII characters.
+        Decodes a string containing only ASCII characters. Deprecated, according
+        to page 182 of the Dubuisson book.
 
-        Deprecated, according to page 182 of the Dubuisson book.
-
-        Returns: a string.
         Throws:
-            ASN1ValueException = if any enecoded character is not ASCII.
+        $(UL
+            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
 
         Citations:
-            Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
-            Communication between Heterogeneous Systems, Morgan Kaufmann,
-            2001, p. 182.
+        $(UL
+            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                $(I ASN.1: Communication between Heterogeneous Systems),
+                Morgan Kaufmann, 2001, p. 182.)
+            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))
+            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))
+        )
     */
     override public @property @system
     string generalString() const
@@ -5029,17 +5090,20 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Encodes a string containing only ASCII characters.
-
-        Deprecated, according to page 182 of the Dubuisson book.
+        Encodes a string containing only ASCII characters. Deprecated,
+        according to page 182 of the Dubuisson book.
 
         Throws:
-            ASN1ValueException = if any enecoded character is not ASCII.
+        $(UL
+            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)
+        )
 
         Citations:
-            Dubuisson, Olivier. “Canonical Encoding Rules (CER).” ASN.1:
-            Communication between Heterogeneous Systems, Morgan Kaufmann,
-            2001, p. 182.
+        $(UL
+            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                $(I ASN.1: Communication between Heterogeneous Systems),
+                Morgan Kaufmann, 2001, p. 182.)
+        )
     */
     override public @property @system
     void generalString(in string value)
@@ -5109,12 +5173,22 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes a dstring of UTF-32 characters.
+        Decodes a $(MONO dstring) of UTF-32 characters.
 
-        Returns: a string of UTF-32 characters.
         Throws:
-            ASN1ValueException = if the encoded bytes is not evenly
-                divisible by four.
+        $(UL
+            $(LI $(D ASN1ValueException)
+                if the encoded bytes is not evenly divisible by four)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property @system
     dstring universalString() const
@@ -5214,9 +5288,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
     }
 
-    /**
-        Encodes a dstring of UTF-32 characters.
-    */
+    /// Encodes a $(MONO dstring) of UTF-32 characters.
     override public @property @system
     void universalString(in dstring value)
     {
@@ -5326,14 +5398,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK https://www.itu.int,
-                International Telecommunications Union)'s
-            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        Decodes a $(MONO CharacterString), which is a constructed data type, defined
+        in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s
+            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines CHARACTER as:
+        The specification defines $(MONO CharacterString) as:
 
-        $(MONO
+        $(PRE
             CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -5349,20 +5420,25 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 string-value OCTET STRING }
         )
 
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
+        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)
+        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.
 
-        Returns: an instance of types.universal.CharacterString.
+        Returns: an instance of $(D types.universal.characterstring.CharacterString).
+
         Throws:
-            ASN1SizeException = if encoded CharacterString has too few or too many
-                elements, or if syntaxes or context-negotiation element has
-                too few or too many elements.
-            ASN1ValueSizeException = if encoded INTEGER is too large to decode.
-            ASN1InvalidIndexException = if encoded value selects a choice for
-                identification or uses an unspecified index for an element in
-                syntaxes or context-negotiation, or if an unspecified element
-                of CharacterString itself is referenced by an out-of-range
-                context-specific index. (See $(D_INLINECODE ASN1InvalidIndexException).)
+        $(UL
+            $(LI $(D ASN1ValueException) if encoded $(MONO CharacterString) has too few or too many
+                elements, or if $(MONO syntaxes) or $(MONO context-negotiation) element has
+                too few or too many elements)
+            $(LI $(D ASN1ValueSizeException) if encoded $(MONO INTEGER) is too large to decode)
+            $(LI $(D ASN1RecursionException) if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException) if any nested primitives do not have the
+                correct tag class)
+            $(LI $(D ASN1ConstructionException) if any element has the wrong construction)
+            $(LI $(D ASN1TagNumberException) if any nested primitives do not have the
+                correct tag number)
+        )
     */
     override public @property @system
     CharacterString characterString() const
@@ -5521,14 +5597,13 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Encodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK https://www.itu.int,
-                International Telecommunications Union)'s
-            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        Encodes a $(MONO CharacterString), which is a constructed data type, defined
+        in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s
+            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines CHARACTER as:
+        The specification defines $(MONO CharacterString) as:
 
-        $(MONO
+        $(PRE
             CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -5544,8 +5619,8 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
                 string-value OCTET STRING }
         )
 
-        This assumes AUTOMATIC TAGS, so all of the identification choices
-        will be context-specific and numbered from 0 to 5.
+        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)
+        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.
     */
     override public @property @system
     void characterString(in CharacterString value)
@@ -5673,12 +5748,22 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Decodes a wstring of UTF-16 characters.
+        Decodes a $(MONO wstring) of UTF-16 characters.
 
-        Returns: an immutable array of UTF-16 characters.
         Throws:
-            ASN1ValueException = if the encoded bytes is not evenly
-                divisible by two.
+        $(UL
+            $(LI $(D ASN1ValueException)
+                if the encoded bytes is not evenly divisible by two)
+            $(LI $(D ASN1RecursionException)
+                if using constructed form and the element
+                is constructed of too many nested constructed elements)
+            $(LI $(D ASN1TagClassException)
+                if any nested primitives do not share the
+                same tag class as their outer constructed element)
+            $(LI $(D ASN1TagNumberException)
+                if any nested primitives do not share the
+                same tag number as their outer constructed element)
+        )
     */
     override public @property @system
     wstring basicMultilingualPlaneString() const
@@ -5776,9 +5861,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         }
     }
 
-    /**
-        Encodes a wstring of UTF-16 characters.
-    */
+    /// Encodes a $(MONO wstring) of UTF-16 characters.
     override public @property @system
     void basicMultilingualPlaneString(in wstring value)
     {
@@ -5887,9 +5970,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         test(2017u);
     }
 
-    /**
-        Creates an EndOfContent CER Value.
-    */
+    /// Creates an $(MONO END OF CONTENT)
     public @safe @nogc nothrow
     this()
     {
@@ -5898,24 +5979,15 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Creates a CERElement from the supplied bytes, inferring that the first
-        byte is the type tag. The supplied ubyte[] array is "chomped" by
-        reference, so the original array will grow shorter as CERElements are
+        Creates a $(D CERElement) from the supplied bytes, inferring that the first
+        byte is the type tag. The supplied $(D ubyte[]) array is "chomped" by
+        reference, so the original array will grow shorter as $(D CERElement)s are
         generated.
 
         Throws:
-            ASN1ValueSizeException = if the bytes supplied are fewer than
-                two (one or zero, in other words), such that no valid CERElement
-                can be decoded, or if the length is encoded in indefinite
-                form, but the END OF CONTENT octets (two consecutive null
-                octets) cannot be found, or if the value is encoded in fewer
-                octets than indicated by the length byte.
-            ASN1LengthException = if the length byte is set to 0xFF,
-                which is reserved.
-            ASN1ValueSizeException = if the length cannot be represented by
-                the largest unsigned integer.
+            All of the same exceptions as $(D fromBytes())
 
-        Example:
+        Examples:
         ---
         // Decoding looks like:
         CERElement[] result;
@@ -5924,7 +5996,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         // Encoding looks like:
         ubyte[] result;
-        foreach (cv; bervalues)
+        foreach (cv; cervalues)
         {
             result ~= cast(ubyte[]) cv;
         }
@@ -5938,24 +6010,15 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        Creates a CERElement from the supplied bytes, inferring that the first
-        byte is the type tag. The supplied ubyte[] array is read, starting
+        Creates a $(D CERElement) from the supplied bytes, inferring that the first
+        byte is the type tag. The supplied $(D ubyte[]) array is read, starting
         from the index specified by $(D bytesRead), and increments
         $(D bytesRead) by the number of bytes read.
 
         Throws:
-            ASN1ValueSizeException = if the bytes supplied are fewer than
-                two (one or zero, in other words), such that no valid CERElement
-                can be decoded, or if the length is encoded in indefinite
-                form, but the END OF CONTENT octets (two consecutive null
-                octets) cannot be found, or if the value is encoded in fewer
-                octets than indicated by the length byte.
-            ASN1LengthException = if the length byte is set to 0xFF,
-                which is reserved.
-            ASN1ValueSizeException = if the length cannot be represented by
-                the largest unsigned integer.
+            All of the same exceptions as $(D fromBytes())
 
-        Example:
+        Examples:
         ---
         // Decoding looks like:
         CERElement[] result;
@@ -5965,7 +6028,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
 
         // Encoding looks like:
         ubyte[] result;
-        foreach (cv; bervalues)
+        foreach (cv; cervalues)
         {
             result ~= cast(ubyte[]) cv;
         }
@@ -5977,7 +6040,28 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         bytesRead += this.fromBytes(bytes[bytesRead .. $].dup);
     }
 
-    // Returns the number of bytes read
+    /**
+        Returns: the number of bytes read
+
+        Throws:
+        $(UL
+            $(LI $(D ASN1TagPaddingException) if the tag number is "padded" with
+                "leading zero bytes" ($(D 0x80u)))
+            $(LI $(D ASN1TagOverflowException) if the tag number is too large to
+                fit into a $(D size_t))
+            $(LI $(D ASN1LengthUndefinedException) if the reserved length byte of
+                $(D 0xFF) is encountered)
+            $(LI $(D ASN1LengthOverflowException) if the length is too large to fit
+                into a $(D size_t))
+            $(LI $(D ASN1TruncationException) if the tag, length, or value appear to
+                be truncated)
+            $(LI $(D ASN1ConstructionException) if the length is indefinite, but the
+                element is marked as being encoded primitively)
+            $(LI $(D ASN1RecursionException) if, when trying to determine the end of
+                an indefinite-length encoded element, the parser has to recurse
+                too deep)
+        )
+    */
     public
     size_t fromBytes (in ubyte[] bytes)
     {
@@ -6232,14 +6316,14 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        This differs from $(D_INLINECODE this.value) in that
-        $(D_INLINECODE this.value) only returns the value octets, whereas
-        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,
+        This differs from $(D this.value) in that
+        $(D this.value) only returns the value octets, whereas
+        $(D this.toBytes) returns the type tag, length tag / octets,
         and the value octets, all concatenated.
 
-        This is the exact same as $(D_INLINECODE this.opCast!(ubyte[])()).
+        This is the exact same as $(D this.opCast!(ubyte[])()).
 
-        Returns: type tag, length tag, and value, all concatenated as a ubyte array.
+        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.
     */
     public @property @system nothrow
     ubyte[] toBytes() const
@@ -6324,14 +6408,14 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     }
 
     /**
-        This differs from $(D_INLINECODE this.value) in that
-        $(D_INLINECODE this.value) only returns the value octets, whereas
-        $(D_INLINECODE this.toBytes) returns the type tag, length tag / octets,
+        This differs from $(D this.value) in that
+        $(D this.value) only returns the value octets, whereas
+        $(D this.toBytes) returns the type tag, length tag / octets,
         and the value octets, all concatenated.
 
-        This is the exact same as $(D_INLINECODE this.toBytes()).
+        This is the exact same as $(D this.toBytes()).
 
-        Returns: type tag, length tag, and value, all concatenated as a ubyte array.
+        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.
     */
     public @system nothrow
     ubyte[] opCast(T = ubyte[])()

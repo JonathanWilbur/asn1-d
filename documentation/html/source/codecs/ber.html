@@ -1877,7 +1877,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+		<ul>            <li><code class="d inline">ASN1ValueException</code>
                 if the encoded bytes is not evenly divisible by four</li>
             <li><code class="d inline">ASN1RecursionException</code>
                 if using constructed form and the element
@@ -2004,7 +2004,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+		<ul>            <li><code class="d inline">ASN1ValueException</code>
                 if the encoded bytes is not evenly divisible by two</li>
             <li><code class="d inline">ASN1RecursionException</code>
                 if using constructed form and the element
@@ -2048,7 +2048,7 @@ I had to name this method <code class="d inline"><code class="code">nill</code><
 </section>
 <div><section class="module-info"><section id="summary">Creates a <code class="d inline">BERElement</code> from the supplied <code class="code">bytes</code>, inferring that the first
         byte is the type tag. The supplied <code class="d inline">ubyte[]</code> array is "chomped" by
-        reference, so the original array will grow shorter as <code class="d inline">BERElements</code> are
+        reference, so the original array will grow shorter as <code class="d inline">BERElement</code>s are
         generated.
 </section>
 <div class="ddoc_throws">
@@ -2208,7 +2208,7 @@ foreach (bv; bervalues)
 
         </div>
         <div id="footer">
-            <span id="timestamp">Tue Jan  9 21:10:22 2018
+            <span id="timestamp">Wed Jan 10 08:39:54 2018
 </span>
         </div>
     </body>
