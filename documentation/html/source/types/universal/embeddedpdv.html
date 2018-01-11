@@ -157,58 +157,88 @@ code, .mono {
 
     </code>
 </section>
-<div><section class="module-info"><div class="ddoc_section">
-	<p class="para">
-		<span class="ddoc_section_h">Page:</span>
-215
-    If a module includes the clause AUTOMATIC TAGS in its header,
-    the components of all its structured types (SEQUENCE, SET or CHOICE)
-    are automatically tagged by the compiler starting from 0 by one-increment.
-    By default, every component is tagged in the implicit mode except if it
-    is a CHOICE type, an open type or a parameter that is a type. This
-    tagging mechanism is obviously documented in the ASN.1 standard and,
-    as a result, does not depend on the compiler. Hence, the module:
+<div><section class="module-info"><section id="summary">An <span class="mono">EmbeddedPDV</span> is a constructed data type, defined in
+    the <a href="https://www.itu.int">International Telecommunications Union</a>'s
+    <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+</section>
+<div class="description">The specification defines <span class="mono">EmbeddedPDV</span> as:
 <br><br>
-        <i>            M DEFINITIONS AUTOMATIC TAGS ::=
-            BEGIN
-                T ::= SEQUENCE { a INTEGER,
-                b CHOICE { i INTEGER, n NULL },
-                c REAL }
-            END
-        </i>
-<br><br>
-    is equivalent, once applied the automatic tagging, to:
-<br><br>
-        <i>            M DEFINITIONS ::=
-            BEGIN
-            T ::= SEQUENCE {
-            a [0] IMPLICIT INTEGER,
-            b [1] EXPLICIT CHOICE { i [0] IMPLICIT INTEGER,
-                                    n [1] IMPLICIT NULL },
-            c [2] IMPLICIT REAL }
-            END
-        </i>
-<br><br>
-        <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
-                identification CHOICE {
-                    syntaxes SEQUENCE {
-                        abstract OBJECT IDENTIFIER,
-                        transfer OBJECT IDENTIFIER },
-                    syntax OBJECT IDENTIFIER,
+    <pre>        EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+            identification CHOICE {
+                syntaxes SEQUENCE {
+                    abstract OBJECT IDENTIFIER,
+                    transfer OBJECT IDENTIFIER },
+                syntax OBJECT IDENTIFIER,
+                presentation-context-id INTEGER,
+                context-negotiation SEQUENCE {
                     presentation-context-id INTEGER,
-                    context-negotiation SEQUENCE {
-                        presentation-context-id INTEGER,
-                        transfer-syntax OBJECT IDENTIFIER },
-                    transfer-syntax OBJECT IDENTIFIER,
-                    fixed NULL },
-                data-value-descriptor ObjectDescriptor OPTIONAL,
-                data-value OCTET STRING }
-            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
-        </i>
+                    transfer-syntax OBJECT IDENTIFIER },
+                transfer-syntax OBJECT IDENTIFIER,
+                fixed NULL },
+            data-value-descriptor ObjectDescriptor OPTIONAL,
+            data-value OCTET STRING }
+        (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
+    </pre>
 <br><br>
-    Note that, the data-value-descriptor field should be absent!
-	</p>
-</div>
+    This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
+    choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.
+<br><br>
+    The following additional constraints are applied to the abstract syntax
+    when using Canonical Encoding Rules or Distinguished Encoding Rules,
+    which are also defined in the
+    <a href="http://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+    <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>:
+<br><br>
+    <pre>        EmbeddedPDV ( WITH COMPONENTS {
+            ... ,
+            identification ( WITH COMPONENTS {
+                ... ,
+                presentation-context-id ABSENT,
+                context-negotiation ABSENT } ) } )
+    </pre>
+<br><br>
+    The stated purpose of the constraints shown above is to restrict the use of
+    the <span class="mono">presentation-context-id</span>, either by itself or within the
+    context-negotiation, which makes the following the effective abstract
+    syntax of <span class="mono">EmbeddedPDV</span> when using Canonical Encoding Rules or
+    Distinguished Encoding Rules:
+<br><br>
+    <pre>        EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+            identification CHOICE {
+                syntaxes SEQUENCE {
+                    abstract OBJECT IDENTIFIER,
+                    transfer OBJECT IDENTIFIER },
+                syntax OBJECT IDENTIFIER,
+                presentation-context-id INTEGER,
+                context-negotiation SEQUENCE {
+                    presentation-context-id INTEGER,
+                    transfer-syntax OBJECT IDENTIFIER },
+                transfer-syntax OBJECT IDENTIFIER,
+                fixed NULL },
+            data-value-descriptor ObjectDescriptor OPTIONAL,
+            data-value OCTET STRING }
+                ( WITH COMPONENTS {
+                    ... ,
+                    identification ( WITH COMPONENTS {
+                        ... ,
+                        presentation-context-id ABSENT,
+                        context-negotiation ABSENT } ) } )
+    </pre>
+<br><br>
+    With the constraints applied, the abstract syntax for <span class="mono">EmbeddedPDV</span>s encoded
+    using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+<br><br>
+    <pre>        EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+            identification CHOICE {
+                syntaxes SEQUENCE {
+                    abstract OBJECT IDENTIFIER,
+                    transfer OBJECT IDENTIFIER },
+                syntax OBJECT IDENTIFIER,
+                transfer-syntax OBJECT IDENTIFIER,
+                fixed NULL },
+            data-value-descriptor ObjectDescriptor OPTIONAL,
+            data-value OCTET STRING }
+    </pre></div>
 </section>
 <ul class="ddoc_members">
 	<li class="ddoc_member"><a href="#EmbeddedPresentationDataValue.identification" id="EmbeddedPresentationDataValue.identification"><code class="member">identification</code></a>
@@ -242,7 +272,7 @@ code, .mono {
 
         </div>
         <div id="footer">
-            <span id="timestamp">Wed Jan 10 13:27:18 2018
+            <span id="timestamp">Wed Jan 10 21:39:50 2018
 </span>
         </div>
     </body>

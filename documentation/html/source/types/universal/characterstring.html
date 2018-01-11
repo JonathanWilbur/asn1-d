@@ -148,20 +148,29 @@ code, .mono {
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Page 309
-CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
-    identification CHOICE {
-        syntaxes SEQUENCE {
-            abstract OBJECT IDENTIFIER,
-            transfer OBJECT IDENTIFIER },
-        syntax OBJECT IDENTIFIER,
-        presentation-context-id INTEGER,
-        context-negotiation SEQUENCE {
-            presentation-context-id INTEGER,
-            transfer-syntax OBJECT IDENTIFIER },
-        transfer-syntax OBJECT IDENTIFIER,
-        fixed NULL },
-    string-value OCTET STRING }</section>
+<div><section class="module-info"><section id="summary">A <span class="mono"><code class="code">CharacterString</code></span>, is a constructed data type, defined
+    in the <a href="https://www.itu.int">International Telecommunications Union</a>'s
+        <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+</section>
+<div class="description">The specification defines <span class="mono"><code class="code">CharacterString</code></span> as:
+<br><br>
+    <pre>        CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+            identification CHOICE {
+                syntaxes SEQUENCE {
+                    abstract OBJECT IDENTIFIER,
+                    transfer OBJECT IDENTIFIER },
+                syntax OBJECT IDENTIFIER,
+                presentation-context-id INTEGER,
+                context-negotiation SEQUENCE {
+                    presentation-context-id INTEGER,
+                    transfer-syntax OBJECT IDENTIFIER },
+                transfer-syntax OBJECT IDENTIFIER,
+                fixed NULL },
+            string-value OCTET STRING }
+    </pre>
+<br><br>
+    This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
+    choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.</div>
 </section>
 <ul class="ddoc_members">
 	<li class="ddoc_member"><a href="#CharacterString.identification" id="CharacterString.identification"><code class="member">identification</code></a>
@@ -195,7 +204,7 @@ CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
 
         </div>
         <div id="footer">
-            <span id="timestamp">Wed Jan 10 13:27:18 2018
+            <span id="timestamp">Wed Jan 10 21:39:50 2018
 </span>
         </div>
     </body>

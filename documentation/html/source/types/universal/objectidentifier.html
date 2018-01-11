@@ -193,11 +193,29 @@ code, .mono {
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">A class for Object Identifiers, that supports object descriptors and various
+<div><section class="module-info"><section id="summary">A class for Object Identifiers that supports object descriptors and various
     output formatting.</section>
 </section>
 <ul class="ddoc_members">
-	<li class="ddoc_member"><a href="#ObjectIdentifier.length" id="ObjectIdentifier.length"><code class="member">length</code></a>
+	<li class="ddoc_member"><a href="#ObjectIdentifier.showDescriptors" id="ObjectIdentifier.showDescriptors"><code class="member">showDescriptors</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.showDescriptors"></span>static bool <code class="code">showDescriptors</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.nodes" id="ObjectIdentifier.nodes"><code class="member">nodes</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.nodes"></span>immutable OIDNode[] <code class="code">nodes</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.length" id="ObjectIdentifier.length"><code class="member">length</code></a>
 <section class="declaration">
     <code>
         <span class="ddoc_anchor" id="ObjectIdentifier.length"></span>const @property @safe size_t <code class="code">length</code>();
@@ -225,37 +243,17 @@ code, .mono {
 	<h4>Parameters</h4>
 	<table cellspacing="0" cellpadding="5" border="0" class="graybox">
 		<tbody>
-			<tr class="ddoc_param_row">
-	<td scope="ddoc_param_id">
-	<code class="code">
-		<em class="term">size_t[] <code class="code">numbers</code></em>
-	</code>
-</td>
-<td>
-	<div class="ddoc_param_desc">
-		<p class="para">
-			an array of unsigned integer representing the Object Identifier
-		</p>
-	</div>
-</td>
-</tr>
-
+			
 		</tbody>
 	</table>
-</div>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		An OID object
-
-	</p>
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		OIDException = if fewer than three <code class="code">numbers</code> are provided, or if the
+		<ul>            <li><code class="d inline">OIDException</code> if fewer than two <code class="code">numbers</code> are provided, or if the
                 first number is not 0, 1, or 2, or if the second number is
-                greater than 39.
+                greater than 39</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -268,41 +266,13 @@ code, .mono {
 </section>
 <div><section class="module-info"><section id="summary">Constructor for an Object Identifier
 </section>
-<div class="ddoc_params">
-	<h4>Parameters</h4>
-	<table cellspacing="0" cellpadding="5" border="0" class="graybox">
-		<tbody>
-			<tr class="ddoc_param_row">
-	<td scope="ddoc_param_id">
-	<code class="code">
-		<em class="term">OIDNode[] <code class="code">nodes</code></em>
-	</code>
-</td>
-<td>
-	<div class="ddoc_param_desc">
-		<p class="para">
-			An array of OIDNodes
-		</p>
-	</div>
-</td>
-</tr>
-
-		</tbody>
-	</table>
-</div>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		An OID object
-
-	</p>
-</div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		OIDException = if fewer than three <code class="code">nodes</code> are provided, or if the
+		<ul>            <li><code class="d inline">OIDException</code> if fewer than two <code class="code">nodes</code> are provided, or if the
                 first node is not 0, 1, or 2, or if the second node is greater
-                than 39.
+                than 39</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -319,39 +289,28 @@ code, .mono {
 	<h4>Parameters</h4>
 	<table cellspacing="0" cellpadding="5" border="0" class="graybox">
 		<tbody>
-			<tr class="ddoc_param_row">
-	<td scope="ddoc_param_id">
-	<code class="code">
-		<em class="term">nodes</em>
-	</code>
-</td>
-<td>
-	<div class="ddoc_param_desc">
-		<p class="para">
-			An array of OIDNodes
-		</p>
-	</div>
-</td>
-</tr>
-
+			
 		</tbody>
 	</table>
-</div>
-<div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		An OID object
-
-	</p>
 </div>
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		OIDException = if fewer than three nodes are provided, or if the
+		<ul>            <li><code class="d inline">OIDException</code> if fewer than two nodes are provided, or if the
                 first node is not 0, 1, or 2, or if the second node is greater
-                than 39.
+                than 39</li>
+        </ul>
 	</p>
 </div></section>
+</div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifier.opEquals" id="ObjectIdentifier.opEquals"><code class="member">opEquals</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifier.opEquals"></span>const @system bool <code class="code">opEquals</code>(in Object <code class="code">other</code>);
+
+    </code>
+</section>
+<div>
 </div>
 </li><li class="ddoc_member"><a href="#ObjectIdentifier.opIndex" id="ObjectIdentifier.opIndex"><code class="member">opIndex</code></a>
 <section class="declaration">
@@ -363,7 +322,7 @@ code, .mono {
 <div><section class="module-info"><div class="ddoc_returns">
 	<h4>Return Value</h4>
 	<p class="para">
-		the OIDNode at the specified <code class="code">index</code>.
+		the <code class="d inline">OIDNode</code> at the specified <code class="code">index</code>.
 
 	</p>
 </div>
@@ -384,7 +343,7 @@ code, .mono {
 <div><section class="module-info"><div class="ddoc_returns">
 	<h4>Return Value</h4>
 	<p class="para">
-		a range of OIDNodes from the OID.
+		a range of <code class="d inline">OIDNode</code>s from the OID.
 
 	</p>
 </div>
@@ -402,12 +361,7 @@ code, .mono {
 
     </code>
 </section>
-<div><section class="module-info"><div class="ddoc_returns">
-	<h4>Return Value</h4>
-	<p class="para">
-		the length of the OID.
-	</p>
-</div>
+<div><section class="module-info"><section id="summary">Returns the length of the OID.</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#ObjectIdentifier.descriptor" id="ObjectIdentifier.descriptor"><code class="member">descriptor</code></a>
@@ -427,7 +381,8 @@ code, .mono {
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		RangeError = if invalid <code class="code">index</code> specified.
+		<ul>            <li><code class="d inline">RangeError</code> if an invalid <code class="code">index</code> is specified</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -589,13 +544,13 @@ code, .mono {
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">An override so that associative arrays can use an OIDNode as a
+<div><section class="module-info"><section id="summary">An override so that associative arrays can use an <code class="d inline">OIDNode</code> as a
         key.
 </section>
 <div class="ddoc_returns">
 	<h4>Return Value</h4>
 	<p class="para">
-		A size_t that represents a hash of the OIDNode
+		A <code class="d inline">size_t</code> that represents a hash of the <code class="d inline">OIDNode</code>
 	</p>
 </div>
 </section>
@@ -609,7 +564,7 @@ code, .mono {
 
         </div>
         <div id="footer">
-            <span id="timestamp">Wed Jan 10 13:27:18 2018
+            <span id="timestamp">Wed Jan 10 21:39:50 2018
 </span>
         </div>
     </body>

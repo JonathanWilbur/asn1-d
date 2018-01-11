@@ -3989,7 +3989,7 @@
      {
       "name" : "descriptor",
       "kind" : "variable",
-      "comment" : "        The descriptor string is an ObjectDescriptor, which is defined as:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        It is used to describe the object identified by this node.\n",
+      "comment" : "        The descriptor string is an ObjectDescriptor, which is defined as:\n\n        $(MONO ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just $(D 0x20) to $(D 0x7E), therefore\n        ObjectDescriptor is just $(D 0x20) to $(D 0x7E).\n\n        It is used to describe the object identified by this node.\n",
       "line" : 30,
       "char" : 29,
       "storageClass" : [
@@ -4051,7 +4051,7 @@
      {
       "name" : "toHash",
       "kind" : "function",
-      "comment" : "        An override so that associative arrays can use an OIDNode as a\n        key.\n        Returns: A size_t that represents a hash of the OIDNode\n",
+      "comment" : "        An override so that associative arrays can use an $(D OIDNode) as a\n        key.\n        Returns: A $(D size_t) that represents a hash of the $(D OIDNode)\n",
       "line" : 61,
       "char" : 12,
       "deco" : "xFNbNeZm",
@@ -4091,8 +4091,8 @@
      {
       "name" : "this",
       "kind" : "constructor",
-      "comment" : "        A constructor that accepts a descriptor string.\n        The descriptor string is an ObjectDescriptor, which is defined as:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n        Returns: a string.\n        Throws:\n            ASN1ValueException = if the encoded value contains any bytes\n                outside of 0x20 to 0x7E.\n",
-      "line" : 105,
+      "comment" : "        A constructor that accepts a descriptor string.\n        The descriptor string is an ObjectDescriptor, which is defined as:\n\n        $(MONO ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        $(MONO GraphicString) is just a string containing only characters between\n        and including $(D 0x20) and $(D 0x7E), therefore ObjectDescriptor is just\n        $(D 0x20) and $(D 0x7E).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if the encoded value contains any bytes\n                outside of $(D 0x20) to $(D 0x7E))\n        )\n",
+      "line" : 100,
       "char" : 5,
       "deco" : "FNcxmxAyaZS5types7oidtype20ObjectIdentifierNode",
       "originalType" : "ref @system (in size_t number, in string descriptor)",
@@ -4106,18 +4106,18 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 130,
+      "endline" : 125,
       "endchar" : 5
      },
      {
-      "name" : "__unittest___source_types_oidtype_d_133_2",
+      "name" : "__unittest___source_types_oidtype_d_128_2",
       "kind" : "function",
-      "line" : 133,
+      "line" : 128,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 150,
+      "endline" : 145,
       "endchar" : 1
      }
     ]
@@ -4139,15 +4139,15 @@
    {
     "name" : "CharacterString",
     "kind" : "struct",
-    "comment" : "Page 309\nCHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n    identification CHOICE {\n        syntaxes SEQUENCE {\n            abstract OBJECT IDENTIFIER,\n            transfer OBJECT IDENTIFIER },\n        syntax OBJECT IDENTIFIER,\n        presentation-context-id INTEGER,\n        context-negotiation SEQUENCE {\n            presentation-context-id INTEGER,\n            transfer-syntax OBJECT IDENTIFIER },\n        transfer-syntax OBJECT IDENTIFIER,\n        fixed NULL },\n    string-value OCTET STRING }\n",
-    "line" : 21,
+    "comment" : "    A $(MONO CharacterString), is a constructed data type, defined\n    in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n    The specification defines $(MONO CharacterString) as:\n\n    $(PRE\n        CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n            identification CHOICE {\n                syntaxes SEQUENCE {\n                    abstract OBJECT IDENTIFIER,\n                    transfer OBJECT IDENTIFIER },\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER },\n                transfer-syntax OBJECT IDENTIFIER,\n                fixed NULL },\n            string-value OCTET STRING }\n    )\n\n    This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n    choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
+    "line" : 31,
     "char" : 1,
     "members" : [
      {
       "name" : "identification",
       "kind" : "variable",
       "comment" : "        A field indicating the the transfer syntax used to indicate the means\n        by which the string-value field is encoded. Can also be used to specify\n        the abstract syntax of what is encoded.\n",
-      "line" : 28,
+      "line" : 38,
       "char" : 39,
       "deco" : "S5types14identification38ASN1ContextSwitchingTypeIdentification",
       "originalType" : "ASN1ContextSwitchingTypeID",
@@ -4157,7 +4157,7 @@
       "name" : "stringValue",
       "kind" : "variable",
       "comment" : "The encoded data\n",
-      "line" : 30,
+      "line" : 40,
       "char" : 20,
       "deco" : "Ah",
       "offset" : 96
@@ -4189,15 +4189,15 @@
    {
     "name" : "EmbeddedPresentationDataValue",
     "kind" : "struct",
-    "comment" : "    Page: 215\n    If a module includes the clause AUTOMATIC TAGS in its header,\n    the components of all its structured types (SEQUENCE, SET or CHOICE)\n    are automatically tagged by the compiler starting from 0 by one-increment.\n    By default, every component is tagged in the implicit mode except if it\n    is a CHOICE type, an open type or a parameter that is a type. This\n    tagging mechanism is obviously documented in the ASN.1 standard and,\n    as a result, does not depend on the compiler. Hence, the module:\n\n        $(I\n            M DEFINITIONS AUTOMATIC TAGS ::=\n            BEGIN\n                T ::= SEQUENCE { a INTEGER,\n                b CHOICE { i INTEGER, n NULL },\n                c REAL }\n            END\n        )\n\n    is equivalent, once applied the automatic tagging, to:\n\n        $(I\n            M DEFINITIONS ::=\n            BEGIN\n            T ::= SEQUENCE {\n            a [0] IMPLICIT INTEGER,\n            b [1] EXPLICIT CHOICE { i [0] IMPLICIT INTEGER,\n                                    n [1] IMPLICIT NULL },\n            c [2] IMPLICIT REAL }\n            END\n        )\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n    Note that, the data-value-descriptor field should be absent!\n",
-    "line" : 64,
+    "comment" : "    An $(MONO EmbeddedPDV) is a constructed data type, defined in\n    the $(LINK https://www.itu.int, International Telecommunications Union)'s\n    $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n    The specification defines $(MONO EmbeddedPDV) as:\n\n    $(PRE\n        EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntaxes SEQUENCE {\n                    abstract OBJECT IDENTIFIER,\n                    transfer OBJECT IDENTIFIER },\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER },\n                transfer-syntax OBJECT IDENTIFIER,\n                fixed NULL },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n        (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n    )\n\n    This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n    choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n\n    The following additional constraints are applied to the abstract syntax\n    when using Canonical Encoding Rules or Distinguished Encoding Rules,\n    which are also defined in the\n    $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n    $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):\n\n    $(PRE\n        EmbeddedPDV ( WITH COMPONENTS {\n            ... ,\n            identification ( WITH COMPONENTS {\n                ... ,\n                presentation-context-id ABSENT,\n                context-negotiation ABSENT } ) } )\n    )\n\n    The stated purpose of the constraints shown above is to restrict the use of\n    the $(MONO presentation-context-id), either by itself or within the\n    context-negotiation, which makes the following the effective abstract\n    syntax of $(MONO EmbeddedPDV) when using Canonical Encoding Rules or\n    Distinguished Encoding Rules:\n\n    $(PRE\n        EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntaxes SEQUENCE {\n                    abstract OBJECT IDENTIFIER,\n                    transfer OBJECT IDENTIFIER },\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER },\n                transfer-syntax OBJECT IDENTIFIER,\n                fixed NULL },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n                ( WITH COMPONENTS {\n                    ... ,\n                    identification ( WITH COMPONENTS {\n                        ... ,\n                        presentation-context-id ABSENT,\n                        context-negotiation ABSENT } ) } )\n    )\n\n    With the constraints applied, the abstract syntax for $(MONO EmbeddedPDV)s encoded\n    using Canonical Encoding Rules or Distinguished Encoding Rules becomes:\n\n    $(PRE\n        EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntaxes SEQUENCE {\n                    abstract OBJECT IDENTIFIER,\n                    transfer OBJECT IDENTIFIER },\n                syntax OBJECT IDENTIFIER,\n                transfer-syntax OBJECT IDENTIFIER,\n                fixed NULL },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n    )\n",
+    "line" : 100,
     "char" : 1,
     "members" : [
      {
       "name" : "identification",
       "kind" : "variable",
       "comment" : "        A field indicating the the transfer syntax used to indicate the means\n        by which the data-value field is encoded. Can also be used to specify\n        the abstract syntax of what is encoded.\n",
-      "line" : 71,
+      "line" : 107,
       "char" : 39,
       "deco" : "S5types14identification38ASN1ContextSwitchingTypeIdentification",
       "originalType" : "ASN1ContextSwitchingTypeID",
@@ -4207,7 +4207,7 @@
       "name" : "dataValue",
       "kind" : "variable",
       "comment" : "The encoded data\n",
-      "line" : 73,
+      "line" : 109,
       "char" : 20,
       "deco" : "Ah",
       "offset" : 96
@@ -4419,7 +4419,7 @@
    {
     "name" : "ObjectIdentifier",
     "kind" : "class",
-    "comment" : "    A class for Object Identifiers, that supports object descriptors and various\n    output formatting.\n",
+    "comment" : "    A class for Object Identifiers that supports object descriptors and various\n    output formatting.\n",
     "line" : 26,
     "char" : 8,
     "members" : [
@@ -4436,7 +4436,8 @@
      {
       "name" : "showDescriptors",
       "kind" : "variable",
-      "line" : 30,
+      "comment" : "\n",
+      "line" : 31,
       "char" : 24,
       "storageClass" : [
        "static"
@@ -4447,7 +4448,8 @@
      {
       "name" : "nodes",
       "kind" : "variable",
-      "line" : 31,
+      "comment" : "\n",
+      "line" : 33,
       "char" : 32,
       "storageClass" : [
        "immutable"
@@ -4460,29 +4462,29 @@
       "name" : "length",
       "kind" : "function",
       "comment" : "Returns: the number of nodes in the OID.\n",
-      "line" : 35,
+      "line" : 37,
       "char" : 12,
       "deco" : "xFNdNfZm",
       "originalType" : "const @property @safe size_t()",
-      "endline" : 38,
+      "endline" : 40,
       "endchar" : 5
      },
      {
-      "name" : "__unittest___source_types_universal_objectidentifier_d_41_0",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_43_0",
       "kind" : "function",
-      "line" : 41,
+      "line" : 43,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 58,
+      "endline" : 63,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
-      "comment" : "        Constructor for an Object Identifier\n\n        Params:\n            numbers = an array of unsigned integer representing the Object Identifier\n        Returns: An OID object\n        Throws:\n            OIDException = if fewer than three numbers are provided, or if the\n                first number is not 0, 1, or 2, or if the second number is\n                greater than 39.\n",
-      "line" : 59,
+      "comment" : "        Constructor for an Object Identifier\n\n        Params:\n        $(UL\n            $(LI $(D numbers) = an array of unsigned integers representing the Object Identifier)\n        )\n        Throws:\n        $(UL\n            $(LI $(D OIDException) if fewer than two numbers are provided, or if the\n                first number is not 0, 1, or 2, or if the second number is\n                greater than 39)\n        )\n",
+      "line" : 64,
       "char" : 5,
       "deco" : "FNfxAmXC5types9universal16objectidentifier16ObjectIdentifier",
       "originalType" : "@safe (in size_t[] numbers...)",
@@ -4492,14 +4494,14 @@
         "deco" : "xAm"
        }
       ],
-      "endline" : 94,
+      "endline" : 99,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
-      "comment" : "        Constructor for an Object Identifier\n\n        Params:\n            nodes = An array of OIDNodes\n        Returns: An OID object\n        Throws:\n            OIDException = if fewer than three nodes are provided, or if the\n                first node is not 0, 1, or 2, or if the second node is greater\n                than 39.\n",
-      "line" : 109,
+      "comment" : "        Constructor for an Object Identifier\n\n        Throws:\n        $(UL\n            $(LI $(D OIDException) if fewer than two nodes are provided, or if the\n                first node is not 0, 1, or 2, or if the second node is greater\n                than 39)\n        )\n",
+      "line" : 113,
       "char" : 5,
       "deco" : "FNfAS5types7oidtype20ObjectIdentifierNodeXCQBm9universal16objectidentifier16ObjectIdentifier",
       "originalType" : "@safe (OIDNode[] nodes...)",
@@ -4509,14 +4511,14 @@
         "deco" : "AS5types7oidtype20ObjectIdentifierNode"
        }
       ],
-      "endline" : 138,
+      "endline" : 142,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
-      "comment" : "        Constructor for an Object Identifier\n\n        Params:\n            nodes = An array of OIDNodes\n        Returns: An OID object\n        Throws:\n            OIDException = if fewer than three nodes are provided, or if the\n                first node is not 0, 1, or 2, or if the second node is greater\n                than 39.\n",
-      "line" : 152,
+      "comment" : "        Constructor for an Object Identifier\n\n        Params:\n        $(UL\n            $(LI $(D str) = the dot-delimited form of the object identifier)\n        )\n        Throws:\n        $(UL\n            $(LI $(D OIDException) if fewer than two nodes are provided, or if the\n                first node is not 0, 1, or 2, or if the second node is greater\n                than 39)\n        )\n",
+      "line" : 159,
       "char" : 5,
       "deco" : "FNfxAyaZC5types9universal16objectidentifier16ObjectIdentifier",
       "originalType" : "@safe (in string str)",
@@ -4526,24 +4528,25 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 199,
+      "endline" : 206,
       "endchar" : 5
      },
      {
-      "name" : "__unittest___source_types_universal_objectidentifier_d_202_1",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_209_1",
       "kind" : "function",
-      "line" : 202,
+      "line" : 209,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 223,
+      "endline" : 231,
       "endchar" : 5
      },
      {
       "name" : "opEquals",
       "kind" : "function",
-      "line" : 224,
+      "comment" : "\n",
+      "line" : 232,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -4556,28 +4559,28 @@
         "deco" : "xC6Object"
        }
       ],
-      "endline" : 234,
+      "endline" : 242,
       "endchar" : 5,
       "overrides" : [
        "object.Object.opEquals"
       ]
      },
      {
-      "name" : "__unittest___source_types_universal_objectidentifier_d_237_2",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_245_2",
       "kind" : "function",
-      "line" : 237,
+      "line" : 245,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 253,
+      "endline" : 261,
       "endchar" : 5
      },
      {
       "name" : "opIndex",
       "kind" : "function",
-      "comment" : "        Returns: the OIDNode at the specified index.\n        Throws:\n            RangeError = if invalid index specified.\n",
-      "line" : 254,
+      "comment" : "        Returns: the $(D OIDNode) at the specified index.\n        Throws:\n            RangeError = if invalid index specified.\n",
+      "line" : 262,
       "char" : 13,
       "deco" : "xFNbNiNfxlZS5types7oidtype20ObjectIdentifierNode",
       "originalType" : "const nothrow @nogc @safe OIDNode(in ptrdiff_t index)",
@@ -4587,25 +4590,25 @@
         "deco" : "xl"
        }
       ],
-      "endline" : 257,
+      "endline" : 265,
       "endchar" : 5
      },
      {
-      "name" : "__unittest___source_types_universal_objectidentifier_d_260_3",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_268_3",
       "kind" : "function",
-      "line" : 260,
+      "line" : 268,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 271,
+      "endline" : 279,
       "endchar" : 5
      },
      {
       "name" : "opSlice",
       "kind" : "function",
-      "comment" : "        Returns: a range of OIDNodes from the OID.\n        Throws:\n            RangeError = if invalid indices are specified.\n",
-      "line" : 272,
+      "comment" : "        Returns: a range of $(D OIDNode)s from the OID.\n        Throws:\n            RangeError = if invalid indices are specified.\n",
+      "line" : 280,
       "char" : 15,
       "deco" : "xFNbNixlxlZAS5types7oidtype20ObjectIdentifierNode",
       "originalType" : "const nothrow @nogc @system OIDNode[](in ptrdiff_t index1, in ptrdiff_t index2)",
@@ -4619,25 +4622,25 @@
         "deco" : "xl"
        }
       ],
-      "endline" : 275,
+      "endline" : 283,
       "endchar" : 5
      },
      {
       "name" : "opDollar",
       "kind" : "function",
-      "comment" : "        Returns: the length of the OID.\n",
-      "line" : 281,
+      "comment" : "Returns the length of the OID.\n",
+      "line" : 287,
       "char" : 12,
       "deco" : "xFNbNiNfZm",
       "originalType" : "const nothrow @nogc @safe size_t()",
-      "endline" : 284,
+      "endline" : 290,
       "endchar" : 5
      },
      {
       "name" : "descriptor",
       "kind" : "function",
-      "comment" : "        Returns: The descriptor at the specified index.\n        Throws:\n            RangeError = if invalid index specified.\n",
-      "line" : 292,
+      "comment" : "        Returns: The descriptor at the specified index.\n        Throws:\n        $(UL\n            $(LI $(D RangeError) if an invalid index is specified)\n        )\n",
+      "line" : 300,
       "char" : 12,
       "deco" : "xFNbNiNfxmZAya",
       "originalType" : "const nothrow @nogc @safe string(in size_t index)",
@@ -4647,179 +4650,179 @@
         "deco" : "xm"
        }
       ],
-      "endline" : 295,
+      "endline" : 303,
       "endchar" : 5
      },
      {
-      "name" : "__unittest___source_types_universal_objectidentifier_d_298_4",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_306_4",
       "kind" : "function",
-      "line" : 298,
+      "line" : 306,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 306,
+      "endline" : 314,
       "endchar" : 5
      },
      {
       "name" : "numbers",
       "kind" : "alias",
       "comment" : "\n",
-      "line" : 306,
+      "line" : 314,
       "char" : 12
      },
      {
       "name" : "numericArray",
       "kind" : "function",
       "comment" : "        Returns:\n            an array of $(D size_t)s representing the dot-delimited sequence of\n            integers that constitute the numeric OID.\n",
-      "line" : 313,
+      "line" : 321,
       "char" : 14,
       "deco" : "xFNbNdNfZAm",
       "originalType" : "const nothrow @property @safe size_t[]()",
-      "endline" : 322,
+      "endline" : 330,
       "endchar" : 5
      },
      {
-      "name" : "__unittest___source_types_universal_objectidentifier_d_325_5",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_333_5",
       "kind" : "function",
-      "line" : 325,
+      "line" : 333,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 332,
+      "endline" : 340,
       "endchar" : 5
      },
      {
       "name" : "asn1Notation",
       "kind" : "alias",
       "comment" : "\n",
-      "line" : 332,
+      "line" : 340,
       "char" : 12
      },
      {
       "name" : "abstractSyntaxNotation1Notation",
       "kind" : "function",
-      "comment" : "        Returns: the OID in ASN.1 Notation\n",
-      "line" : 337,
+      "comment" : "Returns: the OID in ASN.1 Notation\n",
+      "line" : 343,
       "char" : 12,
       "deco" : "xFNbNdNfZAya",
-      "endline" : 353,
+      "endline" : 359,
       "endchar" : 5
      },
      {
-      "name" : "__unittest___source_types_universal_objectidentifier_d_356_6",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_362_6",
       "kind" : "function",
-      "line" : 356,
+      "line" : 362,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 372,
+      "endline" : 378,
       "endchar" : 5
      },
      {
       "name" : "dotNotation",
       "kind" : "function",
       "comment" : "        Returns:\n            the OID as a dot-delimited string, where all nodes with descriptors\n            are represented as descriptors instead of numbers\n",
-      "line" : 373,
+      "line" : 379,
       "char" : 12,
       "deco" : "xFNbNdNfZAya",
-      "endline" : 389,
+      "endline" : 395,
       "endchar" : 5
      },
      {
-      "name" : "__unittest___source_types_universal_objectidentifier_d_392_7",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_398_7",
       "kind" : "function",
-      "line" : 392,
+      "line" : 398,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 404,
+      "endline" : 410,
       "endchar" : 5
      },
      {
       "name" : "iriNotation",
       "kind" : "alias",
       "comment" : "\n",
-      "line" : 404,
+      "line" : 410,
       "char" : 12
      },
      {
       "name" : "uriNotation",
       "kind" : "alias",
       "comment" : "\n",
-      "line" : 406,
+      "line" : 412,
       "char" : 12
      },
      {
       "name" : "uniformResourceIdentifierNotation",
       "kind" : "alias",
       "comment" : "\n",
-      "line" : 408,
+      "line" : 414,
       "char" : 12
      },
      {
       "name" : "internationalizedResourceIdentifierNotation",
       "kind" : "function",
       "comment" : "        Returns:\n            the OID as a forward-slash-delimited string (as one might expect in\n            a URI / IRI path), where all nodes with descriptors are represented\n            as descriptors instead of numbers\n",
-      "line" : 416,
+      "line" : 422,
       "char" : 12,
       "deco" : "xFNdZAya",
-      "endline" : 433,
+      "endline" : 439,
       "endchar" : 5
      },
      {
-      "name" : "__unittest___source_types_universal_objectidentifier_d_436_8",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_442_8",
       "kind" : "function",
-      "line" : 436,
+      "line" : 442,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 448,
+      "endline" : 454,
       "endchar" : 5
      },
      {
       "name" : "urnNotation",
       "kind" : "alias",
       "comment" : "\n",
-      "line" : 448,
+      "line" : 454,
       "char" : 12
      },
      {
       "name" : "uniformResourceNameNotation",
       "kind" : "function",
       "comment" : "        Returns:\n            the OID as a URN, where all nodes of the OID are translated to a\n            segment in the URN path, and where all nodes are represented as\n            numbers regardless of whether or not they have a descriptor\n        See_Also:\n            $(LINK2 https://www.ietf.org/rfc/rfc3061.txt, RFC 3061)\n",
-      "line" : 458,
+      "line" : 464,
       "char" : 12,
       "deco" : "xFNbNdNfZAya",
-      "endline" : 467,
+      "endline" : 473,
       "endchar" : 5
      },
      {
-      "name" : "__unittest___source_types_universal_objectidentifier_d_470_9",
+      "name" : "__unittest___source_types_universal_objectidentifier_d_476_9",
       "kind" : "function",
-      "line" : 470,
+      "line" : 476,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 482,
+      "endline" : 488,
       "endchar" : 5
      },
      {
       "name" : "toString",
       "kind" : "function",
       "comment" : "\n",
-      "line" : 483,
+      "line" : 489,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "FNdZAya",
-      "endline" : 486,
+      "endline" : 492,
       "endchar" : 5,
       "overrides" : [
        "object.Object.toString"
@@ -4828,15 +4831,15 @@
      {
       "name" : "toHash",
       "kind" : "function",
-      "comment" : "        An override so that associative arrays can use an OIDNode as a\n        key.\n        Returns: A size_t that represents a hash of the OIDNode\n",
-      "line" : 494,
+      "comment" : "        An override so that associative arrays can use an $(D OIDNode) as a\n        key.\n        Returns: A $(D size_t) that represents a hash of the $(D OIDNode)\n",
+      "line" : 500,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNbNeZm",
       "originalType" : "const nothrow @trusted size_t()",
-      "endline" : 502,
+      "endline" : 508,
       "endchar" : 5,
       "overrides" : [
        "object.Object.toHash"

@@ -20,14 +20,16 @@ public alias OID = ObjectIdentifier;
 ///
 public alias ObjectID = ObjectIdentifier;
 /**
-    A class for Object Identifiers, that supports object descriptors and various
+    A class for Object Identifiers that supports object descriptors and various
     output formatting.
 */
 public class ObjectIdentifier
 {
     import std.conv : text;
 
+    ///
     static public bool showDescriptors = true;
+    ///
     immutable public OIDNode[] nodes;
 
     /// Returns: the number of nodes in the OID.
@@ -48,12 +50,15 @@ public class ObjectIdentifier
         Constructor for an Object Identifier
 
         Params:
-            numbers = an array of unsigned integer representing the Object Identifier
-        Returns: An OID object
+        $(UL
+            $(LI $(D numbers) = an array of unsigned integers representing the Object Identifier)
+        )
         Throws:
-            OIDException = if fewer than three numbers are provided, or if the
+        $(UL
+            $(LI $(D OIDException) if fewer than two numbers are provided, or if the
                 first number is not 0, 1, or 2, or if the second number is
-                greater than 39.
+                greater than 39)
+        )
     */
     public @safe
     this(in size_t[] numbers ...)
@@ -97,13 +102,12 @@ public class ObjectIdentifier
     /**
         Constructor for an Object Identifier
 
-        Params:
-            nodes = An array of OIDNodes
-        Returns: An OID object
         Throws:
-            OIDException = if fewer than three nodes are provided, or if the
+        $(UL
+            $(LI $(D OIDException) if fewer than two nodes are provided, or if the
                 first node is not 0, 1, or 2, or if the second node is greater
-                than 39.
+                than 39)
+        )
     */
     public @safe
     this(OIDNode[] nodes ...)
@@ -141,12 +145,15 @@ public class ObjectIdentifier
         Constructor for an Object Identifier
 
         Params:
-            nodes = An array of OIDNodes
-        Returns: An OID object
+        $(UL
+            $(LI $(D str) = the dot-delimited form of the object identifier)
+        )
         Throws:
-            OIDException = if fewer than three nodes are provided, or if the
+        $(UL
+            $(LI $(D OIDException) if fewer than two nodes are provided, or if the
                 first node is not 0, 1, or 2, or if the second node is greater
-                than 39.
+                than 39)
+        )
     */
     public @safe
     this (in string str)
@@ -220,6 +227,7 @@ public class ObjectIdentifier
         assert((new OID("1.0.1.65537")).numericArray == [ 1, 0, 1, 65537 ]);
     }
 
+    ///
     override public @system
     bool opEquals(in Object other) const
     {
@@ -246,7 +254,7 @@ public class ObjectIdentifier
     }
 
     /**
-        Returns: the OIDNode at the specified index.
+        Returns: the $(D OIDNode) at the specified index.
         Throws:
             RangeError = if invalid index specified.
     */
@@ -264,7 +272,7 @@ public class ObjectIdentifier
     }
 
     /**
-        Returns: a range of OIDNodes from the OID.
+        Returns: a range of $(D OIDNode)s from the OID.
         Throws:
             RangeError = if invalid indices are specified.
     */
@@ -274,9 +282,7 @@ public class ObjectIdentifier
         return cast(OIDNode[]) this.nodes[index1 .. index2];
     }
 
-    /**
-        Returns: the length of the OID.
-    */
+    /// Returns the length of the OID.
     public @safe @nogc nothrow
     size_t opDollar() const
     {
@@ -286,7 +292,9 @@ public class ObjectIdentifier
     /**
         Returns: The descriptor at the specified index.
         Throws:
-            RangeError = if invalid index specified.
+        $(UL
+            $(LI $(D RangeError) if an invalid index is specified)
+        )
     */
     public @safe @nogc nothrow
     string descriptor(in size_t index) const
@@ -330,9 +338,7 @@ public class ObjectIdentifier
 
     ///
     public alias asn1Notation = abstractSyntaxNotation1Notation;
-    /**
-        Returns: the OID in ASN.1 Notation
-    */
+    /// Returns: the OID in ASN.1 Notation
     public @property @safe nothrow
     string abstractSyntaxNotation1Notation() const
     {
@@ -486,9 +492,9 @@ public class ObjectIdentifier
     }
 
     /**
-        An override so that associative arrays can use an OIDNode as a
+        An override so that associative arrays can use an $(D OIDNode) as a
         key.
-        Returns: A size_t that represents a hash of the OIDNode
+        Returns: A $(D size_t) that represents a hash of the $(D OIDNode)
     */
     override public nothrow @trusted
     size_t toHash() const

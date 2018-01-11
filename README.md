@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.71](http://semver.org/)
+* Version: [1.0.0-beta.72](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: January 12th, 2018**
 
@@ -234,7 +234,6 @@ Version 1.0.0-beta was released on November 8th, 2017.
 - [ ] Cross-Platform Testing
   - [ ] Windows (Which is Big-Endian)
     - [ ] 64-Bit
-    - [ ] 32-Bit
   - [x] Mac OS X (Which is Little-Endian)
     - [x] 64-Bit
   - [x] Linux (Which is Little-Endian)
@@ -258,8 +257,8 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Format numbers consistently (particularly `0b` binary literals)
   - [ ] Format `switch` statements
   - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
-- [ ] Documentation
-  - [ ] Redo embedded documentation
+- [x] Documentation
+  - [x] Redo embedded documentation
   - [x] `install.md`
   - [x] `compliance.md`
     - [x] Create a checklist for every bullet point of X.690.

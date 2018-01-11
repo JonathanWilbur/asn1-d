@@ -27,16 +27,14 @@
 .SH NAME
 .BR decode-cer ", Canonical Encoding Rules (CER) Decoder from the ASN.1 D Library"
 .SH SYNOPSIS
-.B decode-cer
-.RI [ element
-.IR .\|.\|. ]
+.B decode-cer [\-n|\-r]
 .SH DESCRIPTION
 Takes Canonical Encoding Rules (CER) encoded data from
 .I stdin
 and decodes it to a
 readable format to
 .IR stdout .
-Takes no options or operands. If you do not pipe something in from
+If you do not pipe something in from
 .IR stdin ,
 it will appear to "freeze," but it is not really frozen\-\-it is awaiting
 keyboard input from you! Although the range of valid ASN.1 data you can
@@ -45,6 +43,15 @@ keyboard, you can do so, and terminate the session of user input by pressing
 .I Ctrl-D
 once or twice. Or, you can just cancel by pressing
 .IR Ctrl-C .
+.SH OPTIONS
+.TP
+.B \-n
+Strip trailing linefeed character "\\n". This is most useful when piping raw
+ASN.1 encoded data into this program on PowerShell, because PowerShell appends
+a newline character to piped data.
+.TP
+.B \-r
+Strip trailing carriage return and linefeed characters "\\r\\n".
 .SH EXIT STATUS
 .TP
 .B 0

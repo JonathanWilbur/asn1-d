@@ -20,14 +20,28 @@ mixin template Decoder(Element)
 
         ubyte[] data = stdin.rawRead!ubyte(new ubyte[500000]);
 
-        if
-        (
-            args.length == 2u &&
-            args[1] == "-n" &&
-            data.length > 0u &&
-            data[$-1] == '\n'
-        )
-            data = data[0 .. $-1];
+        if (args.length == 2u && data.length > 0u)
+        {
+            if (args[1] == "-n")
+            {
+                if (data[$-1] == '\n')
+                {
+                    data = data[0 .. $-1];
+                    writeln("Removed a trailing LineFeed character from input.");
+                }
+                else writeln("There was no trailing LineFeed character to remove from input.");
+            }
+            else if (args[1] == "-r")
+            {
+                if (data[$-2 .. $] == "\r\n")
+                {
+                    data = data[0 .. $-2];
+                    writeln("Removed a trailing CarriageReturn+LineFeed from input.");
+                }
+                else writeln("There was no trailing CarriageReturn+LineFeed to remove from input.");
+            }
+            else writeln("Ignoring unrecognized option or argument: '" ~ args[1] ~"'.");
+        }
 
         Element[] tops;
 

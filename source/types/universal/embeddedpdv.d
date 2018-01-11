@@ -9,56 +9,92 @@ import types.identification;
 ///
 public alias EmbeddedPDV = EmbeddedPresentationDataValue;
 /**
-    Page: 215
-    If a module includes the clause AUTOMATIC TAGS in its header,
-    the components of all its structured types (SEQUENCE, SET or CHOICE)
-    are automatically tagged by the compiler starting from 0 by one-increment.
-    By default, every component is tagged in the implicit mode except if it
-    is a CHOICE type, an open type or a parameter that is a type. This
-    tagging mechanism is obviously documented in the ASN.1 standard and,
-    as a result, does not depend on the compiler. Hence, the module:
+    An $(MONO EmbeddedPDV) is a constructed data type, defined in
+    the $(LINK https://www.itu.int, International Telecommunications Union)'s
+    $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        $(I
-            M DEFINITIONS AUTOMATIC TAGS ::=
-            BEGIN
-                T ::= SEQUENCE { a INTEGER,
-                b CHOICE { i INTEGER, n NULL },
-                c REAL }
-            END
-        )
+    The specification defines $(MONO EmbeddedPDV) as:
 
-    is equivalent, once applied the automatic tagging, to:
-
-        $(I
-            M DEFINITIONS ::=
-            BEGIN
-            T ::= SEQUENCE {
-            a [0] IMPLICIT INTEGER,
-            b [1] EXPLICIT CHOICE { i [0] IMPLICIT INTEGER,
-                                    n [1] IMPLICIT NULL },
-            c [2] IMPLICIT REAL }
-            END
-        )
-
-        $(I
-            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
-                identification CHOICE {
-                    syntaxes SEQUENCE {
-                        abstract OBJECT IDENTIFIER,
-                        transfer OBJECT IDENTIFIER },
-                    syntax OBJECT IDENTIFIER,
+    $(PRE
+        EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+            identification CHOICE {
+                syntaxes SEQUENCE {
+                    abstract OBJECT IDENTIFIER,
+                    transfer OBJECT IDENTIFIER },
+                syntax OBJECT IDENTIFIER,
+                presentation-context-id INTEGER,
+                context-negotiation SEQUENCE {
                     presentation-context-id INTEGER,
-                    context-negotiation SEQUENCE {
-                        presentation-context-id INTEGER,
-                        transfer-syntax OBJECT IDENTIFIER },
-                    transfer-syntax OBJECT IDENTIFIER,
-                    fixed NULL },
-                data-value-descriptor ObjectDescriptor OPTIONAL,
-                data-value OCTET STRING }
-            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
-        )
+                    transfer-syntax OBJECT IDENTIFIER },
+                transfer-syntax OBJECT IDENTIFIER,
+                fixed NULL },
+            data-value-descriptor ObjectDescriptor OPTIONAL,
+            data-value OCTET STRING }
+        (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
+    )
 
-    Note that, the data-value-descriptor field should be absent!
+    This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)
+    choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.
+
+    The following additional constraints are applied to the abstract syntax
+    when using Canonical Encoding Rules or Distinguished Encoding Rules,
+    which are also defined in the
+    $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+    $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
+
+    $(PRE
+        EmbeddedPDV ( WITH COMPONENTS {
+            ... ,
+            identification ( WITH COMPONENTS {
+                ... ,
+                presentation-context-id ABSENT,
+                context-negotiation ABSENT } ) } )
+    )
+
+    The stated purpose of the constraints shown above is to restrict the use of
+    the $(MONO presentation-context-id), either by itself or within the
+    context-negotiation, which makes the following the effective abstract
+    syntax of $(MONO EmbeddedPDV) when using Canonical Encoding Rules or
+    Distinguished Encoding Rules:
+
+    $(PRE
+        EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+            identification CHOICE {
+                syntaxes SEQUENCE {
+                    abstract OBJECT IDENTIFIER,
+                    transfer OBJECT IDENTIFIER },
+                syntax OBJECT IDENTIFIER,
+                presentation-context-id INTEGER,
+                context-negotiation SEQUENCE {
+                    presentation-context-id INTEGER,
+                    transfer-syntax OBJECT IDENTIFIER },
+                transfer-syntax OBJECT IDENTIFIER,
+                fixed NULL },
+            data-value-descriptor ObjectDescriptor OPTIONAL,
+            data-value OCTET STRING }
+                ( WITH COMPONENTS {
+                    ... ,
+                    identification ( WITH COMPONENTS {
+                        ... ,
+                        presentation-context-id ABSENT,
+                        context-negotiation ABSENT } ) } )
+    )
+
+    With the constraints applied, the abstract syntax for $(MONO EmbeddedPDV)s encoded
+    using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+
+    $(PRE
+        EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+            identification CHOICE {
+                syntaxes SEQUENCE {
+                    abstract OBJECT IDENTIFIER,
+                    transfer OBJECT IDENTIFIER },
+                syntax OBJECT IDENTIFIER,
+                transfer-syntax OBJECT IDENTIFIER,
+                fixed NULL },
+            data-value-descriptor ObjectDescriptor OPTIONAL,
+            data-value OCTET STRING }
+    )
 */
 public
 struct EmbeddedPresentationDataValue

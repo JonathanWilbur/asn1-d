@@ -20,10 +20,10 @@ struct ObjectIdentifierNode
     /**
         The descriptor string is an ObjectDescriptor, which is defined as:
 
-        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
+        $(MONO ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
 
-        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
-        0x20 to 0x7E.
+        GraphicString is just $(D 0x20) to $(D 0x7E), therefore
+        ObjectDescriptor is just $(D 0x20) to $(D 0x7E).
 
         It is used to describe the object identified by this node.
     */
@@ -53,9 +53,9 @@ struct ObjectIdentifierNode
     }
 
     /**
-        An override so that associative arrays can use an OIDNode as a
+        An override so that associative arrays can use an $(D OIDNode) as a
         key.
-        Returns: A size_t that represents a hash of the OIDNode
+        Returns: A $(D size_t) that represents a hash of the $(D OIDNode)
     */
     public nothrow @trusted
     size_t toHash() const
@@ -84,22 +84,17 @@ struct ObjectIdentifierNode
         A constructor that accepts a descriptor string.
         The descriptor string is an ObjectDescriptor, which is defined as:
 
-        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
+        $(MONO ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
 
-        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just
-        0x20 to 0x7E.
+        $(MONO GraphicString) is just a string containing only characters between
+        and including $(D 0x20) and $(D 0x7E), therefore ObjectDescriptor is just
+        $(D 0x20) and $(D 0x7E).
 
-        Sources:
-            $(LINK2 ,
-                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
-                The Wikipedia Page on ISO 2022)
-            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
-
-        Returns: a string.
         Throws:
-            ASN1ValueException = if the encoded value contains any bytes
-                outside of 0x20 to 0x7E.
+        $(UL
+            $(LI $(D ASN1ValueException) if the encoded value contains any bytes
+                outside of $(D 0x20) to $(D 0x7E))
+        )
     */
     public @system
     this(in size_t number, in string descriptor)

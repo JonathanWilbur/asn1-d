@@ -2,20 +2,30 @@ module types.universal.characterstring;
 import types.identification;
 
 /**
-Page 309
-CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
-    identification CHOICE {
-        syntaxes SEQUENCE {
-            abstract OBJECT IDENTIFIER,
-            transfer OBJECT IDENTIFIER },
-        syntax OBJECT IDENTIFIER,
-        presentation-context-id INTEGER,
-        context-negotiation SEQUENCE {
-            presentation-context-id INTEGER,
-            transfer-syntax OBJECT IDENTIFIER },
-        transfer-syntax OBJECT IDENTIFIER,
-        fixed NULL },
-    string-value OCTET STRING }
+    A $(MONO CharacterString), is a constructed data type, defined
+    in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s
+        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+
+    The specification defines $(MONO CharacterString) as:
+
+    $(PRE
+        CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+            identification CHOICE {
+                syntaxes SEQUENCE {
+                    abstract OBJECT IDENTIFIER,
+                    transfer OBJECT IDENTIFIER },
+                syntax OBJECT IDENTIFIER,
+                presentation-context-id INTEGER,
+                context-negotiation SEQUENCE {
+                    presentation-context-id INTEGER,
+                    transfer-syntax OBJECT IDENTIFIER },
+                transfer-syntax OBJECT IDENTIFIER,
+                fixed NULL },
+            string-value OCTET STRING }
+    )
+
+    This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)
+    choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.
 */
 public
 struct CharacterString
