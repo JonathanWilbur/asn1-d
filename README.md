@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.72](http://semver.org/)
+* Version: [1.0.0-beta.73](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: January 12th, 2018**
 
@@ -232,11 +232,9 @@ Version 1.0.0-beta was released on November 8th, 2017.
     - [x] If using indefinite-length, accept only constructed form
 - [x] Make properties for `END OF CONTENT` and `NULL` that just throw exceptions if its wrong
 - [ ] Cross-Platform Testing
-  - [ ] Windows (Which is Big-Endian)
-    - [ ] 64-Bit
-  - [x] Mac OS X (Which is Little-Endian)
-    - [x] 64-Bit
-  - [x] Linux (Which is Little-Endian)
+  - [ ] Windows 64-Bit
+  - [x] Mac OS X 64-Bit
+  - [x] Linux
     - [x] 64-Bit
     - [ ] 32-Bit
 - [x] Comparison Testing with [PyASN1](http://pyasn1.sourceforge.net)
@@ -255,8 +253,6 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Remove trailing spaces
   - [x] Rename `ASN1ContextSwitchingTypeSyntaxes` to `ASN1Syntaxes`
   - [x] Format numbers consistently (particularly `0b` binary literals)
-  - [ ] Format `switch` statements
-  - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
 - [x] Documentation
   - [x] Redo embedded documentation
   - [x] `install.md`
@@ -299,11 +295,11 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `roadmap.md`
   - [x] `man` Pages
 - [ ] Build Scripts
-  - [ ] Add `chmod +x` to the build scripts for all executables
+  - [x] Add `chmod +x` to the build scripts for all executables
   - [x] Fix `echo` output problem on Mac
-  - [ ] Create dynamically-linked libraries as well
+  - [x] Create dynamically-linked libraries as well
+  - [ ] Better `echo` messages
   - [ ] [GNU Make](https://www.gnu.org/software/make/) `Makefile`
-  - [ ] Generate a `.def` file for Windows?
   - [ ] Verbose linking
 - [ ] `releases.csv` (Version, Date, LOC, SLOC, Signature)
 
@@ -330,14 +326,14 @@ I tried doing this for the following properties:
 * `enumerated`
 * `relativeObjectIdentifier`
 
-### 1.0.0 Release
+### 1.0.1 Release
 
 - [ ] Publish a [Dub package](https://code.dlang.org) for it
 - [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
 - [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
 - [ ] Publish a [Brew package](https://docs.brew.sh)
 - [ ] Configure [Travis CI](https://travis-ci.org)
-- [ ] Create `man(1)` (executables) and `man(3)` (Library calls) pages
+- [ ] Create `man(3)` (Library calls) pages
 - [ ] Create Wikipedia pages for each codec
 - [ ] Review by one security firm
 - [ ] Add signatures with [my GPG key](http://jonathan.wilbur.space/downloads/jonathan@wilbur.space.gpg.pub)
@@ -351,12 +347,13 @@ I tried doing this for the following properties:
   - [ ] Suggestions for Inclusions in D Libraries
     - [ ] [Botan](https://github.com/etcimon/botan)
     - [ ] [ldap](https://github.com/WebFreak001/ldap)
-
-### 1.0.1 Release
-
+- [ ] Code Formatting
+  - [ ] Format `switch` statements
+  - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
 - [ ] Unit tests based on examples from X.690
 - [ ] Unit tests based on examples from the Dubuisson book
 - [ ] Comparison tests to Go's ASN.1 library module
+- [ ] Generate a `.def` file for Windows?
 
 ## Suggestions
 

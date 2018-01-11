@@ -1,12 +1,18 @@
 @echo off
 mkdir .\documentation > nul
 mkdir .\documentation\html > nul
+mkdir .\documentation\links > nul
 mkdir .\build > nul
+mkdir .\build\assemblies > nul
 mkdir .\build\executables > nul
 mkdir .\build\interfaces > nul
 mkdir .\build\libraries > nul
+mkdir .\build\logs > nul
+mkdir .\build\maps > nul
 mkdir .\build\objects > nul
+mkdir .\build\scripts > nul
 
+echo Building the static library
 dmd ^
 .\source\macros.ddoc ^
 .\source\asn1.d ^
@@ -32,7 +38,31 @@ dmd ^
 -release ^
 -d
 
-# Build decode-ber
+echo Building the dynamically-linked library
+dmd ^
+.\source\asn1.d ^
+.\source\codec.d ^
+.\source\interfaces.d ^
+.\source\types\alltypes.d ^
+.\source\types\identification.d ^
+.\source\types\oidtype.d ^
+.\source\types\universal\characterstring.d ^
+.\source\types\universal\embeddedpdv.d ^
+.\source\types\universal\external.d ^
+.\source\types\universal\objectidentifier.d ^
+.\source\codecs\ber.d ^
+.\source\codecs\cer.d ^
+.\source\codecs\der.d ^
+-of.\build\libraries\asn1.dll ^
+-shared ^
+-fPIC ^
+-O ^
+-inline ^
+-release ^
+-d
+
+REM Build decode-ber
+echo Building decode-ber
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -42,9 +72,10 @@ dmd ^
  -of".\\build\\executables\\decode-ber" ^
  -O ^
  -release ^
+ -inline ^
  -d
 
-# Build decode-cer
+echo Building decode-cer
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -54,9 +85,10 @@ dmd ^
  -of".\\build\\executables\\decode-cer" ^
  -O ^
  -release ^
+ -inline ^
  -d
 
-# Build decode-der
+echo Building decode-der
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -66,9 +98,10 @@ dmd ^
  -of".\\build\\executables\\decode-der" ^
  -O ^
  -release ^
+ -inline ^
  -d
 
-# Build encode-ber
+echo Building encode-ber
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -78,9 +111,10 @@ dmd ^
  -of".\\build\\executables\\encode-ber" ^
  -O ^
  -release ^
+ -inline ^
  -d
 
-# Build encode-cer
+echo Building encode-cer
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -90,9 +124,10 @@ dmd ^
  -of".\\build\\executables\\encode-cer" ^
  -O ^
  -release ^
+ -inline ^
  -d
 
-# Build encode-der
+echo Building encode-der
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -102,8 +137,10 @@ dmd ^
  -of".\\build\\executables\\encode-der" ^
  -O ^
  -release ^
+ -inline ^
  -d
 
-# Delete object files that get created.
-# Yes, I tried -o- already. It does not create the executable either.
+REM Delete object files that get created.
+REM Yes, I tried -o- already. It does not create the executable either.
 del .\build\executables\*.o
+REM TODO: Move statements

@@ -66,6 +66,7 @@ if dmd \
  -fPIC \
  -inline \
  -release \
+ -O \
  -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
     echo "${GREEN}Done.${NOCOLOR}"
 else
@@ -88,6 +89,7 @@ do
      -O \
      -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
         echo "${GREEN}Done.${NOCOLOR}"
+        chmod +x ./build/executables/${EXECUTABLE}
     else
         echo "${RED}Failed. See ./build/logs.${NOCOLOR}"
     fi
@@ -116,6 +118,7 @@ do
      -O \
      -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
         echo "${GREEN}Done.${NOCOLOR}"
+        chmod +x ./build/executables/${EXECUTABLE}
     else
         echo "${RED}Failed. See ./build/logs.${NOCOLOR}"
     fi
@@ -124,5 +127,5 @@ done
 # Delete object files that get created.
 # Yes, I tried -o- already. It does not create the executable either.
 rm -f ./build/executables/*.o
-mv *.lst ./build/logs
-# mv *.map ./build/maps
+mv *.lst ./build/logs 2>/dev/null
+mv *.map ./build/maps 2>/dev/null
