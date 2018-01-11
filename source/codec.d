@@ -225,7 +225,7 @@ class AbstractSyntaxNotation1TagNumberException : ASN1TagException
     ///
     this
     (
-        size_t expectedTagNumbers[],
+        size_t[] expectedTagNumbers,
         size_t actualTagNumber,
         string whatYouAttemptedToDo,
         string file = __FILE__,
