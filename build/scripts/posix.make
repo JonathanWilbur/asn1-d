@@ -95,8 +95,10 @@ purge :
 	-rm -f /usr/local/bin/decode-*
 	-rm -f /usr/local/bin/encode-*
 	-rm -rf /usr/local/share/asn1
-	-rm -f /usr/local/share/man/man1/{en,de}code-*.1
-	-rm -f /usr/local/share/man/1/{en,de}code-*.1
+	-rm -f /usr/local/share/man/man1/encode-*.1
+	-rm -f /usr/local/share/man/man1/decode-*.1
+	-rm -f /usr/local/share/man/1/encode-*.1
+	-rm -f /usr/local/share/man/1/decode-*.1
 
 asn1-$(version).a : $(sources)
 	echo $(echoflags) "Building the ASN.1 Library (static)... \c"
