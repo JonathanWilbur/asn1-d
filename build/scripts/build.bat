@@ -39,7 +39,7 @@ dmd ^
  -O ^
  -release ^
  -d
-echo "Done."
+echo Done.
 
 echo|set /p="Building the ASN.1 Library (shared / dynamic)... "
 dmd ^
@@ -58,12 +58,11 @@ dmd ^
  .\source\codecs\der.d ^
  -of.\build\libraries\asn1-%version%.dll ^
  -shared ^
- -fPIC ^
  -O ^
  -inline ^
  -release ^
  -d
-echo "Done."
+echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, decode-ber... "
 dmd ^
@@ -78,7 +77,7 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "Done."
+echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, decode-cer... "
 dmd ^
@@ -93,7 +92,7 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "Done."
+echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, decode-der... "
 dmd ^
@@ -108,7 +107,7 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "Done."
+echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, encode-ber... "
 dmd ^
@@ -123,7 +122,7 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "Done."
+echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, encode-cer... "
 dmd ^
@@ -138,7 +137,7 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "Done."
+echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, encode-der... "
 dmd ^
@@ -153,4 +152,4 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "Done."
+echo Done.

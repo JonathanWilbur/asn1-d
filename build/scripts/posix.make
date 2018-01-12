@@ -4,7 +4,6 @@
 # sudo make -f ./build/scripts/posix.make
 # sudo make -f ./build/scripts/posix.make install
 #
-# TODO: Figure out why it rebuilds the library
 vpath %.o ./build/objects
 vpath %.di ./build/interfaces
 vpath %.d ./source
@@ -51,7 +50,7 @@ htmldocs = $(addsuffix .html,$(modules))
 encoders = $(addprefix encode-,$(codecs))
 decoders = $(addprefix decode-,$(codecs))
 
-.SILENT : all libs tools asn1-$(version).a asn1-$(version).so $(encoders) $(decoders)
+.SILENT : all libs tools asn1-$(version).a asn1-$(version).so $(encoders) $(decoders) install purge
 all : libs tools
 libs : asn1-$(version).a asn1-$(version).so
 tools : $(encoders) $(decoders)
@@ -63,14 +62,6 @@ endif
 ifeq ($(uname), Darwin)
 	echoflags = ""
 endif
-# manpagesdirectory = $(shell ls /usr/local/share/man/man1)
-# ifeq ($(manpagesdirectory), /usr/local/share/man/man1)
-# ifeq (,$(wildcard /usr/local/share/man/1))
-#     manpagesdirectory = /usr/local/share/man/1
-# endif
-# ifeq (,$(wildcard /usr/local/share/man/man1))
-#     manpagesdirectory = /usr/local/share/man/man1
-# endif
 
 # You will most likely need to run this will root privileges
 install : all

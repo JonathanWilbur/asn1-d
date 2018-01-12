@@ -13,7 +13,7 @@ mkdir .\build\scripts 2>&1 | Out-Null
 
 version = "1.0.0"
 
-Write-Host "Building the ASN.1 Library (static)... \c"
+Write-Host "Building the ASN.1 Library (static)... " -NoNewLine
 dmd `
 .\source\macros.ddoc `
 .\source\asn1.d `
@@ -40,7 +40,7 @@ dmd `
 -d
 Write-Host "Done." -ForegroundColor Green
 
-Write-Host "Building the ASN.1 Library (shared / dynamic)... \c"
+Write-Host "Building the ASN.1 Library (shared / dynamic)... " -NoNewLine
 dmd `
 .\source\macros.ddoc `
 .\source\asn1.d `
@@ -58,14 +58,13 @@ dmd `
 .\source\codecs\der.d `
 -of".\\build\\libraries\\asn1.dll" `
 -shared `
--fPIC `
 -O `
 -inline `
 -release `
 -d
 Write-Host "Done." -ForegroundColor Green
 
-Write-Host "Building the ASN.1 Command-Line Tool, decode-ber... \c"
+Write-Host "Building the ASN.1 Command-Line Tool, decode-ber... " -NoNewLine
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
@@ -81,7 +80,7 @@ dmd `
 Write-Host "Done." -ForegroundColor Green
 
 
-Write-Host "Building the ASN.1 Command-Line Tool, decode-cer... \c"
+Write-Host "Building the ASN.1 Command-Line Tool, decode-cer... " -NoNewLine
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
@@ -96,7 +95,7 @@ dmd `
  -d
 Write-Host "Done." -ForegroundColor Green
 
-Write-Host "Building the ASN.1 Command-Line Tool, decode-der... \c"
+Write-Host "Building the ASN.1 Command-Line Tool, decode-der... " -NoNewLine
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
@@ -111,7 +110,7 @@ dmd `
  -d
 Write-Host "Done." -ForegroundColor Green
 
-Write-Host "Building the ASN.1 Command-Line Tool, encode-ber... \c"
+Write-Host "Building the ASN.1 Command-Line Tool, encode-ber... " -NoNewLine
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
@@ -126,7 +125,7 @@ dmd `
  -d
 Write-Host "Done." -ForegroundColor Green
 
-Write-Host "Building the ASN.1 Command-Line Tool, encode-cer... \c"
+Write-Host "Building the ASN.1 Command-Line Tool, encode-cer... " -NoNewLine
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
@@ -141,7 +140,7 @@ dmd `
  -d
 Write-Host "Done." -ForegroundColor Green
 
-Write-Host "Building the ASN.1 Command-Line Tool, encode-der... \c"
+Write-Host "Building the ASN.1 Command-Line Tool, encode-der... " -NoNewLine
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
@@ -155,7 +154,3 @@ dmd `
  -inline `
  -d
 Write-Host "Done." -ForegroundColor Green
-
-# Delete object files that get created.
-# Yes, I tried -o- already. It does not create the executable either.
-Remove-Item -path .\build\executables\* -include *.o
