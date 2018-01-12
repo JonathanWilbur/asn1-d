@@ -1,11 +1,28 @@
 {
-	"name": "asn1",
-	"description": "ASN.1 encoding and decoding",
-	"authors": [ "Jonathan M. Wilbur" ],
-	"license": "MIT",
-	"importPaths": "./source/",
-	"sourcePaths": "./source/",
-	"excludedSourceFiles": "./source/tools/*",
+    "name": "asn1",
+    "description": "ASN.1 encoding and decoding with support for BER, CER, and DER",
+    "authors": [
+        "Jonathan M. Wilbur <jonathan@wilbur.space>"
+    ],
+    "license": "MIT",
+	"homepage": "https://github.com/JonathanWilbur/asn1-d",
 	"targetType": "library",
-	"targetPath": "./build/libraries/"
+	"importPaths": [
+		"source/"
+	],
+	"sourcePaths": [
+		"source/"
+	],
+    "excludedSourceFiles": [
+		"source/tools/encode_*",
+		"source/tools/decode_*",
+		"source/tools/decoder_mixin.d",
+		"source/tools/encoder_mixin.d"
+	],
+	"targetPath": "build/libraries/",
+	"buildRequirements": [
+		"silenceWarnings",
+		"silenceDeprecations",
+		"requireBoundsCheck"
+	]
 }

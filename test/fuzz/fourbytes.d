@@ -3,7 +3,7 @@
 
     Build like so:
 
-    dmd ./source/asn1.d ./source/codec.d ./source/interfaces.d ./source/types/*.d ./source/types/universal/*.d ./source/codecs/*.d ./test/fuzz/fourbytes.d -d -of./build/binaries/fourbytes
+    dmd ./source/asn1.d ./source/codec.d ./source/interfaces.d ./source/types/*.d ./source/types/universal/*.d ./source/codecs/*.d ./test/fuzz/fourbytes.d -d -of./build/executables/fourbytes
 */
 import codecs.ber;
 import codecs.cer;
