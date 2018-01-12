@@ -139,7 +139,7 @@ $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
 	dmd \
 	-I./build/interfaces/source \
 	-I./build/interfaces/source/codecs \
-	-L./build/libraries/asn1.so \
+	-L./build/libraries/asn1-$(version).a \
 	./source/tools/encoder_mixin.d \
 	$< \
 	-od./build/objects \
@@ -156,7 +156,7 @@ $(decoders) : decode-% : decode_%.d decoder_mixin.d asn1-$(version).so
 	dmd \
 	-I./build/interfaces/source \
 	-I./build/interfaces/source/codecs \
-	-L./build/libraries/asn1.so \
+	-L./build/libraries/asn1-$(version).a \
 	./source/tools/decoder_mixin.d \
 	$< \
 	-od./build/objects \

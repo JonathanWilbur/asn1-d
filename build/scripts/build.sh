@@ -40,8 +40,8 @@ if dmd \
  -Dd./documentation/html \
  -Hd./build/interfaces \
  -op \
- -of./build/libraries/asn1.a \
- -Xf./documentation/asn1.json \
+ -of./build/libraries/asn1-$(version).a \
+ -Xf./documentation/asn1-$(version).json \
  -lib \
  -inline \
  -release \
@@ -61,7 +61,7 @@ if dmd \
  ./source/types/*.d \
  ./source/types/universal/*.d \
  ./source/codecs/*.d \
- -of./build/libraries/asn1.so \
+ -of./build/libraries/asn1-$(version).so \
  -shared \
  -fPIC \
  -inline \
@@ -80,7 +80,7 @@ do
     if dmd \
      -I./build/interfaces/source \
      -I./build/interfaces/source/codecs \
-     -L./build/libraries/asn1.a \
+     -L./build/libraries/asn1-$(version).a \
      ./source/tools/decoder_mixin.d \
      ./source/tools/${DECODER} \
      -od./build/objects \
@@ -110,7 +110,7 @@ do
     if dmd \
      -I./build/interfaces/source \
      -I./build/interfaces/source/codecs \
-     -L./build/libraries/asn1.a \
+     -L./build/libraries/asn1-$(version).a \
      ./source/tools/encoder_mixin.d \
      ./source/tools/${ENCODER} \
      -od./build/objects \
