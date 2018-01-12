@@ -59,9 +59,11 @@ tools : $(encoders) $(decoders)
 uname := $(shell uname)
 ifeq ($(uname), Linux)
 	manpagesdirectory = /usr/local/share/man/1
+	echoflags = "-e"
 endif
 ifeq ($(uname), Darwin)
 	manpagesdirectory = /usr/local/share/man/man1
+	echoflags = ""
 endif
 
 # You will most likely need to run this will root privileges
@@ -90,7 +92,7 @@ purge :
 	rm $(manpagesdirectory)/encode-*.1
 
 asn1-$(version).a : $(sources)
-	echo "Building the ASN.1 Library (static)... \c"
+	echo $(echoflags) "Building the ASN.1 Library (static)... \c"
 	dmd \
 	./source/macros.ddoc \
 	./source/asn1.d \
@@ -110,10 +112,10 @@ asn1-$(version).a : $(sources)
 	-O \
 	-map \
 	-d
-	echo "\033[0;32mDone.\033[0m"
+	echo $(echoflags) "\033[0;32mDone.\033[0m"
 
 asn1-$(version).so : $(sources)
-	echo "Building the ASN.1 Library (shared / dynamic)... \c"
+	echo $(echoflags) "Building the ASN.1 Library (shared / dynamic)... \c"
 	dmd \
 	./source/macros.ddoc \
 	./source/asn1.d \
@@ -132,10 +134,10 @@ asn1-$(version).so : $(sources)
 	-O \
 	-map \
 	-d
-	echo "\033[0;32mDone.\033[0m"
+	echo $(echoflags) "\033[0;32mDone.\033[0m"
 
 $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
-	echo "Building the ASN.1 Command-Line Tool, $@... \c"
+	echo $(echoflags) "Building the ASN.1 Command-Line Tool, $@... \c"
 	dmd \
 	-I./build/interfaces/source \
 	-I./build/interfaces/source/codecs \
@@ -149,10 +151,10 @@ $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
 	-O \
 	-d
 	chmod +x ./build/executables/$@
-	echo "\033[0;32mDone.\033[0m"
+	echo $(echoflags) "\033[0;32mDone.\033[0m"
 
 $(decoders) : decode-% : decode_%.d decoder_mixin.d asn1-$(version).so
-	echo "Building the ASN.1 Command-Line Tool, $@... \c"
+	echo $(echoflags) "Building the ASN.1 Command-Line Tool, $@... \c"
 	dmd \
 	-I./build/interfaces/source \
 	-I./build/interfaces/source/codecs \
@@ -166,7 +168,7 @@ $(decoders) : decode-% : decode_%.d decoder_mixin.d asn1-$(version).so
 	-O \
 	-d
 	chmod +x ./build/executables/$@
-	echo "\033[0;32mDone.\033[0m"
+	echo $(echoflags) "\033[0;32mDone.\033[0m"
 
 # How Phobos compiles only the JSON file:
 # JSON = phobos.json

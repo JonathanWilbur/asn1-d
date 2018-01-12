@@ -1834,64 +1834,9 @@
         "init" : "5u"
        },
        {
-        "name" : "maxUintAsReal",
-        "kind" : "variable",
-        "line" : 444,
-        "char" : 30,
-        "storageClass" : [
-         "immutable"
-        ],
-        "deco" : "e",
-        "init" : "cast(real)(uint).max"
-       },
-       {
-        "name" : "maxLongAsReal",
-        "kind" : "variable",
-        "line" : 445,
-        "char" : 30,
-        "storageClass" : [
-         "immutable"
-        ],
-        "deco" : "e",
-        "init" : "cast(real)(long).max"
-       },
-       {
-        "name" : "logBaseTwoOfTen",
-        "kind" : "variable",
-        "line" : 446,
-        "char" : 30,
-        "storageClass" : [
-         "immutable"
-        ],
-        "deco" : "e",
-        "init" : "log2(10.0000)"
-       },
-       {
-        "name" : "threeByteMax",
-        "kind" : "variable",
-        "line" : 447,
-        "char" : 29,
-        "storageClass" : [
-         "immutable"
-        ],
-        "deco" : "i",
-        "init" : "8388607"
-       },
-       {
-        "name" : "threeByteMin",
-        "kind" : "variable",
-        "line" : 448,
-        "char" : 29,
-        "storageClass" : [
-         "immutable"
-        ],
-        "deco" : "i",
-        "init" : "4286578688u"
-       },
-       {
         "name" : "notWhatYouMeantText",
         "kind" : "variable",
-        "line" : 451,
+        "line" : 445,
         "char" : 22,
         "storageClass" : [
          "immutable"
@@ -1902,7 +1847,7 @@
        {
         "name" : "forMoreInformationText",
         "kind" : "variable",
-        "line" : 458,
+        "line" : 452,
         "char" : 22,
         "storageClass" : [
          "immutable"
@@ -1913,7 +1858,7 @@
        {
         "name" : "debugInformationText",
         "kind" : "variable",
-        "line" : 470,
+        "line" : 464,
         "char" : 22,
         "storageClass" : [
          "immutable"
@@ -1924,7 +1869,7 @@
        {
         "name" : "reportBugsText",
         "kind" : "variable",
-        "line" : 476,
+        "line" : 470,
         "char" : 22,
         "storageClass" : [
          "immutable"
@@ -1936,20 +1881,20 @@
         "name" : "LengthEncodingPreference",
         "kind" : "enum",
         "comment" : "\n",
-        "line" : 483,
+        "line" : 477,
         "char" : 5,
         "baseDeco" : "h",
         "members" : [
          {
           "name" : "definite",
           "kind" : "enum member",
-          "line" : 485,
+          "line" : 479,
           "char" : 9
          },
          {
           "name" : "indefinite",
           "kind" : "enum member",
-          "line" : 486,
+          "line" : 480,
           "char" : 9
          }
         ]
@@ -1957,8 +1902,8 @@
        {
         "name" : "endOfContent",
         "kind" : "function",
-        "comment" : "        \"Decodes\" an END OF CONTENT, by which I mean: returns nothing, but\n        throws exceptions if the element is not correct.\n\n        Throws:\n            ASN1ConstructionException = if the element is marked as \"constructed\"\n            ASN1ValueSizeException = if there are any content octets\n",
-        "line" : 498,
+        "comment" : "        \"Decodes\" an $(MONO END OF CONTENT), by which I mean: returns nothing, but\n        throws exceptions if the element is not correct.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueSizeException) if there are any content octets)\n        )\n",
+        "line" : 494,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1969,7 +1914,7 @@
         "name" : "boolean",
         "kind" : "function",
         "comment" : "Decodes a boolean\n",
-        "line" : 502,
+        "line" : 498,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1980,7 +1925,7 @@
         "name" : "boolean",
         "kind" : "function",
         "comment" : "Encodes a boolean\n",
-        "line" : 506,
+        "line" : 502,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -1997,20 +1942,20 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_509_0",
+        "name" : "__unittest___source_codec_d_505_0",
         "kind" : "function",
-        "line" : 509,
+        "line" : 505,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 522,
+        "endline" : 518,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Decodes an integer\n",
-        "line" : 523,
+        "line" : 519,
         "char" : 7,
         "name" : "integer",
         "parameters" : [
@@ -2024,7 +1969,7 @@
          {
           "name" : "integer",
           "kind" : "function",
-          "line" : 523,
+          "line" : 519,
           "char" : 7,
           "storageClass" : [
            "abstract"
@@ -2036,7 +1981,7 @@
        {
         "kind" : "template",
         "comment" : "Encodes an integer\n",
-        "line" : 527,
+        "line" : 523,
         "char" : 10,
         "name" : "integer",
         "parameters" : [
@@ -2050,7 +1995,7 @@
          {
           "name" : "integer",
           "kind" : "function",
-          "line" : 527,
+          "line" : 523,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -2069,64 +2014,64 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_531_0",
+        "name" : "__unittest___source_codec_d_527_0",
         "kind" : "function",
-        "line" : 531,
+        "line" : 527,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 548,
+        "endline" : 544,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_549_0",
+        "name" : "__unittest___source_codec_d_545_0",
         "kind" : "function",
-        "line" : 549,
+        "line" : 545,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 564,
+        "endline" : 560,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_565_0",
+        "name" : "__unittest___source_codec_d_561_0",
         "kind" : "function",
-        "line" : 565,
+        "line" : 561,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 582,
+        "endline" : 578,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_583_0",
+        "name" : "__unittest___source_codec_d_579_0",
         "kind" : "function",
-        "line" : 583,
+        "line" : 579,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 593,
+        "endline" : 589,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_594_0",
+        "name" : "__unittest___source_codec_d_590_0",
         "kind" : "function",
-        "line" : 594,
+        "line" : 590,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 765,
+        "endline" : 761,
         "endchar" : 5
        },
        {
         "name" : "bitString",
         "kind" : "function",
-        "line" : 766,
+        "line" : 762,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2136,7 +2081,7 @@
        {
         "name" : "bitString",
         "kind" : "function",
-        "line" : 769,
+        "line" : 765,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2153,21 +2098,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_772_0",
+        "name" : "__unittest___source_codec_d_768_0",
         "kind" : "function",
-        "line" : 772,
+        "line" : 768,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 789,
+        "endline" : 785,
         "endchar" : 5
        },
        {
         "name" : "octetString",
         "kind" : "function",
         "comment" : "Decodes a ubyte[] array\n",
-        "line" : 790,
+        "line" : 786,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -2178,7 +2123,7 @@
         "name" : "octetString",
         "kind" : "function",
         "comment" : "Encodes a ubyte[] array\n",
-        "line" : 794,
+        "line" : 790,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2195,43 +2140,43 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_797_0",
+        "name" : "__unittest___source_codec_d_793_0",
         "kind" : "function",
-        "line" : 797,
+        "line" : 793,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 808,
+        "endline" : 804,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_809_0",
+        "name" : "__unittest___source_codec_d_805_0",
         "kind" : "function",
-        "line" : 809,
+        "line" : 805,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 819,
+        "endline" : 815,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_820_0",
+        "name" : "__unittest___source_codec_d_816_0",
         "kind" : "function",
-        "line" : 820,
+        "line" : 816,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 841,
+        "endline" : 837,
         "endchar" : 5
        },
        {
         "name" : "nill",
         "kind" : "function",
         "comment" : "        \"Decodes\" a NULL, by which I mean: returns nothing, but\n        throws exceptions if the element is not correct.\n\n        Note:\n            I had to name this method \"nill,\" because \"NULL\" is a keyword in D.\n\n        Throws:\n            ASN1ConstructionException = if the element is marked as \"constructed\"\n            ASN1ValueSizeException = if there are any content octets\n",
-        "line" : 842,
+        "line" : 838,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2242,7 +2187,7 @@
         "name" : "oid",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 845,
+        "line" : 841,
         "char" : 12,
         "type" : "objectIdentifier"
        },
@@ -2250,7 +2195,7 @@
         "name" : "objectID",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 847,
+        "line" : 843,
         "char" : 12,
         "type" : "objectIdentifier"
        },
@@ -2258,7 +2203,7 @@
         "name" : "objectIdentifier",
         "kind" : "function",
         "comment" : "Decodes an Object Identifier\n",
-        "line" : 850,
+        "line" : 846,
         "char" : 9,
         "storageClass" : [
          "abstract"
@@ -2269,7 +2214,7 @@
         "name" : "objectIdentifier",
         "kind" : "function",
         "comment" : "Encodes an Object Identifier\n",
-        "line" : 854,
+        "line" : 850,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2286,21 +2231,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_857_0",
+        "name" : "__unittest___source_codec_d_853_0",
         "kind" : "function",
-        "line" : 857,
+        "line" : 853,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 938,
+        "endline" : 934,
         "endchar" : 5
        },
        {
         "name" : "objectDescriptor",
         "kind" : "function",
-        "comment" : "        Decodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n",
-        "line" : 939,
+        "comment" : "        Decodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Sources:\n            $(LINK ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)\n",
+        "line" : 935,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2310,8 +2255,8 @@
        {
         "name" : "objectDescriptor",
         "kind" : "function",
-        "comment" : "        Encodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n",
-        "line" : 960,
+        "comment" : "        Encodes an ObjectDescriptor, which is a string consisting of only\n        graphical characters. In fact, ObjectDescriptor is actually implicitly\n        just a GraphicString! The formal specification for an ObjectDescriptor\n        is:\n\n        $(I ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)\n\n        GraphicString is just 0x20 to 0x7E, therefore ObjectDescriptor is just\n        0x20 to 0x7E.\n\n        Sources:\n            $(LINK ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)\n",
+        "line" : 956,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2328,21 +2273,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_963_0",
+        "name" : "__unittest___source_codec_d_959_0",
         "kind" : "function",
-        "line" : 963,
+        "line" : 959,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1008,
+        "endline" : 1004,
         "endchar" : 5
        },
        {
         "name" : "external",
         "kind" : "function",
-        "comment" : "        Decodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK2 https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n",
-        "line" : 1009,
+        "comment" : "        Decodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n",
+        "line" : 1005,
         "char" : 14,
         "storageClass" : [
          "abstract",
@@ -2353,8 +2298,8 @@
        {
         "name" : "external",
         "kind" : "function",
-        "comment" : "        Encodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK2 https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n",
-        "line" : 1035,
+        "comment" : "        Encodes an EXTERNAL, which is a constructed data type, defined in\n        the $(LINK https://www.itu.int,\n            International Telecommunications Union)'s\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EXTERNAL as:\n\n        $(I\n        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 2.\n",
+        "line" : 1031,
         "char" : 10,
         "storageClass" : [
          "abstract",
@@ -2372,21 +2317,47 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1039_0",
+        "name" : "__unittest___source_codec_d_1035_0",
         "kind" : "function",
-        "line" : 1039,
+        "line" : 1035,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1078,
+        "endline" : 1074,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Encodes a floating-point number\n",
-        "line" : 1079,
+        "line" : 1075,
         "char" : 7,
+        "name" : "realNumber",
+        "parameters" : [
+         {
+          "name" : "T",
+          "kind" : "type"
+         }
+        ],
+        "constraint" : "isFloatingPoint!T",
+        "members" : [
+         {
+          "name" : "realNumber",
+          "kind" : "function",
+          "line" : 1075,
+          "char" : 7,
+          "storageClass" : [
+           "abstract"
+          ],
+          "type" : "const @property T()"
+         }
+        ]
+       },
+       {
+        "kind" : "template",
+        "comment" : "Encodes a floating-point number\n",
+        "line" : 1079,
+        "char" : 10,
         "name" : "realNumber",
         "parameters" : [
          {
@@ -2400,32 +2371,6 @@
           "name" : "realNumber",
           "kind" : "function",
           "line" : 1079,
-          "char" : 7,
-          "storageClass" : [
-           "abstract"
-          ],
-          "type" : "const @property T()"
-         }
-        ]
-       },
-       {
-        "kind" : "template",
-        "comment" : "Encodes a floating-point number\n",
-        "line" : 1083,
-        "char" : 10,
-        "name" : "realNumber",
-        "parameters" : [
-         {
-          "name" : "T",
-          "kind" : "type"
-         }
-        ],
-        "constraint" : "isFloatingPoint!T",
-        "members" : [
-         {
-          "name" : "realNumber",
-          "kind" : "function",
-          "line" : 1083,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -2444,86 +2389,86 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1086_0",
+        "name" : "__unittest___source_codec_d_1082_0",
         "kind" : "function",
-        "line" : 1086,
+        "line" : 1082,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1113,
+        "endline" : 1109,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1114_0",
+        "name" : "__unittest___source_codec_d_1110_0",
         "kind" : "function",
-        "line" : 1114,
+        "line" : 1110,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1138,
+        "endline" : 1134,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1139_0",
+        "name" : "__unittest___source_codec_d_1135_0",
         "kind" : "function",
-        "line" : 1139,
+        "line" : 1135,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1238,
+        "endline" : 1234,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1239_0",
+        "name" : "__unittest___source_codec_d_1235_0",
         "kind" : "function",
-        "line" : 1239,
+        "line" : 1235,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1290,
+        "endline" : 1286,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1291_0",
+        "name" : "__unittest___source_codec_d_1287_0",
         "kind" : "function",
-        "line" : 1291,
+        "line" : 1287,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1326,
+        "endline" : 1322,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1327_0",
+        "name" : "__unittest___source_codec_d_1323_0",
         "kind" : "function",
-        "line" : 1327,
+        "line" : 1323,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1426,
+        "endline" : 1422,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1427_0",
+        "name" : "__unittest___source_codec_d_1423_0",
         "kind" : "function",
-        "line" : 1427,
+        "line" : 1423,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1490,
+        "endline" : 1486,
         "endchar" : 5
        },
        {
         "kind" : "template",
         "comment" : "Encodes an integer that represents an ENUMERATED value\n",
-        "line" : 1491,
+        "line" : 1487,
         "char" : 7,
         "name" : "enumerated",
         "parameters" : [
@@ -2537,7 +2482,7 @@
          {
           "name" : "enumerated",
           "kind" : "function",
-          "line" : 1491,
+          "line" : 1487,
           "char" : 7,
           "storageClass" : [
            "abstract"
@@ -2549,7 +2494,7 @@
        {
         "kind" : "template",
         "comment" : "Decodes an integer that represents an ENUMERATED value\n",
-        "line" : 1495,
+        "line" : 1491,
         "char" : 10,
         "name" : "enumerated",
         "parameters" : [
@@ -2563,7 +2508,7 @@
          {
           "name" : "enumerated",
           "kind" : "function",
-          "line" : 1495,
+          "line" : 1491,
           "char" : 10,
           "storageClass" : [
            "abstract"
@@ -2582,73 +2527,73 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1499_0",
+        "name" : "__unittest___source_codec_d_1495_0",
         "kind" : "function",
-        "line" : 1499,
+        "line" : 1495,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1516,
+        "endline" : 1512,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1517_0",
+        "name" : "__unittest___source_codec_d_1513_0",
         "kind" : "function",
-        "line" : 1517,
+        "line" : 1513,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1532,
+        "endline" : 1528,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1533_0",
+        "name" : "__unittest___source_codec_d_1529_0",
         "kind" : "function",
-        "line" : 1533,
+        "line" : 1529,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1550,
+        "endline" : 1546,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1551_0",
+        "name" : "__unittest___source_codec_d_1547_0",
         "kind" : "function",
-        "line" : 1551,
+        "line" : 1547,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1561,
+        "endline" : 1557,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1562_0",
+        "name" : "__unittest___source_codec_d_1558_0",
         "kind" : "function",
-        "line" : 1562,
+        "line" : 1558,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1734,
+        "endline" : 1730,
         "endchar" : 5
        },
        {
         "name" : "embeddedPDV",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1734,
+        "line" : 1730,
         "char" : 12,
         "type" : "embeddedPresentationDataValue"
        },
        {
         "name" : "embeddedPresentationDataValue",
         "kind" : "function",
-        "comment" : "        Decodes an EmbeddedPDV, which is a constructed data type, defined in\n            the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EmbeddedPDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1765,
+        "comment" : "        Decodes an EmbeddedPDV, which is a constructed data type, defined in\n            the $(LINK https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EmbeddedPDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
+        "line" : 1761,
         "char" : 17,
         "storageClass" : [
          "abstract"
@@ -2658,8 +2603,8 @@
        {
         "name" : "embeddedPresentationDataValue",
         "kind" : "function",
-        "comment" : "        Encodes an EmbeddedPDV, which is a constructed data type, defined in\n            the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EmbeddedPDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 1797,
+        "comment" : "        Encodes an EmbeddedPDV, which is a constructed data type, defined in\n            the $(LINK https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines EmbeddedPDV as:\n\n        $(I\n            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
+        "line" : 1793,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2676,54 +2621,54 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1800_0",
+        "name" : "__unittest___source_codec_d_1796_0",
         "kind" : "function",
-        "line" : 1800,
+        "line" : 1796,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1824,
+        "endline" : 1820,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1825_0",
+        "name" : "__unittest___source_codec_d_1821_0",
         "kind" : "function",
-        "line" : 1825,
+        "line" : 1821,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1841,
+        "endline" : 1837,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1842_0",
+        "name" : "__unittest___source_codec_d_1838_0",
         "kind" : "function",
-        "line" : 1842,
+        "line" : 1838,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1858,
+        "endline" : 1854,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1859_0",
+        "name" : "__unittest___source_codec_d_1855_0",
         "kind" : "function",
-        "line" : 1859,
+        "line" : 1855,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1876,
+        "endline" : 1872,
         "endchar" : 5
        },
        {
         "name" : "utf8String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1876,
+        "line" : 1872,
         "char" : 12,
         "type" : "unicodeTransformationFormat8String"
        },
@@ -2731,7 +2676,7 @@
         "name" : "unicodeTransformationFormat8String",
         "kind" : "function",
         "comment" : "Decodes a UTF-8 String\n",
-        "line" : 1879,
+        "line" : 1875,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2742,7 +2687,7 @@
         "name" : "unicodeTransformationFormat8String",
         "kind" : "function",
         "comment" : "Encodes a UTF-8 String\n",
-        "line" : 1883,
+        "line" : 1879,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2759,32 +2704,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1886_0",
+        "name" : "__unittest___source_codec_d_1882_0",
         "kind" : "function",
-        "line" : 1886,
+        "line" : 1882,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1899,
+        "endline" : 1895,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_1900_0",
+        "name" : "__unittest___source_codec_d_1896_0",
         "kind" : "function",
-        "line" : 1900,
+        "line" : 1896,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1910,
+        "endline" : 1906,
         "endchar" : 5
        },
        {
         "name" : "roid",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1910,
+        "line" : 1906,
         "char" : 12,
         "type" : "relativeObjectIdentifier"
        },
@@ -2792,7 +2737,7 @@
         "name" : "relativeOID",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 1912,
+        "line" : 1908,
         "char" : 12,
         "type" : "relativeObjectIdentifier"
        },
@@ -2800,7 +2745,7 @@
         "name" : "relativeObjectIdentifier",
         "kind" : "function",
         "comment" : "Decodes a portion of an Object Identifier\n",
-        "line" : 1915,
+        "line" : 1911,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -2811,7 +2756,7 @@
         "name" : "relativeObjectIdentifier",
         "kind" : "function",
         "comment" : "Encodes a porition of an Object Identifier\n",
-        "line" : 1919,
+        "line" : 1915,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2828,21 +2773,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_1922_0",
+        "name" : "__unittest___source_codec_d_1918_0",
         "kind" : "function",
-        "line" : 1922,
+        "line" : 1918,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 1948,
+        "endline" : 1944,
         "endchar" : 5
        },
        {
         "name" : "sequence",
         "kind" : "function",
-        "comment" : "        Decodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1949,
+        "comment" : "        Decodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
+        "line" : 1945,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -2852,8 +2797,8 @@
        {
         "name" : "sequence",
         "kind" : "function",
-        "comment" : "        Encodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1961,
+        "comment" : "        Encodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
+        "line" : 1957,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2872,8 +2817,8 @@
        {
         "name" : "set",
         "kind" : "function",
-        "comment" : "        Decodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1973,
+        "comment" : "        Decodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
+        "line" : 1969,
         "char" : 15,
         "storageClass" : [
          "abstract"
@@ -2883,8 +2828,8 @@
        {
         "name" : "set",
         "kind" : "function",
-        "comment" : "        Encodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
-        "line" : 1985,
+        "comment" : "        Encodes an array of elements.\n\n        Credits:\n            Thanks to StackOverflow user\n            $(LINK https://stackoverflow.com/users/359297/biotronic, BioTronic)\n            for teaching me how to create the abstract method that uses the\n            child class as a template.\n",
+        "line" : 1981,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2904,7 +2849,7 @@
         "name" : "numericString",
         "kind" : "function",
         "comment" : "        Decodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n",
-        "line" : 1992,
+        "line" : 1988,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2915,7 +2860,7 @@
         "name" : "numericString",
         "kind" : "function",
         "comment" : "        Encodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n",
-        "line" : 1999,
+        "line" : 1995,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2932,32 +2877,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2002_0",
+        "name" : "__unittest___source_codec_d_1998_0",
         "kind" : "function",
-        "line" : 2002,
+        "line" : 1998,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2019,
+        "endline" : 2015,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2020_0",
+        "name" : "__unittest___source_codec_d_2016_0",
         "kind" : "function",
-        "line" : 2020,
+        "line" : 2016,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2034,
+        "endline" : 2030,
         "endchar" : 5
        },
        {
         "name" : "printableString",
         "kind" : "function",
         "comment" : "        Decodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n",
-        "line" : 2035,
+        "line" : 2031,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -2968,7 +2913,7 @@
         "name" : "printableString",
         "kind" : "function",
         "comment" : "        Encodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n",
-        "line" : 2043,
+        "line" : 2039,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -2985,32 +2930,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2046_0",
+        "name" : "__unittest___source_codec_d_2042_0",
         "kind" : "function",
-        "line" : 2046,
+        "line" : 2042,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2068,
+        "endline" : 2064,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2069_0",
+        "name" : "__unittest___source_codec_d_2065_0",
         "kind" : "function",
-        "line" : 2069,
+        "line" : 2065,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2079,
+        "endline" : 2075,
         "endchar" : 5
        },
        {
         "name" : "t61String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 2079,
+        "line" : 2075,
         "char" : 12,
         "type" : "teletexString"
        },
@@ -3018,7 +2963,7 @@
         "name" : "teletexString",
         "kind" : "function",
         "comment" : "Decodes bytes representing the T.61 Character Set\n",
-        "line" : 2082,
+        "line" : 2078,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -3029,7 +2974,7 @@
         "name" : "teletexString",
         "kind" : "function",
         "comment" : "Encodes bytes representing the T.61 Character Set\n",
-        "line" : 2086,
+        "line" : 2082,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3046,42 +2991,42 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2089_0",
+        "name" : "__unittest___source_codec_d_2085_0",
         "kind" : "function",
-        "line" : 2089,
+        "line" : 2085,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2102,
+        "endline" : 2098,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2103_0",
+        "name" : "__unittest___source_codec_d_2099_0",
         "kind" : "function",
-        "line" : 2103,
+        "line" : 2099,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2113,
+        "endline" : 2109,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2114_0",
+        "name" : "__unittest___source_codec_d_2110_0",
         "kind" : "function",
-        "line" : 2114,
+        "line" : 2110,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2124,
+        "endline" : 2120,
         "endchar" : 5
        },
        {
         "name" : "videotexString",
         "kind" : "function",
-        "line" : 2125,
+        "line" : 2121,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -3091,7 +3036,7 @@
        {
         "name" : "videotexString",
         "kind" : "function",
-        "line" : 2128,
+        "line" : 2124,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3108,43 +3053,43 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2131_0",
+        "name" : "__unittest___source_codec_d_2127_0",
         "kind" : "function",
-        "line" : 2131,
+        "line" : 2127,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2144,
+        "endline" : 2140,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2145_0",
+        "name" : "__unittest___source_codec_d_2141_0",
         "kind" : "function",
-        "line" : 2145,
+        "line" : 2141,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2155,
+        "endline" : 2151,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2156_0",
+        "name" : "__unittest___source_codec_d_2152_0",
         "kind" : "function",
-        "line" : 2156,
+        "line" : 2152,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2167,
+        "endline" : 2163,
         "endchar" : 5
        },
        {
         "name" : "ia5String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 2167,
+        "line" : 2163,
         "char" : 12,
         "type" : "internationalAlphabetNumber5String"
        },
@@ -3152,7 +3097,7 @@
         "name" : "internationalAlphabetNumber5String",
         "kind" : "function",
         "comment" : "Decodes a string of ASCII characters\n",
-        "line" : 2170,
+        "line" : 2166,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -3163,7 +3108,7 @@
         "name" : "internationalAlphabetNumber5String",
         "kind" : "function",
         "comment" : "Encodes a string of ASCII characters\n",
-        "line" : 2174,
+        "line" : 2170,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3180,32 +3125,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2177_0",
+        "name" : "__unittest___source_codec_d_2173_0",
         "kind" : "function",
-        "line" : 2177,
+        "line" : 2173,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2191,
+        "endline" : 2187,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2192_0",
+        "name" : "__unittest___source_codec_d_2188_0",
         "kind" : "function",
-        "line" : 2192,
+        "line" : 2188,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2202,
+        "endline" : 2198,
         "endchar" : 5
        },
        {
         "name" : "utc",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 2202,
+        "line" : 2198,
         "char" : 12,
         "type" : "coordinatedUniversalTime"
        },
@@ -3213,7 +3158,7 @@
         "name" : "utcTime",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 2204,
+        "line" : 2200,
         "char" : 12,
         "type" : "coordinatedUniversalTime"
        },
@@ -3221,7 +3166,7 @@
         "name" : "coordinatedUniversalTime",
         "kind" : "function",
         "comment" : "Decodes a DateTime\n",
-        "line" : 2207,
+        "line" : 2203,
         "char" : 14,
         "storageClass" : [
          "abstract"
@@ -3232,7 +3177,7 @@
         "name" : "coordinatedUniversalTime",
         "kind" : "function",
         "comment" : "Encodes a DateTime\n",
-        "line" : 2211,
+        "line" : 2207,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3249,21 +3194,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2214_0",
+        "name" : "__unittest___source_codec_d_2210_0",
         "kind" : "function",
-        "line" : 2214,
+        "line" : 2210,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2225,
+        "endline" : 2221,
         "endchar" : 5
        },
        {
         "name" : "generalizedTime",
         "kind" : "function",
         "comment" : "Decodes a DateTime\n",
-        "line" : 2226,
+        "line" : 2222,
         "char" : 14,
         "storageClass" : [
          "abstract"
@@ -3274,7 +3219,7 @@
         "name" : "generalizedTime",
         "kind" : "function",
         "comment" : "Encodes a DateTime\n",
-        "line" : 2230,
+        "line" : 2226,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3291,21 +3236,21 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2233_0",
+        "name" : "__unittest___source_codec_d_2229_0",
         "kind" : "function",
-        "line" : 2233,
+        "line" : 2229,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2255,
+        "endline" : 2251,
         "endchar" : 5
        },
        {
         "name" : "graphicString",
         "kind" : "function",
-        "comment" : "        Decodes an ASCII string that contains only characters between and\n        including 0x20 and 0x75.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n",
-        "line" : 2257,
+        "comment" : "        Decodes an ASCII string that contains only characters between and\n        including 0x20 and 0x75.\n\n        Sources:\n            $(LINK ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)\n\n",
+        "line" : 2253,
         "char" : 12,
         "storageClass" : [
          "abstract",
@@ -3316,8 +3261,8 @@
        {
         "name" : "graphicString",
         "kind" : "function",
-        "comment" : "        Encodes an ASCII string that contains only characters between and\n        including 0x20 and 0x75.\n\n        Sources:\n            $(LINK2 ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)\n\n",
-        "line" : 2273,
+        "comment" : "        Encodes an ASCII string that contains only characters between and\n        including 0x20 and 0x75.\n\n        Sources:\n            $(LINK ,\n                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)\n            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,\n                The Wikipedia Page on ISO 2022)\n            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)\n\n",
+        "line" : 2269,
         "char" : 10,
         "storageClass" : [
          "abstract",
@@ -3335,32 +3280,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2276_0",
+        "name" : "__unittest___source_codec_d_2272_0",
         "kind" : "function",
-        "line" : 2276,
+        "line" : 2272,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2299,
+        "endline" : 2295,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2300_0",
+        "name" : "__unittest___source_codec_d_2296_0",
         "kind" : "function",
-        "line" : 2300,
+        "line" : 2296,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2310,
+        "endline" : 2306,
         "endchar" : 5
        },
        {
         "name" : "iso646String",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 2310,
+        "line" : 2306,
         "char" : 12,
         "type" : "visibleString"
        },
@@ -3368,7 +3313,7 @@
         "name" : "visibleString",
         "kind" : "function",
         "comment" : "        Decodes a string that only contains characters between and including\n        0x20 and 0x7E. (Honestly, I don't know how this differs from\n        GraphicalString.)\n",
-        "line" : 2317,
+        "line" : 2313,
         "char" : 12,
         "storageClass" : [
          "abstract"
@@ -3379,7 +3324,7 @@
         "name" : "visibleString",
         "kind" : "function",
         "comment" : "        Encodes a string that only contains characters between and including\n        0x20 and 0x7E. (Honestly, I don't know how this differs from\n        GraphicalString.)\n",
-        "line" : 2325,
+        "line" : 2321,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3396,32 +3341,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2328_0",
+        "name" : "__unittest___source_codec_d_2324_0",
         "kind" : "function",
-        "line" : 2328,
+        "line" : 2324,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2351,
+        "endline" : 2347,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2352_0",
+        "name" : "__unittest___source_codec_d_2348_0",
         "kind" : "function",
-        "line" : 2352,
+        "line" : 2348,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2362,
+        "endline" : 2358,
         "endchar" : 5
        },
        {
         "name" : "generalString",
         "kind" : "function",
         "comment" : "Decodes a string containing only ASCII characters.\n",
-        "line" : 2364,
+        "line" : 2360,
         "char" : 12,
         "storageClass" : [
          "abstract",
@@ -3433,7 +3378,7 @@
         "name" : "generalString",
         "kind" : "function",
         "comment" : "Encodes a string containing only ASCII characters.\n",
-        "line" : 2369,
+        "line" : 2365,
         "char" : 10,
         "storageClass" : [
          "abstract",
@@ -3451,32 +3396,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2372_0",
+        "name" : "__unittest___source_codec_d_2368_0",
         "kind" : "function",
-        "line" : 2372,
+        "line" : 2368,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2386,
+        "endline" : 2382,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2387_0",
+        "name" : "__unittest___source_codec_d_2383_0",
         "kind" : "function",
-        "line" : 2387,
+        "line" : 2383,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2397,
+        "endline" : 2393,
         "endchar" : 5
        },
        {
         "name" : "universalString",
         "kind" : "function",
         "comment" : "Decodes a string of UTF-32 characters\n",
-        "line" : 2398,
+        "line" : 2394,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -3487,7 +3432,7 @@
         "name" : "universalString",
         "kind" : "function",
         "comment" : "Encodes a string of UTF-32 characters\n",
-        "line" : 2402,
+        "line" : 2398,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3504,32 +3449,32 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2405_0",
+        "name" : "__unittest___source_codec_d_2401_0",
         "kind" : "function",
-        "line" : 2405,
+        "line" : 2401,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2418,
+        "endline" : 2414,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2419_0",
+        "name" : "__unittest___source_codec_d_2415_0",
         "kind" : "function",
-        "line" : 2419,
+        "line" : 2415,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2455,
+        "endline" : 2451,
         "endchar" : 5
        },
        {
         "name" : "characterString",
         "kind" : "function",
-        "comment" : "        Decodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 2456,
+        "comment" : "        Decodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
+        "line" : 2452,
         "char" : 21,
         "storageClass" : [
          "abstract"
@@ -3539,8 +3484,8 @@
        {
         "name" : "characterString",
         "kind" : "function",
-        "comment" : "        Encodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
-        "line" : 2486,
+        "comment" : "        Encodes a CHARACTER STRING, which is a constructed data type, defined\n        in the $(LINK https://www.itu.int,\n                International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines CHARACTER as:\n\n        $(I\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes AUTOMATIC TAGS, so all of the identification choices\n        will be context-specific and numbered from 0 to 5.\n",
+        "line" : 2482,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3557,54 +3502,54 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2489_0",
+        "name" : "__unittest___source_codec_d_2485_0",
         "kind" : "function",
-        "line" : 2489,
+        "line" : 2485,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2511,
+        "endline" : 2507,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2512_0",
+        "name" : "__unittest___source_codec_d_2508_0",
         "kind" : "function",
-        "line" : 2512,
+        "line" : 2508,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2528,
+        "endline" : 2524,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2529_0",
+        "name" : "__unittest___source_codec_d_2525_0",
         "kind" : "function",
-        "line" : 2529,
+        "line" : 2525,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2545,
+        "endline" : 2541,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2546_0",
+        "name" : "__unittest___source_codec_d_2542_0",
         "kind" : "function",
-        "line" : 2546,
+        "line" : 2542,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2566,
+        "endline" : 2562,
         "endchar" : 5
        },
        {
         "name" : "bmpString",
         "kind" : "alias",
         "comment" : "\n",
-        "line" : 2566,
+        "line" : 2562,
         "char" : 12,
         "type" : "basicMultilingualPlaneString"
        },
@@ -3612,7 +3557,7 @@
         "name" : "basicMultilingualPlaneString",
         "kind" : "function",
         "comment" : "Decodes a string of UTF-16 characters\n",
-        "line" : 2569,
+        "line" : 2565,
         "char" : 13,
         "storageClass" : [
          "abstract"
@@ -3623,7 +3568,7 @@
         "name" : "basicMultilingualPlaneString",
         "kind" : "function",
         "comment" : "Encodes a string of UTF-16 characters\n",
-        "line" : 2573,
+        "line" : 2569,
         "char" : 10,
         "storageClass" : [
          "abstract"
@@ -3640,25 +3585,25 @@
         ]
        },
        {
-        "name" : "__unittest___source_codec_d_2576_0",
+        "name" : "__unittest___source_codec_d_2572_0",
         "kind" : "function",
-        "line" : 2576,
+        "line" : 2572,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2589,
+        "endline" : 2585,
         "endchar" : 5
        },
        {
-        "name" : "__unittest___source_codec_d_2590_0",
+        "name" : "__unittest___source_codec_d_2586_0",
         "kind" : "function",
-        "line" : 2590,
+        "line" : 2586,
         "char" : 5,
         "storageClass" : [
          "@system"
         ],
-        "endline" : 2599,
+        "endline" : 2595,
         "endchar" : 1
        }
       ]
@@ -4139,7 +4084,7 @@
    {
     "name" : "CharacterString",
     "kind" : "struct",
-    "comment" : "    A $(MONO CharacterString), is a constructed data type, defined\n    in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s\n        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n    The specification defines $(MONO CharacterString) as:\n\n    $(PRE\n        CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n            identification CHOICE {\n                syntaxes SEQUENCE {\n                    abstract OBJECT IDENTIFIER,\n                    transfer OBJECT IDENTIFIER },\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER },\n                transfer-syntax OBJECT IDENTIFIER,\n                fixed NULL },\n            string-value OCTET STRING }\n    )\n\n    This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n    choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
+    "comment" : "    A $(MONO CharacterString), is a constructed data type, defined\n    in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n    The specification defines $(MONO CharacterString) as:\n\n    $(PRE\n        CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n            identification CHOICE {\n                syntaxes SEQUENCE {\n                    abstract OBJECT IDENTIFIER,\n                    transfer OBJECT IDENTIFIER },\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER },\n                transfer-syntax OBJECT IDENTIFIER,\n                fixed NULL },\n            string-value OCTET STRING }\n    )\n\n    This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n    choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
     "line" : 31,
     "char" : 1,
     "members" : [
@@ -4231,15 +4176,15 @@
    {
     "name" : "External",
     "kind" : "struct",
-    "comment" : "    According to the\n    $(LINK2 http://www.itu.int/en/pages/default.aspx,\n        International Telecommunications Union)'s\n    $(LINK2 https://www.itu.int/rec/T-REC-X.680/en,\n        X.680 - Abstract Syntax Notation One (ASN.1)),\n    the abstract definition for an EXTERNAL, after removing the comments in the\n    specification, is as follows:\n\n    $(I\n        EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n            identification CHOICE {\n                syntaxes SEQUENCE {\n                    abstract OBJECT IDENTIFIER,\n                    transfer OBJECT IDENTIFIER },\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER },\n                transfer-syntax OBJECT IDENTIFIER,\n                fixed NULL },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n                ( WITH COMPONENTS {\n                    ... ,\n                    identification ( WITH COMPONENTS {\n                        ... ,\n                        syntaxes ABSENT,\n                        transfer-syntax ABSENT,\n                        fixed ABSENT } ) } )\n    )\n\n    Note that the abstract syntax resembles that of EmbeddedPDV and\n    CharacterString, except with a WITH COMPONENTS constraint that removes some\n    of our choices of identification.\n    As can be seen on page 303 of Olivier Dubuisson's\n    $(I $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,\n        ASN.1: Communication Between Heterogeneous Systems)),\n    after applying the WITH COMPONENTS constraint, our reduced syntax becomes:\n\n    $(I\n        EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n    )\n\n    But, according to the\n    $(LINK2 http://www.itu.int/en/pages/default.aspx,\n    International Telecommunications Union)'s\n    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),\n    section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as\n    follows, for compatibility reasons:\n\n    $(I\n        EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            direct-reference  OBJECT IDENTIFIER OPTIONAL,\n            indirect-reference  INTEGER OPTIONAL,\n            data-value-descriptor  ObjectDescriptor  OPTIONAL,\n            encoding  CHOICE {\n                single-ASN1-type  [0] ANY,\n                octet-aligned     [1] IMPLICIT OCTET STRING,\n                arbitrary         [2] IMPLICIT BIT STRING } }\n    )\n\n    The definition above is the pre-1994 definition of EXTERNAL. The syntax\n    field of the post-1994 definition maps to the direct-reference field of\n    the pre-1994 definition. The presentation-context-id field of the post-1994\n    definition maps to the indirect-reference field of the pre-1994 definition.\n    If context-negotiation is used, per the abstract syntax, then the\n    presentation-context-id field of the context-negotiation SEQUENCE in the\n    post-1994 definition maps to the indirect-reference field of the pre-1994\n    definition, and the transfer-syntax field of the context-negotiation\n    SEQUENCE maps to the direct-reference field of the pre-1994 definition.\n\n    The following additional constraints are applied to the abstract syntax\n    when using Canonical Encoding Rules or Distinguished Encoding Rules,\n    which are also defined in the\n    $(LINK2 http://www.itu.int/en/pages/default.aspx,\n    International Telecommunications Union)'s\n    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):\n\n    $(I\n        EXTERNAL ( WITH COMPONENTS {\n            ... ,\n            identification ( WITH COMPONENTS {\n                ... ,\n                presentation-context-id ABSENT,\n                context-negotiation ABSENT } ) } )\n    )\n\n    The stated purpose of the constraints shown above is to restrict the use of\n    the presentation-context-id, either by itself or within the\n    context-negotiation, which makes the following the effective abstract\n    syntax of EXTERNAL when using Canonical Encoding Rules or\n    Distinguished Encoding Rules:\n\n    $(I\n        EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n            identification CHOICE {\n                syntaxes SEQUENCE {\n                    abstract OBJECT IDENTIFIER,\n                    transfer OBJECT IDENTIFIER },\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER },\n                transfer-syntax OBJECT IDENTIFIER,\n                fixed NULL },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n                ( WITH COMPONENTS {\n                    ... ,\n                    identification ( WITH COMPONENTS {\n                        ... ,\n                        syntaxes ABSENT,\n                        presentation-context-id ABSENT,\n                        context-negotiation ABSENT,\n                        transfer-syntax ABSENT,\n                        fixed ABSENT } ) } )\n    )\n\n    With the constraints applied, the abstract syntax for EXTERNALs encoded\n    using Canonical Encoding Rules or Distinguished Encoding Rules becomes:\n\n    $(I\n        EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n    )\n\n    Upon removing the CHOICE tag (since you have no choice but to use syntax\n    at this point), the encoding definition when using\n    Canonical Encoding Rules or Distinguished Encoding Rules:\n\n    $(I\n        EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n            syntax OBJECT IDENTIFIER,\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n    )\n\n    For all encoding rules defined in the\n    $(LINK2 http://www.itu.int/en/pages/default.aspx,\n    International Telecommunications Union)'s\n    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)\n    (meaning Basic Encoding Rules, Canonical Encoding Rules, and\n    Distinguished Encoding Rules), EXPLICIT tagging must be used when encoding\n    the EXTERNAL type. Unlike the other Context-Switching Types, automatic\n    tagging is NOT used when encoding with Basic Encoding Rules,\n    Canonical Encoding Rules, or Distinguished Encoding Rules.\n",
-    "line" : 166,
+    "comment" : "    According to the\n    $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n    $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),\n    the abstract definition for an $(MONO EXTERNAL), after removing the comments in the\n    specification, is as follows:\n\n    $(PRE\n        EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n            identification CHOICE {\n                syntaxes SEQUENCE {\n                    abstract OBJECT IDENTIFIER,\n                    transfer OBJECT IDENTIFIER },\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER },\n                transfer-syntax OBJECT IDENTIFIER,\n                fixed NULL },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n                ( WITH COMPONENTS {\n                    ... ,\n                    identification ( WITH COMPONENTS {\n                        ... ,\n                        syntaxes ABSENT,\n                        transfer-syntax ABSENT,\n                        fixed ABSENT } ) } )\n    )\n\n    Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and\n    $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some\n    of our choices of $(MONO identification).\n    As can be seen on page 303 of Olivier Dubuisson's\n    $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,\n        ASN.1: Communication Between Heterogeneous Systems)),\n    after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:\n\n    $(PRE\n        EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER } },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n    )\n\n    But, according to the\n    $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n    $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),\n    section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as\n    follows, for compatibility reasons:\n\n    $(PRE\n        EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n            direct-reference  OBJECT IDENTIFIER OPTIONAL,\n            indirect-reference  INTEGER OPTIONAL,\n            data-value-descriptor  ObjectDescriptor  OPTIONAL,\n            encoding  CHOICE {\n                single-ASN1-type  [0] ANY,\n                octet-aligned     [1] IMPLICIT OCTET STRING,\n                arbitrary         [2] IMPLICIT BIT STRING } }\n    )\n\n    The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)\n    field of the post-1994 definition maps to the $(MONO direct-reference) field of\n    the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994\n    definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.\n    If $(MONO context-negotiation) is used, per the abstract syntax, then the\n    $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the\n    post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994\n    definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)\n    $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.\n\n    The following additional constraints are applied to the abstract syntax\n    when using Canonical Encoding Rules or Distinguished Encoding Rules,\n    which are also defined in the\n    $(LINK http://www.itu.int/en/pages/default.aspx,\n    International Telecommunications Union)'s\n    $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):\n\n    $(PRE\n        EXTERNAL ( WITH COMPONENTS {\n            ... ,\n            identification ( WITH COMPONENTS {\n                ... ,\n                presentation-context-id ABSENT,\n                context-negotiation ABSENT } ) } )\n    )\n\n    The stated purpose of the constraints shown above is to restrict the use of\n    the $(MONO presentation-context-id), either by itself or within the\n    $(MONO context-negotiation), which makes the following the effective abstract\n    syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or\n    Distinguished Encoding Rules:\n\n    $(PRE\n        EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n            identification CHOICE {\n                syntaxes SEQUENCE {\n                    abstract OBJECT IDENTIFIER,\n                    transfer OBJECT IDENTIFIER },\n                syntax OBJECT IDENTIFIER,\n                presentation-context-id INTEGER,\n                context-negotiation SEQUENCE {\n                    presentation-context-id INTEGER,\n                    transfer-syntax OBJECT IDENTIFIER },\n                transfer-syntax OBJECT IDENTIFIER,\n                fixed NULL },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n                ( WITH COMPONENTS {\n                    ... ,\n                    identification ( WITH COMPONENTS {\n                        ... ,\n                        syntaxes ABSENT,\n                        presentation-context-id ABSENT,\n                        context-negotiation ABSENT,\n                        transfer-syntax ABSENT,\n                        fixed ABSENT } ) } )\n    )\n\n    With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded\n    using Canonical Encoding Rules or Distinguished Encoding Rules becomes:\n\n    $(PRE\n        EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n            identification CHOICE {\n                syntax OBJECT IDENTIFIER },\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n    )\n\n    Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax\n    at this point), the encoding definition when using\n    Canonical Encoding Rules or Distinguished Encoding Rules:\n\n    $(PRE\n        EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n            syntax OBJECT IDENTIFIER,\n            data-value-descriptor ObjectDescriptor OPTIONAL,\n            data-value OCTET STRING }\n    )\n",
+    "line" : 153,
     "char" : 1,
     "members" : [
      {
       "name" : "identification",
       "kind" : "variable",
       "comment" : "        A field indicating the the transfer syntax used to indicate the means\n        by which the data-value field is encoded. Can also be used to specify\n        the abstract syntax of what is encoded.\n",
-      "line" : 173,
+      "line" : 160,
       "char" : 39,
       "deco" : "S5types14identification38ASN1ContextSwitchingTypeIdentification",
       "originalType" : "ASN1ContextSwitchingTypeID",
@@ -4249,7 +4194,7 @@
       "name" : "dataValueDescriptor",
       "kind" : "variable",
       "comment" : "An optional field used to describe the encoded data.\n",
-      "line" : 175,
+      "line" : 162,
       "char" : 19,
       "deco" : "Aya",
       "offset" : 96
@@ -4258,7 +4203,7 @@
       "name" : "dataValue",
       "kind" : "variable",
       "comment" : "The encoded data\n",
-      "line" : 177,
+      "line" : 164,
       "char" : 20,
       "deco" : "Ah",
       "offset" : 112
@@ -4267,7 +4212,7 @@
       "name" : "encoding",
       "kind" : "variable",
       "comment" : "        A field that exists only to determine the developer's choice of\n        encoding used, per the pre-1994 definition of EXTERNAL.\n\n        octet-aligned is a sensible default, since it is the most lax of the\n        three choices.\n",
-      "line" : 185,
+      "line" : 172,
       "char" : 32,
       "deco" : "E5types9universal8external45AbstractSyntaxNotation1ExternalEncodingChoice",
       "originalType" : "ASN1ExternalEncodingChoice",
@@ -4280,7 +4225,7 @@
     "name" : "ASN1ExternalEncodingChoice",
     "kind" : "alias",
     "comment" : "\n",
-    "line" : 189,
+    "line" : 176,
     "char" : 8,
     "deco" : "E5types9universal8external45AbstractSyntaxNotation1ExternalEncodingChoice"
    },
@@ -4288,7 +4233,7 @@
     "name" : "AbstractSyntaxNotation1ExternalEncodingChoice",
     "kind" : "enum",
     "comment" : "    The CHOICE of encoding used for the encoding of a pre-1994 EXTERNAL,\n    as used by the Basic Encoding Rules, Canonical Encoding Rules, or\n    Distinguished Encoding Rules.\n",
-    "line" : 196,
+    "line" : 183,
     "char" : 1,
     "baseDeco" : "h",
     "members" : [
@@ -4297,7 +4242,7 @@
       "kind" : "enum member",
       "value" : "cast(ubyte)0u",
       "comment" : "single-ASN1-type [0] ABSTRACT-SYNTAX.&Type\n",
-      "line" : 199,
+      "line" : 186,
       "char" : 5
      },
      {
@@ -4305,7 +4250,7 @@
       "kind" : "enum member",
       "value" : "cast(ubyte)0u",
       "comment" : "single-ASN1-type [0] ABSTRACT-SYNTAX.&Type\n",
-      "line" : 201,
+      "line" : 188,
       "char" : 5
      },
      {
@@ -4313,7 +4258,7 @@
       "kind" : "enum member",
       "value" : "cast(ubyte)1u",
       "comment" : "octet-aligned [1] IMPLICIT OCTET STRING\n",
-      "line" : 203,
+      "line" : 190,
       "char" : 5
      },
      {
@@ -4321,7 +4266,7 @@
       "kind" : "enum member",
       "value" : "cast(ubyte)2u",
       "comment" : "arbitrary [2] IMPLICIT BIT STRING\n",
-      "line" : 205,
+      "line" : 192,
       "char" : 5
      }
     ]
@@ -4794,7 +4739,7 @@
      {
       "name" : "uniformResourceNameNotation",
       "kind" : "function",
-      "comment" : "        Returns:\n            the OID as a URN, where all nodes of the OID are translated to a\n            segment in the URN path, and where all nodes are represented as\n            numbers regardless of whether or not they have a descriptor\n        See_Also:\n            $(LINK2 https://www.ietf.org/rfc/rfc3061.txt, RFC 3061)\n",
+      "comment" : "        Returns:\n            the OID as a URN, where all nodes of the OID are translated to a\n            segment in the URN path, and where all nodes are represented as\n            numbers regardless of whether or not they have a descriptor\n        See_Also:\n            $(LINK https://www.ietf.org/rfc/rfc3061.txt, RFC 3061)\n",
       "line" : 464,
       "char" : 12,
       "deco" : "xFNbNdNfZAya",
@@ -4960,7 +4905,7 @@
       "char" : 25,
       "deco" : "E4asn131AbstractSyntaxNotation1TagClass",
       "originalType" : "ASN1TagClass",
-      "offset" : 144
+      "offset" : 88
      },
      {
       "name" : "construction",
@@ -4970,7 +4915,7 @@
       "char" : 29,
       "deco" : "E4asn135AbstractSyntaxNotation1Construction",
       "originalType" : "ASN1Construction",
-      "offset" : 145
+      "offset" : 89
      },
      {
       "name" : "tagNumber",
@@ -4980,7 +4925,7 @@
       "char" : 19,
       "deco" : "m",
       "originalType" : "size_t",
-      "offset" : 152
+      "offset" : 96
      },
      {
       "name" : "length",
@@ -5000,7 +4945,7 @@
       "line" : 155,
       "char" : 20,
       "deco" : "Ah",
-      "offset" : 160
+      "offset" : 104
      },
      {
       "name" : "endOfContent",
@@ -5954,7 +5899,7 @@
      {
       "name" : "relativeObjectIdentifier",
       "kind" : "function",
-      "comment" : "        Encodes a $(MONO RELATIVE OBJECT IDENTIFIER).\n\n        Standards:\n            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
+      "comment" : "        Encodes a $(MONO RELATIVE OBJECT IDENTIFIER).\n\n        Standards:\n            $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
       "line" : 3215,
       "char" : 10,
       "storageClass" : [
@@ -6350,7 +6295,7 @@
      {
       "name" : "generalizedTime",
       "kind" : "function",
-      "comment" : "        Encodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n\n        The value is just the ASCII character representation of\n        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,\n        ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
+      "comment" : "        Encodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n\n        The value is just the ASCII character representation of\n        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html,\n        ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
       "line" : 3916,
       "char" : 10,
       "storageClass" : [
@@ -6539,7 +6484,7 @@
      {
       "name" : "characterString",
       "kind" : "function",
-      "comment" : "        Decodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n\n        Returns: an instance of $(D types.universal.characterstring.CharacterString).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if encoded $(MONO CharacterString) has too few or too many\n                elements, or if $(MONO syntaxes) or $(MONO context-negotiation) element has\n                too few or too many elements)\n            $(LI $(D ASN1ValueSizeException) if encoded $(MONO INTEGER) is too large to decode)\n            $(LI $(D ASN1RecursionException) if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException) if any nested primitives do not have the\n                correct tag class)\n            $(LI $(D ASN1ConstructionException) if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException) if any nested primitives do not have the\n                correct tag number)\n        )\n",
+      "comment" : "        Decodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n\n        Returns: an instance of $(D types.universal.characterstring.CharacterString).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if encoded $(MONO CharacterString) has too few or too many\n                elements, or if $(MONO syntaxes) or $(MONO context-negotiation) element has\n                too few or too many elements)\n            $(LI $(D ASN1ValueSizeException) if encoded $(MONO INTEGER) is too large to decode)\n            $(LI $(D ASN1RecursionException) if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException) if any nested primitives do not have the\n                correct tag class)\n            $(LI $(D ASN1ConstructionException) if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException) if any nested primitives do not have the\n                correct tag number)\n        )\n",
       "line" : 4354,
       "char" : 21,
       "storageClass" : [
@@ -6555,7 +6500,7 @@
      {
       "name" : "characterString",
       "kind" : "function",
-      "comment" : "        Encodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
+      "comment" : "        Encodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
       "line" : 4618,
       "char" : 10,
       "storageClass" : [
@@ -7115,7 +7060,7 @@
       "char" : 25,
       "deco" : "E4asn131AbstractSyntaxNotation1TagClass",
       "originalType" : "ASN1TagClass",
-      "offset" : 144
+      "offset" : 88
      },
      {
       "name" : "construction",
@@ -7125,7 +7070,7 @@
       "char" : 29,
       "deco" : "E4asn135AbstractSyntaxNotation1Construction",
       "originalType" : "ASN1Construction",
-      "offset" : 145
+      "offset" : 89
      },
      {
       "name" : "tagNumber",
@@ -7135,7 +7080,7 @@
       "char" : 19,
       "deco" : "m",
       "originalType" : "size_t",
-      "offset" : 152
+      "offset" : 96
      },
      {
       "name" : "length",
@@ -7158,7 +7103,7 @@
       "line" : 131,
       "char" : 20,
       "deco" : "Ah",
-      "offset" : 160
+      "offset" : 104
      },
      {
       "name" : "endOfContent",
@@ -7647,7 +7592,7 @@
      {
       "name" : "external",
       "kind" : "function",
-      "comment" : "        Decodes an $(MONO EXTERNAL).\n\n        According to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),\n        the abstract definition for an $(MONO EXTERNAL), after removing the comments in the\n        specification, is as follows:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and\n        $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some\n        of our choices of $(MONO identification).\n        As can be seen on page 303 of Olivier Dubuisson's\n        $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,\n            ASN.1: Communication Between Heterogeneous Systems)),\n        after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER } },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        But, according to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),\n        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as\n        follows, for compatibility reasons:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                direct-reference  OBJECT IDENTIFIER OPTIONAL,\n                indirect-reference  INTEGER OPTIONAL,\n                data-value-descriptor  ObjectDescriptor  OPTIONAL,\n                encoding  CHOICE {\n                    single-ASN1-type  [0] ANY,\n                    octet-aligned     [1] IMPLICIT OCTET STRING,\n                    arbitrary         [2] IMPLICIT BIT STRING } }\n        )\n\n        The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)\n        field of the post-1994 definition maps to the $(MONO direct-reference) field of\n        the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994\n        definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.\n        If $(MONO context-negotiation) is used, per the abstract syntax, then the\n        $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the\n        post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994\n        definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)\n        $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.\n\n        The following additional constraints are applied to the abstract syntax\n        when using Canonical Encoding Rules or Distinguished Encoding Rules,\n        which are also defined in the\n        $(LINK2 http://www.itu.int/en/pages/default.aspx,\n        International Telecommunications Union)'s\n        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):\n\n        $(PRE\n            EXTERNAL ( WITH COMPONENTS {\n                ... ,\n                identification ( WITH COMPONENTS {\n                    ... ,\n                    presentation-context-id ABSENT,\n                    context-negotiation ABSENT } ) } )\n        )\n\n        The stated purpose of the constraints shown above is to restrict the use of\n        the $(MONO presentation-context-id), either by itself or within the\n        $(MONO context-negotiation), which makes the following the effective abstract\n        syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or\n        Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            presentation-context-id ABSENT,\n                            context-negotiation ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded\n        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax\n        at this point), the encoding definition when using\n        Canonical Encoding Rules or Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                syntax OBJECT IDENTIFIER,\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Returns: an instance of $(D types.universal.external.External)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if the SEQUENCE does not contain two to four elements)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not have the correct tag class)\n            $(LI $(D ASN1ConstructionException)\n                if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not have the correct tag number)\n            $(LI $(D ASN1ValueCharactersException)\n                if a data-value-descriptor is supplied with invalid characters)\n        )\n",
+      "comment" : "        Decodes an $(MONO EXTERNAL).\n\n        According to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),\n        the abstract definition for an $(MONO EXTERNAL), after removing the comments in the\n        specification, is as follows:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and\n        $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some\n        of our choices of $(MONO identification).\n        As can be seen on page 303 of Olivier Dubuisson's\n        $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,\n            ASN.1: Communication Between Heterogeneous Systems)),\n        after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER } },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        But, according to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),\n        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as\n        follows, for compatibility reasons:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                direct-reference  OBJECT IDENTIFIER OPTIONAL,\n                indirect-reference  INTEGER OPTIONAL,\n                data-value-descriptor  ObjectDescriptor  OPTIONAL,\n                encoding  CHOICE {\n                    single-ASN1-type  [0] ANY,\n                    octet-aligned     [1] IMPLICIT OCTET STRING,\n                    arbitrary         [2] IMPLICIT BIT STRING } }\n        )\n\n        The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)\n        field of the post-1994 definition maps to the $(MONO direct-reference) field of\n        the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994\n        definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.\n        If $(MONO context-negotiation) is used, per the abstract syntax, then the\n        $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the\n        post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994\n        definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)\n        $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.\n\n        The following additional constraints are applied to the abstract syntax\n        when using Canonical Encoding Rules or Distinguished Encoding Rules,\n        which are also defined in the\n        $(LINK http://www.itu.int/en/pages/default.aspx,\n        International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):\n\n        $(PRE\n            EXTERNAL ( WITH COMPONENTS {\n                ... ,\n                identification ( WITH COMPONENTS {\n                    ... ,\n                    presentation-context-id ABSENT,\n                    context-negotiation ABSENT } ) } )\n        )\n\n        The stated purpose of the constraints shown above is to restrict the use of\n        the $(MONO presentation-context-id), either by itself or within the\n        $(MONO context-negotiation), which makes the following the effective abstract\n        syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or\n        Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            presentation-context-id ABSENT,\n                            context-negotiation ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded\n        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax\n        at this point), the encoding definition when using\n        Canonical Encoding Rules or Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                syntax OBJECT IDENTIFIER,\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Returns: an instance of $(D types.universal.external.External)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if the SEQUENCE does not contain two to four elements)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not have the correct tag class)\n            $(LI $(D ASN1ConstructionException)\n                if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not have the correct tag number)\n            $(LI $(D ASN1ValueCharactersException)\n                if a data-value-descriptor is supplied with invalid characters)\n        )\n",
       "line" : 1489,
       "char" : 14,
       "storageClass" : [
@@ -7664,7 +7609,7 @@
      {
       "name" : "external",
       "kind" : "function",
-      "comment" : "        Encodes an $(MONO EXTERNAL).\n\n        According to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),\n        the abstract definition for an $(MONO EXTERNAL), after removing the comments in the\n        specification, is as follows:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and\n        $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some\n        of our choices of $(MONO identification).\n        As can be seen on page 303 of Olivier Dubuisson's\n        $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,\n            ASN.1: Communication Between Heterogeneous Systems)),\n        after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER } },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        But, according to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),\n        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as\n        follows, for compatibility reasons:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                direct-reference  OBJECT IDENTIFIER OPTIONAL,\n                indirect-reference  INTEGER OPTIONAL,\n                data-value-descriptor  ObjectDescriptor  OPTIONAL,\n                encoding  CHOICE {\n                    single-ASN1-type  [0] ANY,\n                    octet-aligned     [1] IMPLICIT OCTET STRING,\n                    arbitrary         [2] IMPLICIT BIT STRING } }\n        )\n\n        The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)\n        field of the post-1994 definition maps to the $(MONO direct-reference) field of\n        the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994\n        definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.\n        If $(MONO context-negotiation) is used, per the abstract syntax, then the\n        $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the\n        post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994\n        definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)\n        $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.\n\n        The following additional constraints are applied to the abstract syntax\n        when using Canonical Encoding Rules or Distinguished Encoding Rules,\n        which are also defined in the\n        $(LINK2 http://www.itu.int/en/pages/default.aspx,\n        International Telecommunications Union)'s\n        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):\n\n        $(PRE\n            EXTERNAL ( WITH COMPONENTS {\n                ... ,\n                identification ( WITH COMPONENTS {\n                    ... ,\n                    presentation-context-id ABSENT,\n                    context-negotiation ABSENT } ) } )\n        )\n\n        The stated purpose of the constraints shown above is to restrict the use of\n        the $(MONO presentation-context-id), either by itself or within the\n        $(MONO context-negotiation), which makes the following the effective abstract\n        syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or\n        Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            presentation-context-id ABSENT,\n                            context-negotiation ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded\n        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax\n        at this point), the encoding definition when using\n        Canonical Encoding Rules or Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                syntax OBJECT IDENTIFIER,\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Returns: an instance of $(D types.universal.external.External)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if something other than $(D syntax) is used for $(MONO identification))\n            $(LI $(D ASN1ValueCharactersException)\n                if a data-value-descriptor is supplied with invalid characters)\n        )\n",
+      "comment" : "        Encodes an $(MONO EXTERNAL).\n\n        According to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),\n        the abstract definition for an $(MONO EXTERNAL), after removing the comments in the\n        specification, is as follows:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and\n        $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some\n        of our choices of $(MONO identification).\n        As can be seen on page 303 of Olivier Dubuisson's\n        $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,\n            ASN.1: Communication Between Heterogeneous Systems)),\n        after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER } },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        But, according to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),\n        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as\n        follows, for compatibility reasons:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                direct-reference  OBJECT IDENTIFIER OPTIONAL,\n                indirect-reference  INTEGER OPTIONAL,\n                data-value-descriptor  ObjectDescriptor  OPTIONAL,\n                encoding  CHOICE {\n                    single-ASN1-type  [0] ANY,\n                    octet-aligned     [1] IMPLICIT OCTET STRING,\n                    arbitrary         [2] IMPLICIT BIT STRING } }\n        )\n\n        The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)\n        field of the post-1994 definition maps to the $(MONO direct-reference) field of\n        the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994\n        definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.\n        If $(MONO context-negotiation) is used, per the abstract syntax, then the\n        $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the\n        post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994\n        definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)\n        $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.\n\n        The following additional constraints are applied to the abstract syntax\n        when using Canonical Encoding Rules or Distinguished Encoding Rules,\n        which are also defined in the\n        $(LINK http://www.itu.int/en/pages/default.aspx,\n        International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):\n\n        $(PRE\n            EXTERNAL ( WITH COMPONENTS {\n                ... ,\n                identification ( WITH COMPONENTS {\n                    ... ,\n                    presentation-context-id ABSENT,\n                    context-negotiation ABSENT } ) } )\n        )\n\n        The stated purpose of the constraints shown above is to restrict the use of\n        the $(MONO presentation-context-id), either by itself or within the\n        $(MONO context-negotiation), which makes the following the effective abstract\n        syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or\n        Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            presentation-context-id ABSENT,\n                            context-negotiation ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded\n        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax\n        at this point), the encoding definition when using\n        Canonical Encoding Rules or Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                syntax OBJECT IDENTIFIER,\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Returns: an instance of $(D types.universal.external.External)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if something other than $(D syntax) is used for $(MONO identification))\n            $(LI $(D ASN1ValueCharactersException)\n                if a data-value-descriptor is supplied with invalid characters)\n        )\n",
       "line" : 1735,
       "char" : 10,
       "storageClass" : [
@@ -8053,7 +7998,7 @@
      {
       "name" : "relativeObjectIdentifier",
       "kind" : "function",
-      "comment" : "        Encodes a $(MONO RELATIVE OBJECT IDENTIFIER).\n\n        Standards:\n            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
+      "comment" : "        Encodes a $(MONO RELATIVE OBJECT IDENTIFIER).\n\n        Standards:\n            $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
       "line" : 3531,
       "char" : 10,
       "storageClass" : [
@@ -8504,7 +8449,7 @@
      {
       "name" : "generalizedTime",
       "kind" : "function",
-      "comment" : "        Encodes a DateTime.\n\n        The value is just the ASCII character representation of\n        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,\n        ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
+      "comment" : "        Encodes a DateTime.\n\n        The value is just the ASCII character representation of\n        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html,\n        ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
       "line" : 4731,
       "char" : 10,
       "storageClass" : [
@@ -8759,7 +8704,7 @@
      {
       "name" : "characterString",
       "kind" : "function",
-      "comment" : "        Decodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n\n        Returns: an instance of $(D types.universal.characterstring.CharacterString).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if encoded $(MONO CharacterString) has too few or too many\n                elements, or if $(MONO syntaxes) or $(MONO context-negotiation) element has\n                too few or too many elements)\n            $(LI $(D ASN1ValueSizeException) if encoded $(MONO INTEGER) is too large to decode)\n            $(LI $(D ASN1RecursionException) if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException) if any nested primitives do not have the\n                correct tag class)\n            $(LI $(D ASN1ConstructionException) if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException) if any nested primitives do not have the\n                correct tag number)\n        )\n",
+      "comment" : "        Decodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n\n        Returns: an instance of $(D types.universal.characterstring.CharacterString).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if encoded $(MONO CharacterString) has too few or too many\n                elements, or if $(MONO syntaxes) or $(MONO context-negotiation) element has\n                too few or too many elements)\n            $(LI $(D ASN1ValueSizeException) if encoded $(MONO INTEGER) is too large to decode)\n            $(LI $(D ASN1RecursionException) if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException) if any nested primitives do not have the\n                correct tag class)\n            $(LI $(D ASN1ConstructionException) if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException) if any nested primitives do not have the\n                correct tag number)\n        )\n",
       "line" : 5583,
       "char" : 21,
       "storageClass" : [
@@ -8775,7 +8720,7 @@
      {
       "name" : "characterString",
       "kind" : "function",
-      "comment" : "        Encodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
+      "comment" : "        Encodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
       "line" : 5765,
       "char" : 10,
       "storageClass" : [
@@ -9313,7 +9258,7 @@
       "char" : 25,
       "deco" : "E4asn131AbstractSyntaxNotation1TagClass",
       "originalType" : "ASN1TagClass",
-      "offset" : 144
+      "offset" : 88
      },
      {
       "name" : "construction",
@@ -9323,7 +9268,7 @@
       "char" : 29,
       "deco" : "E4asn135AbstractSyntaxNotation1Construction",
       "originalType" : "ASN1Construction",
-      "offset" : 145
+      "offset" : 89
      },
      {
       "name" : "tagNumber",
@@ -9333,7 +9278,7 @@
       "char" : 19,
       "deco" : "m",
       "originalType" : "size_t",
-      "offset" : 152
+      "offset" : 96
      },
      {
       "name" : "length",
@@ -9356,7 +9301,7 @@
       "line" : 132,
       "char" : 20,
       "deco" : "Ah",
-      "offset" : 160
+      "offset" : 104
      },
      {
       "name" : "endOfContent",
@@ -9783,7 +9728,7 @@
      {
       "name" : "external",
       "kind" : "function",
-      "comment" : "        Decodes an $(MONO EXTERNAL).\n\n        According to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),\n        the abstract definition for an $(MONO EXTERNAL), after removing the comments in the\n        specification, is as follows:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and\n        $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some\n        of our choices of $(MONO identification).\n        As can be seen on page 303 of Olivier Dubuisson's\n        $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,\n            ASN.1: Communication Between Heterogeneous Systems)),\n        after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER } },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        But, according to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),\n        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as\n        follows, for compatibility reasons:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                direct-reference  OBJECT IDENTIFIER OPTIONAL,\n                indirect-reference  INTEGER OPTIONAL,\n                data-value-descriptor  ObjectDescriptor  OPTIONAL,\n                encoding  CHOICE {\n                    single-ASN1-type  [0] ANY,\n                    octet-aligned     [1] IMPLICIT OCTET STRING,\n                    arbitrary         [2] IMPLICIT BIT STRING } }\n        )\n\n        The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)\n        field of the post-1994 definition maps to the $(MONO direct-reference) field of\n        the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994\n        definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.\n        If $(MONO context-negotiation) is used, per the abstract syntax, then the\n        $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the\n        post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994\n        definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)\n        $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.\n\n        The following additional constraints are applied to the abstract syntax\n        when using Canonical Encoding Rules or Distinguished Encoding Rules,\n        which are also defined in the\n        $(LINK2 http://www.itu.int/en/pages/default.aspx,\n        International Telecommunications Union)'s\n        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):\n\n        $(PRE\n            EXTERNAL ( WITH COMPONENTS {\n                ... ,\n                identification ( WITH COMPONENTS {\n                    ... ,\n                    presentation-context-id ABSENT,\n                    context-negotiation ABSENT } ) } )\n        )\n\n        The stated purpose of the constraints shown above is to restrict the use of\n        the $(MONO presentation-context-id), either by itself or within the\n        $(MONO context-negotiation), which makes the following the effective abstract\n        syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or\n        Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            presentation-context-id ABSENT,\n                            context-negotiation ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded\n        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax\n        at this point), the encoding definition when using\n        Canonical Encoding Rules or Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                syntax OBJECT IDENTIFIER,\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Returns: an instance of $(D types.universal.external.External)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if the SEQUENCE does not contain two to four elements)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not have the correct tag class)\n            $(LI $(D ASN1ConstructionException)\n                if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not have the correct tag number)\n            $(LI $(D ASN1ValueCharactersException)\n                if a data-value-descriptor is supplied with invalid characters)\n            $(LI $(D ASN1ConstructionException) if the element is not marked as \"constructed\")\n        )\n",
+      "comment" : "        Decodes an $(MONO EXTERNAL).\n\n        According to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),\n        the abstract definition for an $(MONO EXTERNAL), after removing the comments in the\n        specification, is as follows:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and\n        $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some\n        of our choices of $(MONO identification).\n        As can be seen on page 303 of Olivier Dubuisson's\n        $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,\n            ASN.1: Communication Between Heterogeneous Systems)),\n        after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER } },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        But, according to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),\n        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as\n        follows, for compatibility reasons:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                direct-reference  OBJECT IDENTIFIER OPTIONAL,\n                indirect-reference  INTEGER OPTIONAL,\n                data-value-descriptor  ObjectDescriptor  OPTIONAL,\n                encoding  CHOICE {\n                    single-ASN1-type  [0] ANY,\n                    octet-aligned     [1] IMPLICIT OCTET STRING,\n                    arbitrary         [2] IMPLICIT BIT STRING } }\n        )\n\n        The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)\n        field of the post-1994 definition maps to the $(MONO direct-reference) field of\n        the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994\n        definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.\n        If $(MONO context-negotiation) is used, per the abstract syntax, then the\n        $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the\n        post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994\n        definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)\n        $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.\n\n        The following additional constraints are applied to the abstract syntax\n        when using Canonical Encoding Rules or Distinguished Encoding Rules,\n        which are also defined in the\n        $(LINK http://www.itu.int/en/pages/default.aspx,\n        International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):\n\n        $(PRE\n            EXTERNAL ( WITH COMPONENTS {\n                ... ,\n                identification ( WITH COMPONENTS {\n                    ... ,\n                    presentation-context-id ABSENT,\n                    context-negotiation ABSENT } ) } )\n        )\n\n        The stated purpose of the constraints shown above is to restrict the use of\n        the $(MONO presentation-context-id), either by itself or within the\n        $(MONO context-negotiation), which makes the following the effective abstract\n        syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or\n        Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            presentation-context-id ABSENT,\n                            context-negotiation ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded\n        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax\n        at this point), the encoding definition when using\n        Canonical Encoding Rules or Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                syntax OBJECT IDENTIFIER,\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Returns: an instance of $(D types.universal.external.External)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if the SEQUENCE does not contain two to four elements)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not have the correct tag class)\n            $(LI $(D ASN1ConstructionException)\n                if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not have the correct tag number)\n            $(LI $(D ASN1ValueCharactersException)\n                if a data-value-descriptor is supplied with invalid characters)\n            $(LI $(D ASN1ConstructionException) if the element is not marked as \"constructed\")\n        )\n",
       "line" : 1095,
       "char" : 14,
       "storageClass" : [
@@ -9800,7 +9745,7 @@
      {
       "name" : "external",
       "kind" : "function",
-      "comment" : "        Encodes an $(MONO EXTERNAL).\n\n        According to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),\n        the abstract definition for an $(MONO EXTERNAL), after removing the comments in the\n        specification, is as follows:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and\n        $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some\n        of our choices of $(MONO identification).\n        As can be seen on page 303 of Olivier Dubuisson's\n        $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,\n            ASN.1: Communication Between Heterogeneous Systems)),\n        after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER } },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        But, according to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),\n        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as\n        follows, for compatibility reasons:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                direct-reference  OBJECT IDENTIFIER OPTIONAL,\n                indirect-reference  INTEGER OPTIONAL,\n                data-value-descriptor  ObjectDescriptor  OPTIONAL,\n                encoding  CHOICE {\n                    single-ASN1-type  [0] ANY,\n                    octet-aligned     [1] IMPLICIT OCTET STRING,\n                    arbitrary         [2] IMPLICIT BIT STRING } }\n        )\n\n        The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)\n        field of the post-1994 definition maps to the $(MONO direct-reference) field of\n        the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994\n        definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.\n        If $(MONO context-negotiation) is used, per the abstract syntax, then the\n        $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the\n        post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994\n        definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)\n        $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.\n\n        The following additional constraints are applied to the abstract syntax\n        when using Canonical Encoding Rules or Distinguished Encoding Rules,\n        which are also defined in the\n        $(LINK2 http://www.itu.int/en/pages/default.aspx,\n        International Telecommunications Union)'s\n        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):\n\n        $(PRE\n            EXTERNAL ( WITH COMPONENTS {\n                ... ,\n                identification ( WITH COMPONENTS {\n                    ... ,\n                    presentation-context-id ABSENT,\n                    context-negotiation ABSENT } ) } )\n        )\n\n        The stated purpose of the constraints shown above is to restrict the use of\n        the $(MONO presentation-context-id), either by itself or within the\n        $(MONO context-negotiation), which makes the following the effective abstract\n        syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or\n        Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            presentation-context-id ABSENT,\n                            context-negotiation ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded\n        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax\n        at this point), the encoding definition when using\n        Canonical Encoding Rules or Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                syntax OBJECT IDENTIFIER,\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Returns: an instance of $(D types.universal.external.External)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if something other than $(D syntax) is used for $(MONO identification))\n            $(LI $(D ASN1ValueCharactersException)\n                if a data-value-descriptor is supplied with invalid characters)\n        )\n",
+      "comment" : "        Encodes an $(MONO EXTERNAL).\n\n        According to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),\n        the abstract definition for an $(MONO EXTERNAL), after removing the comments in the\n        specification, is as follows:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and\n        $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some\n        of our choices of $(MONO identification).\n        As can be seen on page 303 of Olivier Dubuisson's\n        $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,\n            ASN.1: Communication Between Heterogeneous Systems)),\n        after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER } },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        But, according to the\n        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),\n        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as\n        follows, for compatibility reasons:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {\n                direct-reference  OBJECT IDENTIFIER OPTIONAL,\n                indirect-reference  INTEGER OPTIONAL,\n                data-value-descriptor  ObjectDescriptor  OPTIONAL,\n                encoding  CHOICE {\n                    single-ASN1-type  [0] ANY,\n                    octet-aligned     [1] IMPLICIT OCTET STRING,\n                    arbitrary         [2] IMPLICIT BIT STRING } }\n        )\n\n        The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)\n        field of the post-1994 definition maps to the $(MONO direct-reference) field of\n        the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994\n        definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.\n        If $(MONO context-negotiation) is used, per the abstract syntax, then the\n        $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the\n        post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994\n        definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)\n        $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.\n\n        The following additional constraints are applied to the abstract syntax\n        when using Canonical Encoding Rules or Distinguished Encoding Rules,\n        which are also defined in the\n        $(LINK http://www.itu.int/en/pages/default.aspx,\n        International Telecommunications Union)'s\n        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):\n\n        $(PRE\n            EXTERNAL ( WITH COMPONENTS {\n                ... ,\n                identification ( WITH COMPONENTS {\n                    ... ,\n                    presentation-context-id ABSENT,\n                    context-negotiation ABSENT } ) } )\n        )\n\n        The stated purpose of the constraints shown above is to restrict the use of\n        the $(MONO presentation-context-id), either by itself or within the\n        $(MONO context-negotiation), which makes the following the effective abstract\n        syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or\n        Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n                    ( WITH COMPONENTS {\n                        ... ,\n                        identification ( WITH COMPONENTS {\n                            ... ,\n                            syntaxes ABSENT,\n                            presentation-context-id ABSENT,\n                            context-negotiation ABSENT,\n                            transfer-syntax ABSENT,\n                            fixed ABSENT } ) } )\n        )\n\n        With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded\n        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                identification CHOICE {\n                    syntax OBJECT IDENTIFIER },\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax\n        at this point), the encoding definition when using\n        Canonical Encoding Rules or Distinguished Encoding Rules:\n\n        $(PRE\n            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {\n                syntax OBJECT IDENTIFIER,\n                data-value-descriptor ObjectDescriptor OPTIONAL,\n                data-value OCTET STRING }\n        )\n\n        Returns: an instance of $(D types.universal.external.External)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if something other than $(D syntax) is used for $(MONO identification))\n            $(LI $(D ASN1ValueCharactersException)\n                if a data-value-descriptor is supplied with invalid characters)\n        )\n",
       "line" : 1341,
       "char" : 10,
       "storageClass" : [
@@ -10178,7 +10123,7 @@
      {
       "name" : "relativeObjectIdentifier",
       "kind" : "function",
-      "comment" : "        Encodes a $(MONO RELATIVE OBJECT IDENTIFIER).\n\n        Standards:\n            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
+      "comment" : "        Encodes a $(MONO RELATIVE OBJECT IDENTIFIER).\n\n        Standards:\n            $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
       "line" : 3026,
       "char" : 10,
       "storageClass" : [
@@ -10574,7 +10519,7 @@
      {
       "name" : "generalizedTime",
       "kind" : "function",
-      "comment" : "        Encodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n\n        The value is just the ASCII character representation of\n        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,\n        ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
+      "comment" : "        Encodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n\n        The value is just the ASCII character representation of\n        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html,\n        ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
       "line" : 3647,
       "char" : 10,
       "storageClass" : [
@@ -10785,7 +10730,7 @@
      {
       "name" : "characterString",
       "kind" : "function",
-      "comment" : "        Decodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n\n        Returns: an instance of $(D types.universal.characterstring.CharacterString).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if encoded $(MONO CharacterString) has too few or too many\n                elements, or if $(MONO syntaxes) or $(MONO context-negotiation) element has\n                too few or too many elements)\n            $(LI $(D ASN1ValueSizeException) if encoded $(MONO INTEGER) is too large to decode)\n            $(LI $(D ASN1RecursionException) if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException) if any nested primitives do not have the\n                correct tag class)\n            $(LI $(D ASN1ConstructionException) if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException) if any nested primitives do not have the\n                correct tag number)\n        )\n",
+      "comment" : "        Decodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n\n        Returns: an instance of $(D types.universal.characterstring.CharacterString).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if encoded $(MONO CharacterString) has too few or too many\n                elements, or if $(MONO syntaxes) or $(MONO context-negotiation) element has\n                too few or too many elements)\n            $(LI $(D ASN1ValueSizeException) if encoded $(MONO INTEGER) is too large to decode)\n            $(LI $(D ASN1RecursionException) if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException) if any nested primitives do not have the\n                correct tag class)\n            $(LI $(D ASN1ConstructionException) if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException) if any nested primitives do not have the\n                correct tag number)\n        )\n",
       "line" : 4007,
       "char" : 21,
       "storageClass" : [
@@ -10801,7 +10746,7 @@
      {
       "name" : "characterString",
       "kind" : "function",
-      "comment" : "        Encodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s\n            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
+      "comment" : "        Encodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
       "line" : 4189,
       "char" : 10,
       "storageClass" : [

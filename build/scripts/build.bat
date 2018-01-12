@@ -14,7 +14,7 @@ mkdir .\build\scripts > nul
 
 set version="1.0.0"
 
-echo "Building the ASN.1 Library (static)... \c"
+echo|set /p="Building the ASN.1 Library (static)... "
 dmd ^
  .\source\macros.ddoc ^
  .\source\asn1.d ^
@@ -39,9 +39,9 @@ dmd ^
  -O ^
  -release ^
  -d
-echo "\033[0;32mDone.\033[0m"
+echo "Done."
 
-echo "Building the ASN.1 Library (shared / dynamic)... \c"
+echo|set /p="Building the ASN.1 Library (shared / dynamic)... "
 dmd ^
  .\source\asn1.d ^
  .\source\codec.d ^
@@ -63,9 +63,9 @@ dmd ^
  -inline ^
  -release ^
  -d
-echo "\033[0;32mDone.\033[0m"
+echo "Done."
 
-echo "Building the ASN.1 Command-Line Tool, decode-ber... \c"
+echo|set /p="Building the ASN.1 Command-Line Tool, decode-ber... "
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -78,9 +78,9 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "\033[0;32mDone.\033[0m"
+echo "Done."
 
-echo "Building the ASN.1 Command-Line Tool, decode-cer... \c"
+echo|set /p="Building the ASN.1 Command-Line Tool, decode-cer... "
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -93,9 +93,9 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "\033[0;32mDone.\033[0m"
+echo "Done."
 
-echo "Building the ASN.1 Command-Line Tool, decode-der... \c"
+echo|set /p="Building the ASN.1 Command-Line Tool, decode-der... "
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -108,9 +108,9 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "\033[0;32mDone.\033[0m"
+echo "Done."
 
-echo "Building the ASN.1 Command-Line Tool, encode-ber... \c"
+echo|set /p="Building the ASN.1 Command-Line Tool, encode-ber... "
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -123,9 +123,9 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "\033[0;32mDone.\033[0m"
+echo "Done."
 
-echo "Building the ASN.1 Command-Line Tool, encode-cer... \c"
+echo|set /p="Building the ASN.1 Command-Line Tool, encode-cer... "
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -138,9 +138,9 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "\033[0;32mDone.\033[0m"
+echo "Done."
 
-echo "Building the ASN.1 Command-Line Tool, encode-der... \c"
+echo|set /p="Building the ASN.1 Command-Line Tool, encode-der... "
 dmd ^
  -I".\\build\\interfaces\\source" ^
  -I".\\build\\interfaces\\source\\codecs" ^
@@ -153,4 +153,4 @@ dmd ^
  -release ^
  -inline ^
  -d
-echo "\033[0;32mDone.\033[0m"
+echo "Done."

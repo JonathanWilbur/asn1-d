@@ -12,6 +12,14 @@ NOCOLOR='\033[0m'
 TIMESTAMP=$(date '+%Y-%m-%d@%H:%M:%S')
 VERSION="1.0.0"
 
+if [ "$(uname)" == "Darwin" ]; then
+	MANPAGESDIRECTORY=/usr/local/share/man/man1
+	ECHOFLAGS=""
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    MANPAGESDIRECTORY=/usr/local/share/man/1
+	ECHOFLAGS="-e"
+fi
+
 # Unfortunately, because this is running in a shell script, brace expansion
 # might not work, so I can't create all the necessary directories "the cool
 # way." See this StackOverflow question that addresses my problem:
@@ -29,7 +37,7 @@ mkdir -p ./build/maps
 mkdir -p ./build/objects
 mkdir -p ./build/scripts
 
-echo "Building the ASN.1 Library (static)... \c"
+echo $ECHOFLAGS "Building the ASN.1 Library (static)... \c"
 if dmd \
  ./source/macros.ddoc \
  ./source/asn1.d \
@@ -49,12 +57,12 @@ if dmd \
  -O \
  -map \
  -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
-    echo "${GREEN}Done.${NOCOLOR}"
+    echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
 else
-    echo "${RED}Failed. See ./build/logs.${NOCOLOR}"
+    echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
 fi
 
-echo "Building the ASN.1 Library (shared / dynamic)... \c"
+echo $ECHOFLAGS "Building the ASN.1 Library (shared / dynamic)... \c"
 if dmd \
  ./source/asn1.d \
  ./source/codec.d \
@@ -69,15 +77,15 @@ if dmd \
  -release \
  -O \
  -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
-    echo "${GREEN}Done.${NOCOLOR}"
+    echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
 else
-    echo "${RED}Failed. See ./build/logs.${NOCOLOR}"
+    echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
 fi
 
 for DECODER in $(ls -1 ./source/tools | grep decode_)
 do
     EXECUTABLE=$(echo $DECODER | sed "s/_/-/g" | sed "s/\.d//g")
-    echo "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
+    echo $ECHOFLAGS "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
     if dmd \
      -I./build/interfaces/source \
      -I./build/interfaces/source/codecs \
@@ -90,10 +98,10 @@ do
      -release \
      -O \
      -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
-        echo "${GREEN}Done.${NOCOLOR}"
+        echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
         chmod +x ./build/executables/${EXECUTABLE}
     else
-        echo "${RED}Failed. See ./build/logs.${NOCOLOR}"
+        echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
     fi
 done
 
@@ -107,7 +115,7 @@ done
 for ENCODER in $(ls -1 ./source/tools | grep encode_)
 do
     EXECUTABLE=$(echo $ENCODER | sed "s/_/-/g" | sed "s/\.d//g")
-    echo "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
+    echo $ECHOFLAGS "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
     if dmd \
      -I./build/interfaces/source \
      -I./build/interfaces/source/codecs \
@@ -120,10 +128,10 @@ do
      -release \
      -O \
      -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
-        echo "${GREEN}Done.${NOCOLOR}"
+        echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
         chmod +x ./build/executables/${EXECUTABLE}
     else
-        echo "${RED}Failed. See ./build/logs.${NOCOLOR}"
+        echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
     fi
 done
 
