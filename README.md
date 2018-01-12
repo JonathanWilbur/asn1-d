@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.82](http://semver.org/)
+* Version: [1.0.0-beta.83](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: January 12th, 2018**
 
@@ -306,7 +306,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Change `.lib` to `.a`.
   - [x] Put version in file names
   - [x] ~~Generate `.map` file~~ (It's not generating for some reason. Skipping.)
-- [ ] `releases.csv` (Version, Date, LOC, SLOC, Signature)
+- [x] `releases.csv`
 
 #### Note 1:
 
@@ -363,6 +363,7 @@ I tried doing this for the following properties:
 - [ ] Build testing
   - [ ] OpenSolaris
   - [ ] FreeBSD
+- [ ] Improved exception messages
 
 ## Suggestions
 
