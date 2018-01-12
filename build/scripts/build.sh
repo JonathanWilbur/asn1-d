@@ -10,6 +10,7 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NOCOLOR='\033[0m'
 TIMESTAMP=$(date '+%Y-%m-%d@%H:%M:%S')
+VERSION="1.0.0"
 
 # Unfortunately, because this is running in a shell script, brace expansion
 # might not work, so I can't create all the necessary directories "the cool
@@ -40,8 +41,8 @@ if dmd \
  -Dd./documentation/html \
  -Hd./build/interfaces \
  -op \
- -of./build/libraries/asn1-$(version).a \
- -Xf./documentation/asn1-$(version).json \
+ -of./build/libraries/asn1-${VERSION}.a \
+ -Xf./documentation/asn1-${VERSION}.json \
  -lib \
  -inline \
  -release \
@@ -61,7 +62,7 @@ if dmd \
  ./source/types/*.d \
  ./source/types/universal/*.d \
  ./source/codecs/*.d \
- -of./build/libraries/asn1-$(version).so \
+ -of./build/libraries/asn1-${VERSION}.so \
  -shared \
  -fPIC \
  -inline \
@@ -80,7 +81,7 @@ do
     if dmd \
      -I./build/interfaces/source \
      -I./build/interfaces/source/codecs \
-     -L./build/libraries/asn1-$(version).a \
+     -L./build/libraries/asn1-${VERSION}.a \
      ./source/tools/decoder_mixin.d \
      ./source/tools/${DECODER} \
      -od./build/objects \
@@ -110,7 +111,7 @@ do
     if dmd \
      -I./build/interfaces/source \
      -I./build/interfaces/source/codecs \
-     -L./build/libraries/asn1-$(version).a \
+     -L./build/libraries/asn1-${VERSION}.a \
      ./source/tools/encoder_mixin.d \
      ./source/tools/${ENCODER} \
      -od./build/objects \
