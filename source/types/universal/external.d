@@ -3,14 +3,12 @@ import types.identification;
 
 /**
     According to the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx,
-        International Telecommunications Union)'s
-    $(LINK2 https://www.itu.int/rec/T-REC-X.680/en,
-        X.680 - Abstract Syntax Notation One (ASN.1)),
-    the abstract definition for an EXTERNAL, after removing the comments in the
+    $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+    $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),
+    the abstract definition for an $(MONO EXTERNAL), after removing the comments in the
     specification, is as follows:
 
-    $(I
+    $(PRE
         EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
             identification CHOICE {
                 syntaxes SEQUENCE {
@@ -34,15 +32,15 @@ import types.identification;
                         fixed ABSENT } ) } )
     )
 
-    Note that the abstract syntax resembles that of EmbeddedPDV and
-    CharacterString, except with a WITH COMPONENTS constraint that removes some
-    of our choices of identification.
+    Note that the abstract syntax resembles that of $(MONO EmbeddedPDV) and
+    $(MONO CharacterString), except with a $(MONO WITH COMPONENTS) constraint that removes some
+    of our choices of $(MONO identification).
     As can be seen on page 303 of Olivier Dubuisson's
-    $(I $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
+    $(I $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
         ASN.1: Communication Between Heterogeneous Systems)),
-    after applying the WITH COMPONENTS constraint, our reduced syntax becomes:
+    after applying the $(MONO WITH COMPONENTS) constraint, our reduced syntax becomes:
 
-    $(I
+    $(PRE
         EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
             identification CHOICE {
                 syntax OBJECT IDENTIFIER,
@@ -55,13 +53,12 @@ import types.identification;
     )
 
     But, according to the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx,
-    International Telecommunications Union)'s
-    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),
+    $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+    $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),
     section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
     follows, for compatibility reasons:
 
-    $(I
+    $(PRE
         EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
             direct-reference  OBJECT IDENTIFIER OPTIONAL,
             indirect-reference  INTEGER OPTIONAL,
@@ -72,24 +69,24 @@ import types.identification;
                 arbitrary         [2] IMPLICIT BIT STRING } }
     )
 
-    The definition above is the pre-1994 definition of EXTERNAL. The syntax
-    field of the post-1994 definition maps to the direct-reference field of
-    the pre-1994 definition. The presentation-context-id field of the post-1994
-    definition maps to the indirect-reference field of the pre-1994 definition.
-    If context-negotiation is used, per the abstract syntax, then the
-    presentation-context-id field of the context-negotiation SEQUENCE in the
-    post-1994 definition maps to the indirect-reference field of the pre-1994
-    definition, and the transfer-syntax field of the context-negotiation
-    SEQUENCE maps to the direct-reference field of the pre-1994 definition.
+    The definition above is the pre-1994 definition of $(MONO EXTERNAL). The $(MONO syntax)
+    field of the post-1994 definition maps to the $(MONO direct-reference) field of
+    the pre-1994 definition. The $(MONO presentation-context-id) field of the post-1994
+    definition maps to the $(MONO indirect-reference) field of the pre-1994 definition.
+    If $(MONO context-negotiation) is used, per the abstract syntax, then the
+    $(MONO presentation-context-id) field of the $(MONO context-negotiation) $(MONO SEQUENCE) in the
+    post-1994 definition maps to the $(MONO indirect-reference) field of the pre-1994
+    definition, and the $(MONO transfer-syntax) field of the $(MONO context-negotiation)
+    $(MONO SEQUENCE) maps to the $(MONO direct-reference) field of the pre-1994 definition.
 
     The following additional constraints are applied to the abstract syntax
     when using Canonical Encoding Rules or Distinguished Encoding Rules,
     which are also defined in the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx,
+    $(LINK http://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union)'s
-    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
+    $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
 
-    $(I
+    $(PRE
         EXTERNAL ( WITH COMPONENTS {
             ... ,
             identification ( WITH COMPONENTS {
@@ -99,12 +96,12 @@ import types.identification;
     )
 
     The stated purpose of the constraints shown above is to restrict the use of
-    the presentation-context-id, either by itself or within the
-    context-negotiation, which makes the following the effective abstract
-    syntax of EXTERNAL when using Canonical Encoding Rules or
+    the $(MONO presentation-context-id), either by itself or within the
+    $(MONO context-negotiation), which makes the following the effective abstract
+    syntax of $(MONO EXTERNAL) when using Canonical Encoding Rules or
     Distinguished Encoding Rules:
 
-    $(I
+    $(PRE
         EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
             identification CHOICE {
                 syntaxes SEQUENCE {
@@ -130,10 +127,10 @@ import types.identification;
                         fixed ABSENT } ) } )
     )
 
-    With the constraints applied, the abstract syntax for EXTERNALs encoded
+    With the constraints applied, the abstract syntax for $(MONO EXTERNAL)s encoded
     using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
 
-    $(I
+    $(PRE
         EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
             identification CHOICE {
                 syntax OBJECT IDENTIFIER },
@@ -141,26 +138,16 @@ import types.identification;
             data-value OCTET STRING }
     )
 
-    Upon removing the CHOICE tag (since you have no choice but to use syntax
+    Upon removing the $(MONO CHOICE) tag (since you have no choice but to use syntax
     at this point), the encoding definition when using
     Canonical Encoding Rules or Distinguished Encoding Rules:
 
-    $(I
+    $(PRE
         EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
             syntax OBJECT IDENTIFIER,
             data-value-descriptor ObjectDescriptor OPTIONAL,
             data-value OCTET STRING }
     )
-
-    For all encoding rules defined in the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx,
-    International Telecommunications Union)'s
-    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
-    (meaning Basic Encoding Rules, Canonical Encoding Rules, and
-    Distinguished Encoding Rules), EXPLICIT tagging must be used when encoding
-    the EXTERNAL type. Unlike the other Context-Switching Types, automatic
-    tagging is NOT used when encoding with Basic Encoding Rules,
-    Canonical Encoding Rules, or Distinguished Encoding Rules.
 */
 public
 struct External

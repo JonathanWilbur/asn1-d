@@ -1,8 +1,8 @@
 /**
     Abstract Syntax Notation 1 is a high-level syntax specification created
-    by the $(LINK2 http://www.itu.int/en/pages/default.aspx,
+    by the $(LINK http://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union) in
-    $(LINK2 https://www.itu.int/rec/T-REC-X.680/en,
+    $(LINK https://www.itu.int/rec/T-REC-X.680/en,
     X.680 - Abstract Syntax Notation One (ASN.1)), that
     abstractly defines data structures and protocol data units used by
     programs and protocols. It defines an extensible system of data types,
@@ -11,9 +11,9 @@
     While described abstractly by ASN.1, the specified protocol data units
     and data structures can be encoded via various encoding schemes, such as
     the Basic Encoding Rules (BER), which are defined in the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx,
+    $(LINK http://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union)'s
-    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules).
+    $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules).
     These encoding schemes uniformly relay data between systems that
     can differ in endianness, bit-width, byte-size, operating system,
     machine architecture, and so on.
@@ -22,15 +22,15 @@
     such as TLS, LDAP, SNMP, RDP, and many more.
 
     Author:
-        $(LINK2 http://jonathan.wilbur.space, Jonathan M. Wilbur)
-            $(LINK2 mailto:jonathan@wilbur.space, jonathan@wilbur.space)
-    License: $(LINK2 https://mit-license.org/, MIT License)
+        $(LINK http://jonathan.wilbur.space, Jonathan M. Wilbur)
+            $(LINK mailto:jonathan@wilbur.space, jonathan@wilbur.space)
+    License: $(LINK https://mit-license.org/, MIT License)
     Standards:
-        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1))
+        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1))
     See_Also:
-        $(LINK2 https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One, The Wikipedia Page on ASN.1)
-        $(LINK2 https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf, ASN.1 By Simple Words)
-        $(LINK2 http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems)
+        $(LINK https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One, The Wikipedia Page on ASN.1)
+        $(LINK https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf, ASN.1 By Simple Words)
+        $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems)
 */
 module asn1;
 
@@ -97,9 +97,9 @@ public alias ASN1UniversalType = AbstractSyntaxNotation1UniversalType;
 /**
     The data types, as well as their permitted construction and numeric
     identifiers, according to the
-    $(LINK2 http://www.itu.int/en/pages/default.aspx,
+    $(LINK http://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union)'s
-    $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
+    $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
 
     $(TABLE
         $(TR $(TH Type)                 $(TH Construction)      $(TH Hexadecimal Value))
@@ -257,7 +257,7 @@ enum AbstractSyntaxNotation1SpecialRealValue : ubyte
 public alias ASN1Base10RealNumericalRepresentation = AbstractSyntaxNotation1Base10RealNumericalRepresentation;
 /**
     The standardized string representations of floating point numbers, as
-    specified in $(LINK2 https://www.iso.org/standard/12285.html, ISO 6093).
+    specified in $(LINK https://www.iso.org/standard/12285.html, ISO 6093).
 
     $(TABLE
         $(TR $(TH Representation) $(TH Description) $(TH Examples))

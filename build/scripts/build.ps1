@@ -11,7 +11,9 @@ mkdir .\build\maps 2>&1 | Out-Null
 mkdir .\build\objects 2>&1 | Out-Null
 mkdir .\build\scripts 2>&1 | Out-Null
 
-echo "Building statically-linked library"
+version = "1.0.0"
+
+Write-Host "Building the ASN.1 Library (static)... \c"
 dmd `
 .\source\macros.ddoc `
 .\source\asn1.d `
@@ -30,14 +32,15 @@ dmd `
 -Dd".\\documentation\\html\\" `
 -Hd".\\build\\interfaces" `
 -op `
--of".\\build\\libraries\\asn1.lib" `
--Xf".\\documentation\\asn1.json" `
+-of".\\build\\libraries\\asn1-$version.a" `
+-Xf".\\documentation\\asn1-$version.json" `
 -lib `
 -O `
 -release `
 -d
+Write-Host "Done." -ForegroundColor Green
 
-echo "Building dynamically-linked library"
+Write-Host "Building the ASN.1 Library (shared / dynamic)... \c"
 dmd `
 .\source\macros.ddoc `
 .\source\asn1.d `
@@ -60,84 +63,98 @@ dmd `
 -inline `
 -release `
 -d
+Write-Host "Done." -ForegroundColor Green
 
-echo "Building decode-ber"
+Write-Host "Building the ASN.1 Command-Line Tool, decode-ber... \c"
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
  .\source\tools\decoder_mixin.d `
  .\source\tools\decode_ber.d `
- -L+".\\build\\libraries\\asn1.lib" `
+ -L+".\\build\\libraries\\asn1-$version.a" `
+ -od".\\build\\objects" `
  -of".\\build\\executables\\decode-ber" `
  -O `
  -release `
  -inline `
  -d
+Write-Host "Done." -ForegroundColor Green
 
-echo "Building decode-cer"
+
+Write-Host "Building the ASN.1 Command-Line Tool, decode-cer... \c"
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
  .\source\tools\decoder_mixin.d `
  .\source\tools\decode_cer.d `
- -L+".\\build\\libraries\\asn1.lib" `
+ -L+".\\build\\libraries\\asn1-$version.a" `
+ -od".\\build\\objects" `
  -of".\\build\\executables\\decode-cer" `
  -O `
  -release `
  -inline `
  -d
+Write-Host "Done." -ForegroundColor Green
 
-echo "Building decode-der"
+Write-Host "Building the ASN.1 Command-Line Tool, decode-der... \c"
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
  .\source\tools\decoder_mixin.d `
  .\source\tools\decode_der.d `
- -L+".\\build\\libraries\\asn1.lib" `
+ -L+".\\build\\libraries\\asn1-$version.a" `
+ -od".\\build\\objects" `
  -of".\\build\\executables\\decode-der" `
  -O `
  -release `
  -inline `
  -d
+Write-Host "Done." -ForegroundColor Green
 
-echo "Building encode-ber"
+Write-Host "Building the ASN.1 Command-Line Tool, encode-ber... \c"
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
  .\source\tools\encoder_mixin.d `
  .\source\tools\encode_ber.d `
- -L+".\\build\\libraries\\asn1.lib" `
+ -L+".\\build\\libraries\\asn1-$version.a" `
+ -od".\\build\\objects" `
  -of".\\build\\executables\\encode-ber" `
  -O `
  -release `
  -inline `
  -d
+Write-Host "Done." -ForegroundColor Green
 
-echo "Building encode-cer"
+Write-Host "Building the ASN.1 Command-Line Tool, encode-cer... \c"
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
  .\source\tools\encoder_mixin.d `
  .\source\tools\encode_cer.d `
- -L+".\\build\\libraries\\asn1.lib" `
+ -L+".\\build\\libraries\\asn1-$version.a" `
+ -od".\\build\\objects" `
  -of".\\build\\executables\\encode-cer" `
  -O `
  -release `
  -inline `
  -d
+Write-Host "Done." -ForegroundColor Green
 
-echo "Building encode-der"
+Write-Host "Building the ASN.1 Command-Line Tool, encode-der... \c"
 dmd `
  -I".\\build\\interfaces\\source" `
  -I".\\build\\interfaces\\source\\codecs" `
  .\source\tools\encoder_mixin.d `
  .\source\tools\encode_der.d `
- -L+".\\build\\libraries\\asn1.lib" `
+ -L+".\\build\\libraries\\asn1-$version.a" `
+ -od".\\build\\objects" `
  -of".\\build\\executables\\encode-der" `
  -O `
  -release `
  -inline `
  -d
+Write-Host "Done." -ForegroundColor Green
 
 # Delete object files that get created.
 # Yes, I tried -o- already. It does not create the executable either.

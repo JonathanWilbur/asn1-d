@@ -440,13 +440,7 @@ class AbstractSyntaxNotation1Element(Element)
     */
     static immutable ubyte nestingRecursionLimit = 5u;
 
-    // Constants used to save CPU cycles
-    protected immutable real maxUintAsReal = cast(real) uint.max; // Saves CPU cycles in realNumber()
-    protected immutable real maxLongAsReal = cast(real) long.max; // Saves CPU cycles in realNumber()
-    protected immutable real logBaseTwoOfTen = log2(10.0); // Saves CPU cycles in realNumber()
-    protected immutable int threeByteMax = 0x007FFFFF; // Used for CER and DER realNumber()
-    protected immutable int threeByteMin = 0xFF800000; // Used for CER and DER realNumber()
-
+    // FIXME: Remove these entirely
     // Constants for exception messages
     immutable string notWhatYouMeantText =
         "It is highly likely that what you attempted to decode was not the " ~
@@ -487,12 +481,14 @@ class AbstractSyntaxNotation1Element(Element)
     }
 
     /**
-        "Decodes" an END OF CONTENT, by which I mean: returns nothing, but
+        "Decodes" an $(MONO END OF CONTENT), by which I mean: returns nothing, but
         throws exceptions if the element is not correct.
 
         Throws:
-            ASN1ConstructionException = if the element is marked as "constructed"
-            ASN1ValueSizeException = if there are any content octets
+        $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
+            $(LI $(D ASN1ValueSizeException) if there are any content octets)
+        )
     */
     abstract public @property
     void endOfContent() const;
@@ -929,11 +925,11 @@ class AbstractSyntaxNotation1Element(Element)
         0x20 to 0x7E.
 
         Sources:
-            $(LINK2 ,
+            $(LINK ,
                 ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
+            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
-            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)
     */
     abstract public @property
     string objectDescriptor() const;
@@ -950,11 +946,11 @@ class AbstractSyntaxNotation1Element(Element)
         0x20 to 0x7E.
 
         Sources:
-            $(LINK2 ,
+            $(LINK ,
                 ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
+            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
-            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)
     */
     abstract public @property
     void objectDescriptor(in string value);
@@ -984,9 +980,9 @@ class AbstractSyntaxNotation1Element(Element)
 
     /**
         Decodes an EXTERNAL, which is a constructed data type, defined in
-        the $(LINK2 https://www.itu.int,
+        the $(LINK https://www.itu.int,
             International Telecommunications Union)'s
-        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EXTERNAL as:
 
@@ -1010,9 +1006,9 @@ class AbstractSyntaxNotation1Element(Element)
 
     /**
         Encodes an EXTERNAL, which is a constructed data type, defined in
-        the $(LINK2 https://www.itu.int,
+        the $(LINK https://www.itu.int,
             International Telecommunications Union)'s
-        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EXTERNAL as:
 
@@ -1734,9 +1730,9 @@ class AbstractSyntaxNotation1Element(Element)
     public alias embeddedPDV = embeddedPresentationDataValue;
     /**
         Decodes an EmbeddedPDV, which is a constructed data type, defined in
-            the $(LINK2 https://www.itu.int,
+            the $(LINK https://www.itu.int,
                 International Telecommunications Union)'s
-            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EmbeddedPDV as:
 
@@ -1766,9 +1762,9 @@ class AbstractSyntaxNotation1Element(Element)
 
     /**
         Encodes an EmbeddedPDV, which is a constructed data type, defined in
-            the $(LINK2 https://www.itu.int,
+            the $(LINK https://www.itu.int,
                 International Telecommunications Union)'s
-            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines EmbeddedPDV as:
 
@@ -1941,7 +1937,7 @@ class AbstractSyntaxNotation1Element(Element)
 
         Credits:
             Thanks to StackOverflow user
-            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
+            $(LINK https://stackoverflow.com/users/359297/biotronic, BioTronic)
             for teaching me how to create the abstract method that uses the
             child class as a template.
     */
@@ -1953,7 +1949,7 @@ class AbstractSyntaxNotation1Element(Element)
 
         Credits:
             Thanks to StackOverflow user
-            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
+            $(LINK https://stackoverflow.com/users/359297/biotronic, BioTronic)
             for teaching me how to create the abstract method that uses the
             child class as a template.
     */
@@ -1965,7 +1961,7 @@ class AbstractSyntaxNotation1Element(Element)
 
         Credits:
             Thanks to StackOverflow user
-            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
+            $(LINK https://stackoverflow.com/users/359297/biotronic, BioTronic)
             for teaching me how to create the abstract method that uses the
             child class as a template.
     */
@@ -1977,7 +1973,7 @@ class AbstractSyntaxNotation1Element(Element)
 
         Credits:
             Thanks to StackOverflow user
-            $(LINK2 https://stackoverflow.com/users/359297/biotronic, BioTronic)
+            $(LINK https://stackoverflow.com/users/359297/biotronic, BioTronic)
             for teaching me how to create the abstract method that uses the
             child class as a template.
     */
@@ -2245,11 +2241,11 @@ class AbstractSyntaxNotation1Element(Element)
         including 0x20 and 0x75.
 
         Sources:
-            $(LINK2 ,
+            $(LINK ,
                 ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
+            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
-            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)
 
     */
     deprecated
@@ -2261,11 +2257,11 @@ class AbstractSyntaxNotation1Element(Element)
         including 0x20 and 0x75.
 
         Sources:
-            $(LINK2 ,
+            $(LINK ,
                 ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK2 https://en.wikipedia.org/wiki/ISO/IEC_2022,
+            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,
                 The Wikipedia Page on ISO 2022)
-            $(LINK2 https://www.iso.org/standard/22747.html, ISO 2022)
+            $(LINK https://www.iso.org/standard/22747.html, ISO 2022)
 
     */
     deprecated
@@ -2427,9 +2423,9 @@ class AbstractSyntaxNotation1Element(Element)
 
     /**
         Decodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK2 https://www.itu.int,
+        in the $(LINK https://www.itu.int,
                 International Telecommunications Union)'s
-            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines CHARACTER as:
 
@@ -2457,9 +2453,9 @@ class AbstractSyntaxNotation1Element(Element)
 
     /**
         Encodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK2 https://www.itu.int,
+        in the $(LINK https://www.itu.int,
                 International Telecommunications Union)'s
-            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines CHARACTER as:
 

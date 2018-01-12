@@ -51,15 +51,43 @@ htmldocs = $(addsuffix .html,$(modules))
 encoders = $(addprefix encode-,$(codecs))
 decoders = $(addprefix decode-,$(codecs))
 
-.SILENT : all libs tools asn1-$(version).a asn1-$(version).so $(encoders) $(decoders) install
+.SILENT : all libs tools asn1-$(version).a asn1-$(version).so $(encoders) $(decoders) install purge
 all : libs tools
 libs : asn1-$(version).a asn1-$(version).so
 tools : $(encoders) $(decoders)
 
+uname := $(shell uname)
+ifeq ($(uname), Linux)
+	manpagesdirectory = /usr/local/share/man/1
+endif
+ifeq ($(uname), Darwin)
+	manpagesdirectory = /usr/local/share/man/man1
+endif
+
 # You will most likely need to run this will root privileges
 install : all
-	cp ./build/libraries/asn1-$(version).so /usr/lib
-	ln -s /usr/lib/asn1-$(version).so /usr/lib/asn1.so
+	cp ./build/libraries/asn1-$(version).so /usr/local/lib
+	[ -f /usr/local/lib/asn1.so ] && rm /usr/local/lib/asn1.so
+	ln -s /usr/local/lib/asn1-$(version).so /usr/local/lib/asn1.so
+	cp ./build/executables/encode-* /usr/local/bin
+	cp ./build/executables/decode-* /usr/local/bin
+	cp ./documentation/man/1/* $(manpagesdirectory)
+	mkdir -p /usr/local/share/asn1/{html,md,json}
+	cp -r ./documentation/html/* /usr/local/share/asn1/html
+	cp -r ./documentation/*.md /usr/local/share/asn1/md
+	cp -r ./documentation/asn1-$(version).json /usr/local/share/asn1/json/asn1-$(version).json
+	cp ./documentation/mit.license /usr/local/share/asn1
+	cp ./documentation/credits.csv /usr/local/share/asn1
+	cp ./documentation/releases.csv /usr/local/share/asn1
+
+purge :
+	[ -e /usr/local/lib/asn1.so ] && rm /usr/local/lib/asn1.so
+	[ -f /usr/local/lib/asn1-$(version).so ] && rm /usr/local/lib/asn1-$(version).so
+	rm /usr/local/bin/decode-*
+	rm /usr/local/bin/encode-*
+	[ -d /usr/local/share/asn1 ] && rm -rf /usr/local/share/asn1
+	rm $(manpagesdirectory)/decode-*.1
+	rm $(manpagesdirectory)/encode-*.1
 
 asn1-$(version).a : $(sources)
 	echo "Building the ASN.1 Library (static)... \c"
@@ -74,8 +102,8 @@ asn1-$(version).a : $(sources)
 	-Dd./documentation/html \
 	-Hd./build/interfaces \
 	-op \
-	-of./build/libraries/asn1.a \
-	-Xf./documentation/asn1.json \
+	-of./build/libraries/asn1-$(version).a \
+	-Xf./documentation/asn1-$(version).json \
 	-lib \
 	-inline \
 	-release \
@@ -97,8 +125,7 @@ asn1-$(version).so : $(sources)
 	-Dd./documentation/html \
 	-Hd./build/interfaces \
 	-op \
-	-of./build/libraries/asn1.so \
-	-Xf./documentation/asn1.json \
+	-of./build/libraries/asn1-$(version).so \
 	-lib \
 	-inline \
 	-release \
@@ -115,11 +142,13 @@ $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
 	-L./build/libraries/asn1.so \
 	./source/tools/encoder_mixin.d \
 	$< \
+	-od./build/objects \
 	-of./build/executables/$@ \
 	-inline \
 	-release \
 	-O \
 	-d
+	chmod +x ./build/executables/$@
 	echo "\033[0;32mDone.\033[0m"
 
 $(decoders) : decode-% : decode_%.d decoder_mixin.d asn1-$(version).so
@@ -130,9 +159,17 @@ $(decoders) : decode-% : decode_%.d decoder_mixin.d asn1-$(version).so
 	-L./build/libraries/asn1.so \
 	./source/tools/decoder_mixin.d \
 	$< \
+	-od./build/objects \
 	-of./build/executables/$@ \
 	-inline \
 	-release \
 	-O \
 	-d
+	chmod +x ./build/executables/$@
 	echo "\033[0;32mDone.\033[0m"
+
+# How Phobos compiles only the JSON file:
+# JSON = phobos.json
+# json : $(JSON)
+# $(JSON) : $(ALL_D_FILES)
+# $(DMD) $(DFLAGS) -o- -Xf$@ $^

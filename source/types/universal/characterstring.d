@@ -3,8 +3,8 @@ import types.identification;
 
 /**
     A $(MONO CharacterString), is a constructed data type, defined
-    in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s
-        $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+    in the $(LINK https://www.itu.int, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
     The specification defines $(MONO CharacterString) as:
 

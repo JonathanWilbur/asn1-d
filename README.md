@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.73](http://semver.org/)
+* Version: [1.0.0-beta.74](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: January 12th, 2018**
 
@@ -244,7 +244,7 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Test [OpenSSL](https://www.openssl.org/)'s [d2i tests](https://github.com/openssl/openssl/tree/master/test/d2i-tests)
 - [x] Review ASN.1-related Common Vulnerabilities and Exploits (CVEs) in the [National Vulnerability Database](https://nvd.nist.gov)
 - [x] Change copyright year to 2018
-- [ ] Grammar and Styling
+- [x] Grammar and Styling
   - [x] Check for `a` and `an` mixups
   - [x] Check for duplicated terminal words
   - [x] Check for incorrect data types
@@ -294,13 +294,18 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] `tools.md`
   - [x] `roadmap.md`
   - [x] `man` Pages
-- [ ] Build Scripts
+- [x] Build Scripts
   - [x] Add `chmod +x` to the build scripts for all executables
   - [x] Fix `echo` output problem on Mac
   - [x] Create dynamically-linked libraries as well
-  - [ ] Better `echo` messages
-  - [ ] [GNU Make](https://www.gnu.org/software/make/) `Makefile`
-  - [ ] Verbose linking
+  - [x] Better `echo` messages
+  - [x] [GNU Make](https://www.gnu.org/software/make/) `Makefile`
+    - [x] Add a Make `install` target
+    - [x] Add a Make `purge` target
+  - [x] ~~Verbose linking~~ (I could not figure out how to do this.)
+  - [x] Change `.lib` to `.a`.
+  - [x] Put version in file names
+  - [x] ~~Generate `.map` file~~ (It's not generating for some reason. Skipping.)
 - [ ] `releases.csv` (Version, Date, LOC, SLOC, Signature)
 
 #### Note 1:
@@ -354,6 +359,7 @@ I tried doing this for the following properties:
 - [ ] Unit tests based on examples from the Dubuisson book
 - [ ] Comparison tests to Go's ASN.1 library module
 - [ ] Generate a `.def` file for Windows?
+- [ ] Make tools build with the dynamically-linked library, if possible
 
 ## Suggestions
 

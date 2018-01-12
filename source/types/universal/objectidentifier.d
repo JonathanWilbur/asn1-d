@@ -458,7 +458,7 @@ public class ObjectIdentifier
             segment in the URN path, and where all nodes are represented as
             numbers regardless of whether or not they have a descriptor
         See_Also:
-            $(LINK2 https://www.ietf.org/rfc/rfc3061.txt, RFC 3061)
+            $(LINK https://www.ietf.org/rfc/rfc3061.txt, RFC 3061)
     */
     public @property @safe nothrow
     string uniformResourceNameNotation() const

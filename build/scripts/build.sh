@@ -40,7 +40,7 @@ if dmd \
  -Dd./documentation/html \
  -Hd./build/interfaces \
  -op \
- -of./build/libraries/asn1.lib \
+ -of./build/libraries/asn1.a \
  -Xf./documentation/asn1.json \
  -lib \
  -inline \
@@ -80,9 +80,10 @@ do
     if dmd \
      -I./build/interfaces/source \
      -I./build/interfaces/source/codecs \
-     -L./build/libraries/asn1.lib \
+     -L./build/libraries/asn1.a \
      ./source/tools/decoder_mixin.d \
      ./source/tools/${DECODER} \
+     -od./build/objects \
      -of./build/executables/${EXECUTABLE} \
      -inline \
      -release \
@@ -109,9 +110,10 @@ do
     if dmd \
      -I./build/interfaces/source \
      -I./build/interfaces/source/codecs \
-     -L./build/libraries/asn1.lib \
+     -L./build/libraries/asn1.a \
      ./source/tools/encoder_mixin.d \
      ./source/tools/${ENCODER} \
+     -od./build/objects \
      -of./build/executables/${EXECUTABLE} \
      -inline \
      -release \
@@ -124,8 +126,5 @@ do
     fi
 done
 
-# Delete object files that get created.
-# Yes, I tried -o- already. It does not create the executable either.
-rm -f ./build/executables/*.o
 mv *.lst ./build/logs 2>/dev/null
 mv *.map ./build/maps 2>/dev/null

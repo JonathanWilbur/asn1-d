@@ -1004,9 +1004,9 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         The following additional constraints are applied to the abstract syntax
         when using Canonical Encoding Rules or Distinguished Encoding Rules,
         which are also defined in the
-        $(LINK2 http://www.itu.int/en/pages/default.aspx,
+        $(LINK http://www.itu.int/en/pages/default.aspx,
         International Telecommunications Union)'s
-        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
+        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
 
         $(PRE
             EXTERNAL ( WITH COMPONENTS {
@@ -1260,9 +1260,9 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         The following additional constraints are applied to the abstract syntax
         when using Canonical Encoding Rules or Distinguished Encoding Rules,
         which are also defined in the
-        $(LINK2 http://www.itu.int/en/pages/default.aspx,
+        $(LINK http://www.itu.int/en/pages/default.aspx,
         International Telecommunications Union)'s
-        $(LINK2 http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
+        $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
 
         $(PRE
             EXTERNAL ( WITH COMPONENTS {
@@ -3020,7 +3020,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         Encodes a $(MONO RELATIVE OBJECT IDENTIFIER).
 
         Standards:
-            $(LINK2 http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
+            $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)
     */
     override public @property @system nothrow
     void relativeObjectIdentifier(in OIDNode[] value)
@@ -3628,7 +3628,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         Encodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).
 
         The value is just the ASCII character representation of
-        the $(LINK2 https://www.iso.org/iso-8601-date-and-time-format.html,
+        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html,
         ISO 8601)-formatted timestamp.
 
         An ISO-8601 Timestamp looks like:
@@ -3962,8 +3962,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
     /**
         Decodes a $(MONO CharacterString), which is a constructed data type, defined
-        in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s
-            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        in the $(LINK https://www.itu.int, International Telecommunications Union)'s
+            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines $(MONO CharacterString) as:
 
@@ -4161,8 +4161,8 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
 
     /**
         Encodes a $(MONO CharacterString), which is a constructed data type, defined
-        in the $(LINK2 https://www.itu.int, International Telecommunications Union)'s
-            $(LINK2 https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        in the $(LINK https://www.itu.int, International Telecommunications Union)'s
+            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
         The specification defines $(MONO CharacterString) as:
 

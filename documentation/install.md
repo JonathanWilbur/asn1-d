@@ -3,10 +3,18 @@
 ## Building
 
 In `build/scripts` there are three scripts you can use to build the library.
+All of the build scripts assume that you are using `dmd` and not `gdc` or
+any other D compiler.
 
 ### On POSIX-Compliant Machines (Linux, Mac OS X)
 
-Run `./build/scripts/build.sh`.
+Run `make -f ./build/scripts/posix.make` to build the static library,
+shared library, and all command-line tools.
+
+Run `sudo make -f ./build/scripts/posix.make install` to install the
+shared library, command-line tools, and documentation.
+
+Alternatively, you can run `./build/scripts/build.sh`.
 If you get a permissions error, you need to set that file to be executable
 using the `chmod` command.
 
@@ -17,6 +25,10 @@ from the PowerShell command line. If you get a warning about needing a
 cryptographic signature for the PowerShell script, it is probably because
 your system is blocking running unsigned PowerShell scripts. Just run the
 other script if that is the case.
+
+Unfortunately, there is no install scripts, mostly because I don't really know
+how to install something on Windows, other than just putting executables on the
+`%PATH%`. I welcome suggestions or pull requests.
 
 ## Installation
 
