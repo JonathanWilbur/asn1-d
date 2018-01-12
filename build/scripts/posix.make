@@ -58,12 +58,16 @@ tools : $(encoders) $(decoders)
 
 uname := $(shell uname)
 ifeq ($(uname), Linux)
-	manpagesdirectory = /usr/local/share/man/1
 	echoflags = "-e"
 endif
 ifeq ($(uname), Darwin)
-	manpagesdirectory = /usr/local/share/man/man1
 	echoflags = ""
+endif
+ifeq (,$(wildcard /usr/local/share/man/1))
+    manpagesdirectory = /usr/local/share/man/1
+endif
+ifeq (,$(wildcard /usr/local/share/man/man1))
+    manpagesdirectory = /usr/local/share/man/man1
 endif
 
 # You will most likely need to run this will root privileges

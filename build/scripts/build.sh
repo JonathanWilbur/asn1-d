@@ -13,10 +13,8 @@ TIMESTAMP=$(date '+%Y-%m-%d@%H:%M:%S')
 VERSION="1.0.0"
 
 if [ "$(uname)" == "Darwin" ]; then
-	MANPAGESDIRECTORY=/usr/local/share/man/man1
 	ECHOFLAGS=""
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    MANPAGESDIRECTORY=/usr/local/share/man/1
 	ECHOFLAGS="-e"
 fi
 
