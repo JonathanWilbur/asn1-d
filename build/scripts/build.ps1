@@ -57,6 +57,7 @@ dmd `
 .\source\codecs\cer.d `
 .\source\codecs\der.d `
 -of".\\build\\libraries\\asn1.dll" `
+-lib `
 -shared `
 -O `
 -inline `
