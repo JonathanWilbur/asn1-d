@@ -371,7 +371,7 @@ This is the exception hierarchy:
       - `ASN1ValueOverflowException`
       - `ASN1ValuePaddingException`
       - `ASN1ValueCharactersException`
-      - `ASN1UndefinedException`
+      - `ASN1ValueUndefinedException`
   - `ASN1CompilerException`
 
 The names are pretty self-explanatory (at least I think so). To learn the

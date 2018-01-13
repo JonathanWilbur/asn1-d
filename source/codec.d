@@ -1286,7 +1286,7 @@ class AbstractSyntaxNotation1Element(Element)
     @system
     unittest
     {
-        immutable float[] tests = [
+        immutable float[] tests = cast(float[]) [
             byte.max,
             byte.min,
             ubyte.max,

@@ -1,16 +1,16 @@
 @echo off
-mkdir .\documentation > nul
-mkdir .\documentation\html > nul
-mkdir .\documentation\links > nul
-mkdir .\build > nul
-mkdir .\build\assemblies > nul
-mkdir .\build\executables > nul
-mkdir .\build\interfaces > nul
-mkdir .\build\libraries > nul
-mkdir .\build\logs > nul
-mkdir .\build\maps > nul
-mkdir .\build\objects > nul
-mkdir .\build\scripts > nul
+mkdir .\documentation > nul 2>&1
+mkdir .\documentation\html > nul 2>&1
+mkdir .\documentation\links > nul 2>&1
+mkdir .\build > nul 2>&1
+mkdir .\build\assemblies > nul 2>&1
+mkdir .\build\executables > nul 2>&1
+mkdir .\build\interfaces > nul 2>&1
+mkdir .\build\libraries > nul 2>&1
+mkdir .\build\logs > nul 2>&1
+mkdir .\build\maps > nul 2>&1
+mkdir .\build\objects > nul 2>&1
+mkdir .\build\scripts > nul 2>&1
 
 set version="1.0.0"
 
