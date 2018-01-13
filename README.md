@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0-beta.85](http://semver.org/)
+* Version: [1.0.0-beta.86](http://semver.org/)
 
 **Expected Version 1.0.0 Release Date: January 12th, 2018**
 
@@ -19,13 +19,15 @@ as well as a family of standards for encoding and decoding said protocols.
 It is similar to Google's [Protocol Buffers](https://developers.google.com/protocol-buffers/),
 or Sun Microsystems' [External Data Representation (XDR)](https://tools.ietf.org/html/rfc1014).
 
+For more information on what ASN.1 is, see `documentation/asn1.md`.
+
 ## Why ASN.1?
 
 ASN.1 is used in, or required by, multiple technologies, including:
 
 * [X.509 Certificates](http://www.itu.int/rec/T-REC-X.509-201610-I/en), used in [SSL/TLS](https://tools.ietf.org/html/rfc5246)
 * [Lightweight Directory Access Protocol (LDAP)](https://www.ietf.org/rfc/rfc4511.txt)
-* [X.400]()
+* [X.400](https://www.itu.int/rec/T-REC-X.400/en), the messaging system used by the U.S. Military
 * [X.500](http://www.itu.int/rec/T-REC-X.500-201610-I/en)
 * The [magnetic stripes](https://www.iso.org/standard/43317.html) on credit cards and debit cards
 * Microsoft's [Remote Desktop Protocol (RDP)](https://msdn.microsoft.com/en-us/library/mt242409.aspx)
@@ -33,6 +35,7 @@ ASN.1 is used in, or required by, multiple technologies, including:
 * [Common Management Information Protocol (CMIP)](http://www.itu.int/rec/T-REC-X.711/en)
 * [Signalling System Number 7 (SS7)](http://www.itu.int/rec/T-REC-Q.700-199303-I/en),
   used to make most phone calls on the Public Switched Telephone Network (PSTN).
+* [Kerberos 5](https://tools.ietf.org/html/rfc4120)
 * [H.323](http://www.itu.int/rec/T-REC-H.323-200912-I/en) Video conferencing
 * Biometrics Protocols:
   * [BioAPI Interworking Protocol (BIP)](https://www.iso.org/standard/43611.html)
@@ -50,7 +53,22 @@ If you look in the
 [`asn1` directory of WireShark's source code](https://github.com/wireshark/wireshark/tree/master/epan/dissectors/asn1),
 you'll see all of the protocols that use ASN.1.
 
-## Usage
+This list can also be found in `documentation/asn1.d`.
+
+## Building and Installing
+
+There are four scripts in `build/scripts` that help you build this library,
+in addition to building using `dub`. If you are using Windows, you can build
+by running `.\build\scripts\build.ps1` from PowerShell, or `.\build\scripts\build.bat`
+from the traditional `cmd` shell. If you are on any POSIX-compliant(-ish)
+operating system, such as Linux or Mac OS X, you may build this library using
+`./build/scripts/build.sh` or `make -f ./build/scripts/posix.make`. The output
+library will be in `./build/libraries`. The command-line tools will be in
+`./build/executables`.
+
+For more information on building and installing, see `documentation/install.md`.
+
+## Library Usage
 
 For each codec in the library, usage entails instantiating the class,
 then using that class' properties to get and set the encoded value.
@@ -75,17 +93,32 @@ BERElement el2 = new BERElement(encodedData);
 long x = el2.integer!long;
 ```
 
+For more information on usage of the library, see `documentation/library.md`,
+`documentation/security.md`, `documentation/concurrency.md`. After that, see
+the compiler-generated HTML documentation in `documentation/html` for even
+more detail.
+
+## Command-Line Tools Usage
+
+This library also provides for a pair of command-line tools for each set
+of encoding rules. The following can be used as a way to read the
+Distinguished Encoding Rules (DER) structure of an X.509 PEM certificate,
+for instance:
+
+```bash
+tail -n +2 example.pem | head -n -1 | base64 --decode | decode-der
+```
+
+For more information on usage of the command-line tools, see
+`documentation/tools.md`, or if you are using a POSIX-compliant(-ish)
+system, run `sudo make -f build/scripts/posix.make install` to install
+the `man` pages, then view them by running `man decode-der`, for instance.
+
 ## Development
-
-I hope to be done with this library before the end of 2017. When it is
-complete, it will contain several codecs, and everything will be unit-tested
-and reviewed for security and performance.
-
-### 1.0.0-beta Development
 
 Version 1.0.0-beta was released on November 8th, 2017.
 
-**Expected Version 1.0.0 Release Date: December 31st, 2017**
+### 1.0.0 Development
 
 - [x] Fix licensing (Some parts of this project still say "ISC" instead of "MIT.")
 - [x] Find and change integral types to either `size_t` or `ptrdiff_t`
@@ -231,12 +264,12 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] All rules (BER, CER, and DER)
     - [x] If using indefinite-length, accept only constructed form
 - [x] Make properties for `END OF CONTENT` and `NULL` that just throw exceptions if its wrong
-- [ ] Cross-Platform Testing
-  - [ ] Windows 64-Bit
+- [x] Cross-Platform Testing
+  - [x] Windows 64-Bit
   - [x] Mac OS X 64-Bit
   - [x] Linux
     - [x] 64-Bit
-    - [ ] 32-Bit
+    - [x] 32-Bit
 - [x] Comparison Testing with [PyASN1](http://pyasn1.sourceforge.net)
 - [x] Field Testing
   - [x] Reading [X.509 Certificates](http://www.itu.int/rec/T-REC-X.509-201610-I/en)
@@ -307,76 +340,6 @@ Version 1.0.0-beta was released on November 8th, 2017.
   - [x] Put version in file names
   - [x] ~~Generate `.map` file~~ (It's not generating for some reason. Skipping.)
 - [x] `releases.csv`
-
-#### Note 1:
-
-From X.690, Section 8.19.2 on encoding of OIDs:
-
-> The subidentifier shall be encoded in the fewest possible octets, that is, the leading octet of the subidentifier shall not have the value 0x80.
-
-#### Note 2:
-
-Due to [this bug that I found](https://issues.dlang.org/show_bug.cgi?id=18087),
-I would either have to have no documentation for all mixin'd properties, since
-embedded documentation does not appear to get generated after mixins are
-applied, or I would have to split the getter-setter pairs for each property
-into two separate mixins, which will make the use of the properties only work
-if called syntactically like their method equivalents (e.g. `.prop(arg)`
-instead of `.prop = arg`)
-
-I tried doing this for the following properties:
-
-* `integer`
-* `objectIdentifier`
-* `enumerated`
-* `relativeObjectIdentifier`
-
-### 1.0.1 Release
-
-- [ ] Publish a [Dub package](https://code.dlang.org) for it
-- [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
-- [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
-- [ ] Publish a [Brew package](https://docs.brew.sh)
-- [ ] Configure [Travis CI](https://travis-ci.org)
-- [ ] Create `man(3)` (Library calls) pages
-- [ ] Create Wikipedia pages for each codec
-- [ ] Review by one security firm
-- [ ] Add signatures with [my GPG key](http://jonathan.wilbur.space/downloads/jonathan@wilbur.space.gpg.pub)
-- [ ] Marketing
-  - [ ] "The ASN.1 Tour"
-    - [ ] Tampa Hackerspace
-    - [ ] Iron Yard
-    - [ ] Gainesville Hackerspace
-  - [ ] Share it on the [Dlang Subreddit](https://www.reddit.com/r/dlang/)
-  - [ ] Share it on the [Dlang Blog](https://forum.dlang.org/group/announce)
-  - [ ] Suggestions for Inclusions in D Libraries
-    - [ ] [Botan](https://github.com/etcimon/botan)
-    - [ ] [ldap](https://github.com/WebFreak001/ldap)
-- [ ] Code Formatting
-  - [ ] Format `switch` statements
-  - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
-- [ ] Unit tests based on examples from X.690
-- [ ] Unit tests based on examples from the Dubuisson book
-- [ ] Comparison tests to Go's ASN.1 library module
-- [ ] Generate a `.def` file for Windows?
-- [ ] Make tools build with the dynamically-linked library, if possible
-- [ ] Build testing
-  - [ ] OpenSolaris
-  - [ ] FreeBSD
-- [ ] Improved exception messages
-- [ ] Improve the Fuzz Testing Tool
-
-## Suggestions
-
-I would like to have `debug` statements all throughout the code, but any method
-in which I put a `write`, `writeln`, or `writefln` statement cannot be `nothrow`.
-I would like a solution for this that:
-
-1. Allows me to put a `debug` statement in _every_ method.
-2. Allows methods to still be `nothrow`.
-3. Does not use `version` statements that dramatically increase the lines of code.
-
-If you have any great ideas, let me know.
 
 ## Bugs
 

@@ -1,5 +1,40 @@
 # Development Roadmap
 
+### 1.0.1 Release
+
+- [ ] Publish a [Dub package](https://code.dlang.org) for it
+- [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
+- [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
+- [ ] Publish a [Brew package](https://docs.brew.sh)
+- [ ] Configure [Travis CI](https://travis-ci.org)
+- [ ] Create `man(3)` (Library calls) pages
+- [ ] Create Wikipedia pages for each codec
+- [ ] Review by one security firm
+- [ ] Add signatures with [my GPG key](http://jonathan.wilbur.space/downloads/jonathan@wilbur.space.gpg.pub)
+- [ ] Marketing
+  - [ ] "The ASN.1 Tour"
+    - [ ] Tampa Hackerspace
+    - [ ] Iron Yard
+    - [ ] Gainesville Hackerspace
+  - [ ] Share it on the [Dlang Subreddit](https://www.reddit.com/r/dlang/)
+  - [ ] Share it on the [Dlang Blog](https://forum.dlang.org/group/announce)
+  - [ ] Suggestions for Inclusions in D Libraries
+    - [ ] [Botan](https://github.com/etcimon/botan)
+    - [ ] [ldap](https://github.com/WebFreak001/ldap)
+- [ ] Code Formatting
+  - [ ] Format `switch` statements
+  - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
+- [ ] Unit tests based on examples from X.690
+- [ ] Unit tests based on examples from the Dubuisson book
+- [ ] Comparison tests to Go's ASN.1 library module
+- [ ] Generate a `.def` file for Windows?
+- [ ] Make tools build with the dynamically-linked library, if possible
+- [ ] Build testing
+  - [ ] OpenSolaris
+  - [ ] FreeBSD
+- [ ] Improved exception messages
+- [ ] Improve the Fuzz Testing Tool
+
 ## 1.1.0 Release
 
 The following codecs will be added:
