@@ -39,7 +39,7 @@ public alias EmbeddedPDV = EmbeddedPresentationDataValue;
     The following additional constraints are applied to the abstract syntax
     when using Canonical Encoding Rules or Distinguished Encoding Rules,
     which are also defined in the
-    $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+    $(LINK https://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
     $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
 
     $(PRE

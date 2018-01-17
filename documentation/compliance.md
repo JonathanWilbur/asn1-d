@@ -3,7 +3,7 @@
 ## X.690 Compliance
 
 This section outlines conformance of this library to every item of the
-[International Telecommunications Union](http://www.itu.int/en/pages/default.aspx)'s
+[International Telecommunications Union](https://www.itu.int/en/pages/default.aspx)'s
 2015 edition of
 [X.690 - ASN.1 encoding rules](http://www.itu.int/rec/T-REC-X.690/en).
 Conformance to the specification beings with conformance to section 8 to 12,

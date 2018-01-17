@@ -855,7 +855,7 @@ code, .mono {
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">"Decodes" a NULL, by which I mean: returns nothing, but
+<div><section class="module-info"><section id="summary">"Decodes" a <span class="mono">NULL</span>, by which I mean: returns nothing, but
         throws exceptions if the element is not correct.
 </section>
 <div class="ddoc_section">
@@ -869,8 +869,9 @@ I had to name this method "<code class="code">nill</code>," because "NULL" is a 
 <div class="ddoc_throws">
 	<h4>Throws</h4>
 	<p class="para">
-		ASN1ConstructionException = if the element is marked as "constructed"
-            ASN1ValueSizeException = if there are any content octets
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if there are any content octets</li>
+        </ul>
 	</p>
 </div></section>
 </div>
@@ -975,22 +976,22 @@ I had to name this method "<code class="code">nill</code>," because "NULL" is a 
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes an EXTERNAL, which is a constructed data type, defined in
-        the <a href="https://www.itu.int">            International Telecommunications Union</a>'s
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">EXTERNAL</span>, which is a constructed data type, defined in
+        the <a href="https://www.itu.int">International Telecommunications Union</a>'s
         <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines EXTERNAL as:
+<div class="description">The specification defines <span class="mono">EXTERNAL</span> as:
 <br><br>
-        <i>        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
-            identification CHOICE {
-                syntax OBJECT IDENTIFIER,
-                presentation-context-id INTEGER,
-                context-negotiation SEQUENCE {
+        <pre>            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER,
                     presentation-context-id INTEGER,
-                    transfer-syntax OBJECT IDENTIFIER } },
-            data-value-descriptor ObjectDescriptor OPTIONAL,
-            data-value OCTET STRING }
-        </i>
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER } },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+        </pre>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.</div>
@@ -1003,22 +1004,22 @@ I had to name this method "<code class="code">nill</code>," because "NULL" is a 
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an EXTERNAL, which is a constructed data type, defined in
-        the <a href="https://www.itu.int">            International Telecommunications Union</a>'s
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">EXTERNAL</span>, which is a constructed data type, defined in
+        the <a href="https://www.itu.int">International Telecommunications Union</a>'s
         <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines EXTERNAL as:
+<div class="description">The specification defines <span class="mono">EXTERNAL</span> as:
 <br><br>
-        <i>        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
-            identification CHOICE {
-                syntax OBJECT IDENTIFIER,
-                presentation-context-id INTEGER,
-                context-negotiation SEQUENCE {
+        <pre>            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER,
                     presentation-context-id INTEGER,
-                    transfer-syntax OBJECT IDENTIFIER } },
-            data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
-            data-<code class="code">value</code> OCTET STRING }
-        </i>
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER } },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+        </pre>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 2.</div>
@@ -1080,13 +1081,13 @@ I had to name this method "<code class="code">nill</code>," because "NULL" is a 
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes an EmbeddedPDV, which is a constructed data type, defined in
-            the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
-            <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">EmbeddedPDV</span>, which is a constructed data type, defined in
+        the <a href="https://www.itu.int">International Telecommunications Union</a>'s
+        <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines EmbeddedPDV as:
+<div class="description">The specification defines <span class="mono">EmbeddedPDV</span> as:
 <br><br>
-        <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -1101,7 +1102,7 @@ I had to name this method "<code class="code">nill</code>," because "NULL" is a 
                 data-value-descriptor ObjectDescriptor OPTIONAL,
                 data-value OCTET STRING }
             (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
-        </i>
+        </pre>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.</div>
@@ -1114,13 +1115,13 @@ I had to name this method "<code class="code">nill</code>," because "NULL" is a 
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes an EmbeddedPDV, which is a constructed data type, defined in
-            the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
-            <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">EmbeddedPDV</span>, which is a constructed data type, defined in
+        the <a href="https://www.itu.int">International Telecommunications Union</a>'s
+        <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines EmbeddedPDV as:
+<div class="description">The specification defines <span class="mono">EmbeddedPDV</span> as:
 <br><br>
-        <i>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -1135,7 +1136,7 @@ I had to name this method "<code class="code">nill</code>," because "NULL" is a 
                 data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
                 data-<code class="code">value</code> OCTET STRING }
             (WITH COMPONENTS { ... , data-<code class="code">value</code>-descriptor ABSENT })
-        </i>
+        </pre>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.</div>
@@ -1463,8 +1464,8 @@ Thanks to StackOverflow user
 <div class="ddoc_section">
 	<p class="para">
 		<span class="ddoc_section_h">Sources:</span>
-<a href="">                ASN.1: Communication Between Heterogeneous Systems, pages 175-178</a>
-            <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">                The Wikipedia Page on ISO 2022</a>
+<a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">ASN.1: Communication Between Heterogeneous Systems, pages 175-178</a>
+            <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a>
             <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
 	</p>
 </div>
@@ -1483,8 +1484,8 @@ Thanks to StackOverflow user
 <div class="ddoc_section">
 	<p class="para">
 		<span class="ddoc_section_h">Sources:</span>
-<a href="">                ASN.1: Communication Between Heterogeneous Systems, pages 175-178</a>
-            <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">                The Wikipedia Page on ISO 2022</a>
+<a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">ASN.1: Communication Between Heterogeneous Systems, pages 175-178</a>
+            <a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a>
             <a href="https://www.iso.org/standard/22747.html">ISO 2022</a>
 	</p>
 </div>
@@ -1570,13 +1571,13 @@ Thanks to StackOverflow user
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Decodes a CHARACTER STRING, which is a constructed data type, defined
-        in the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
-            <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+<div><section class="module-info"><section id="summary">Decodes a <span class="mono">CHARACTER STRING</span>, which is a constructed data type, defined
+        in the <a href="https://www.itu.int">International Telecommunications Union</a>'s
+        <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines CHARACTER as:
+<div class="description">The specification defines <span class="mono">CHARACTER STRING</span> as:
 <br><br>
-        <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+        <pre>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -1589,7 +1590,7 @@ Thanks to StackOverflow user
                     transfer-syntax OBJECT IDENTIFIER,
                     fixed NULL },
                 string-value OCTET STRING }
-        </i>
+        </pre>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.</div>
@@ -1602,13 +1603,13 @@ Thanks to StackOverflow user
 
     </code>
 </section>
-<div><section class="module-info"><section id="summary">Encodes a CHARACTER STRING, which is a constructed data type, defined
-        in the <a href="https://www.itu.int">                International Telecommunications Union</a>'s
-            <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+<div><section class="module-info"><section id="summary">Encodes a <span class="mono">CHARACTER STRING</span>, which is a constructed data type, defined
+        in the <a href="https://www.itu.int">International Telecommunications Union</a>'s
+        <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
 </section>
-<div class="description">The specification defines CHARACTER as:
+<div class="description">The specification defines <span class="mono">CHARACTER STRING</span> as:
 <br><br>
-        <i>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+        <pre>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
                         abstract OBJECT IDENTIFIER,
@@ -1621,7 +1622,7 @@ Thanks to StackOverflow user
                     transfer-syntax OBJECT IDENTIFIER,
                     fixed NULL },
                 string-<code class="code">value</code> OCTET STRING }
-        </i>
+        </pre>
 <br><br>
         This assumes AUTOMATIC TAGS, so all of the identification choices
         will be context-specific and numbered from 0 to 5.</div>
@@ -1665,7 +1666,7 @@ Thanks to StackOverflow user
 
         </div>
         <div id="footer">
-            <span id="timestamp">Fri Jan 12 20:44:57 2018
+            <span id="timestamp">Wed Jan 17 13:26:39 2018
 </span>
         </div>
     </body>

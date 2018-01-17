@@ -2,7 +2,7 @@
 
 ASN.1 stands for *Abstract Syntax Notation*. ASN.1 was first specified in
 [X.680 - Abstract Syntax Notation One (ASN.1)](https://www.itu.int/rec/T-REC-X.680/en),
-by the [International Telecommunications Union](http://www.itu.int/en/pages/default.aspx).
+by the [International Telecommunications Union](https://www.itu.int/en/pages/default.aspx).
 ASN.1 messages can be encoded in one of several encoding/decoding standards.
 It provides a system of types that are extensible, and can presumably describe
 every protocol. You can think of it as a protocol for describing other protocols
@@ -74,7 +74,7 @@ BER, DER, and BACNet (used for remote control of HVAC systems).
 
 BER, CER, and DER are all specified in
 [X.690 - ASN.1 encoding rules](http://www.itu.int/rec/T-REC-X.690/en), published by the
-[International Telecommunications Union](http://www.itu.int/en/pages/default.aspx).
+[International Telecommunications Union](https://www.itu.int/en/pages/default.aspx).
 
 BER are the most liberal encoding rules: they permit data to be serialized and
 deserialized in many ways. This makes BER easier to use, but harder to initially

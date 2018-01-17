@@ -824,15 +824,17 @@ class AbstractSyntaxNotation1Element(Element)
     }
 
     /**
-        "Decodes" a NULL, by which I mean: returns nothing, but
+        "Decodes" a $(MONO NULL), by which I mean: returns nothing, but
         throws exceptions if the element is not correct.
 
         Note:
             I had to name this method "nill," because "NULL" is a keyword in D.
 
         Throws:
-            ASN1ConstructionException = if the element is marked as "constructed"
-            ASN1ValueSizeException = if there are any content octets
+        $(UL
+            $(LI $(D ASN1ConstructionException) if the element is marked as "constructed")
+            $(LI $(D ASN1ValueSizeException) if there are any content octets)
+        )
     */
     abstract public @property
     void nill() const;
@@ -979,23 +981,22 @@ class AbstractSyntaxNotation1Element(Element)
     }
 
     /**
-        Decodes an EXTERNAL, which is a constructed data type, defined in
-        the $(LINK https://www.itu.int,
-            International Telecommunications Union)'s
+        Decodes an $(MONO EXTERNAL), which is a constructed data type, defined in
+        the $(LINK https://www.itu.int, International Telecommunications Union)'s
         $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines EXTERNAL as:
+        The specification defines $(MONO EXTERNAL) as:
 
-        $(I
-        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
-            identification CHOICE {
-                syntax OBJECT IDENTIFIER,
-                presentation-context-id INTEGER,
-                context-negotiation SEQUENCE {
+        $(PRE
+            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER,
                     presentation-context-id INTEGER,
-                    transfer-syntax OBJECT IDENTIFIER } },
-            data-value-descriptor ObjectDescriptor OPTIONAL,
-            data-value OCTET STRING }
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER } },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
         )
 
         This assumes AUTOMATIC TAGS, so all of the identification choices
@@ -1005,23 +1006,22 @@ class AbstractSyntaxNotation1Element(Element)
     External external() const;
 
     /**
-        Encodes an EXTERNAL, which is a constructed data type, defined in
-        the $(LINK https://www.itu.int,
-            International Telecommunications Union)'s
+        Encodes an $(MONO EXTERNAL), which is a constructed data type, defined in
+        the $(LINK https://www.itu.int, International Telecommunications Union)'s
         $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines EXTERNAL as:
+        The specification defines $(MONO EXTERNAL) as:
 
-        $(I
-        EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
-            identification CHOICE {
-                syntax OBJECT IDENTIFIER,
-                presentation-context-id INTEGER,
-                context-negotiation SEQUENCE {
+        $(PRE
+            EXTERNAL := [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER,
                     presentation-context-id INTEGER,
-                    transfer-syntax OBJECT IDENTIFIER } },
-            data-value-descriptor ObjectDescriptor OPTIONAL,
-            data-value OCTET STRING }
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER } },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
         )
 
         This assumes AUTOMATIC TAGS, so all of the identification choices
@@ -1729,14 +1729,13 @@ class AbstractSyntaxNotation1Element(Element)
     ///
     public alias embeddedPDV = embeddedPresentationDataValue;
     /**
-        Decodes an EmbeddedPDV, which is a constructed data type, defined in
-            the $(LINK https://www.itu.int,
-                International Telecommunications Union)'s
-            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        Decodes an $(MONO EmbeddedPDV), which is a constructed data type, defined in
+        the $(LINK https://www.itu.int, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines EmbeddedPDV as:
+        The specification defines $(MONO EmbeddedPDV) as:
 
-        $(I
+        $(PRE
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -1761,14 +1760,13 @@ class AbstractSyntaxNotation1Element(Element)
     EmbeddedPDV embeddedPresentationDataValue() const;
 
     /**
-        Encodes an EmbeddedPDV, which is a constructed data type, defined in
-            the $(LINK https://www.itu.int,
-                International Telecommunications Union)'s
-            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        Encodes an $(MONO EmbeddedPDV), which is a constructed data type, defined in
+        the $(LINK https://www.itu.int, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines EmbeddedPDV as:
+        The specification defines $(MONO EmbeddedPDV) as:
 
-        $(I
+        $(PRE
             EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -2241,10 +2239,8 @@ class AbstractSyntaxNotation1Element(Element)
         including 0x20 and 0x75.
 
         Sources:
-            $(LINK ,
-                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,
-                The Wikipedia Page on ISO 2022)
+            $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022)
             $(LINK https://www.iso.org/standard/22747.html, ISO 2022)
 
     */
@@ -2257,10 +2253,8 @@ class AbstractSyntaxNotation1Element(Element)
         including 0x20 and 0x75.
 
         Sources:
-            $(LINK ,
-                ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
-            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022,
-                The Wikipedia Page on ISO 2022)
+            $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems, pages 175-178)
+            $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022)
             $(LINK https://www.iso.org/standard/22747.html, ISO 2022)
 
     */
@@ -2422,14 +2416,13 @@ class AbstractSyntaxNotation1Element(Element)
     }
 
     /**
-        Decodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK https://www.itu.int,
-                International Telecommunications Union)'s
-            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        Decodes a $(MONO CHARACTER STRING), which is a constructed data type, defined
+        in the $(LINK https://www.itu.int, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines CHARACTER as:
+        The specification defines $(MONO CHARACTER STRING) as:
 
-        $(I
+        $(PRE
             CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {
@@ -2452,14 +2445,13 @@ class AbstractSyntaxNotation1Element(Element)
     CharacterString characterString() const;
 
     /**
-        Encodes a CHARACTER STRING, which is a constructed data type, defined
-        in the $(LINK https://www.itu.int,
-                International Telecommunications Union)'s
-            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
+        Encodes a $(MONO CHARACTER STRING), which is a constructed data type, defined
+        in the $(LINK https://www.itu.int, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).
 
-        The specification defines CHARACTER as:
+        The specification defines $(MONO CHARACTER STRING) as:
 
-        $(I
+        $(PRE
             CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
                 identification CHOICE {
                     syntaxes SEQUENCE {

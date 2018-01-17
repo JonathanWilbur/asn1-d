@@ -3,13 +3,13 @@
 * Author: [Jonathan M. Wilbur](http://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [1.0.0](http://semver.org/)
+* Version: [1.0.1](https://semver.org/)
 
 ## What is ASN.1?
 
 ASN.1 stands for *Abstract Syntax Notation*. ASN.1 was first specified in
 [X.680 - Abstract Syntax Notation One (ASN.1)](https://www.itu.int/rec/T-REC-X.680/en),
-by the [International Telecommunications Union](http://www.itu.int/en/pages/default.aspx).
+by the [International Telecommunications Union](https://www.itu.int/en/pages/default.aspx).
 ASN.1 messages can be encoded in one of several encoding/decoding standards.
 It provides a system of types that are extensible, and can presumably describe
 every protocol. You can think of it as a protocol for describing other protocols
@@ -133,9 +133,9 @@ be until that bug is resolved.
 ## See Also
 
 * [X.680 - Abstract Syntax Notation One (ASN.1)](https://www.itu.int/rec/T-REC-X.680/en), published by the
-[International Telecommunications Union](http://www.itu.int/en/pages/default.aspx).
+[International Telecommunications Union](https://www.itu.int/en/pages/default.aspx).
 * [X.690 - ASN.1 encoding rules](http://www.itu.int/rec/T-REC-X.690/en), published by the
-[International Telecommunications Union](http://www.itu.int/en/pages/default.aspx).
+[International Telecommunications Union](https://www.itu.int/en/pages/default.aspx).
 * [ASN.1: Communication Between Heterogeneous Systems](http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF) by Olivier Dubuisson
 
 ## Contact Me

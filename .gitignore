@@ -5,6 +5,7 @@ build/assemblies/*
 build/executables/*
 build/interfaces/*
 build/libraries/*
+build/maps/*
 build/logs/*
 build/objects/*
 documentation/restricted/

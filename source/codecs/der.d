@@ -8,7 +8,7 @@
     Like Basic Encoding Rules (BER), Canonical Encoding Rules (CER), and
     Packed Encoding Rules (PER), Distinguished Encoding Rules (DER) is a
     specification created by the
-    $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union),
+    $(LINK https://www.itu.int/en/pages/default.aspx, International Telecommunications Union),
     and specified in
     $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
 
@@ -44,7 +44,7 @@ public alias derObjectID = distinguishedEncodingRulesObjectIdentifier;
 public alias derObjectIdentifier = distinguishedEncodingRulesObjectIdentifier;
 /**
     The object identifier assigned to the Distinguished Encoding Rules (DER), per the
-    $(LINK http://www.itu.int/en/pages/default.aspx,
+    $(LINK https://www.itu.int/en/pages/default.aspx,
         International Telecommunications Union)'s,
     $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
 
@@ -255,18 +255,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             throw new ASN1ValueSizeException
             (1u, long.sizeof, this.value.length, "decode an INTEGER");
 
-        /* NOTE:
-            this.value must be duplicated; if it is not, the reverse() operation
-            below reverses this.value, which persists until the next decode!
-        */
-        ubyte[] value = this.value.dup;
         if
         (
-            this.value.length > 1u &&
-            (
-                (this.value[0] == 0x00u && (!(this.value[1] & 0x80u))) || // Unnecessary positive leading bytes
-                (this.value[0] == 0xFFu && (this.value[1] & 0x80u)) // Unnecessary negative leading bytes
-            )
+            (this.value[0] == 0x00u && (!(this.value[1] & 0x80u))) || // Unnecessary positive leading bytes
+            (this.value[0] == 0xFFu && (this.value[1] & 0x80u)) // Unnecessary negative leading bytes
         )
             throw new ASN1ValuePaddingException
             (
@@ -278,7 +270,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             );
 
         /* NOTE:
-            Because the DER INTEGER is stored in two's complement form, you
+            Because the INTEGER is stored in two's complement form, you
             can't just apppend 0x00u to the big end of it until it is as long
             as T in bytes, then cast to T. Instead, you have to first determine
             if the encoded integer is negative or positive. If it is negative,
@@ -294,6 +286,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             and the padding byte should be 0x00.
         */
         immutable ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
+        ubyte[] value = this.value.dup; // Duplication is necessary to prevent modifying the source bytes
         while (value.length < T.sizeof)
             value = (paddingByte ~ value);
         version (LittleEndian) reverse(value);
@@ -925,7 +918,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         Decodes an $(MONO EXTERNAL).
 
         According to the
-        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
         $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),
         the abstract definition for an $(MONO EXTERNAL), after removing the comments in the
         specification, is as follows:
@@ -975,7 +968,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         )
 
         But, according to the
-        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
         $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),
         section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
         follows, for compatibility reasons:
@@ -1004,7 +997,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         The following additional constraints are applied to the abstract syntax
         when using Canonical Encoding Rules or Distinguished Encoding Rules,
         which are also defined in the
-        $(LINK http://www.itu.int/en/pages/default.aspx,
+        $(LINK https://www.itu.int/en/pages/default.aspx,
         International Telecommunications Union)'s
         $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
 
@@ -1181,7 +1174,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         Encodes an $(MONO EXTERNAL).
 
         According to the
-        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
         $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),
         the abstract definition for an $(MONO EXTERNAL), after removing the comments in the
         specification, is as follows:
@@ -1231,7 +1224,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         )
 
         But, according to the
-        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
         $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),
         section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
         follows, for compatibility reasons:
@@ -1260,7 +1253,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         The following additional constraints are applied to the abstract syntax
         when using Canonical Encoding Rules or Distinguished Encoding Rules,
         which are also defined in the
-        $(LINK http://www.itu.int/en/pages/default.aspx,
+        $(LINK https://www.itu.int/en/pages/default.aspx,
         International Telecommunications Union)'s
         $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
 
@@ -2233,18 +2226,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             throw new ASN1ValueSizeException
             (1u, long.sizeof, this.value.length, "decode an ENUMERATED");
 
-        /* NOTE:
-            this.value must be duplicated; if it is not, the reverse() operation
-            below reverses this.value, which persists until the next decode!
-        */
-        ubyte[] value = this.value.dup;
         if
         (
-            this.value.length > 1u &&
-            (
-                (this.value[0] == 0x00u && (!(this.value[1] & 0x80u))) || // Unnecessary positive leading bytes
-                (this.value[0] == 0xFFu && (this.value[1] & 0x80u)) // Unnecessary negative leading bytes
-            )
+            (this.value[0] == 0x00u && (!(this.value[1] & 0x80u))) || // Unnecessary positive leading bytes
+            (this.value[0] == 0xFFu && (this.value[1] & 0x80u)) // Unnecessary negative leading bytes
         )
             throw new ASN1ValuePaddingException
             (
@@ -2256,7 +2241,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             );
 
         /* NOTE:
-            Because the DER ENUMERATED is stored in two's complement form, you
+            Because the ENUMERATED is stored in two's complement form, you
             can't just apppend 0x00u to the big end of it until it is as long
             as T in bytes, then cast to T. Instead, you have to first determine
             if the encoded integer is negative or positive. If it is negative,
@@ -2272,6 +2257,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             and the padding byte should be 0x00.
         */
         immutable ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
+        ubyte[] value = this.value.dup; // Duplication is necessary to prevent modifying the source bytes
         while (value.length < T.sizeof)
             value = (paddingByte ~ value);
         version (LittleEndian) reverse(value);
@@ -2420,7 +2406,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         The following additional constraints are applied to the abstract syntax
         when using Canonical Encoding Rules or Distinguished Encoding Rules,
         which are also defined in the
-        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
         $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
 
         $(PRE
@@ -2681,7 +2667,7 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         The following additional constraints are applied to the abstract syntax
         when using Canonical Encoding Rules or Distinguished Encoding Rules,
         which are also defined in the
-        $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+        $(LINK https://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
         $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
 
         $(PRE

@@ -1,6 +1,6 @@
 /**
     Abstract Syntax Notation 1 is a high-level syntax specification created
-    by the $(LINK http://www.itu.int/en/pages/default.aspx,
+    by the $(LINK https://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union) in
     $(LINK https://www.itu.int/rec/T-REC-X.680/en,
     X.680 - Abstract Syntax Notation One (ASN.1)), that
@@ -11,7 +11,7 @@
     While described abstractly by ASN.1, the specified protocol data units
     and data structures can be encoded via various encoding schemes, such as
     the Basic Encoding Rules (BER), which are defined in the
-    $(LINK http://www.itu.int/en/pages/default.aspx,
+    $(LINK https://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union)'s
     $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules).
     These encoding schemes uniformly relay data between systems that
@@ -97,7 +97,7 @@ public alias ASN1UniversalType = AbstractSyntaxNotation1UniversalType;
 /**
     The data types, as well as their permitted construction and numeric
     identifiers, according to the
-    $(LINK http://www.itu.int/en/pages/default.aspx,
+    $(LINK https://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union)'s
     $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)
 

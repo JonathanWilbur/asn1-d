@@ -22,7 +22,7 @@ or `SET`). In the `source/codecs` directory, you will find all of the codecs tha
 inherit from `ASN1Element`. The `BERElement` class, for instance, can be found in
 `ber.d`, and it represents a ASN.1 value, encoded via the Basic Encoding Rules
 (BER) specified in the
-[International Telecommunications Union](http://www.itu.int/en/pages/default.aspx)'s
+[International Telecommunications Union](https://www.itu.int/en/pages/default.aspx)'s
 [X.690 - ASN.1 encoding rules](http://www.itu.int/rec/T-REC-X.690/en).
 
 The codecs rely upon a few ASN.1-specific data types, such as `EmbeddedPDV`,

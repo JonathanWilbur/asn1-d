@@ -3,7 +3,7 @@ import types.identification;
 
 /**
     According to the
-    $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+    $(LINK https://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
     $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)),
     the abstract definition for an $(MONO EXTERNAL), after removing the comments in the
     specification, is as follows:
@@ -53,7 +53,7 @@ import types.identification;
     )
 
     But, according to the
-    $(LINK http://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
+    $(LINK https://www.itu.int/en/pages/default.aspx, International Telecommunications Union)'s
     $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules),
     section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
     follows, for compatibility reasons:
@@ -82,7 +82,7 @@ import types.identification;
     The following additional constraints are applied to the abstract syntax
     when using Canonical Encoding Rules or Distinguished Encoding Rules,
     which are also defined in the
-    $(LINK http://www.itu.int/en/pages/default.aspx,
+    $(LINK https://www.itu.int/en/pages/default.aspx,
     International Telecommunications Union)'s
     $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules):
 
