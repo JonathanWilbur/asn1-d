@@ -1,8 +1,17 @@
 # Development Roadmap
 
-### 1.0.1 Release
+### 1.0.2 Release
 
-- [ ] Publish a [Dub package](https://code.dlang.org) for it
+- [x] Publish a [Dub package](https://code.dlang.org) for it
+
+### 1.0.3 Release
+
+- [ ] Code Formatting
+  - [ ] Format `switch` statements
+  - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
+
+### 1.0.4 Release
+
 - [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
 - [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
 - [ ] Publish a [Brew package](https://docs.brew.sh)
@@ -21,9 +30,6 @@
   - [ ] Suggestions for Inclusions in D Libraries
     - [ ] [Botan](https://github.com/etcimon/botan)
     - [ ] [ldap](https://github.com/WebFreak001/ldap)
-- [ ] Code Formatting
-  - [ ] Format `switch` statements
-  - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
 - [ ] Unit tests based on examples from X.690
 - [ ] Unit tests based on examples from the Dubuisson book
 - [ ] Comparison tests to Go's ASN.1 library module
