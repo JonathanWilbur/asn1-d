@@ -3,11 +3,11 @@
 
     Build like so:
 
-    dmd ./source/asn1.d ./source/codec.d ./source/interfaces.d ./source/types/*.d ./source/types/universal/*.d ./source/codecs/*.d ./test/fuzz/twobytes.d -d -of./build/executables/twobytes
+    dmd ./source/asn1/constants.d ./source/asn1/codec.d ./source/asn1/interfaces.d ./source/asn1/types/*.d ./source/asn1/types/universal/*.d ./source/asn1/codecs/*.d ./test/fuzz/twobytes.d -d -of./build/executables/twobytes
 */
-import codecs.ber;
-import codecs.cer;
-import codecs.der;
+import asn1.codecs.ber;
+import asn1.codecs.cer;
+import asn1.codecs.der;
 import core.exception : RangeError;
 import std.stdio : writefln, writeln;
 

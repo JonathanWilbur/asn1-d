@@ -1,9 +1,8 @@
-module tools.decoder_mixin;
+module asn1.tools.decoder_mixin;
 
 mixin template Decoder(Element)
 {
-    import asn1;
-    import codecs.ber;
+    import asn1.constants;
     import std.conv : ConvException;
     import std.stdio : write, writeln, writefln, stdin;
     import std.utf : UTFException;

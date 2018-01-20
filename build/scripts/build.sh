@@ -5,12 +5,11 @@
 # It should not fail if your terminal does not support it--the output will just
 # look a bit garbled.
 #
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
+GREEN='\033[32m'
+RED='\033[31m'
 NOCOLOR='\033[0m'
 TIMESTAMP=$(date '+%Y-%m-%d@%H:%M:%S')
-VERSION="1.0.0"
+VERSION="2.0.0"
 
 if [ "$(uname)" == "Darwin" ]; then
 	ECHOFLAGS=""
@@ -38,12 +37,10 @@ mkdir -p ./build/scripts
 echo $ECHOFLAGS "Building the ASN.1 Library (static)... \c"
 if dmd \
  ./source/macros.ddoc \
- ./source/asn1.d \
- ./source/codec.d \
- ./source/interfaces.d \
- ./source/types/*.d \
- ./source/types/universal/*.d \
- ./source/codecs/*.d \
+ ./source/asn1/*.d \
+ ./source/asn1/types/*.d \
+ ./source/asn1/types/universal/*.d \
+ ./source/asn1/codecs/*.d \
  -Dd./documentation/html \
  -Hd./build/interfaces \
  -op \
@@ -62,12 +59,10 @@ fi
 
 echo $ECHOFLAGS "Building the ASN.1 Library (shared / dynamic)... \c"
 if dmd \
- ./source/asn1.d \
- ./source/codec.d \
- ./source/interfaces.d \
- ./source/types/*.d \
- ./source/types/universal/*.d \
- ./source/codecs/*.d \
+ ./source/asn1/*.d \
+ ./source/asn1/types/*.d \
+ ./source/asn1/types/universal/*.d \
+ ./source/asn1/codecs/*.d \
  -of./build/libraries/asn1-${VERSION}.so \
  -shared \
  -fPIC \
@@ -86,7 +81,6 @@ do
     echo $ECHOFLAGS "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
     if dmd \
      -I./build/interfaces/source \
-     -I./build/interfaces/source/codecs \
      -L./build/libraries/asn1-${VERSION}.a \
      ./source/tools/decoder_mixin.d \
      ./source/tools/${DECODER} \
@@ -116,7 +110,6 @@ do
     echo $ECHOFLAGS "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
     if dmd \
      -I./build/interfaces/source \
-     -I./build/interfaces/source/codecs \
      -L./build/libraries/asn1-${VERSION}.a \
      ./source/tools/encoder_mixin.d \
      ./source/tools/${ENCODER} \

@@ -1,8 +1,8 @@
-module tools.encoder_mixin;
+module asn1.tools.encoder_mixin;
 
 mixin template Encoder(Element)
 {
-    import asn1;
+    import asn1.constants;
     import std.algorithm: map;
     import std.array : array, split;
     import std.conv : ConvException, ConvOverflowException, parse, to;

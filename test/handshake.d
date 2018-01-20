@@ -1,11 +1,13 @@
 /*
     Just a field test for initiating a connection to a remote LDAP server.
-    Passed on December 20th, 2017 (Version 1.0.0-beta.24)
+
+    Build with:
+    dmd -I./build/interfaces/source -L./build/libraries/asn1-<version>.a ./test/handshake.d -of./handshake -d
 */
 import std.socket : InternetAddress, TcpSocket;
 import std.stdio : writefln, writeln;
-import asn1;
-import codecs.ber : BERElement;
+import asn1.constants;
+import asn1.codecs.ber : BERElement;
 
 void main()
 {

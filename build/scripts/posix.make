@@ -1,22 +1,22 @@
 #!/usr/bin/make
 #
 # Run this from the root directory like so:
-# sudo make -f ./build/scripts/posix.make
+# make -f ./build/scripts/posix.make
 # sudo make -f ./build/scripts/posix.make install
 #
 vpath %.o ./build/objects
 vpath %.di ./build/interfaces
-vpath %.d ./source
-vpath %.d ./source/types
-vpath %.d ./source/types/universal
-vpath %.d ./source/codecs
+vpath %.d ./source/asn1
+vpath %.d ./source/asn1/types
+vpath %.d ./source/asn1/types/universal
+vpath %.d ./source/asn1/codecs
 vpath %.d ./source/tools
 vpath %.html ./documentation/html
 vpath %.a ./build/libraries
 vpath %.so ./build/libraries
 vpath % ./build/executables
 
-version = 1.0.0
+version = 2.0.0
 
 universaltypes = \
 	characterstring \
@@ -35,7 +35,7 @@ codecs = \
 	der
 
 modules = \
-	asn1 \
+	constants \
 	codec \
 	compiler \
 	interfaces \
@@ -95,12 +95,10 @@ asn1-$(version).a : $(sources)
 	echo $(echoflags) "Building the ASN.1 Library (static)... \c"
 	dmd \
 	./source/macros.ddoc \
-	./source/asn1.d \
-	./source/codec.d \
-	./source/interfaces.d \
-	./source/types/*.d \
-	./source/types/universal/*.d \
-	./source/codecs/*.d \
+	./source/asn1/*.d \
+	./source/asn1/types/*.d \
+	./source/asn1/types/universal/*.d \
+	./source/asn1/codecs/*.d \
 	-Dd./documentation/html \
 	-Hd./build/interfaces \
 	-op \
@@ -112,18 +110,16 @@ asn1-$(version).a : $(sources)
 	-O \
 	-map \
 	-d
-	echo $(echoflags) "\033[0;32mDone.\033[0m"
+	echo $(echoflags) "\033[32mDone.\033[0m"
 
 asn1-$(version).so : $(sources)
 	echo $(echoflags) "Building the ASN.1 Library (shared / dynamic)... \c"
 	dmd \
 	./source/macros.ddoc \
-	./source/asn1.d \
-	./source/codec.d \
-	./source/interfaces.d \
-	./source/types/*.d \
-	./source/types/universal/*.d \
-	./source/codecs/*.d \
+	./source/asn1/*.d \
+	./source/asn1/types/*.d \
+	./source/asn1/types/universal/*.d \
+	./source/asn1/codecs/*.d \
 	-Dd./documentation/html \
 	-Hd./build/interfaces \
 	-op \
@@ -134,13 +130,12 @@ asn1-$(version).so : $(sources)
 	-O \
 	-map \
 	-d
-	echo $(echoflags) "\033[0;32mDone.\033[0m"
+	echo $(echoflags) "\033[32mDone.\033[0m"
 
 $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
 	echo $(echoflags) "Building the ASN.1 Command-Line Tool, $@... \c"
 	dmd \
 	-I./build/interfaces/source \
-	-I./build/interfaces/source/codecs \
 	-L./build/libraries/asn1-$(version).a \
 	./source/tools/encoder_mixin.d \
 	$< \
@@ -151,13 +146,12 @@ $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
 	-O \
 	-d
 	chmod +x ./build/executables/$@
-	echo $(echoflags) "\033[0;32mDone.\033[0m"
+	echo $(echoflags) "\033[32mDone.\033[0m"
 
 $(decoders) : decode-% : decode_%.d decoder_mixin.d asn1-$(version).so
 	echo $(echoflags) "Building the ASN.1 Command-Line Tool, $@... \c"
 	dmd \
 	-I./build/interfaces/source \
-	-I./build/interfaces/source/codecs \
 	-L./build/libraries/asn1-$(version).a \
 	./source/tools/decoder_mixin.d \
 	$< \
@@ -168,7 +162,7 @@ $(decoders) : decode-% : decode_%.d decoder_mixin.d asn1-$(version).so
 	-O \
 	-d
 	chmod +x ./build/executables/$@
-	echo $(echoflags) "\033[0;32mDone.\033[0m"
+	echo $(echoflags) "\033[32mDone.\033[0m"
 
 # How Phobos compiles only the JSON file:
 # JSON = phobos.json

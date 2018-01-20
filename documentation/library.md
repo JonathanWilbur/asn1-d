@@ -23,7 +23,7 @@ inherit from `ASN1Element`. The `BERElement` class, for instance, can be found i
 `ber.d`, and it represents a ASN.1 value, encoded via the Basic Encoding Rules
 (BER) specified in the
 [International Telecommunications Union](https://www.itu.int/en/pages/default.aspx)'s
-[X.690 - ASN.1 encoding rules](http://www.itu.int/rec/T-REC-X.690/en).
+[X.690 - ASN.1 encoding rules](https://www.itu.int/rec/T-REC-X.690/en).
 
 The codecs rely upon a few ASN.1-specific data types, such as `EmbeddedPDV`,
 and these data types have their own classes or structs somewhere in the

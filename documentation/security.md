@@ -712,7 +712,7 @@ I could barely find any information on this one.
 > cause a denial of service (abort and daemon exit) via ASN.1 data 
 > encountered in the Kerberos 5 protocol.
 
-They are talking about [this Heimdal](http://www.h5l.org/). I cannot find any 
+They are talking about [this Heimdal](https://www.h5l.org/). I cannot find any 
 information about this vulnerability.
 
 ### CVE-2013-5018
@@ -826,7 +826,7 @@ From the [Bugzilla page](https://bugzilla.mozilla.org/show_bug.cgi?id=715073):
 > have unspecified other impact via a crafted ASN.1 structure.
 
 Apparently, according to 
-[this page](http://article.gmane.org/gmane.comp.gnu.libtasn1.general/54),
+[this page](https://article.gmane.org/gmane.comp.gnu.libtasn1.general/54),
 this was not actually a vulnerability, but rather, a lot of developers using
 this library were not doing validation on the return value of 
 `asn_get_length_der` that they were expected to do.
@@ -954,7 +954,7 @@ _NOTE: This looks like this is going to be a problem, because my code does not p
 > service (memory consumption) via crafted HTTP headers, which are not properly 
 > parsed by the ASN.1 DER input stream parser, aka Bug Id 6864911.
 
-[This bug](http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6864911) is no 
+[This bug](https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6864911) is no 
 longer available.
 
 Skipping, because I think this is closed source anyway.
@@ -1156,7 +1156,7 @@ cause an infinite loop in the first place. I might have to get an expert on
 OpenSSL to weigh in here.
 
 The patch is 
-[here](http://security.FreeBSD.org/patches/SA-06:23/openssl.patch),
+[here](https://security.FreeBSD.org/patches/SA-06:23/openssl.patch),
 but also saved in `documentation/miscellaneous/CVE-2006-2937.patch`, just in 
 case that link breaks.
 
@@ -1192,7 +1192,7 @@ breaks.
 > or CVE-2004-0112.
 
 I managed to download the [exploit malware source](
-        http://downloads.securityfocus.com/vulnerabilities/exploits/ASN.1-Brute.c), 
+        https://downloads.securityfocus.com/vulnerabilities/exploits/ASN.1-Brute.c), 
 which is saved in `documentation/miscellaneous/exploit-CVE-2005-1730.c`.
 The author says you can use it [here](
         http://www.derkeiler.com/Mailing-Lists/securityfocus/bugtraq/2004-01/0126.html).

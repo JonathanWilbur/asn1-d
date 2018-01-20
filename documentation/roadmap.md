@@ -1,25 +1,21 @@
 # Development Roadmap
 
-### 1.0.2 Release
-
-- [x] Publish a [Dub package](https://code.dlang.org) for it
-
-### 1.0.3 Release
+### 2.0.1 Release
 
 - [ ] Code Formatting
   - [ ] Format `switch` statements
   - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
 
-### 1.0.4 Release
+### 2.0.2 Release
 
 - [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
 - [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
-- [ ] Publish a [Brew package](https://docs.brew.sh)
+- [ ] Publish a [Brew package](https://docs.brew.sh/Formula-Cookbook.html)
 - [ ] Configure [Travis CI](https://travis-ci.org)
 - [ ] Create `man(3)` (Library calls) pages
 - [ ] Create Wikipedia pages for each codec
 - [ ] Review by one security firm
-- [ ] Add signatures with [my GPG key](http://jonathan.wilbur.space/downloads/jonathan@wilbur.space.gpg.pub)
+- [ ] Add signatures with [my GPG key](https://jonathan.wilbur.space/downloads/jonathan@wilbur.space.gpg.pub)
 - [ ] Marketing
   - [ ] "The ASN.1 Tour"
     - [ ] Tampa Hackerspace
@@ -40,14 +36,15 @@
   - [ ] FreeBSD
 - [ ] Improved exception messages
 - [ ] Improve the Fuzz Testing Tool
+- [ ] Create "test" `GNU Make` target
 
-## 1.1.0 Release
+## 2.1.0 Release
 
 The following codecs will be added:
 
-- [ ] [Aligned Packed Encoding Rules (PER)](http://www.itu.int/rec/T-REC-X.691-201508-I)
+- [ ] [Aligned Packed Encoding Rules (PER)](https://www.itu.int/rec/T-REC-X.691-201508-I)
 - [ ] Unaligned Packed Encoding Rules (UPER)
-- [ ] [Canonical Packed Encoding Rules (CPER)](http://www.itu.int/rec/T-REC-X.696-201508-I)
+- [ ] [Canonical Packed Encoding Rules (CPER)](https://www.itu.int/rec/T-REC-X.696-201508-I)
 - [ ] Command-Line Tools
   - [ ] `encode-per`
   - [ ] `encode-uper`
@@ -59,14 +56,14 @@ The following codecs will be added:
 After this release, developers will be able to use this library to develop a
 Remote Desktop Protocol library.
 
-## 1.2.0 Release
+## 2.2.0 Release
 
 The following codecs will be added:
 
-- [ ] [JSON Encoding Rules (JER)](http://www.itu.int/rec/T-REC-X.697-201710-P)
-- [ ] [XML Encoding Rules (XER)](http://www.itu.int/rec/T-REC-X.693-201508-I/en)
-- [ ] [Canonical XML Encoding Rules (CXER)](http://www.itu.int/rec/T-REC-X.693-201508-I/en)
-- [ ] [Extended XML Encoding Rules (EXER)](http://www.itu.int/rec/T-REC-X.693-201508-I/en)
+- [ ] [JSON Encoding Rules (JER)](https://www.itu.int/rec/T-REC-X.697-201710-P)
+- [ ] [XML Encoding Rules (XER)](https://www.itu.int/rec/T-REC-X.693-201508-I/en)
+- [ ] [Canonical XML Encoding Rules (CXER)](https://www.itu.int/rec/T-REC-X.693-201508-I/en)
+- [ ] [Extended XML Encoding Rules (EXER)](https://www.itu.int/rec/T-REC-X.693-201508-I/en)
 - [ ] Command-Line Tools
   - [ ] `encode-xer`
   - [ ] `encode-cxer`
@@ -77,19 +74,19 @@ The following codecs will be added:
   - [ ] `decode-exer`
   - [ ] `decode-jer`
 
-## 1.3.0 Release
+## 2.3.0 Release
 
 The following codecs will be added:
 
-- [ ] [Octet Encoding Rules (OER)](http://www.itu.int/rec/T-REC-X.696-201508-I)
-- [ ] [Canonical Octet Encoding Rules (COER)](http://www.itu.int/rec/T-REC-X.696-201508-I)
+- [ ] [Octet Encoding Rules (OER)](https://www.itu.int/rec/T-REC-X.696-201508-I)
+- [ ] [Canonical Octet Encoding Rules (COER)](https://www.itu.int/rec/T-REC-X.696-201508-I)
 - [ ] Command-Line Tools
   - [ ] `encode-oer`
   - [ ] `encode-coer`
   - [ ] `decode-oer`
   - [ ] `decode-coer`
 
-## 1.4.0 Release
+## 2.4.0 Release
 
 The following codecs will be added:
 
@@ -107,7 +104,7 @@ The following codecs will be added:
   - [ ] `decode-bacnet`
   - [ ] `decode-ser`
 
-## 2.0.0 Release
+## 3.0.0 Release
 
 - [ ] TeletexString (T61String) validation (WireShark has an implementation.)
 - [ ] VideotexString validation
