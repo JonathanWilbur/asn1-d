@@ -1,12 +1,12 @@
 # Development Roadmap
 
-### 2.0.1 Release
+### 2.0.2 Release
 
 - [ ] Code Formatting
   - [ ] Format `switch` statements
   - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
 
-### 2.0.2 Release
+### 2.0.3 Release
 
 - [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
 - [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)

@@ -1,0 +1,290 @@
+
+<html>
+    <head>
+        <!-- Standard -->
+        <title>asn1.types.identification</title>
+        <meta charset="utf-8">
+        <meta name="author" content="Jonathan M. Wilbur jonathan@wilbur.space">
+        <meta name="description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+        <meta name="keywords" content="asn1.types.identification,asn1,asn.1,x690,x.690,ber,cer,der,per,basic encoding rules,codec,dlang,d">
+        <meta name="theme-color" content="#FFFFFF">
+
+        <!-- Google -->
+        <meta name="application-url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta name="audience" content="grownup">
+        <meta itemprop="name" content="asn1.types.identification - ASN.1 D Library">
+        <meta itemprop="description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+
+        <!-- Apple -->
+        <meta name="apple-mobile-web-app-title" content="asn1.types.identification">
+        <meta name="apple-mobile-web-app-status-bar-style" content="white">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-touch-fullscreen" content="yes">
+        <meta name="format-detection" content="telephone=yes">
+
+        <!-- Microsoft -->
+        <meta name="msapplication-tooltip" content="asn1.types.identification - ASN.1 D Library">
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+
+        <!-- Miscellaneous -->
+        <meta name="designer" content="Jonathan M. Wilbur jonathan@wilbur.space">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="version" content="1.0.0">
+        <meta name="copyright" content="Copyright 2018 (C) Jonathan M. Wilbur.">
+        <meta name="language" content="English">
+
+        <!-- Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta property="og:title" content="asn1.types.identification - ASN.1 D Library">
+        <meta property="og:description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+        <meta property="og:site_name" content="GitHub">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="website">
+        <meta name="twitter:url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta name="twitter:title" content="asn1.types.identification - ASN.1 D Library">
+        <meta name="twitter:description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+
+        <!-- Application -->
+        <style type="text/css">
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #661515;
+    background-image: linear-gradient(to right, #FFFFEE 0%, #FFCCBB 100%);
+    margin: 20px;
+}
+
+a {
+    color: #AA0000;
+	font-weight: 500;
+	-webkit-transition: color 0.2s;
+    transition: color 0.2s;
+    text-decoration-style: none;
+}
+
+a:hover {
+	color: #FF2222;
+}
+
+a::before,a::after {
+	font-weight: 100;
+	font-size: 110%;
+	line-height: 1;
+	opacity: 0;
+	-webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
+	transition: opacity 0.2s, transform 0.2s;
+}
+
+a::before {
+	left: -0.1em;
+	content: '[';
+	-webkit-transform: translateX(-100%);
+	transform: translateX(-100%);
+}
+
+a::after {
+	right: -0.1em;
+	content: ']';
+	-webkit-transform: translateX(100%);
+	transform: translateX(100%);
+}
+
+a:hover::before,a:hover::after {
+	opacity: 1;
+	-webkit-transform: translateX(0);
+	transform: translateX(0);
+}
+
+code, .mono {
+    font-family: Courier New, Courier, monospace;
+}
+
+.d.inline {
+    display: inline-block;
+}
+
+.d.block .declaration {
+    display: block;
+    padding: 10px;
+    margin: 10px;
+}
+
+.declaration {
+    background-color: #FFFFEE;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+
+#summary, .description {
+    margin: 5px;
+    padding: 5px;
+}
+
+.module-info {
+	margin-bottom: 100px;
+}
+
+.member {
+	font-weight: bold;
+}
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <h1>asn1.types.identification</h1>
+            <h2>ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER</h2>
+        </div>
+        <div id="content">
+            
+<section class="module-members">
+    <ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#ASN1ContextNegotiation" id="ASN1ContextNegotiation"><code class="member">ASN1ContextNegotiation</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ContextNegotiation"></span>struct <code class="code">ASN1ContextNegotiation</code>;
+
+    </code>
+</section>
+<div>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#ASN1ContextNegotiation.presentationContextID" id="ASN1ContextNegotiation.presentationContextID"><code class="member">presentationContextID</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ContextNegotiation.presentationContextID"></span>ptrdiff_t <code class="code">presentationContextID</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ContextNegotiation.transferSyntax" id="ASN1ContextNegotiation.transferSyntax"><code class="member">transferSyntax</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ContextNegotiation.transferSyntax"></span>ObjectIdentifier <code class="code">transferSyntax</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li>
+</ul>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1Syntaxes" id="ASN1Syntaxes"><code class="member">ASN1Syntaxes</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1Syntaxes"></span>struct <code class="code">ASN1Syntaxes</code>;
+
+    </code>
+</section>
+<div>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#ASN1Syntaxes.abstractSyntax" id="ASN1Syntaxes.abstractSyntax"><code class="member">abstractSyntax</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1Syntaxes.abstractSyntax"></span>ObjectIdentifier <code class="code">abstractSyntax</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1Syntaxes.transferSyntax" id="ASN1Syntaxes.transferSyntax"><code class="member">transferSyntax</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1Syntaxes.transferSyntax"></span>ObjectIdentifier <code class="code">transferSyntax</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li>
+</ul>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ContextSwitchingTypeID" id="ASN1ContextSwitchingTypeID"><code class="member">ASN1ContextSwitchingTypeID</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ContextSwitchingTypeID"></span>alias <code class="code">ASN1ContextSwitchingTypeID</code> = ASN1ContextSwitchingTypeIdentification;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ContextSwitchingTypeIdentification" id="ASN1ContextSwitchingTypeIdentification"><code class="member">ASN1ContextSwitchingTypeIdentification</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ContextSwitchingTypeIdentification"></span>struct <code class="code">ASN1ContextSwitchingTypeIdentification</code>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">This can be used for the creation of Externals, EmbeddedPDVs, and CharacterStrings.</section>
+</section>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#ASN1ContextSwitchingTypeIdentification.syntaxes" id="ASN1ContextSwitchingTypeIdentification.syntaxes"><code class="member">syntaxes</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ContextSwitchingTypeIdentification.syntaxes"></span>Nullable!ASN1Syntaxes <code class="code">syntaxes</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ContextSwitchingTypeIdentification.syntax" id="ASN1ContextSwitchingTypeIdentification.syntax"><code class="member">syntax</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ContextSwitchingTypeIdentification.syntax"></span>Nullable!ObjectIdentifier <code class="code">syntax</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ContextSwitchingTypeIdentification.presentationContextID" id="ASN1ContextSwitchingTypeIdentification.presentationContextID"><code class="member">presentationContextID</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ContextSwitchingTypeIdentification.presentationContextID"></span>ptrdiff_t <code class="code">presentationContextID</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ContextSwitchingTypeIdentification.contextNegotiation" id="ASN1ContextSwitchingTypeIdentification.contextNegotiation"><code class="member">contextNegotiation</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ContextSwitchingTypeIdentification.contextNegotiation"></span>Nullable!ASN1ContextNegotiation <code class="code">contextNegotiation</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ContextSwitchingTypeIdentification.transferSyntax" id="ASN1ContextSwitchingTypeIdentification.transferSyntax"><code class="member">transferSyntax</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ContextSwitchingTypeIdentification.transferSyntax"></span>Nullable!ObjectIdentifier <code class="code">transferSyntax</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#ASN1ContextSwitchingTypeIdentification.fixed" id="ASN1ContextSwitchingTypeIdentification.fixed"><code class="member">fixed</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ASN1ContextSwitchingTypeIdentification.fixed"></span>bool <code class="code">fixed</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</section>
+
+        </div>
+        <div id="footer">
+            <span id="timestamp">Sat Jan 20 10:35:48 2018
+</span>
+        </div>
+    </body>
+</html>

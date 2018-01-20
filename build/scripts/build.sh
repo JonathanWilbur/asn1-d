@@ -9,7 +9,7 @@ GREEN='\033[32m'
 RED='\033[31m'
 NOCOLOR='\033[0m'
 TIMESTAMP=$(date '+%Y-%m-%d@%H:%M:%S')
-VERSION="2.0.0"
+VERSION="2.0.1"
 
 if [ "$(uname)" == "Darwin" ]; then
 	ECHOFLAGS=""

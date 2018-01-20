@@ -11,7 +11,7 @@ build/objects/*
 documentation/restricted/
 rubbish/
 test/yury/
-asn1
+./asn1
 
 # General D Ignores
 *.o

@@ -1,0 +1,2454 @@
+
+<html>
+    <head>
+        <!-- Standard -->
+        <title>asn1.codecs.cer</title>
+        <meta charset="utf-8">
+        <meta name="author" content="Jonathan M. Wilbur jonathan@wilbur.space">
+        <meta name="description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+        <meta name="keywords" content="asn1.codecs.cer,asn1,asn.1,x690,x.690,ber,cer,der,per,basic encoding rules,codec,dlang,d">
+        <meta name="theme-color" content="#FFFFFF">
+
+        <!-- Google -->
+        <meta name="application-url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta name="audience" content="grownup">
+        <meta itemprop="name" content="asn1.codecs.cer - ASN.1 D Library">
+        <meta itemprop="description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+
+        <!-- Apple -->
+        <meta name="apple-mobile-web-app-title" content="asn1.codecs.cer">
+        <meta name="apple-mobile-web-app-status-bar-style" content="white">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-touch-fullscreen" content="yes">
+        <meta name="format-detection" content="telephone=yes">
+
+        <!-- Microsoft -->
+        <meta name="msapplication-tooltip" content="asn1.codecs.cer - ASN.1 D Library">
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+
+        <!-- Miscellaneous -->
+        <meta name="designer" content="Jonathan M. Wilbur jonathan@wilbur.space">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="version" content="1.0.0">
+        <meta name="copyright" content="Copyright 2018 (C) Jonathan M. Wilbur.">
+        <meta name="language" content="English">
+
+        <!-- Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta property="og:title" content="asn1.codecs.cer - ASN.1 D Library">
+        <meta property="og:description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+        <meta property="og:site_name" content="GitHub">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="website">
+        <meta name="twitter:url" content="https://github.com/JonathanWilbur/asn1-d">
+        <meta name="twitter:title" content="asn1.codecs.cer - ASN.1 D Library">
+        <meta name="twitter:description" content="ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER">
+
+        <!-- Application -->
+        <style type="text/css">
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #661515;
+    background-image: linear-gradient(to right, #FFFFEE 0%, #FFCCBB 100%);
+    margin: 20px;
+}
+
+a {
+    color: #AA0000;
+	font-weight: 500;
+	-webkit-transition: color 0.2s;
+    transition: color 0.2s;
+    text-decoration-style: none;
+}
+
+a:hover {
+	color: #FF2222;
+}
+
+a::before,a::after {
+	font-weight: 100;
+	font-size: 110%;
+	line-height: 1;
+	opacity: 0;
+	-webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
+	transition: opacity 0.2s, transform 0.2s;
+}
+
+a::before {
+	left: -0.1em;
+	content: '[';
+	-webkit-transform: translateX(-100%);
+	transform: translateX(-100%);
+}
+
+a::after {
+	right: -0.1em;
+	content: ']';
+	-webkit-transform: translateX(100%);
+	transform: translateX(100%);
+}
+
+a:hover::before,a:hover::after {
+	opacity: 1;
+	-webkit-transform: translateX(0);
+	transform: translateX(0);
+}
+
+code, .mono {
+    font-family: Courier New, Courier, monospace;
+}
+
+.d.inline {
+    display: inline-block;
+}
+
+.d.block .declaration {
+    display: block;
+    padding: 10px;
+    margin: 10px;
+}
+
+.declaration {
+    background-color: #FFFFEE;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+
+#summary, .description {
+    margin: 5px;
+    padding: 5px;
+}
+
+.module-info {
+	margin-bottom: 100px;
+}
+
+.member {
+	font-weight: bold;
+}
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <h1>asn1.codecs.cer</h1>
+            <h2>ASN.1 Codecs, as specified in ITU X.690, including BER, DER, and PER</h2>
+        </div>
+        <div id="content">
+            <section class="module-info"><section id="summary">Canonical Encoding Rules (CER) is a standard for encoding ASN.1 data.
+    CER is often used for cryptgraphically-signed data, such as X.509
+    certificates, because CER's defining feature is that there is only one way
+    to encode each data type, which means that two encodings of the same data
+    could not have different cryptographic signatures. For this reason, CER
+    is generally regarded as the most secure encoding standard for ASN.1.
+    Like Basic Encoding Rules (BER), Canonical Encoding Rules (CER), and
+    Packed Encoding Rules (PER), Canonical Encoding Rules (CER) is a
+    specification created by the
+    <a href="https://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>,
+    and specified in <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
+</section>
+<div class="ddoc_authors">
+	<h4>Authors</h4>
+	<p class="para">
+		<ul>        <li><span class="person">
+    <a href="http://jonathan.wilbur.space">Jonathan M. Wilbur</a>
+    <span>&lt;<a href="mailto:jonathan@wilbur.space">jonathan@wilbur.space</a>&gt;</span>
+</span></li>
+    </ul>
+
+	</p>
+</div>
+<div class="ddoc_license">
+	<h4>License</h4>
+	<p class="para">
+		<a href="https://mit-license.org/">MIT License</a>
+
+	</p>
+</div>
+<div class="ddoc_standards">
+	<h4>Standards</h4>
+	<p class="para">
+		<ul>        <li><a href="https://www.itu.int/rec/T-REC-X.680/en">X.680 - Abstract Syntax Notation One (ASN.1)</a></li>
+        <li><a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a></li>
+    </ul>
+
+	</p>
+</div><div class="ddoc_see_also">
+	<h4>See Also</h4>
+	<p class="para">
+		<ul>        <li><a href="https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One">The Wikipedia Page on ASN.1</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/X.690">The Wikipedia Page on X.690</a></li>
+        <li><a href="https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf">ASN.1 By Simple Words</a></li>
+        <li><a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">ASN.1: Communication Between Heterogeneous Systems</a></li>
+    </ul>
+	</p>
+</div>
+</section>
+<section class="module-members">
+    <ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#cerOID" id="cerOID"><code class="member">cerOID</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="cerOID"></span>alias <code class="code">cerOID</code> = canonicalEncodingRulesObjectIdentifier;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#cerObjectID" id="cerObjectID"><code class="member">cerObjectID</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="cerObjectID"></span>alias <code class="code">cerObjectID</code> = canonicalEncodingRulesObjectIdentifier;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#cerObjectIdentifier" id="cerObjectIdentifier"><code class="member">cerObjectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="cerObjectIdentifier"></span>alias <code class="code">cerObjectIdentifier</code> = canonicalEncodingRulesObjectIdentifier;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#canonicalEncodingRulesObjectIdentifier" id="canonicalEncodingRulesObjectIdentifier"><code class="member">canonicalEncodingRulesObjectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="canonicalEncodingRulesObjectIdentifier"></span>immutable OID <code class="code">canonicalEncodingRulesObjectIdentifier</code>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The object identifier assigned to the Canonical Encoding Rules (CER), per the
+    <a href="https://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>'s,
+    <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>
+</section>
+<div class="description"><span class="mono">{joint-iso-itu-t asn1(1) ber-derived(2) canonical-encoding(0)} </span></div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CERElement" id="CERElement"><code class="member">CERElement</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CERElement"></span>alias <code class="code">CERElement</code> = CanonicalEncodingRulesElement;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement" id="CanonicalEncodingRulesElement"><code class="member">CanonicalEncodingRulesElement</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement"></span>class <code class="code">CanonicalEncodingRulesElement</code>: <span class="ddoc_psuper_symbol">asn1.codec.ASN1Element!(<code class="code">CanonicalEncodingRulesElement</code>).AbstractSyntaxNotation1Element</span>, <span class="ddoc_psuper_symbol">asn1.interfaces.Byteable</span>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The unit of encoding and decoding for Canonical Encoding Rules (CER).
+</section>
+<div class="description">    There are three parts to an element encoded according to the Canonical
+    Encoding Rules (CER):
+<br><br>
+    <ul>        <li>A Type Tag, which specifies what data type is encoded</li>
+        <li>A Length Tag, which specifies how many subsequent bytes encode the data</li>
+        <li>The Encoded Value</li>
+    </ul>
+<br><br>
+    They appear in the binary encoding in that order, and as such, the encoding
+    scheme is sometimes described as "TLV," which stands for Type-Length-Value.
+<br><br>
+    This class provides a properties for getting and setting bit fields of
+    the type tag, but most of it is functionality for encoding data per
+    the specification.
+<br><br>
+    As an example, this is what encoding a simple INTEGER looks like:
+<br><br>
+<pre><code class="d block">CERElement cv = new CERElement();
+cv.tagNumber = 0x02u; <span class="comment">// "2" means this is an INTEGER
+</span>cv.integer = 1433; <span class="comment">// Now the data is encoded.
+</span>transmit(cast(ubyte[]) cv); <span class="comment">// transmit() is a made-up function.
+</span></code></pre>
+<br><br>
+    And this is what decoding looks like:
+<br><br>
+<pre><code class="d block">ubyte[] data = receive(); <span class="comment">// receive() is a made-up function.
+</span>CERElement cv2 = new CERElement(data);
+
+long x;
+if (cv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
+</span>{
+    x = cv.integer;
+}
+<span class="comment">// Now x is 1433!
+</span></code></pre>
+</div>
+</section>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.tagClass" id="CanonicalEncodingRulesElement.tagClass"><code class="member">tagClass</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.tagClass"></span>ASN1TagClass <code class="code">tagClass</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.construction" id="CanonicalEncodingRulesElement.construction"><code class="member">construction</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.construction"></span>ASN1Construction <code class="code">construction</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.tagNumber" id="CanonicalEncodingRulesElement.tagNumber"><code class="member">tagNumber</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.tagNumber"></span>size_t <code class="code">tagNumber</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.length" id="CanonicalEncodingRulesElement.length"><code class="member">length</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.length"></span>final const nothrow @property @safe size_t <code class="code">length</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The <code class="code">length</code> of the value in octets</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.value" id="CanonicalEncodingRulesElement.value"><code class="member">value</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.value"></span>ubyte[] <code class="code">value</code>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The octets of the encoded <code class="code">value</code>.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.endOfContent" id="CanonicalEncodingRulesElement.endOfContent"><code class="member">endOfContent</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.endOfContent"></span>const @property @safe void <code class="code">endOfContent</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">"Decodes" an <span class="mono">END OF CONTENT</span>, by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if there are any content octets</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.boolean" id="CanonicalEncodingRulesElement.boolean"><code class="member">boolean</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.boolean"></span>const @property @safe bool <code class="code">boolean</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a <code class="d inline">bool</code>.
+</section>
+<div class="description">A <code class="d inline">0xFF</code> byte will be interpreted as <span class="mono">TRUE</span>. A zero byte
+        (<code class="d inline">0x00</code>) will be interpreted as <span class="mono">FALSE</span>. Any other value,
+        or any length other than 1 byte will throw an exception.
+
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code>
+                if the encoded value is not primitively-constructed</li>
+            <li><code class="d inline">ASN1ValueSizeException</code>
+                if the encoded value is not exactly 1 byte in size</li>
+            <li><code class="d inline">ASN1ValueException</code>
+                if the encoded value is not either 0xFF or 0x00</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.boolean" id="CanonicalEncodingRulesElement.boolean"><code class="member">boolean</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.boolean.2"></span>nothrow @property @safe void <code class="code">boolean</code>(in bool <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a <code class="d inline">bool</code></section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.integer" id="CanonicalEncodingRulesElement.integer"><code class="member">integer</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.integer"></span>const @property @system T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a signed <code class="code">integer</code>.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code>
+                if the encoded value is not primitively-constructed</li>
+            <li><code class="d inline">ASN1ValueSizeException</code>
+                if the value is too big to decode to a signed integral type,
+                or if the value is zero bytes</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code>
+                if there are padding bytes</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.integer" id="CanonicalEncodingRulesElement.integer"><code class="member">integer</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.integer.2"></span>nothrow @property @system void <code class="code">integer</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a signed integral type</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.bitString" id="CanonicalEncodingRulesElement.bitString"><code class="member">bitString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.bitString"></span>const @property @system bool[] <code class="code">bitString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an array of <code class="d inline">bool</code>s representing a string of bits.
+</section>
+<div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		an array of <code class="d inline">bool</code>s, where each <code class="d inline">bool</code> represents a bit
+            in the encoded bit string
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueSizeException</code>
+                if the any primitive contains 0 bytes</li>
+            <li><code class="d inline">ASN1ValueException</code>
+                if the first byte has a value greater
+                than seven, or if the first byte indicates the presence of
+                padding bits when no subsequent bytes exist, or if any primitive
+                but the last in a constructed BIT STRING uses padding bits, or
+                if any of the padding bits are set</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.bitString" id="CanonicalEncodingRulesElement.bitString"><code class="member">bitString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.bitString.2"></span>@property @system void <code class="code">bitString</code>(in bool[] <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an array of <code class="d inline">bool</code>s representing a string of bits.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.octetString" id="CanonicalEncodingRulesElement.octetString"><code class="member">octetString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.octetString"></span>const @property @system ubyte[] <code class="code">octetString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">OCTET STRING</span> into an unsigned byte array.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.octetString" id="CanonicalEncodingRulesElement.octetString"><code class="member">octetString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.octetString.2"></span>@property @system void <code class="code">octetString</code>(in ubyte[] <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">OCTET STRING</span> from an unsigned byte (<code class="d inline">ubyte</code>) array.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.nill" id="CanonicalEncodingRulesElement.nill"><code class="member">nill</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.nill"></span>const @property @safe void <code class="code">nill</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">"Decodes" a <code class="d inline"><code class="code">null</code></code>, by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+</section>
+<div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Note:</span>
+I had to name this method <code class="d inline"><code class="code">nill</code></code>, because <code class="d inline"><code class="code">null</code></code> is a keyword in D.
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if there are any content octets</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.objectIdentifier" id="CanonicalEncodingRulesElement.objectIdentifier"><code class="member">objectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectIdentifier"></span>const @property @system OID <code class="code">objectIdentifier</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">OBJECT IDENTIFIER</span>.
+        See <span class="mono">source/types/universal/objectidentifier.d</span> for information about
+        the <code class="d inline">ObjectIdentifier</code> class (aliased as <code class="d inline">OID</code>).
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if there are no value bytes</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code> if a single OID number is encoded with
+                "leading zero bytes" (<code class="d inline">0x80u</code>)</li>
+            <li><code class="d inline">ASN1ValueOverflowException</code> if a single OID number is too big to
+                decode to a <code class="d inline">size_t</code></li>
+            <li><code class="d inline">ASN1TruncationException</code> if a single OID number is "cut off"</li>
+        </ul>
+
+
+	</p>
+</div><div class="ddoc_standards">
+	<h4>Standards</h4>
+	<p class="para">
+		<ul>            <li><a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a></li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.objectIdentifier" id="CanonicalEncodingRulesElement.objectIdentifier"><code class="member">objectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectIdentifier.2"></span>@property @system void <code class="code">objectIdentifier</code>(in OID <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">OBJECT IDENTIFIER</span>.
+        See <span class="mono">source/types/universal/objectidentifier.d</span> for information about
+        the <code class="d inline">ObjectIdentifier</code> class (aliased as ).
+</section>
+<div class="ddoc_standards">
+	<h4>Standards</h4>
+	<p class="para">
+		<ul>            <li><a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a></li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.objectDescriptor" id="CanonicalEncodingRulesElement.objectDescriptor"><code class="member">objectDescriptor</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectDescriptor"></span>const @property @system string <code class="code">objectDescriptor</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an <code class="d inline">ObjectDescriptor</code>, which is a string consisting of only
+        graphical characters. In fact, <code class="d inline">ObjectDescriptor</code> is actually implicitly
+        just a <span class="mono">GraphicString</span>! The formal specification for an <code class="d inline">ObjectDescriptor</code>
+        is:
+</section>
+<div class="description"><span class="mono">ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</span>
+<br><br>
+        <span class="mono">GraphicString</span> is just a string containing only characters between
+        and including <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>, therefore ObjectDescriptor is just
+        <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>.
+
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if the encoded value contains any character outside of
+                <code class="d inline">0x20</code> to <code class="d inline">0x7E</code>, which means any control characters or <span class="mono">DELETE</span></li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+
+
+	</p>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html">ISO 2022</a></li>
+        </ul>
+	</p>
+</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.objectDescriptor" id="CanonicalEncodingRulesElement.objectDescriptor"><code class="member">objectDescriptor</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.objectDescriptor.2"></span>@property @system void <code class="code">objectDescriptor</code>(in string <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an <code class="d inline">ObjectDescriptor</code>, which is a string consisting of only
+        graphical characters. In fact, <code class="d inline">ObjectDescriptor</code> is actually implicitly
+        just a <span class="mono">GraphicString</span>! The formal specification for an <code class="d inline">ObjectDescriptor</code>
+        is:
+</section>
+<div class="description"><span class="mono">ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</span>
+<br><br>
+        <span class="mono">GraphicString</span> is just a string containing only characters between
+        and including <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>, therefore ObjectDescriptor is just
+        <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>.
+
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if the string <code class="code">value</code> contains any character outside of
+                <code class="d inline">0x20</code> to <code class="d inline">0x7E</code>, which means any control characters or <span class="mono">DELETE</span></li>
+        </ul>
+
+
+	</p>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html">ISO 2022</a></li>
+        </ul>
+	</p>
+</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.external" id="CanonicalEncodingRulesElement.external"><code class="member">external</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.external"></span>deprecated const @property @system External <code class="code">external</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">EXTERNAL</span>.
+</section>
+<div class="description">According to the
+        <a href="https://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+        <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680 - Abstract Syntax Notation One (ASN.1)</a>,
+        the abstract definition for an <span class="mono">EXTERNAL</span>, after removing the comments in the
+        specification, is as follows:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            syntaxes ABSENT,
+                            transfer-syntax ABSENT,
+                            fixed ABSENT } ) } )
+        </pre>
+<br><br>
+        Note that the abstract syntax resembles that of <span class="mono">EmbeddedPDV</span> and
+        <span class="mono">CharacterString</span>, except with a <span class="mono">WITH COMPONENTS</span> constraint that removes some
+        of our choices of <span class="mono">identification</span>.
+        As can be seen on page 303 of Olivier Dubuisson's
+        <i><a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">            ASN.1: Communication Between Heterogeneous Systems</a></i>,
+        after applying the <span class="mono">WITH COMPONENTS</span> constraint, our reduced syntax becomes:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER } },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+        </pre>
+<br><br>
+        But, according to the
+        <a href="https://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>,
+        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
+        follows, for compatibility reasons:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                direct-reference  OBJECT IDENTIFIER OPTIONAL,
+                indirect-reference  INTEGER OPTIONAL,
+                data-value-descriptor  ObjectDescriptor  OPTIONAL,
+                encoding  CHOICE {
+                    single-ASN1-type  [0] ANY,
+                    octet-aligned     [1] IMPLICIT OCTET STRING,
+                    arbitrary         [2] IMPLICIT BIT STRING } }
+        </pre>
+<br><br>
+        The definition above is the pre-1994 definition of <span class="mono">EXTERNAL</span>. The <span class="mono">syntax</span>
+        field of the post-1994 definition maps to the <span class="mono">direct-reference</span> field of
+        the pre-1994 definition. The <span class="mono">presentation-context-id</span> field of the post-1994
+        definition maps to the <span class="mono">indirect-reference</span> field of the pre-1994 definition.
+        If <span class="mono">context-negotiation</span> is used, per the abstract syntax, then the
+        <span class="mono">presentation-context-id</span> field of the <span class="mono">context-negotiation</span> <span class="mono">SEQUENCE</span> in the
+        post-1994 definition maps to the <span class="mono">indirect-reference</span> field of the pre-1994
+        definition, and the <span class="mono">transfer-syntax</span> field of the <span class="mono">context-negotiation</span>
+        <span class="mono">SEQUENCE</span> maps to the <span class="mono">direct-reference</span> field of the pre-1994 definition.
+<br><br>
+        The following additional constraints are applied to the abstract syntax
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
+        which are also defined in the
+        <a href="https://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>:
+<br><br>
+        <pre>            EXTERNAL ( WITH COMPONENTS {
+                ... ,
+                identification ( WITH COMPONENTS {
+                    ... ,
+                    presentation-context-id ABSENT,
+                    context-negotiation ABSENT } ) } )
+        </pre>
+<br><br>
+        The stated purpose of the constraints shown above is to restrict the use of
+        the <span class="mono">presentation-context-id</span>, either by itself or within the
+        <span class="mono">context-negotiation</span>, which makes the following the effective abstract
+        syntax of <span class="mono">EXTERNAL</span> when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            syntaxes ABSENT,
+                            presentation-context-id ABSENT,
+                            context-negotiation ABSENT,
+                            transfer-syntax ABSENT,
+                            fixed ABSENT } ) } )
+        </pre>
+<br><br>
+        With the constraints applied, the abstract syntax for <span class="mono">EXTERNAL</span>s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+        </pre>
+<br><br>
+        Upon removing the <span class="mono">CHOICE</span> tag (since you have no choice but to use syntax
+        at this point), the encoding definition when using
+        Canonical Encoding Rules or Distinguished Encoding Rules:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                syntax OBJECT IDENTIFIER,
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+        </pre>
+
+</div>
+<div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		an instance of <code class="d inline">types.universal.<code class="code">external</code>.External</code>
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueException</code>
+                if the SEQUENCE does not contain two to four elements</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not have the correct tag class</li>
+            <li><code class="d inline">ASN1ConstructionException</code>
+                if any element has the wrong construction</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not have the correct tag number</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if a data-value-descriptor is supplied with invalid characters</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.external" id="CanonicalEncodingRulesElement.external"><code class="member">external</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.external.2"></span>deprecated @property @system void <code class="code">external</code>(in External <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">EXTERNAL</span>.
+</section>
+<div class="description">According to the
+        <a href="https://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+        <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680 - Abstract Syntax Notation One (ASN.1)</a>,
+        the abstract definition for an <span class="mono">EXTERNAL</span>, after removing the comments in the
+        specification, is as follows:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            syntaxes ABSENT,
+                            transfer-syntax ABSENT,
+                            fixed ABSENT } ) } )
+        </pre>
+<br><br>
+        Note that the abstract syntax resembles that of <span class="mono">EmbeddedPDV</span> and
+        <span class="mono">CharacterString</span>, except with a <span class="mono">WITH COMPONENTS</span> constraint that removes some
+        of our choices of <span class="mono">identification</span>.
+        As can be seen on page 303 of Olivier Dubuisson's
+        <i><a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF">            ASN.1: Communication Between Heterogeneous Systems</a></i>,
+        after applying the <span class="mono">WITH COMPONENTS</span> constraint, our reduced syntax becomes:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER } },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+        </pre>
+<br><br>
+        But, according to the
+        <a href="https://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>,
+        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
+        follows, for compatibility reasons:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE {
+                direct-reference  OBJECT IDENTIFIER OPTIONAL,
+                indirect-reference  INTEGER OPTIONAL,
+                data-<code class="code">value</code>-descriptor  ObjectDescriptor  OPTIONAL,
+                encoding  CHOICE {
+                    single-ASN1-type  [0] ANY,
+                    octet-aligned     [1] IMPLICIT OCTET STRING,
+                    arbitrary         [2] IMPLICIT BIT STRING } }
+        </pre>
+<br><br>
+        The definition above is the pre-1994 definition of <span class="mono">EXTERNAL</span>. The <span class="mono">syntax</span>
+        field of the post-1994 definition maps to the <span class="mono">direct-reference</span> field of
+        the pre-1994 definition. The <span class="mono">presentation-context-id</span> field of the post-1994
+        definition maps to the <span class="mono">indirect-reference</span> field of the pre-1994 definition.
+        If <span class="mono">context-negotiation</span> is used, per the abstract syntax, then the
+        <span class="mono">presentation-context-id</span> field of the <span class="mono">context-negotiation</span> <span class="mono">SEQUENCE</span> in the
+        post-1994 definition maps to the <span class="mono">indirect-reference</span> field of the pre-1994
+        definition, and the <span class="mono">transfer-syntax</span> field of the <span class="mono">context-negotiation</span>
+        <span class="mono">SEQUENCE</span> maps to the <span class="mono">direct-reference</span> field of the pre-1994 definition.
+<br><br>
+        The following additional constraints are applied to the abstract syntax
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
+        which are also defined in the
+        <a href="https://www.itu.int/en/pages/default.aspx">        International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>:
+<br><br>
+        <pre>            EXTERNAL ( WITH COMPONENTS {
+                ... ,
+                identification ( WITH COMPONENTS {
+                    ... ,
+                    presentation-context-id ABSENT,
+                    context-negotiation ABSENT } ) } )
+        </pre>
+<br><br>
+        The stated purpose of the constraints shown above is to restrict the use of
+        the <span class="mono">presentation-context-id</span>, either by itself or within the
+        <span class="mono">context-negotiation</span>, which makes the following the effective abstract
+        syntax of <span class="mono">EXTERNAL</span> when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            syntaxes ABSENT,
+                            presentation-context-id ABSENT,
+                            context-negotiation ABSENT,
+                            transfer-syntax ABSENT,
+                            fixed ABSENT } ) } )
+        </pre>
+<br><br>
+        With the constraints applied, the abstract syntax for <span class="mono">EXTERNAL</span>s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                identification CHOICE {
+                    syntax OBJECT IDENTIFIER },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+        </pre>
+<br><br>
+        Upon removing the <span class="mono">CHOICE</span> tag (since you have no choice but to use syntax
+        at this point), the encoding definition when using
+        Canonical Encoding Rules or Distinguished Encoding Rules:
+<br><br>
+        <pre>            EXTERNAL ::= [UNIVERSAL 8] SEQUENCE {
+                syntax OBJECT IDENTIFIER,
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+        </pre>
+
+</div>
+<div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		an instance of <code class="d inline">types.universal.<code class="code">external</code>.External</code>
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueException</code>
+                if something other than <code class="d inline">syntax</code> is used for <span class="mono">identification</span></li>
+            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if a data-<code class="code">value</code>-descriptor is supplied with invalid characters</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.realNumber" id="CanonicalEncodingRulesElement.realNumber"><code class="member">realNumber</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.realNumber"></span>const @property @system T <code class="code">realNumber</code>(T)() if (isFloatingPoint!T);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a floating-point type.
+</section>
+<div class="description">Note that this method assumes that your machine uses
+        <a href="http://ieeexplore.ieee.org/document/4610935/">IEEE 754-2008</a>
+        floating point format.
+
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1TruncationException</code> if the value appears to be "cut off"</li>
+            <li><code class="d inline">ConvException</code> if character-encoding cannot be converted to
+                the selected floating-point type, T</li>
+            <li><code class="d inline">ConvOverflowException</code> if the character-encoding encodes a
+                number that is too big for the selected floating-point
+                type to express</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if the binary-encoding contains fewer
+                bytes than the information byte purports, or if the
+                binary-encoded mantissa is too big to be expressed by an
+                unsigned long integer</li>
+            <li><code class="d inline">ASN1ValueException</code> if a complicated-form exponent or a
+                non-zero-byte mantissa encodes a zero or even number, of if a base-10
+                (character-encoded) REAL is has something wrong that is not
+                covered by <code class="d inline">ASN1ValueCharactersException</code> or
+                <code class="d inline">ASN1ValuePaddingException</code></li>
+            <li><code class="d inline">ASN1ValueUndefinedException</code> if both bits indicating the base in the
+                information byte of a binary-encoded <span class="mono">REAL</span>'s information byte
+                are set, which would indicate an invalid base, or if a special
+                value has been indicated that is not defined by the specification</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code> if a base-10 (character-encoded)
+                REAL is encoded with leading zeroes, or trailing zeroes on the
+                mantissa, or if the mantissa is encoded on more than the minimal
+                necessary octets</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code> if a base-10 (character-encoded)
+                REAL is encoded with characters that are not numeric, a decimal, E,
+                or plus or minus</li>
+        </ul>
+
+
+	</p>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 400-402.</li>
+            <li><a href="https://www.iso.org/standard/12285.html">ISO 6093</a></li>
+        </ul>
+	</p>
+</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.realNumber" id="CanonicalEncodingRulesElement.realNumber"><code class="member">realNumber</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.realNumber.2"></span>nothrow @property @system void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (isFloatingPoint!T);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a floating-point type, using base-2 binary encoding.
+</section>
+<div class="description">Note that this method assumes that your machine uses
+        <a href="http://ieeexplore.ieee.org/document/4610935/">IEEE 754-2008</a>
+        floating point format.
+
+</div>
+<div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 400-402.</li>
+            <li><a href="https://www.iso.org/standard/12285.html">ISO 6093</a></li>
+        </ul>
+	</p>
+</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.enumerated" id="CanonicalEncodingRulesElement.enumerated"><code class="member">enumerated</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.enumerated"></span>const @property @system T <code class="code">enumerated</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a signed integer, which represents a selection from an
+        <span class="mono">ENUMERATION</span> of choices.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code>
+                if the encoded value is not primitively-constructed</li>
+            <li><code class="d inline">ASN1ValueSizeException</code>
+                if the value is too big to decode to a signed integral type,
+                or if the value is zero bytes</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code>
+                if there are padding bytes</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.enumerated" id="CanonicalEncodingRulesElement.enumerated"><code class="member">enumerated</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.enumerated.2"></span>nothrow @property @system void <code class="code">enumerated</code>(T)(in T <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">ENUMERATED</span> type from an integer.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.embeddedPresentationDataValue" id="CanonicalEncodingRulesElement.embeddedPresentationDataValue"><code class="member">embeddedPresentationDataValue</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.embeddedPresentationDataValue"></span>const @property @system EmbeddedPDV <code class="code">embeddedPresentationDataValue</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an <span class="mono">EmbeddedPDV</span>, which is a constructed data type, defined in
+            the <a href="https://www.itu.int">International Telecommunications Union</a>'s
+            <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+</section>
+<div class="description">The specification defines <span class="mono">EmbeddedPDV</span> as:
+<br><br>
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+            (WITH COMPONENTS { ... , data-value-descriptor ABSENT })
+        </pre>
+<br><br>
+        This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
+        choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.
+<br><br>
+        The following additional constraints are applied to the abstract syntax
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
+        which are also defined in the
+        <a href="https://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>:
+<br><br>
+        <pre>            EmbeddedPDV ( WITH COMPONENTS {
+                ... ,
+                identification ( WITH COMPONENTS {
+                    ... ,
+                    presentation-context-id ABSENT,
+                    context-negotiation ABSENT } ) } )
+        </pre>
+<br><br>
+        The stated purpose of the constraints shown above is to restrict the use of
+        the <span class="mono">presentation-context-id</span>, either by itself or within the
+        context-negotiation, which makes the following the effective abstract
+        syntax of <span class="mono">EmbeddedPDV</span> when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
+<br><br>
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            presentation-context-id ABSENT,
+                            context-negotiation ABSENT } ) } )
+        </pre>
+<br><br>
+        With the constraints applied, the abstract syntax for <span class="mono">EmbeddedPDV</span>s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+<br><br>
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-value-descriptor ObjectDescriptor OPTIONAL,
+                data-value OCTET STRING }
+        </pre>
+
+</div>
+<div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		an instance of <code class="d inline">types.universal.embeddedpdv.EmbeddedPDV</code>
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueException</code> if encoded EmbeddedPDV has too few or too many
+                elements, or if syntaxes or context-negotiation element has
+                too few or too many elements</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if encoded INTEGER is too large to decode</li>
+            <li><code class="d inline">ASN1RecursionException</code> if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code> if any nested primitives do not have the
+                correct tag class</li>
+            <li><code class="d inline">ASN1ConstructionException</code> if any element has the wrong construction</li>
+            <li><code class="d inline">ASN1TagNumberException</code> if any nested primitives do not have the
+                correct tag number</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.embeddedPresentationDataValue" id="CanonicalEncodingRulesElement.embeddedPresentationDataValue"><code class="member">embeddedPresentationDataValue</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.embeddedPresentationDataValue.2"></span>@property @system void <code class="code">embeddedPresentationDataValue</code>(in EmbeddedPDV <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an <span class="mono">EmbeddedPDV</span>, which is a constructed data type, defined in
+            the <a href="https://www.itu.int">International Telecommunications Union</a>'s
+            <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+</section>
+<div class="description">The specification defines <span class="mono">EmbeddedPDV</span> as:
+<br><br>
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+            (WITH COMPONENTS { ... , data-<code class="code">value</code>-descriptor ABSENT })
+        </pre>
+<br><br>
+        This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
+        choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.
+<br><br>
+        The following additional constraints are applied to the abstract syntax
+        when using Canonical Encoding Rules or Distinguished Encoding Rules,
+        which are also defined in the
+        <a href="https://www.itu.int/en/pages/default.aspx">International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en">X.690 - ASN.1 encoding rules</a>:
+<br><br>
+        <pre>            EmbeddedPDV ( WITH COMPONENTS {
+                ... ,
+                identification ( WITH COMPONENTS {
+                    ... ,
+                    presentation-context-id ABSENT,
+                    context-negotiation ABSENT } ) } )
+        </pre>
+<br><br>
+        The stated purpose of the constraints shown above is to restrict the use of
+        the <span class="mono">presentation-context-id</span>, either by itself or within the
+        context-negotiation, which makes the following the effective abstract
+        syntax of <span class="mono">EmbeddedPDV</span> when using Canonical Encoding Rules or
+        Distinguished Encoding Rules:
+<br><br>
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+                    ( WITH COMPONENTS {
+                        ... ,
+                        identification ( WITH COMPONENTS {
+                            ... ,
+                            presentation-context-id ABSENT,
+                            context-negotiation ABSENT } ) } )
+        </pre>
+<br><br>
+        With the constraints applied, the abstract syntax for <span class="mono">EmbeddedPDV</span>s encoded
+        using Canonical Encoding Rules or Distinguished Encoding Rules becomes:
+<br><br>
+        <pre>            EmbeddedPDV ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                data-<code class="code">value</code>-descriptor ObjectDescriptor OPTIONAL,
+                data-<code class="code">value</code> OCTET STRING }
+        </pre>
+<br><br>
+        If the supplied <span class="mono">identification</span> for the EmbeddedPDV is a
+        <span class="mono">presentation-context-id</span> or a <span class="mono">context-negotiation</span>,
+        no exception will be thrown; the <span class="mono">identification</span> will be set to
+        <span class="mono">fixed</span> silently.
+
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueException</code> if encoded ObjectDescriptor contains invalid characters</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.unicodeTransformationFormat8String" id="CanonicalEncodingRulesElement.unicodeTransformationFormat8String"><code class="member">unicodeTransformationFormat8String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.unicodeTransformationFormat8String"></span>const @property @system string <code class="code">unicodeTransformationFormat8String</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes the value to UTF-8 characters.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">UTF8Exception</code>
+                if the encoded value does not decode to UTF-8</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.unicodeTransformationFormat8String" id="CanonicalEncodingRulesElement.unicodeTransformationFormat8String"><code class="member">unicodeTransformationFormat8String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.unicodeTransformationFormat8String.2"></span>@property @system void <code class="code">unicodeTransformationFormat8String</code>(in string <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a UTF-8 string to bytes.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.relativeObjectIdentifier" id="CanonicalEncodingRulesElement.relativeObjectIdentifier"><code class="member">relativeObjectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.relativeObjectIdentifier"></span>const @property @system OIDNode[] <code class="code">relativeObjectIdentifier</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a <span class="mono">RELATIVE OBJECT IDENTIFIER</span>.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "constructed"</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code> if a single OID number is encoded with
+                "leading zero bytes" (<code class="d inline">0x80u</code>)</li>
+            <li><code class="d inline">ASN1ValueOverflowException</code> if a single OID number is too big to
+                decode to a <code class="d inline">size_t</code></li>
+            <li><code class="d inline">ASN1TruncationException</code> if a single OID number is "cut off"</li>
+        </ul>
+
+
+	</p>
+</div><div class="ddoc_standards">
+	<h4>Standards</h4>
+	<p class="para">
+		<ul>            <li><a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a></li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.relativeObjectIdentifier" id="CanonicalEncodingRulesElement.relativeObjectIdentifier"><code class="member">relativeObjectIdentifier</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.relativeObjectIdentifier.2"></span>nothrow @property @system void <code class="code">relativeObjectIdentifier</code>(in OIDNode[] <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a <span class="mono">RELATIVE OBJECT IDENTIFIER</span>.
+</section>
+<div class="ddoc_standards">
+	<h4>Standards</h4>
+	<p class="para">
+		<a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en">X.660</a>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.sequence" id="CanonicalEncodingRulesElement.sequence"><code class="member">sequence</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.sequence"></span>const @property @system CERElement[] <code class="code">sequence</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a <code class="code">sequence</code> of elements
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "primitive"</li>
+            <li>And all of the exceptions thrown by the constructor</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.sequence" id="CanonicalEncodingRulesElement.sequence"><code class="member">sequence</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.sequence.2"></span>@property @system void <code class="code">sequence</code>(in CERElement[] <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a <code class="code">sequence</code> of elements</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.set" id="CanonicalEncodingRulesElement.set"><code class="member">set</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.set"></span>const @property @system CERElement[] <code class="code">set</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a <code class="code">set</code> of elements
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ConstructionException</code> if the element is marked as "primitive"</li>
+            <li>And all of the exceptions thrown by the constructor</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.set" id="CanonicalEncodingRulesElement.set"><code class="member">set</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.set.2"></span>@property @system void <code class="code">set</code>(in CERElement[] <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a <code class="code">set</code> of elements</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.numericString" id="CanonicalEncodingRulesElement.numericString"><code class="member">numericString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.numericString"></span>const @property @system string <code class="code">numericString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a string, where the characters of the string are limited to
+        0 - 9 and <span class="mono">SPACE</span>.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any character other than 0-9 or space is encoded.</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.numericString" id="CanonicalEncodingRulesElement.numericString"><code class="member">numericString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.numericString.2"></span>@property @system void <code class="code">numericString</code>(in string <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string, where the characters of the string are limited to
+        0 - 9 and space.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any character other than 0-9 or space is supplied.</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.printableString" id="CanonicalEncodingRulesElement.printableString"><code class="member">printableString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.printableString"></span>const @property @system string <code class="code">printableString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a string that will only contain characters a-z, A-Z, 0-9,
+        space, apostrophe, parentheses, comma, minus, plus, period,
+        forward slash, colon, equals, and question mark.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if any character other than a-z, A-Z,
+                0-9, space, apostrophe, parentheses, comma, minus, plus,
+                period, forward slash, colon, equals, or question mark are
+                encoded</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.printableString" id="CanonicalEncodingRulesElement.printableString"><code class="member">printableString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.printableString.2"></span>@property @system void <code class="code">printableString</code>(in string <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string that may only contain characters a-z, A-Z, 0-9,
+        space, apostrophe, parentheses, comma, minus, plus, period,
+        forward slash, colon, equals, and question mark.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<li><code class="d inline">ASN1ValueCharactersException</code> if any character other than a-z, A-Z,
+                0-9, space, apostrophe, parentheses, comma, minus, plus,
+                period, forward slash, colon, equals, or question mark are
+                supplied</li>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.teletexString" id="CanonicalEncodingRulesElement.teletexString"><code class="member">teletexString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.teletexString"></span>const @property @system ubyte[] <code class="code">teletexString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Literally just returns the value bytes.
+</section>
+<div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		an unsigned byte array, where each byte is a T.61 character.
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.teletexString" id="CanonicalEncodingRulesElement.teletexString"><code class="member">teletexString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.teletexString.2"></span>@property @system void <code class="code">teletexString</code>(in ubyte[] <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Literally just sets the <code class="code">value</code> bytes.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.videotexString" id="CanonicalEncodingRulesElement.videotexString"><code class="member">videotexString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.videotexString"></span>const @property @system ubyte[] <code class="code">videotexString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Literally just returns the value bytes.
+</section>
+<div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		an unsigned byte array, where each byte is a Videotex character.
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.videotexString" id="CanonicalEncodingRulesElement.videotexString"><code class="member">videotexString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.videotexString.2"></span>@property @system void <code class="code">videotexString</code>(in ubyte[] <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Literally just sets the <code class="code">value</code> bytes.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.internationalAlphabetNumber5String" id="CanonicalEncodingRulesElement.internationalAlphabetNumber5String"><code class="member">internationalAlphabetNumber5String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.internationalAlphabetNumber5String"></span>const @property @system string <code class="code">internationalAlphabetNumber5String</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a string that only contains ASCII characters.
+</section>
+<div class="description"><span class="mono">IA5String</span> differs from ASCII ever so slightly: IA5 is international,
+        leaving 10 characters up to be locale-specific:
+<br><br>
+        <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
+            <tr><td>0x40</td> <td>@</td></tr>
+            <tr><td>0x5B</td> <td>[</td></tr>
+            <tr><td>0x5C</td> <td>\</td></tr>
+            <tr><td>0x5D</td> <td>]</td></tr>
+            <tr><td>0x5E</td> <td>^</td></tr>
+            <tr><td>0x60</td> <td>`</td></tr>
+            <tr><td>0x7B</td> <td>{</td></tr>
+            <tr><td>0x7C</td> <td>/</td></tr>
+            <tr><td>0x7D</td> <td>}</td></tr>
+            <tr><td>0x7E</td> <td>~</td></tr>
+        </table>
+
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.internationalAlphabetNumber5String" id="CanonicalEncodingRulesElement.internationalAlphabetNumber5String"><code class="member">internationalAlphabetNumber5String</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.internationalAlphabetNumber5String.2"></span>@property @system void <code class="code">internationalAlphabetNumber5String</code>(in string <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string that may only contain ASCII characters.
+</section>
+<div class="description"><span class="mono">IA5String</span> differs from ASCII ever so slightly: IA5 is international,
+        leaving 10 characters up to be locale-specific:
+<br><br>
+        <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
+            <tr><td>0x40</td> <td>@</td></tr>
+            <tr><td>0x5B</td> <td>[</td></tr>
+            <tr><td>0x5C</td> <td>\</td></tr>
+            <tr><td>0x5D</td> <td>]</td></tr>
+            <tr><td>0x5E</td> <td>^</td></tr>
+            <tr><td>0x60</td> <td>`</td></tr>
+            <tr><td>0x7B</td> <td>{</td></tr>
+            <tr><td>0x7C</td> <td>/</td></tr>
+            <tr><td>0x7D</td> <td>}</td></tr>
+            <tr><td>0x7E</td> <td>~</td></tr>
+        </table>
+
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.coordinatedUniversalTime" id="CanonicalEncodingRulesElement.coordinatedUniversalTime"><code class="member">coordinatedUniversalTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.coordinatedUniversalTime"></span>const @property @system DateTime <code class="code">coordinatedUniversalTime</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime">DateTime</a>.
+        The value is just the ASCII character representation of the UTC-formatted timestamp.
+</section>
+<div class="description">An UTC Timestamp looks like:
+        <ul>            <li><span class="mono">9912312359Z</span></li>
+            <li><span class="mono">991231235959+0200</span></li>
+        </ul>
+<br><br>
+        If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,
+        meaning that the date refers to the first 80 years of the century, this
+        assumes we are talking about the 21st century and prepend '20' when
+        creating the ISO Date String. Otherwise, it assumes we are talking
+        about the 20th century, and prepend '19' when creating the string.
+
+</div>
+<div class="ddoc_see_also">
+	<h4>See Also</h4>
+	<p class="para">
+		<ul>            <li><a href="https://www.obj-sys.com/asn1tutorial/node15.html">UTCTime</a></li>
+            <li><a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime">DateTime</a></li>
+        </ul>
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueException</code> if the encoded value does not end with a 'Z'</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code> if any character is not valid in a <span class="mono">Visiblestring</span></li>
+            <li><code class="d inline">DateTimeException</code> if the encoded string cannot be decoded to a DateTime</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.coordinatedUniversalTime" id="CanonicalEncodingRulesElement.coordinatedUniversalTime"><code class="member">coordinatedUniversalTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.coordinatedUniversalTime.2"></span>@property @system void <code class="code">coordinatedUniversalTime</code>(in DateTime <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a DateTime. The <code class="code">value</code> is just the ASCII character representation of
+        the UTC-formatted timestamp.
+</section>
+<div class="description">An UTC Timestamp looks like:
+        <ul>            <li><span class="mono">9912312359Z</span></li>
+            <li><span class="mono">991231235959+0200</span></li>
+        </ul>
+
+</div>
+<div class="ddoc_see_also">
+	<h4>See Also</h4>
+	<p class="para">
+		<a href="https://www.obj-sys.com/asn1tutorial/node15.html">UTCTime</a>
+	</p>
+</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.generalizedTime" id="CanonicalEncodingRulesElement.generalizedTime"><code class="member">generalizedTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalizedTime"></span>const @property @system DateTime <code class="code">generalizedTime</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a DateTime. The value is just the ASCII character representation of
+        the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a>-formatted timestamp.
+</section>
+<div class="description">An ISO-8601 Timestamp looks like:
+        <ul>            <li><span class="mono">19851106210627.3</span></li>
+            <li><span class="mono">19851106210627.3Z</span></li>
+            <li><span class="mono">19851106210627.3-0500</span></li>
+        </ul>
+
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueException</code> if the encoded value did not end with a 'Z'
+                or contained a misplaced or unnecessary decimal point</li>
+            <li><code class="d inline">ASN1ValueCharactersException</code> if any character is not valid in a <span class="mono">Visiblestring</span></li>
+            <li><code class="d inline">DateTimeException</code> if the encoded string cannot be decoded to a DateTime</li>
+            <li><code class="d inline">ASN1ValuePaddingException</code> if the seconds fraction contains trailing zeroes</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+
+
+	</p>
+</div><div class="ddoc_standards">
+	<h4>Standards</h4>
+	<p class="para">
+		<ul>            <li><a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a></li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.generalizedTime" id="CanonicalEncodingRulesElement.generalizedTime"><code class="member">generalizedTime</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalizedTime.2"></span>@property @system void <code class="code">generalizedTime</code>(in DateTime <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a DateTime.
+</section>
+<div class="description">The <code class="code">value</code> is just the ASCII character representation of
+        the <a href="https://www.iso.org/iso-8601-date-and-time-format.html">        ISO 8601</a>-formatted timestamp.
+<br><br>
+        An ISO-8601 Timestamp looks like:
+        <ul>            <li><span class="mono">19851106210627.3</span></li>
+            <li><span class="mono">19851106210627.3Z</span></li>
+            <li><span class="mono">19851106210627.3-0500</span></li>
+        </ul>
+
+</div>
+<div class="ddoc_standards">
+	<h4>Standards</h4>
+	<p class="para">
+		<ul>            <li><a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a></li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.graphicString" id="CanonicalEncodingRulesElement.graphicString"><code class="member">graphicString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.graphicString"></span>const @property @system string <code class="code">graphicString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes an ASCII string that contains only characters between and
+        including <code class="d inline">0x20</code> and <code class="d inline">0x75</code>. Deprecated, according to page 182 of the
+        Dubuisson book.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any non-graphical character (including space) is encoded</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+
+
+	</p>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html">ISO 2022</a></li>
+        </ul>
+	</p>
+</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.graphicString" id="CanonicalEncodingRulesElement.graphicString"><code class="member">graphicString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.graphicString.2"></span>@property @system void <code class="code">graphicString</code>(in string <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes an ASCII string that may contain only characters between and
+        including <code class="d inline">0x20</code> and <code class="d inline">0x75</code>. Deprecated, according to page 182
+        of the Dubuisson book.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any non-graphical character (including space) is supplied</li>
+        </ul>
+
+
+	</p>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html">ISO 2022</a></li>
+        </ul>
+	</p>
+</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.visibleString" id="CanonicalEncodingRulesElement.visibleString"><code class="member">visibleString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.visibleString"></span>const @property @system string <code class="code">visibleString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a string that only contains characters between and including
+        <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>. (Honestly, I don't know how this differs from
+        <span class="mono">GraphicalString</span>.)
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if any non-graphical character (including space) is encoded</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.visibleString" id="CanonicalEncodingRulesElement.visibleString"><code class="member">visibleString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.visibleString.2"></span>@property @system void <code class="code">visibleString</code>(in string <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string that only contains characters between and including
+        <code class="d inline">0x20</code> and <code class="d inline">0x7E</code>. (Honestly, I don't know how this differs from
+        <span class="mono">GraphicalString</span>.)
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code>
+                if any non-graphical character (including space) is supplied.</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.generalString" id="CanonicalEncodingRulesElement.generalString"><code class="member">generalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalString"></span>const @property @system string <code class="code">generalString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a string containing only ASCII characters. Deprecated, according
+        to page 182 of the Dubuisson book.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+
+
+	</p>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, p. 182.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022">The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html">ISO 2022</a></li>
+        </ul>
+	</p>
+</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.generalString" id="CanonicalEncodingRulesElement.generalString"><code class="member">generalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.generalString.2"></span>@property @system void <code class="code">generalString</code>(in string <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a string containing only ASCII characters. Deprecated,
+        according to page 182 of the Dubuisson book.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueCharactersException</code> if any encoded character is not ASCII</li>
+        </ul>
+
+
+	</p>
+</div><div class="ddoc_section">
+	<p class="para">
+		<span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, p. 182.</li>
+        </ul>
+	</p>
+</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.universalString" id="CanonicalEncodingRulesElement.universalString"><code class="member">universalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.universalString"></span>const @property @system dstring <code class="code">universalString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a <span class="mono">dstring</span> of UTF-32 characters.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueException</code>
+                if the encoded bytes is not evenly divisible by four</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.universalString" id="CanonicalEncodingRulesElement.universalString"><code class="member">universalString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.universalString.2"></span>@property @system void <code class="code">universalString</code>(in dstring <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a <span class="mono">dstring</span> of UTF-32 characters.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.characterString" id="CanonicalEncodingRulesElement.characterString"><code class="member">characterString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.characterString"></span>const @property @system CharacterString <code class="code">characterString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a <span class="mono">CharacterString</span>, which is a constructed data type, defined
+        in the <a href="https://www.itu.int">International Telecommunications Union</a>'s
+            <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+</section>
+<div class="description">The specification defines <span class="mono">CharacterString</span> as:
+<br><br>
+        <pre>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                string-value OCTET STRING }
+        </pre>
+<br><br>
+        This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
+        choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.
+
+</div>
+<div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		an instance of <code class="d inline">types.universal.characterstring.CharacterString</code>.
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueException</code> if encoded <span class="mono">CharacterString</span> has too few or too many
+                elements, or if <span class="mono">syntaxes</span> or <span class="mono">context-negotiation</span> element has
+                too few or too many elements</li>
+            <li><code class="d inline">ASN1ValueSizeException</code> if encoded <span class="mono">INTEGER</span> is too large to decode</li>
+            <li><code class="d inline">ASN1RecursionException</code> if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code> if any nested primitives do not have the
+                correct tag class</li>
+            <li><code class="d inline">ASN1ConstructionException</code> if any element has the wrong construction</li>
+            <li><code class="d inline">ASN1TagNumberException</code> if any nested primitives do not have the
+                correct tag number</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.characterString" id="CanonicalEncodingRulesElement.characterString"><code class="member">characterString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.characterString.2"></span>@property @system void <code class="code">characterString</code>(in CharacterString <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a <span class="mono">CharacterString</span>, which is a constructed data type, defined
+        in the <a href="https://www.itu.int">International Telecommunications Union</a>'s
+            <a href="https://www.itu.int/rec/T-REC-X.680/en">X.680</a>.
+</section>
+<div class="description">The specification defines <span class="mono">CharacterString</span> as:
+<br><br>
+        <pre>            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {
+                identification CHOICE {
+                    syntaxes SEQUENCE {
+                        abstract OBJECT IDENTIFIER,
+                        transfer OBJECT IDENTIFIER },
+                    syntax OBJECT IDENTIFIER,
+                    presentation-context-id INTEGER,
+                    context-negotiation SEQUENCE {
+                        presentation-context-id INTEGER,
+                        transfer-syntax OBJECT IDENTIFIER },
+                    transfer-syntax OBJECT IDENTIFIER,
+                    fixed NULL },
+                string-<code class="code">value</code> OCTET STRING }
+        </pre>
+<br><br>
+        This assumes <span class="mono">AUTOMATIC TAGS</span>, so all of the <span class="mono">identification</span>
+        choices will be <span class="mono">CONTEXT-SPECIFIC</span> and numbered from 0 to 5.</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.basicMultilingualPlaneString" id="CanonicalEncodingRulesElement.basicMultilingualPlaneString"><code class="member">basicMultilingualPlaneString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.basicMultilingualPlaneString"></span>const @property @system wstring <code class="code">basicMultilingualPlaneString</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Decodes a <span class="mono">wstring</span> of UTF-16 characters.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1ValueException</code>
+                if the encoded bytes is not evenly divisible by two</li>
+            <li><code class="d inline">ASN1RecursionException</code>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li><code class="d inline">ASN1TagClassException</code>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li><code class="d inline">ASN1TagNumberException</code>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.basicMultilingualPlaneString" id="CanonicalEncodingRulesElement.basicMultilingualPlaneString"><code class="member">basicMultilingualPlaneString</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.basicMultilingualPlaneString.2"></span>@property @system void <code class="code">basicMultilingualPlaneString</code>(in wstring <code class="code">value</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Encodes a <span class="mono">wstring</span> of UTF-16 characters.</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.this" id="CanonicalEncodingRulesElement.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.this"></span>nothrow @nogc @safe this();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Creates an <span class="mono">END OF CONTENT</span></section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.this" id="CanonicalEncodingRulesElement.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.this.2"></span>@system this(ref ubyte[] <code class="code">bytes</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Creates a <code class="d inline">CERElement</code> from the supplied <code class="code">bytes</code>, inferring that the first
+        byte is the type tag. The supplied <code class="d inline">ubyte[]</code> array is "chomped" by
+        reference, so the original array will grow shorter as <code class="d inline">CERElement</code>s are
+        generated.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		All of the same exceptions as <code class="d inline">fromBytes()</code>
+
+
+	</p>
+</div><div class="ddoc_examples">
+	<h4>Examples</h4>
+	<p class="para">
+		<pre><code class="d block"><span class="comment">// Decoding looks like:
+</span>CERElement[] result;
+while (bytes.length &gt; 0)
+    result ~= new CERElement(bytes);
+
+<span class="comment">// Encoding looks like:
+</span>ubyte[] result;
+foreach (cv; cervalues)
+{
+    result ~= cast(ubyte[]) cv;
+}
+</code></pre>
+
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.this" id="CanonicalEncodingRulesElement.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.this.3"></span>@system this(ref size_t <code class="code">bytesRead</code>, in ubyte[] <code class="code">bytes</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Creates a <code class="d inline">CERElement</code> from the supplied <code class="code">bytes</code>, inferring that the first
+        byte is the type tag. The supplied <code class="d inline">ubyte[]</code> array is read, starting
+        from the index specified by <code class="d inline"><code class="code">bytesRead</code></code>, and increments
+        <code class="d inline"><code class="code">bytesRead</code></code> by the number of <code class="code">bytes</code> read.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		All of the same exceptions as <code class="d inline">fromBytes()</code>
+
+
+	</p>
+</div><div class="ddoc_examples">
+	<h4>Examples</h4>
+	<p class="para">
+		<pre><code class="d block"><span class="comment">// Decoding looks like:
+</span>CERElement[] result;
+size_t i = 0u;
+while (i &lt; bytes.length)
+    result ~= new CERElement(i, bytes);
+
+<span class="comment">// Encoding looks like:
+</span>ubyte[] result;
+foreach (cv; cervalues)
+{
+    result ~= cast(ubyte[]) cv;
+}
+</code></pre>
+
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.fromBytes" id="CanonicalEncodingRulesElement.fromBytes"><code class="member">fromBytes</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.fromBytes"></span>size_t <code class="code">fromBytes</code>(in ubyte[] <code class="code">bytes</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		the number of <code class="code">bytes</code> read
+
+
+	</p>
+</div>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		<ul>            <li><code class="d inline">ASN1TagPaddingException</code> if the tag number is "padded" with
+                "leading zero <code class="code">bytes</code>" (<code class="d inline">0x80u</code>)</li>
+            <li><code class="d inline">ASN1TagOverflowException</code> if the tag number is too large to
+                fit into a <code class="d inline">size_t</code></li>
+            <li><code class="d inline">ASN1LengthUndefinedException</code> if the reserved length byte of
+                <code class="d inline">0xFF</code> is encountered</li>
+            <li><code class="d inline">ASN1LengthOverflowException</code> if the length is too large to fit
+                into a <code class="d inline">size_t</code></li>
+            <li><code class="d inline">ASN1TruncationException</code> if the tag, length, or value appear to
+                be truncated</li>
+            <li><code class="d inline">ASN1ConstructionException</code> if the length is indefinite, but the
+                element is marked as being encoded primitively</li>
+            <li><code class="d inline">ASN1RecursionException</code> if, when trying to determine the end of
+                an indefinite-length encoded element, the parser has to recurse
+                too deep</li>
+        </ul>
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.toBytes" id="CanonicalEncodingRulesElement.toBytes"><code class="member">toBytes</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.toBytes"></span>const nothrow @property @system ubyte[] <code class="code">toBytes</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">This differs from <code class="d inline">this.value</code> in that
+        <code class="d inline">this.value</code> only returns the value octets, whereas
+        <code class="d inline">this.<code class="code">toBytes</code></code> returns the type tag, length tag / octets,
+        and the value octets, all concatenated.
+</section>
+<div class="description">This is the exact same as <code class="d inline">this.opCast!(ubyte[])()</code>.
+
+</div>
+<div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		type tag, length tag, and value, all concatenated as a <code class="d inline">ubyte</code> array.
+	</p>
+</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#CanonicalEncodingRulesElement.opCast" id="CanonicalEncodingRulesElement.opCast"><code class="member">opCast</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="CanonicalEncodingRulesElement.opCast"></span>nothrow @system ubyte[] <code class="code">opCast</code>(T = ubyte[])();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">This differs from <code class="d inline">this.value</code> in that
+        <code class="d inline">this.value</code> only returns the value octets, whereas
+        <code class="d inline">this.toBytes</code> returns the type tag, length tag / octets,
+        and the value octets, all concatenated.
+</section>
+<div class="description">This is the exact same as <code class="d inline">this.toBytes()</code>.
+
+</div>
+<div class="ddoc_returns">
+	<h4>Return Value</h4>
+	<p class="para">
+		type tag, length tag, and value, all concatenated as a <code class="d inline">ubyte</code> array.
+	</p>
+</div>
+</section>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</section>
+
+        </div>
+        <div id="footer">
+            <span id="timestamp">Sat Jan 20 10:35:48 2018
+</span>
+        </div>
+    </body>
+</html>
