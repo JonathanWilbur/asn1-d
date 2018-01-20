@@ -11,14 +11,10 @@ This library expects that the target system uses IEEE 754 floating-point formats
 
 ## Structure
 
-The "root" of this library is `asn1.d`, which contains some universal absolutes,
-such as `enum`s and `const`s that are used by ASN.1. But this is a pretty boring
-file with almost no actual code.
-
-The real fun begins with `source/codec.d`, whose flagship item is `ASN1Element`,
+This library begins with `source/asn1/codec.d`, whose flagship item is `ASN1Element`,
 the abstract class from which all other codecs must inherit. An `ASN1Element`
 represents a single encoded value (although it could be a single `SEQUENCE`
-or `SET`). In the `source/codecs` directory, you will find all of the codecs that
+or `SET`). In the `source/asn1/codecs` directory, you will find all of the codecs that
 inherit from `ASN1Element`. The `BERElement` class, for instance, can be found in
 `ber.d`, and it represents a ASN.1 value, encoded via the Basic Encoding Rules
 (BER) specified in the
@@ -27,11 +23,12 @@ inherit from `ASN1Element`. The `BERElement` class, for instance, can be found i
 
 The codecs rely upon a few ASN.1-specific data types, such as `EmbeddedPDV`,
 and these data types have their own classes or structs somewhere in the
-`source/types` directory. In `source/types`, you will find `alltypes.d`, which
-just provides a convenient way to import all data types instead of having
+`source/asn1/types` directory. In `source/asn1/types`, you will find `alltypes.d`,
+which just provides a convenient way to import all data types instead of having
 multiple import statements for each. There, you will also find data types
-that are used by other data types. In `source/types/universal`, you will find
-D data types for some of ASN.1's universal data types.
+that are used by other data types. In `source/asn1/types/universal`, you will
+find D data types for some of ASN.1's universal data types. You will also notice
+the directory `source/asn1/tools`. This directory is for the command-line tools.
 
 ## Usage
 
@@ -68,7 +65,7 @@ abbreviated names to the unabbreviated names. There are a few exceptions:
 * There are no `null` properties (what would the accessor return?)
 * The properties for getting and setting a `REAL` are named `realNumber`, because `real` is a keyword in D.
 
-Taken from `source/codec.d`, the members that each codec implements are as
+Taken from `source/asn1/codec.d`, the members that each codec implements are as
 follows:
 
 ```d

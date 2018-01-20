@@ -5,8 +5,8 @@ This page describes how to add your own codec to this library.
 ## How to design your code
 
 All codecs are really just "Elements," and they all should inherit from
-`ASN1Element` and `Byteable`, which can be found in `source/codec.d` and
-`source/interfaces.d` respectively.
+`ASN1Element` and `Byteable`, which can be found in `source/asn1/codec.d` and
+`source/asn1/interfaces.d` respectively.
 
 Let's say that you had your own set of ASN.1 encoding rules called
 "Thicc Encoding Rules" (TER). You would create a class whose signature is

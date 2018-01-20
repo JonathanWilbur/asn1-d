@@ -46,7 +46,7 @@ to TOCTOU vulnerabilities.
 
 Let's take a theoretical multi-threaded `BOOLEAN` decoding, for instance:
 
-This is the actual code for the `boolean` accessor from `source/codecs/der.d`:
+This is the actual code for the `boolean` accessor from `source/asn1/codecs/der.d`:
 
 ```d
     override public @property @safe
