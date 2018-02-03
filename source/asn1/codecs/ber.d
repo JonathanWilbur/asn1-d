@@ -122,38 +122,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     static public LengthEncodingPreference lengthEncodingPreference =
         LengthEncodingPreference.definite;
 
-    ///
-    public ASN1TagClass tagClass;
-    ///
-    public ASN1Construction construction;
-    ///
-    public size_t tagNumber;
-
-    /// The length of the value in octets
-    public @property @safe nothrow
-    size_t length() const
-    {
-        return this.value.length;
-    }
-
-    /**
-        I have been on the fence about this for a while now: I don't want
-        developers directly setting the bytes of the value. I know that making
-        value a public member means that some idiot somewhere is going to
-        bypass all of the methods I made and just directly set values himself,
-        resulting in some catastrophic bug in a major library or program
-        somewhere.
-
-        But on the other hand, if I make value a private member, and readable
-        only via property, then the same idiot that would have directly set
-        value could just directly set the value using the $(D octetString) method.
-
-        So either way, I can't stop anybody from doing something dumb with this
-        code. As Ron White says: you can't fix stupid. So value is going to be
-        a public member. But don't touch it.
-    */
-    public ubyte[] value;
-
     /**
         "Decodes" an $(MONO END OF CONTENT), by which I mean: returns nothing, but
         throws exceptions if the element is not correct.

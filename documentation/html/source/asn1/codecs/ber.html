@@ -302,66 +302,6 @@ if (bv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
 </section>
 <div>
 </div>
-</li><li class="ddoc_member"><a href="#BasicEncodingRulesElement.tagClass" id="BasicEncodingRulesElement.tagClass"><code class="member">tagClass</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="BasicEncodingRulesElement.tagClass"></span>ASN1TagClass <code class="code">tagClass</code>;
-
-    </code>
-</section>
-<div>
-</div>
-</li><li class="ddoc_member"><a href="#BasicEncodingRulesElement.construction" id="BasicEncodingRulesElement.construction"><code class="member">construction</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="BasicEncodingRulesElement.construction"></span>ASN1Construction <code class="code">construction</code>;
-
-    </code>
-</section>
-<div>
-</div>
-</li><li class="ddoc_member"><a href="#BasicEncodingRulesElement.tagNumber" id="BasicEncodingRulesElement.tagNumber"><code class="member">tagNumber</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="BasicEncodingRulesElement.tagNumber"></span>size_t <code class="code">tagNumber</code>;
-
-    </code>
-</section>
-<div>
-</div>
-</li><li class="ddoc_member"><a href="#BasicEncodingRulesElement.length" id="BasicEncodingRulesElement.length"><code class="member">length</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="BasicEncodingRulesElement.length"></span>const nothrow @property @safe size_t <code class="code">length</code>();
-
-    </code>
-</section>
-<div><section class="module-info"><section id="summary">The <code class="code">length</code> of the value in octets</section>
-</section>
-</div>
-</li><li class="ddoc_member"><a href="#BasicEncodingRulesElement.value" id="BasicEncodingRulesElement.value"><code class="member">value</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="BasicEncodingRulesElement.value"></span>ubyte[] <code class="code">value</code>;
-
-    </code>
-</section>
-<div><section class="module-info"><section id="summary">I have been on the fence about this for a while now: I don't want
-        developers directly setting the bytes of the <code class="code">value</code>. I know that making
-        <code class="code">value</code> a public member means that some idiot somewhere is going to
-        bypass all of the methods I made and just directly set values himself,
-        resulting in some catastrophic bug in a major library or program
-        somewhere.
-</section>
-<div class="description">But on the other hand, if I make <code class="code">value</code> a private member, and readable
-        only via property, then the same idiot that would have directly set
-        <code class="code">value</code> could just directly set the <code class="code">value</code> using the <code class="d inline">octetString</code> method.
-<br><br>
-        So either way, I can't stop anybody from doing something dumb with this
-        code. As Ron White says: you can't fix stupid. So <code class="code">value</code> is going to be
-        a public member. But don't touch it.</div>
-</section>
-</div>
 </li><li class="ddoc_member"><a href="#BasicEncodingRulesElement.endOfContent" id="BasicEncodingRulesElement.endOfContent"><code class="member">endOfContent</code></a>
 <section class="declaration">
     <code>
@@ -2209,7 +2149,7 @@ foreach (bv; bervalues)
 
         </div>
         <div id="footer">
-            <span id="timestamp">Sat Jan 20 10:35:48 2018
+            <span id="timestamp">Sat Feb  3 11:07:05 2018
 </span>
         </div>
     </body>

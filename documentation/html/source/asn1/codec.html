@@ -809,6 +809,130 @@ code, .mono {
         absolutely never set this to 255.</section>
 </section>
 </div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.tagClass" id="AbstractSyntaxNotation1Element.tagClass"><code class="member">tagClass</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.tagClass"></span>ASN1TagClass <code class="code">tagClass</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.construction" id="AbstractSyntaxNotation1Element.construction"><code class="member">construction</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.construction"></span>ASN1Construction <code class="code">construction</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.tagNumber" id="AbstractSyntaxNotation1Element.tagNumber"><code class="member">tagNumber</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.tagNumber"></span>size_t <code class="code">tagNumber</code>;
+
+    </code>
+</section>
+<div>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.length" id="AbstractSyntaxNotation1Element.length"><code class="member">length</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.length"></span>const nothrow @property @safe size_t <code class="code">length</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The <code class="code">length</code> of the value in octets</section>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.value" id="AbstractSyntaxNotation1Element.value"><code class="member">value</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.value"></span>ubyte[] <code class="code">value</code>;
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The octets of the encoded <code class="code">value</code>.
+</section>
+<div class="description">I have been on the fence about this for a while now: I don't want
+        developers directly setting the bytes of the <code class="code">value</code>. I know that making
+        <code class="code">value</code> a public member means that some idiot somewhere is going to
+        bypass all of the methods I made and just directly set values himself,
+        resulting in some catastrophic bug in a major library or program
+        somewhere.
+<br><br>
+        But on the other hand, if I make <code class="code">value</code> a private member, and readable
+        only via property, then the same idiot that would have directly set
+        <code class="code">value</code> could just directly set the <code class="code">value</code> using the <code class="d inline">octetString</code> method.
+<br><br>
+        So either way, I can't stop anybody from doing something dumb with this
+        code. As Ron White says: you can't fix stupid. So <code class="code">value</code> is going to be
+        a public member. But don't touch it.</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.validateTag" id="AbstractSyntaxNotation1Element.validateTag"><code class="member">validateTag</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.validateTag"></span>@system void <code class="code">validateTag</code>(ASN1TagClass[] <code class="code">acceptableTagClasses</code>, ASN1Construction <code class="code">acceptableConstruction</code>, size_t[] <code class="code">acceptableTagNumbers</code>, string <code class="code">whatYouAttemptedToDo</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">A convenient method for validating the tag of an ASN.1 element.
+</section>
+<div class="description">        When writing an application that uses ASN.1 validation often has to be
+        performed for the <code class="d inline">tagClass</code>, <code class="d inline">construction</code>, and <code class="d inline">tagNumber</code>.
+        This results in a lot of code that looks like this:
+<br><br>
+<pre><code class="d block">if (!canFind(acceptableTagClasses, this.tagClass))
+    throw new ASN1TagClassException
+    (acceptableTagClasses, this.tagClass, whatYouAttemptedToDo);
+
+if (this.construction != acceptableConstruction)
+    throw new ASN1ConstructionException
+    (this.construction, whatYouAttemptedToDo);
+
+if (!canFind(acceptableTagNumbers, this.tagNumber))
+    throw new ASN1TagNumberException
+    (acceptableTagNumbers, this.tagNumber, whatYouAttemptedToDo);
+</code></pre>
+<br><br>
+        This function was created to combat excessive code resulting from this recurring need.</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.validateTag" id="AbstractSyntaxNotation1Element.validateTag"><code class="member">validateTag</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.validateTag.2"></span>@system void <code class="code">validateTag</code>(ASN1TagClass[] <code class="code">acceptableTagClasses</code>, size_t[] <code class="code">acceptableTagNumbers</code>, string <code class="code">whatYouAttemptedToDo</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">A convenient method for validating the tag of an ASN.1 element.
+</section>
+<div class="description">        When writing an application that uses ASN.1 validation often has to be
+        performed for the <code class="d inline">tagClass</code>, <code class="d inline">construction</code>, and <code class="d inline">tagNumber</code>.
+        This results in a lot of code that looks like this:
+<br><br>
+<pre><code class="d block">if (!canFind(acceptableTagClasses, this.tagClass))
+    throw new ASN1TagClassException
+    (acceptableTagClasses, this.tagClass, whatYouAttemptedToDo);
+
+if (this.construction != acceptableConstruction)
+    throw new ASN1ConstructionException
+    (this.construction, whatYouAttemptedToDo);
+
+if (!canFind(acceptableTagNumbers, this.tagNumber))
+    throw new ASN1TagNumberException
+    (acceptableTagNumbers, this.tagNumber, whatYouAttemptedToDo);
+</code></pre>
+<br><br>
+        This function was created to combat excessive code resulting from this recurring need.
+<br><br>
+        Since the construction sometimes does not matter, this method was created.
+        No validation of the element construction is performed if this variant of
+        <code class="d inline"><code class="code">validateTag</code></code> is used.</div>
+</section>
+</div>
 </li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.LengthEncodingPreference" id="AbstractSyntaxNotation1Element.LengthEncodingPreference"><code class="member">LengthEncodingPreference</code></a>
 <section class="declaration">
     <code>
@@ -816,7 +940,11 @@ code, .mono {
 
     </code>
 </section>
-<div>
+<div><section class="module-info"><section id="summary">Determines how the lengths of elements are encoded, if you have a choice.
+        When using Distinguished Encoding Rules (DER), this is ignored entirely,
+        since only definite-length encoding is permitted, for instance. Used for
+        setting lengthEncodingPreference in elements where you have a choice.</section>
+</section>
 </div>
 </li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.endOfContent" id="AbstractSyntaxNotation1Element.endOfContent"><code class="member">endOfContent</code></a>
 <section class="declaration">
@@ -1715,7 +1843,7 @@ Thanks to StackOverflow user
 
         </div>
         <div id="footer">
-            <span id="timestamp">Sat Jan 20 10:35:48 2018
+            <span id="timestamp">Sat Feb  3 11:07:05 2018
 </span>
         </div>
     </body>

@@ -113,23 +113,6 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         writeln("Running unit tests for codec: " ~ typeof(this).stringof);
     }
 
-    ///
-    public ASN1TagClass tagClass;
-    ///
-    public ASN1Construction construction;
-    ///
-    public size_t tagNumber;
-
-    /// The length of the value in octets
-    final public @property @safe nothrow
-    size_t length() const
-    {
-        return this.value.length;
-    }
-
-    /// The octets of the encoded value.
-    public ubyte[] value;
-
     /**
         "Decodes" an $(MONO END OF CONTENT), by which I mean: returns nothing, but
         throws exceptions if the element is not correct.

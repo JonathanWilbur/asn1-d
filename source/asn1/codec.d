@@ -501,6 +501,146 @@ class AbstractSyntaxNotation1Element(Element)
         "section at: https://github.com/JonathanWilbur/asn1-d/issues. ";
 
     ///
+    public ASN1TagClass tagClass;
+    ///
+    public ASN1Construction construction;
+    ///
+    public size_t tagNumber;
+
+    /// The length of the value in octets
+    public @property @safe nothrow
+    size_t length() const
+    {
+        return this.value.length;
+    }
+
+    /**
+        The octets of the encoded value.
+
+        I have been on the fence about this for a while now: I don't want
+        developers directly setting the bytes of the value. I know that making
+        value a public member means that some idiot somewhere is going to
+        bypass all of the methods I made and just directly set values himself,
+        resulting in some catastrophic bug in a major library or program
+        somewhere.
+
+        But on the other hand, if I make value a private member, and readable
+        only via property, then the same idiot that would have directly set
+        value could just directly set the value using the $(D octetString) method.
+
+        So either way, I can't stop anybody from doing something dumb with this
+        code. As Ron White says: you can't fix stupid. So value is going to be
+        a public member. But don't touch it.
+    */
+    public ubyte[] value;
+
+    /**
+        A convenient method for validating the tag of an ASN.1 element.
+
+        When writing an application that uses ASN.1 validation often has to be
+        performed for the $(D tagClass), $(D construction), and $(D tagNumber).
+        This results in a lot of code that looks like this:
+
+        ---
+        if (!canFind(acceptableTagClasses, this.tagClass))
+            throw new ASN1TagClassException
+            (acceptableTagClasses, this.tagClass, whatYouAttemptedToDo);
+
+        if (this.construction != acceptableConstruction)
+            throw new ASN1ConstructionException
+            (this.construction, whatYouAttemptedToDo);
+
+        if (!canFind(acceptableTagNumbers, this.tagNumber))
+            throw new ASN1TagNumberException
+            (acceptableTagNumbers, this.tagNumber, whatYouAttemptedToDo);
+        ---
+
+        This function was created to combat excessive code resulting from this recurring need.
+    */
+    public @system
+    void validateTag
+    (
+        ASN1TagClass[] acceptableTagClasses,
+        ASN1Construction acceptableConstruction,
+        size_t[] acceptableTagNumbers,
+        string whatYouAttemptedToDo
+    )
+    in
+    {
+        assert(acceptableTagClasses.length > 0u);
+        assert(acceptableTagNumbers.length > 0u);
+    }
+    body
+    {
+        if (!canFind(acceptableTagClasses, this.tagClass))
+            throw new ASN1TagClassException
+            (acceptableTagClasses, this.tagClass, whatYouAttemptedToDo);
+
+        if (this.construction != acceptableConstruction)
+            throw new ASN1ConstructionException
+            (this.construction, whatYouAttemptedToDo);
+
+        if (!canFind(acceptableTagNumbers, this.tagNumber))
+            throw new ASN1TagNumberException
+            (acceptableTagNumbers, this.tagNumber, whatYouAttemptedToDo);
+    }
+
+    /**
+        A convenient method for validating the tag of an ASN.1 element.
+
+        When writing an application that uses ASN.1 validation often has to be
+        performed for the $(D tagClass), $(D construction), and $(D tagNumber).
+        This results in a lot of code that looks like this:
+
+        ---
+        if (!canFind(acceptableTagClasses, this.tagClass))
+            throw new ASN1TagClassException
+            (acceptableTagClasses, this.tagClass, whatYouAttemptedToDo);
+
+        if (this.construction != acceptableConstruction)
+            throw new ASN1ConstructionException
+            (this.construction, whatYouAttemptedToDo);
+
+        if (!canFind(acceptableTagNumbers, this.tagNumber))
+            throw new ASN1TagNumberException
+            (acceptableTagNumbers, this.tagNumber, whatYouAttemptedToDo);
+        ---
+
+        This function was created to combat excessive code resulting from this recurring need.
+
+        Since the construction sometimes does not matter, this method was created.
+        No validation of the element construction is performed if this variant of
+        $(D validateTag) is used.
+    */
+    public @system
+    void validateTag
+    (
+        ASN1TagClass[] acceptableTagClasses,
+        size_t[] acceptableTagNumbers,
+        string whatYouAttemptedToDo
+    )
+    in
+    {
+        assert(acceptableTagClasses.length > 0u);
+        assert(acceptableTagNumbers.length > 0u);
+    }
+    body
+    {
+        if (!canFind(acceptableTagClasses, this.tagClass))
+            throw new ASN1TagClassException
+            (acceptableTagClasses, this.tagClass, whatYouAttemptedToDo);
+
+        if (!canFind(acceptableTagNumbers, this.tagNumber))
+            throw new ASN1TagNumberException
+            (acceptableTagNumbers, this.tagNumber, whatYouAttemptedToDo);
+    }
+
+    /**
+        Determines how the lengths of elements are encoded, if you have a choice.
+        When using Distinguished Encoding Rules (DER), this is ignored entirely,
+        since only definite-length encoding is permitted, for instance. Used for
+        setting lengthEncodingPreference in elements where you have a choice.
+    */
     immutable public
     enum LengthEncodingPreference : ubyte
     {

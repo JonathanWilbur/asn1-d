@@ -11,7 +11,7 @@ mkdir .\build\maps 2>&1 | Out-Null
 mkdir .\build\objects 2>&1 | Out-Null
 mkdir .\build\scripts 2>&1 | Out-Null
 
-$version = "2.0.1"
+$version = "2.1.0"
 
 Write-Host "Building the ASN.1 Library (static)... " -NoNewLine
 dmd `
