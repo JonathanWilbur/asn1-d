@@ -636,6 +636,66 @@ class AbstractSyntaxNotation1Element(Element)
     }
 
     /**
+        A convenience method for more concisely determining if an element
+        is of UNIVERSAL tag class.
+    */
+    public @property @safe @nogc nothrow
+    bool isUniversal() const
+    {
+        return (this.tagClass == ASN1TagClass.universal);
+    }
+
+    /**
+        A convenience method for more concisely determining if an element
+        is of APPLICATION tag class.
+    */
+    public @property @safe @nogc nothrow
+    bool isApplication() const
+    {
+        return (this.tagClass == ASN1TagClass.application);
+    }
+
+    /**
+        A convenience method for more concisely determining if an element
+        is of CONTEXT-SPECIFIC tag class.
+    */
+    public @property @safe @nogc nothrow
+    bool isContextSpecific() const
+    {
+        return (this.tagClass == ASN1TagClass.contextSpecific);
+    }
+
+    /**
+        A convenience method for more concisely determining if an element
+        is of PRIVATE tag class.
+    */
+    public @property @safe @nogc nothrow
+    bool isPrivate() const
+    {
+        return (this.tagClass == ASN1TagClass.privatelyDefined);
+    }
+
+    /**
+        A convenience method for more concisely determining if an element
+        is of primitive or constructed construction.
+    */
+    public @property @safe @nogc nothrow
+    bool isPrimitive() const
+    {
+        return (this.construction == ASN1Construction.primitive);
+    }
+
+    /**
+        A convenience method for more concisely determining if an element
+        is of primitive or constructed construction.
+    */
+    public @property @safe @nogc nothrow
+    bool isConstructed() const
+    {
+        return (this.construction == ASN1Construction.constructed);
+    }
+
+    /**
         Determines how the lengths of elements are encoded, if you have a choice.
         When using Distinguished Encoding Rules (DER), this is ignored entirely,
         since only definite-length encoding is permitted, for instance. Used for
