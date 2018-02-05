@@ -1142,7 +1142,7 @@
         "comment" : "        A convenient method for validating the tag of an ASN.1 element.\n\n        When writing an application that uses ASN.1 validation often has to be\n        performed for the $(D tagClass), $(D construction), and $(D tagNumber).\n        This results in a lot of code that looks like this:\n\n        ---\n        if (!canFind(acceptableTagClasses, this.tagClass))\n            throw new ASN1TagClassException\n            (acceptableTagClasses, this.tagClass, whatYouAttemptedToDo);\n\n        if (this.construction != acceptableConstruction)\n            throw new ASN1ConstructionException\n            (this.construction, whatYouAttemptedToDo);\n\n        if (!canFind(acceptableTagNumbers, this.tagNumber))\n            throw new ASN1TagNumberException\n            (acceptableTagNumbers, this.tagNumber, whatYouAttemptedToDo);\n        ---\n\n        This function was created to combat excessive code resulting from this recurring need.\n",
         "line" : 561,
         "char" : 10,
-        "type" : "@system void(ASN1TagClass[] acceptableTagClasses, ASN1Construction acceptableConstruction, size_t[] acceptableTagNumbers, string whatYouAttemptedToDo)",
+        "type" : "const @system void(ASN1TagClass[] acceptableTagClasses, ASN1Construction acceptableConstruction, size_t[] acceptableTagNumbers, string whatYouAttemptedToDo)",
         "parameters" : [
          {
           "name" : "acceptableTagClasses",
@@ -1170,7 +1170,7 @@
         "comment" : "        A convenient method for validating the tag of an ASN.1 element.\n\n        When writing an application that uses ASN.1 validation often has to be\n        performed for the $(D tagClass), $(D construction), and $(D tagNumber).\n        This results in a lot of code that looks like this:\n\n        ---\n        if (!canFind(acceptableTagClasses, this.tagClass))\n            throw new ASN1TagClassException\n            (acceptableTagClasses, this.tagClass, whatYouAttemptedToDo);\n\n        if (this.construction != acceptableConstruction)\n            throw new ASN1ConstructionException\n            (this.construction, whatYouAttemptedToDo);\n\n        if (!canFind(acceptableTagNumbers, this.tagNumber))\n            throw new ASN1TagNumberException\n            (acceptableTagNumbers, this.tagNumber, whatYouAttemptedToDo);\n        ---\n\n        This function was created to combat excessive code resulting from this recurring need.\n\n        Since the construction sometimes does not matter, this method was created.\n        No validation of the element construction is performed if this variant of\n        $(D validateTag) is used.\n",
         "line" : 616,
         "char" : 10,
-        "type" : "@system void(ASN1TagClass[] acceptableTagClasses, size_t[] acceptableTagNumbers, string whatYouAttemptedToDo)",
+        "type" : "const @system void(ASN1TagClass[] acceptableTagClasses, size_t[] acceptableTagNumbers, string whatYouAttemptedToDo)",
         "parameters" : [
          {
           "name" : "acceptableTagClasses",

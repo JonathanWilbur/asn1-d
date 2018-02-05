@@ -564,7 +564,7 @@ class AbstractSyntaxNotation1Element(Element)
         ASN1Construction acceptableConstruction,
         size_t[] acceptableTagNumbers,
         string whatYouAttemptedToDo
-    )
+    ) const
     in
     {
         assert(acceptableTagClasses.length > 0u);
@@ -618,7 +618,7 @@ class AbstractSyntaxNotation1Element(Element)
         ASN1TagClass[] acceptableTagClasses,
         size_t[] acceptableTagNumbers,
         string whatYouAttemptedToDo
-    )
+    ) const
     in
     {
         assert(acceptableTagClasses.length > 0u);
