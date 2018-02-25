@@ -2160,7 +2160,28 @@ foreach (dv; dervalues)
 </li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.this" id="DistinguishedEncodingRulesElement.this"><code class="member">this</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this.3"></span>@system this(ref size_t <code class="code">bytesRead</code>, in ubyte[] <code class="code">bytes</code>);
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this.3"></span>@system this(in ubyte[] <code class="code">bytes</code>);
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">Creates a <code class="d inline">DERElement</code> from the supplied <code class="code">bytes</code>, inferring that the first
+        byte is the type tag. Unlike the construct that accepts a <code class="d inline">ubyte[]</code>
+        reference, this constructor does not "chomp" the array. This constructor
+        expects the encoded <code class="code">bytes</code> to encode only one . If there are
+        any remaining <code class="code">bytes</code> after decoding, an exception is thrown.
+</section>
+<div class="ddoc_throws">
+	<h4>Throws</h4>
+	<p class="para">
+		All of the same exceptions as <code class="d inline">fromBytes()</code>, but also throws an
+            <code class="d inline">ASN1LengthException</code> if there are excess <code class="code">bytes</code>.
+	</p>
+</div></section>
+</div>
+</li><li class="ddoc_member"><a href="#DistinguishedEncodingRulesElement.this" id="DistinguishedEncodingRulesElement.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="DistinguishedEncodingRulesElement.this.4"></span>@system this(ref size_t <code class="code">bytesRead</code>, in ubyte[] <code class="code">bytes</code>);
 
     </code>
 </section>
@@ -2286,7 +2307,7 @@ foreach (dv; dervalues)
 
         </div>
         <div id="footer">
-            <span id="timestamp">Mon Feb  5 08:48:58 2018
+            <span id="timestamp">Sun Feb 25 12:13:48 2018
 </span>
         </div>
     </body>

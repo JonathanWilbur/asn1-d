@@ -55,20 +55,75 @@ BERElement el2 = new BERElement(encodedData);
 long x = el2.integer!long;
 ```
 
+If you know that the encoding bytes contain only one element, you can also
+decode an array of `ubyte`s by value instead of by reference, like so:
+
+```d
+BERElement el3 = new BERElement(el.toBytes);
+assert(el.integer!long == el3.integer!long); // Passes
+```
+
 Each codec contains accessors and mutators for each ASN.1 data type. Each property
 takes or returns the data type you would expect it to return (for instance, the
 `integer` property returns a signed integral type), and each property is given
 the unabbreviated name of the data type it encodes, with aliases mapping the
 abbreviated names to the unabbreviated names. There are a few exceptions:
 
-* There are no `endOfContent` properties (what would the accessor return?)
-* There are no `null` properties (what would the accessor return?)
+* There are no `endOfContent` or `null` mutators.
+* The accessors for `endOfContent` and `nill` (that's not a typo), do not return a value; they just throw an exception if the encoded value is not a well-formed `END OF CONTENT` or `NULL`, respectively.
 * The properties for getting and setting a `REAL` are named `realNumber`, because `real` is a keyword in D.
 
-Taken from `source/asn1/codec.d`, the members that each codec implements are as
+Taken from `source/asn1/codec.d`, the members that each codec has are as
 follows:
 
 ```d
+    public ASN1TagClass tagClass;
+    public ASN1Construction construction;
+    public size_t tagNumber;
+
+    public @property @safe nothrow
+    size_t length() const;
+
+    public ubyte[] value;
+
+    public @system
+    void validateTag
+    (
+        ASN1TagClass[] acceptableTagClasses,
+        ASN1Construction acceptableConstruction,
+        size_t[] acceptableTagNumbers,
+        string whatYouAttemptedToDo
+    ) const;
+
+    public @system
+    void validateTag
+    (
+        ASN1TagClass[] acceptableTagClasses,
+        size_t[] acceptableTagNumbers,
+        string whatYouAttemptedToDo
+    ) const;
+
+    public @property @safe @nogc nothrow
+    bool isUniversal() const;
+
+    public @property @safe @nogc nothrow
+    bool isApplication() const;
+
+    public @property @safe @nogc nothrow
+    bool isContextSpecific() const;
+
+    public @property @safe @nogc nothrow
+    bool isPrivate() const;
+
+    public @property @safe @nogc nothrow
+    bool isPrimitive() const;
+
+    public @property @safe @nogc nothrow
+    bool isConstructed() const;
+
+    abstract public @property
+    void endOfContent() const;
+
     abstract public @property
     bool boolean() const;
 
@@ -92,6 +147,9 @@ follows:
 
     abstract public @property
     void octetString(in ubyte[] value);
+
+    abstract public @property
+    void nill() const;
 
     public alias oid = objectIdentifier;
     public alias objectID = objectIdentifier;
@@ -252,15 +310,7 @@ that these are universal properties of all ASN.1 codecs), all of the X.690
 codecs (BER, CER, and DER) contain these members:
 
 ```d
-    public ASN1TagClass tagClass;
-    public ASN1Construction construction;
-    public size_t tagNumber;
 
-    public @property @safe nothrow
-    size_t length() const
-    {
-        return this.value.length;
-    }
 ```
 
 The relevant `enum`s can be found in `source/asn1.d`, and are as follows:

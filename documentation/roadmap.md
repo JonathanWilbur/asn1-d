@@ -1,12 +1,6 @@
 # Development Roadmap
 
-### 2.1.2 Release
-
-- [ ] Code Formatting
-  - [ ] Format `switch` statements
-  - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
-
-### 2.1.3 Release
+### 2.3.0 Release
 
 - [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
 - [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
@@ -37,8 +31,11 @@
 - [ ] Improved exception messages
 - [ ] Improve the Fuzz Testing Tool
 - [ ] Create "test" `GNU Make` target
+- [ ] Code Formatting
+  - [ ] Format `switch` statements
+  - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
 
-## 2.2.0 Release
+## 2.4.0 Release
 
 The following codecs will be added:
 
@@ -56,7 +53,7 @@ The following codecs will be added:
 After this release, developers will be able to use this library to develop a
 Remote Desktop Protocol library.
 
-## 2.3.0 Release
+## 2.5.0 Release
 
 The following codecs will be added:
 
@@ -74,7 +71,7 @@ The following codecs will be added:
   - [ ] `decode-exer`
   - [ ] `decode-jer`
 
-## 2.4.0 Release
+## 2.6.0 Release
 
 The following codecs will be added:
 
@@ -86,7 +83,7 @@ The following codecs will be added:
   - [ ] `decode-oer`
   - [ ] `decode-coer`
 
-## 2.5.0 Release
+## 2.7.0 Release
 
 The following codecs will be added:
 

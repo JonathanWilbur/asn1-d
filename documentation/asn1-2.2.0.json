@@ -6788,8 +6788,25 @@
      {
       "name" : "this",
       "kind" : "constructor",
+      "comment" : "        Creates a $(D BERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. Unlike the construct that accepts a $(D ubyte[])\n        reference, this constructor does not \"chomp\" the array. This constructor\n        expects the encoded bytes to encode only one $(BERElement). If there are\n        any remaining bytes after decoding, an exception is thrown.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes()), but also throws an\n            $(D ASN1LengthException) if there are excess bytes.\n",
+      "line" : 4884,
+      "char" : 5,
+      "deco" : "FxAhZC4asn16codecs3ber25BasicEncodingRulesElement",
+      "originalType" : "@system (in ubyte[] bytes)",
+      "parameters" : [
+       {
+        "name" : "bytes",
+        "deco" : "xAh"
+       }
+      ],
+      "endline" : 4896,
+      "endchar" : 5
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
       "comment" : "        Creates a $(D BERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. The supplied $(D ubyte[]) array is read, starting\n        from the index specified by $(D bytesRead), and increments\n        $(D bytesRead) by the number of bytes read.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes())\n\n        Examples:\n        ---\n        // Decoding looks like:\n        BERElement[] result;\n        size_t i = 0u;\n        while (i < bytes.length)\n            result ~= new BERElement(i, bytes);\n\n        // Encoding looks like:\n        ubyte[] result;\n        foreach (bv; bervalues)\n        {\n            result ~= cast(ubyte[]) bv;\n        }\n        ---\n",
-      "line" : 4898,
+      "line" : 4924,
       "char" : 5,
       "deco" : "FKmxAhZC4asn16codecs3ber25BasicEncodingRulesElement",
       "originalType" : "@system (ref size_t bytesRead, in ubyte[] bytes)",
@@ -6806,14 +6823,14 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 4901,
+      "endline" : 4927,
       "endchar" : 5
      },
      {
       "name" : "fromBytes",
       "kind" : "function",
       "comment" : "        Returns: the number of bytes read\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1TagPaddingException) if the tag number is \"padded\" with\n                \"leading zero bytes\" ($(D 0x80u)))\n            $(LI $(D ASN1TagOverflowException) if the tag number is too large to\n                fit into a $(D size_t))\n            $(LI $(D ASN1LengthUndefinedException) if the reserved length byte of\n                $(D 0xFF) is encountered)\n            $(LI $(D ASN1LengthOverflowException) if the length is too large to fit\n                into a $(D size_t))\n            $(LI $(D ASN1TruncationException) if the tag, length, or value appear to\n                be truncated)\n            $(LI $(D ASN1ConstructionException) if the length is indefinite, but the\n                element is marked as being encoded primitively)\n            $(LI $(D ASN1RecursionException) if, when trying to determine the end of\n                an indefinite-length encoded element, the parser has to recurse\n                too deep)\n        )\n",
-      "line" : 4926,
+      "line" : 4952,
       "char" : 12,
       "deco" : "FxAhZm",
       "originalType" : "size_t(in ubyte[] bytes)",
@@ -6823,7 +6840,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 5142,
+      "endline" : 5168,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.fromBytes"
@@ -6833,10 +6850,10 @@
       "name" : "toBytes",
       "kind" : "function",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.opCast!(ubyte[])()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 5155,
+      "line" : 5181,
       "char" : 13,
       "deco" : "xFNbNdZAh",
-      "endline" : 5227,
+      "endline" : 5253,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.toBytes"
@@ -6845,7 +6862,7 @@
      {
       "kind" : "template",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.toBytes()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 5240,
+      "line" : 5266,
       "char" : 13,
       "name" : "opCast",
       "parameters" : [
@@ -6859,10 +6876,10 @@
        {
         "name" : "opCast",
         "kind" : "function",
-        "line" : 5240,
+        "line" : 5266,
         "char" : 13,
         "type" : "nothrow @system ubyte[]()",
-        "endline" : 5243,
+        "endline" : 5269,
         "endchar" : 5
        }
       ]
@@ -6870,64 +6887,42 @@
     ]
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5249_37",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5275_37",
     "kind" : "function",
-    "line" : 5249,
+    "line" : 5275,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5400,
+    "endline" : 5426,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5401_38",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5427_38",
     "kind" : "function",
-    "line" : 5401,
+    "line" : 5427,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5442,
+    "endline" : 5468,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5443_39",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5469_39",
     "kind" : "function",
-    "line" : 5443,
+    "line" : 5469,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5485,
+    "endline" : 5511,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5486_40",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5512_40",
     "kind" : "function",
-    "line" : 5486,
-    "char" : 1,
-    "storageClass" : [
-     "@system"
-    ],
-    "endline" : 5498,
-    "endchar" : 1
-   },
-   {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5499_41",
-    "kind" : "function",
-    "line" : 5499,
-    "char" : 1,
-    "storageClass" : [
-     "@system"
-    ],
-    "endline" : 5512,
-    "endchar" : 1
-   },
-   {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5513_42",
-    "kind" : "function",
-    "line" : 5513,
+    "line" : 5512,
     "char" : 1,
     "storageClass" : [
      "@system"
@@ -6936,97 +6931,86 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5525_43",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5525_41",
     "kind" : "function",
     "line" : 5525,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5535,
+    "endline" : 5538,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5536_44",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5539_42",
     "kind" : "function",
-    "line" : 5536,
+    "line" : 5539,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5554,
+    "endline" : 5550,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5555_45",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5551_43",
     "kind" : "function",
-    "line" : 5555,
+    "line" : 5551,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5578,
+    "endline" : 5561,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5579_46",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5562_44",
     "kind" : "function",
-    "line" : 5579,
+    "line" : 5562,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5595,
+    "endline" : 5580,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5596_47",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5581_45",
     "kind" : "function",
-    "line" : 5596,
+    "line" : 5581,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5608,
+    "endline" : 5604,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5609_48",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5605_46",
     "kind" : "function",
-    "line" : 5609,
+    "line" : 5605,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5623,
+    "endline" : 5621,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5624_49",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5622_47",
     "kind" : "function",
-    "line" : 5624,
+    "line" : 5622,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5633,
+    "endline" : 5634,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5634_50",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5635_48",
     "kind" : "function",
-    "line" : 5634,
-    "char" : 1,
-    "storageClass" : [
-     "@system"
-    ],
-    "endline" : 5641,
-    "endchar" : 1
-   },
-   {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5642_51",
-    "kind" : "function",
-    "line" : 5642,
+    "line" : 5635,
     "char" : 1,
     "storageClass" : [
      "@system"
@@ -7035,64 +7019,86 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5650_52",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5650_49",
     "kind" : "function",
     "line" : 5650,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5661,
+    "endline" : 5659,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5662_53",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5660_50",
     "kind" : "function",
-    "line" : 5662,
+    "line" : 5660,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5673,
+    "endline" : 5667,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5674_54",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5668_51",
     "kind" : "function",
-    "line" : 5674,
+    "line" : 5668,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5682,
+    "endline" : 5675,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5683_55",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5676_52",
     "kind" : "function",
-    "line" : 5683,
+    "line" : 5676,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5691,
+    "endline" : 5687,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5692_56",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5688_53",
     "kind" : "function",
-    "line" : 5692,
+    "line" : 5688,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5700,
+    "endline" : 5699,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5701_57",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5700_54",
     "kind" : "function",
-    "line" : 5701,
+    "line" : 5700,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 5708,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_asn1_codecs_ber_d_5709_55",
+    "kind" : "function",
+    "line" : 5709,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 5717,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_asn1_codecs_ber_d_5718_56",
+    "kind" : "function",
+    "line" : 5718,
     "char" : 1,
     "storageClass" : [
      "@system"
@@ -7101,14 +7107,25 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_ber_d_5727_58",
+    "name" : "__unittest___source_asn1_codecs_ber_d_5727_57",
     "kind" : "function",
     "line" : 5727,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5743,
+    "endline" : 5752,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_asn1_codecs_ber_d_5753_58",
+    "kind" : "function",
+    "line" : 5753,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 5769,
     "endchar" : 2
    }
   ]
@@ -8955,8 +8972,25 @@
      {
       "name" : "this",
       "kind" : "constructor",
+      "comment" : "        Creates a $(D CERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. Unlike the construct that accepts a $(D ubyte[])\n        reference, this constructor does not \"chomp\" the array. This constructor\n        expects the encoded bytes to encode only one $(CERElement). If there are\n        any remaining bytes after decoding, an exception is thrown.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes()), but also throws an\n            $(D ASN1LengthException) if there are excess bytes.\n",
+      "line" : 6132,
+      "char" : 5,
+      "deco" : "FxAhZC4asn16codecs3cer29CanonicalEncodingRulesElement",
+      "originalType" : "@system (in ubyte[] bytes)",
+      "parameters" : [
+       {
+        "name" : "bytes",
+        "deco" : "xAh"
+       }
+      ],
+      "endline" : 6144,
+      "endchar" : 5
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
       "comment" : "        Creates a $(D CERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. The supplied $(D ubyte[]) array is read, starting\n        from the index specified by $(D bytesRead), and increments\n        $(D bytesRead) by the number of bytes read.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes())\n\n        Examples:\n        ---\n        // Decoding looks like:\n        CERElement[] result;\n        size_t i = 0u;\n        while (i < bytes.length)\n            result ~= new CERElement(i, bytes);\n\n        // Encoding looks like:\n        ubyte[] result;\n        foreach (cv; cervalues)\n        {\n            result ~= cast(ubyte[]) cv;\n        }\n        ---\n",
-      "line" : 6146,
+      "line" : 6172,
       "char" : 5,
       "deco" : "FKmxAhZC4asn16codecs3cer29CanonicalEncodingRulesElement",
       "originalType" : "@system (ref size_t bytesRead, in ubyte[] bytes)",
@@ -8973,14 +9007,14 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 6149,
+      "endline" : 6175,
       "endchar" : 5
      },
      {
       "name" : "fromBytes",
       "kind" : "function",
       "comment" : "        Returns: the number of bytes read\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1TagPaddingException) if the tag number is \"padded\" with\n                \"leading zero bytes\" ($(D 0x80u)))\n            $(LI $(D ASN1TagOverflowException) if the tag number is too large to\n                fit into a $(D size_t))\n            $(LI $(D ASN1LengthUndefinedException) if the reserved length byte of\n                $(D 0xFF) is encountered)\n            $(LI $(D ASN1LengthOverflowException) if the length is too large to fit\n                into a $(D size_t))\n            $(LI $(D ASN1TruncationException) if the tag, length, or value appear to\n                be truncated)\n            $(LI $(D ASN1ConstructionException) if the length is indefinite, but the\n                element is marked as being encoded primitively)\n            $(LI $(D ASN1RecursionException) if, when trying to determine the end of\n                an indefinite-length encoded element, the parser has to recurse\n                too deep)\n        )\n",
-      "line" : 6174,
+      "line" : 6200,
       "char" : 12,
       "deco" : "FxAhZm",
       "originalType" : "size_t(in ubyte[] bytes)",
@@ -8990,7 +9024,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 6424,
+      "endline" : 6450,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.fromBytes"
@@ -9000,10 +9034,10 @@
       "name" : "toBytes",
       "kind" : "function",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.opCast!(ubyte[])()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 6437,
+      "line" : 6463,
       "char" : 13,
       "deco" : "xFNbNdZAh",
-      "endline" : 6516,
+      "endline" : 6542,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.toBytes"
@@ -9012,7 +9046,7 @@
      {
       "kind" : "template",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.toBytes()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 6529,
+      "line" : 6555,
       "char" : 13,
       "name" : "opCast",
       "parameters" : [
@@ -9026,10 +9060,10 @@
        {
         "name" : "opCast",
         "kind" : "function",
-        "line" : 6529,
+        "line" : 6555,
         "char" : 13,
         "type" : "nothrow @system ubyte[]()",
-        "endline" : 6532,
+        "endline" : 6558,
         "endchar" : 5
        }
       ]
@@ -9037,130 +9071,97 @@
     ]
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6538_41",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6564_41",
     "kind" : "function",
-    "line" : 6538,
+    "line" : 6564,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6690,
+    "endline" : 6716,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6691_42",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6717_42",
     "kind" : "function",
-    "line" : 6691,
+    "line" : 6717,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6776,
+    "endline" : 6802,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6777_43",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6803_43",
     "kind" : "function",
-    "line" : 6777,
+    "line" : 6803,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6789,
+    "endline" : 6815,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6790_44",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6816_44",
     "kind" : "function",
-    "line" : 6790,
+    "line" : 6816,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6801,
+    "endline" : 6827,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6802_45",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6828_45",
     "kind" : "function",
-    "line" : 6802,
+    "line" : 6828,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6812,
+    "endline" : 6838,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6813_46",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6839_46",
     "kind" : "function",
-    "line" : 6813,
+    "line" : 6839,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6831,
+    "endline" : 6857,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6832_47",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6858_47",
     "kind" : "function",
-    "line" : 6832,
+    "line" : 6858,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6855,
+    "endline" : 6881,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6856_48",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6882_48",
     "kind" : "function",
-    "line" : 6856,
+    "line" : 6882,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6873,
+    "endline" : 6899,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6874_49",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6900_49",
     "kind" : "function",
-    "line" : 6874,
-    "char" : 1,
-    "storageClass" : [
-     "@system"
-    ],
-    "endline" : 6888,
-    "endchar" : 1
-   },
-   {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6889_50",
-    "kind" : "function",
-    "line" : 6889,
-    "char" : 1,
-    "storageClass" : [
-     "@system"
-    ],
-    "endline" : 6898,
-    "endchar" : 1
-   },
-   {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6899_51",
-    "kind" : "function",
-    "line" : 6899,
-    "char" : 1,
-    "storageClass" : [
-     "@system"
-    ],
-    "endline" : 6906,
-    "endchar" : 1
-   },
-   {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6907_52",
-    "kind" : "function",
-    "line" : 6907,
+    "line" : 6900,
     "char" : 1,
     "storageClass" : [
      "@system"
@@ -9169,75 +9170,97 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6915_53",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6915_50",
     "kind" : "function",
     "line" : 6915,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6922,
+    "endline" : 6924,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6923_54",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6925_51",
     "kind" : "function",
-    "line" : 6923,
+    "line" : 6925,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6934,
+    "endline" : 6932,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6935_55",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6933_52",
     "kind" : "function",
-    "line" : 6935,
+    "line" : 6933,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6946,
+    "endline" : 6940,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6947_56",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6941_53",
     "kind" : "function",
-    "line" : 6947,
+    "line" : 6941,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6955,
+    "endline" : 6948,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6956_57",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6949_54",
     "kind" : "function",
-    "line" : 6956,
+    "line" : 6949,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6964,
+    "endline" : 6960,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6965_58",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6961_55",
     "kind" : "function",
-    "line" : 6965,
+    "line" : 6961,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6973,
+    "endline" : 6972,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_6974_59",
+    "name" : "__unittest___source_asn1_codecs_cer_d_6973_56",
     "kind" : "function",
-    "line" : 6974,
+    "line" : 6973,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 6981,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_asn1_codecs_cer_d_6982_57",
+    "kind" : "function",
+    "line" : 6982,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 6990,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_asn1_codecs_cer_d_6991_58",
+    "kind" : "function",
+    "line" : 6991,
     "char" : 1,
     "storageClass" : [
      "@system"
@@ -9246,14 +9269,25 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_cer_d_7000_60",
+    "name" : "__unittest___source_asn1_codecs_cer_d_7000_59",
     "kind" : "function",
     "line" : 7000,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7016,
+    "endline" : 7025,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_asn1_codecs_cer_d_7026_60",
+    "kind" : "function",
+    "line" : 7026,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 7042,
     "endchar" : 2
    }
   ]
@@ -10917,8 +10951,25 @@
      {
       "name" : "this",
       "kind" : "constructor",
+      "comment" : "        Creates a $(D DERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. Unlike the construct that accepts a $(D ubyte[])\n        reference, this constructor does not \"chomp\" the array. This constructor\n        expects the encoded bytes to encode only one $(DERElement). If there are\n        any remaining bytes after decoding, an exception is thrown.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes()), but also throws an\n            $(D ASN1LengthException) if there are excess bytes.\n",
+      "line" : 4409,
+      "char" : 5,
+      "deco" : "FxAhZC4asn16codecs3der33DistinguishedEncodingRulesElement",
+      "originalType" : "@system (in ubyte[] bytes)",
+      "parameters" : [
+       {
+        "name" : "bytes",
+        "deco" : "xAh"
+       }
+      ],
+      "endline" : 4421,
+      "endchar" : 5
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
       "comment" : "        Creates a $(D DERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. The supplied $(D ubyte[]) array is read, starting\n        from the index specified by $(D bytesRead), and increments\n        $(D bytesRead) by the number of bytes read.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes())\n\n        Examples:\n        ---\n        // Decoding looks like:\n        DERElement[] result;\n        size_t i = 0u;\n        while (i < bytes.length)\n            result ~= new DERElement(i, bytes);\n\n        // Encoding looks like:\n        ubyte[] result;\n        foreach (dv; dervalues)\n        {\n            result ~= cast(ubyte[]) dv;\n        }\n        ---\n",
-      "line" : 4423,
+      "line" : 4449,
       "char" : 5,
       "deco" : "FKmxAhZC4asn16codecs3der33DistinguishedEncodingRulesElement",
       "originalType" : "@system (ref size_t bytesRead, in ubyte[] bytes)",
@@ -10935,14 +10986,14 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 4426,
+      "endline" : 4452,
       "endchar" : 5
      },
      {
       "name" : "fromBytes",
       "kind" : "function",
       "comment" : "        Returns: the number of bytes read\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1TagPaddingException) if the tag number is \"padded\" with\n                \"leading zero bytes\" ($(D 0x80u)))\n            $(LI $(D ASN1TagOverflowException) if the tag number is too large to\n                fit into a $(D size_t))\n            $(LI $(D ASN1LengthUndefinedException) if the reserved length byte of\n                $(D 0xFF) is encountered)\n            $(LI $(D ASN1LengthOverflowException) if the length is too large to fit\n                into a $(D size_t))\n            $(LI $(D ASN1TruncationException) if the tag, length, or value appear to\n                be truncated)\n            $(LI $(D ASN1ConstructionException) if the length is indefinite, but the\n                element is marked as being encoded primitively)\n            $(LI $(D ASN1LengthException) if indefinite-length encoding is encountered)\n        )\n",
-      "line" : 4449,
+      "line" : 4475,
       "char" : 12,
       "deco" : "FxAhZm",
       "originalType" : "size_t(in ubyte[] bytes)",
@@ -10952,7 +11003,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 4654,
+      "endline" : 4680,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.fromBytes"
@@ -10962,10 +11013,10 @@
       "name" : "toBytes",
       "kind" : "function",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.opCast!(ubyte[])()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 4667,
+      "line" : 4693,
       "char" : 13,
       "deco" : "xFNbNdZAh",
-      "endline" : 4726,
+      "endline" : 4752,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.toBytes"
@@ -10974,7 +11025,7 @@
      {
       "kind" : "template",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.toBytes()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 4739,
+      "line" : 4765,
       "char" : 13,
       "name" : "opCast",
       "parameters" : [
@@ -10988,10 +11039,10 @@
        {
         "name" : "opCast",
         "kind" : "function",
-        "line" : 4739,
+        "line" : 4765,
         "char" : 13,
         "type" : "nothrow @system ubyte[]()",
-        "endline" : 4742,
+        "endline" : 4768,
         "endchar" : 5
        }
       ]
@@ -10999,97 +11050,64 @@
     ]
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_4748_26",
+    "name" : "__unittest___source_asn1_codecs_der_d_4774_26",
     "kind" : "function",
-    "line" : 4748,
+    "line" : 4774,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4900,
+    "endline" : 4926,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_4901_27",
+    "name" : "__unittest___source_asn1_codecs_der_d_4927_27",
     "kind" : "function",
-    "line" : 4901,
+    "line" : 4927,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4942,
+    "endline" : 4968,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_4943_28",
+    "name" : "__unittest___source_asn1_codecs_der_d_4969_28",
     "kind" : "function",
-    "line" : 4943,
+    "line" : 4969,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 4978,
+    "endline" : 5004,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_4979_29",
+    "name" : "__unittest___source_asn1_codecs_der_d_5005_29",
     "kind" : "function",
-    "line" : 4979,
+    "line" : 5005,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5002,
+    "endline" : 5028,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_5003_30",
+    "name" : "__unittest___source_asn1_codecs_der_d_5029_30",
     "kind" : "function",
-    "line" : 5003,
+    "line" : 5029,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5020,
+    "endline" : 5046,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_5021_31",
+    "name" : "__unittest___source_asn1_codecs_der_d_5047_31",
     "kind" : "function",
-    "line" : 5021,
-    "char" : 1,
-    "storageClass" : [
-     "@system"
-    ],
-    "endline" : 5035,
-    "endchar" : 1
-   },
-   {
-    "name" : "__unittest___source_asn1_codecs_der_d_5036_32",
-    "kind" : "function",
-    "line" : 5036,
-    "char" : 1,
-    "storageClass" : [
-     "@system"
-    ],
-    "endline" : 5045,
-    "endchar" : 1
-   },
-   {
-    "name" : "__unittest___source_asn1_codecs_der_d_5046_33",
-    "kind" : "function",
-    "line" : 5046,
-    "char" : 1,
-    "storageClass" : [
-     "@system"
-    ],
-    "endline" : 5053,
-    "endchar" : 1
-   },
-   {
-    "name" : "__unittest___source_asn1_codecs_der_d_5054_34",
-    "kind" : "function",
-    "line" : 5054,
+    "line" : 5047,
     "char" : 1,
     "storageClass" : [
      "@system"
@@ -11098,53 +11116,75 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_5062_35",
+    "name" : "__unittest___source_asn1_codecs_der_d_5062_32",
     "kind" : "function",
     "line" : 5062,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5069,
+    "endline" : 5071,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_5070_36",
+    "name" : "__unittest___source_asn1_codecs_der_d_5072_33",
     "kind" : "function",
-    "line" : 5070,
+    "line" : 5072,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5081,
+    "endline" : 5079,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_5082_37",
+    "name" : "__unittest___source_asn1_codecs_der_d_5080_34",
     "kind" : "function",
-    "line" : 5082,
+    "line" : 5080,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5093,
+    "endline" : 5087,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_5094_38",
+    "name" : "__unittest___source_asn1_codecs_der_d_5088_35",
     "kind" : "function",
-    "line" : 5094,
+    "line" : 5088,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5102,
+    "endline" : 5095,
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_5103_39",
+    "name" : "__unittest___source_asn1_codecs_der_d_5096_36",
     "kind" : "function",
-    "line" : 5103,
+    "line" : 5096,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 5107,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_asn1_codecs_der_d_5108_37",
+    "kind" : "function",
+    "line" : 5108,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 5119,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_asn1_codecs_der_d_5120_38",
+    "kind" : "function",
+    "line" : 5120,
     "char" : 1,
     "storageClass" : [
      "@system"
@@ -11153,14 +11193,25 @@
     "endchar" : 1
    },
    {
-    "name" : "__unittest___source_asn1_codecs_der_d_5129_40",
+    "name" : "__unittest___source_asn1_codecs_der_d_5129_39",
     "kind" : "function",
     "line" : 5129,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5145,
+    "endline" : 5154,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest___source_asn1_codecs_der_d_5155_40",
+    "kind" : "function",
+    "line" : 5155,
+    "char" : 1,
+    "storageClass" : [
+     "@system"
+    ],
+    "endline" : 5171,
     "endchar" : 2
    }
   ]

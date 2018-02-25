@@ -4871,6 +4871,32 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
     /**
         Creates a $(D BERElement) from the supplied bytes, inferring that the first
+        byte is the type tag. Unlike the construct that accepts a $(D ubyte[])
+        reference, this constructor does not "chomp" the array. This constructor
+        expects the encoded bytes to encode only one $(BERElement). If there are
+        any remaining bytes after decoding, an exception is thrown.
+
+        Throws:
+            All of the same exceptions as $(D fromBytes()), but also throws an
+            $(D ASN1LengthException) if there are excess bytes.
+    */
+    public @system
+    this (in ubyte[] bytes)
+    {
+        immutable size_t bytesRead = this.fromBytes(bytes);
+        if (bytesRead != bytes.length)
+            throw new ASN1LengthException
+            (
+                "This exception was thrown because you attempted to decode " ~
+                "a single ASN.1 element that was encoded on too many bytes. " ~
+                "The entire element was decoded from " ~ text(bytesRead) ~ " " ~
+                "bytes, but " ~ text(bytes.length) ~ " bytes were supplied to " ~
+                "decode."
+            );
+    }
+
+    /**
+        Creates a $(D BERElement) from the supplied bytes, inferring that the first
         byte is the type tag. The supplied $(D ubyte[]) array is read, starting
         from the index specified by $(D bytesRead), and increments
         $(D bytesRead) by the number of bytes read.
