@@ -12,7 +12,7 @@ documentation/restricted/
 rubbish/
 test/yury/
 ./asn1
-./unittest
+unittest
 
 # General D Ignores
 *.o

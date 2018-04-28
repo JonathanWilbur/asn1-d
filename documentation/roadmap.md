@@ -1,11 +1,41 @@
 # Development Roadmap
 
-### 2.3.0 Release
+### 2.3.1 Release
+
+- [ ] Make command line tools decode all integers as `BigInt`
+
+### 2.3.2 Release
+
+- [ ] Optimize `integer!BigInt`
+
+### 2.3.3 Release
+
+- [ ] Add explanatory comments
+
+### 2.3.4 Release
+
+- [ ] Change `body` to `do`, since `body` is being deprecated
+- [ ] Change `for` loops to `foreach` loops
+- [ ] Apply `@nogc` when possible
+- [ ] Apply `pure` when possible
+- [ ] Use `.length` pre-allocation instead of incremental appends via `~`
+
+### 2.4.0 Release
+
+- [ ] New constructors
+  - [ ] `Element(ASN1Class, ASN1Construction, size_t)`
+
+### 2.5.0 Release
+
+- [ ] Allow `INTEGER` to be encoded with unsigned integers
+
+### 2.6.0 Release
 
 - [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
 - [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
 - [ ] Publish a [Brew package](https://docs.brew.sh/Formula-Cookbook.html)
 - [ ] Configure [Travis CI](https://travis-ci.org)
+- [ ] Create `Vagrantfile`
 - [ ] Create `man(3)` (Library calls) pages
 - [ ] Create Wikipedia pages for each codec
 - [ ] Review by one security firm
@@ -35,7 +65,7 @@
   - [ ] Format `switch` statements
   - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
 
-## 2.4.0 Release
+## 2.7.0 Release
 
 The following codecs will be added:
 
@@ -53,7 +83,7 @@ The following codecs will be added:
 After this release, developers will be able to use this library to develop a
 Remote Desktop Protocol library.
 
-## 2.5.0 Release
+## 2.8.0 Release
 
 The following codecs will be added:
 
@@ -71,7 +101,7 @@ The following codecs will be added:
   - [ ] `decode-exer`
   - [ ] `decode-jer`
 
-## 2.6.0 Release
+## 2.9.0 Release
 
 The following codecs will be added:
 
@@ -83,7 +113,7 @@ The following codecs will be added:
   - [ ] `decode-oer`
   - [ ] `decode-coer`
 
-## 2.7.0 Release
+## 2.10.0 Release
 
 The following codecs will be added:
 

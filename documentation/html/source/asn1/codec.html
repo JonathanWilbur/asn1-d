@@ -1054,7 +1054,7 @@ if (!canFind(acceptableTagNumbers, this.tagNumber))
 </li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.integer" id="AbstractSyntaxNotation1Element.integer"><code class="member">integer</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.integer"></span>abstract const @property T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.integer"></span>abstract const @property T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T || is(T == BigInt));
 
     </code>
 </section>
@@ -1064,7 +1064,7 @@ if (!canFind(acceptableTagNumbers, this.tagNumber))
 </li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1Element.integer" id="AbstractSyntaxNotation1Element.integer"><code class="member">integer</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.integer.2"></span>abstract @property void <code class="code">integer</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T);
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1Element.integer.2"></span>abstract @property void <code class="code">integer</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T || is(T == BigInt));
 
     </code>
 </section>
@@ -1909,7 +1909,7 @@ Thanks to StackOverflow user
 
         </div>
         <div id="footer">
-            <span id="timestamp">Sun Feb 25 12:13:48 2018
+            <span id="timestamp">Sat Apr 28 11:12:00 2018
 </span>
         </div>
     </body>

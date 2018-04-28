@@ -217,18 +217,30 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     */
     public @property @system
     T integer(T)() const
-    if (isIntegral!T && isSigned!T)
+    if ((isIntegral!T && isSigned!T) || is(T == BigInt))
     {
         if (this.construction != ASN1Construction.primitive)
             throw new ASN1ConstructionException
             (this.construction, "decode an INTEGER");
 
         if (this.value.length == 1u)
-            return cast(T) cast(byte) this.value[0];
+        {
+            static if (is(T == BigInt))
+                return BigInt(cast(byte) this.value[0]);
+            else
+                return cast(T) cast(byte) this.value[0];
+        }
 
-        if (this.value.length == 0u || this.value.length > T.sizeof)
+        if (this.value.length == 0u)
             throw new ASN1ValueSizeException
             (1u, long.sizeof, this.value.length, "decode an INTEGER");
+
+        static if (!is(T == BigInt))
+        {
+            if (this.value.length > T.sizeof)
+                throw new ASN1ValueSizeException
+                (1u, long.sizeof, this.value.length, "decode an INTEGER");
+        }
 
         if
         (
@@ -244,35 +256,53 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 debugInformationText ~ reportBugsText
             );
 
-        /* NOTE:
-            Because the INTEGER is stored in two's complement form, you
-            can't just apppend 0x00u to the big end of it until it is as long
-            as T in bytes, then cast to T. Instead, you have to first determine
-            if the encoded integer is negative or positive. If it is negative,
-            then you actually want to append 0xFFu to the big end until it is
-            as big as T, so you get the two's complement form of whatever T
-            you choose.
+        static if (is(T == BigInt))
+        {
+            BigInt ret = BigInt(0);
+            ubyte[] sb = this.value.dup;
 
-            The line immediately below this determines whether the padding byte
-            should be 0xFF or 0x00 based on the most significant bit of the
-            most significant byte (which, since BER encodes big-endian, will
-            always be the first byte). If set (1), the number is negative, and
-            hence, the padding byte should be 0xFF. If not, it is positive,
-            and the padding byte should be 0x00.
-        */
-        immutable ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
-        ubyte[] value = this.value.dup; // Duplication is necessary to prevent modifying the source bytes
-        while (value.length < T.sizeof)
-            value = (paddingByte ~ value);
-        version (LittleEndian) reverse(value);
-        version (unittest) assert(value.length == T.sizeof);
-        return *cast(T *) value.ptr;
+            ret += cast(byte) (sb[0] & 0x80u);
+            ret += (sb[0] & cast(ubyte) 0x7Fu);
+            foreach (ubyte b; sb[1 .. $])
+            {
+                ret <<= 8;
+                ret += b;
+            }
+
+            return ret;
+        }
+        else // it is a native integral type
+        {
+            /* NOTE:
+                Because the INTEGER is stored in two's complement form, you
+                can't just apppend 0x00u to the big end of it until it is as long
+                as T in bytes, then cast to T. Instead, you have to first determine
+                if the encoded integer is negative or positive. If it is negative,
+                then you actually want to append 0xFFu to the big end until it is
+                as big as T, so you get the two's complement form of whatever T
+                you choose.
+
+                The line immediately below this determines whether the padding byte
+                should be 0xFF or 0x00 based on the most significant bit of the
+                most significant byte (which, since BER encodes big-endian, will
+                always be the first byte). If set (1), the number is negative, and
+                hence, the padding byte should be 0xFF. If not, it is positive,
+                and the padding byte should be 0x00.
+            */
+            immutable ubyte paddingByte = ((this.value[0] & 0x80u) ? 0xFFu : 0x00u);
+            ubyte[] value = this.value.dup; // Duplication is necessary to prevent modifying the source bytes
+            while (value.length < T.sizeof)
+                value = (paddingByte ~ value);
+            version (LittleEndian) reverse(value);
+            version (unittest) assert(value.length == T.sizeof);
+            return *cast(T *) value.ptr;
+        }
     }
 
     /// Encodes a signed integral type
-    public @property @system nothrow
+    public @property @system // nothrow (Can't be nothrow because of BigInt.opCast)
     void integer(T)(in T value)
-    if (isIntegral!T && isSigned!T)
+    if ((isIntegral!T && isSigned!T) || is(T == BigInt))
     out
     {
         assert(this.value.length > 0u);
@@ -287,8 +317,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
 
         ubyte[] ub;
-        ub.length = T.sizeof;
-        *cast(T *)&ub[0] = value;
+        static if (is(T == BigInt))
+        {
+            ub.length = (value.uintLength * uint.sizeof);
+            for (size_t i = 0u; i < value.uintLength; i++)
+            {
+                *cast(uint *) &ub[i * 4u] = cast(uint) ((value >> (32u * i)) & uint.max);
+            }
+        }
+        else // it is a native integral type
+        {
+            ub.length = T.sizeof;
+            *cast(T *)&ub[0] = value;
+        }
         version (LittleEndian) reverse(ub);
 
         /*
@@ -308,7 +349,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 encoded in the smallest possible number of octets.
         */
         size_t startOfNonPadding = 0u;
-        if (T.sizeof > 1u)
+        static if (T.sizeof > 1u)
         {
             if (value >= 0)
             {
@@ -316,6 +357,12 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 {
                     if (ub[i] != 0x00u) break;
                     if (!(ub[i+1] & 0x80u)) startOfNonPadding++;
+                }
+
+                static if (is(T == BigInt))
+                {
+                    // Endianness does not matter here, because it is always stored BE.
+                    if (ub[0] & 0x80u) ub = (0x00u ~ ub);
                 }
             }
             else
@@ -325,10 +372,54 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     if (ub[i] != 0xFFu) break;
                     if (ub[i+1] & 0x80u) startOfNonPadding++;
                 }
+
+                static if (is(T == BigInt))
+                {
+                    // Endianness does not matter here, because it is always stored BE.
+                    if (!(ub[0] & 0x80u)) ub = (0xFFu ~ ub);
+                }
             }
         }
-
         this.value = ub[startOfNonPadding .. $];
+    }
+
+    @system
+    unittest
+    {
+        BERElement el = new BERElement();
+        BigInt b1 = BigInt("18446744073709551619"); // ulong.max + 4
+        BigInt b2 = BigInt(uint.max);
+        BigInt b3 = BigInt(0);
+        BigInt b4 = BigInt(3);
+        BigInt b5 = BigInt(-3);
+
+        el.integer = b1;
+        assert(el.value == [
+            0x01u, 0x00u, 0x00u, 0x00u,
+            0x00u, 0x00u, 0x00u, 0x00u,
+            0x03u
+        ]);
+
+        el.integer = b2;
+        assert(el.value == [
+            0x00u, 0xFFu, 0xFFu, 0xFFu,
+            0xFFu
+        ]);
+
+        el.integer = b3;
+        assert(el.value == [
+            0x00u
+        ]);
+
+        el.integer = b4;
+        assert(el.value == [
+            0x03u
+        ]);
+
+        el.integer = b5;
+        assert(el.value == [
+            0xFDu
+        ]);
     }
 
     // Ensure that INTEGER 0 gets encoded on a single null byte.
