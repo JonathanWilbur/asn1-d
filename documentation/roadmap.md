@@ -2,7 +2,7 @@
 
 ### 2.3.1 Release
 
-- [ ] Make command line tools decode all integers as `BigInt`
+- [x] Make command line tools decode all integers as `BigInt`
 
 ### 2.3.2 Release
 
@@ -20,6 +20,10 @@
 - [ ] Apply `pure` when possible
 - [ ] Use `.length` pre-allocation instead of incremental appends via `~`
 
+### 2.3.5 Release
+
+- [ ] Make command line tools display decoded `BIT STRING`s as `bool` arrays
+
 ### 2.4.0 Release
 
 - [ ] New constructors
@@ -28,6 +32,9 @@
 ### 2.5.0 Release
 
 - [ ] Allow `INTEGER` to be encoded with unsigned integers
+- [ ] Allow `ENUMERATED` to be encoded with unsigned integers
+- [ ] Allow `INTEGER` to be decoded with unsigned integers
+- [ ] Allow `ENUMERATED` to be decoded with unsigned integers
 
 ### 2.6.0 Release
 
@@ -142,3 +149,7 @@ The following codecs will be added:
   - [ ] Makefile
   - [ ] Compiled D Executable
   - [ ] Support `gdc` and `ldc` compilation
+
+## Possible Future Ideas
+
+- [ ] Make a separate `BitString` type, since `bool[]` is unwieldy.

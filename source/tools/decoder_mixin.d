@@ -3,6 +3,7 @@ module asn1.tools.decoder_mixin;
 mixin template Decoder(Element)
 {
     import asn1.constants;
+    import std.bigint : BigInt;
     import std.conv : ConvException;
     import std.stdio : write, writeln, writefln, stdin;
     import std.utf : UTFException;
@@ -155,18 +156,20 @@ mixin template Decoder(Element)
     string stringifyUniversalValue (Element element)
     {
         import std.conv : text;
+        import std.format : format;
+
         switch (element.tagNumber)
         {
             case (0u): return "END OF CONTENT";
             case (1u): return (element.boolean ? "TRUE" : "FALSE");
-            case (2u): return text(element.integer!ptrdiff_t);
+            case (2u): return format("%d", element.integer!BigInt);
             case (3u): return "BIT STRING";
             case (4u): return text(element.octetString);
             case (5u): return "NULL";
             case (6u): return element.objectIdentifier.toString();
             case (7u): return element.objectDescriptor;
             case (8u): return "EXTERNAL"; // This should never be executed.
-            case (9u): return text(element.realNumber!double);
+            case (9u): return text(element.realNumber!real);
             case (10u): return text(element.enumerated!ptrdiff_t);
             case (11u): return "EmbeddedPDV"; // This should never be executed.
             case (12u): return element.utf8String;

@@ -5,6 +5,7 @@ mixin template Encoder(Element)
     import asn1.constants;
     import std.algorithm: map;
     import std.array : array, split;
+    import std.bigint : BigInt;
     import std.conv : ConvException, ConvOverflowException, parse, to;
     import std.datetime.date : DateTime, DateTimeException;
     import std.range: chunks;
@@ -32,7 +33,7 @@ mixin template Encoder(Element)
     {
         try
         {
-            element.integer!ptrdiff_t = literal.to!ptrdiff_t;
+            element.integer!BigInt = BigInt(literal);
         }
         catch (ConvException e)
         {
