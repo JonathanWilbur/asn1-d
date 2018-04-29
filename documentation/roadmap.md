@@ -6,7 +6,7 @@
 
 ### 2.3.2 Release
 
-- [ ] Optimize `integer!BigInt`
+- [x] Optimize `integer!BigInt`
 
 ### 2.3.3 Release
 

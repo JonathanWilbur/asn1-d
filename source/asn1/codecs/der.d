@@ -267,16 +267,13 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         static if (is(T == BigInt))
         {
             BigInt ret = BigInt(0);
-            ubyte[] sb = this.value.dup;
-
-            ret += cast(byte) (sb[0] & 0x80u);
-            ret += (sb[0] & cast(ubyte) 0x7Fu);
-            foreach (ubyte b; sb[1 .. $])
+            ret += cast(byte) (this.value[0] & 0x80u);
+            ret += (this.value[0] & cast(ubyte) 0x7Fu);
+            foreach (immutable ubyte b; this.value[1 .. $])
             {
                 ret <<= 8;
                 ret += b;
             }
-
             return ret;
         }
         else // it is a native integral type
@@ -327,11 +324,16 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         ubyte[] ub;
         static if (is(T == BigInt))
         {
-            ub.length = (value.uintLength * uint.sizeof);
+            ub.length = ((value.uintLength * uint.sizeof) + 1u);
             for (size_t i = 0u; i < value.uintLength; i++)
             {
                 *cast(uint *) &ub[i * 4u] = cast(uint) ((value >> (32u * i)) & uint.max);
             }
+
+            if (value >= 0)
+                ub[$-1] = 0x00u;
+            else // it is negative
+                ub[$-1] = 0xFFu;
         }
         else // it is a native integral type
         {
@@ -366,12 +368,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     if (ub[i] != 0x00u) break;
                     if (!(ub[i+1] & 0x80u)) startOfNonPadding++;
                 }
-
-                static if (is(T == BigInt))
-                {
-                    // Endianness does not matter here, because it is always stored BE.
-                    if (ub[0] & 0x80u) ub = (0x00u ~ ub);
-                }
             }
             else
             {
@@ -379,12 +375,6 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                 {
                     if (ub[i] != 0xFFu) break;
                     if (ub[i+1] & 0x80u) startOfNonPadding++;
-                }
-
-                static if (is(T == BigInt))
-                {
-                    // Endianness does not matter here, because it is always stored BE.
-                    if (!(ub[0] & 0x80u)) ub = (0xFFu ~ ub);
                 }
             }
         }
