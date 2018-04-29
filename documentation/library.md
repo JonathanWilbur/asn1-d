@@ -131,10 +131,10 @@ follows:
     void boolean(in bool value);
 
     abstract public @property
-    T integer(T)() const if (isIntegral!T && isSigned!T);
+    T integer(T)() const if ((isIntegral!T && isSigned!T) || is(T == BigInt));
 
     abstract public @property
-    void integer(T)(in T value) if (isIntegral!T && isSigned!T);
+    void integer(T)(in T value) if ((isIntegral!T && isSigned!T) || is(T == BigInt));
 
     abstract public @property
     bool[] bitString() const;
@@ -303,14 +303,6 @@ follows:
 
     abstract public @property
     void basicMultilingualPlaneString(in wstring value);
-```
-
-And though it is not implemented on `ASN1Element` (because I cannot confirm
-that these are universal properties of all ASN.1 codecs), all of the X.690
-codecs (BER, CER, and DER) contain these members:
-
-```d
-
 ```
 
 The relevant `enum`s can be found in `source/asn1.d`, and are as follows:

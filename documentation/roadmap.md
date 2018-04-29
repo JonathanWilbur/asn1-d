@@ -10,7 +10,7 @@
 
 ### 2.3.3 Release
 
-- [ ] Add explanatory comments
+- [x] Add explanatory comments
 
 ### 2.3.4 Release
 

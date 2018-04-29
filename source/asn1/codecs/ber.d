@@ -258,6 +258,13 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
 
         static if (is(T == BigInt))
         {
+            /*
+                The most significant bit of the most significant byte
+                determines the sign of the resulting INTEGER. So we have to
+                treat the first byte specially. After that, all remaining
+                bytes are just added after the BigInt has been shifted by
+                a byte.
+            */
             BigInt ret = BigInt(0);
             ret += cast(byte) (this.value[0] & 0x80u);
             ret += (this.value[0] & cast(ubyte) 0x7Fu);
@@ -316,15 +323,36 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         ubyte[] ub;
         static if (is(T == BigInt))
         {
+            if (value.uintLength > (size_t.max >> 5u))
+                throw new ASN1ValueSizeException
+                (1u, (size_t.max >> 2u), (value.uintLength << 2u), "encode an INTEGER from a BigInt");
+
+            // "+ 1u" because we are going to set the last byte to 00 or FF to indicate sign
             ub.length = ((value.uintLength * uint.sizeof) + 1u);
+
+            /*
+                Since there is no easy way to obtain the bytes of the BigInt,
+                we have to incrementally shift, mask, and cast to bytes, one
+                uint at a time. This loop shifts the supplied BigInt by 32 more
+                bits with each iteration, then masks with FFFFFFFF. The resulting
+                value can then be cast to a uint without overflow, which can then
+                be written to the appropriate "slot" in the pre-allocated array.
+            */
             for (size_t i = 0u; i < value.uintLength; i++)
             {
-                *cast(uint *) &ub[i * 4u] = cast(uint) ((value >> (32u * i)) & uint.max);
+                *cast(uint *) &ub[i << 2u] = cast(uint) ((value >> (i << 5u)) & uint.max);
             }
 
+            /*
+                When the BigInt is converted to bytes, unlike a signed integer,
+                it might not have the most significant bit set to correctly
+                indicate its sign, because the bytes of the BigInt are obtained
+                from the internal array of *uints* in the BigInt. So here, we
+                append a 00 or FF byte to correct this.
+            */
             if (value >= 0)
                 ub[$-1] = 0x00u;
-            else // it is negative
+            else
                 ub[$-1] = 0xFFu;
         }
         else // it is a native integral type
@@ -2019,7 +2047,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             this.value = [ ASN1SpecialRealValue.minusZero ];
             return;
         }
-        if (value.isNaN)
+        else if (value.isNaN)
         {
             this.value = [ ASN1SpecialRealValue.notANumber ];
             return;

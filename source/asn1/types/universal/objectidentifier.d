@@ -65,7 +65,7 @@ public class ObjectIdentifier
     {
         if (numbers.length < 2u)
             throw new OIDException
-            ("At least two nodes must be provided to ObjectIdenifier constructor.");
+            ("At least two nodes must be provided to ObjectIdentifier constructor.");
 
         if (numbers[0] == 0u || numbers[0] == 1u)
         {
@@ -114,7 +114,7 @@ public class ObjectIdentifier
     {
         if (nodes.length < 2u)
             throw new OIDException
-            ("At least two nodes must be provided to ObjectIdenifier constructor.");
+            ("At least two nodes must be provided to ObjectIdentifier constructor.");
 
         if (nodes[0].number == 0u || nodes[0].number == 1u)
         {
@@ -164,7 +164,7 @@ public class ObjectIdentifier
 
         if (segments.length < 2u)
             throw new OIDException
-            ("At least two nodes must be provided to ObjectIdenifier constructor.");
+            ("At least two nodes must be provided to ObjectIdentifier constructor.");
 
         size_t[] numbers;
         numbers.length = segments.length;
