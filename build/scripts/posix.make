@@ -16,7 +16,7 @@ vpath %.a ./build/libraries
 vpath %.so ./build/libraries
 vpath % ./build/executables
 
-version = 2.3.6
+version = 2.4.0
 
 universaltypes = \
 	characterstring \

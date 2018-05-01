@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](https://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [2.3.6](https://semver.org/)
+* Version: [2.4.0](https://semver.org/)
 
 ## What is ASN.1?
 

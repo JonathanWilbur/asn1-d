@@ -786,7 +786,6 @@ class AbstractSyntaxNotation1Element(Element)
             el.integer!long = i;
             assert(el.integer!long == i);
             el.integer!BigInt = BigInt(i);
-            // writefln("%(%02X %)", el.value);
             assert(el.integer!BigInt == BigInt(i));
         }
     }
@@ -2825,92 +2824,6 @@ class AbstractSyntaxNotation1Element(Element)
         el.bmpString = test;
         el.value[4] = 0x88u;
         assert(test[4] == 'O');
-    }
-
-    /*
-        Increments an arbitrary-length BigEndian integer, represented as an
-        array of bytes.
-    */
-    protected @property nothrow pure @safe
-    ubyte[] incremented () const
-    {
-        if (this.value.length == 0u) return [];
-        ubyte[] ret = this.value.dup;
-        foreach_reverse (size_t i, ref b; ret)
-        {
-            if (b != 0xFFu)
-            {
-                b++;
-                break;
-            }
-
-            b = 0x00u;
-
-            // If the array of bytes is maxed out, append a next byte set to one.
-            if (i == (ret.length - 1))
-            {
-                ret = (0x01u ~ ret);
-                return ret;
-            }
-        }
-        return ret;
-    }
-
-    @safe
-    unittest
-    {
-        Element el = new Element();
-
-        el.value = [ 0x00u ];
-        assert(el.incremented == [ 0x01u ]);
-
-        el.value = [ 0xFFu ];
-        assert(el.incremented == [ 0x01u, 0x00u ]);
-
-        el.value = [ 0xFFu, 0xFFu, 0xFDu ];
-        assert(el.incremented == [ 0xFFu, 0xFFu, 0xFEu ]);
-
-        el.value = [];
-        assert(el.incremented == []);
-    }
-
-    /*
-        Decrements an arbitrary-length BigEndian integer, represented as an
-        array of bytes.
-    */
-    protected @property nothrow pure @safe
-    ubyte[] decremented () const
-    {
-        if (this.value.length == 0u) return [];
-        ubyte[] ret = this.value.dup;
-        foreach_reverse (ref b; ret)
-        {
-            if (b != 0x00u)
-            {
-                b--;
-                break;
-            }
-            b = 0xFFu;
-        }
-        return ret;
-    }
-
-    @safe
-    unittest
-    {
-        Element el = new Element();
-
-        el.value = [ 0x00u ];
-        assert(el.decremented == [ 0xFFu ]);
-
-        el.value = [ 0xFFu ];
-        assert(el.decremented == [ 0xFEu ]);
-
-        el.value = [ 0xFFu, 0xFFu, 0xFDu ];
-        assert(el.decremented == [ 0xFFu, 0xFFu, 0xFCu ]);
-
-        el.value = [];
-        assert(el.decremented == []);
     }
 
 }

@@ -6189,11 +6189,18 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         test(2017u);
     }
 
-    /// Creates an $(MONO END OF CONTENT)
+    /// Creates an $(MONO END OF CONTENT) by default
     public @safe @nogc nothrow
-    this()
+    this
+    (
+        ASN1TagClass tagClass = ASN1TagClass.universal,
+        ASN1Construction construction = ASN1Construction.primitive,
+        size_t tagNumber = 0u
+    )
     {
-        this.tagNumber = 0u;
+        this.tagClass = tagClass;
+        this.construction = construction;
+        this.tagNumber = tagNumber;
         this.value = [];
     }
 
@@ -6222,7 +6229,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         ---
     */
     public @system
-    this(ref ubyte[] bytes)
+    this (ref ubyte[] bytes)
     {
         size_t bytesRead = this.fromBytes(bytes);
         bytes = bytes[bytesRead .. $];
@@ -6280,7 +6287,7 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
         ---
     */
     public @system
-    this(ref size_t bytesRead, in ubyte[] bytes)
+    this (ref size_t bytesRead, in ubyte[] bytes)
     {
         bytesRead += this.fromBytes(bytes[bytesRead .. $].dup);
     }

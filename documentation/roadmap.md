@@ -31,8 +31,8 @@
 
 ### 2.4.0 Release
 
-- [ ] New constructors
-  - [ ] `Element(ASN1Class, ASN1Construction, size_t)`
+- [x] New constructors
+  - [x] `Element(ASN1Class, ASN1Construction, size_t)`
 
 ### 2.4.1 Release
 
@@ -49,11 +49,11 @@
 
 ### 2.6.0 Release
 
+- [ ] Achieve 100% Code Coverage
 - [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
 - [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
 - [ ] Publish a [Brew package](https://docs.brew.sh/Formula-Cookbook.html)
 - [ ] Configure [Travis CI](https://travis-ci.org)
-- [ ] Create `Vagrantfile`
 - [ ] Create `man(3)` (Library calls) pages
 - [ ] Create Wikipedia pages for each codec
 - [ ] Review by one security firm
@@ -151,6 +151,7 @@ The following codecs will be added:
 
 ## 3.0.0 Release
 
+- [ ] Get rid of `opCast!(ubyte[])()`.
 - [ ] TeletexString (T61String) validation (WireShark has an implementation.)
 - [ ] VideotexString validation
 - [ ] Operator Overloads
