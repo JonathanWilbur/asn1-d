@@ -20,8 +20,9 @@
 
 ### 2.3.5 Release
 
-- [ ] Rewrite `objectIdentifier` accessor so it does not create a bunch of new arrays
-- [ ] Make command line tools display decoded `BIT STRING`s as `bool` arrays
+- [x] Rewrite `objectIdentifier` accessor so it does not create a bunch of new arrays
+- [x] Make command-line tools display decoded `BIT STRING`s as `bool` arrays
+- [x] Make command-line tools display decoded `UniversalString`s and `BMPString`s.
 
 ### 2.3.6 Release
 
@@ -31,6 +32,7 @@
 ### 2.3.7 Release
 
 - [ ] Use `Appender` for `SEQUENCE` and `SET`.
+- [ ] Change occurrences of `0x80u` to `0b10000000u`.
 
 ### 2.4.0 Release
 

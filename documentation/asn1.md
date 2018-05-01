@@ -256,6 +256,22 @@ a massive waste of time and an invitation to billions of dollars of security
 breaches around the world. ASN.1 _MUST_ be implemented by an expert in ASN.1,
 implemented _completely_, and be ruthlessly tested after that.
 
+### Bad Choice of Endianness
+
+ASN.1 encodes everything Big-Endian. This decision was made back when there
+were still 10-bit computers, when there was a variety of CPU architectures,
+and where endianness was uncertain. Nowadays, things have changed: almost
+every computer on the face of the Earth uses the x86 instruction set
+architecture, which is little-endian and uses 8-bits per byte.
+
+If big-endian computers were the established norm, ASN.1 would be a lot better,
+because a lot of the data could be dumped right from memory into the encoded
+data buffer, and vice versa. But because little-endian is the norm, but ASN.1
+expects big-endian, everything has to be reversed, often in tedious ways, when
+encoding and decoding with ASN.1. This makes it a lot less computationally
+efficient when compared to something little-endian like Google's
+[Protocol Buffers](https://developers.google.com/protocol-buffers/).
+
 ### In summary
 
 DO NOT USE ASN.1 UNLESS YOU HAVE TO.

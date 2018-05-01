@@ -153,6 +153,20 @@ mixin template Decoder(Element)
         indentation -= 4;
     }
 
+    string stringifyBitString (in bool[] value)
+    {
+        char[] ret;
+        ret.length = value.length;
+        foreach(size_t index, bool boolean; value)
+        {
+            if (boolean)
+                ret[index] = '1';
+            else
+                ret[index] = '0';
+        }
+        return cast(string) ret;
+    }
+
     string stringifyUniversalValue (Element element)
     {
         import std.conv : text;
@@ -163,8 +177,8 @@ mixin template Decoder(Element)
             case (0u): return "END OF CONTENT";
             case (1u): return (element.boolean ? "TRUE" : "FALSE");
             case (2u): return format("%d", element.integer!BigInt);
-            case (3u): return "BIT STRING";
-            case (4u): return text(element.octetString);
+            case (3u): return stringifyBitString(element.bitString);
+            case (4u): return format("%(%02X %)", element.octetString);
             case (5u): return "NULL";
             case (6u): return element.objectIdentifier.toString();
             case (7u): return element.objectDescriptor;
@@ -180,17 +194,17 @@ mixin template Decoder(Element)
             case (17u): return "SET"; // This should never be executed.
             case (18u): return element.numericString;
             case (19u): return element.printableString;
-            case (20u): return text(element.teletexString);
-            case (21u): return text(element.videotexString);
+            case (20u): return format("%(%02X %)", element.teletexString);
+            case (21u): return format("%(%02X %)", element.videotexString);
             case (22u): return element.ia5String;
             case (23u): return element.utcTime.toISOString();
             case (24u): return element.generalizedTime.toISOString();
             case (25u): return element.graphicString;
             case (26u): return element.visibleString;
             case (27u): return element.generalString;
-            case (28u): return "[ UniversalString that cannot be displayed. ]";
+            case (28u): return cast(string) element.universalString;
             case (29u): return "CharacterString"; // This should never be executed.
-            case (30u): return "[ BMPString that cannot be displayed. ]";
+            case (30u): return cast(string) element.bmpString;
             case (31u): return "!!! INVALID TYPE : UNDEFINED 31 !!!";
             default: return "!!! INVALID TYPE : tagNumber above 31 !!!";
         }

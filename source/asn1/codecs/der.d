@@ -758,38 +758,38 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
         }
 
         size_t[] numbers;
-        if (this.value[0] >= 0x50u)
-        {
-            numbers = [ 2u, (this.value[0] - 0x50u) ];
-        }
-        else if (this.value[0] >= 0x28u)
-        {
-            numbers = [ 1u, (this.value[0] - 0x28u) ];
-        }
-        else
-        {
-            numbers = [ 0u, this.value[0] ];
-        }
-
-        // Breaks bytes into groups, where each group encodes one OID component.
-        const(ubyte)[][] byteGroups;
-        size_t lastTerminator = 1u;
+        size_t components = 2u;
         const ubyte[] allButTheFirstByte = this.value[1 .. $];
         foreach (immutable size_t i, immutable ubyte b; allButTheFirstByte)
         {
-            if (!(b & 0x80u))
-            {
-                byteGroups ~= this.value[lastTerminator .. (i + 2u)];
-                lastTerminator = (i + 2u);
-            }
+            if (!(b & 0x80u)) components++;
+        }
+        numbers.length = components;
+
+        if (this.value[0] >= 0x50u)
+        {
+            numbers[0] = 2u;
+            numbers[1] = (this.value[0] - 0x50u);
+        }
+        else if (this.value[0] >= 0x28u)
+        {
+            numbers[0] = 1u;
+            numbers[1] = (this.value[0] - 0x28u);
+        }
+        else
+        {
+            numbers[0] = 0u;
+            numbers[1] = this.value[0];
         }
 
-        numbers.length += byteGroups.length;
-
-        // Converts each group of bytes to a number.
-        foreach (immutable size_t i, const ubyte[] byteGroup; byteGroups)
+        size_t currentNumber = 2u;
+        ubyte bytesUsedInCurrentNumber = 0u;
+        foreach (immutable ubyte b; allButTheFirstByte)
         {
-            if (byteGroup.length > size_t.sizeof)
+            numbers[currentNumber] <<= 7;
+            numbers[currentNumber] |= cast(size_t) (b & 0x7Fu);
+
+            if ((++bytesUsedInCurrentNumber) > size_t.sizeof)
                 throw new ASN1ValueOverflowException
                 (
                     "This exception was thrown because you attempted to decode " ~
@@ -799,10 +799,10 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
                     debugInformationText ~ reportBugsText
                 );
 
-            foreach (immutable ubyte b; byteGroup)
+            if (!(b & 0x80u))
             {
-                numbers[(i + 2u)] <<= 7;
-                numbers[(i + 2u)] |= cast(size_t) (b & 0x7Fu);
+                currentNumber++;
+                bytesUsedInCurrentNumber = 0u;
             }
         }
 
@@ -3056,38 +3056,35 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             throw new ASN1TruncationException
             (size_t.max, this.value.length, "decode a RELATIVE OID");
 
-        // Breaks bytes into groups, where each group encodes one OID component.
-        const(ubyte)[][] byteGroups;
-        size_t lastTerminator = 0u;
+        size_t[] numbers;
+        size_t components = 0u;
         foreach (immutable size_t i, immutable ubyte b; this.value)
         {
-            if (!(b & 0x80u))
-            {
-                byteGroups ~= this.value[lastTerminator .. (i + 1u)];
-                lastTerminator = (i + 1u);
-            }
+            if (!(b & 0x80u)) components++;
         }
+        numbers.length = components;
 
-        size_t[] numbers;
-        numbers.length = byteGroups.length;
-
-        // Converts each group of bytes to a number.
-        foreach (immutable size_t i, const ubyte[] byteGroup; byteGroups)
+        size_t currentNumber = 0u;
+        ubyte bytesUsedInCurrentNumber = 0u;
+        foreach (immutable ubyte b; this.value)
         {
-            if (byteGroup.length > size_t.sizeof)
+            numbers[currentNumber] <<= 7;
+            numbers[currentNumber] |= cast(size_t) (b & 0x7Fu);
+
+            if ((++bytesUsedInCurrentNumber) > size_t.sizeof)
                 throw new ASN1ValueOverflowException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "a RELATIVE OID that encoded a number on more than " ~
+                    "a OBJECT IDENTIFIER that encoded a number on more than " ~
                     "size_t.sizeof bytes. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
 
-            foreach (immutable ubyte b; byteGroup)
+            if (!(b & 0x80u))
             {
-                numbers[i] <<= 7;
-                numbers[i] |= cast(size_t) (b & 0x7Fu);
+                currentNumber++;
+                bytesUsedInCurrentNumber = 0u;
             }
         }
 

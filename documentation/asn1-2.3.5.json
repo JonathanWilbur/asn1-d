@@ -6165,7 +6165,7 @@
       ],
       "deco" : "xFNdZAS4asn15types7oidtype20ObjectIdentifierNode",
       "originalType" : "const @property @system OIDNode[]()",
-      "endline" : 3277,
+      "endline" : 3274,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
@@ -6175,7 +6175,7 @@
       "name" : "relativeObjectIdentifier",
       "kind" : "function",
       "comment" : "        Encodes a $(MONO RELATIVE OBJECT IDENTIFIER).\n\n        Standards:\n            $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
-      "line" : 3286,
+      "line" : 3283,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6188,46 +6188,46 @@
         "deco" : "xAS4asn15types7oidtype20ObjectIdentifierNode"
        }
       ],
-      "endline" : 3312,
+      "endline" : 3309,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
       ]
      },
      {
-      "name" : "__unittest_L3315_C5",
+      "name" : "__unittest_L3312_C5",
       "kind" : "function",
-      "line" : 3315,
+      "line" : 3312,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3334,
+      "endline" : 3331,
       "endchar" : 5
      },
      {
-      "name" : "__unittest_L3335_C5",
+      "name" : "__unittest_L3332_C5",
       "kind" : "function",
-      "line" : 3335,
+      "line" : 3332,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3367,
+      "endline" : 3364,
       "endchar" : 5
      },
      {
       "name" : "sequence",
       "kind" : "function",
       "comment" : "        Decodes a sequence of elements\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"primitive\")\n            $(LI And all of the exceptions thrown by the constructor)\n        )\n",
-      "line" : 3368,
+      "line" : 3365,
       "char" : 18,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAC4asn16codecs3ber25BasicEncodingRulesElement",
       "originalType" : "const @property @system BERElement[]()",
-      "endline" : 3379,
+      "endline" : 3376,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
@@ -6237,7 +6237,7 @@
       "name" : "sequence",
       "kind" : "function",
       "comment" : "Encodes a sequence of elements\n",
-      "line" : 3383,
+      "line" : 3380,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6250,7 +6250,7 @@
         "deco" : "xAC4asn16codecs3ber25BasicEncodingRulesElement"
        }
       ],
-      "endline" : 3392,
+      "endline" : 3389,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
@@ -6260,14 +6260,14 @@
       "name" : "set",
       "kind" : "function",
       "comment" : "        Decodes a set of elements\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"primitive\")\n            $(LI And all of the exceptions thrown by the constructor)\n        )\n",
-      "line" : 3404,
+      "line" : 3401,
       "char" : 18,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAC4asn16codecs3ber25BasicEncodingRulesElement",
       "originalType" : "const @property @system BERElement[]()",
-      "endline" : 3415,
+      "endline" : 3412,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.set"
@@ -6277,7 +6277,7 @@
       "name" : "set",
       "kind" : "function",
       "comment" : "Encodes a set of elements\n",
-      "line" : 3419,
+      "line" : 3416,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6290,7 +6290,7 @@
         "deco" : "xAC4asn16codecs3ber25BasicEncodingRulesElement"
        }
       ],
-      "endline" : 3428,
+      "endline" : 3425,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.set"
@@ -6300,13 +6300,13 @@
       "name" : "numericString",
       "kind" : "function",
       "comment" : "        Decodes a string, where the characters of the string are limited to\n        0 - 9 and $(MONO SPACE).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any character other than 0-9 or space is encoded.)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 3449,
+      "line" : 3446,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3483,
+      "endline" : 3480,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
@@ -6316,7 +6316,7 @@
       "name" : "numericString",
       "kind" : "function",
       "comment" : "        Encodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any character other than 0-9 or space is supplied.)\n        )\n",
-      "line" : 3495,
+      "line" : 3492,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6329,7 +6329,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 3505,
+      "endline" : 3502,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
@@ -6339,13 +6339,13 @@
       "name" : "printableString",
       "kind" : "function",
       "comment" : "        Decodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException)\n                if any character other than a-z, A-Z,\n                0-9, space, apostrophe, parentheses, comma, minus, plus,\n                period, forward slash, colon, equals, or question mark are\n                encoded)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 3531,
+      "line" : 3528,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3565,
+      "endline" : 3562,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
@@ -6355,7 +6355,7 @@
       "name" : "printableString",
       "kind" : "function",
       "comment" : "        Encodes a string that may only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n\n        Throws:\n            $(LI $(D ASN1ValueCharactersException) if any character other than a-z, A-Z,\n                0-9, space, apostrophe, parentheses, comma, minus, plus,\n                period, forward slash, colon, equals, or question mark are\n                supplied)\n",
-      "line" : 3579,
+      "line" : 3576,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6368,7 +6368,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 3589,
+      "endline" : 3586,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
@@ -6378,13 +6378,13 @@
       "name" : "teletexString",
       "kind" : "function",
       "comment" : "        Literally just returns the value bytes.\n\n        Returns: an unsigned byte array, where each byte is a T.61 character.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 3610,
+      "line" : 3607,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAh",
-      "endline" : 3638,
+      "endline" : 3635,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
@@ -6394,7 +6394,7 @@
       "name" : "teletexString",
       "kind" : "function",
       "comment" : "Literally just sets the value bytes.\n",
-      "line" : 3642,
+      "line" : 3639,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6407,7 +6407,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 3646,
+      "endline" : 3643,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
@@ -6417,13 +6417,13 @@
       "name" : "videotexString",
       "kind" : "function",
       "comment" : "        Literally just returns the value bytes.\n\n        Returns: an unsigned byte array, where each byte is a Videotex character.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 3667,
+      "line" : 3664,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAh",
-      "endline" : 3695,
+      "endline" : 3692,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
@@ -6433,7 +6433,7 @@
       "name" : "videotexString",
       "kind" : "function",
       "comment" : "Literally just sets the value bytes.\n",
-      "line" : 3699,
+      "line" : 3696,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6446,7 +6446,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 3703,
+      "endline" : 3700,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
@@ -6456,13 +6456,13 @@
       "name" : "internationalAlphabetNumber5String",
       "kind" : "function",
       "comment" : "        Decodes a string that only contains ASCII characters.\n\n        $(MONO IA5String) differs from ASCII ever so slightly: IA5 is international,\n        leaving 10 characters up to be locale-specific:\n\n        $(TABLE\n            $(TR $(TH Byte) $(TH ASCII Character))\n            $(TR $(TD 0x40) $(TD @))\n            $(TR $(TD 0x5B) $(TD [))\n            $(TR $(TD 0x5C) $(TD \\))\n            $(TR $(TD 0x5D) $(TD ]))\n            $(TR $(TD 0x5E) $(TD ^))\n            $(TR $(TD 0x60) $(TD `))\n            $(TR $(TD 0x7B) $(TD {))\n            $(TR $(TD 0x7C) $(TD /))\n            $(TR $(TD 0x7D) $(TD }))\n            $(TR $(TD 0x7E) $(TD ~))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 3740,
+      "line" : 3737,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3775,
+      "endline" : 3772,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
@@ -6472,7 +6472,7 @@
       "name" : "internationalAlphabetNumber5String",
       "kind" : "function",
       "comment" : "        Encodes a string that may only contain ASCII characters.\n\n        $(MONO IA5String) differs from ASCII ever so slightly: IA5 is international,\n        leaving 10 characters up to be locale-specific:\n\n        $(TABLE\n            $(TR $(TH Byte) $(TH ASCII Character))\n            $(TR $(TD 0x40) $(TD @))\n            $(TR $(TD 0x5B) $(TD [))\n            $(TR $(TD 0x5C) $(TD \\))\n            $(TR $(TD 0x5D) $(TD ]))\n            $(TR $(TD 0x5E) $(TD ^))\n            $(TR $(TD 0x60) $(TD `))\n            $(TR $(TD 0x7B) $(TD {))\n            $(TR $(TD 0x7C) $(TD /))\n            $(TR $(TD 0x7D) $(TD }))\n            $(TR $(TD 0x7E) $(TD ~))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n        )\n",
-      "line" : 3803,
+      "line" : 3800,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6485,7 +6485,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 3813,
+      "endline" : 3810,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
@@ -6495,13 +6495,13 @@
       "name" : "coordinatedUniversalTime",
       "kind" : "function",
       "comment" : "        Decodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n        The value is just the ASCII character representation of the UTC-formatted timestamp.\n\n        An UTC Timestamp looks like:\n        $(UL\n            $(LI $(MONO 9912312359Z))\n            $(LI $(MONO 991231235959+0200))\n        )\n\n        If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,\n        meaning that the date refers to the first 80 years of the century, this\n        assumes we are talking about the 21st century and prepend '20' when\n        creating the ISO Date String. Otherwise, it assumes we are talking\n        about the 20th century, and prepend '19' when creating the string.\n\n        See_Also:\n        $(UL\n            $(LI $(LINK https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime))\n            $(LI $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any character is not valid in a $(MONO Visiblestring))\n            $(LI $(D DateTimeException) if the encoded string cannot be decoded to a DateTime)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 3853,
+      "line" : 3850,
       "char" : 14,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS3std8datetime4date8DateTime",
-      "endline" : 3871,
+      "endline" : 3868,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
@@ -6511,7 +6511,7 @@
       "name" : "coordinatedUniversalTime",
       "kind" : "function",
       "comment" : "        Encodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n        The value is just the ASCII character representation of the UTC-formatted timestamp.\n\n        An UTC Timestamp looks like:\n        $(UL\n            $(LI $(MONO 9912312359Z))\n            $(LI $(MONO 991231235959+0200))\n        )\n\n        See_Also:\n            $(LINK https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)\n",
-      "line" : 3887,
+      "line" : 3884,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6524,7 +6524,7 @@
         "deco" : "xS3std8datetime4date8DateTime"
        }
       ],
-      "endline" : 3898,
+      "endline" : 3895,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
@@ -6532,36 +6532,36 @@
       "out" : {
        "name" : "__ensure",
        "kind" : "function",
-       "line" : 3889,
+       "line" : 3886,
        "char" : 5,
        "deco" : "FNaNbNiZv",
        "originalType" : "nothrow @system void()",
-       "endline" : 3889,
+       "endline" : 3886,
        "endchar" : 5
       }
      },
      {
-      "name" : "__unittest_L3901_C5",
+      "name" : "__unittest_L3898_C5",
       "kind" : "function",
-      "line" : 3901,
+      "line" : 3898,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3947,
+      "endline" : 3944,
       "endchar" : 5
      },
      {
       "name" : "generalizedTime",
       "kind" : "function",
       "comment" : "        Decodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n        The value is just the ASCII character representation of\n        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any character is not valid in a $(MONO Visiblestring))\n            $(LI $(D DateTimeException) if the encoded string cannot be decoded to a DateTime)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
-      "line" : 3948,
+      "line" : 3945,
       "char" : 14,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS3std8datetime4date8DateTime",
-      "endline" : 3965,
+      "endline" : 3962,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
@@ -6571,7 +6571,7 @@
       "name" : "generalizedTime",
       "kind" : "function",
       "comment" : "        Encodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n\n        The value is just the ASCII character representation of\n        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html,\n        ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
-      "line" : 3987,
+      "line" : 3984,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6584,7 +6584,7 @@
         "deco" : "xS3std8datetime4date8DateTime"
        }
       ],
-      "endline" : 3998,
+      "endline" : 3995,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
@@ -6592,11 +6592,11 @@
       "out" : {
        "name" : "__ensure",
        "kind" : "function",
-       "line" : 3989,
+       "line" : 3986,
        "char" : 5,
        "deco" : "FNaNbNiZv",
        "originalType" : "nothrow @system void()",
-       "endline" : 3989,
+       "endline" : 3986,
        "endchar" : 5
       }
      },
@@ -6604,13 +6604,13 @@
       "name" : "graphicString",
       "kind" : "function",
       "comment" : "        Decodes an ASCII string that contains only characters between and\n        including $(D 0x20) and $(D 0x75). Deprecated, according to page 182 of the\n        Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any non-graphical character (including space) is encoded)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, pp. 175-178.)\n            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))\n            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))\n        )\n",
-      "line" : 4029,
+      "line" : 4026,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 4064,
+      "endline" : 4061,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
@@ -6620,7 +6620,7 @@
       "name" : "graphicString",
       "kind" : "function",
       "comment" : "        Encodes an ASCII string that may contain only characters between and\n        including $(D 0x20) and $(D 0x75). Deprecated, according to page 182\n        of the Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any non-graphical character (including space) is supplied)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, pp. 175-178.)\n            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))\n            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))\n        )\n",
-      "line" : 4086,
+      "line" : 4083,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6633,7 +6633,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 4096,
+      "endline" : 4093,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
@@ -6643,13 +6643,13 @@
       "name" : "visibleString",
       "kind" : "function",
       "comment" : "        Decodes a string that only contains characters between and including\n        $(D 0x20) and $(D 0x7E). (Honestly, I don't know how this differs from\n        $(MONO GraphicalString).)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException)\n                if any non-graphical character (including space) is encoded)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 4119,
+      "line" : 4116,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 4154,
+      "endline" : 4151,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
@@ -6659,7 +6659,7 @@
       "name" : "visibleString",
       "kind" : "function",
       "comment" : "        Encodes a string that only contains characters between and including\n        $(D 0x20) and $(D 0x7E). (Honestly, I don't know how this differs from\n        $(MONO GraphicalString).)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException)\n                if any non-graphical character (including space) is supplied.)\n        )\n",
-      "line" : 4168,
+      "line" : 4165,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6672,7 +6672,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 4178,
+      "endline" : 4175,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
@@ -6682,13 +6682,13 @@
       "name" : "generalString",
       "kind" : "function",
       "comment" : "        Decodes a string containing only ASCII characters. Deprecated, according\n        to page 182 of the Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, p. 182.)\n            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))\n            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))\n        )\n",
-      "line" : 4208,
+      "line" : 4205,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 4243,
+      "endline" : 4240,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
@@ -6698,7 +6698,7 @@
       "name" : "generalString",
       "kind" : "function",
       "comment" : "        Encodes a string containing only ASCII characters. Deprecated,\n        according to page 182 of the Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, p. 182.)\n        )\n",
-      "line" : 4262,
+      "line" : 4259,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6711,7 +6711,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 4272,
+      "endline" : 4269,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
@@ -6721,13 +6721,13 @@
       "name" : "universalString",
       "kind" : "function",
       "comment" : "        Decodes a $(MONO dstring) of UTF-32 characters.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if the encoded bytes is not evenly divisible by four)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 4293,
+      "line" : 4290,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAyw",
-      "endline" : 4355,
+      "endline" : 4352,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
@@ -6737,7 +6737,7 @@
       "name" : "universalString",
       "kind" : "function",
       "comment" : "Encodes a $(MONO dstring) of UTF-32 characters.\n",
-      "line" : 4359,
+      "line" : 4356,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6750,7 +6750,7 @@
         "deco" : "xAyw"
        }
       ],
-      "endline" : 4379,
+      "endline" : 4376,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
@@ -6760,13 +6760,13 @@
       "name" : "characterString",
       "kind" : "function",
       "comment" : "        Decodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n\n        Returns: an instance of $(D types.universal.characterstring.CharacterString).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if encoded $(MONO CharacterString) has too few or too many\n                elements, or if $(MONO syntaxes) or $(MONO context-negotiation) element has\n                too few or too many elements)\n            $(LI $(D ASN1ValueSizeException) if encoded $(MONO INTEGER) is too large to decode)\n            $(LI $(D ASN1RecursionException) if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException) if any nested primitives do not have the\n                correct tag class)\n            $(LI $(D ASN1ConstructionException) if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException) if any nested primitives do not have the\n                correct tag number)\n        )\n",
-      "line" : 4425,
+      "line" : 4422,
       "char" : 21,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS4asn15types9universal15characterstring15CharacterString",
-      "endline" : 4660,
+      "endline" : 4657,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
@@ -6776,7 +6776,7 @@
       "name" : "characterString",
       "kind" : "function",
       "comment" : "        Encodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
-      "line" : 4689,
+      "line" : 4686,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6789,7 +6789,7 @@
         "deco" : "xS4asn15types9universal15characterstring15CharacterString"
        }
       ],
-      "endline" : 4765,
+      "endline" : 4762,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
@@ -6797,58 +6797,58 @@
       "out" : {
        "name" : "__ensure",
        "kind" : "function",
-       "line" : 4691,
+       "line" : 4688,
        "char" : 5,
        "deco" : "FNaNbNiZv",
        "originalType" : "@system void()",
-       "endline" : 4691,
+       "endline" : 4688,
        "endchar" : 5
       }
      },
      {
-      "name" : "__unittest_L4768_C5",
+      "name" : "__unittest_L4765_C5",
       "kind" : "function",
-      "line" : 4768,
+      "line" : 4765,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4785,
+      "endline" : 4782,
       "endchar" : 5
      },
      {
-      "name" : "__unittest_L4786_C5",
+      "name" : "__unittest_L4783_C5",
       "kind" : "function",
-      "line" : 4786,
+      "line" : 4783,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4808,
+      "endline" : 4805,
       "endchar" : 5
      },
      {
-      "name" : "__unittest_L4809_C5",
+      "name" : "__unittest_L4806_C5",
       "kind" : "function",
-      "line" : 4809,
+      "line" : 4806,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4863,
+      "endline" : 4860,
       "endchar" : 5
      },
      {
       "name" : "basicMultilingualPlaneString",
       "kind" : "function",
       "comment" : "        Decodes a $(MONO wstring) of UTF-16 characters.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if the encoded bytes is not evenly divisible by two)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 4864,
+      "line" : 4861,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAyu",
-      "endline" : 4924,
+      "endline" : 4921,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
@@ -6858,7 +6858,7 @@
       "name" : "basicMultilingualPlaneString",
       "kind" : "function",
       "comment" : "Encodes a $(MONO wstring) of UTF-16 characters.\n",
-      "line" : 4928,
+      "line" : 4925,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -6871,7 +6871,7 @@
         "deco" : "xAyu"
        }
       ],
-      "endline" : 4948,
+      "endline" : 4945,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(BasicEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
@@ -6881,18 +6881,18 @@
       "name" : "this",
       "kind" : "constructor",
       "comment" : "Creates an $(MONO END OF CONTENT)\n",
-      "line" : 4952,
+      "line" : 4949,
       "char" : 5,
       "deco" : "FNbNiNfZC4asn16codecs3ber25BasicEncodingRulesElement",
       "originalType" : "nothrow @nogc @safe ()",
-      "endline" : 4956,
+      "endline" : 4953,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates a $(D BERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. The supplied $(D ubyte[]) array is \"chomped\" by\n        reference, so the original array will grow shorter as $(D BERElement)s are\n        generated.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes())\n\n        Examples:\n        ---\n        // Decoding looks like:\n        BERElement[] result;\n        while (bytes.length > 0)\n            result ~= new BERElement(bytes);\n\n        // Encoding looks like:\n        ubyte[] result;\n        foreach (bv; bervalues)\n        {\n            result ~= cast(ubyte[]) bv;\n        }\n        ---\n",
-      "line" : 4983,
+      "line" : 4980,
       "char" : 5,
       "deco" : "FKAhZC4asn16codecs3ber25BasicEncodingRulesElement",
       "originalType" : "@system (ref ubyte[] bytes)",
@@ -6905,14 +6905,14 @@
         ]
        }
       ],
-      "endline" : 4987,
+      "endline" : 4984,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates a $(D BERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. Unlike the construct that accepts a $(D ubyte[])\n        reference, this constructor does not \"chomp\" the array. This constructor\n        expects the encoded bytes to encode only one $(BERElement). If there are\n        any remaining bytes after decoding, an exception is thrown.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes()), but also throws an\n            $(D ASN1LengthException) if there are excess bytes.\n",
-      "line" : 5001,
+      "line" : 4998,
       "char" : 5,
       "deco" : "FxAhZC4asn16codecs3ber25BasicEncodingRulesElement",
       "originalType" : "@system (in ubyte[] bytes)",
@@ -6922,14 +6922,14 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 5013,
+      "endline" : 5010,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates a $(D BERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. The supplied $(D ubyte[]) array is read, starting\n        from the index specified by $(D bytesRead), and increments\n        $(D bytesRead) by the number of bytes read.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes())\n\n        Examples:\n        ---\n        // Decoding looks like:\n        BERElement[] result;\n        size_t i = 0u;\n        while (i < bytes.length)\n            result ~= new BERElement(i, bytes);\n\n        // Encoding looks like:\n        ubyte[] result;\n        foreach (bv; bervalues)\n        {\n            result ~= cast(ubyte[]) bv;\n        }\n        ---\n",
-      "line" : 5041,
+      "line" : 5038,
       "char" : 5,
       "deco" : "FKmxAhZC4asn16codecs3ber25BasicEncodingRulesElement",
       "originalType" : "@system (ref size_t bytesRead, in ubyte[] bytes)",
@@ -6946,14 +6946,14 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 5044,
+      "endline" : 5041,
       "endchar" : 5
      },
      {
       "name" : "fromBytes",
       "kind" : "function",
       "comment" : "        Returns: the number of bytes read\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1TagPaddingException) if the tag number is \"padded\" with\n                \"leading zero bytes\" ($(D 0x80u)))\n            $(LI $(D ASN1TagOverflowException) if the tag number is too large to\n                fit into a $(D size_t))\n            $(LI $(D ASN1LengthUndefinedException) if the reserved length byte of\n                $(D 0xFF) is encountered)\n            $(LI $(D ASN1LengthOverflowException) if the length is too large to fit\n                into a $(D size_t))\n            $(LI $(D ASN1TruncationException) if the tag, length, or value appear to\n                be truncated)\n            $(LI $(D ASN1ConstructionException) if the length is indefinite, but the\n                element is marked as being encoded primitively)\n            $(LI $(D ASN1RecursionException) if, when trying to determine the end of\n                an indefinite-length encoded element, the parser has to recurse\n                too deep)\n        )\n",
-      "line" : 5069,
+      "line" : 5066,
       "char" : 12,
       "deco" : "FxAhZm",
       "originalType" : "size_t(in ubyte[] bytes)",
@@ -6963,7 +6963,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 5285,
+      "endline" : 5282,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.fromBytes"
@@ -6973,10 +6973,10 @@
       "name" : "toBytes",
       "kind" : "function",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.opCast!(ubyte[])()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 5298,
+      "line" : 5295,
       "char" : 13,
       "deco" : "xFNbNdZAh",
-      "endline" : 5370,
+      "endline" : 5367,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.toBytes"
@@ -6985,7 +6985,7 @@
      {
       "kind" : "template",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.toBytes()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 5383,
+      "line" : 5380,
       "char" : 13,
       "name" : "opCast",
       "parameters" : [
@@ -6999,10 +6999,10 @@
        {
         "name" : "opCast",
         "kind" : "function",
-        "line" : 5383,
+        "line" : 5380,
         "char" : 13,
         "type" : "nothrow @system ubyte[]()",
-        "endline" : 5386,
+        "endline" : 5383,
         "endchar" : 5
        }
       ]
@@ -7010,245 +7010,245 @@
     ]
    },
    {
-    "name" : "__unittest_L5392_C1",
+    "name" : "__unittest_L5389_C1",
     "kind" : "function",
-    "line" : 5392,
+    "line" : 5389,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5543,
+    "endline" : 5540,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5544_C1",
+    "name" : "__unittest_L5541_C1",
     "kind" : "function",
-    "line" : 5544,
+    "line" : 5541,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5585,
+    "endline" : 5582,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5586_C1",
+    "name" : "__unittest_L5583_C1",
     "kind" : "function",
-    "line" : 5586,
+    "line" : 5583,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5628,
+    "endline" : 5625,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5629_C1",
+    "name" : "__unittest_L5626_C1",
     "kind" : "function",
-    "line" : 5629,
+    "line" : 5626,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5641,
+    "endline" : 5638,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5642_C1",
+    "name" : "__unittest_L5639_C1",
     "kind" : "function",
-    "line" : 5642,
+    "line" : 5639,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5655,
+    "endline" : 5652,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5656_C1",
+    "name" : "__unittest_L5653_C1",
     "kind" : "function",
-    "line" : 5656,
+    "line" : 5653,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5667,
+    "endline" : 5664,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5668_C1",
+    "name" : "__unittest_L5665_C1",
     "kind" : "function",
-    "line" : 5668,
+    "line" : 5665,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5678,
+    "endline" : 5675,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5679_C1",
+    "name" : "__unittest_L5676_C1",
     "kind" : "function",
-    "line" : 5679,
+    "line" : 5676,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5697,
+    "endline" : 5694,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5698_C1",
+    "name" : "__unittest_L5695_C1",
     "kind" : "function",
-    "line" : 5698,
+    "line" : 5695,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5721,
+    "endline" : 5718,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5722_C1",
+    "name" : "__unittest_L5719_C1",
     "kind" : "function",
-    "line" : 5722,
+    "line" : 5719,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5738,
+    "endline" : 5735,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5739_C1",
+    "name" : "__unittest_L5736_C1",
     "kind" : "function",
-    "line" : 5739,
+    "line" : 5736,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5751,
+    "endline" : 5748,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5752_C1",
+    "name" : "__unittest_L5749_C1",
     "kind" : "function",
-    "line" : 5752,
+    "line" : 5749,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5766,
+    "endline" : 5763,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5767_C1",
+    "name" : "__unittest_L5764_C1",
     "kind" : "function",
-    "line" : 5767,
+    "line" : 5764,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5776,
+    "endline" : 5773,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5777_C1",
+    "name" : "__unittest_L5774_C1",
     "kind" : "function",
-    "line" : 5777,
+    "line" : 5774,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5784,
+    "endline" : 5781,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5785_C1",
+    "name" : "__unittest_L5782_C1",
     "kind" : "function",
-    "line" : 5785,
+    "line" : 5782,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5792,
+    "endline" : 5789,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5793_C1",
+    "name" : "__unittest_L5790_C1",
     "kind" : "function",
-    "line" : 5793,
+    "line" : 5790,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5804,
+    "endline" : 5801,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5805_C1",
+    "name" : "__unittest_L5802_C1",
     "kind" : "function",
-    "line" : 5805,
+    "line" : 5802,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5816,
+    "endline" : 5813,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5817_C1",
+    "name" : "__unittest_L5814_C1",
     "kind" : "function",
-    "line" : 5817,
+    "line" : 5814,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5825,
+    "endline" : 5822,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5826_C1",
+    "name" : "__unittest_L5823_C1",
     "kind" : "function",
-    "line" : 5826,
+    "line" : 5823,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5834,
+    "endline" : 5831,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5835_C1",
+    "name" : "__unittest_L5832_C1",
     "kind" : "function",
-    "line" : 5835,
+    "line" : 5832,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5843,
+    "endline" : 5840,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5844_C1",
+    "name" : "__unittest_L5841_C1",
     "kind" : "function",
-    "line" : 5844,
+    "line" : 5841,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5869,
+    "endline" : 5866,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5870_C1",
+    "name" : "__unittest_L5867_C1",
     "kind" : "function",
-    "line" : 5870,
+    "line" : 5867,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5886,
+    "endline" : 5883,
     "endchar" : 2
    }
   ]
@@ -8239,7 +8239,7 @@
       ],
       "deco" : "xFNdZAS4asn15types7oidtype20ObjectIdentifierNode",
       "originalType" : "const @property @system OIDNode[]()",
-      "endline" : 3605,
+      "endline" : 3602,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
@@ -8249,7 +8249,7 @@
       "name" : "relativeObjectIdentifier",
       "kind" : "function",
       "comment" : "        Encodes a $(MONO RELATIVE OBJECT IDENTIFIER).\n\n        Standards:\n            $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
-      "line" : 3614,
+      "line" : 3611,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8262,46 +8262,46 @@
         "deco" : "xAS4asn15types7oidtype20ObjectIdentifierNode"
        }
       ],
-      "endline" : 3640,
+      "endline" : 3637,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
       ]
      },
      {
-      "name" : "__unittest_L3643_C5",
+      "name" : "__unittest_L3640_C5",
       "kind" : "function",
-      "line" : 3643,
+      "line" : 3640,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3662,
+      "endline" : 3659,
       "endchar" : 5
      },
      {
-      "name" : "__unittest_L3663_C5",
+      "name" : "__unittest_L3660_C5",
       "kind" : "function",
-      "line" : 3663,
+      "line" : 3660,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3695,
+      "endline" : 3692,
       "endchar" : 5
      },
      {
       "name" : "sequence",
       "kind" : "function",
       "comment" : "        Decodes a sequence of elements\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"primitive\")\n            $(LI And all of the exceptions thrown by the constructor)\n        )\n",
-      "line" : 3696,
+      "line" : 3693,
       "char" : 18,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAC4asn16codecs3cer29CanonicalEncodingRulesElement",
       "originalType" : "const @property @system CERElement[]()",
-      "endline" : 3707,
+      "endline" : 3704,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
@@ -8311,7 +8311,7 @@
       "name" : "sequence",
       "kind" : "function",
       "comment" : "Encodes a sequence of elements\n",
-      "line" : 3711,
+      "line" : 3708,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8324,7 +8324,7 @@
         "deco" : "xAC4asn16codecs3cer29CanonicalEncodingRulesElement"
        }
       ],
-      "endline" : 3720,
+      "endline" : 3717,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
@@ -8334,14 +8334,14 @@
       "name" : "set",
       "kind" : "function",
       "comment" : "        Decodes a set of elements\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"primitive\")\n            $(LI And all of the exceptions thrown by the constructor)\n        )\n",
-      "line" : 3732,
+      "line" : 3729,
       "char" : 18,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAC4asn16codecs3cer29CanonicalEncodingRulesElement",
       "originalType" : "const @property @system CERElement[]()",
-      "endline" : 3743,
+      "endline" : 3740,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.set"
@@ -8351,7 +8351,7 @@
       "name" : "set",
       "kind" : "function",
       "comment" : "Encodes a set of elements\n",
-      "line" : 3747,
+      "line" : 3744,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8364,7 +8364,7 @@
         "deco" : "xAC4asn16codecs3cer29CanonicalEncodingRulesElement"
        }
       ],
-      "endline" : 3756,
+      "endline" : 3753,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.set"
@@ -8374,13 +8374,13 @@
       "name" : "numericString",
       "kind" : "function",
       "comment" : "        Decodes a string, where the characters of the string are limited to\n        0 - 9 and $(MONO SPACE).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any character other than 0-9 or space is encoded.)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 3777,
+      "line" : 3774,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3844,
+      "endline" : 3841,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
@@ -8390,7 +8390,7 @@
       "name" : "numericString",
       "kind" : "function",
       "comment" : "        Encodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any character other than 0-9 or space is supplied.)\n        )\n",
-      "line" : 3856,
+      "line" : 3853,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8403,34 +8403,34 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 3892,
+      "endline" : 3889,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
       ]
      },
      {
-      "name" : "__unittest_L3895_C5",
+      "name" : "__unittest_L3892_C5",
       "kind" : "function",
-      "line" : 3895,
+      "line" : 3892,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3945,
+      "endline" : 3942,
       "endchar" : 5
      },
      {
       "name" : "printableString",
       "kind" : "function",
       "comment" : "        Decodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException)\n                if any character other than a-z, A-Z,\n                0-9, space, apostrophe, parentheses, comma, minus, plus,\n                period, forward slash, colon, equals, or question mark are\n                encoded)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 3946,
+      "line" : 3943,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 4013,
+      "endline" : 4010,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
@@ -8440,7 +8440,7 @@
       "name" : "printableString",
       "kind" : "function",
       "comment" : "        Encodes a string that may only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n\n        Throws:\n            $(LI $(D ASN1ValueCharactersException) if any character other than a-z, A-Z,\n                0-9, space, apostrophe, parentheses, comma, minus, plus,\n                period, forward slash, colon, equals, or question mark are\n                supplied)\n",
-      "line" : 4027,
+      "line" : 4024,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8453,34 +8453,34 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 4063,
+      "endline" : 4060,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
       ]
      },
      {
-      "name" : "__unittest_L4066_C5",
+      "name" : "__unittest_L4063_C5",
       "kind" : "function",
-      "line" : 4066,
+      "line" : 4063,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4111,
+      "endline" : 4108,
       "endchar" : 5
      },
      {
       "name" : "teletexString",
       "kind" : "function",
       "comment" : "        Literally just returns the value bytes.\n\n        Returns: an unsigned byte array, where each byte is a T.61 character.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 4112,
+      "line" : 4109,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAh",
-      "endline" : 4173,
+      "endline" : 4170,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
@@ -8490,7 +8490,7 @@
       "name" : "teletexString",
       "kind" : "function",
       "comment" : "Literally just sets the value bytes.\n",
-      "line" : 4177,
+      "line" : 4174,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8503,34 +8503,34 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 4206,
+      "endline" : 4203,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
       ]
      },
      {
-      "name" : "__unittest_L4209_C5",
+      "name" : "__unittest_L4206_C5",
       "kind" : "function",
-      "line" : 4209,
+      "line" : 4206,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4254,
+      "endline" : 4251,
       "endchar" : 5
      },
      {
       "name" : "videotexString",
       "kind" : "function",
       "comment" : "        Literally just returns the value bytes.\n\n        Returns: an unsigned byte array, where each byte is a Videotex character.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 4255,
+      "line" : 4252,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAh",
-      "endline" : 4316,
+      "endline" : 4313,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
@@ -8540,7 +8540,7 @@
       "name" : "videotexString",
       "kind" : "function",
       "comment" : "Literally just sets the value bytes.\n",
-      "line" : 4320,
+      "line" : 4317,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8553,34 +8553,34 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 4349,
+      "endline" : 4346,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
       ]
      },
      {
-      "name" : "__unittest_L4352_C5",
+      "name" : "__unittest_L4349_C5",
       "kind" : "function",
-      "line" : 4352,
+      "line" : 4349,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4413,
+      "endline" : 4410,
       "endchar" : 5
      },
      {
       "name" : "internationalAlphabetNumber5String",
       "kind" : "function",
       "comment" : "        Decodes a string that only contains ASCII characters.\n\n        $(MONO IA5String) differs from ASCII ever so slightly: IA5 is international,\n        leaving 10 characters up to be locale-specific:\n\n        $(TABLE\n            $(TR $(TH Byte) $(TH ASCII Character))\n            $(TR $(TD 0x40) $(TD @))\n            $(TR $(TD 0x5B) $(TD [))\n            $(TR $(TD 0x5C) $(TD \\))\n            $(TR $(TD 0x5D) $(TD ]))\n            $(TR $(TD 0x5E) $(TD ^))\n            $(TR $(TD 0x60) $(TD `))\n            $(TR $(TD 0x7B) $(TD {))\n            $(TR $(TD 0x7C) $(TD /))\n            $(TR $(TD 0x7D) $(TD }))\n            $(TR $(TD 0x7E) $(TD ~))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 4414,
+      "line" : 4411,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 4481,
+      "endline" : 4478,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
@@ -8590,7 +8590,7 @@
       "name" : "internationalAlphabetNumber5String",
       "kind" : "function",
       "comment" : "        Encodes a string that may only contain ASCII characters.\n\n        $(MONO IA5String) differs from ASCII ever so slightly: IA5 is international,\n        leaving 10 characters up to be locale-specific:\n\n        $(TABLE\n            $(TR $(TH Byte) $(TH ASCII Character))\n            $(TR $(TD 0x40) $(TD @))\n            $(TR $(TD 0x5B) $(TD [))\n            $(TR $(TD 0x5C) $(TD \\))\n            $(TR $(TD 0x5D) $(TD ]))\n            $(TR $(TD 0x5E) $(TD ^))\n            $(TR $(TD 0x60) $(TD `))\n            $(TR $(TD 0x7B) $(TD {))\n            $(TR $(TD 0x7C) $(TD /))\n            $(TR $(TD 0x7D) $(TD }))\n            $(TR $(TD 0x7E) $(TD ~))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n        )\n",
-      "line" : 4509,
+      "line" : 4506,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8603,34 +8603,34 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 4545,
+      "endline" : 4542,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
       ]
      },
      {
-      "name" : "__unittest_L4548_C5",
+      "name" : "__unittest_L4545_C5",
       "kind" : "function",
-      "line" : 4548,
+      "line" : 4545,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4613,
+      "endline" : 4610,
       "endchar" : 5
      },
      {
       "name" : "coordinatedUniversalTime",
       "kind" : "function",
       "comment" : "        Decodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n        The value is just the ASCII character representation of the UTC-formatted timestamp.\n\n        An UTC Timestamp looks like:\n        $(UL\n            $(LI $(MONO 9912312359Z))\n            $(LI $(MONO 991231235959+0200))\n        )\n\n        If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,\n        meaning that the date refers to the first 80 years of the century, this\n        assumes we are talking about the 21st century and prepend '20' when\n        creating the ISO Date String. Otherwise, it assumes we are talking\n        about the 20th century, and prepend '19' when creating the string.\n\n        See_Also:\n        $(UL\n            $(LI $(LINK https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime))\n            $(LI $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if the encoded value does not end with a 'Z')\n            $(LI $(D ASN1ValueCharactersException) if any character is not valid in a $(MONO Visiblestring))\n            $(LI $(D DateTimeException) if the encoded string cannot be decoded to a DateTime)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 4614,
+      "line" : 4611,
       "char" : 14,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS3std8datetime4date8DateTime",
-      "endline" : 4647,
+      "endline" : 4644,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
@@ -8640,7 +8640,7 @@
       "name" : "coordinatedUniversalTime",
       "kind" : "function",
       "comment" : "        Encodes a DateTime. The value is just the ASCII character representation of\n        the UTC-formatted timestamp.\n\n        An UTC Timestamp looks like:\n        $(UL\n            $(LI $(MONO 9912312359Z))\n            $(LI $(MONO 991231235959+0200))\n        )\n\n        See_Also:\n            $(LINK https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)\n",
-      "line" : 4663,
+      "line" : 4660,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8653,7 +8653,7 @@
         "deco" : "xS3std8datetime4date8DateTime"
        }
       ],
-      "endline" : 4675,
+      "endline" : 4672,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
@@ -8661,36 +8661,36 @@
       "out" : {
        "name" : "__ensure",
        "kind" : "function",
-       "line" : 4665,
+       "line" : 4662,
        "char" : 5,
        "deco" : "FNaNbNiZv",
        "originalType" : "@system void()",
-       "endline" : 4665,
+       "endline" : 4662,
        "endchar" : 5
       }
      },
      {
-      "name" : "__unittest_L4678_C5",
+      "name" : "__unittest_L4675_C5",
       "kind" : "function",
-      "line" : 4678,
+      "line" : 4675,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4719,
+      "endline" : 4716,
       "endchar" : 5
      },
      {
       "name" : "generalizedTime",
       "kind" : "function",
       "comment" : "        Decodes a DateTime. The value is just the ASCII character representation of\n        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if the encoded value did not end with a 'Z'\n                or contained a misplaced or unnecessary decimal point)\n            $(LI $(D ASN1ValueCharactersException) if any character is not valid in a $(MONO Visiblestring))\n            $(LI $(D DateTimeException) if the encoded string cannot be decoded to a DateTime)\n            $(LI $(D ASN1ValuePaddingException) if the seconds fraction contains trailing zeroes)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
-      "line" : 4720,
+      "line" : 4717,
       "char" : 14,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS3std8datetime4date8DateTime",
-      "endline" : 4792,
+      "endline" : 4789,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
@@ -8700,7 +8700,7 @@
       "name" : "generalizedTime",
       "kind" : "function",
       "comment" : "        Encodes a DateTime.\n\n        The value is just the ASCII character representation of\n        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html,\n        ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
-      "line" : 4814,
+      "line" : 4811,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8713,7 +8713,7 @@
         "deco" : "xS3std8datetime4date8DateTime"
        }
       ],
-      "endline" : 4825,
+      "endline" : 4822,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
@@ -8721,47 +8721,47 @@
       "out" : {
        "name" : "__ensure",
        "kind" : "function",
-       "line" : 4816,
+       "line" : 4813,
        "char" : 5,
        "deco" : "FNaZv",
        "originalType" : "@system void()",
-       "endline" : 4816,
+       "endline" : 4813,
        "endchar" : 5
       }
      },
      {
-      "name" : "__unittest_L4829_C5",
+      "name" : "__unittest_L4826_C5",
       "kind" : "function",
-      "line" : 4829,
+      "line" : 4826,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4844,
+      "endline" : 4841,
       "endchar" : 5
      },
      {
-      "name" : "__unittest_L4845_C5",
+      "name" : "__unittest_L4842_C5",
       "kind" : "function",
-      "line" : 4845,
+      "line" : 4842,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4893,
+      "endline" : 4890,
       "endchar" : 5
      },
      {
       "name" : "graphicString",
       "kind" : "function",
       "comment" : "        Decodes an ASCII string that contains only characters between and\n        including $(D 0x20) and $(D 0x75). Deprecated, according to page 182 of the\n        Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any non-graphical character (including space) is encoded)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, pp. 175-178.)\n            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))\n            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))\n        )\n",
-      "line" : 4894,
+      "line" : 4891,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 4961,
+      "endline" : 4958,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
@@ -8771,7 +8771,7 @@
       "name" : "graphicString",
       "kind" : "function",
       "comment" : "        Encodes an ASCII string that may contain only characters between and\n        including $(D 0x20) and $(D 0x75). Deprecated, according to page 182\n        of the Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any non-graphical character (including space) is supplied)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, pp. 175-178.)\n            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))\n            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))\n        )\n",
-      "line" : 4983,
+      "line" : 4980,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8784,34 +8784,34 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 5019,
+      "endline" : 5016,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
       ]
      },
      {
-      "name" : "__unittest_L5022_C5",
+      "name" : "__unittest_L5019_C5",
       "kind" : "function",
-      "line" : 5022,
+      "line" : 5019,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 5069,
+      "endline" : 5066,
       "endchar" : 5
      },
      {
       "name" : "visibleString",
       "kind" : "function",
       "comment" : "        Decodes a string that only contains characters between and including\n        $(D 0x20) and $(D 0x7E). (Honestly, I don't know how this differs from\n        $(MONO GraphicalString).)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException)\n                if any non-graphical character (including space) is encoded)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 5070,
+      "line" : 5067,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 5137,
+      "endline" : 5134,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
@@ -8821,7 +8821,7 @@
       "name" : "visibleString",
       "kind" : "function",
       "comment" : "        Encodes a string that only contains characters between and including\n        $(D 0x20) and $(D 0x7E). (Honestly, I don't know how this differs from\n        $(MONO GraphicalString).)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException)\n                if any non-graphical character (including space) is supplied.)\n        )\n",
-      "line" : 5151,
+      "line" : 5148,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8834,34 +8834,34 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 5187,
+      "endline" : 5184,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
       ]
      },
      {
-      "name" : "__unittest_L5190_C5",
+      "name" : "__unittest_L5187_C5",
       "kind" : "function",
-      "line" : 5190,
+      "line" : 5187,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 5244,
+      "endline" : 5241,
       "endchar" : 5
      },
      {
       "name" : "generalString",
       "kind" : "function",
       "comment" : "        Decodes a string containing only ASCII characters. Deprecated, according\n        to page 182 of the Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, p. 182.)\n            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))\n            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))\n        )\n",
-      "line" : 5245,
+      "line" : 5242,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 5312,
+      "endline" : 5309,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
@@ -8871,7 +8871,7 @@
       "name" : "generalString",
       "kind" : "function",
       "comment" : "        Encodes a string containing only ASCII characters. Deprecated,\n        according to page 182 of the Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, p. 182.)\n        )\n",
-      "line" : 5331,
+      "line" : 5328,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8884,34 +8884,34 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 5367,
+      "endline" : 5364,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
       ]
      },
      {
-      "name" : "__unittest_L5370_C5",
+      "name" : "__unittest_L5367_C5",
       "kind" : "function",
-      "line" : 5370,
+      "line" : 5367,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 5415,
+      "endline" : 5412,
       "endchar" : 5
      },
      {
       "name" : "universalString",
       "kind" : "function",
       "comment" : "        Decodes a $(MONO dstring) of UTF-32 characters.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if the encoded bytes is not evenly divisible by four)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 5416,
+      "line" : 5413,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAyw",
-      "endline" : 5511,
+      "endline" : 5508,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
@@ -8921,7 +8921,7 @@
       "name" : "universalString",
       "kind" : "function",
       "comment" : "Encodes a $(MONO dstring) of UTF-32 characters.\n",
-      "line" : 5515,
+      "line" : 5512,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8934,34 +8934,34 @@
         "deco" : "xAyw"
        }
       ],
-      "endline" : 5592,
+      "endline" : 5589,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
       ]
      },
      {
-      "name" : "__unittest_L5595_C5",
+      "name" : "__unittest_L5592_C5",
       "kind" : "function",
-      "line" : 5595,
+      "line" : 5592,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 5665,
+      "endline" : 5662,
       "endchar" : 5
      },
      {
       "name" : "characterString",
       "kind" : "function",
       "comment" : "        Decodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n\n        Returns: an instance of $(D types.universal.characterstring.CharacterString).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if encoded $(MONO CharacterString) has too few or too many\n                elements, or if $(MONO syntaxes) or $(MONO context-negotiation) element has\n                too few or too many elements)\n            $(LI $(D ASN1ValueSizeException) if encoded $(MONO INTEGER) is too large to decode)\n            $(LI $(D ASN1RecursionException) if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException) if any nested primitives do not have the\n                correct tag class)\n            $(LI $(D ASN1ConstructionException) if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException) if any nested primitives do not have the\n                correct tag number)\n        )\n",
-      "line" : 5666,
+      "line" : 5663,
       "char" : 21,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS4asn15types9universal15characterstring15CharacterString",
-      "endline" : 5819,
+      "endline" : 5816,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
@@ -8971,7 +8971,7 @@
       "name" : "characterString",
       "kind" : "function",
       "comment" : "        Encodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
-      "line" : 5848,
+      "line" : 5845,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -8984,7 +8984,7 @@
         "deco" : "xS4asn15types9universal15characterstring15CharacterString"
        }
       ],
-      "endline" : 5903,
+      "endline" : 5900,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
@@ -8992,47 +8992,47 @@
       "out" : {
        "name" : "__ensure",
        "kind" : "function",
-       "line" : 5850,
+       "line" : 5847,
        "char" : 5,
        "deco" : "FNaNbNiZv",
        "originalType" : "@system void()",
-       "endline" : 5850,
+       "endline" : 5847,
        "endchar" : 5
       }
      },
      {
-      "name" : "__unittest_L5914_C5",
+      "name" : "__unittest_L5911_C5",
       "kind" : "function",
-      "line" : 5914,
+      "line" : 5911,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 5935,
+      "endline" : 5932,
       "endchar" : 5
      },
      {
-      "name" : "__unittest_L5936_C5",
+      "name" : "__unittest_L5933_C5",
       "kind" : "function",
-      "line" : 5936,
+      "line" : 5933,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 5990,
+      "endline" : 5987,
       "endchar" : 5
      },
      {
       "name" : "basicMultilingualPlaneString",
       "kind" : "function",
       "comment" : "        Decodes a $(MONO wstring) of UTF-16 characters.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException)\n                if the encoded bytes is not evenly divisible by two)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n",
-      "line" : 5991,
+      "line" : 5988,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAyu",
-      "endline" : 6084,
+      "endline" : 6081,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
@@ -9042,7 +9042,7 @@
       "name" : "basicMultilingualPlaneString",
       "kind" : "function",
       "comment" : "Encodes a $(MONO wstring) of UTF-16 characters.\n",
-      "line" : 6088,
+      "line" : 6085,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -9055,39 +9055,39 @@
         "deco" : "xAyu"
        }
       ],
-      "endline" : 6165,
+      "endline" : 6162,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
       ]
      },
      {
-      "name" : "__unittest_L6168_C5",
+      "name" : "__unittest_L6165_C5",
       "kind" : "function",
-      "line" : 6168,
+      "line" : 6165,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 6196,
+      "endline" : 6193,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "Creates an $(MONO END OF CONTENT)\n",
-      "line" : 6197,
+      "line" : 6194,
       "char" : 5,
       "deco" : "FNbNiNfZC4asn16codecs3cer29CanonicalEncodingRulesElement",
       "originalType" : "nothrow @nogc @safe ()",
-      "endline" : 6201,
+      "endline" : 6198,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates a $(D CERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. The supplied $(D ubyte[]) array is \"chomped\" by\n        reference, so the original array will grow shorter as $(D CERElement)s are\n        generated.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes())\n\n        Examples:\n        ---\n        // Decoding looks like:\n        CERElement[] result;\n        while (bytes.length > 0)\n            result ~= new CERElement(bytes);\n\n        // Encoding looks like:\n        ubyte[] result;\n        foreach (cv; cervalues)\n        {\n            result ~= cast(ubyte[]) cv;\n        }\n        ---\n",
-      "line" : 6228,
+      "line" : 6225,
       "char" : 5,
       "deco" : "FKAhZC4asn16codecs3cer29CanonicalEncodingRulesElement",
       "originalType" : "@system (ref ubyte[] bytes)",
@@ -9100,14 +9100,14 @@
         ]
        }
       ],
-      "endline" : 6232,
+      "endline" : 6229,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates a $(D CERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. Unlike the construct that accepts a $(D ubyte[])\n        reference, this constructor does not \"chomp\" the array. This constructor\n        expects the encoded bytes to encode only one $(CERElement). If there are\n        any remaining bytes after decoding, an exception is thrown.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes()), but also throws an\n            $(D ASN1LengthException) if there are excess bytes.\n",
-      "line" : 6246,
+      "line" : 6243,
       "char" : 5,
       "deco" : "FxAhZC4asn16codecs3cer29CanonicalEncodingRulesElement",
       "originalType" : "@system (in ubyte[] bytes)",
@@ -9117,14 +9117,14 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 6258,
+      "endline" : 6255,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates a $(D CERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. The supplied $(D ubyte[]) array is read, starting\n        from the index specified by $(D bytesRead), and increments\n        $(D bytesRead) by the number of bytes read.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes())\n\n        Examples:\n        ---\n        // Decoding looks like:\n        CERElement[] result;\n        size_t i = 0u;\n        while (i < bytes.length)\n            result ~= new CERElement(i, bytes);\n\n        // Encoding looks like:\n        ubyte[] result;\n        foreach (cv; cervalues)\n        {\n            result ~= cast(ubyte[]) cv;\n        }\n        ---\n",
-      "line" : 6286,
+      "line" : 6283,
       "char" : 5,
       "deco" : "FKmxAhZC4asn16codecs3cer29CanonicalEncodingRulesElement",
       "originalType" : "@system (ref size_t bytesRead, in ubyte[] bytes)",
@@ -9141,14 +9141,14 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 6289,
+      "endline" : 6286,
       "endchar" : 5
      },
      {
       "name" : "fromBytes",
       "kind" : "function",
       "comment" : "        Returns: the number of bytes read\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1TagPaddingException) if the tag number is \"padded\" with\n                \"leading zero bytes\" ($(D 0x80u)))\n            $(LI $(D ASN1TagOverflowException) if the tag number is too large to\n                fit into a $(D size_t))\n            $(LI $(D ASN1LengthUndefinedException) if the reserved length byte of\n                $(D 0xFF) is encountered)\n            $(LI $(D ASN1LengthOverflowException) if the length is too large to fit\n                into a $(D size_t))\n            $(LI $(D ASN1TruncationException) if the tag, length, or value appear to\n                be truncated)\n            $(LI $(D ASN1ConstructionException) if the length is indefinite, but the\n                element is marked as being encoded primitively)\n            $(LI $(D ASN1RecursionException) if, when trying to determine the end of\n                an indefinite-length encoded element, the parser has to recurse\n                too deep)\n        )\n",
-      "line" : 6314,
+      "line" : 6311,
       "char" : 12,
       "deco" : "FxAhZm",
       "originalType" : "size_t(in ubyte[] bytes)",
@@ -9158,7 +9158,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 6564,
+      "endline" : 6561,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.fromBytes"
@@ -9168,10 +9168,10 @@
       "name" : "toBytes",
       "kind" : "function",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.opCast!(ubyte[])()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 6577,
+      "line" : 6574,
       "char" : 13,
       "deco" : "xFNbNdZAh",
-      "endline" : 6656,
+      "endline" : 6653,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.toBytes"
@@ -9180,7 +9180,7 @@
      {
       "kind" : "template",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.toBytes()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 6669,
+      "line" : 6666,
       "char" : 13,
       "name" : "opCast",
       "parameters" : [
@@ -9194,10 +9194,10 @@
        {
         "name" : "opCast",
         "kind" : "function",
-        "line" : 6669,
+        "line" : 6666,
         "char" : 13,
         "type" : "nothrow @system ubyte[]()",
-        "endline" : 6672,
+        "endline" : 6669,
         "endchar" : 5
        }
       ]
@@ -9205,223 +9205,223 @@
     ]
    },
    {
-    "name" : "__unittest_L6678_C1",
+    "name" : "__unittest_L6675_C1",
     "kind" : "function",
-    "line" : 6678,
+    "line" : 6675,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6830,
+    "endline" : 6827,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L6831_C1",
+    "name" : "__unittest_L6828_C1",
     "kind" : "function",
-    "line" : 6831,
+    "line" : 6828,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6916,
+    "endline" : 6913,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L6917_C1",
+    "name" : "__unittest_L6914_C1",
     "kind" : "function",
-    "line" : 6917,
+    "line" : 6914,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6929,
+    "endline" : 6926,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L6930_C1",
+    "name" : "__unittest_L6927_C1",
     "kind" : "function",
-    "line" : 6930,
+    "line" : 6927,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6941,
+    "endline" : 6938,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L6942_C1",
+    "name" : "__unittest_L6939_C1",
     "kind" : "function",
-    "line" : 6942,
+    "line" : 6939,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6952,
+    "endline" : 6949,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L6953_C1",
+    "name" : "__unittest_L6950_C1",
     "kind" : "function",
-    "line" : 6953,
+    "line" : 6950,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6971,
+    "endline" : 6968,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L6972_C1",
+    "name" : "__unittest_L6969_C1",
     "kind" : "function",
-    "line" : 6972,
+    "line" : 6969,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 6995,
+    "endline" : 6992,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L6996_C1",
+    "name" : "__unittest_L6993_C1",
     "kind" : "function",
-    "line" : 6996,
+    "line" : 6993,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7013,
+    "endline" : 7010,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7014_C1",
+    "name" : "__unittest_L7011_C1",
     "kind" : "function",
-    "line" : 7014,
+    "line" : 7011,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7028,
+    "endline" : 7025,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7029_C1",
+    "name" : "__unittest_L7026_C1",
     "kind" : "function",
-    "line" : 7029,
+    "line" : 7026,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7038,
+    "endline" : 7035,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7039_C1",
+    "name" : "__unittest_L7036_C1",
     "kind" : "function",
-    "line" : 7039,
+    "line" : 7036,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7046,
+    "endline" : 7043,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7047_C1",
+    "name" : "__unittest_L7044_C1",
     "kind" : "function",
-    "line" : 7047,
+    "line" : 7044,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7054,
+    "endline" : 7051,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7055_C1",
+    "name" : "__unittest_L7052_C1",
     "kind" : "function",
-    "line" : 7055,
+    "line" : 7052,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7062,
+    "endline" : 7059,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7063_C1",
+    "name" : "__unittest_L7060_C1",
     "kind" : "function",
-    "line" : 7063,
+    "line" : 7060,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7074,
+    "endline" : 7071,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7075_C1",
+    "name" : "__unittest_L7072_C1",
     "kind" : "function",
-    "line" : 7075,
+    "line" : 7072,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7086,
+    "endline" : 7083,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7087_C1",
+    "name" : "__unittest_L7084_C1",
     "kind" : "function",
-    "line" : 7087,
+    "line" : 7084,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7095,
+    "endline" : 7092,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7096_C1",
+    "name" : "__unittest_L7093_C1",
     "kind" : "function",
-    "line" : 7096,
+    "line" : 7093,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7104,
+    "endline" : 7101,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7105_C1",
+    "name" : "__unittest_L7102_C1",
     "kind" : "function",
-    "line" : 7105,
+    "line" : 7102,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7113,
+    "endline" : 7110,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7114_C1",
+    "name" : "__unittest_L7111_C1",
     "kind" : "function",
-    "line" : 7114,
+    "line" : 7111,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7139,
+    "endline" : 7136,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L7140_C1",
+    "name" : "__unittest_L7137_C1",
     "kind" : "function",
-    "line" : 7140,
+    "line" : 7137,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 7156,
+    "endline" : 7153,
     "endchar" : 2
    }
   ]
@@ -10339,7 +10339,7 @@
       ],
       "deco" : "xFNdZAS4asn15types7oidtype20ObjectIdentifierNode",
       "originalType" : "const @property @system OIDNode[]()",
-      "endline" : 3103,
+      "endline" : 3100,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
@@ -10349,7 +10349,7 @@
       "name" : "relativeObjectIdentifier",
       "kind" : "function",
       "comment" : "        Encodes a $(MONO RELATIVE OBJECT IDENTIFIER).\n\n        Standards:\n            $(LINK http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660)\n",
-      "line" : 3112,
+      "line" : 3109,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10362,46 +10362,46 @@
         "deco" : "xAS4asn15types7oidtype20ObjectIdentifierNode"
        }
       ],
-      "endline" : 3138,
+      "endline" : 3135,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
       ]
      },
      {
-      "name" : "__unittest_L3141_C5",
+      "name" : "__unittest_L3138_C5",
       "kind" : "function",
-      "line" : 3141,
+      "line" : 3138,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3160,
+      "endline" : 3157,
       "endchar" : 5
      },
      {
-      "name" : "__unittest_L3161_C5",
+      "name" : "__unittest_L3158_C5",
       "kind" : "function",
-      "line" : 3161,
+      "line" : 3158,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3193,
+      "endline" : 3190,
       "endchar" : 5
      },
      {
       "name" : "sequence",
       "kind" : "function",
       "comment" : "        Decodes a sequence of elements\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"primitive\")\n            $(LI And all of the exceptions thrown by the constructor)\n        )\n",
-      "line" : 3194,
+      "line" : 3191,
       "char" : 18,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAC4asn16codecs3der33DistinguishedEncodingRulesElement",
       "originalType" : "const @property @system DERElement[]()",
-      "endline" : 3205,
+      "endline" : 3202,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
@@ -10411,7 +10411,7 @@
       "name" : "sequence",
       "kind" : "function",
       "comment" : "Encodes a sequence of elements\n",
-      "line" : 3209,
+      "line" : 3206,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10424,7 +10424,7 @@
         "deco" : "xAC4asn16codecs3der33DistinguishedEncodingRulesElement"
        }
       ],
-      "endline" : 3218,
+      "endline" : 3215,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
@@ -10434,14 +10434,14 @@
       "name" : "set",
       "kind" : "function",
       "comment" : "        Decodes a set of elements\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"primitive\")\n            $(LI And all of the exceptions thrown by the constructor)\n        )\n",
-      "line" : 3230,
+      "line" : 3227,
       "char" : 18,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAC4asn16codecs3der33DistinguishedEncodingRulesElement",
       "originalType" : "const @property @system DERElement[]()",
-      "endline" : 3241,
+      "endline" : 3238,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.set"
@@ -10451,7 +10451,7 @@
       "name" : "set",
       "kind" : "function",
       "comment" : "Encodes a set of elements\n",
-      "line" : 3245,
+      "line" : 3242,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10464,7 +10464,7 @@
         "deco" : "xAC4asn16codecs3der33DistinguishedEncodingRulesElement"
        }
       ],
-      "endline" : 3254,
+      "endline" : 3251,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.set"
@@ -10474,13 +10474,13 @@
       "name" : "numericString",
       "kind" : "function",
       "comment" : "        Decodes a string, where the characters of the string are limited to\n        0 - 9 and $(MONO SPACE).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueCharactersException) if any character other than 0-9 or space is encoded.)\n        )\n",
-      "line" : 3267,
+      "line" : 3264,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3280,
+      "endline" : 3277,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
@@ -10490,7 +10490,7 @@
       "name" : "numericString",
       "kind" : "function",
       "comment" : "        Encodes a string, where the characters of the string are limited to\n        0 - 9 and space.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any character other than 0-9 or space is supplied.)\n        )\n",
-      "line" : 3292,
+      "line" : 3289,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10503,7 +10503,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 3302,
+      "endline" : 3299,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
@@ -10513,13 +10513,13 @@
       "name" : "printableString",
       "kind" : "function",
       "comment" : "        Decodes a string that will only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueCharactersException)\n                if any character other than a-z, A-Z,\n                0-9, space, apostrophe, parentheses, comma, minus, plus,\n                period, forward slash, colon, equals, or question mark are\n                encoded)\n        )\n",
-      "line" : 3320,
+      "line" : 3317,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3333,
+      "endline" : 3330,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
@@ -10529,7 +10529,7 @@
       "name" : "printableString",
       "kind" : "function",
       "comment" : "        Encodes a string that may only contain characters a-z, A-Z, 0-9,\n        space, apostrophe, parentheses, comma, minus, plus, period,\n        forward slash, colon, equals, and question mark.\n\n        Throws:\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueCharactersException) if any character other than a-z, A-Z,\n                0-9, space, apostrophe, parentheses, comma, minus, plus,\n                period, forward slash, colon, equals, or question mark are\n                supplied)\n",
-      "line" : 3348,
+      "line" : 3345,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10542,7 +10542,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 3358,
+      "endline" : 3355,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
@@ -10552,13 +10552,13 @@
       "name" : "teletexString",
       "kind" : "function",
       "comment" : "        Literally just returns the value bytes.\n\n        Returns: an unsigned byte array, where each byte is a T.61 character.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n        )\n",
-      "line" : 3371,
+      "line" : 3368,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdNfZAh",
-      "endline" : 3378,
+      "endline" : 3375,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
@@ -10568,7 +10568,7 @@
       "name" : "teletexString",
       "kind" : "function",
       "comment" : "Literally just sets the value bytes.\n",
-      "line" : 3382,
+      "line" : 3379,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10581,7 +10581,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 3386,
+      "endline" : 3383,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
@@ -10591,13 +10591,13 @@
       "name" : "videotexString",
       "kind" : "function",
       "comment" : "        Literally just returns the value bytes.\n\n        Returns: an unsigned byte array, where each byte is a Videotex character.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n        )\n",
-      "line" : 3399,
+      "line" : 3396,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdNfZAh",
-      "endline" : 3406,
+      "endline" : 3403,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
@@ -10607,7 +10607,7 @@
       "name" : "videotexString",
       "kind" : "function",
       "comment" : "Literally just sets the value bytes.\n",
-      "line" : 3410,
+      "line" : 3407,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10620,7 +10620,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 3414,
+      "endline" : 3411,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
@@ -10630,13 +10630,13 @@
       "name" : "internationalAlphabetNumber5String",
       "kind" : "function",
       "comment" : "        Decodes a string that only contains ASCII characters.\n\n        $(MONO IA5String) differs from ASCII ever so slightly: IA5 is international,\n        leaving 10 characters up to be locale-specific:\n\n        $(TABLE\n            $(TR $(TH Byte) $(TH ASCII Character))\n            $(TR $(TD 0x40) $(TD @))\n            $(TR $(TD 0x5B) $(TD [))\n            $(TR $(TD 0x5C) $(TD \\))\n            $(TR $(TD 0x5D) $(TD ]))\n            $(TR $(TD 0x5E) $(TD ^))\n            $(TR $(TD 0x60) $(TD `))\n            $(TR $(TD 0x7B) $(TD {))\n            $(TR $(TD 0x7C) $(TD /))\n            $(TR $(TD 0x7D) $(TD }))\n            $(TR $(TD 0x7E) $(TD ~))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n        )\n",
-      "line" : 3443,
+      "line" : 3440,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3457,
+      "endline" : 3454,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
@@ -10646,7 +10646,7 @@
       "name" : "internationalAlphabetNumber5String",
       "kind" : "function",
       "comment" : "        Encodes a string that may only contain ASCII characters.\n\n        $(MONO IA5String) differs from ASCII ever so slightly: IA5 is international,\n        leaving 10 characters up to be locale-specific:\n\n        $(TABLE\n            $(TR $(TH Byte) $(TH ASCII Character))\n            $(TR $(TD 0x40) $(TD @))\n            $(TR $(TD 0x5B) $(TD [))\n            $(TR $(TD 0x5C) $(TD \\))\n            $(TR $(TD 0x5D) $(TD ]))\n            $(TR $(TD 0x5E) $(TD ^))\n            $(TR $(TD 0x60) $(TD `))\n            $(TR $(TD 0x7B) $(TD {))\n            $(TR $(TD 0x7C) $(TD /))\n            $(TR $(TD 0x7D) $(TD }))\n            $(TR $(TD 0x7E) $(TD ~))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n        )\n",
-      "line" : 3485,
+      "line" : 3482,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10659,7 +10659,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 3495,
+      "endline" : 3492,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
@@ -10669,13 +10669,13 @@
       "name" : "coordinatedUniversalTime",
       "kind" : "function",
       "comment" : "        Decodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n        The value is just the ASCII character representation of the UTC-formatted timestamp.\n\n        An UTC Timestamp looks like:\n        $(UL\n            $(LI $(MONO 9912312359Z))\n            $(LI $(MONO 991231235959+0200))\n        )\n\n        If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,\n        meaning that the date refers to the first 80 years of the century, this\n        assumes we are talking about the 21st century and prepend '20' when\n        creating the ISO Date String. Otherwise, it assumes we are talking\n        about the 20th century, and prepend '19' when creating the string.\n\n        See_Also:\n        $(UL\n            $(LI $(LINK https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime))\n            $(LI $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueException) if the encoded value does not end with a 'Z')\n            $(LI $(D ASN1ValueCharactersException) if any character is not valid in a $(MONO Visiblestring))\n            $(LI $(D DateTimeException) if the encoded string cannot be decoded to a DateTime)\n        )\n",
-      "line" : 3528,
+      "line" : 3525,
       "char" : 14,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS3std8datetime4date8DateTime",
-      "endline" : 3562,
+      "endline" : 3559,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
@@ -10685,7 +10685,7 @@
       "name" : "coordinatedUniversalTime",
       "kind" : "function",
       "comment" : "        Encodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n        The value is just the ASCII character representation of\n        the UTC-formatted timestamp.\n\n        An UTC Timestamp looks like:\n        $(UL\n            $(LI $(MONO 9912312359Z))\n            $(LI $(MONO 991231235959+0200))\n        )\n\n        See_Also:\n            $(LINK https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime)\n",
-      "line" : 3579,
+      "line" : 3576,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10698,7 +10698,7 @@
         "deco" : "xS3std8datetime4date8DateTime"
        }
       ],
-      "endline" : 3591,
+      "endline" : 3588,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
@@ -10706,36 +10706,36 @@
       "out" : {
        "name" : "__ensure",
        "kind" : "function",
-       "line" : 3581,
+       "line" : 3578,
        "char" : 5,
        "deco" : "FNaNbNiZv",
        "originalType" : "@system void()",
-       "endline" : 3581,
+       "endline" : 3578,
        "endchar" : 5
       }
      },
      {
-      "name" : "__unittest_L3594_C5",
+      "name" : "__unittest_L3591_C5",
       "kind" : "function",
-      "line" : 3594,
+      "line" : 3591,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3637,
+      "endline" : 3634,
       "endchar" : 5
      },
      {
       "name" : "generalizedTime",
       "kind" : "function",
       "comment" : "        Decodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n        The value is just the ASCII character representation of\n        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueException) if the encoded value did not end with a 'Z'\n                or contained a misplaced or unnecessary decimal point)\n            $(LI $(D ASN1ValueCharactersException) if any character is not valid in a $(MONO Visiblestring))\n            $(LI $(D DateTimeException) if the encoded string cannot be decoded to a DateTime)\n            $(LI $(D ASN1ValuePaddingException) if the seconds fraction contains trailing zeroes)\n            $(LI $(D ASN1RecursionException)\n                if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException)\n                if any nested primitives do not share the\n                same tag class as their outer constructed element)\n            $(LI $(D ASN1TagNumberException)\n                if any nested primitives do not share the\n                same tag number as their outer constructed element)\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
-      "line" : 3638,
+      "line" : 3635,
       "char" : 14,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS3std8datetime4date8DateTime",
-      "endline" : 3711,
+      "endline" : 3708,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
@@ -10745,7 +10745,7 @@
       "name" : "generalizedTime",
       "kind" : "function",
       "comment" : "        Encodes a $(LINK https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime).\n\n        The value is just the ASCII character representation of\n        the $(LINK https://www.iso.org/iso-8601-date-and-time-format.html,\n        ISO 8601)-formatted timestamp.\n\n        An ISO-8601 Timestamp looks like:\n        $(UL\n            $(LI $(MONO 19851106210627.3))\n            $(LI $(MONO 19851106210627.3Z))\n            $(LI $(MONO 19851106210627.3-0500))\n        )\n\n        Standards:\n        $(UL\n            $(LI $(LINK https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601))\n        )\n",
-      "line" : 3733,
+      "line" : 3730,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10758,7 +10758,7 @@
         "deco" : "xS3std8datetime4date8DateTime"
        }
       ],
-      "endline" : 3744,
+      "endline" : 3741,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
@@ -10766,47 +10766,47 @@
       "out" : {
        "name" : "__ensure",
        "kind" : "function",
-       "line" : 3735,
+       "line" : 3732,
        "char" : 5,
        "deco" : "FNaZv",
        "originalType" : "@system void()",
-       "endline" : 3735,
+       "endline" : 3732,
        "endchar" : 5
       }
      },
      {
-      "name" : "__unittest_L3748_C5",
+      "name" : "__unittest_L3745_C5",
       "kind" : "function",
-      "line" : 3748,
+      "line" : 3745,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3763,
+      "endline" : 3760,
       "endchar" : 5
      },
      {
-      "name" : "__unittest_L3764_C5",
+      "name" : "__unittest_L3761_C5",
       "kind" : "function",
-      "line" : 3764,
+      "line" : 3761,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 3804,
+      "endline" : 3801,
       "endchar" : 5
      },
      {
       "name" : "graphicString",
       "kind" : "function",
       "comment" : "        Decodes an ASCII string that contains only characters between and\n        including $(D 0x20) and $(D 0x75). Deprecated, according to page 182 of the\n        Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueCharactersException) if any non-graphical character (including space) is encoded)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, pp. 175-178.)\n            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))\n            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))\n        )\n",
-      "line" : 3805,
+      "line" : 3802,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3819,
+      "endline" : 3816,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
@@ -10816,7 +10816,7 @@
       "name" : "graphicString",
       "kind" : "function",
       "comment" : "        Encodes an ASCII string that may contain only characters between and\n        including $(D 0x20) and $(D 0x75). Deprecated, according to page 182\n        of the Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any non-graphical character (including space) is supplied)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, pp. 175-178.)\n            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))\n            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))\n        )\n",
-      "line" : 3841,
+      "line" : 3838,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10829,7 +10829,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 3851,
+      "endline" : 3848,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
@@ -10839,13 +10839,13 @@
       "name" : "visibleString",
       "kind" : "function",
       "comment" : "        Decodes a string that only contains characters between and including\n        $(D 0x20) and $(D 0x7E). (Honestly, I don't know how this differs from\n        $(MONO GraphicalString).)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueCharactersException)\n                if any non-graphical character (including space) is encoded)\n        )\n",
-      "line" : 3866,
+      "line" : 3863,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3880,
+      "endline" : 3877,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
@@ -10855,7 +10855,7 @@
       "name" : "visibleString",
       "kind" : "function",
       "comment" : "        Encodes a string that only contains characters between and including\n        $(D 0x20) and $(D 0x7E). (Honestly, I don't know how this differs from\n        $(MONO GraphicalString).)\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException)\n                if any non-graphical character (including space) is supplied.)\n        )\n",
-      "line" : 3894,
+      "line" : 3891,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10868,7 +10868,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 3904,
+      "endline" : 3901,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
@@ -10878,13 +10878,13 @@
       "name" : "generalString",
       "kind" : "function",
       "comment" : "        Decodes a string containing only ASCII characters. Deprecated, according\n        to page 182 of the Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, p. 182.)\n            $(LI $(LINK https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022))\n            $(LI $(LINK https://www.iso.org/standard/22747.html, ISO 2022))\n        )\n",
-      "line" : 3926,
+      "line" : 3923,
       "char" : 12,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAya",
-      "endline" : 3940,
+      "endline" : 3937,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
@@ -10894,7 +10894,7 @@
       "name" : "generalString",
       "kind" : "function",
       "comment" : "        Encodes a string containing only ASCII characters. Deprecated,\n        according to page 182 of the Dubuisson book.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueCharactersException) if any encoded character is not ASCII)\n        )\n\n        Citations:\n        $(UL\n            $(LI Dubuisson, Olivier. “Basic Encoding Rules (BER).”\n                $(I ASN.1: Communication between Heterogeneous Systems),\n                Morgan Kaufmann, 2001, p. 182.)\n        )\n",
-      "line" : 3959,
+      "line" : 3956,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10907,7 +10907,7 @@
         "deco" : "xAya"
        }
       ],
-      "endline" : 3969,
+      "endline" : 3966,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
@@ -10917,13 +10917,13 @@
       "name" : "universalString",
       "kind" : "function",
       "comment" : "        Decodes a $(MONO dstring) of UTF-32 characters.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueException)\n                if the encoded bytes is not evenly divisible by four)\n        )\n",
-      "line" : 3982,
+      "line" : 3979,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAyw",
-      "endline" : 4023,
+      "endline" : 4020,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
@@ -10933,7 +10933,7 @@
       "name" : "universalString",
       "kind" : "function",
       "comment" : "Encodes a $(MONO dstring) of UTF-32 characters.\n",
-      "line" : 4027,
+      "line" : 4024,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10946,7 +10946,7 @@
         "deco" : "xAyw"
        }
       ],
-      "endline" : 4047,
+      "endline" : 4044,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
@@ -10956,13 +10956,13 @@
       "name" : "characterString",
       "kind" : "function",
       "comment" : "        Decodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n\n        Returns: an instance of $(D types.universal.characterstring.CharacterString).\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ValueException) if encoded $(MONO CharacterString) has too few or too many\n                elements, or if $(MONO syntaxes) or $(MONO context-negotiation) element has\n                too few or too many elements)\n            $(LI $(D ASN1ValueSizeException) if encoded $(MONO INTEGER) is too large to decode)\n            $(LI $(D ASN1RecursionException) if using constructed form and the element\n                is constructed of too many nested constructed elements)\n            $(LI $(D ASN1TagClassException) if any nested primitives do not have the\n                correct tag class)\n            $(LI $(D ASN1ConstructionException) if any element has the wrong construction)\n            $(LI $(D ASN1TagNumberException) if any nested primitives do not have the\n                correct tag number)\n        )\n",
-      "line" : 4093,
+      "line" : 4090,
       "char" : 21,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZS4asn15types9universal15characterstring15CharacterString",
-      "endline" : 4246,
+      "endline" : 4243,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
@@ -10972,7 +10972,7 @@
       "name" : "characterString",
       "kind" : "function",
       "comment" : "        Encodes a $(MONO CharacterString), which is a constructed data type, defined\n        in the $(LINK https://www.itu.int, International Telecommunications Union)'s\n            $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680).\n\n        The specification defines $(MONO CharacterString) as:\n\n        $(PRE\n            CHARACTER STRING ::= [UNIVERSAL 29] SEQUENCE {\n                identification CHOICE {\n                    syntaxes SEQUENCE {\n                        abstract OBJECT IDENTIFIER,\n                        transfer OBJECT IDENTIFIER },\n                    syntax OBJECT IDENTIFIER,\n                    presentation-context-id INTEGER,\n                    context-negotiation SEQUENCE {\n                        presentation-context-id INTEGER,\n                        transfer-syntax OBJECT IDENTIFIER },\n                    transfer-syntax OBJECT IDENTIFIER,\n                    fixed NULL },\n                string-value OCTET STRING }\n        )\n\n        This assumes $(MONO AUTOMATIC TAGS), so all of the $(MONO identification)\n        choices will be $(MONO CONTEXT-SPECIFIC) and numbered from 0 to 5.\n",
-      "line" : 4275,
+      "line" : 4272,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -10985,7 +10985,7 @@
         "deco" : "xS4asn15types9universal15characterstring15CharacterString"
        }
       ],
-      "endline" : 4330,
+      "endline" : 4327,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
@@ -10993,47 +10993,47 @@
       "out" : {
        "name" : "__ensure",
        "kind" : "function",
-       "line" : 4277,
+       "line" : 4274,
        "char" : 5,
        "deco" : "FNaNbNiZv",
        "originalType" : "@system void()",
-       "endline" : 4277,
+       "endline" : 4274,
        "endchar" : 5
       }
      },
      {
-      "name" : "__unittest_L4341_C5",
+      "name" : "__unittest_L4338_C5",
       "kind" : "function",
-      "line" : 4341,
+      "line" : 4338,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4362,
+      "endline" : 4359,
       "endchar" : 5
      },
      {
-      "name" : "__unittest_L4363_C5",
+      "name" : "__unittest_L4360_C5",
       "kind" : "function",
-      "line" : 4363,
+      "line" : 4360,
       "char" : 5,
       "storageClass" : [
        "@system"
       ],
-      "endline" : 4409,
+      "endline" : 4406,
       "endchar" : 5
      },
      {
       "name" : "basicMultilingualPlaneString",
       "kind" : "function",
       "comment" : "        Decodes a $(MONO wstring) of UTF-16 characters.\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1ConstructionException) if the element is marked as \"constructed\")\n            $(LI $(D ASN1ValueException)\n                if the encoded bytes is not evenly divisible by two)\n        )\n",
-      "line" : 4410,
+      "line" : 4407,
       "char" : 13,
       "storageClass" : [
        "override"
       ],
       "deco" : "xFNdZAyu",
-      "endline" : 4449,
+      "endline" : 4446,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
@@ -11043,7 +11043,7 @@
       "name" : "basicMultilingualPlaneString",
       "kind" : "function",
       "comment" : "Encodes a $(MONO wstring) of UTF-16 characters.\n",
-      "line" : 4453,
+      "line" : 4450,
       "char" : 10,
       "storageClass" : [
        "override"
@@ -11056,7 +11056,7 @@
         "deco" : "xAyu"
        }
       ],
-      "endline" : 4473,
+      "endline" : 4470,
       "endchar" : 5,
       "overrides" : [
        "asn1.codec.ASN1Element!(DistinguishedEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
@@ -11066,18 +11066,18 @@
       "name" : "this",
       "kind" : "constructor",
       "comment" : "Creates an $(MONO END OF CONTENT)\n",
-      "line" : 4477,
+      "line" : 4474,
       "char" : 5,
       "deco" : "FNbNiNfZC4asn16codecs3der33DistinguishedEncodingRulesElement",
       "originalType" : "nothrow @nogc @safe ()",
-      "endline" : 4481,
+      "endline" : 4478,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates a $(D DERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. The supplied $(D ubyte[]) array is \"chomped\" by\n        reference, so the original array will grow shorter as $(D DERElement)s are\n        generated.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes())\n\n        Examples:\n        ---\n        // Decoding looks like:\n        DERElement[] result;\n        while (bytes.length > 0)\n            result ~= new DERElement(bytes);\n\n        // Encoding looks like:\n        ubyte[] result;\n        foreach (dv; dervalues)\n        {\n            result ~= cast(ubyte[]) dv;\n        }\n        ---\n",
-      "line" : 4508,
+      "line" : 4505,
       "char" : 5,
       "deco" : "FKAhZC4asn16codecs3der33DistinguishedEncodingRulesElement",
       "originalType" : "@system (ref ubyte[] bytes)",
@@ -11090,14 +11090,14 @@
         ]
        }
       ],
-      "endline" : 4512,
+      "endline" : 4509,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates a $(D DERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. Unlike the construct that accepts a $(D ubyte[])\n        reference, this constructor does not \"chomp\" the array. This constructor\n        expects the encoded bytes to encode only one $(DERElement). If there are\n        any remaining bytes after decoding, an exception is thrown.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes()), but also throws an\n            $(D ASN1LengthException) if there are excess bytes.\n",
-      "line" : 4526,
+      "line" : 4523,
       "char" : 5,
       "deco" : "FxAhZC4asn16codecs3der33DistinguishedEncodingRulesElement",
       "originalType" : "@system (in ubyte[] bytes)",
@@ -11107,14 +11107,14 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 4538,
+      "endline" : 4535,
       "endchar" : 5
      },
      {
       "name" : "this",
       "kind" : "constructor",
       "comment" : "        Creates a $(D DERElement) from the supplied bytes, inferring that the first\n        byte is the type tag. The supplied $(D ubyte[]) array is read, starting\n        from the index specified by $(D bytesRead), and increments\n        $(D bytesRead) by the number of bytes read.\n\n        Throws:\n            All of the same exceptions as $(D fromBytes())\n\n        Examples:\n        ---\n        // Decoding looks like:\n        DERElement[] result;\n        size_t i = 0u;\n        while (i < bytes.length)\n            result ~= new DERElement(i, bytes);\n\n        // Encoding looks like:\n        ubyte[] result;\n        foreach (dv; dervalues)\n        {\n            result ~= cast(ubyte[]) dv;\n        }\n        ---\n",
-      "line" : 4566,
+      "line" : 4563,
       "char" : 5,
       "deco" : "FKmxAhZC4asn16codecs3der33DistinguishedEncodingRulesElement",
       "originalType" : "@system (ref size_t bytesRead, in ubyte[] bytes)",
@@ -11131,14 +11131,14 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 4569,
+      "endline" : 4566,
       "endchar" : 5
      },
      {
       "name" : "fromBytes",
       "kind" : "function",
       "comment" : "        Returns: the number of bytes read\n\n        Throws:\n        $(UL\n            $(LI $(D ASN1TagPaddingException) if the tag number is \"padded\" with\n                \"leading zero bytes\" ($(D 0x80u)))\n            $(LI $(D ASN1TagOverflowException) if the tag number is too large to\n                fit into a $(D size_t))\n            $(LI $(D ASN1LengthUndefinedException) if the reserved length byte of\n                $(D 0xFF) is encountered)\n            $(LI $(D ASN1LengthOverflowException) if the length is too large to fit\n                into a $(D size_t))\n            $(LI $(D ASN1TruncationException) if the tag, length, or value appear to\n                be truncated)\n            $(LI $(D ASN1ConstructionException) if the length is indefinite, but the\n                element is marked as being encoded primitively)\n            $(LI $(D ASN1LengthException) if indefinite-length encoding is encountered)\n        )\n",
-      "line" : 4592,
+      "line" : 4589,
       "char" : 12,
       "deco" : "FxAhZm",
       "originalType" : "size_t(in ubyte[] bytes)",
@@ -11148,7 +11148,7 @@
         "deco" : "xAh"
        }
       ],
-      "endline" : 4797,
+      "endline" : 4794,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.fromBytes"
@@ -11158,10 +11158,10 @@
       "name" : "toBytes",
       "kind" : "function",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.opCast!(ubyte[])()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 4810,
+      "line" : 4807,
       "char" : 13,
       "deco" : "xFNbNdZAh",
-      "endline" : 4869,
+      "endline" : 4866,
       "endchar" : 5,
       "overrides" : [
        "asn1.interfaces.Byteable.toBytes"
@@ -11170,7 +11170,7 @@
      {
       "kind" : "template",
       "comment" : "        This differs from $(D this.value) in that\n        $(D this.value) only returns the value octets, whereas\n        $(D this.toBytes) returns the type tag, length tag / octets,\n        and the value octets, all concatenated.\n\n        This is the exact same as $(D this.toBytes()).\n\n        Returns: type tag, length tag, and value, all concatenated as a $(D ubyte) array.\n",
-      "line" : 4882,
+      "line" : 4879,
       "char" : 13,
       "name" : "opCast",
       "parameters" : [
@@ -11184,10 +11184,10 @@
        {
         "name" : "opCast",
         "kind" : "function",
-        "line" : 4882,
+        "line" : 4879,
         "char" : 13,
         "type" : "nothrow @system ubyte[]()",
-        "endline" : 4885,
+        "endline" : 4882,
         "endchar" : 5
        }
       ]
@@ -11195,168 +11195,168 @@
     ]
    },
    {
-    "name" : "__unittest_L4891_C1",
+    "name" : "__unittest_L4888_C1",
     "kind" : "function",
-    "line" : 4891,
+    "line" : 4888,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5043,
+    "endline" : 5040,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5044_C1",
+    "name" : "__unittest_L5041_C1",
     "kind" : "function",
-    "line" : 5044,
+    "line" : 5041,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5085,
+    "endline" : 5082,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5086_C1",
+    "name" : "__unittest_L5083_C1",
     "kind" : "function",
-    "line" : 5086,
+    "line" : 5083,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5121,
+    "endline" : 5118,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5122_C1",
+    "name" : "__unittest_L5119_C1",
     "kind" : "function",
-    "line" : 5122,
+    "line" : 5119,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5145,
+    "endline" : 5142,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5146_C1",
+    "name" : "__unittest_L5143_C1",
     "kind" : "function",
-    "line" : 5146,
+    "line" : 5143,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5163,
+    "endline" : 5160,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5164_C1",
+    "name" : "__unittest_L5161_C1",
     "kind" : "function",
-    "line" : 5164,
+    "line" : 5161,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5178,
+    "endline" : 5175,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5179_C1",
+    "name" : "__unittest_L5176_C1",
     "kind" : "function",
-    "line" : 5179,
+    "line" : 5176,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5188,
+    "endline" : 5185,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5189_C1",
+    "name" : "__unittest_L5186_C1",
     "kind" : "function",
-    "line" : 5189,
+    "line" : 5186,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5196,
+    "endline" : 5193,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5197_C1",
+    "name" : "__unittest_L5194_C1",
     "kind" : "function",
-    "line" : 5197,
+    "line" : 5194,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5204,
+    "endline" : 5201,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5205_C1",
+    "name" : "__unittest_L5202_C1",
     "kind" : "function",
-    "line" : 5205,
+    "line" : 5202,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5212,
+    "endline" : 5209,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5213_C1",
+    "name" : "__unittest_L5210_C1",
     "kind" : "function",
-    "line" : 5213,
+    "line" : 5210,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5224,
+    "endline" : 5221,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5225_C1",
+    "name" : "__unittest_L5222_C1",
     "kind" : "function",
-    "line" : 5225,
+    "line" : 5222,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5236,
+    "endline" : 5233,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5237_C1",
+    "name" : "__unittest_L5234_C1",
     "kind" : "function",
-    "line" : 5237,
+    "line" : 5234,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5245,
+    "endline" : 5242,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5246_C1",
+    "name" : "__unittest_L5243_C1",
     "kind" : "function",
-    "line" : 5246,
+    "line" : 5243,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5271,
+    "endline" : 5268,
     "endchar" : 1
    },
    {
-    "name" : "__unittest_L5272_C1",
+    "name" : "__unittest_L5269_C1",
     "kind" : "function",
-    "line" : 5272,
+    "line" : 5269,
     "char" : 1,
     "storageClass" : [
      "@system"
     ],
-    "endline" : 5288,
+    "endline" : 5285,
     "endchar" : 2
    }
   ]
