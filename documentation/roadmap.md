@@ -24,15 +24,10 @@
 - [x] Make command-line tools display decoded `BIT STRING`s as `bool` arrays
 - [x] Make command-line tools display decoded `UniversalString`s and `BMPString`s.
 
+
 ### 2.3.6 Release
 
-- [ ] Modify `bitString` mutator so it reuses `this.value` instead of creating a new `ubyte[]` (`ub`)
-  - Note to self: remember that all unused bits in `CERElement` and `DERElement` must be unset!
-
-### 2.3.7 Release
-
-- [ ] Use `Appender` for `SEQUENCE` and `SET`.
-- [ ] Change occurrences of `0x80u` to `0b10000000u`.
+- [x] Use `Appender` for `SEQUENCE` and `SET`.
 
 ### 2.4.0 Release
 
@@ -43,6 +38,7 @@
 
 - [ ] Apply `@nogc` when possible
 - [ ] Apply `pure` when possible
+- [ ] Apply function attributes to code in command-line tools
 
 ### 2.5.0 Release
 

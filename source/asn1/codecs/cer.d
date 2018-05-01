@@ -3696,11 +3696,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             throw new ASN1ConstructionException
             (this.construction, "decode a SEQUENCE");
 
-        ubyte[] data = this.value.dup;
-        CERElement[] result;
-        while (data.length > 0u)
-            result ~= new CERElement(data);
-        return result;
+        size_t i = 0u;
+        Appender!(CERElement[]) result = appender!(CERElement[])();
+        while (i < this.value.length)
+            result.put(new CERElement(i, this.value));
+        return result.data;
     }
 
     /// Encodes a sequence of elements
@@ -3708,12 +3708,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     void sequence(in CERElement[] value)
     {
         scope(success) this.construction = ASN1Construction.constructed;
-        ubyte[] result;
-        foreach (cv; value)
+        Appender!(ubyte[]) result = appender!(ubyte[])();
+        foreach (element; value)
         {
-            result ~= cv.toBytes;
+            result.put(element.toBytes);
         }
-        this.value = result;
+        this.value = result.data;
     }
 
     /**
@@ -3732,11 +3732,11 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
             throw new ASN1ConstructionException
             (this.construction, "decode a SET");
 
-        ubyte[] data = this.value.dup;
-        CERElement[] result;
-        while (data.length > 0u)
-            result ~= new CERElement(data);
-        return result;
+        size_t i = 0u;
+        Appender!(CERElement[]) result = appender!(CERElement[])();
+        while (i < this.value.length)
+            result.put(new CERElement(i, this.value));
+        return result.data;
     }
 
     /// Encodes a set of elements
@@ -3744,12 +3744,12 @@ class CanonicalEncodingRulesElement : ASN1Element!CERElement, Byteable
     void set(in CERElement[] value)
     {
         scope(success) this.construction = ASN1Construction.constructed;
-        ubyte[] result;
-        foreach (cv; value)
+        Appender!(ubyte[]) result = appender!(ubyte[])();
+        foreach (element; value)
         {
-            result ~= cv.toBytes;
+            result.put(element.toBytes);
         }
-        this.value = result;
+        this.value = result.data;
     }
 
     /**

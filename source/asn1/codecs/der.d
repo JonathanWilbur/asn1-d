@@ -3194,11 +3194,11 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             throw new ASN1ConstructionException
             (this.construction, "decode a SEQUENCE");
 
-        ubyte[] data = this.value.dup;
-        DERElement[] result;
-        while (data.length > 0u)
-            result ~= new DERElement(data);
-        return result;
+        size_t i = 0u;
+        Appender!(DERElement[]) result = appender!(DERElement[])();
+        while (i < this.value.length)
+            result.put(new DERElement(i, this.value));
+        return result.data;
     }
 
     /// Encodes a sequence of elements
@@ -3206,12 +3206,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     void sequence(in DERElement[] value)
     {
         scope(success) this.construction = ASN1Construction.constructed;
-        ubyte[] result;
-        foreach (dv; value)
+        Appender!(ubyte[]) result = appender!(ubyte[])();
+        foreach (element; value)
         {
-            result ~= dv.toBytes;
+            result.put(element.toBytes);
         }
-        this.value = result;
+        this.value = result.data;
     }
 
     /**
@@ -3230,11 +3230,11 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
             throw new ASN1ConstructionException
             (this.construction, "decode a SET");
 
-        ubyte[] data = this.value.dup;
-        DERElement[] result;
-        while (data.length > 0u)
-            result ~= new DERElement(data);
-        return result;
+        size_t i = 0u;
+        Appender!(DERElement[]) result = appender!(DERElement[])();
+        while (i < this.value.length)
+            result.put(new DERElement(i, this.value));
+        return result.data;
     }
 
     /// Encodes a set of elements
@@ -3242,12 +3242,12 @@ class DistinguishedEncodingRulesElement : ASN1Element!DERElement, Byteable
     void set(in DERElement[] value)
     {
         scope(success) this.construction = ASN1Construction.constructed;
-        ubyte[] result;
-        foreach (dv; value)
+        Appender!(ubyte[]) result = appender!(ubyte[])();
+        foreach (element; value)
         {
-            result ~= dv.toBytes;
+            result.put(element.toBytes);
         }
-        this.value = result;
+        this.value = result.data;
     }
 
     /**
