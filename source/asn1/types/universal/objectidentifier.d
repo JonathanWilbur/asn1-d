@@ -110,7 +110,7 @@ public class ObjectIdentifier
         )
     */
     public @safe
-    this(OIDNode[] nodes ...)
+    this(in OIDNode[] nodes ...)
     {
         if (nodes.length < 2u)
             throw new OIDException
@@ -169,9 +169,13 @@ public class ObjectIdentifier
         size_t[] numbers;
         numbers.length = segments.length;
 
-        for (size_t i = 0u; i < segments.length; i++)
+        // for (size_t i = 0u; i < segments.length; i++)
+        // {
+        //     numbers[i] = segments[i].to!size_t;
+        // }
+        foreach (immutable size_t i, immutable string segment; segments)
         {
-            numbers[i] = segments[i].to!size_t;
+            numbers[i] = segment.to!size_t;
         }
 
         if (numbers[0] == 0u || numbers[0] == 1u)
@@ -234,7 +238,7 @@ public class ObjectIdentifier
         const OID that = cast(OID) other;
         if (that is null) return false;
         if (this.nodes.length != that.nodes.length) return false;
-        for (ptrdiff_t i = 0; i < this.nodes.length; i++)
+        for (size_t i = 0u; i < this.nodes.length; i++)
         {
             if (this.nodes[i].number != that.nodes[i].number) return false;
         }
@@ -296,7 +300,7 @@ public class ObjectIdentifier
             $(LI $(D RangeError) if an invalid index is specified)
         )
     */
-    public @safe @nogc nothrow
+    public @safe nothrow
     string descriptor(in size_t index) const
     {
         return this.nodes[index].descriptor;
@@ -322,9 +326,13 @@ public class ObjectIdentifier
     {
         size_t[] ret;
         ret.length = this.nodes.length;
-        for (ptrdiff_t i = 0; i < this.nodes.length; i++)
+        // for (size_t i = 0u; i < this.nodes.length; i++)
+        // {
+        //     ret[i] = this.nodes[i].number;
+        // }
+        foreach (immutable size_t i, immutable OIDNode node; this.nodes)
         {
-            ret[i] = this.nodes[i].number;
+            ret[i] = node.number;
         }
         return ret;
     }

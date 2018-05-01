@@ -571,7 +571,7 @@ class AbstractSyntaxNotation1Element(Element)
         assert(acceptableTagClasses.length > 0u);
         assert(acceptableTagNumbers.length > 0u);
     }
-    body
+    do
     {
         if (!canFind(acceptableTagClasses, this.tagClass))
             throw new ASN1TagClassException
@@ -625,7 +625,7 @@ class AbstractSyntaxNotation1Element(Element)
         assert(acceptableTagClasses.length > 0u);
         assert(acceptableTagNumbers.length > 0u);
     }
-    body
+    do
     {
         if (!canFind(acceptableTagClasses, this.tagClass))
             throw new ASN1TagClassException
@@ -2911,29 +2911,6 @@ class AbstractSyntaxNotation1Element(Element)
 
         el.value = [];
         assert(el.decremented == []);
-    }
-
-    /*
-        This is needed for converting bytes to BigInt, because BigInt's
-        constructor only accepts strings.
-    */
-    protected static nothrow pure
-    string bytesToHex(in ubyte[] bytes)
-    {
-        string ret;
-        foreach (b; bytes)
-        {
-            string hexbyte = b.to!string(16);
-            if (hexbyte.length == 1u) hexbyte = ("0" ~ hexbyte);
-            ret ~= hexbyte;
-        }
-        return ret;
-    }
-
-    @system
-    unittest
-    {
-        assert("00FF12AB" == Element.bytesToHex(cast(ubyte[]) [ 0x00u, 0xFFu, 0x12u, 0xABu ]));
     }
 
 }

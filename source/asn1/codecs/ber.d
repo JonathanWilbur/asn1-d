@@ -179,7 +179,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         assert(this.value.length > 0u);
     }
-    body
+    do
     {
         scope(success) this.construction = ASN1Construction.primitive;
         this.value = [(value ? 0xFFu : 0x00u)];
@@ -311,7 +311,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         assert(this.value.length > 0u);
     }
-    body
+    do
     {
         scope(success) this.construction = ASN1Construction.primitive;
         if (value <= byte.max && value >= byte.min)
@@ -560,18 +560,18 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                 );
 
             bool[] ret;
-            for (size_t i = 1; i < this.value.length; i++)
+            ret.length = ((this.value.length - 1u) << 3u);
+            const ubyte[] allButTheFirstByte = this.value[1 .. $];
+            foreach (immutable size_t i, immutable ubyte b; allButTheFirstByte)
             {
-                ret ~= [
-                    (this.value[i] & 0b10000000u ? true : false),
-                    (this.value[i] & 0b01000000u ? true : false),
-                    (this.value[i] & 0b00100000u ? true : false),
-                    (this.value[i] & 0b00010000u ? true : false),
-                    (this.value[i] & 0b00001000u ? true : false),
-                    (this.value[i] & 0b00000100u ? true : false),
-                    (this.value[i] & 0b00000010u ? true : false),
-                    (this.value[i] & 0b00000001u ? true : false)
-                ];
+                ret[((i << 3u) + 0u)] = cast(bool) (b & 0b10000000u);
+                ret[((i << 3u) + 1u)] = cast(bool) (b & 0b01000000u);
+                ret[((i << 3u) + 2u)] = cast(bool) (b & 0b00100000u);
+                ret[((i << 3u) + 3u)] = cast(bool) (b & 0b00010000u);
+                ret[((i << 3u) + 4u)] = cast(bool) (b & 0b00001000u);
+                ret[((i << 3u) + 5u)] = cast(bool) (b & 0b00000100u);
+                ret[((i << 3u) + 6u)] = cast(bool) (b & 0b00000010u);
+                ret[((i << 3u) + 7u)] = cast(bool) (b & 0b00000001u);
             }
             ret.length -= this.value[0];
             return ret;
@@ -627,18 +627,21 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         assert(this.value.length > 0u);
     }
-    body
+    do
     {
         scope(success) this.construction = ASN1Construction.primitive;
         ubyte[] ub;
-        ub.length = ((value.length / 8u) + (value.length % 8u ? 1u : 0u));
-        for (size_t i = 0u; i < value.length; i++)
+        ub.length = ((value.length / 8u) + (value.length % 8u ? 2u : 1u));
+        foreach (immutable size_t i, immutable bool b; value)
         {
-            if (value[i] == false) continue;
-            ub[(i/8u)] |= (0b10000000u >> (i % 8u));
+            if (!b) continue;
+            ub[((i >> 3u) + 1u)] |= (0b10000000u >> (i % 8u));
         }
-        this.value = [ cast(ubyte) (8u - (value.length % 8u)) ] ~ ub;
-        if (this.value[0] == 0x08u) this.value[0] = 0x00u;
+
+        // REVIEW: I feel like there is a more efficient way to do this.
+        ub[0] = cast(ubyte) (8u - (value.length % 8u));
+        if (ub[0] == 0x08u) ub[0] = 0x00u;
+        this.value = ub;
     }
 
     // Test a $(MONO BIT STRING) with a deceptive first byte.
@@ -856,7 +859,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         assert(value.length >= 2u);
     }
-    body
+    do
     {
         if (this.construction != ASN1Construction.primitive)
             throw new ASN1ConstructionException
@@ -905,19 +908,22 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         }
 
         // Breaks bytes into groups, where each group encodes one OID component.
-        ubyte[][] byteGroups;
-        size_t lastTerminator = 1;
-        for (size_t i = 1; i < this.length; i++)
+        const(ubyte)[][] byteGroups;
+        size_t lastTerminator = 1u;
+        const ubyte[] allButTheFirstByte = this.value[1 .. $];
+        foreach (immutable size_t i, immutable ubyte b; allButTheFirstByte)
         {
-            if (!(this.value[i] & 0x80u))
+            if (!(b & 0x80u))
             {
-                byteGroups ~= cast(ubyte[]) this.value[lastTerminator .. i+1];
-                lastTerminator = i+1;
+                byteGroups ~= this.value[lastTerminator .. (i + 2u)];
+                lastTerminator = (i + 2u);
             }
         }
 
+        numbers.length += byteGroups.length;
+
         // Converts each group of bytes to a number.
-        foreach (const byteGroup; byteGroups)
+        foreach (immutable size_t i, const ubyte[] byteGroup; byteGroups)
         {
             if (byteGroup.length > size_t.sizeof)
                 throw new ASN1ValueOverflowException
@@ -929,19 +935,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     debugInformationText ~ reportBugsText
                 );
 
-            numbers ~= 0u;
-            for (size_t i = 0u; i < byteGroup.length; i++)
+            foreach (immutable ubyte b; byteGroup)
             {
-                numbers[$-1] <<= 7;
-                numbers[$-1] |= cast(size_t) (byteGroup[i] & 0x7Fu);
+                numbers[(i + 2u)] <<= 7;
+                numbers[(i + 2u)] |= cast(size_t) (b & 0x7Fu);
             }
         }
 
         // Constructs the array of OIDNodes from the array of numbers.
         OIDNode[] nodes;
-        foreach (number; numbers)
+        nodes.length = numbers.length;
+        foreach (immutable size_t i, immutable size_t number; numbers)
         {
-            nodes ~= OIDNode(number);
+            nodes[i] = OIDNode(number);
         }
 
         return new OID(nodes);
@@ -972,7 +978,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         assert(this.value.length > 0u);
     }
-    body
+    do
     {
         scope(success) this.construction = ASN1Construction.primitive;
         size_t[] numbers = value.numericArray();
@@ -1546,7 +1552,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         assert(this.value.length > 0u);
     }
-    body
+    do
     {
         scope(success) this.construction = ASN1Construction.constructed;
         BERElement[] components = [];
@@ -2530,7 +2536,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         assert(this.value.length > 0u);
     }
-    body
+    do
     {
         scope(success) this.construction = ASN1Construction.primitive;
         if (value <= byte.max && value >= byte.min)
@@ -2956,7 +2962,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         assert(this.value.length > 0u);
     }
-    body
+    do
     {
         scope(success) this.construction = ASN1Construction.constructed;
         BERElement identification = new BERElement();
@@ -3225,20 +3231,22 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             (size_t.max, this.value.length, "decode a RELATIVE OID");
 
         // Breaks bytes into groups, where each group encodes one OID component.
-        ubyte[][] byteGroups;
+        const(ubyte)[][] byteGroups;
         size_t lastTerminator = 0u;
-        for (size_t i = 0u; i < this.length; i++)
+        foreach (immutable size_t i, immutable ubyte b; this.value)
         {
-            if (!(this.value[i] & 0x80u))
+            if (!(b & 0x80u))
             {
-                byteGroups ~= cast(ubyte[]) this.value[lastTerminator .. i+1];
-                lastTerminator = i+1;
+                byteGroups ~= this.value[lastTerminator .. (i + 1u)];
+                lastTerminator = (i + 1u);
             }
         }
 
-        // Converts each group of bytes to a number.
         size_t[] numbers;
-        foreach (const byteGroup; byteGroups)
+        numbers.length = byteGroups.length;
+
+        // Converts each group of bytes to a number.
+        foreach (immutable size_t i, const ubyte[] byteGroup; byteGroups)
         {
             if (byteGroup.length > size_t.sizeof)
                 throw new ASN1ValueOverflowException
@@ -3250,19 +3258,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
                     debugInformationText ~ reportBugsText
                 );
 
-            numbers ~= 0u;
-            for (size_t i = 0u; i < byteGroup.length; i++)
+            foreach (immutable ubyte b; byteGroup)
             {
-                numbers[$-1] <<= 7;
-                numbers[$-1] |= cast(size_t) (byteGroup[i] & 0x7Fu);
+                numbers[i] <<= 7;
+                numbers[i] |= cast(size_t) (b & 0x7Fu);
             }
         }
 
         // Constructs the array of OIDNodes from the array of numbers.
         OIDNode[] nodes;
-        foreach (number; numbers)
+        nodes.length = numbers.length;
+        foreach (immutable size_t i, immutable size_t number; numbers)
         {
-            nodes ~= OIDNode(number);
+            nodes[i] = OIDNode(number);
         }
 
         return nodes;
@@ -3881,7 +3889,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         assert(this.value.length > 10u);
     }
-    body
+    do
     {
         scope(success) this.construction = ASN1Construction.primitive;
         import std.string : replace;
@@ -3981,7 +3989,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         assert(this.value.length > 10u);
     }
-    body
+    do
     {
         scope(success) this.construction = ASN1Construction.primitive;
         import std.string : replace;
@@ -4303,19 +4311,19 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             }
             else version (LittleEndian)
             {
-                dstring ret;
-                size_t i = 0u;
-                while (i < this.value.length-3)
+                dchar[] ret;
+                ret.length = (this.value.length >> 2);
+                foreach (immutable size_t i, ref dchar c; ret)
                 {
-                    ubyte[] character;
-                    character.length = 4u;
-                    character[3] = this.value[i++];
-                    character[2] = this.value[i++];
-                    character[1] = this.value[i++];
-                    character[0] = this.value[i++];
-                    ret ~= (*cast(dchar *) character.ptr);
+                    immutable size_t byteIndex = (i << 2);
+                    *cast(ubyte[4] *) &c = [
+                        this.value[(byteIndex + 3u)],
+                        this.value[(byteIndex + 2u)],
+                        this.value[(byteIndex + 1u)],
+                        this.value[(byteIndex + 0u)]
+                    ];
                 }
-                return ret;
+                return cast(dstring) ret;
             }
             else
             {
@@ -4683,7 +4691,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     {
         assert(this.value.length > 0u);
     }
-    body
+    do
     {
         scope(success) this.construction = ASN1Construction.constructed;
         BERElement identification = new BERElement();
@@ -4874,17 +4882,17 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             }
             else version (LittleEndian)
             {
-                wstring ret;
-                size_t i = 0u;
-                while (i < this.value.length-1)
+                wchar[] ret;
+                ret.length = (this.value.length >> 1);
+                foreach (immutable size_t i, ref wchar c; ret)
                 {
-                    ubyte[] character;
-                    character.length = 2u;
-                    character[1] = this.value[i++];
-                    character[0] = this.value[i++];
-                    ret ~= (*cast(wchar *) character.ptr);
+                    immutable size_t byteIndex = (i << 1);
+                    *cast(ubyte[2] *) &c = [
+                        this.value[(byteIndex + 1u)],
+                        this.value[(byteIndex + 0u)]
+                    ];
                 }
-                return ret;
+                return cast(wstring) ret;
             }
             else
             {

@@ -14,20 +14,33 @@
 
 ### 2.3.4 Release
 
-- [ ] Change `body` to `do`, since `body` is being deprecated
-- [ ] Change `for` loops to `foreach` loops
-- [ ] Apply `@nogc` when possible
-- [ ] Apply `pure` when possible
-- [ ] Use `.length` pre-allocation instead of incremental appends via `~`
+- [x] Change `body` to `do`, since `body` is being deprecated
+- [x] Change `for` loops to `foreach` loops
+- [x] Use `.length` pre-allocation instead of incremental appends via `~`
 
 ### 2.3.5 Release
 
+- [ ] Rewrite `objectIdentifier` accessor so it does not create a bunch of new arrays
 - [ ] Make command line tools display decoded `BIT STRING`s as `bool` arrays
+
+### 2.3.6 Release
+
+- [ ] Modify `bitString` mutator so it reuses `this.value` instead of creating a new `ubyte[]` (`ub`)
+  - Note to self: remember that all unused bits in `CERElement` and `DERElement` must be unset!
+
+### 2.3.7 Release
+
+- [ ] Use `Appender` for `SEQUENCE` and `SET`.
 
 ### 2.4.0 Release
 
 - [ ] New constructors
   - [ ] `Element(ASN1Class, ASN1Construction, size_t)`
+
+### 2.4.1 Release
+
+- [ ] Apply `@nogc` when possible
+- [ ] Apply `pure` when possible
 
 ### 2.5.0 Release
 
@@ -146,10 +159,5 @@ The following codecs will be added:
   - [ ] `~=` making a constructed element
 - [ ] Build System
   - [ ] [Bazel](https://www.bazel.build)
-  - [ ] Makefile
   - [ ] Compiled D Executable
   - [ ] Support `gdc` and `ldc` compilation
-
-## Possible Future Ideas
-
-- [ ] Make a separate `BitString` type, since `bool[]` is unwieldy.

@@ -1,7 +1,7 @@
 module asn1.types.oidtype;
-import asn1.constants;
 import asn1.codec : ASN1ValueException;
 import std.ascii : isGraphical;
+import std.exception : assertThrown;
 
 ///
 public alias OIDNode = ObjectIdentifierNode;
@@ -16,7 +16,9 @@ struct ObjectIdentifierNode
         The unique unsigned integral number associated with a node in the
         object identifier hierarchy.
     */
-    immutable public size_t number;
+    public size_t number;
+    private string _descriptor;
+
     /**
         The descriptor string is an ObjectDescriptor, which is defined as:
 
@@ -27,79 +29,27 @@ struct ObjectIdentifierNode
 
         It is used to describe the object identified by this node.
     */
-    immutable public string descriptor;
-
-    /// Override for use of the `==` operand.
-    public @safe @nogc nothrow
-    bool opEquals(const OIDNode other) const
+    public @property @safe pure nothrow
+    string descriptor() const
     {
-        return (this.number == other.number);
-    }
-
-    ///
-    @system
-    unittest
-    {
-        immutable OIDNode a = OIDNode(1, "iso");
-        immutable OIDNode b = OIDNode(1, "not-iso");
-        assert(a == b);
-    }
-
-    /// Override for the use of the '>', '<', '<=', and '>=' operands.
-    public @safe @nogc nothrow
-    ptrdiff_t opCmp(ref const OIDNode other) const
-    {
-        return cast(ptrdiff_t) (this.number - other.number);
+        return this._descriptor.dup;
     }
 
     /**
-        An override so that associative arrays can use an $(D OIDNode) as a
-        key.
-        Returns: A $(D size_t) that represents a hash of the $(D OIDNode)
-    */
-    public nothrow @trusted
-    size_t toHash() const
-    {
-        return typeid(this.number).getHash(cast(const void*) &this.number);
-    }
-
-    ///
-    @system
-    unittest
-    {
-        immutable OIDNode a = OIDNode(1, "iso");
-        immutable OIDNode b = OIDNode(2, "even-more-iso");
-        assert(b > a);
-    }
-
-    /// The simple numeric constructor. Does not throw exceptions.
-    public @safe @nogc nothrow
-    this(in size_t number)
-    {
-        this.number = number;
-        this.descriptor = "";
-    }
-
-    /**
-        A constructor that accepts a descriptor string.
         The descriptor string is an ObjectDescriptor, which is defined as:
 
         $(MONO ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
 
-        $(MONO GraphicString) is just a string containing only characters between
-        and including $(D 0x20) and $(D 0x7E), therefore ObjectDescriptor is just
-        $(D 0x20) and $(D 0x7E).
+        GraphicString is just $(D 0x20) to $(D 0x7E), therefore
+        ObjectDescriptor is just $(D 0x20) to $(D 0x7E).
 
-        Throws:
-        $(UL
-            $(LI $(D ASN1ValueException) if the encoded value contains any bytes
-                outside of $(D 0x20) to $(D 0x7E))
-        )
+        It is used to describe the object identified by this node.
     */
-    public @system
-    this(in size_t number, in string descriptor)
+    public @property @safe pure
+    void descriptor(string value)
     {
-        foreach (immutable character; descriptor)
+        scope (success) this._descriptor = value;
+        foreach (immutable character; value)
         {
             if ((!character.isGraphical) && (character != ' '))
             {
@@ -120,6 +70,70 @@ struct ObjectIdentifierNode
                 );
             }
         }
+    }
+
+    /// Override for use of the `==` operand.
+    public @safe @nogc nothrow pure
+    bool opEquals(const OIDNode other) const
+    {
+        return (this.number == other.number);
+    }
+
+    ///
+    @system
+    unittest
+    {
+        immutable OIDNode a = OIDNode(1, "iso");
+        immutable OIDNode b = OIDNode(1, "not-iso");
+        assert(a == b);
+    }
+
+    /// Override for the use of the '>', '<', '<=', and '>=' operands.
+    public @safe @nogc nothrow pure
+    ptrdiff_t opCmp(ref in OIDNode other) const
+    {
+        return cast(ptrdiff_t) (this.number - other.number);
+    }
+
+    ///
+    @system
+    unittest
+    {
+        immutable OIDNode a = OIDNode(1, "iso");
+        immutable OIDNode b = OIDNode(2, "even-more-iso");
+        assert(b > a);
+    }
+
+    /**
+        An override so that associative arrays can use an $(D OIDNode) as a
+        key.
+        Returns: A $(D size_t) that represents a hash of the $(D OIDNode)
+    */
+    public @trusted nothrow
+    size_t toHash() const
+    {
+        return typeid(this.number).getHash(cast(const void*) &this.number);
+    }
+
+    /**
+        A constructor that accepts a descriptor string.
+        The descriptor string is an ObjectDescriptor, which is defined as:
+
+        $(MONO ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString)
+
+        $(MONO GraphicString) is just a string containing only characters between
+        and including $(D 0x20) and $(D 0x7E), therefore ObjectDescriptor is just
+        $(D 0x20) and $(D 0x7E).
+
+        Throws:
+        $(UL
+            $(LI $(D ASN1ValueException) if the encoded value contains any bytes
+                outside of $(D 0x20) to $(D 0x7E))
+        )
+    */
+    public @safe pure
+    this(in size_t number, in string descriptor = "")
+    {
         this.number = number;
         this.descriptor = descriptor;
     }

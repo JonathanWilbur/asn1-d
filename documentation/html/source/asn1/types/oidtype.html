@@ -164,7 +164,7 @@ code, .mono {
 	<li class="ddoc_member"><a href="#ObjectIdentifierNode.number" id="ObjectIdentifierNode.number"><code class="member">number</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="ObjectIdentifierNode.number"></span>immutable size_t <code class="code">number</code>;
+        <span class="ddoc_anchor" id="ObjectIdentifierNode.number"></span>size_t <code class="code">number</code>;
 
     </code>
 </section>
@@ -175,7 +175,24 @@ code, .mono {
 </li><li class="ddoc_member"><a href="#ObjectIdentifierNode.descriptor" id="ObjectIdentifierNode.descriptor"><code class="member">descriptor</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="ObjectIdentifierNode.descriptor"></span>immutable string <code class="code">descriptor</code>;
+        <span class="ddoc_anchor" id="ObjectIdentifierNode.descriptor"></span>const pure nothrow @property @safe string <code class="code">descriptor</code>();
+
+    </code>
+</section>
+<div><section class="module-info"><section id="summary">The <code class="code">descriptor</code> string is an ObjectDescriptor, which is defined as:
+</section>
+<div class="description"><span class="mono">ObjectDescriptor ::= [UNIVERSAL 7] IMPLICIT GraphicString</span>
+<br><br>
+        GraphicString is just <code class="d inline">0x20</code> to <code class="d inline">0x7E</code>, therefore
+        ObjectDescriptor is just <code class="d inline">0x20</code> to <code class="d inline">0x7E</code>.
+<br><br>
+        It is used to describe the object identified by this node.</div>
+</section>
+</div>
+</li><li class="ddoc_member"><a href="#ObjectIdentifierNode.descriptor" id="ObjectIdentifierNode.descriptor"><code class="member">descriptor</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="ObjectIdentifierNode.descriptor.2"></span>pure @property @safe void <code class="code">descriptor</code>(string <code class="code">value</code>);
 
     </code>
 </section>
@@ -192,7 +209,7 @@ code, .mono {
 </li><li class="ddoc_member"><a href="#ObjectIdentifierNode.opEquals" id="ObjectIdentifierNode.opEquals"><code class="member">opEquals</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="ObjectIdentifierNode.opEquals"></span>const nothrow @nogc @safe bool <code class="code">opEquals</code>(const OIDNode <code class="code">other</code>);
+        <span class="ddoc_anchor" id="ObjectIdentifierNode.opEquals"></span>const pure nothrow @nogc @safe bool <code class="code">opEquals</code>(const OIDNode <code class="code">other</code>);
 
     </code>
 </section>
@@ -211,12 +228,21 @@ assert(a == b);
 </li><li class="ddoc_member"><a href="#ObjectIdentifierNode.opCmp" id="ObjectIdentifierNode.opCmp"><code class="member">opCmp</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="ObjectIdentifierNode.opCmp"></span>const nothrow @nogc @safe ptrdiff_t <code class="code">opCmp</code>(ref const OIDNode <code class="code">other</code>);
+        <span class="ddoc_anchor" id="ObjectIdentifierNode.opCmp"></span>const pure nothrow @nogc @safe ptrdiff_t <code class="code">opCmp</code>(ref OIDNode <code class="code">other</code>);
 
     </code>
 </section>
 <div><section class="module-info"><section id="summary">Override for the use of the '&gt;', '&lt;', '&lt;=', and '&gt;=' operands.</section>
-</section>
+<div class="ddoc_examples">
+	<h4>Examples</h4>
+	<p class="para">
+		<pre><code class="d block">immutable OIDNode a = OIDNode(1, <span class="string_literal">"iso"</span>);
+immutable OIDNode b = OIDNode(2, <span class="string_literal">"even-more-iso"</span>);
+assert(b &gt; a);
+</code></pre>
+
+	</p>
+</div></section>
 </div>
 </li><li class="ddoc_member"><a href="#ObjectIdentifierNode.toHash" id="ObjectIdentifierNode.toHash"><code class="member">toHash</code></a>
 <section class="declaration">
@@ -234,31 +260,12 @@ assert(a == b);
 		A <code class="d inline">size_t</code> that represents a hash of the <code class="d inline">OIDNode</code>
 	</p>
 </div>
-<div class="ddoc_examples">
-	<h4>Examples</h4>
-	<p class="para">
-		<pre><code class="d block">immutable OIDNode a = OIDNode(1, <span class="string_literal">"iso"</span>);
-immutable OIDNode b = OIDNode(2, <span class="string_literal">"even-more-iso"</span>);
-assert(b &gt; a);
-</code></pre>
-
-	</p>
-</div></section>
-</div>
-</li><li class="ddoc_member"><a href="#ObjectIdentifierNode.this" id="ObjectIdentifierNode.this"><code class="member">this</code></a>
-<section class="declaration">
-    <code>
-        <span class="ddoc_anchor" id="ObjectIdentifierNode.this"></span>nothrow @nogc @safe this(in size_t <code class="code">number</code>);
-
-    </code>
-</section>
-<div><section class="module-info"><section id="summary">The simple numeric constructor. Does not throw exceptions.</section>
 </section>
 </div>
 </li><li class="ddoc_member"><a href="#ObjectIdentifierNode.this" id="ObjectIdentifierNode.this"><code class="member">this</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="ObjectIdentifierNode.this.2"></span>@system this(in size_t <code class="code">number</code>, in string <code class="code">descriptor</code>);
+        <span class="ddoc_anchor" id="ObjectIdentifierNode.this"></span>pure @safe this(in size_t <code class="code">number</code>, in string <code class="code">descriptor</code> = "");
 
     </code>
 </section>
@@ -290,7 +297,7 @@ assert(b &gt; a);
 
         </div>
         <div id="footer">
-            <span id="timestamp">Sun Apr 29 11:38:14 2018
+            <span id="timestamp">Tue May  1 08:50:54 2018
 </span>
         </div>
     </body>
