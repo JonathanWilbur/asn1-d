@@ -869,39 +869,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             throw new ASN1ValueSizeException
             (1u, size_t.max, 0u, "decode an OBJECT IDENTIFIER");
 
-        if (this.value.length >= 2u)
-        {
-            // Skip the first, because it is fine if it is 0x80
-            // Skip the last because it will be checked next
-            foreach (immutable octet; this.value[1 .. $-1])
-            {
-                if (octet == 0x80u)
-                    throw new ASN1ValuePaddingException
-                    (
-                        "This exception was thrown because you attempted to decode " ~
-                        "an OBJECT IDENTIFIER that contained a number that was " ~
-                        "encoded on more than the minimum necessary octets. This " ~
-                        "is indicated by an occurrence of the octet 0x80, which " ~
-                        "is the encoded equivalent of a leading zero. " ~
-                        notWhatYouMeantText ~ forMoreInformationText ~
-                        debugInformationText ~ reportBugsText
-                    );
-            }
-
-            if ((this.value[$-1] & 0x80u) == 0x80u)
-                throw new ASN1TruncationException
-                (size_t.max, this.value.length, "decode an OBJECT IDENTIFIER");
-        }
-
-        size_t[] numbers;
-        size_t components = 2u;
-        const ubyte[] allButTheFirstByte = this.value[1 .. $];
-        foreach (immutable size_t i, immutable ubyte b; allButTheFirstByte)
-        {
-            if (!(b & 0x80u)) components++;
-        }
-        numbers.length = components;
-
+        size_t[] numbers = [ 0u, 0u ];
         if (this.value[0] >= 0x50u)
         {
             numbers[0] = 2u;
@@ -918,39 +886,62 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             numbers[1] = this.value[0];
         }
 
+        if (this.value.length == 1u)
+            return new OID(numbers);
+
+        if ((this.value[$-1] & 0x80u) == 0x80u)
+            throw new ASN1TruncationException
+            (size_t.max, this.value.length, "decode an OBJECT IDENTIFIER");
+
+        size_t components = 2u;
+        const ubyte[] allButTheFirstByte = this.value[1 .. $];
+        foreach (immutable size_t i, immutable ubyte b; allButTheFirstByte)
+        {
+            if (!(b & 0x80u)) components++;
+        }
+        numbers.length = components;
+
         size_t currentNumber = 2u;
         ubyte bytesUsedInCurrentNumber = 0u;
         foreach (immutable ubyte b; allButTheFirstByte)
         {
-            numbers[currentNumber] <<= 7;
-            numbers[currentNumber] |= cast(size_t) (b & 0x7Fu);
-
-            if ((++bytesUsedInCurrentNumber) > size_t.sizeof)
-                throw new ASN1ValueOverflowException
+            if (bytesUsedInCurrentNumber == 0u && b == 0x80u)
+                throw new ASN1ValuePaddingException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "a OBJECT IDENTIFIER that encoded a number on more than " ~
-                    "size_t.sizeof bytes. " ~
+                    "an OBJECT IDENTIFIER that contained a number that was " ~
+                    "encoded on more than the minimum necessary octets. This " ~
+                    "is indicated by an occurrence of the octet 0x80, which " ~
+                    "is the encoded equivalent of a leading zero. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
+
+            if (numbers[currentNumber] > (size_t.max >> 7))
+                throw new ASN1ValueOverflowException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "an OBJECT IDENTIFIER that encoded a number that is too big to " ~
+                    "decode to a native integral type. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~
+                    debugInformationText ~ reportBugsText
+                );
+
+            numbers[currentNumber] <<= 7;
+            numbers[currentNumber] |= cast(size_t) (b & 0x7Fu);
 
             if (!(b & 0x80u))
             {
                 currentNumber++;
                 bytesUsedInCurrentNumber = 0u;
             }
+            else
+            {
+                bytesUsedInCurrentNumber++;
+            }
         }
 
-        // Constructs the array of OIDNodes from the array of numbers.
-        OIDNode[] nodes;
-        nodes.length = numbers.length;
-        foreach (immutable size_t i, immutable size_t number; numbers)
-        {
-            nodes[i] = OIDNode(number);
-        }
-
-        return new OID(nodes);
+        return new OID(numbers);
     }
 
     /**
@@ -1038,12 +1029,16 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         // Tests for the "leading zero byte," 0x80
         element.value = [ 0x29u, 0x80u, 0x14u ];
         assertThrown!ASN1ValuePaddingException(element.objectIdentifier);
-        element.value = [ 0x29u, 0x80u, 0x80u ];
-        assertThrown!ASN1ValuePaddingException(element.objectIdentifier);
-        element.value = [ 0x80u, 0x80u, 0x80u ];
-        assertThrown!ASN1ValuePaddingException(element.objectIdentifier);
+
+        // This one is fine, because the null byte is in the middle of a number.
+        element.value = [ 0x29u, 0x84u, 0x80u, 0x01u ];
+        assertNotThrown!ASN1CodecException(element.objectIdentifier);
 
         // Test for non-terminating components
+        element.value = [ 0x29u, 0x80u, 0x80u ];
+        assertThrown!ASN1TruncationException(element.objectIdentifier);
+        element.value = [ 0x80u, 0x80u, 0x80u ];
+        assertThrown!ASN1TruncationException(element.objectIdentifier);
         element.value = [ 0x29u, 0x81u ];
         assertThrown!ASN1TruncationException(element.objectIdentifier);
         element.value = [ 0x29u, 0x80u ];
@@ -3211,20 +3206,6 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
             (this.construction, "decode a RELATIVE OID");
 
         if (this.value.length == 0u) return [];
-        foreach (immutable octet; this.value)
-        {
-            if (octet == 0x80u)
-                throw new ASN1ValuePaddingException
-                (
-                    "This exception was thrown because you attempted to decode " ~
-                    "a RELATIVE OID that contained a number that was " ~
-                    "encoded on more than the minimum necessary octets. This " ~
-                    "is indicated by an occurrence of the octet 0x80, which " ~
-                    "is the encoded equivalent of a leading zero. " ~
-                    notWhatYouMeantText ~ forMoreInformationText ~
-                    debugInformationText ~ reportBugsText
-                );
-        }
 
         if (this.value[$-1] > 0x80u)
             throw new ASN1TruncationException
@@ -3242,23 +3223,39 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
         ubyte bytesUsedInCurrentNumber = 0u;
         foreach (immutable ubyte b; this.value)
         {
-            numbers[currentNumber] <<= 7;
-            numbers[currentNumber] |= cast(size_t) (b & 0x7Fu);
-
-            if ((++bytesUsedInCurrentNumber) > size_t.sizeof)
-                throw new ASN1ValueOverflowException
+            if (bytesUsedInCurrentNumber == 0u && b == 0x80u)
+                throw new ASN1ValuePaddingException
                 (
                     "This exception was thrown because you attempted to decode " ~
-                    "a OBJECT IDENTIFIER that encoded a number on more than " ~
-                    "size_t.sizeof bytes. " ~
+                    "a RELATIVE OID that contained a number that was " ~
+                    "encoded on more than the minimum necessary octets. This " ~
+                    "is indicated by an occurrence of the octet 0x80, which " ~
+                    "is the encoded equivalent of a leading zero. " ~
                     notWhatYouMeantText ~ forMoreInformationText ~
                     debugInformationText ~ reportBugsText
                 );
+
+            if (numbers[currentNumber] > (size_t.max >> 7))
+                throw new ASN1ValueOverflowException
+                (
+                    "This exception was thrown because you attempted to decode " ~
+                    "a RELATIVE OID that encoded a number that is too big to " ~
+                    "decode to a native integral type. " ~
+                    notWhatYouMeantText ~ forMoreInformationText ~
+                    debugInformationText ~ reportBugsText
+                );
+
+            numbers[currentNumber] <<= 7;
+            numbers[currentNumber] |= cast(size_t) (b & 0x7Fu);
 
             if (!(b & 0x80u))
             {
                 currentNumber++;
                 bytesUsedInCurrentNumber = 0u;
+            }
+            else
+            {
+                bytesUsedInCurrentNumber++;
             }
         }
 
@@ -3283,6 +3280,7 @@ class BasicEncodingRulesElement : ASN1Element!BERElement, Byteable
     void relativeObjectIdentifier(in OIDNode[] value)
     {
         scope(success) this.construction = ASN1Construction.primitive;
+        this.value.length = 0u;
         foreach (node; value)
         {
             size_t number = node.number;

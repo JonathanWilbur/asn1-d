@@ -8,6 +8,7 @@ build/libraries/*
 build/maps/*
 build/logs/*
 build/objects/*
+build/packages/*
 documentation/restricted/
 rubbish/
 test/yury/
@@ -51,6 +52,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+*.dmg
 
 # Ignore PDFs so I don't infringe on intellectual property
 *.pdf

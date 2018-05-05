@@ -18,6 +18,19 @@ Alternatively, you can run `./build/scripts/build.sh`.
 If you get a permissions error, you need to set that file to be executable
 using the `chmod` command.
 
+### Mac OS X App Bundle
+
+Create the Application Bundle by running `./build/scripts/mac.app.sh`. This
+will create `./build/packages/ASN.1 Tools.app`.
+
+Then run
+
+```bash
+export PATH=$PATH:/Applications/ASN.1\ Tools.app/Contents/MacOS
+```
+
+to make those tools accessible via the command line.
+
 ### On Windows
 
 Run `.\build\scripts\build.bat` from a `cmd` or run `.\build\scripts\build.ps1`

@@ -12,7 +12,7 @@ mkdir .\build\maps > nul 2>&1
 mkdir .\build\objects > nul 2>&1
 mkdir .\build\scripts > nul 2>&1
 
-set version="2.4.0"
+set version="2.4.1"
 
 echo|set /p="Building the ASN.1 Library (static)... "
 dmd ^

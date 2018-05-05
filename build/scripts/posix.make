@@ -16,7 +16,7 @@ vpath %.a ./build/libraries
 vpath %.so ./build/libraries
 vpath % ./build/executables
 
-version = 2.4.0
+version = 2.4.1
 
 universaltypes = \
 	characterstring \
@@ -50,7 +50,7 @@ htmldocs = $(addsuffix .html,$(modules))
 encoders = $(addprefix encode-,$(codecs))
 decoders = $(addprefix decode-,$(codecs))
 
-.SILENT : all libs tools asn1-$(version).a asn1-$(version).so $(encoders) $(decoders) install purge
+.SILENT : all libs tools asn1-$(version).a asn1-$(version).so $(encoders) $(decoders) install purge unittest
 all : libs tools
 libs : asn1-$(version).a asn1-$(version).so
 tools : $(encoders) $(decoders)
@@ -79,6 +79,23 @@ install : all
 	cp ./documentation/mit.license /usr/local/share/asn1
 	cp ./documentation/credits.csv /usr/local/share/asn1
 	cp ./documentation/releases.csv /usr/local/share/asn1
+
+unittest : $(sources)
+	echo $(echoflags) "Building the ASN.1 Unit Testing Executable... \c"
+	dmd \
+	./source/asn1/*.d \
+	./source/asn1/types/*.d \
+	./source/asn1/types/universal/*.d \
+	./source/asn1/codecs/*.d \
+	-of./asn1-d-unittest-executable \
+	-unittest \
+	-main \
+	-d
+	echo $(echoflags) "\033[32mDone.\033[0m"
+	echo $(echoflags) "Running the ASN.1 unit tests... "
+	./asn1-d-unittest-executable
+	rm -f ./asn1-d-unittest-executable
+	echo $(echoflags) "\033[32mDone.\033[0m"
 
 purge :
 	-rm -f /usr/local/lib/asn1.so

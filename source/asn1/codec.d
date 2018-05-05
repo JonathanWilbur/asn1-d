@@ -72,6 +72,7 @@ class AbstractSyntaxNotation1RecursionException : ASN1CodecException
     immutable size_t recursionLimit;
 
     ///
+    public @safe pure
     this
     (
         size_t recursionLimit,
@@ -113,6 +114,7 @@ class AbstractSyntaxNotation1TruncationException : ASN1CodecException
     immutable size_t actualBytes;
 
     ///
+    public @safe pure
     this
     (
         size_t expectedBytes,
@@ -182,6 +184,7 @@ class AbstractSyntaxNotation1TagClassException : ASN1TagException
     immutable ASN1TagClass actualTagClass;
 
     ///
+    public @safe pure
     this
     (
         ASN1TagClass[] expectedTagClasses,
@@ -216,7 +219,7 @@ class AbstractSyntaxNotation1ConstructionException : ASN1TagException
     immutable ASN1Construction actualConstruction;
 
     ///
-    public @safe
+    public @safe pure
     this
     (
         ASN1Construction actualConstruction,
@@ -252,6 +255,7 @@ class AbstractSyntaxNotation1TagNumberException : ASN1TagException
     immutable size_t actualTagNumber;
 
     ///
+    public @safe pure
     this
     (
         size_t[] expectedTagNumbers,
@@ -292,6 +296,8 @@ public alias ASN1LengthOverflowException = AbstractSyntaxNotation1LengthOverflow
 public
 class AbstractSyntaxNotation1LengthOverflowException : ASN1LengthException
 {
+    ///
+    public @safe pure
     this (string file = __FILE__, size_t line = __LINE__)
     {
         super
@@ -310,6 +316,7 @@ public
 class AbstractSyntaxNotation1LengthUndefinedException : ASN1LengthException
 {
     ///
+    public @safe pure
     this (string file = __FILE__, size_t line = __LINE__)
     {
         super
@@ -402,7 +409,7 @@ class AbstractSyntaxNotation1ValueCharactersException : ASN1ValueException
     immutable dchar offendingCharacter;
 
     ///
-    public @safe
+    public @safe pure
     this
     (
         string descriptionOfPermittedCharacters,
@@ -1100,16 +1107,39 @@ class AbstractSyntaxNotation1Element(Element)
         el.objectIdentifier = new OID(OIDNode(1u), OIDNode(30u), OIDNode(256u), OIDNode(623485u), OIDNode(8u));
         assert(el.objectIdentifier == new OID(OIDNode(1u), OIDNode(30u), OIDNode(256u), OIDNode(623485u), OIDNode(8u)));
 
+        el.objectIdentifier(new OID(1u, 3u, 4u, 6u, 1u, 65537u, 256u, 9u));
+        assert(el.objectIdentifier == new OID(1u, 3u, 4u, 6u, 1u, 65537u, 256u, 9u));
+
         size_t[] sensitiveValues = [
-            0,
-            1,
-            2, // First even
-            3, // First odd greater than 1
-            7, // Number of bits in each byte that encode the number
-            8, // Number of bits in a byte
-            127, // Largest number that can encode on a single OID byte
-            128, // 127+1
-            70000 // A large number that takes three bytes to encode
+            0u,
+            1u,
+            2u,
+            3u,
+            7u,
+            8u,
+            cast (size_t) (byte.max - 1u),
+            cast (size_t) (byte.max),
+            cast (size_t) (byte.max + 1u),
+            cast (size_t) (ubyte.max - 1u),
+            cast (size_t) (ubyte.max),
+            cast (size_t) (ubyte.max + 1u),
+            cast (size_t) (short.max - 1u),
+            cast (size_t) (short.max),
+            cast (size_t) (short.max + 1u),
+            cast (size_t) (ushort.max - 1u),
+            cast (size_t) (ushort.max),
+            cast (size_t) (ushort.max + 1u),
+            cast (size_t) (int.max - 1u),
+            cast (size_t) (int.max),
+            cast (size_t) (int.max + 1u),
+            cast (size_t) (uint.max - 1u),
+            cast (size_t) (uint.max),
+            cast (size_t) (uint.max + 1u),
+            cast (size_t) (long.max - 1u),
+            cast (size_t) (long.max),
+            cast (size_t) (long.max + 1u),
+            cast (size_t) (ulong.max - 1u),
+            cast (size_t) (ulong.max)
         ];
 
         for (size_t x = 0u; x < 2; x++)
@@ -2170,6 +2200,50 @@ class AbstractSyntaxNotation1Element(Element)
 
         // Assert that accessor does not mutate state
         assert(el.relativeObjectIdentifier == el.relativeObjectIdentifier);
+    }
+
+    @system
+    unittest
+    {
+        size_t[] sensitiveValues = [
+            0u,
+            1u,
+            2u,
+            3u,
+            7u,
+            8u,
+            cast (size_t) (byte.max - 1u),
+            cast (size_t) (byte.max),
+            cast (size_t) (byte.max + 1u),
+            cast (size_t) (ubyte.max - 1u),
+            cast (size_t) (ubyte.max),
+            cast (size_t) (ubyte.max + 1u),
+            cast (size_t) (short.max - 1u),
+            cast (size_t) (short.max),
+            cast (size_t) (short.max + 1u),
+            cast (size_t) (ushort.max - 1u),
+            cast (size_t) (ushort.max),
+            cast (size_t) (ushort.max + 1u),
+            cast (size_t) (int.max - 1u),
+            cast (size_t) (int.max),
+            cast (size_t) (int.max + 1u),
+            cast (size_t) (uint.max - 1u),
+            cast (size_t) (uint.max),
+            cast (size_t) (uint.max + 1u),
+            cast (size_t) (long.max - 1u),
+            cast (size_t) (long.max),
+            cast (size_t) (long.max + 1u),
+            cast (size_t) (ulong.max - 1u),
+            cast (size_t) (ulong.max)
+        ];
+
+        Element el = new Element();
+        foreach (immutable size_t number; sensitiveValues)
+        {
+            import std.stdio : writefln, writeln;
+            el.roid = [ OIDNode(number) ];
+            assert(el.roid == [ OIDNode(number) ]);
+        }
     }
 
     /**

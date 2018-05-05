@@ -24,7 +24,6 @@
 - [x] Make command-line tools display decoded `BIT STRING`s as `bool` arrays
 - [x] Make command-line tools display decoded `UniversalString`s and `BMPString`s.
 
-
 ### 2.3.6 Release
 
 - [x] Use `Appender` for `SEQUENCE` and `SET`.
@@ -36,24 +35,26 @@
 
 ### 2.4.1 Release
 
+- [x] Fix Improper OID encoding (leading zeros)
+
+### 2.4.2 Release
+
+- [ ] Figure out how to concatenate long exception strings or something, so exception constructors can be `@nogc`.
 - [ ] Apply `@nogc` when possible
 - [ ] Apply `pure` when possible
 - [ ] Apply function attributes to code in command-line tools
-
-### 2.5.0 Release
-
-- [ ] Allow `INTEGER` to be encoded with unsigned integers
-- [ ] Allow `ENUMERATED` to be encoded with unsigned integers
-- [ ] Allow `INTEGER` to be decoded with unsigned integers
-- [ ] Allow `ENUMERATED` to be decoded with unsigned integers
 
 ### 2.6.0 Release
 
 - [ ] Achieve 100% Code Coverage
 - [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
-- [ ] Publish an [APT package](https://debian-handbook.info/browse/stable/debian-packaging.html)
-- [ ] Publish a [Brew package](https://docs.brew.sh/Formula-Cookbook.html)
+- [ ] Publish an [Debian package](https://debian-handbook.info/browse/stable/debian-packaging.html)
+- [x] Publish a [Brew package](https://docs.brew.sh/Formula-Cookbook.html)
+  - [ ] `test` command
 - [ ] Configure [Travis CI](https://travis-ci.org)
+- [ ] Create an [MSI Installer](http://wixtoolset.org/)
+- [ ] Create a Mac OS X Package file
+- [x] Create a Mac OS X App Bundle + Disk Image
 - [ ] Create `man(3)` (Library calls) pages
 - [ ] Create Wikipedia pages for each codec
 - [ ] Review by one security firm

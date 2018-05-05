@@ -246,7 +246,7 @@ code, .mono {
 </li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1RecursionException.this" id="AbstractSyntaxNotation1RecursionException.this"><code class="member">this</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="AbstractSyntaxNotation1RecursionException.this"></span>this(size_t <code class="code">recursionLimit</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1RecursionException.this"></span>pure @safe this(size_t <code class="code">recursionLimit</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
 
     </code>
 </section>
@@ -299,7 +299,7 @@ code, .mono {
 </li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TruncationException.this" id="AbstractSyntaxNotation1TruncationException.this"><code class="member">this</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TruncationException.this"></span>this(size_t <code class="code">expectedBytes</code>, size_t <code class="code">actualBytes</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TruncationException.this"></span>pure @safe this(size_t <code class="code">expectedBytes</code>, size_t <code class="code">actualBytes</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
 
     </code>
 </section>
@@ -405,7 +405,7 @@ code, .mono {
 </li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagClassException.this" id="AbstractSyntaxNotation1TagClassException.this"><code class="member">this</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagClassException.this"></span>this(ASN1TagClass[] <code class="code">expectedTagClasses</code>, ASN1TagClass <code class="code">actualTagClass</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagClassException.this"></span>pure @safe this(ASN1TagClass[] <code class="code">expectedTagClasses</code>, ASN1TagClass <code class="code">actualTagClass</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
 
     </code>
 </section>
@@ -445,7 +445,7 @@ code, .mono {
 </li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ConstructionException.this" id="AbstractSyntaxNotation1ConstructionException.this"><code class="member">this</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ConstructionException.this"></span>@safe this(ASN1Construction <code class="code">actualConstruction</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ConstructionException.this"></span>pure @safe this(ASN1Construction <code class="code">actualConstruction</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
 
     </code>
 </section>
@@ -503,7 +503,7 @@ code, .mono {
 </li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1TagNumberException.this" id="AbstractSyntaxNotation1TagNumberException.this"><code class="member">this</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagNumberException.this"></span>this(size_t[] <code class="code">expectedTagNumbers</code>, size_t <code class="code">actualTagNumber</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1TagNumberException.this"></span>pure @safe this(size_t[] <code class="code">expectedTagNumbers</code>, size_t <code class="code">actualTagNumber</code>, string <code class="code">whatYouAttemptedToDo</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
 
     </code>
 </section>
@@ -549,6 +549,18 @@ code, .mono {
 </section>
 <div><section class="module-info"><section id="summary">An exception that is thrown when the length cannot fit inside of a <code class="d inline">size_t</code></section>
 </section>
+<ul class="ddoc_members">
+	<li class="ddoc_member"><a href="#AbstractSyntaxNotation1LengthOverflowException.this" id="AbstractSyntaxNotation1LengthOverflowException.this"><code class="member">this</code></a>
+<section class="declaration">
+    <code>
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthOverflowException.this"></span>pure @safe this(string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+
+    </code>
+</section>
+<div>
+</div>
+</li>
+</ul>
 </div>
 </li><li class="ddoc_member"><a href="#ASN1LengthUndefinedException" id="ASN1LengthUndefinedException"><code class="member">ASN1LengthUndefinedException</code></a>
 <section class="declaration">
@@ -572,7 +584,7 @@ code, .mono {
 	<li class="ddoc_member"><a href="#AbstractSyntaxNotation1LengthUndefinedException.this" id="AbstractSyntaxNotation1LengthUndefinedException.this"><code class="member">this</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthUndefinedException.this"></span>this(string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1LengthUndefinedException.this"></span>pure @safe this(string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
 
     </code>
 </section>
@@ -727,7 +739,7 @@ code, .mono {
 </li><li class="ddoc_member"><a href="#AbstractSyntaxNotation1ValueCharactersException.this" id="AbstractSyntaxNotation1ValueCharactersException.this"><code class="member">this</code></a>
 <section class="declaration">
     <code>
-        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueCharactersException.this"></span>@safe this(string <code class="code">descriptionOfPermittedCharacters</code>, dchar <code class="code">offendingCharacter</code>, string <code class="code">typeName</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
+        <span class="ddoc_anchor" id="AbstractSyntaxNotation1ValueCharactersException.this"></span>pure @safe this(string <code class="code">descriptionOfPermittedCharacters</code>, dchar <code class="code">offendingCharacter</code>, string <code class="code">typeName</code>, string <code class="code">file</code> = __FILE__, size_t <code class="code">line</code> = __LINE__);
 
     </code>
 </section>
@@ -1909,7 +1921,7 @@ Thanks to StackOverflow user
 
         </div>
         <div id="footer">
-            <span id="timestamp">Tue May  1 14:14:02 2018
+            <span id="timestamp">Sat May  5 11:41:04 2018
 </span>
         </div>
     </body>

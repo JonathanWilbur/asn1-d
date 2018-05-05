@@ -10,12 +10,7 @@ RED='\033[31m'
 NOCOLOR='\033[0m'
 TIMESTAMP=$(date '+%Y-%m-%d@%H:%M:%S')
 VERSION="2.4.1"
-
-if [ "$(uname)" == "Darwin" ]; then
-	ECHOFLAGS=""
-elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-	ECHOFLAGS="-e"
-fi
+ECHOFLAGS=""
 
 # Unfortunately, because this is running in a shell script, brace expansion
 # might not work, so I can't create all the necessary directories "the cool
@@ -34,28 +29,17 @@ mkdir -p ./build/maps
 mkdir -p ./build/objects
 mkdir -p ./build/scripts
 
-echo $ECHOFLAGS "Building the ASN.1 Library (static)... \c"
-if dmd \
- ./source/macros.ddoc \
- ./source/asn1/*.d \
- ./source/asn1/types/*.d \
- ./source/asn1/types/universal/*.d \
- ./source/asn1/codecs/*.d \
- -Dd./documentation/html \
- -Hd./build/interfaces \
- -op \
- -of./build/libraries/asn1-${VERSION}.a \
- -Xf./documentation/asn1-${VERSION}.json \
- -lib \
- -inline \
- -release \
- -O \
- -map \
- -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
-    echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
-else
-    echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
-fi
+# Make the App Bundle directory structure
+mkdir -p "./build/packages/ASN.1 Tools.app"
+mkdir -p "./build/packages/ASN.1 Tools.app/Contents"
+mkdir -p "./build/packages/ASN.1 Tools.app/Contents/MacOS"
+mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Frameworks"
+mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources"
+mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj"
+mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/html"
+mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/json"
+mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/md"
+mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources/include"
 
 echo $ECHOFLAGS "Building the ASN.1 Library (shared / dynamic)... \c"
 if dmd \
@@ -63,7 +47,10 @@ if dmd \
  ./source/asn1/types/*.d \
  ./source/asn1/types/universal/*.d \
  ./source/asn1/codecs/*.d \
- -of./build/libraries/asn1-${VERSION}.so \
+ -of"./build/packages/ASN.1 Tools.app/Contents/Frameworks/asn1-${VERSION}.so" \
+ -Dd"./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/html" \
+ -Xf"./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/json/asn1-${VERSION}.json" \
+ -Hd"./build/packages/ASN.1 Tools.app/Contents/Resources/include" \
  -shared \
  -fPIC \
  -inline \
@@ -81,17 +68,17 @@ do
     echo $ECHOFLAGS "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
     if dmd \
      -I./build/interfaces/source \
-     -L./build/libraries/asn1-${VERSION}.a \
+     -L"./build/packages/ASN.1 Tools.app/Contents/Frameworks/asn1-${VERSION}.so" \
      ./source/tools/decoder_mixin.d \
      ./source/tools/${DECODER} \
      -od./build/objects \
-     -of./build/executables/${EXECUTABLE} \
+     -of"./build/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}" \
      -inline \
      -release \
      -O \
      -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
         echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
-        chmod +x ./build/executables/${EXECUTABLE}
+        chmod +x "./build/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}"
     else
         echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
     fi
@@ -110,17 +97,17 @@ do
     echo $ECHOFLAGS "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
     if dmd \
      -I./build/interfaces/source \
-     -L./build/libraries/asn1-${VERSION}.a \
+     -L"./build/packages/ASN.1 Tools.app/Contents/Frameworks/asn1-${VERSION}.so" \
      ./source/tools/encoder_mixin.d \
      ./source/tools/${ENCODER} \
      -od./build/objects \
-     -of./build/executables/${EXECUTABLE} \
+     -of"./build/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}" \
      -inline \
      -release \
      -O \
      -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
         echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
-        chmod +x ./build/executables/${EXECUTABLE}
+        chmod +x "./build/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}"
     else
         echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
     fi
@@ -128,3 +115,11 @@ done
 
 mv *.lst ./build/logs 2>/dev/null
 mv *.map ./build/maps 2>/dev/null
+
+cp \
+ "./build/packaging/ASN.1 Tools.app/Contents/Info.plist" \
+ "./build/packages/ASN.1 Tools.app/Contents/Info.plist"
+
+cp \
+ "./build/packaging/ASN.1 Tools.app/Contents/Resources/ASN.1-Tools.icns" \
+ "./build/packages/ASN.1 Tools.app/Contents/Resources/ASN.1-Tools.icns"
