@@ -1,4 +1,15 @@
 @echo off
+REM NOTE:
+REM The command-line tools are all compiled with the specific inclusion of the
+REM file `.\source\asn1\types\oidtype.d`. This is because of a compiler bug, in
+REM which the interface for `oidtype.d` is not including the method body for the
+REM `descriptor` properties. I believe this is related to this Bugzilla Bug:
+REM
+REM https://issues.dlang.org/show_bug.cgi?id=18620
+REM
+REM but there are other bugs like that going back to 2014, so it will probably
+REM not be fixed just by changing your DMD compiler version.
+REM 
 mkdir .\documentation > nul 2>&1
 mkdir .\documentation\html > nul 2>&1
 mkdir .\documentation\links > nul 2>&1
@@ -69,6 +80,7 @@ echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, decode-ber... "
 dmd ^
+ .\source\asn1\types\oidtype.d ^
  -I".\\build\\interfaces\\source" ^
  .\source\tools\decoder_mixin.d ^
  .\source\tools\decode_ber.d ^
@@ -83,6 +95,7 @@ echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, decode-cer... "
 dmd ^
+ .\source\asn1\types\oidtype.d ^
  -I".\\build\\interfaces\\source" ^
  .\source\tools\decoder_mixin.d ^
  .\source\tools\decode_cer.d ^
@@ -97,6 +110,7 @@ echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, decode-der... "
 dmd ^
+ .\source\asn1\types\oidtype.d ^
  -I".\\build\\interfaces\\source" ^
  .\source\tools\decoder_mixin.d ^
  .\source\tools\decode_der.d ^
@@ -111,6 +125,7 @@ echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, encode-ber... "
 dmd ^
+ .\source\asn1\types\oidtype.d ^
  -I".\\build\\interfaces\\source" ^
  .\source\tools\encoder_mixin.d ^
  .\source\tools\encode_ber.d ^
@@ -125,6 +140,7 @@ echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, encode-cer... "
 dmd ^
+ .\source\asn1\types\oidtype.d ^
  -I".\\build\\interfaces\\source" ^
  .\source\tools\encoder_mixin.d ^
  .\source\tools\encode_cer.d ^
@@ -139,6 +155,7 @@ echo Done.
 
 echo|set /p="Building the ASN.1 Command-Line Tool, encode-der... "
 dmd ^
+ .\source\asn1\types\oidtype.d ^
  -I".\\build\\interfaces\\source" ^
  .\source\tools\encoder_mixin.d ^
  .\source\tools\encode_der.d ^

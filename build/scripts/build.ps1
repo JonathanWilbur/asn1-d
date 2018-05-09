@@ -1,3 +1,14 @@
+# NOTE:
+# The command-line tools are all compiled with the specific inclusion of the
+# file `.\source\asn1\types\oidtype.d`. This is because of a compiler bug, in
+# which the interface for `oidtype.d` is not including the method body for the
+# `descriptor` properties. I believe this is related to this Bugzilla Bug:
+#
+# https://issues.dlang.org/show_bug.cgi?id=18620
+#
+# but there are other bugs like that going back to 2014, so it will probably
+# not be fixed just by changing your DMD compiler version.
+# 
 mkdir .\documentation 2>&1 | Out-Null
 mkdir .\documentation\html 2>&1 | Out-Null
 mkdir .\documentation\links 2>&1 | Out-Null
@@ -68,6 +79,7 @@ Write-Host "Done." -ForegroundColor Green
 
 Write-Host "Building the ASN.1 Command-Line Tool, decode-ber... " -NoNewLine
 dmd `
+ .\source\asn1\types\oidtype.d `
  -I".\\build\\interfaces\\source" `
  .\source\tools\decoder_mixin.d `
  .\source\tools\decode_ber.d `
@@ -83,6 +95,7 @@ Write-Host "Done." -ForegroundColor Green
 
 Write-Host "Building the ASN.1 Command-Line Tool, decode-cer... " -NoNewLine
 dmd `
+ .\source\asn1\types\oidtype.d `
  -I".\\build\\interfaces\\source" `
  .\source\tools\decoder_mixin.d `
  .\source\tools\decode_cer.d `
@@ -97,6 +110,7 @@ Write-Host "Done." -ForegroundColor Green
 
 Write-Host "Building the ASN.1 Command-Line Tool, decode-der... " -NoNewLine
 dmd `
+ .\source\asn1\types\oidtype.d `
  -I".\\build\\interfaces\\source" `
  .\source\tools\decoder_mixin.d `
  .\source\tools\decode_der.d `
@@ -111,6 +125,7 @@ Write-Host "Done." -ForegroundColor Green
 
 Write-Host "Building the ASN.1 Command-Line Tool, encode-ber... " -NoNewLine
 dmd `
+ .\source\asn1\types\oidtype.d `
  -I".\\build\\interfaces\\source" `
  .\source\tools\encoder_mixin.d `
  .\source\tools\encode_ber.d `
@@ -125,6 +140,7 @@ Write-Host "Done." -ForegroundColor Green
 
 Write-Host "Building the ASN.1 Command-Line Tool, encode-cer... " -NoNewLine
 dmd `
+ .\source\asn1\types\oidtype.d `
  -I".\\build\\interfaces\\source" `
  .\source\tools\encoder_mixin.d `
  .\source\tools\encode_cer.d `
@@ -139,6 +155,7 @@ Write-Host "Done." -ForegroundColor Green
 
 Write-Host "Building the ASN.1 Command-Line Tool, encode-der... " -NoNewLine
 dmd `
+ .\source\asn1\types\oidtype.d `
  -I".\\build\\interfaces\\source" `
  .\source\tools\encoder_mixin.d `
  .\source\tools\encode_der.d `

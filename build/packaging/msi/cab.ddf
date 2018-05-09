@@ -1,0 +1,104 @@
+.OPTION EXPLICIT
+.Define Version=2.4.1
+.Set CabinetNameTemplate=asn1.cab
+.Set Cabinet=on
+.Set Compress=on
+.Set CabinetFileCountThreshold=0 
+.Set FolderFileCountThreshold=0 
+.Set FolderSizeThreshold=0 
+.Set MaxCabinetSize=0 
+.Set MaxDiskFileCount=0
+.Set MaxDiskSize=0
+.Set DestinationDir=build\packaging\msi
+.Set DiskDirectory1=build\packaging\msi
+.Set InfFileName=build\packaging\msi\setup.inf
+.Set RptFileName=build\packaging\msi\setup.rpt
+
+dub.json
+LICENSE.txt
+README.md
+WORKSPACE
+build\executables\decode-ber.exe
+build\executables\decode-cer.exe
+build\executables\decode-der.exe
+build\executables\encode-ber.exe
+build\executables\encode-cer.exe
+build\executables\encode-der.exe
+build\interfaces\source\asn1\codec.di
+build\interfaces\source\asn1\compiler.di
+build\interfaces\source\asn1\constants.di
+build\interfaces\source\asn1\interfaces.di
+build\interfaces\source\asn1\codecs\ber.di
+build\interfaces\source\asn1\codecs\cer.di
+build\interfaces\source\asn1\codecs\der.di
+build\interfaces\source\asn1\types\alltypes.di
+build\interfaces\source\asn1\types\identification.di
+build\interfaces\source\asn1\types\oidtype.di
+; "build\interfaces\source\asn1\types\codecs\ber.di" HOW DID THIS EVEN HAPPEN?
+; "build\interfaces\source\asn1\types\codecs\cer.di" HOW DID THIS EVEN HAPPEN?
+; "build\interfaces\source\asn1\types\codecs\der.di" HOW DID THIS EVEN HAPPEN?
+build\interfaces\source\asn1\types\universal\characterstring.di
+build\interfaces\source\asn1\types\universal\embeddedpdv.di
+build\interfaces\source\asn1\types\universal\external.di
+build\interfaces\source\asn1\types\universal\objectidentifier.di
+build\libraries\asn1-%Version%.a
+build\libraries\asn1-%Version%.dll
+build\packaging\msi\asn1.wxs
+build\packaging\msi\cab.ddf
+build\packaging\msi\makecab.bat
+build\scripts\build.bat
+build\scripts\build.ps1
+documentation\asn1-%Version%.json
+documentation\asn1.md
+documentation\compliance.md
+documentation\concurrency.md
+documentation\contributing.md
+documentation\credits.csv
+documentation\design.md
+documentation\install.md
+documentation\library.md
+documentation\mit.license
+documentation\releases.csv
+documentation\roadmap.md
+documentation\security.md
+documentation\tools.md
+documentation\html\source\asn1\codec.html
+documentation\html\source\asn1\compiler.html
+documentation\html\source\asn1\constants.html
+documentation\html\source\asn1\interfaces.html
+documentation\html\source\asn1\codecs\ber.html
+documentation\html\source\asn1\codecs\cer.html
+documentation\html\source\asn1\codecs\der.html
+documentation\html\source\asn1\types\alltypes.html
+documentation\html\source\asn1\types\identification.html
+documentation\html\source\asn1\types\oidtype.html
+documentation\html\source\asn1\types\universal\characterstring.html
+documentation\html\source\asn1\types\universal\embeddedpdv.html
+documentation\html\source\asn1\types\universal\external.html
+documentation\html\source\asn1\types\universal\objectidentifier.html
+documentation\links\asn1-playground.uri
+documentation\miscellaneous\notes.md
+source\BUILD
+source\macros.ddoc
+source\asn1\codec.d
+source\asn1\compiler.d
+source\asn1\constants.d
+source\asn1\interfaces.d
+source\asn1\codecs\ber.d
+source\asn1\codecs\cer.d
+source\asn1\codecs\der.d
+source\asn1\types\alltypes.d
+source\asn1\types\identification.d
+source\asn1\types\oidtype.d
+source\asn1\types\universal\characterstring.d
+source\asn1\types\universal\embeddedpdv.d
+source\asn1\types\universal\external.d
+source\asn1\types\universal\objectidentifier.d
+source\tools\decoder_mixin.d
+source\tools\decode_ber.d
+source\tools\decode_cer.d
+source\tools\decode_der.d
+source\tools\encoder_mixin.d
+source\tools\encode_ber.d
+source\tools\encode_cer.d
+source\tools\encode_der.d

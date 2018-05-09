@@ -39,88 +39,64 @@
 
 ### 2.4.2 Release
 
+- [x] Create "test" `GNU Make` target
+- [x] Create an [MSI Installer](https://wixtoolset.org/)
+- [x] Create a Mac OS X App Bundle + Disk Image
+- [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
+- [ ] Publish an [Debian package](https://debian-handbook.info/browse/stable/debian-packaging.html)
+
+### 2.4.3 Release
+
+- [ ] Generate a `.def` file for Windows?
+- [ ] Make tools build with the dynamically-linked library, if possible
+- [ ] Create a Mac OS X Package file
+- [ ] Refactor `toBytes` so that `lengthBytes` is broken off into a separate field.
+- [ ] Publish a [Brew formula](https://docs.brew.sh/Formula-Cookbook.html)
+  - [x] `install` command
+  - [ ] `test` command
+
+### 2.4.4
+
+- [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
 - [ ] Figure out how to concatenate long exception strings or something, so exception constructors can be `@nogc`.
 - [ ] Apply `@nogc` when possible
 - [ ] Apply `pure` when possible
 - [ ] Apply function attributes to code in command-line tools
 
-### 2.6.0 Release
-
-- [ ] Achieve 100% Code Coverage
-- [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
-- [ ] Publish an [Debian package](https://debian-handbook.info/browse/stable/debian-packaging.html)
-- [x] Publish a [Brew package](https://docs.brew.sh/Formula-Cookbook.html)
-  - [ ] `test` command
-- [ ] Configure [Travis CI](https://travis-ci.org)
-- [ ] Create an [MSI Installer](http://wixtoolset.org/)
-- [ ] Create a Mac OS X Package file
-- [x] Create a Mac OS X App Bundle + Disk Image
-- [ ] Create `man(3)` (Library calls) pages
-- [ ] Create Wikipedia pages for each codec
-- [ ] Review by one security firm
-- [ ] Add signatures with [my GPG key](https://jonathan.wilbur.space/downloads/jonathan@wilbur.space.gpg.pub)
-- [ ] Marketing
-  - [ ] "The ASN.1 Tour"
-    - [ ] Tampa Hackerspace
-    - [ ] Iron Yard
-    - [ ] Gainesville Hackerspace
-  - [ ] Share it on the [Dlang Subreddit](https://www.reddit.com/r/dlang/)
-  - [ ] Share it on the [Dlang Blog](https://forum.dlang.org/group/announce)
-  - [ ] Suggestions for Inclusions in D Libraries
-    - [ ] [Botan](https://github.com/etcimon/botan)
-    - [ ] [ldap](https://github.com/WebFreak001/ldap)
-- [ ] Unit tests based on examples from X.690
-- [ ] Unit tests based on examples from the Dubuisson book
-- [ ] Comparison tests to Go's ASN.1 library module
-- [ ] Generate a `.def` file for Windows?
-- [ ] Make tools build with the dynamically-linked library, if possible
-- [ ] Build testing
-  - [ ] OpenSolaris
-  - [ ] FreeBSD
-- [ ] Improved exception messages
-- [ ] Improve the Fuzz Testing Tool
-- [ ] Create "test" `GNU Make` target
-- [ ] Code Formatting
-  - [ ] Format `switch` statements
-  - [ ] Replace numbers with `enum`s in `ASN1TagNumberException` instantiations
-
-## 2.7.0 Release
+## 2.5.0 Release
 
 The following codecs will be added:
 
-- [ ] [Aligned Packed Encoding Rules (PER)](https://www.itu.int/rec/T-REC-X.691-201508-I)
-- [ ] Unaligned Packed Encoding Rules (UPER)
-- [ ] [Canonical Packed Encoding Rules (CPER)](https://www.itu.int/rec/T-REC-X.696-201508-I)
+- [ ] [Basic Aligned Packed Encoding Rules (PER)](https://www.itu.int/rec/T-REC-X.691-201508-I)
 - [ ] Command-Line Tools
   - [ ] `encode-per`
-  - [ ] `encode-uper`
-  - [ ] `encode-cper`
   - [ ] `decode-per`
-  - [ ] `decode-uper`
-  - [ ] `decode-cper`
 
 After this release, developers will be able to use this library to develop a
 Remote Desktop Protocol library.
 
+## 2.6.0 Release
+
+- [ ] [Canonical Aligned Packed Encoding Rules (CPER)](https://www.itu.int/rec/T-REC-X.691-201508-I)
+- [ ] Command-Line Tools
+  - [ ] `encode-cper`
+  - [ ] `decode-cper`
+
+## 2.7.0 Release
+
+- [ ] [Basic Unaligned Packed Encoding Rules (UPER)](https://www.itu.int/rec/T-REC-X.691-201508-I)
+- [ ] Command-Line Tools
+  - [ ] `encode-uper`
+  - [ ] `decode-uper`
+
 ## 2.8.0 Release
 
-The following codecs will be added:
-
-- [ ] [JSON Encoding Rules (JER)](https://www.itu.int/rec/T-REC-X.697-201710-P)
-- [ ] [XML Encoding Rules (XER)](https://www.itu.int/rec/T-REC-X.693-201508-I/en)
-- [ ] [Canonical XML Encoding Rules (CXER)](https://www.itu.int/rec/T-REC-X.693-201508-I/en)
-- [ ] [Extended XML Encoding Rules (EXER)](https://www.itu.int/rec/T-REC-X.693-201508-I/en)
+- [ ] [Canonical Unaligned Packed Encoding Rules (CUPER)](https://www.itu.int/rec/T-REC-X.691-201508-I)
 - [ ] Command-Line Tools
-  - [ ] `encode-xer`
-  - [ ] `encode-cxer`
-  - [ ] `encode-exer`
-  - [ ] `encode-jer`
-  - [ ] `decode-xer`
-  - [ ] `decode-cxer`
-  - [ ] `decode-exer`
-  - [ ] `decode-jer`
+  - [ ] `encode-cuper`
+  - [ ] `decode-cuper`
 
-## 2.9.0 Release
+## 2.6.0 Release
 
 The following codecs will be added:
 
@@ -132,26 +108,34 @@ The following codecs will be added:
   - [ ] `decode-oer`
   - [ ] `decode-coer`
 
-## 2.10.0 Release
+## 2.7.0 Release
+
+- [ ] Lightweight Encoding Rules (LWER)
+- [ ] Command-Line Tools
+  - [ ] `encode-lwer`
+  - [ ] `decode-lwer`
+
+## 2.8.0 Release
+
+- [ ] BACNet Encoding Rules
+- [ ] Command-Line Tools
+  - [ ] `encode-bacnet`
+  - [ ] `decode-bacnet`
+
+## 2.9.0 Release
 
 The following codecs will be added:
 
-- [ ] Generic String Encoding Rules (GSER)
-- [ ] Lightweight Encoding Rules (LWER)
-- [ ] BACNet Encoding Rules
 - [ ] Signalling-specific Encoding Rules (SER)
 - [ ] Command-Line Tools
-  - [ ] `encode-gser`
-  - [ ] `encode-lwer`
-  - [ ] `encode-bacnet`
   - [ ] `encode-ser`
-  - [ ] `decode-gser`
-  - [ ] `decode-lwer`
-  - [ ] `decode-bacnet`
   - [ ] `decode-ser`
 
 ## 3.0.0 Release
 
+- [ ] Configure [Travis CI](https://travis-ci.org)
+- [ ] Improve the Fuzz Testing Tool
+- [ ] Achieve 100% Code Coverage
 - [ ] Get rid of `opCast!(ubyte[])()`.
 - [ ] TeletexString (T61String) validation (WireShark has an implementation.)
 - [ ] VideotexString validation
@@ -161,3 +145,26 @@ The following codecs will be added:
   - [ ] [Bazel](https://www.bazel.build)
   - [ ] Compiled D Executable
   - [ ] Support `gdc` and `ldc` compilation
+- [ ] Add signatures with [my GPG key](https://jonathan.wilbur.space/downloads/jonathan@wilbur.space.gpg.pub)
+- [ ] Create `man(3)` (Library calls) pages
+- [ ] Unit tests based on examples from X.690
+- [ ] Unit tests based on examples from the Dubuisson book
+- [ ] Comparison tests to Go's ASN.1 library module
+- [ ] Build testing
+  - [ ] OpenSolaris
+  - [ ] FreeBSD
+
+## Unversioned
+ 
+- [ ] Create Wikipedia pages for each codec
+- [ ] Review by one security firm
+- [ ] Marketing
+  - [ ] "The ASN.1 Tour"
+    - [ ] Tampa Hackerspace
+    - [ ] Iron Yard
+    - [ ] Gainesville Hackerspace
+  - [ ] Share it on the [Dlang Subreddit](https://www.reddit.com/r/dlang/)
+  - [ ] Share it on the [Dlang Blog](https://forum.dlang.org/group/announce)
+  - [ ] Suggestions for Inclusions in D Libraries
+    - [ ] [Botan](https://github.com/etcimon/botan)
+    - [ ] [ldap](https://github.com/WebFreak001/ldap)

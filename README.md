@@ -149,8 +149,8 @@ please see `documentation/contributing.md`.
 ## Bugs
 
 The codecs are intended to be `final` classes, but due to
-[this bug](https://issues.dlang.org/show_bug.cgi?id=17909) I found, it cannot
-be until that bug is resolved.
+[this bug](https://issues.dlang.org/show_bug.cgi?id=17909) I found, they cannot
+be `final` until that bug is resolved.
 
 ## Special Thanks
 

@@ -1,0 +1,523 @@
+<?xml version='1.0' encoding='utf-8'?>
+<?define VERSION="2.4.1"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product 
+        Id="2B28FEE1-20FD-4C99-9BAB-B768C16E680E" 
+        UpgradeCode="219C67AA-00F6-4B1B-997C-1EBB8FC8E115" 
+        Name="ASN.1 Tools" 
+        Version="$(var.VERSION)" 
+        Manufacturer="Jonathan M. Wilbur" 
+        Language="1033">
+        <Package
+            InstallerVersion="200"
+            Compressed="yes"
+            Platform="x86"
+            Description="Tools for encoding and decoding ASN.1 data"
+            Keywords="ASN.1 BER CER DER Basic Canonical Distinguished Encoding Rules X.690 Decoding Codec"
+            Comments="Windows Installer Package" />
+        <Media Id="1" Cabinet="asn1.cab" EmbedCab="yes" />
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="JonathanWilburFolder" Name="Jonathan M. Wilbur">
+                    <Directory Id="INSTALLDIR" Name="ASN.1 Tools">
+                        <Component Id="DubJSON" Guid="1A4F0EE3-F38F-4264-B207-885E5ED42336">
+                            <File Id="DubJSON" Name="dub.json" Source="dub.json" KeyPath="yes" />
+                        </Component>
+                        <Component Id="LicenseTXT" Guid="42806B21-8D1C-4022-AA3A-7119184238A3">
+                            <File Id="LicenseTXT" Name="LICENSE.txt" Source="LICENSE.txt" KeyPath="yes" />
+                        </Component>
+                        <Component Id="ReadmeMD" Guid="58F06A6E-0B64-48FB-BFAE-69675159C650">
+                            <File Id="ReadmeMD" Name="README.md" Source="README.md" KeyPath="yes" />
+                        </Component>
+                        <Component Id="Workspace" Guid="20A65CC0-EC93-4ED3-B0B7-0FD5C5F81708">
+                            <File Id="Workspace" Name="WORKSPACE" Source="WORKSPACE" KeyPath="yes" />
+                        </Component>
+                        <Directory Id="BuildFolder" Name="build">
+                            <Directory Id="InterfacesFolder" Name="interfaces">
+                                <Component Id="CodecDI" Guid="1DC62C05-5709-48DE-BE1F-3E2D608CA60B">
+                                    <File Id="CodecDI" Name="codec.di" Source="build\interfaces\source\asn1\codec.di" KeyPath="yes" />
+                                </Component>
+                                <Component Id="CompilerDI" Guid="9B320218-2E63-46B1-AD49-49625FFAFBE1">
+                                    <File Id="CompilerDI" Name="compiler.di" Source="build\interfaces\source\asn1\compiler.di" KeyPath="yes" />
+                                </Component>
+                                <Component Id="ConstantsDI" Guid="54EA4331-F90D-4AA7-AFC3-F6EBE274BA82">
+                                    <File Id="ConstantsDI" Name="constants.di" Source="build\interfaces\source\asn1\constants.di" KeyPath="yes" />
+                                </Component>
+                                <Component Id="InterfacesDI" Guid="E538C82C-261F-4154-A510-FEE0DFAAC525">
+                                    <File Id="InterfacesDI" Name="interfaces.di" Source="build\interfaces\source\asn1\interfaces.di" KeyPath="yes" />
+                                </Component>
+                                <Directory Id="InterfacesCodecsFolder" Name="codecs">
+                                    <Component Id="BerDI" Guid="2C8E39CD-CDAB-487D-A089-85A1D39BA1ED">
+                                        <File Id="BerDI" Name="ber.di" Source="build\interfaces\source\asn1\codecs\ber.di" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="CerDI" Guid="3A2BDEE5-0B09-4E2F-9170-777FAAD62265">
+                                        <File Id="CerDI" Name="cer.di" Source="build\interfaces\source\asn1\codecs\cer.di" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="DerDI" Guid="98C5BA88-686A-467E-A0BE-5C33EC6F6B9F">
+                                        <File Id="DerDI" Name="der.di" Source="build\interfaces\source\asn1\codecs\der.di" KeyPath="yes" />
+                                    </Component>
+                                </Directory>
+                                <Directory Id="InterfacesTypesFolder" Name="types">
+                                    <Component Id="AllTypesDI" Guid="0B7ECA4A-5936-4E95-B11A-E0A6F55B6059">
+                                        <File Id="AllTypesDI" Name="alltypes.di" Source="build\interfaces\source\asn1\types\alltypes.di" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="IdentificationDI" Guid="BF20C08E-52F4-45AA-9085-EB57ADA0A9C4">
+                                        <File Id="IdentificationDI" Name="identification.di" Source="build\interfaces\source\asn1\types\identification.di" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="OidTypeDI" Guid="EF77A108-5E50-4D24-BA7E-327C970927D9">
+                                        <File Id="OidTypeDI" Name="oidtype.di" Source="build\interfaces\source\asn1\types\oidtype.di" KeyPath="yes" />
+                                    </Component>
+                                    <Directory Id="InterfacesUniversalFolder" Name="universal">
+                                        <Component Id="CharacterStringDI" Guid="6ABAF319-87D7-44C1-A7D7-D5DAB0DDF00F">
+                                            <File Id="CharacterStringDI" Name="characterstring.di" Source="build\interfaces\source\asn1\types\universal\characterstring.di" KeyPath="yes" />
+                                        </Component>
+                                        <Component Id="EmbeddedPDVDI" Guid="03E33F57-DB99-4953-95C3-92C9116EFC95">
+                                            <File Id="EmbeddedPDVDI" Name="embeddedpdv.di" Source="build\interfaces\source\asn1\types\universal\embeddedpdv.di" KeyPath="yes" />
+                                        </Component>
+                                        <Component Id="ExternalDI" Guid="9FAE6FEB-F4C2-41F4-B2FD-A6E1053A5A49">
+                                            <File Id="ExternalDI" Name="external.di" Source="build\interfaces\source\asn1\types\universal\external.di" KeyPath="yes" />
+                                        </Component>
+                                        <Component Id="ObjectIdentifierDI" Guid="B82DBFC7-3210-422E-B19C-80B14C24C3A8">
+                                            <File Id="ObjectIdentifierDI" Name="objectidentifier.di" Source="build\interfaces\source\asn1\types\universal\objectidentifier.di" KeyPath="yes" />
+                                        </Component>
+                                    </Directory>
+                                </Directory>
+                            </Directory>
+                            <Directory Id="LibrariesFolder" Name="libraries">
+                                <Component Id="ASN1StaticallyLinkedLibrary" Guid="7EE2339E-7551-405A-B918-D1137F58D12C">
+                                    <File Id="ASN1A" Name="asn1.a" Source="build\libraries\asn1-$(var.VERSION).a" KeyPath="yes" />
+                                </Component>
+                                <Component Id="ASN1DynamicallyLinkedLibrary" Guid="D1516C15-7D82-45B6-8857-0C00FC332F99">
+                                    <File Id="ASN1DLL" Name="asn1.dll" Source="build\libraries\asn1-$(var.VERSION).dll" KeyPath="yes" />
+                                </Component>
+                            </Directory>
+                            <Directory Id="ExecutablesFolder" Name="executables">
+                                <Component Id="BasicEncodingRulesEncoder" Guid="0DD72CAC-3965-401A-99E8-467CA34C3054">
+                                    <File Id="EncodeBER" Name="encode-ber.exe" Source="build\executables\encode-ber.exe" KeyPath="yes" />
+                                </Component>
+                                <Component Id="BasicEncodingRulesDecoder" Guid="E4F67E74-A8BA-4C86-9284-D97FFF431F9D">
+                                    <File Id="DecodeBER" Name="decode-ber.exe" Source="build\executables\decode-ber.exe" KeyPath="yes" />
+                                </Component>
+                                <Component Id="CanonicalEncodingRulesEncoder" Guid="CB413AD4-F59C-4FA7-9684-0965C35FF0BE">
+                                    <File Id="EncodeCER" Name="encode-cer.exe" Source="build\executables\encode-cer.exe" KeyPath="yes" />
+                                </Component>
+                                <Component Id="CanonicalEncodingRulesDecoder" Guid="659ED47C-6246-48E4-9F91-2EB03486AD78">
+                                    <File Id="DecodeCER" Name="decode-cer.exe" Source="build\executables\decode-cer.exe" KeyPath="yes" />
+                                </Component>
+                                <Component Id="DistinguishedEncodingRulesEncoder" Guid="C1ADDF6F-4DFC-494A-A7EF-26CA05C80FFD">
+                                    <File Id="EncodeDER" Name="encode-der.exe" Source="build\executables\encode-der.exe" KeyPath="yes" />
+                                </Component>
+                                <Component Id="DistinguishedEncodingRulesDecoder" Guid="F02C574E-10A4-48A2-9CC9-98AABC85F0D0">
+                                    <File Id="DecodeDER" Name="decode-der.exe" Source="build\executables\decode-der.exe" KeyPath="yes" />
+                                </Component>
+                                <Component Id="ExecutablesPATH" Guid="87260BC9-5008-41DF-A359-4B19C969F9C6">
+                                    <CreateFolder />
+                                    <Environment 
+                                        Id="PATH" 
+                                        Name="PATH" 
+                                        Value="[ExecutablesFolder]" 
+                                        Permanent="no" 
+                                        Part="last" 
+                                        Action="set" 
+                                        System="no" />
+                                </Component>
+                            </Directory>
+                            <Directory Id="PackagingFolder" Name="packaging">
+                                <Directory Id="PackagingMSIFolder" Name="msi">
+                                    <Component Id="CabDDF" Guid="7D0D7F0C-183A-424B-865F-67235562727B">
+                                        <File Id="CabDDF" Name="cab.ddf" Source="build\packaging\msi\cab.ddf" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="MakeCabBAT" Guid="0F59B1FE-7C26-49E7-8FA5-82E0014035D3">
+                                        <File Id="MakeCabBAT" Name="makecab.bat" Source="build\packaging\msi\makecab.bat" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="ASN1WXS" Guid="3730D695-48D2-4756-99E2-31745B6EFB65">
+                                        <File Id="ASN1WXS" Name="asn1.wxs" Source="build\packaging\msi\asn1.wxs" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="LicenseRTF" Guid="BF8F663F-0321-428B-81A9-DCA1F2A265C2">
+                                        <File Id="LicenseRTF" Name="license.rtf" Source="build\packaging\msi\license.rtf" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="BuildMSIBAT" Guid="5C9B1AF9-791B-4BCF-A74F-713C52594453">
+                                        <File Id="BuildMSIBAT" Name="buildmsi.bat" Source="build\packaging\msi\buildmsi.bat" KeyPath="yes" />
+                                    </Component>
+                                </Directory>
+                            </Directory>
+                            <Directory Id="ScriptsFolder" Name="scripts">
+                                <Component Id="BuildBAT" Guid="55DF189C-2F71-4F3A-8D2F-29F3AE1195C1">
+                                    <File Id="BuildBAT" Name="build.bat" Source="build\scripts\build.bat" KeyPath="yes" />
+                                </Component>
+                                <Component Id="BuildPS1" Guid="71E24B03-AB94-4325-B5C3-791DBA12597A">
+                                    <File Id="BuildPS1" Name="build.ps1" Source="build\scripts\build.ps1" KeyPath="yes" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="DocumentationFolder" Name="documentation">
+                            <Directory Id="MarkdownFolder" Name="md">
+                                <Component Id="ASN1MD" Guid="3621E58B-ADF0-4B88-ADAD-D287CC7CCCA7">
+                                    <File Id="ASN1MD" Name="asn1.md" Source="documentation\asn1.md" KeyPath="yes" />
+                                </Component>
+                                <Component Id="ComplianceMD" Guid="674B71F3-E7AF-4962-8FB7-CF90DFE8F8DB">
+                                    <File Id="ComplianceMD" Name="compliance.md" Source="documentation\compliance.md" KeyPath="yes" />
+                                </Component>
+                                <Component Id="ConcurrencyMD" Guid="009F504B-5A3A-44AD-A6A1-CD4043F3E5DD">
+                                    <File Id="ConcurrencyMD" Name="concurrency.md" Source="documentation\concurrency.md" KeyPath="yes" />
+                                </Component>
+                                <Component Id="ContributingMD" Guid="D1178401-4925-4B5F-80C0-E50872598AB6">
+                                    <File Id="ContributingMD" Name="contributing.md" Source="documentation\contributing.md" KeyPath="yes" />
+                                </Component>
+                                <Component Id="DesignMD" Guid="3DBB7BE9-53EE-4F6F-97FB-876A47A0B956">
+                                    <File Id="DesignMD" Name="design.md" Source="documentation\design.md" KeyPath="yes" />
+                                </Component>
+                                <Component Id="InstallMD" Guid="C9E992A5-7A87-4750-B751-538D9EFE5C91">
+                                    <File Id="InstallMD" Name="install.md" Source="documentation\install.md" KeyPath="yes" />
+                                </Component>
+                                <Component Id="LibraryMD" Guid="93C84A63-2E87-47A0-988A-0CF68AD9270D">
+                                    <File Id="LibraryMD" Name="library.md" Source="documentation\library.md" KeyPath="yes" />
+                                </Component>
+                                <Component Id="RoadmapMD" Guid="AF280C22-2128-4591-A876-FF2AD837E6AE">
+                                    <File Id="RoadmapMD" Name="roadmap.md" Source="documentation\roadmap.md" KeyPath="yes" />
+                                </Component>
+                                <Component Id="SecurityMD" Guid="61F4ABBB-95EA-4030-9B00-EA0C4A735570">
+                                    <File Id="SecurityMD" Name="security.md" Source="documentation\security.md" KeyPath="yes" />
+                                </Component>
+                                <Component Id="ToolsMD" Guid="0F2E9AF2-AE1E-4C87-A0DA-2DBD0187C73D">
+                                    <File Id="ToolsMD" Name="tools.md" Source="documentation\tools.md" KeyPath="yes" />
+                                </Component>
+                            </Directory>
+                            <Directory Id="HTMLFolder" Name="html">
+                                <Component Id="CodecHTML" Guid="6CCDAF0C-01C6-400B-A36C-C14004AEB38B">
+                                    <File Id="CodecHTML" Name="codec.html" Source="documentation\html\source\asn1\codec.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="CompilerHTML" Guid="2D935588-5675-4D88-A842-F4AC6BA37346">
+                                    <File Id="CompilerHTML" Name="compiler.html" Source="documentation\html\source\asn1\compiler.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="ConstantsHTML" Guid="5BE9DD0F-0F63-4162-8FD8-016507333D72">
+                                    <File Id="ConstantsHTML" Name="constants.html" Source="documentation\html\source\asn1\constants.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="InterfacesHTML" Guid="6EE3819F-6EF9-4B6C-8881-BA456755D305">
+                                    <File Id="InterfacesHTML" Name="interfaces.html" Source="documentation\html\source\asn1\interfaces.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="BerHTML" Guid="F4ACFE18-1479-4609-8A6C-FF40CE070A4E">
+                                    <File Id="BerHTML" Name="ber.html" Source="documentation\html\source\asn1\codecs\ber.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="CerHTML" Guid="6CA0A8EE-9776-4786-BA1E-42039A27A045">
+                                    <File Id="CerHTML" Name="cer.html" Source="documentation\html\source\asn1\codecs\cer.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="DerHTML" Guid="114F7707-290C-4FAF-BF6B-500C3EF5C5AD">
+                                    <File Id="DerHTML" Name="der.html" Source="documentation\html\source\asn1\codecs\der.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="AllTypesHTML" Guid="831BDD0F-01BF-463A-9F59-E3B7A0A78753">
+                                    <File Id="AllTypesHTML" Name="alltypes.html" Source="documentation\html\source\asn1\types\alltypes.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="IdentificationHTML" Guid="F093BED0-C85A-4701-84CD-D70D5B58312B">
+                                    <File Id="IdentificationHTML" Name="identification.html" Source="documentation\html\source\asn1\types\identification.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="OidTypeHTML" Guid="AA139D18-4A3C-415E-9E7A-524A90A714A7">
+                                    <File Id="OidTypeHTML" Name="oidtype.html" Source="documentation\html\source\asn1\types\oidtype.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="CharacterStringHTML" Guid="E82F402C-3387-4A1B-9CC6-CBF6E3771DBE">
+                                    <File Id="CharacterStringHTML" Name="characterstring.html" Source="documentation\html\source\asn1\types\universal\characterstring.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="EmbeddedPDVHTML" Guid="6EA2962A-4687-48C3-9D75-B6B50F82FAC6">
+                                    <File Id="EmbeddedPDVHTML" Name="embeddedpdv.html" Source="documentation\html\source\asn1\types\universal\embeddedpdv.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="ExternalHTML" Guid="361AAE69-77C0-46CF-9C2E-6A2C0FDB8499">
+                                    <File Id="ExternalHTML" Name="external.html" Source="documentation\html\source\asn1\types\universal\external.html" KeyPath="yes" />
+                                </Component>
+                                <Component Id="ObjectIdentifierHTML" Guid="ACC0E525-A5C5-4245-BDCC-7F92D5F13CE7">
+                                    <File Id="ObjectIdentifierHTML" Name="objectidentifier.html" Source="documentation\html\source\asn1\types\universal\objectidentifier.html" KeyPath="yes" />
+                                </Component>
+                            </Directory>
+                            <Directory Id="URIFolder" Name="uri">
+                                <Component Id="ASN1PlaygroundURI" Guid="019466EF-D772-4B1D-AF7B-499F25E4A5DE">
+                                    <File Id="ASN1PlaygroundURI" Name="asn1-playground.uri" Source="documentation\links\asn1-playground.uri" KeyPath="yes" />
+                                </Component>
+                            </Directory>
+                            <Component Id="MitLICENSE" Guid="2F89B787-FEAD-4F6E-BDA7-7E1D6269FC13">
+                                <File Id="MitLICENSE" Name="mit.license" Source="documentation\mit.license" KeyPath="yes" />
+                            </Component>
+                            <Component Id="ASN1JSON" Guid="B0B66386-00D6-44D3-9FD2-71D5965E9F21">
+                                <File Id="ASN1JSON" Name="asn1-$(var.VERSION).json" Source="documentation\asn1-$(var.VERSION).json" KeyPath="yes" />
+                            </Component>
+                            <Component Id="ReleasesCSV" Guid="DEE001DC-BDFF-42A2-8DE0-230F87481C5D">
+                                <File Id="ReleasesCSV" Name="releases.csv" Source="documentation\releases.csv" KeyPath="yes" />
+                            </Component>
+                            <Component Id="CreditsCSV" Guid="7DD498AF-B697-41F1-9C61-A4AC77B9EE79">
+                                <File Id="CreditsCSV" Name="credits.csv" Source="documentation\credits.csv" KeyPath="yes" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="SourceFolder" Name="source">
+                            <Directory Id="SourceASN1Folder" Name="asn1">
+                                <Component Id="MacrosDDOC" Guid="9A83380C-FB33-4FC4-9B83-3B89037021F9">
+                                    <File Id="MacrosDDOC" Name="macros.ddoc" Source="source\macros.ddoc" KeyPath="yes" />
+                                </Component>
+                                <Component Id="CodecD" Guid="69960368-7DFE-4011-BD8E-576769F79630">
+                                    <File Id="CodecD" Name="codec.d" Source="source\asn1\codec.d" KeyPath="yes" />
+                                </Component>
+                                <Component Id="CompilerD" Guid="C0BD7B1A-73FB-4BFC-9497-F0D8ECCB4F43">
+                                    <File Id="CompilerD" Name="compiler.d" Source="source\asn1\compiler.d" KeyPath="yes" />
+                                </Component>
+                                <Component Id="ConstantsD" Guid="396547F4-915D-46E3-96B9-523F9B22CDE4">
+                                    <File Id="ConstantsD" Name="constants.d" Source="source\asn1\constants.d" KeyPath="yes" />
+                                </Component>
+                                <Component Id="InterfacesD" Guid="2DE08893-202E-44A1-9CBF-7D7732892ECE">
+                                    <File Id="InterfacesD" Name="interfaces.d" Source="source\asn1\interfaces.d" KeyPath="yes" />
+                                </Component>
+                                <Directory Id="SourceCodecsFolder" Name="codecs">
+                                    <Component Id="BerD" Guid="3E482210-B0B6-4B22-9ECF-A8BBB50273D6">
+                                        <File Id="BerD" Name="ber.d" Source="source\asn1\codecs\ber.d" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="CerD" Guid="05BAD147-064E-4B52-BF23-000756468AED">
+                                        <File Id="CerD" Name="cer.d" Source="source\asn1\codecs\cer.d" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="DerD" Guid="CDED03C9-7AC4-4040-8EC1-22635E3679D2">
+                                        <File Id="DerD" Name="der.d" Source="source\asn1\codecs\der.d" KeyPath="yes" />
+                                    </Component>
+                                </Directory>
+                                <Directory Id="SourceTypesFolder" Name="types">
+                                    <Component Id="AllTypesD" Guid="D4A79A4E-3813-4FC1-A446-132B47D4526E">
+                                        <File Id="AllTypesD" Name="alltypes.d" Source="source\asn1\types\alltypes.d" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="IdentificationD" Guid="52A4F44C-1310-4BDD-8EC5-1DF6AC7117DF">
+                                        <File Id="IdentificationD" Name="identification.d" Source="source\asn1\types\identification.d" KeyPath="yes" />
+                                    </Component>
+                                    <Component Id="OidTypeD" Guid="0DE5970A-972C-4606-92FA-9BBA2B609B48">
+                                        <File Id="OidTypeD" Name="oidtype.d" Source="source\asn1\types\oidtype.d" KeyPath="yes" />
+                                    </Component>
+                                    <Directory Id="SourceUniversalFolder" Name="universal">
+                                        <Component Id="CharacterstringD" Guid="D7F7C75F-4855-459C-8ED1-8AC58BD09B2D">
+                                            <File Id="CharacterstringD" Name="characterstring.d" Source="source\asn1\types\universal\characterstring.d" KeyPath="yes" />
+                                        </Component>
+                                        <Component Id="EmbeddedPDVD" Guid="D68F4ADE-0533-4786-A15A-690C9AD1640B">
+                                            <File Id="EmbeddedPDVD" Name="embeddedpdv.d" Source="source\asn1\types\universal\embeddedpdv.d" KeyPath="yes" />
+                                        </Component>
+                                        <Component Id="ExternalD" Guid="04A00511-2D68-4369-BB55-FB91249810A4">
+                                            <File Id="ExternalD" Name="external.d" Source="source\asn1\types\universal\external.d" KeyPath="yes" />
+                                        </Component>
+                                        <Component Id="ObjectIdentifierD" Guid="11273AF4-AAD5-4045-BB0A-5A15F8D692C4">
+                                            <File Id="ObjectIdentifierD" Name="objectidentifier.d" Source="source\asn1\types\universal\objectidentifier.d" KeyPath="yes" />
+                                        </Component>
+                                    </Directory>
+                                </Directory>
+                            </Directory>
+                            <Directory Id="SourceToolsFolder" Name="tools">
+                                <Component Id="DecoderMixinD" Guid="8B72149E-CB3F-46A0-9F15-6AE01D3E3E19">
+                                    <File Id="DecoderMixinD" Name="decoder_mixin.d" Source="source\tools\decoder_mixin.d" KeyPath="yes" />
+                                </Component>
+                                <Component Id="DecodeBerD" Guid="6ECCBEE0-FCA7-4C62-84CC-AC8AEA764C84">
+                                    <File Id="DecodeBerD" Name="decode_ber.d" Source="source\tools\decode_ber.d" KeyPath="yes" />
+                                </Component>
+                                <Component Id="DecodeCerD" Guid="2EAC2AEA-9211-4ADD-9844-3AD17BDF66BF">
+                                    <File Id="DecodeCerD" Name="decode_cer.d" Source="source\tools\decode_cer.d" KeyPath="yes" />
+                                </Component>
+                                <Component Id="DecodeDerD" Guid="F31A69F8-8BCF-4FD8-9658-7066659914E1">
+                                    <File Id="DecodeDerD" Name="decode_der.d" Source="source\tools\decode_der.d" KeyPath="yes" />
+                                </Component>
+                                <Component Id="EncoderMixinD" Guid="A522CF6A-9950-4B37-8B39-C7986B56BDC7">
+                                    <File Id="EncoderMixinD" Name="encoder_mixin.d" Source="source\tools\encoder_mixin.d" KeyPath="yes" />
+                                </Component>
+                                <Component Id="EncodeBerD" Guid="290C2FCF-57DF-4E56-A0AA-8C33C609AC56">
+                                    <File Id="EncodeBerD" Name="encode_ber.d" Source="source\tools\encode_ber.d" KeyPath="yes" />
+                                </Component>
+                                <Component Id="EncodeCerD" Guid="0506D3CB-D385-4EE2-810F-0118E9160DCC">
+                                    <File Id="EncodeCerD" Name="encode_cer.d" Source="source\tools\encode_cer.d" KeyPath="yes" />
+                                </Component>
+                                <Component Id="EncodeDerD" Guid="9DB4E0AC-D72A-4697-B034-C2B4B1B5F6BE">
+                                    <File Id="EncodeDerD" Name="encode_der.d" Source="source\tools\encode_der.d" KeyPath="yes" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                </Directory>
+            </Directory>
+        </Directory>
+        <Feature
+            Id="Root"
+            Level="1"
+            Absent="disallow"
+            Display="hidden"
+            Title="Root Components"
+            Description="The files that go in the root folder of the library.">
+            <ComponentRef Id="DubJSON" />
+            <ComponentRef Id="LicenseTXT" />
+            <ComponentRef Id="ReadmeMD" />
+            <ComponentRef Id="Workspace" />
+        </Feature>
+        <Feature
+            Id="LibrariesFeature" 
+            Level="1" 
+            Absent="disallow" 
+            Title="Libraries" 
+            Description="Both the Dynamically-Linked and Statically-Linked Libraries.">
+            <ComponentRef Id="ASN1StaticallyLinkedLibrary" />
+            <ComponentRef Id="ASN1DynamicallyLinkedLibrary" />
+        </Feature>
+        <Feature
+            Id="CodecsFeature" 
+            Level="1" 
+            Absent="allow" 
+            Display="collapse"
+            Title="Encoding and Decoding Tools" 
+            Description="Tools for encoding and decoding using ASN.1 encoding specifications.">
+            <ComponentRef Id="ExecutablesPATH" />
+            <Feature 
+                Id="BERCodecsFeature" 
+                Level="1" 
+                Absent="allow" 
+                Title="Basic Encoding Rules Tools" 
+                Description="Tools for encoding and decoding per the Basic Encoding Rules.">
+                <ComponentRef Id="BasicEncodingRulesEncoder" />
+                <ComponentRef Id="BasicEncodingRulesDecoder" />
+            </Feature>
+            <Feature 
+                Id="CERCodecsFeature" 
+                Level="1" 
+                Absent="allow" 
+                Title="Canonical Encoding Rules Tools" 
+                Description="Tools for encoding and decoding per the Canonical Encoding Rules.">
+                <ComponentRef Id="CanonicalEncodingRulesEncoder" />
+                <ComponentRef Id="CanonicalEncodingRulesDecoder" />
+            </Feature>
+            <Feature 
+                Id="DERCodecsFeature" 
+                Level="1" 
+                Absent="allow" 
+                Title="Distinguished Encoding Rules Tools" 
+                Description="Tools for encoding and decoding per the Distinguished Encoding Rules.">
+                <ComponentRef Id="DistinguishedEncodingRulesEncoder" />
+                <ComponentRef Id="DistinguishedEncodingRulesDecoder" />
+            </Feature>
+        </Feature>
+        <Feature
+            Id="DocumentationFeature"
+            Level="1"
+            Absent="allow"
+            Display="collapse"
+            Title="Documentation"
+            Description="Documentation for this library and its tools.">
+            <Feature
+                Id="MarkdownDocumentationFeature"
+                Level="1"
+                Absent="allow"
+                Display="collapse"
+                Title="Markdown Documentation"
+                Description="Markdown documentation for this library and its tools.">
+                <ComponentRef Id="ASN1MD" />
+                <ComponentRef Id="ComplianceMD" />
+                <ComponentRef Id="ConcurrencyMD" />
+                <ComponentRef Id="ContributingMD" />
+                <ComponentRef Id="CreditsCSV" />
+                <ComponentRef Id="DesignMD" />
+                <ComponentRef Id="InstallMD" />
+                <ComponentRef Id="LibraryMD" />
+                <ComponentRef Id="RoadmapMD" />
+                <ComponentRef Id="SecurityMD" />
+                <ComponentRef Id="ToolsMD" />
+            </Feature>
+            <Feature
+                Id="HTMLDocumentationFeature"
+                Level="1"
+                Absent="allow"
+                Display="collapse"
+                Title="HTML Documentation"
+                Description="HTML documentation, which is auto-generated from the DMD compiler, using the embedded documentation comments in the source code.">
+                <ComponentRef Id="CodecHTML" />
+                <ComponentRef Id="CompilerHTML" />
+                <ComponentRef Id="ConstantsHTML" />
+                <ComponentRef Id="InterfacesHTML" />
+                <ComponentRef Id="BerHTML" />
+                <ComponentRef Id="CerHTML" />
+                <ComponentRef Id="DerHTML" />
+                <ComponentRef Id="AllTypesHTML" />
+                <ComponentRef Id="IdentificationHTML" />
+                <ComponentRef Id="OidTypeHTML" />
+                <ComponentRef Id="CharacterStringHTML" />
+                <ComponentRef Id="EmbeddedPDVHTML" />
+                <ComponentRef Id="ExternalHTML" />
+                <ComponentRef Id="ObjectIdentifierHTML" />
+            </Feature>
+            <Feature
+                Id="UsefulLinks"
+                Level="1"
+                Absent="allow"
+                Display="collapse"
+                Title="Useful Links"
+                Description="A folder of files containing links to useful sites for learning ASN.1.">
+                <ComponentRef Id="ASN1PlaygroundURI" />
+            </Feature>
+            <ComponentRef Id="MitLICENSE" />
+            <ComponentRef Id="ASN1JSON" />
+            <ComponentRef Id="ReleasesCSV" />
+            <ComponentRef Id="CreditsCSV" />
+        </Feature>
+        <Feature
+            Id="Source"
+            Level="1"
+            Absent="allow"
+            Display="collapse"
+            Title="Source Files"
+            Description="The source code of this library and the tools.">
+            <ComponentRef Id="MacrosDDOC" />
+            <ComponentRef Id="CodecD" />
+            <ComponentRef Id="CompilerD" />
+            <ComponentRef Id="ConstantsD" />
+            <ComponentRef Id="InterfacesD" />
+            <ComponentRef Id="BerD" />
+            <ComponentRef Id="CerD" />
+            <ComponentRef Id="DerD" />
+            <ComponentRef Id="AllTypesD" />
+            <ComponentRef Id="IdentificationD" />
+            <ComponentRef Id="OidTypeD" />
+            <ComponentRef Id="CharacterstringD" />
+            <ComponentRef Id="EmbeddedPDVD" />
+            <ComponentRef Id="ExternalD" />
+            <ComponentRef Id="ObjectIdentifierD" />
+            <ComponentRef Id="DecoderMixinD" />
+            <ComponentRef Id="DecodeBerD" />
+            <ComponentRef Id="DecodeCerD" />
+            <ComponentRef Id="DecodeDerD" />
+            <ComponentRef Id="EncoderMixinD" />
+            <ComponentRef Id="EncodeBerD" />
+            <ComponentRef Id="EncodeCerD" />
+            <ComponentRef Id="EncodeDerD" />
+        </Feature>
+        <Feature
+            Id="Interfaces"
+            Level="1"
+            Absent="allow"
+            Display="collapse"
+            Title="Interface Files"
+            Description="The interface files, so you can more easily compile.">
+            <ComponentRef Id="CodecDI" />
+            <ComponentRef Id="CompilerDI" />
+            <ComponentRef Id="ConstantsDI" />
+            <ComponentRef Id="InterfacesDI" />
+            <ComponentRef Id="BerDI" />
+            <ComponentRef Id="CerDI" />
+            <ComponentRef Id="DerDI" />
+            <ComponentRef Id="AllTypesDI" />
+            <ComponentRef Id="IdentificationDI" />
+            <ComponentRef Id="OidTypeDI" />
+            <ComponentRef Id="CharacterStringDI" />
+            <ComponentRef Id="EmbeddedPDVDI" />
+            <ComponentRef Id="ExternalDI" />
+            <ComponentRef Id="ObjectIdentifierDI" />
+        </Feature>
+        <Feature
+            Id="BuildScripts"
+            Level="1"
+            Absent="allow"
+            Display="collapse"
+            Title="Build Scripts"
+            Description="The source code of this library and the tools.">
+            <ComponentRef Id="CabDDF" />
+            <ComponentRef Id="MakeCabBAT" />
+            <ComponentRef Id="ASN1WXS" />
+            <ComponentRef Id="LicenseRTF" />
+            <ComponentRef Id="BuildMSIBAT" />
+            <ComponentRef Id="BuildBAT" />
+            <ComponentRef Id="BuildPS1" />
+        </Feature>
+        <UIRef Id="WixUI_Mondo" />
+        <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
+    </Product>
+</Wix>
