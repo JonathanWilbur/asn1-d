@@ -105,7 +105,7 @@ unittest : $(sources)
 clean :
 	-rm -f $(root)/build/assemblies/*
 	-rm -f $(root)/build/executables/*
-	-rm -f $(root)/build/interfaces/*
+	-rm -rf $(root)/build/interfaces/*
 	-rm -f $(root)/build/libraries/*
 	-rm -f $(root)/build/logs/*
 	-rm -f $(root)/build/maps/*
