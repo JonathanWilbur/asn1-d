@@ -80,6 +80,8 @@ install : all
 	cp $(root)/documentation/credits.csv /usr/local/share/asn1
 	cp $(root)/documentation/releases.csv /usr/local/share/asn1
 
+check : unittest
+test : unittest
 unittest : $(sources)
 	echo $(echoflags) "Building the ASN.1 Unit Testing Executable... \c"
 	dmd \
@@ -92,15 +94,25 @@ unittest : $(sources)
 	-main \
 	-d
 	echo $(echoflags) "\033[32mDone.\033[0m"
+	chmod +x $(root)/asn1-d-unittest-executable
 	echo $(echoflags) "Running the ASN.1 unit tests... "
 	$(root)/asn1-d-unittest-executable
 	rm -f $(root)/asn1-d-unittest-executable
 	echo $(echoflags) "\033[32mDone.\033[0m"
 
+# From the Debian New Maintainer's Guide, Version 1.2.40:
+# clean target: to clean all compiled, generated, and useless files in the build-tree. (Required) 
 clean :
-	-rm -f $(root)/build/objects/*.o
-	-rm -rf $(root)/documentation/html/source
+	-rm -f $(root)/build/assemblies/*
+	-rm -f $(root)/build/executables/*
+	-rm -f $(root)/build/interfaces/*
+	-rm -f $(root)/build/libraries/*
+	-rm -f $(root)/build/logs/*
+	-rm -f $(root)/build/maps/*
+	-rm -f $(root)/build/objects/*
+	-rm -f $(root)/build/packages/*
 	-rm -f $(root)/documentation/asn1-*.json
+	-rm -rf $(root)/documentation/html/*
 
 purge :
 	-rm -f /usr/local/lib/asn1.so

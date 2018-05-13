@@ -11,6 +11,8 @@ build/maps/*
 build/logs/*
 build/objects/*
 build/packages/*
+documentation/asn1-*.json
+documentation/html/*
 documentation/restricted/
 rubbish/
 test/yury/
@@ -33,6 +35,7 @@ docs/
 *.lst
 *.def
 *.log
+dub.selections.json
 
 # Windows Ignores
 Thumbs.db
