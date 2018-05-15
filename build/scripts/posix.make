@@ -97,6 +97,7 @@ unittest : $(sources)
 	chmod +x $(root)/asn1-d-unittest-executable
 	echo $(echoflags) "Running the ASN.1 unit tests... "
 	$(root)/asn1-d-unittest-executable
+	rm -f $(root)/asn1-d-unittest-executable.o
 	rm -f $(root)/asn1-d-unittest-executable
 	echo $(echoflags) "\033[32mDone.\033[0m"
 
