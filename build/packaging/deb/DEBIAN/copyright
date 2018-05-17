@@ -1,10 +1,9 @@
-Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=135
-Name: asn1
-Maintainer: Jonathan M. Wilbur <jonathan@wilbur.space>
-Source: https://github.com/JonathanWilbur/asn1-d.git
-Copyright: 2018 Jonathan M. Wilbur <jonathan@wilbur.space>
-License: MIT
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: asn1
+Source: https://github.com/JonathanWilbur/asn1-d
 
+Files: *
+Copyright: 2018 Jonathan M. Wilbur <jonathan@wilbur.space>
 License: MIT
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -12,10 +11,10 @@ License: MIT
  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
  of the Software, and to permit persons to whom the Software is furnished to do
  so, subject to the following conditions:
- 
+ .
  The above copyright notice and this permission notice shall be included in all
  copies or substantial portions of the Software.
- 
+ .
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE

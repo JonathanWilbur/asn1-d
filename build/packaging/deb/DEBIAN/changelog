@@ -1,5 +1,5 @@
-asn1 (2.4-1) stable; urgency=medium
+asn1 (2.4.1-1) bionic; urgency=high
 
-  * Initial release
+  * Fixed improper OID encoding
 
- -- Jonathan M. Wilbur <jonathan@wilbur.space>  Wed, 9 Mar 2018 15:38:31 -0500
+ -- Jonathan M. Wilbur <jonathan@wilbur.space>  Sat, 12 May 2018 23:37:50 +0000

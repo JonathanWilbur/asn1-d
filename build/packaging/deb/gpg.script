@@ -1,0 +1,19 @@
+# DO NOT USE Name-Comment!
+# When debuild builds a .deb, it will look for the GPG key on the keychain
+# by name, email, and comment. Adding a comment will make the key "not found."
+#
+# %no-protection prevents the key from being encrypted with a password
+#
+# Run this with: gpg --batch --gen-key gpg.script
+#
+%echo Making a key...
+Key-Type: 1
+Key-Length: 2048
+Subkey-Type: 1
+Subkey-Length: 2048
+Name-Real: Jonathan M. Wilbur
+Name-Email: jonathan@wilbur.space
+Expire-Date: 1y
+%no-protection
+%commit
+%echo Done!
