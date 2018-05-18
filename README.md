@@ -82,14 +82,14 @@ security vulnerability in your code if you aren't just copying and pasting from 
 
 ## Building and Installing
 
-There are four scripts in `build/scripts` that help you build this library,
+There are four scripts in `build/` that help you build this library,
 in addition to building using `dub`. If you are using Windows, you can build
-by running `.\build\scripts\build.ps1` from PowerShell, or `.\build\scripts\build.bat`
+by running `.\build\build.ps1` from PowerShell, or `.\build\build.bat`
 from the traditional `cmd` shell. If you are on any POSIX-compliant(-ish)
 operating system, such as Linux or Mac OS X, you may build this library using
-`./build/scripts/build.sh` or `make -f ./build/scripts/posix.make`. The output
-library will be in `./build/libraries`. The command-line tools will be in
-`./build/executables`.
+`./build/build.sh` or `make -f ./build/posix.make`. The output
+library will be in `./output/libraries`. The command-line tools will be in
+`./output/executables`.
 
 For more information on building and installing, see `documentation/install.md`.
 
@@ -136,7 +136,7 @@ tail -n +2 example.pem | head -n -1 | base64 --decode | decode-der
 
 For more information on usage of the command-line tools, see
 `documentation/tools.md`, or if you are using a POSIX-compliant(-ish)
-system, run `sudo make -f build/scripts/posix.make install` to install
+system, run `sudo make -f build/posix.make install` to install
 the `man` pages, then view them by running `man decode-der`, for instance.
 
 ## Development

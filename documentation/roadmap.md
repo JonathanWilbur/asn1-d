@@ -156,6 +156,7 @@ The following codecs will be added:
 
 ## Unversioned
  
+- [ ] Add `chroot` jails or containerization to each step of the build process
 - [ ] Create Wikipedia pages for each codec
 - [ ] Review by one security firm
 - [ ] Marketing

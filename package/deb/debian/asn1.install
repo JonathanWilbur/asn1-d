@@ -1,7 +1,7 @@
-build/libraries/asn1-2.4.1.so usr/lib
-build/executables/encode-ber usr/bin
-build/executables/encode-cer usr/bin
-build/executables/encode-der usr/bin
-build/executables/decode-ber usr/bin
-build/executables/decode-cer usr/bin
-build/executables/decode-der usr/bin
+output/libraries/asn1-2.4.1.so /usr/lib
+output/executables/encode-ber /usr/bin
+output/executables/encode-cer /usr/bin
+output/executables/encode-der /usr/bin
+output/executables/decode-ber /usr/bin
+output/executables/decode-cer /usr/bin
+output/executables/decode-der /usr/bin

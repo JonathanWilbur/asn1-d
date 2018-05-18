@@ -2,26 +2,26 @@
 
 ## Building
 
-In `build/scripts` there are three scripts you can use to build the library.
+In `build` there are three scripts you can use to build the library.
 All of the build scripts assume that you are using `dmd` and not `gdc` or
 any other D compiler.
 
 ### On POSIX-Compliant Machines (Linux, Mac OS X)
 
-Run `make -f ./build/scripts/posix.make` to build the static library,
+Run `make -f ./build/posix.make` to build the static library,
 shared library, and all command-line tools.
 
-Run `sudo make -f ./build/scripts/posix.make install` to install the
+Run `sudo make -f ./build/posix.make install` to install the
 shared library, command-line tools, and documentation.
 
-Alternatively, you can run `./build/scripts/build.sh`.
+Alternatively, you can run `./build/build.sh`.
 If you get a permissions error, you need to set that file to be executable
 using the `chmod` command.
 
 ### Mac OS X App Bundle
 
-Create the Application Bundle by running `./build/scripts/mac.app.sh`. This
-will create `./build/packages/ASN.1 Tools.app`.
+Create the Application Bundle by running `./build/mac.app.sh`. This
+will create `./output/packages/ASN.1 Tools.app`.
 
 Then run
 
@@ -33,7 +33,7 @@ to make those tools accessible via the command line.
 
 ### On Windows
 
-Run `.\build\scripts\build.bat` from a `cmd` or run `.\build\scripts\build.ps1`
+Run `.\build\build.bat` from a `cmd` or run `.\build\build.ps1`
 from the PowerShell command line. If you get a warning about needing a
 cryptographic signature for the PowerShell script, it is probably because
 your system is blocking running unsigned PowerShell scripts. Just run the
@@ -45,19 +45,19 @@ how to install something on Windows, other than just putting executables on the
 
 ## Installation
 
-When the library is built, it will be located in `build/libraries`. You may
+When the library is built, it will be located in `output/libraries`. You may
 want to place the shared library in `/lib`, `/usr/lib` or where ever you find
 the `.so` files on your system. If you are using Windows, I don't know where
 you should put the `.dll` file.
 
-You will also need to put the `.di` files found in `build/interfaces` somewhere
+You will also need to put the `.di` files found in `output/interfaces` somewhere
 in your source imports directory, which seems to vary a lot from system to
 system.
 
 Static libraries can be put where ever `phobos2` is on your system.
 
 If the command-line executables are built too, they will be found in
-`build/executables`. You may want to place this in `/usr/bin` or somewhere
+`output/executables`. You may want to place this in `/usr/bin` or somewhere
 else indicated by the `PATH` environment variable. Type `echo $PATH` on POSIX
 systems to see your `PATH` variable.
 

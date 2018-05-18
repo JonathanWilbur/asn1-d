@@ -1,8 +1,9 @@
+# This wont work until I recalculate the hash. This should be next commit. Sorry.
 class Asn1D < Formula
   desc "ASN.1 Codecs, including BER, CER, and DER"
   homepage "https://github.com/JonathanWilbur/asn1-d"
-  url "https://github.com/JonathanWilbur/asn1-d/archive/master.zip"
-  version "2.4.0"
+  url "https://github.com/JonathanWilbur/asn1-d/archive/v2.4.1.tar.gz"
+  version = "2.4.1"
   sha256 "e86694b2e15d8d4da2477c44e584fb5e860666787d010801199a0a77bcf28a2d"
 
   def install
@@ -23,9 +24,9 @@ class Asn1D < Formula
       './source/asn1/codecs/cer.d', \
       './source/asn1/codecs/der.d', \
       '-Dd./documentation/html', \
-      '-Hd./build/interfaces', \
+      '-Hd./output/interfaces', \
       '-op', \
-      "-of./build/libraries/asn1-#{version}.so", \
+      "-of./output/libraries/asn1-#{version}.so", \
       '-lib', \
       '-inline', \
       '-release', \
@@ -36,15 +37,15 @@ class Asn1D < Formula
       encoder_source = File.basename(file)
       encoder_executable = encoder_source.sub('_', '-').sub('.d', '')
       system '/usr/local/bin/dmd', \
-	'-I./build/interfaces/source', \
-	"-L./build/libraries/asn1-#{version}.so", \
-	'./source/tools/encoder_mixin.d', \
-	"./source/tools/#{encoder_source}", \
-	'-od./build/objects', \
-	"-of./build/executables/#{encoder_executable}", \
-	'-inline', \
-	'-release', \
-	'-O', \
+        '-I./output/interfaces/source', \
+        "-L./output/libraries/asn1-#{version}.so", \
+        './source/tools/encoder_mixin.d', \
+        "./source/tools/#{encoder_source}", \
+        '-od./output/objects', \
+        "-of./output/executables/#{encoder_executable}", \
+        '-inline', \
+        '-release', \
+        '-O', \
         '-d'
     end
 
@@ -52,21 +53,21 @@ class Asn1D < Formula
       decoder_source = File.basename(file)
       decoder_executable = decoder_source.sub('_', '-').sub('.d', '')
       system '/usr/local/bin/dmd', \
-        '-I./build/interfaces/source', \
-        "-L./build/libraries/asn1-#{version}.so", \
+        '-I./output/interfaces/source', \
+        "-L./output/libraries/asn1-#{version}.so", \
         './source/tools/decoder_mixin.d', \
         "./source/tools/#{decoder_source}", \
-        '-od./build/objects', \
-        "-of./build/executables/#{decoder_executable}", \
+        '-od./output/objects', \
+        "-of./output/executables/#{decoder_executable}", \
         '-inline', \
         '-release', \
         '-O', \
         '-d'
     end
 
-    lib.install "./build/libraries/asn1-#{version}.so"
+    lib.install "./output/libraries/asn1-#{version}.so"
     ln_sf lib/"asn1_#{version}.so", lib/'asn1.so'
-    bin.install Dir['./build/executables/*']
+    bin.install Dir['./output/executables/*']
     man1.install Dir['./documentation/man/1/*']
     doc.install Dir['./documentation/*.md']
     doc.install Dir['./documentation/html']
@@ -77,8 +78,6 @@ class Asn1D < Formula
   end
 
   test do
-#     system "#{bin}/encode-der [U:P:6]::=oid:1.3.4.6.1.65537.256.9 > test.der"
-#     system "cat test.der | #{bin}/decode-der | grep 1.3.4.6.1.65537.256.9"
     system "#{bin}/encode-der [UP6]::=oid:1.3.4.6.1.65537.256.9 > test.der"
     system "cat test.der | #{bin}/decode-der | grep 1.3.4.6.1.65537.256.9"
   end

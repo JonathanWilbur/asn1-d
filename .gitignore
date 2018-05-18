@@ -3,21 +3,14 @@
 
 # Custom Ignores
 analogs/
-build/assemblies/*
-build/executables/*
-build/interfaces/*
-build/libraries/*
-build/maps/*
-build/logs/*
-build/objects/*
-build/packages/*
+output/
 documentation/asn1-*.json
 documentation/html/*
 documentation/restricted/
 rubbish/
 test/yury/
 ./asn1
-unittest
+unittest-executable
 
 # General D Ignores
 *.o

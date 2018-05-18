@@ -2,7 +2,7 @@
     Just a field test for initiating a connection to a remote LDAP server.
 
     Build with:
-    dmd -I./build/interfaces/source -L./build/libraries/asn1-<version>.a ./test/handshake.d -of./handshake -d
+    dmd -I./output/interfaces/source -L./output/libraries/asn1-<version>.a ./test/handshake.d -of./output/executables/handshake -d
 */
 import std.socket : InternetAddress, TcpSocket;
 import std.stdio : writefln, writeln;

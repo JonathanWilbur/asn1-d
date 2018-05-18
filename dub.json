@@ -19,7 +19,7 @@
 		"source/tools/decoder_mixin.d",
 		"source/tools/encoder_mixin.d"
 	],
-	"targetPath": "build/libraries/",
+	"targetPath": "output/libraries/",
 	"buildRequirements": [
 		"silenceWarnings",
 		"silenceDeprecations",

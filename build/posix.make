@@ -89,33 +89,26 @@ unittest : $(sources)
 	$(root)/source/asn1/types/*.d \
 	$(root)/source/asn1/types/universal/*.d \
 	$(root)/source/asn1/codecs/*.d \
-	-of$(root)/asn1-d-unittest-executable \
+	-of$(root)/unittest-executable \
 	-unittest \
 	-main \
 	-d
 	echo $(echoflags) "\033[32mDone.\033[0m"
-	chmod +x $(root)/asn1-d-unittest-executable
+	chmod +x $(root)/unittest-executable
 	echo $(echoflags) "Running the ASN.1 unit tests... "
-	$(root)/asn1-d-unittest-executable
-	rm -f $(root)/asn1-d-unittest-executable.o
-	rm -f $(root)/asn1-d-unittest-executable
+	$(root)/unittest-executable
+	rm -f $(root)/unittest-executable.o
+	rm -f $(root)/unittest-executable
 	echo $(echoflags) "\033[32mDone.\033[0m"
 
 # From the Debian New Maintainer's Guide, Version 1.2.40:
 # clean target: to clean all compiled, generated, and useless files in the build-tree. (Required) 
 clean :
-	-rm -f $(root)/output/assemblies/*
-	-rm -f $(root)/output/executables/*
-	-rm -rf $(root)/output/interfaces/*
-	-rm -f $(root)/output/libraries/*
-	-rm -f $(root)/output/logs/*
-	-rm -f $(root)/output/maps/*
-	-rm -f $(root)/output/objects/*
-	-rm -f $(root)/output/packages/*
+	-rm -f $(root)/output/*
 	-rm -f $(root)/documentation/asn1-*.json
 	-rm -rf $(root)/documentation/html/*
 
-purge :
+uninstall :
 	-rm -f /usr/local/lib/asn1.so
 	-rm -f /usr/local/lib/asn1-$(version).so
 	-rm -f /usr/local/bin/decode-*
@@ -128,6 +121,9 @@ purge :
 
 asn1-$(version).a : $(sources)
 	echo $(echoflags) "Building the ASN.1 Library (static)... \c"
+	mkdir $(root)/output
+	mkdir $(root)/output/interfaces
+	mkdir $(root)/output/libraries
 	dmd \
 	$(root)/source/macros.ddoc \
 	$(root)/source/asn1/*.d \
@@ -149,6 +145,9 @@ asn1-$(version).a : $(sources)
 
 asn1-$(version).so : $(sources)
 	echo $(echoflags) "Building the ASN.1 Library (shared / dynamic)... \c"
+	mkdir $(root)/output
+	mkdir $(root)/output/interfaces
+	mkdir $(root)/output/libraries
 	dmd \
 	$(root)/source/macros.ddoc \
 	$(root)/source/asn1/*.d \
@@ -169,6 +168,8 @@ asn1-$(version).so : $(sources)
 
 $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
 	echo $(echoflags) "Building the ASN.1 Command-Line Tool, $@... \c"
+	mkdir $(root)/output
+	mkdir $(root)/output/executables
 	dmd \
 	-I$(root)/output/interfaces/source \
 	-L$(root)/output/libraries/asn1-$(version).a \
@@ -185,6 +186,8 @@ $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
 
 $(decoders) : decode-% : decode_%.d decoder_mixin.d asn1-$(version).so
 	echo $(echoflags) "Building the ASN.1 Command-Line Tool, $@... \c"
+	mkdir $(root)/output
+	mkdir $(root)/output/executables
 	dmd \
 	-I$(root)/output/interfaces/source \
 	-L$(root)/output/libraries/asn1-$(version).a \

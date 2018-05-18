@@ -19,27 +19,27 @@ ECHOFLAGS=""
 mkdir -p ./documentation
 mkdir -p ./documentation/html
 mkdir -p ./documentation/links
-mkdir -p ./build
-mkdir -p ./build/assemblies
-mkdir -p ./build/executables
-mkdir -p ./build/interfaces
-mkdir -p ./build/libraries
-mkdir -p ./build/logs
-mkdir -p ./build/maps
-mkdir -p ./build/objects
-mkdir -p ./build/scripts
+mkdir -p ./output
+mkdir -p ./output/assemblies
+mkdir -p ./output/executables
+mkdir -p ./output/interfaces
+mkdir -p ./output/libraries
+mkdir -p ./output/logs
+mkdir -p ./output/maps
+mkdir -p ./output/objects
+mkdir -p ./output/scripts
 
 # Make the App Bundle directory structure
-mkdir -p "./build/packages/ASN.1 Tools.app"
-mkdir -p "./build/packages/ASN.1 Tools.app/Contents"
-mkdir -p "./build/packages/ASN.1 Tools.app/Contents/MacOS"
-mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Frameworks"
-mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources"
-mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj"
-mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/html"
-mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/json"
-mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/md"
-mkdir -p "./build/packages/ASN.1 Tools.app/Contents/Resources/include"
+mkdir -p "./output/packages/ASN.1 Tools.app"
+mkdir -p "./output/packages/ASN.1 Tools.app/Contents"
+mkdir -p "./output/packages/ASN.1 Tools.app/Contents/MacOS"
+mkdir -p "./output/packages/ASN.1 Tools.app/Contents/Frameworks"
+mkdir -p "./output/packages/ASN.1 Tools.app/Contents/Resources"
+mkdir -p "./output/packages/ASN.1 Tools.app/Contents/Resources/en.lproj"
+mkdir -p "./output/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/html"
+mkdir -p "./output/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/json"
+mkdir -p "./output/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/md"
+mkdir -p "./output/packages/ASN.1 Tools.app/Contents/Resources/include"
 
 echo $ECHOFLAGS "Building the ASN.1 Library (shared / dynamic)... \c"
 if dmd \
@@ -47,19 +47,19 @@ if dmd \
  ./source/asn1/types/*.d \
  ./source/asn1/types/universal/*.d \
  ./source/asn1/codecs/*.d \
- -of"./build/packages/ASN.1 Tools.app/Contents/Frameworks/asn1-${VERSION}.so" \
- -Dd"./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/html" \
- -Xf"./build/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/json/asn1-${VERSION}.json" \
- -Hd"./build/packages/ASN.1 Tools.app/Contents/Resources/include" \
+ -of"./output/packages/ASN.1 Tools.app/Contents/Frameworks/asn1-${VERSION}.so" \
+ -Dd"./output/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/html" \
+ -Xf"./output/packages/ASN.1 Tools.app/Contents/Resources/en.lproj/json/asn1-${VERSION}.json" \
+ -Hd"./output/packages/ASN.1 Tools.app/Contents/Resources/include" \
  -shared \
  -fPIC \
  -inline \
  -release \
  -O \
- -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
+ -v >> ./output/logs/${TIMESTAMP}.log 2>&1; then
     echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
 else
-    echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
+    echo $ECHOFLAGS "${RED}Failed. See ./output/logs.${NOCOLOR}"
 fi
 
 for DECODER in $(ls -1 ./source/tools | grep decode_)
@@ -67,20 +67,20 @@ do
     EXECUTABLE=$(echo $DECODER | sed "s/_/-/g" | sed "s/\.d//g")
     echo $ECHOFLAGS "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
     if dmd \
-     -I./build/interfaces/source \
-     -L"./build/packages/ASN.1 Tools.app/Contents/Frameworks/asn1-${VERSION}.so" \
+     -I./output/interfaces/source \
+     -L"./output/packages/ASN.1 Tools.app/Contents/Frameworks/asn1-${VERSION}.so" \
      ./source/tools/decoder_mixin.d \
      ./source/tools/${DECODER} \
-     -od./build/objects \
-     -of"./build/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}" \
+     -od./output/objects \
+     -of"./output/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}" \
      -inline \
      -release \
      -O \
-     -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
+     -v >> ./output/logs/${TIMESTAMP}.log 2>&1; then
         echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
-        chmod +x "./build/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}"
+        chmod +x "./output/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}"
     else
-        echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
+        echo $ECHOFLAGS "${RED}Failed. See ./output/logs.${NOCOLOR}"
     fi
 done
 
@@ -96,30 +96,30 @@ do
     EXECUTABLE=$(echo $ENCODER | sed "s/_/-/g" | sed "s/\.d//g")
     echo $ECHOFLAGS "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
     if dmd \
-     -I./build/interfaces/source \
-     -L"./build/packages/ASN.1 Tools.app/Contents/Frameworks/asn1-${VERSION}.so" \
+     -I./output/interfaces/source \
+     -L"./output/packages/ASN.1 Tools.app/Contents/Frameworks/asn1-${VERSION}.so" \
      ./source/tools/encoder_mixin.d \
      ./source/tools/${ENCODER} \
-     -od./build/objects \
-     -of"./build/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}" \
+     -od./output/objects \
+     -of"./output/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}" \
      -inline \
      -release \
      -O \
-     -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
+     -v >> ./output/logs/${TIMESTAMP}.log 2>&1; then
         echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
-        chmod +x "./build/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}"
+        chmod +x "./output/packages/ASN.1 Tools.app/Contents/MacOS/${EXECUTABLE}"
     else
-        echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
+        echo $ECHOFLAGS "${RED}Failed. See ./output/logs.${NOCOLOR}"
     fi
 done
 
-mv *.lst ./build/logs 2>/dev/null
-mv *.map ./build/maps 2>/dev/null
+mv *.lst ./output/logs 2>/dev/null
+mv *.map ./output/maps 2>/dev/null
 
 cp \
  "./build/packaging/ASN.1 Tools.app/Contents/Info.plist" \
- "./build/packages/ASN.1 Tools.app/Contents/Info.plist"
+ "./output/packages/ASN.1 Tools.app/Contents/Info.plist"
 
 cp \
  "./build/packaging/ASN.1 Tools.app/Contents/Resources/ASN.1-Tools.icns" \
- "./build/packages/ASN.1 Tools.app/Contents/Resources/ASN.1-Tools.icns"
+ "./output/packages/ASN.1 Tools.app/Contents/Resources/ASN.1-Tools.icns"
