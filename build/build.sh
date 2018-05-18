@@ -9,7 +9,7 @@ GREEN='\033[32m'
 RED='\033[31m'
 NOCOLOR='\033[0m'
 TIMESTAMP=$(date '+%Y-%m-%d@%H:%M:%S')
-VERSION="2.4.1"
+VERSION=`cat ./version`
 
 if [ "$(uname)" == "Darwin" ]; then
 	ECHOFLAGS=""
@@ -24,15 +24,14 @@ fi
 mkdir -p ./documentation
 mkdir -p ./documentation/html
 mkdir -p ./documentation/links
-mkdir -p ./build
-mkdir -p ./build/assemblies
-mkdir -p ./build/executables
-mkdir -p ./build/interfaces
-mkdir -p ./build/libraries
-mkdir -p ./build/logs
-mkdir -p ./build/maps
-mkdir -p ./build/objects
-mkdir -p ./build/scripts
+mkdir -p ./output
+mkdir -p ./output/assemblies
+mkdir -p ./output/executables
+mkdir -p ./output/interfaces
+mkdir -p ./output/libraries
+mkdir -p ./output/logs
+mkdir -p ./output/maps
+mkdir -p ./output/objects
 
 echo $ECHOFLAGS "Building the ASN.1 Library (static)... \c"
 if dmd \
@@ -42,19 +41,19 @@ if dmd \
  ./source/asn1/types/universal/*.d \
  ./source/asn1/codecs/*.d \
  -Dd./documentation/html \
- -Hd./build/interfaces \
+ -Hd./output/interfaces \
  -op \
- -of./build/libraries/asn1-${VERSION}.a \
+ -of./output/libraries/asn1-${VERSION}.a \
  -Xf./documentation/asn1-${VERSION}.json \
  -lib \
  -inline \
  -release \
  -O \
  -map \
- -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
+ -v >> ./output/logs/${TIMESTAMP}.log 2>&1; then
     echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
 else
-    echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
+    echo $ECHOFLAGS "${RED}Failed. See ./output/logs.${NOCOLOR}"
 fi
 
 echo $ECHOFLAGS "Building the ASN.1 Library (shared / dynamic)... \c"
@@ -63,16 +62,16 @@ if dmd \
  ./source/asn1/types/*.d \
  ./source/asn1/types/universal/*.d \
  ./source/asn1/codecs/*.d \
- -of./build/libraries/asn1-${VERSION}.so \
+ -of./output/libraries/asn1-${VERSION}.so \
  -shared \
  -fPIC \
  -inline \
  -release \
  -O \
- -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
+ -v >> ./output/logs/${TIMESTAMP}.log 2>&1; then
     echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
 else
-    echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
+    echo $ECHOFLAGS "${RED}Failed. See ./output/logs.${NOCOLOR}"
 fi
 
 for DECODER in $(ls -1 ./source/tools | grep decode_)
@@ -80,20 +79,20 @@ do
     EXECUTABLE=$(echo $DECODER | sed "s/_/-/g" | sed "s/\.d//g")
     echo $ECHOFLAGS "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
     if dmd \
-     -I./build/interfaces/source \
-     -L./build/libraries/asn1-${VERSION}.a \
+     -I./output/interfaces/source \
+     -L./output/libraries/asn1-${VERSION}.a \
      ./source/tools/decoder_mixin.d \
      ./source/tools/${DECODER} \
-     -od./build/objects \
-     -of./build/executables/${EXECUTABLE} \
+     -od./output/objects \
+     -of./output/executables/${EXECUTABLE} \
      -inline \
      -release \
      -O \
-     -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
+     -v >> ./output/logs/${TIMESTAMP}.log 2>&1; then
         echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
-        chmod +x ./build/executables/${EXECUTABLE}
+        chmod +x ./output/executables/${EXECUTABLE}
     else
-        echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
+        echo $ECHOFLAGS "${RED}Failed. See ./output/logs.${NOCOLOR}"
     fi
 done
 
@@ -109,22 +108,22 @@ do
     EXECUTABLE=$(echo $ENCODER | sed "s/_/-/g" | sed "s/\.d//g")
     echo $ECHOFLAGS "Building the ASN.1 Command-Line Tool, ${EXECUTABLE}... \c"
     if dmd \
-     -I./build/interfaces/source \
-     -L./build/libraries/asn1-${VERSION}.a \
+     -I./output/interfaces/source \
+     -L./output/libraries/asn1-${VERSION}.a \
      ./source/tools/encoder_mixin.d \
      ./source/tools/${ENCODER} \
-     -od./build/objects \
-     -of./build/executables/${EXECUTABLE} \
+     -od./output/objects \
+     -of./output/executables/${EXECUTABLE} \
      -inline \
      -release \
      -O \
-     -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
+     -v >> ./output/logs/${TIMESTAMP}.log 2>&1; then
         echo $ECHOFLAGS "${GREEN}Done.${NOCOLOR}"
-        chmod +x ./build/executables/${EXECUTABLE}
+        chmod +x ./output/executables/${EXECUTABLE}
     else
-        echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
+        echo $ECHOFLAGS "${RED}Failed. See ./output/logs.${NOCOLOR}"
     fi
 done
 
-mv *.lst ./build/logs 2>/dev/null
-mv *.map ./build/maps 2>/dev/null
+mv *.lst ./output/logs 2>/dev/null
+mv *.map ./output/maps 2>/dev/null

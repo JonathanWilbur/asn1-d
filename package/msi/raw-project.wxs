@@ -1,0 +1,1145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="3B2E4E9E-1BB2-4D8D-9998-29FF151A4DD5" Language="1033" Manufacturer="PUT-COMPANY-NAME-HERE" Name="PUT-PRODUCT-NAME-HERE" UpgradeCode="12680F21-2397-4BA7-B5BC-9ABB18510C72" Version="1.0.0.0">
+        <Package Compressed="yes" InstallerVersion="200" />
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="dir2E8C36726222BC859097A14DB65D1B87" Name="asn1-d">
+                <Component Id="cmp8A947B1CDDC6C73CD8EEF10DD3E7EB57" Guid="BF285271-3EF9-48BC-A82B-4E182310D7BA">
+                    <File Id="filBF1A65B0F119D9DB13C4D9C09285489F" KeyPath="yes" Source="SourceDir\.gitignore" />
+                </Component>
+                <Component Id="cmpBB77C085B9E143EEC04869C9498A0C5B" Guid="3CDD6456-A068-4C20-8E0B-42814365AA28">
+                    <File Id="fil7FC355BF5CB23A944952040F40325401" KeyPath="yes" Source="SourceDir\asn1.wxs" />
+                </Component>
+                <Component Id="cmp75E74E802262AF01DE63643BD51EF075" Guid="ACC29F0A-93E4-42E8-AA2A-D906744CABB8">
+                    <File Id="fil7039C198246BA84D6B8567E98A3B7F34" KeyPath="yes" Source="SourceDir\dub.json" />
+                </Component>
+                <Component Id="cmp5C801CB75DF667C1D1B92BFAB5B4CA98" Guid="59FC877E-2D5A-450A-87AC-7501CCEC3886">
+                    <File Id="fil6FABA16514F50ACA70E533FB54FB87C7" KeyPath="yes" Source="SourceDir\dub.selections.json" />
+                </Component>
+                <Component Id="cmp78B037FCE402694D7527A4EEEA8913D6" Guid="A2915639-D47A-4B2D-B351-5C5B3753E6A3">
+                    <File Id="filB75208CE3A38F22EFC66EFAF55952C2C" KeyPath="yes" Source="SourceDir\LICENSE.txt" />
+                </Component>
+                <Component Id="cmpF7CFE4EE313AB21CA920D1CC7E93EC11" Guid="DA8DEC09-A202-4486-80BB-761A8BF07FEE">
+                    <File Id="filFBC154972B32532B855E341640644AFC" KeyPath="yes" Source="SourceDir\README.md" />
+                </Component>
+                <Component Id="cmpBE46892E55F367A581D81420F50FE15F" Guid="2F5399E6-643B-4D05-AAB8-F1D73F1B87F8">
+                    <File Id="filF94D05D5D99B2521F192CC5ABE8C88A4" KeyPath="yes" Source="SourceDir\ubuntu-bionic-18.04-cloudimg-console.log" />
+                </Component>
+                <Component Id="cmp8A64405A67F14D6CFD8BABC9A2377481" Guid="3E1A3214-5C54-4B2B-A005-347191847327">
+                    <File Id="fil26F38CC3A16A5CFE93FDFB38C2B53C52" KeyPath="yes" Source="SourceDir\Vagrantfile" />
+                </Component>
+                <Component Id="cmp7935FF02592A8FFB093504C2237B21B9" Guid="B8441A0A-C00F-467D-8EF1-EBAB4BB2C0D8">
+                    <File Id="filB85F2BED898CBEE7286D4A29751D54E9" KeyPath="yes" Source="SourceDir\version" />
+                </Component>
+                <Component Id="cmp5EBFB4E1A7E86F5E201CAD1ADA786CF0" Guid="BCF3B2A1-CD13-4A2A-8491-079646C31753">
+                    <File Id="filFB16754BFF7BC621D6B3208787F1F061" KeyPath="yes" Source="SourceDir\WORKSPACE" />
+                </Component>
+                <Directory Id="dir7136310AF1E8A189A0C6092886D4751B" Name=".dub">
+                    <Component Id="cmp1EF281999D1CD7317CCCDFB235D738E9" Guid="1254050A-F0D4-4866-B333-DE7033DF166E">
+                        <File Id="filCC2D0D3FC287855D5CC0CEF12CA93733" KeyPath="yes" Source="SourceDir\.dub\version.json" />
+                    </Component>
+                </Directory>
+                <Directory Id="dirA0FDCCE28E5CC5FB1E7946C62D552850" Name=".git">
+                    <Component Id="cmp64034E2C949D1C34CE84A578B23F2CE6" Guid="C31E29CE-64CC-433C-BCCE-3B11D19E100C">
+                        <File Id="fil2CA400D404CA2C23FD584280B8E1962E" KeyPath="yes" Source="SourceDir\.git\COMMIT_EDITMSG" />
+                    </Component>
+                    <Component Id="cmp2D2745B5E084E6FE29F65B66DD9CD8ED" Guid="B2EF5404-63A6-44B0-BD09-4A92F2BC7465">
+                        <File Id="filED25DA77F2493B24C2EE8A958049F693" KeyPath="yes" Source="SourceDir\.git\config" />
+                    </Component>
+                    <Component Id="cmp60CBDB59F56FF9B03A4BA97799A6FCB8" Guid="FDE71CA0-D1A3-4BA8-B65E-75B7C8850383">
+                        <File Id="fil04263D69A9EE16AE7A9117A50E603A73" KeyPath="yes" Source="SourceDir\.git\description" />
+                    </Component>
+                    <Component Id="cmp3FEABAA3C930716F7E2877BC48732102" Guid="BD6A248C-85AA-4BDA-BBA8-AAB003701348">
+                        <File Id="filE319D239693A8681A00DFF9C3E4C569C" KeyPath="yes" Source="SourceDir\.git\HEAD" />
+                    </Component>
+                    <Component Id="cmp2B95C3D01A7DA8E9F0B11BE6F3F60CAE" Guid="8D5DF9C1-5CA0-44FD-8F57-D11D96CC5E3B">
+                        <File Id="fil9CB849149103FA5AD6282A6C674BD8C6" KeyPath="yes" Source="SourceDir\.git\index" />
+                    </Component>
+                    <Component Id="cmp23C809E584CFA1D29FE81B7DD61A17A5" Guid="73A2B525-37CC-44B6-A32D-4F596686557B">
+                        <File Id="filDB3257957D14E5551D1F83961BE59CB5" KeyPath="yes" Source="SourceDir\.git\packed-refs" />
+                    </Component>
+                    <Directory Id="dir887DADDF0A18491B99B38F42CB3C77AF" Name="hooks">
+                        <Component Id="cmpB41965FFC560C03FFF750A10BEE48065" Guid="35509F0D-62D3-4665-944F-D4633C52004B">
+                            <File Id="fil25827F50A17CB35EE446D9E3C1B5A094" KeyPath="yes" Source="SourceDir\.git\hooks\applypatch-msg.sample" />
+                        </Component>
+                        <Component Id="cmp8B36D5D6F3AA0E9BE1C916964FC16840" Guid="82D6D81D-C07C-40AB-88C8-BED9DE15543F">
+                            <File Id="fil9C3C0A12D4C09C5B6254DABA0B7EA6EA" KeyPath="yes" Source="SourceDir\.git\hooks\commit-msg.sample" />
+                        </Component>
+                        <Component Id="cmp4FB51F7CCEBBF6937E3CD28446B2EF3D" Guid="FF6E2351-1F22-4A41-814C-8EDD6556A1E2">
+                            <File Id="fil0C6350126DB0A39B816C2044C8FA7EA4" KeyPath="yes" Source="SourceDir\.git\hooks\fsmonitor-watchman.sample" />
+                        </Component>
+                        <Component Id="cmp61E63B14699D97233A64F45F24EE0110" Guid="CA7A0DB7-2E1C-4A92-B148-CD5FD498512B">
+                            <File Id="fil948AA75EF4E778F29984AB7E19A6F557" KeyPath="yes" Source="SourceDir\.git\hooks\post-update.sample" />
+                        </Component>
+                        <Component Id="cmp397AF10EA32CF9D21BE68F4CC1E72903" Guid="8D732C82-FB43-40A6-B51F-74CD20F7AB5C">
+                            <File Id="fil1298726A095E614B71EECE330CF679CD" KeyPath="yes" Source="SourceDir\.git\hooks\pre-applypatch.sample" />
+                        </Component>
+                        <Component Id="cmp30545F9221BEB61ADCB8433DC5DFB098" Guid="F500693D-B24C-45F8-B354-6187DFE07AA0">
+                            <File Id="filED7AE57D9839DB376BE3513C7E4FC42B" KeyPath="yes" Source="SourceDir\.git\hooks\pre-commit.sample" />
+                        </Component>
+                        <Component Id="cmpB2E19CD88D651312C20454C6C4B044D9" Guid="40024A6F-BD90-4730-B189-360F21DEB6E8">
+                            <File Id="filAA7E5D2407246BE07F09D6AAAEFBE50C" KeyPath="yes" Source="SourceDir\.git\hooks\pre-push.sample" />
+                        </Component>
+                        <Component Id="cmpCD09994F29653F9C7E848AACF944ECFE" Guid="7281F4E1-AE3E-4C8F-B7EA-DB447A16E2A5">
+                            <File Id="fil18CC81D464BB796355CED6BA6B71D989" KeyPath="yes" Source="SourceDir\.git\hooks\pre-rebase.sample" />
+                        </Component>
+                        <Component Id="cmp38B75892C760DA81D0AC1BE112E2F27E" Guid="F37B7B8C-E729-47AD-AEE2-2C0A2D6B566B">
+                            <File Id="filF38D698A8CB14A888EA84E0B04051722" KeyPath="yes" Source="SourceDir\.git\hooks\pre-receive.sample" />
+                        </Component>
+                        <Component Id="cmp512C81C3E1BDFB0CF54B07D996855102" Guid="C94BD54D-E466-424F-B44B-7E83FE8DDB06">
+                            <File Id="fil413BD513E74314373996DDF98CBA4600" KeyPath="yes" Source="SourceDir\.git\hooks\prepare-commit-msg.sample" />
+                        </Component>
+                        <Component Id="cmpA24F0F93E5A7AE67F7F2348707FE2632" Guid="88B48AA1-FC90-4639-A750-BFB212EE5340">
+                            <File Id="fil15975D1A777077786756B0E62CE04244" KeyPath="yes" Source="SourceDir\.git\hooks\update.sample" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dir8C9BF1146B4389C47361F924F7CC21EC" Name="info">
+                        <Component Id="cmpCFFCD50BFBED74F8488F995086EB8221" Guid="98BCC337-0939-44C0-847F-3D07C5C2BCC9">
+                            <File Id="fil65151B7AFEEB16A7B4FF6AB2D6FAB5B2" KeyPath="yes" Source="SourceDir\.git\info\exclude" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dirEFE16EFC606C4A3A81DA716BE11BFE0A" Name="logs">
+                        <Component Id="cmpCD2EA0C189832D8E4E0759CDD07289A0" Guid="2712ADF2-B6E6-4D52-90FF-47E997EB1451">
+                            <File Id="fil6A52F1F722CCA3C1BA0996810EE121CE" KeyPath="yes" Source="SourceDir\.git\logs\HEAD" />
+                        </Component>
+                        <Directory Id="dirEC7D9F6C98C5D7925052A06DC449CC3E" Name="refs">
+                            <Directory Id="dir22FDDE7AAF9242B3439B20A4FC312654" Name="heads">
+                                <Component Id="cmp65EBD9B61C581A9694F63B5807C965FE" Guid="C32C4362-18AC-4139-BC86-FC19FABEB8D1">
+                                    <File Id="filF26E5F737B239A86BD8D19C24BC42778" KeyPath="yes" Source="SourceDir\.git\logs\refs\heads\master" />
+                                </Component>
+                            </Directory>
+                            <Directory Id="dirA4C4A9B3B341044CFBF253D5264DAE08" Name="remotes">
+                                <Directory Id="dir9515FBCD83499D256D784137E1863F1E" Name="origin">
+                                    <Component Id="cmpE32E4D21AC217BBDE8D02D5DE271C03B" Guid="160D6ED5-ADD2-4853-AFCD-CB8F32209C7F">
+                                        <File Id="filF16065F8454F7A77356BC238DF729C31" KeyPath="yes" Source="SourceDir\.git\logs\refs\remotes\origin\HEAD" />
+                                    </Component>
+                                    <Component Id="cmp395EA386924B5A1AE4817443E79A23DA" Guid="40334201-F678-438B-8E6B-8032A584B966">
+                                        <File Id="fil42B89FCB0D86E345B51C8625CF512C63" KeyPath="yes" Source="SourceDir\.git\logs\refs\remotes\origin\master" />
+                                    </Component>
+                                </Directory>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir95DCE0F3DC1D605E7C876E81D2B6C792" Name="objects">
+                        <Directory Id="dir675A62E036ED3362310CEF9BE642D304" Name="01">
+                            <Component Id="cmpF5E58C4CF215E8EE03AD029EB3CD072B" Guid="449EB70B-BA3D-4033-94AD-858BEDEC1C68">
+                                <File Id="filF92033FF7001E928A6AE96180BE70257" KeyPath="yes" Source="SourceDir\.git\objects\01\dea892f21a3bf05fbc98e6a9e1512a90766d14" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir5B0F62650C4325B7604DBAEBE435EF1E" Name="08">
+                            <Component Id="cmpF51A55E14468BBE6EB31D58756296B0D" Guid="FEC72529-BA91-4376-B97D-214FD654E764">
+                                <File Id="fil696E1F237D586E35E6A697E39322C52B" KeyPath="yes" Source="SourceDir\.git\objects\08\5c2e1622ae031aa0038ca98251db1b3419d17a" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir8B857315A1B7A8841BBA38FCB9B9BCDC" Name="0c">
+                            <Component Id="cmp0A7E2E49CFC55D09AABC99F7B7055006" Guid="76A4D2A8-A345-4CDE-A45C-838089FF9AE5">
+                                <File Id="fil58C06A08043BBF7EF2E725A0829615D2" KeyPath="yes" Source="SourceDir\.git\objects\0c\91fed1092aa89dd4fd0bd94186d86e40f33920" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir69414921000F5459F87B53201CE9EB91" Name="15">
+                            <Component Id="cmpCC135F7E99D6197B7552287ED4BA0098" Guid="350E57A9-44D7-40EB-B121-DC8925523A1C">
+                                <File Id="filA77D57EB4AF1DAF5B3A9C81A3CF86AE4" KeyPath="yes" Source="SourceDir\.git\objects\15\ed5d3ac0bed740ced9dce7fdd98cb8e33d1c15" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir38D1B8BE97D05DAAFE7A7BA89A8824A2" Name="16">
+                            <Component Id="cmp0C7DB4AC336E1804B3E99F24B8B45AF3" Guid="F748F52E-2BA4-413E-87A6-1323387EA0B1">
+                                <File Id="fil64CED99CEDE27C18A8A5581179022EA8" KeyPath="yes" Source="SourceDir\.git\objects\16\179e80ee9a7dd6c82b68db85da98bfabc18896" />
+                            </Component>
+                            <Component Id="cmp23BA5C6926BB67670A2D5DF81865D3B3" Guid="FA497B36-6730-4AB8-AB1C-3F914D6F2DB0">
+                                <File Id="filCB09855E5AD0A1E1C2307C2710DFFCFE" KeyPath="yes" Source="SourceDir\.git\objects\16\3ba6382719e2455de9eb038d16f8f7ac24bf58" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir6789C963C08C9D1DD45E57E1C1B7D868" Name="17">
+                            <Component Id="cmp4FF4B23D7B160C9699C912BFABFE000A" Guid="D9846600-8FB0-4088-9AA4-9CEF31B4510A">
+                                <File Id="filEAB3B9B9A18E11C2427DF82519266A7F" KeyPath="yes" Source="SourceDir\.git\objects\17\6a7ad77f3226d26a636a18240c462aa6b8f3c7" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir6B328940CD61774181E51AB4A7D1F1EB" Name="22">
+                            <Component Id="cmp3C89DD072E663770885B8926819AA62A" Guid="E95E0B07-B21F-467C-8612-58075F05801C">
+                                <File Id="fil29DB3819076AC424F9A94E4666EDFFAB" KeyPath="yes" Source="SourceDir\.git\objects\22\c6d246a7973194747baa3f483a91e0f91094a4" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir5E837AD02C19E5B5B3627E9E791F52E5" Name="24">
+                            <Component Id="cmp2F9965C66D6729975F68FD62602205E8" Guid="D59D55DD-5591-4FEF-8E19-E861C09701C5">
+                                <File Id="fil1112C72712BD5A82CF9C770A2D6F5DC8" KeyPath="yes" Source="SourceDir\.git\objects\24\cc4c3b43012d2d87147da229c207f9451730dc" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir85073B811C416277E5D7D8F309326E4C" Name="29">
+                            <Component Id="cmpF44DB8734AD5DC4C622D25D482E1296A" Guid="38D3A9E0-6244-4F64-BD61-C33ADF3FB500">
+                                <File Id="fil3D4725DBDECF02ACF938ED3370C02E29" KeyPath="yes" Source="SourceDir\.git\objects\29\40ffd60b5e22447d41cd0fa32c3996f51ce5b6" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir30FBC937A7E6A34FFC1ABD1005098B36" Name="2f">
+                            <Component Id="cmp75C05C1E8B4C1528BB0BE906576D636D" Guid="438BC85D-8219-4A13-9B7E-846639865C63">
+                                <File Id="fil5B2F1B6861C08F88E6B95A2F64F83BA1" KeyPath="yes" Source="SourceDir\.git\objects\2f\10dcad9813819966f069e4cce11be5773a1df3" />
+                            </Component>
+                            <Component Id="cmpD225895D7EB636F91B968EA0B1791E84" Guid="98631034-231D-4ED7-A7F7-084FA3D4ABCC">
+                                <File Id="fil8F43CBAC44D96550A36661A0B4AECCFD" KeyPath="yes" Source="SourceDir\.git\objects\2f\95b88f7f5a62c18cf6382f7f32896c49ebe00a" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir48F1FD4653A7DB0A50A68958426D4029" Name="32">
+                            <Component Id="cmp4080A0F8C7D3E2DEE7B34EE3F051FF2B" Guid="DA9489DA-8EDC-46EB-9376-B484962563B3">
+                                <File Id="fil75E4E8E60CC5ECEB003B24E56748118F" KeyPath="yes" Source="SourceDir\.git\objects\32\20b72874b4c5f838da8153c33a3bb6301f667a" />
+                            </Component>
+                            <Component Id="cmp24E57C1F67E90F6EF282815DB1A15F9A" Guid="83E048DC-EAB2-4AB6-8AAF-A947B1AB2562">
+                                <File Id="filE2D5C9DDD25323F99211090CBD0D302F" KeyPath="yes" Source="SourceDir\.git\objects\32\4a40c1f90c850d3831ff10730101551b5560fc" />
+                            </Component>
+                            <Component Id="cmpBDD7CB9AB3737B16B4DA2AC57EACCBE8" Guid="A7D0877B-751C-4225-9559-54C6D987F2DD">
+                                <File Id="fil085C0B1CF8603A9DE228C476D2C666F5" KeyPath="yes" Source="SourceDir\.git\objects\32\fb465e1fe2fe23d21e8f858084d33a130733dd" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir6B7EE8CE9B781A18976CC81A0EB0E4C3" Name="34">
+                            <Component Id="cmpE5F4D50FDDD9689657799B71A6679EF5" Guid="96ABCA53-5A5A-4B64-BE84-728C3C24657D">
+                                <File Id="fil630E704B3F4751977A8BF48618389308" KeyPath="yes" Source="SourceDir\.git\objects\34\975989e73c3a5c141e0980c51e5a369a8b4a00" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirDA390B3E33B7FC00CED4BBEC4DEEBBF2" Name="37">
+                            <Component Id="cmp58C51A72639F193BB1F40567A1CE8A84" Guid="ABCD0EDD-0049-4A0B-8D62-46575509B6BE">
+                                <File Id="fil106E85F200CB6DDBC3333F5C61687A89" KeyPath="yes" Source="SourceDir\.git\objects\37\47e4b032739e8fbeb85648a07d6986a20b4615" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir0967E58AE4130CD3AFBC9F5C6EF79911" Name="38">
+                            <Component Id="cmpF4FCA680ED57D4048F9C1D21A3DACE33" Guid="F5B7C0FF-87F6-48DF-B1D2-7B3070A8C12B">
+                                <File Id="fil2F196DEAE241D9CB7C6BF84BF7309A6A" KeyPath="yes" Source="SourceDir\.git\objects\38\fb18e06bb992221f3e7fe5501afc81a8545aa3" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirAC06FDD0E9D23F5AF1B9865DCA6E644E" Name="3d">
+                            <Component Id="cmpE8037CE4FD59279C1DE8F77D38B99BAB" Guid="6823F646-7A19-4A00-8E82-D3E834894D94">
+                                <File Id="filA03753D7398B4AA03D5CA9A55E84CC24" KeyPath="yes" Source="SourceDir\.git\objects\3d\49f10fb15bd8215aebcb9156c9e8768dac6363" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir473C77D6AD786F0FACE8BA72BF2F491E" Name="42">
+                            <Component Id="cmp22E3535826929A2039EF5D0D37D556D4" Guid="4B5433F6-9A4D-446D-8DE2-6061606D1823">
+                                <File Id="fil65ED1F91B248529A42EECC59292C3651" KeyPath="yes" Source="SourceDir\.git\objects\42\43b7de0954f3ddfa1d34a5e525faf75fcfc442" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir3E6C746AC55291EEB1B6C182A56E39F1" Name="48">
+                            <Component Id="cmp5EC9538254183BA05F48D2A7EDFD8126" Guid="36171CA3-11B6-4232-8DEC-54E1F2EDDFF9">
+                                <File Id="fil9F259BE92F63BFCC432BF7FE2EB660C8" KeyPath="yes" Source="SourceDir\.git\objects\48\4240409be0e466e1b019e0c54ff183647f08b0" />
+                            </Component>
+                            <Component Id="cmp22B75F329FDEEE778CB81AAD5C5081FF" Guid="677DABAE-E6D8-41C9-BB6E-703329B39509">
+                                <File Id="filB21B5D11F931EDC1E82A4E5E06276D6F" KeyPath="yes" Source="SourceDir\.git\objects\48\f423814b483927920b9c21f4bc8b72321fa735" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir2C45A306C8A4B45D44971A2C1F9A6688" Name="49">
+                            <Component Id="cmpE174D7C57B1624F588AFDBB80781B012" Guid="AA5DEB5C-AF17-4B8F-B6E4-1BA105A1872F">
+                                <File Id="fil671B5266A3F12700AD8BEBC8786F999B" KeyPath="yes" Source="SourceDir\.git\objects\49\e3325b74b5a80f7fff981f39cce3000c6af4db" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir391297512F856C30508B30AEE0468EEE" Name="4a">
+                            <Component Id="cmp3F7A52140E7B053B48A1B58043040732" Guid="C7CE5339-5F76-4415-A5A8-1401C76508C9">
+                                <File Id="fil67B5C3C11B38819C38C2B76C39810137" KeyPath="yes" Source="SourceDir\.git\objects\4a\b385a9b590eeeb8be3e5d4be5a76051a236640" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirF804C69C5841982ACB0FFC280C7AE4A0" Name="51">
+                            <Component Id="cmp457D8EDF665B86496D75B3C59F8E8FC3" Guid="DB43F781-913C-4E9E-9C8F-3B2F59EAD47D">
+                                <File Id="fil86CB22C54BBFC95068B2248B3B67142F" KeyPath="yes" Source="SourceDir\.git\objects\51\bed57f00498438e24dd47be6d1aecd274f012e" />
+                            </Component>
+                            <Component Id="cmp85A50B244A3855A8F305E90E04587A22" Guid="F7435CF4-E094-4109-98DE-95DE2162C681">
+                                <File Id="fil29C75A3B83C14647E646E03FE5A79074" KeyPath="yes" Source="SourceDir\.git\objects\51\cda9b579f0be107de9ea803b560916a0139c88" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir718C20CF058F5EFBC408372C277C89AB" Name="5e">
+                            <Component Id="cmp55C1819CE8479B6638B7A49B160DCE69" Guid="5EB16AE6-D536-44C7-B7C8-E238FC882FBA">
+                                <File Id="fil7893C5EC7F85353DEF707380BD932C2B" KeyPath="yes" Source="SourceDir\.git\objects\5e\fedc624ab2661577d25ed4e373756e7422a777" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir9BB5D2DCF13043A9630189A28ECAED10" Name="61">
+                            <Component Id="cmp6271B186483E628819D32EE99B5E0FC2" Guid="BDDE0BA9-0C18-47F8-89E0-C64448EDA975">
+                                <File Id="fil9BFAD16634426F8C699522EA07368705" KeyPath="yes" Source="SourceDir\.git\objects\61\d357dd728f7bfe4b08735cecef337f7dbd9250" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir45F4CD30683BDF5C63EEB1BD95B5E294" Name="64">
+                            <Component Id="cmp206FC96043700F43D13B2F2846B510DE" Guid="57009E74-B128-409E-9A2D-601FF7080DF3">
+                                <File Id="filDD60DDE315C5006CC6C6B7ED65441EF4" KeyPath="yes" Source="SourceDir\.git\objects\64\afb13ec1e9dffcf60b67d3e901c133940f37c0" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirBEF754D4B43C896EA1D09DCCFA9D1299" Name="67">
+                            <Component Id="cmp2B823141F4402C0A83031ED465C42522" Guid="72ECA238-DCAD-40B6-A28C-B49C758EC974">
+                                <File Id="fil917B07038A261171A2400C4D868BC7D7" KeyPath="yes" Source="SourceDir\.git\objects\67\2418a47cb2f41c54a0f1cf2692c38a162e5589" />
+                            </Component>
+                            <Component Id="cmpC8F384D1A8502D1EF51279821F508084" Guid="C93B94ED-AEEA-42B9-9146-D2A54AAB3238">
+                                <File Id="filC76958A6DF695F43A9BD831396AAC155" KeyPath="yes" Source="SourceDir\.git\objects\67\41462d8cb8884b6eb154fae6afecd9c1938883" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir710397849E692B39B6E284C937FDB372" Name="6c">
+                            <Component Id="cmp82A604E1E9536C03F58EE6ED20BF5BFD" Guid="1BA8E28C-8FC3-4552-AC6B-FDFDAD9282A7">
+                                <File Id="fil2DBC9F692D4583418969BCF45F18FB84" KeyPath="yes" Source="SourceDir\.git\objects\6c\bacb76ddf86b09952d45c9a14937dadf9dd626" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirAB7E06D0BFCC30EC024F478A7E85680E" Name="6d">
+                            <Component Id="cmpE84E893DDAFE9146DFC3E5D75DB6EDEF" Guid="E9F5A2E5-520C-4C47-894B-241A67A93A27">
+                                <File Id="filF0484F09768C97D24A6C867F03B21669" KeyPath="yes" Source="SourceDir\.git\objects\6d\36e11f662e6447e8aa6fab45552aef0b09699e" />
+                            </Component>
+                            <Component Id="cmp7C99B6AE26E5A93E4C568068560D4568" Guid="0FEC223A-DD41-4F63-918B-E994197659B2">
+                                <File Id="fil097737435B2702946FFA4B731AD3C321" KeyPath="yes" Source="SourceDir\.git\objects\6d\707fed9a95e4eb799782f5ded0f50711bc51f1" />
+                            </Component>
+                            <Component Id="cmp4D3B5A78B766C2003BF0F0EC532BF0C2" Guid="C99B0BBA-7FD1-4CAB-9805-660E9907AF4B">
+                                <File Id="filDF2807AF42BFB251ED62494B5DE1C3C8" KeyPath="yes" Source="SourceDir\.git\objects\6d\c4a4fc3dc133e8c4a5948868536a052c69b6ad" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir245944486C6CD6E118B2746B849FE0D7" Name="70">
+                            <Component Id="cmp76CFE58E9B9A7AF924456E0C231A7663" Guid="607CEE03-E690-4F5E-986C-F3022F66E013">
+                                <File Id="fil72CA81E10B60673DEC7FE0D803ED2A6F" KeyPath="yes" Source="SourceDir\.git\objects\70\676b2bc93cc49310c147b6c3c8e63e9541d38b" />
+                            </Component>
+                            <Component Id="cmp386FE5CB003B49E69A2B614D8B82F729" Guid="29A07B17-449D-491C-86E7-B55124B5C668">
+                                <File Id="filA17BBEE63BC071D3C42185C0DD04CA7A" KeyPath="yes" Source="SourceDir\.git\objects\70\d5fb4a92e3ca7a69b3c36eb92528b91e49a048" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir1BDE0804CBAA14965B437F3D8519C8DD" Name="72">
+                            <Component Id="cmpCA554E883088A96BF78073B837B7598F" Guid="1E1114D4-F96C-4A86-83E0-4B0E8CFED2C8">
+                                <File Id="fil3BAC464CA18878A93EB01F448D2433EE" KeyPath="yes" Source="SourceDir\.git\objects\72\70f290b1bc33012b2ce8dc6af66b69d45e757d" />
+                            </Component>
+                            <Component Id="cmp5C91EC34DF6CC398CFD5392F69281D5B" Guid="53D7E64A-85D3-4FA5-A738-A1D1D622E9A2">
+                                <File Id="fil83F701441AD53FD027473AE45787AE73" KeyPath="yes" Source="SourceDir\.git\objects\72\9d28f6f4d9c4d784e7c7847ab7adfaee6c3afe" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirAEB0FD31C9F946DD5518A3E3B7392B05" Name="74">
+                            <Component Id="cmpCD00CAEF65578C129EB4FFF03A0B153B" Guid="C2FA685F-AE35-4ED9-A243-C3E5158A0825">
+                                <File Id="fil1ED59C3AFF12AA5B5175D255A3BC1633" KeyPath="yes" Source="SourceDir\.git\objects\74\3ea501843150d06dc2854a33ee9da7652cfefd" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir800EB2A8E3E30B9EFC3C3DD320B4C1FE" Name="76">
+                            <Component Id="cmp009462CA656B4469C682592AFCED733B" Guid="A9F1726B-ADCB-4B0D-A5ED-850B1679570F">
+                                <File Id="filF77381CD895F6512ED614CC34325A641" KeyPath="yes" Source="SourceDir\.git\objects\76\43a6760fa2f16380c32b71201079d59e741e17" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir8799A447299C48518BFFCC19B31DC00C" Name="78">
+                            <Component Id="cmp90114E302E216F2ACAAA511C97568BFA" Guid="412E91AF-DB16-4E51-A83A-70844CED0953">
+                                <File Id="filD7E37B03A068B70BCD372A2912033490" KeyPath="yes" Source="SourceDir\.git\objects\78\81c9907430e724997a1f0c425a48ae17bf904a" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirA16D2AC0B6D72CEF57B7A38761785EEE" Name="7c">
+                            <Component Id="cmpFAA81767D45C51FFF28962646828BC67" Guid="C18058D0-D258-42B0-8158-0BB07AEAE2B2">
+                                <File Id="fil8377CEC795113187656BB0CBDEF577AD" KeyPath="yes" Source="SourceDir\.git\objects\7c\36c1129dbd29b8d440d488d16968aba7a18102" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir211972A0B98B2DF20A8C89B3336258F1" Name="80">
+                            <Component Id="cmpE3A40B7F255D24E115512C076A0EF64C" Guid="B5315F5C-53FB-4EB4-8D78-FE80BDD2226B">
+                                <File Id="filAFA8C9C4D8F3E7942FF7B5F7F43BFC4B" KeyPath="yes" Source="SourceDir\.git\objects\80\4b5d6e2141ef28d4c95d53fc95793ba0472875" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir514650E18C4BCB58D7AF7AC2163AA9B2" Name="83">
+                            <Component Id="cmpEB2F2DAD1853A799845298303B86A004" Guid="F5400867-2FE8-4E75-995F-66913F6F61E1">
+                                <File Id="fil0469F893F6FF61B97196754B38FC0999" KeyPath="yes" Source="SourceDir\.git\objects\83\8e34846b0806a95963b8edf7c61a3c9424f632" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir6A85EFF2B151CA8534EA5D33379970E9" Name="84">
+                            <Component Id="cmp33E8D76F5CD64E8F686536ABE97DC0BB" Guid="631BD049-EC7B-458F-806E-E961FDDB9E98">
+                                <File Id="filBBC74F948C39B01054188142F5094C3A" KeyPath="yes" Source="SourceDir\.git\objects\84\a3ded2763b5fbb92be922da6ceb595664d121a" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir96E492E05D139194BED04300A94EE9C0" Name="86">
+                            <Component Id="cmpD77CAA72909A6D155E2B0D6DB1874DFE" Guid="3BD219DE-51A4-4519-891D-B7F0524BF364">
+                                <File Id="filFE2D51A61DA597A9D9FB78ED08CD3501" KeyPath="yes" Source="SourceDir\.git\objects\86\b697d3cf8de629a08a498931102b608d4c0ff7" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir529BFEAA936B5FE9B4493C57FDA1CBFC" Name="89">
+                            <Component Id="cmpD3D279E40378A76C044402B64300A4BF" Guid="1D24C181-E5BD-4DFD-BF98-7A2CDC0262FF">
+                                <File Id="fil80E6FC013E0461D9F31656FDE1F870A2" KeyPath="yes" Source="SourceDir\.git\objects\89\1fddfae28c3dae7d7973a790ca028e6477f3c0" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir98AAE972A835FB8921AFD5CB2A7EB0E2" Name="8b">
+                            <Component Id="cmpA4A3F09A82DEE8D56CABE1A8B88CA5EE" Guid="110837E0-48A1-4815-95A7-D9B431D4CCB1">
+                                <File Id="filD9D7A1CA69551BC3A287854151E2D193" KeyPath="yes" Source="SourceDir\.git\objects\8b\02775ce30ea25154efcce18ad8c9bc4682dc87" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir9D2CA29EC061D0C431142985E3647F96" Name="8d">
+                            <Component Id="cmp9B4441CE11CEAFE489FDD0B55BF4C58C" Guid="27CC251A-14CA-4CCA-94D7-2117A6A0F9B9">
+                                <File Id="fil3EBBC1B5F65CA575A672E91FCA2D373C" KeyPath="yes" Source="SourceDir\.git\objects\8d\643ad2cb9c0c4ea3d270e5612b0860e60e4bd3" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirE30C7163ABBEAF56D4D030E5DC2375DE" Name="90">
+                            <Component Id="cmp20755EAA7672F3FAFDE4CC109559D478" Guid="B8A930FC-9537-445B-AA13-723C22C01C74">
+                                <File Id="fil8C2246DF7E71FC1A1C858934FBE16611" KeyPath="yes" Source="SourceDir\.git\objects\90\ccb5e82b935092ef47df70b5b1883165934bf6" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirE8AC896C59E9EDC19CB4D68C6370CC3D" Name="93">
+                            <Component Id="cmp228994825D63607641510294F28A0212" Guid="3A46A580-DBCE-4187-8AA3-3B5BA39D02F2">
+                                <File Id="fil14E675AEC64EA6F3A52B9BC3BF8456B3" KeyPath="yes" Source="SourceDir\.git\objects\93\c75bb8ac4efc582e50713384a56a3c08359142" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir3F83F87D1F91F39D18E5B94A36DF504B" Name="94">
+                            <Component Id="cmpE406EBAD4D98BB89E7697FC85980B2E2" Guid="E2FB3318-3365-40A5-974A-61408288DE5F">
+                                <File Id="fil100846524800CBD8E33854C1123AEA41" KeyPath="yes" Source="SourceDir\.git\objects\94\10fac8f6ff1609baac9d20030c4c8c7b37386d" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir8B035BB3FFC57C50464172EE0F34B9AC" Name="97">
+                            <Component Id="cmp066225BE523986AAB93325F3C1D87782" Guid="BBA3EC91-918C-4556-B266-5FFF04F04C13">
+                                <File Id="fil298B62218BCEFEC195BCD10A81E62E30" KeyPath="yes" Source="SourceDir\.git\objects\97\fc210727ccb47f0d10181b90b2bada5460fb20" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir508EC041F2C74958D59F11A875096923" Name="9b">
+                            <Component Id="cmp20D4D06259C572879DA0EAA64F1087F0" Guid="161C4A92-17C6-4E73-9BAC-CDF7E6A0910D">
+                                <File Id="fil8A503CB9BF79029C82152139A444A18C" KeyPath="yes" Source="SourceDir\.git\objects\9b\50f242276b838512909555cb0ab82623db6a25" />
+                            </Component>
+                            <Component Id="cmp9850EB1409D9F110520B15E765322F14" Guid="C07D7376-B95C-443B-B237-EFFB2BB775BB">
+                                <File Id="fil4502EB8583B9FC4E09D2FB8C584027EB" KeyPath="yes" Source="SourceDir\.git\objects\9b\efe1a48e98100f4d6f030add81ed1351d64f82" />
+                            </Component>
+                            <Component Id="cmp18386B64807D16080812897B58B8E574" Guid="944D0FDE-E042-4356-BF13-B8201104F46E">
+                                <File Id="fil6F7BDF721B34D9890E7E8D9731293714" KeyPath="yes" Source="SourceDir\.git\objects\9b\fb75b0ebc0226c5d61f581783567085fc4170e" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir64E72C7032030772D167291C28360638" Name="9d">
+                            <Component Id="cmpFC47FCA63040DE17A9ED83A4948BA9ED" Guid="175F2998-3B5B-4207-B23C-12851EB9F49C">
+                                <File Id="fil3823C3DFB7ADC035044E1CC82396F962" KeyPath="yes" Source="SourceDir\.git\objects\9d\ff884b6fe01ce415ec7b63a91a996f2e86aee2" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirDC21846DA3381CB2E6903CA71C8B1E6B" Name="9e">
+                            <Component Id="cmp11AD541042919AD4169FEBFE288712AD" Guid="FA2541B1-740C-4EBA-93A6-8D2B645EBF25">
+                                <File Id="fil1F0365A61D8E1329B7E80D5BB298C90D" KeyPath="yes" Source="SourceDir\.git\objects\9e\afef942e9320a7d0a06a5620dcddc59e1012d9" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirC20237BA52DB329418550163B16B1378" Name="a3">
+                            <Component Id="cmp9C54CB7182944C8C38D7D207B6EE4547" Guid="10AD1D9C-4C95-4C8B-B05F-0CC14E8CABF7">
+                                <File Id="fil1B2E78F47F1CFA11F9E68B6BACB76E4C" KeyPath="yes" Source="SourceDir\.git\objects\a3\91f4dfe3c957f557e6dc332edfb60714c87585" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirF8196F987952CBFF04C041FE7AE41FFA" Name="ab">
+                            <Component Id="cmp16C74D17DE5143493C3827AD923E6572" Guid="EDC52752-8B7F-47A2-AF93-073CE7E7B2BC">
+                                <File Id="fil082CC105BB5082F64AAEEA78F6105EF4" KeyPath="yes" Source="SourceDir\.git\objects\ab\84c9dcbedfa75d44f77c122def2c89bd9b3222" />
+                            </Component>
+                            <Component Id="cmpACC2747764E9875E7909B4383603D870" Guid="99AAEEAF-A7D9-4983-9FAF-6C9B74883797">
+                                <File Id="fil02805839210F22D6CF3C9F2F045C10D2" KeyPath="yes" Source="SourceDir\.git\objects\ab\e4142d777bd7580a10287cb6a5fe2b98b4205a" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir41182B0D4E721DA476446A18C3BBB303" Name="ae">
+                            <Component Id="cmpB06E47952A4E9ECD2456905544DBF712" Guid="4C336F09-CB51-4D65-92D2-383E15C8E296">
+                                <File Id="fil80E07A7442223D1032A041124FBD58AA" KeyPath="yes" Source="SourceDir\.git\objects\ae\800da8d374a59337572f353deb003a1320c224" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir73DD2217BF0C9585F389BE79D599D535" Name="b5">
+                            <Component Id="cmp22E1EFEBD88877B3A9AB255C2D367E7E" Guid="98F6C97D-6AF8-4C67-974F-8965B988E1E0">
+                                <File Id="filBF45835612EDE4E0BD83929573181A50" KeyPath="yes" Source="SourceDir\.git\objects\b5\92eafd3294cba9ddfc31bc7313f1d0d478e816" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir69CDFE20FF15D9BECA575B35CFCEE803" Name="ba">
+                            <Component Id="cmp8C6F3A58E246EF5624D210C874135ACD" Guid="752A0965-C6C2-4B5B-BA45-2EFAC29B43DC">
+                                <File Id="fil961EE5ECEDD1E902A44ADFCEF1F81350" KeyPath="yes" Source="SourceDir\.git\objects\ba\ca7123a3730767947c9204693b935a25e0376a" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir53428FB9A2DB4290D3F5E99707D9710B" Name="bb">
+                            <Component Id="cmpFA8DD7809BB3E816588F32DD62CD01F4" Guid="BE77D53E-7964-456B-AE6D-77A5FFFBFBB6">
+                                <File Id="fil51D8DA27CCA3C50BA4E947162F244F23" KeyPath="yes" Source="SourceDir\.git\objects\bb\cb4497b08757a264861c20f717274c95ee069c" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir8560913945F9E73031723AEC41166322" Name="bc">
+                            <Component Id="cmpBB2300C72F17D9E2410A080EF2821564" Guid="60FC2ED9-526A-48F1-B399-857D89395505">
+                                <File Id="fil903400CEE1AF84CE56E861898946CE57" KeyPath="yes" Source="SourceDir\.git\objects\bc\fde24ff5aa2c01e69a80f60084f444e97d8874" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir800FDCAC06C96B69BC64518BF984B2DA" Name="bd">
+                            <Component Id="cmp94C593B9213E6900CD1067D841191E1F" Guid="BCD5CF83-6CBA-4999-9F34-5E101ED311B2">
+                                <File Id="filEDDDED2A296166D67318FFE04998CA98" KeyPath="yes" Source="SourceDir\.git\objects\bd\cbbe9a8785faa42a206cf4c076ac717f62f040" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirA6C64D47277509423F8BF0949AA2E976" Name="c0">
+                            <Component Id="cmp19B0935CAA690F341F4838A9C6118994" Guid="323BA023-5456-430C-80C2-9E16DEFF84CE">
+                                <File Id="fil9DE051C3D07EE0B7E3B186848BD8470D" KeyPath="yes" Source="SourceDir\.git\objects\c0\019c1f5654f12391c8b70c31f55995f6b2d23e" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirA65B1C1BDEFDA88A13110860F29DC08F" Name="c2">
+                            <Component Id="cmpE8B4911D6336BFC41AB44697426787F1" Guid="274D921F-C52D-4158-B2AC-29440A63291B">
+                                <File Id="fil32DDD5B14E735E54D0ABC9B746352ABC" KeyPath="yes" Source="SourceDir\.git\objects\c2\e0d8853312a5a7073e7748ae55691534908184" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir48B602FCF4AFB7891D7FEB7B1E09A18F" Name="c6">
+                            <Component Id="cmpD4CE40DC0E80AD5DF1D1C172D6EDFD2F" Guid="B555C604-98DB-4B5A-87D3-BE1A0D6B71D4">
+                                <File Id="fil237859C308B3DC890EFAE540D469D700" KeyPath="yes" Source="SourceDir\.git\objects\c6\38b24bb2a949e4280fd9f9d88d37945bfb9d4e" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirB7F6258E3D215C414626D7E900636E95" Name="c8">
+                            <Component Id="cmpEE8DFA971F5BFF0840EA8621B7294506" Guid="19AE18D1-DB38-422B-ADDA-25FC23907A06">
+                                <File Id="filAE2A756752871ABD0FF6A3A14B510CE3" KeyPath="yes" Source="SourceDir\.git\objects\c8\9f3ea1f16d36c960b41e1108aa13d20c7217a7" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirBA5E52CEB0D1407B4E1EADEA3F780480" Name="c9">
+                            <Component Id="cmp7982BDF4B17040C34A8F44032146CB1F" Guid="DA4A51EE-36DE-4263-9DB7-91651B4F5B0C">
+                                <File Id="filF9582DB254BE5B53C89A591DEDE9F5CF" KeyPath="yes" Source="SourceDir\.git\objects\c9\2249b60692586d6f515e73396568460498f26d" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir0E03A2F9655042DF1D5C5A0F506DF8A9" Name="cb">
+                            <Component Id="cmpA8FE3E19CA13268C674105C3632CDA94" Guid="82429E8E-0BE4-4A85-AE12-F05BE39BF241">
+                                <File Id="fil490B6CFBE1B5F295F36A57514C923630" KeyPath="yes" Source="SourceDir\.git\objects\cb\77d034fd798fd1d727df1e19fa9435ccce8293" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir0E88FDA3E91D6E99BEF38559EA9C9945" Name="d1">
+                            <Component Id="cmp3B7BB69332870A668F092DC27E85E6A8" Guid="ED8BB872-0C0C-460D-B7C8-F08F5ED5C88B">
+                                <File Id="filADDC4B3AAE38377B4E399E93C6F55676" KeyPath="yes" Source="SourceDir\.git\objects\d1\02278fe86cd5e9f986e022896fe5fc7b185e06" />
+                            </Component>
+                            <Component Id="cmp4AAFF337E21E11AABA3E20A6ABA3EC2A" Guid="4D11255A-E591-477A-9AB7-1B6482677075">
+                                <File Id="fil1DA628640A18A5DFA9C309AAAF563B05" KeyPath="yes" Source="SourceDir\.git\objects\d1\f7f22c380a49191fb5bb81d56706116674d24e" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirB6D785DCCCD5A5646C5ECD57B56C46D4" Name="d3">
+                            <Component Id="cmp6E77E4F314C98E662AE6AA9DA7D35C07" Guid="C0EDF5DB-7F24-46EA-9F98-B88F077FB497">
+                                <File Id="fil05030FF4368119D73F5748119BF913FD" KeyPath="yes" Source="SourceDir\.git\objects\d3\cf14058d3c7d0344bcb3fa5041eea504bb0b30" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirDCA718EACBAF969A1064EA836090748C" Name="d4">
+                            <Component Id="cmpAC192336791B4DB522BF69FCB2B2EA18" Guid="34101E8B-856F-4FD8-B8E5-4DB6733D5E87">
+                                <File Id="fil66A716B1A28BE1FC6EF91631C10A3E7F" KeyPath="yes" Source="SourceDir\.git\objects\d4\879bd120f8c74be170f777996fe21573454b85" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirEFB358A19B1C9D008A0913397666B724" Name="d5">
+                            <Component Id="cmp272B8A949AC5E32772EF1B74DB66E82B" Guid="689A9310-04B5-47E6-A1B5-5417C2E24941">
+                                <File Id="fil0DCEB5FEB9827167B59A2D103DE7016B" KeyPath="yes" Source="SourceDir\.git\objects\d5\da31519c0f7ffd6dfb7b3a24dfa16171a46d16" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir63E68397CD36654EB3964888F7F05B43" Name="d8">
+                            <Component Id="cmpDD1247D16F73B74DF743D73DE1D02C51" Guid="321D2CD7-275D-4FE4-9E32-B8820F452B74">
+                                <File Id="filC89B6135D269CC2893F4ED9AC2FCBCDB" KeyPath="yes" Source="SourceDir\.git\objects\d8\cce6d50dc647784d6f37bbf06d2be9c49a40af" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir18C172B3F96FD10C7494DE1AC4B12294" Name="da">
+                            <Component Id="cmp2AF4F500889D9CC04FB4A3ED26772C1D" Guid="A6B26A44-EDA0-4737-96C0-0437138C2327">
+                                <File Id="fil2D19B63B8C62ACF181EBFE1C176CF38C" KeyPath="yes" Source="SourceDir\.git\objects\da\1b8a0bec9ce5b852fee269cf6646aef384c25d" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir3D5E9A05304FF9400E1AEE498906A791" Name="df">
+                            <Component Id="cmp069DEE08BD9F08142257C917FE721BBC" Guid="CA3D95BB-570E-41B7-BCEE-D0996E270ECB">
+                                <File Id="fil524C7F565C973752227C820DD3D83503" KeyPath="yes" Source="SourceDir\.git\objects\df\1fa160884db5a3970949d53d890ee2c01bc8de" />
+                            </Component>
+                            <Component Id="cmp9AEBC665A89EB1D69483780058D03156" Guid="868E21FC-6BFB-4277-BCD3-9085AFBDF511">
+                                <File Id="filC35413315CDCF85227E71421EC2624A7" KeyPath="yes" Source="SourceDir\.git\objects\df\b106894a4ea262d2c7be5ccf4a0f61a58406fd" />
+                            </Component>
+                            <Component Id="cmpCF0667907C866A14C99ECD994890E3B2" Guid="EA1D9054-6E0E-4E5E-BF5A-A1F0A31E07E7">
+                                <File Id="fil1E6C0813B72A544A4E029E321741E9C0" KeyPath="yes" Source="SourceDir\.git\objects\df\cf31ae69cdb63640e275d4e79371efa65f6da4" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir9A2D64A43B8C955D84CC63B9BAF06D1A" Name="e2">
+                            <Component Id="cmp4798A15F897457638370D33DA7866F14" Guid="322E188D-9DA5-4C0C-93A0-0EBFEA85CBDC">
+                                <File Id="fil0FE443D040BBC9BBAFA3A92C3BC67864" KeyPath="yes" Source="SourceDir\.git\objects\e2\9d532fa9f00c6deb9f34353e9279c408f8eb7c" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirD7A59322EDBFF1290718C52DFF400120" Name="e3">
+                            <Component Id="cmp088D46AA74AF560A0816D5EBCDAE9F3C" Guid="17343639-E466-4297-BA84-1ABA5CFBFE34">
+                                <File Id="fil6BA0F270C71B824EB054D75BD20329B8" KeyPath="yes" Source="SourceDir\.git\objects\e3\9ca28659b5869bb40da25e9b6d43a41ba73527" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir4FEE7C9CC2BE5631E52B2FF8042B9330" Name="e7">
+                            <Component Id="cmp27FAA6BDA75E686D0AD2CF3DF6326194" Guid="6A03F7A0-DEC9-4523-A222-0EF4BD031219">
+                                <File Id="fil9584C412D2A042C7CFDBBE203BF7E435" KeyPath="yes" Source="SourceDir\.git\objects\e7\1f738ac0be7a32986fadb12a4b9fdfba109e66" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir3ADD58506FB73E226EBF0C713A2CC2CD" Name="e9">
+                            <Component Id="cmpF7A7271C4677F6BD6383C363DF5E6D8A" Guid="5FB8B307-46C9-4F61-8988-40385E749F44">
+                                <File Id="fil25FED53D44E56D7E9E1139DEC5CA4A34" KeyPath="yes" Source="SourceDir\.git\objects\e9\6b2b0e5181ada0f8c7da31e487a24b298bcc9c" />
+                            </Component>
+                            <Component Id="cmp6687F8CCD59BD9268DC76CC64A597635" Guid="1FD345FD-2D2A-4789-B454-3BCEA140CEC9">
+                                <File Id="fil33289EFF846A4C8C95BEEBB825CF60F6" KeyPath="yes" Source="SourceDir\.git\objects\e9\74421da31a199ac3d1c12a3d520cb6631761b1" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirB8A23AD390795BA2E15ABC125CBBD925" Name="ea">
+                            <Component Id="cmpBB640E8C9D6CB89D36EEBBE4068171C3" Guid="98FCF548-1F57-40AD-B165-EF9CBC761F00">
+                                <File Id="filFEDF43C79F92125064DC5964768773D8" KeyPath="yes" Source="SourceDir\.git\objects\ea\b93427c80e4221628a9a185fb2ef58e2927770" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirB6A5DB07F5D75A61E8295C8C74742501" Name="ed">
+                            <Component Id="cmp86CD8D09C86A6958C831F0E700B7294B" Guid="DEC512AF-04A5-4633-92A6-68089C894316">
+                                <File Id="filCD1202F85C17A7C1060B2C25C67E1598" KeyPath="yes" Source="SourceDir\.git\objects\ed\3f02199faa39246b329274bbc07a046676d297" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir17C5B67F93276C0A1AD9E3F986BB55F6" Name="ee">
+                            <Component Id="cmp90145D062A927679C3767ABDC950127D" Guid="D31222EE-4B1C-437B-854D-54CFBA3D53B4">
+                                <File Id="fil6C77FDE32FFD8FF36CA95F48D10DC755" KeyPath="yes" Source="SourceDir\.git\objects\ee\ac2331d0e2d6e9bf46bd188c3caf42e60d0827" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir537DFE8A8925AA57064B4D4C0F287E93" Name="f4">
+                            <Component Id="cmp691CF40A8BE3AF72E0704682B9ECB89F" Guid="993D0813-CE3B-47E7-BA92-E0EC1C31646F">
+                                <File Id="fil1B36B026E3E068BD5B22CAC6A4C68F13" KeyPath="yes" Source="SourceDir\.git\objects\f4\d322e4f32d8c049f0636f2cfd408b217885776" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirB7D3078DCB8740F3826DEF14C95AD709" Name="f5">
+                            <Component Id="cmp427336E6F1606ED29244787061136B4B" Guid="15922F26-8A40-446F-B44F-60F7C82A863D">
+                                <File Id="fil2B695BFDFD08BB0E679E283F5E954F8B" KeyPath="yes" Source="SourceDir\.git\objects\f5\dea4114f17e27f1a4539fc91990a2225f3521b" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir520C18383B5EEB769508B5EF31FDE7AA" Name="f7">
+                            <Component Id="cmp854654D238509C3EE602DE6900A0E9BF" Guid="C8F0B978-F8E4-47C2-A678-A68A5C68A0FE">
+                                <File Id="fil36FE3A5D96950B08A700FAB12FC3048E" KeyPath="yes" Source="SourceDir\.git\objects\f7\2844dcf27e5731e137f540eaa508499c22a301" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir02CDAFFC6C547E36080B146D04DF926D" Name="fd">
+                            <Component Id="cmp5ECC396A6562781D1D6F032EE11D0AA1" Guid="F6F5D1C9-3E07-424D-90EA-FAEAC5CA533D">
+                                <File Id="filEE2F6BE90C90EB5302DCDCBB3786EFA0" KeyPath="yes" Source="SourceDir\.git\objects\fd\cf9aea0cc40b40e974294d63167350b9f6f0e3" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir32357541D41DEFD5FF4BF06A8F56E02F" Name="ff">
+                            <Component Id="cmp3E13274937C071345090057B5AD568E9" Guid="0328831D-8CAF-44D7-A6ED-A9B68BE6039B">
+                                <File Id="filA856076459AF846A17772DF808EF550F" KeyPath="yes" Source="SourceDir\.git\objects\ff\0d06b6e301798bc865be37511c798be005fb46" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirA9EE6A3F25686D9890FEDB672959DDC0" Name="pack">
+                            <Component Id="cmp6C537A4E07AEED2786EDF1F82EBD1560" Guid="7E009460-B403-4136-B53D-1D94E5C1D208">
+                                <File Id="filD9752693559CA59544ABFF9BC9BD2F96" KeyPath="yes" Source="SourceDir\.git\objects\pack\pack-2d8bee0a4affc91e5299a4fe8a33251dfe60e2a8.idx" />
+                            </Component>
+                            <Component Id="cmp768A73152DD9A37E450AC0E2A7175CCE" Guid="1E7D005D-0889-4A7B-8007-03473DFCFC9E">
+                                <File Id="filEA8FF34C84298EED172A677FF4B10A0A" KeyPath="yes" Source="SourceDir\.git\objects\pack\pack-2d8bee0a4affc91e5299a4fe8a33251dfe60e2a8.pack" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir927D187D2F3CC6F34FDF98ADDA81B0F7" Name="refs">
+                        <Directory Id="dir288AF43BA96A08635954CC9B8811A858" Name="heads">
+                            <Component Id="cmpC774B9B68B82C58EBE392318564AA640" Guid="F7D81B03-4300-456C-95D1-0242B12E440B">
+                                <File Id="filBAB3F4A91A8B5791F9B8D874BC8FC098" KeyPath="yes" Source="SourceDir\.git\refs\heads\master" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirCB7A1B0F2B804F66C45DF39D4FBCEF16" Name="remotes">
+                            <Directory Id="dirFFCE94B21A7D4C1CE77EC906A05C3D19" Name="origin">
+                                <Component Id="cmp61FBAE40630951B4F5F827DE92EDD8CC" Guid="BB97834B-A0A2-40B7-9CDA-F8BA1E22E2C8">
+                                    <File Id="filB8A90C15C498742841D72997259A07A7" KeyPath="yes" Source="SourceDir\.git\refs\remotes\origin\HEAD" />
+                                </Component>
+                                <Component Id="cmp6CE45F8DD62CE9C926E803D1B050E158" Guid="C0A0856D-AA3D-4BFA-B060-11BE3486A239">
+                                    <File Id="fil8B88A3EF470A1B7DD4C2E62AA7E4B3B6" KeyPath="yes" Source="SourceDir\.git\refs\remotes\origin\master" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                </Directory>
+                <Directory Id="dirA97289F985712145F03D9ADFF0CCDE9E" Name=".vagrant">
+                    <Directory Id="dir1D4CA4B1EAD810B2A0A8111DB7B801DD" Name="machines">
+                        <Directory Id="dirE2C2C4AA48CE028EC3529C20791C8C1B" Name="debhost">
+                            <Directory Id="dir9E1C05A008DE1BA75F1CAF742ECDA4FF" Name="virtualbox">
+                                <Component Id="cmpDDECDA950B42FA37EA04DE0810007624" Guid="3D082832-F7A6-466D-A672-1C4D5E3837F6">
+                                    <File Id="filCBC6FCB6A7C49783C0DEC3B191C6B847" KeyPath="yes" Source="SourceDir\.vagrant\machines\debhost\virtualbox\action_provision" />
+                                </Component>
+                                <Component Id="cmp81FCA50FA3D0A264C2ABCA2C1CB32EA6" Guid="F10B391A-4478-4761-992C-AB738CAC877B">
+                                    <File Id="filD8D691D9B2186C6271D2B13B643D7A5E" KeyPath="yes" Source="SourceDir\.vagrant\machines\debhost\virtualbox\action_set_name" />
+                                </Component>
+                                <Component Id="cmp1E4AC65D5CBE7DDB0FF718839A79140B" Guid="62C16196-E810-48F2-95A5-1A8BDBF989FD">
+                                    <File Id="fil8A0B1B8BE8DC2FA1F868D7C4F42F548A" KeyPath="yes" Source="SourceDir\.vagrant\machines\debhost\virtualbox\creator_uid" />
+                                </Component>
+                                <Component Id="cmpAC1322D3F1A5D528214A208C7E5DFE43" Guid="1EB3CBA5-0336-4416-A84A-BA101F2E59D6">
+                                    <File Id="filE522EE42E337B16F3289600A89BA0ED1" KeyPath="yes" Source="SourceDir\.vagrant\machines\debhost\virtualbox\id" />
+                                </Component>
+                                <Component Id="cmpF050063E5BEC9CB13F7EF5CED30C6C17" Guid="CCE6408D-5F66-41FB-B398-2899F073228D">
+                                    <File Id="filDD1F7DDE8B1C2AEC3C519D7D72DE9491" KeyPath="yes" Source="SourceDir\.vagrant\machines\debhost\virtualbox\index_uuid" />
+                                </Component>
+                                <Component Id="cmp666C427297CFA5EA54DF050FACAF0EBF" Guid="A798E1E4-127B-4708-A62B-B4E91AE8BB69">
+                                    <File Id="fil9844615FC5F81E57BDA0317D58EE1192" KeyPath="yes" Source="SourceDir\.vagrant\machines\debhost\virtualbox\private_key" />
+                                </Component>
+                                <Component Id="cmpE8269983A3B83DD0E84BAB99DACD17B2" Guid="D6AD682E-D57F-4406-B65E-C4EA91091746">
+                                    <File Id="fil54D547F14A948721ABC68DC08D142A96" KeyPath="yes" Source="SourceDir\.vagrant\machines\debhost\virtualbox\synced_folders" />
+                                </Component>
+                                <Component Id="cmp9BD1B4A1ECD8AA3D3F8E6B5F0C98425D" Guid="910F83CB-8EC7-41E7-ADC3-3A2E9C92DC42">
+                                    <File Id="fil43E63E5003FCE00385E74DE293BA9412" KeyPath="yes" Source="SourceDir\.vagrant\machines\debhost\virtualbox\vagrant_cwd" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                        <Directory Id="dirDF50FDB5038475A2CA4A4ADFD97F1659" Name="rpmhost">
+                            <Directory Id="dirDC2550D9554AF6D3F670FFFC28517B34" Name="virtualbox">
+                                <Component Id="cmp0FD502919C4C4EC97BA804B3264F1F58" Guid="B968EC41-24C7-40D8-8984-CC09887A322A">
+                                    <File Id="fil5D48B60C9870D613941A57A0BB7771DE" KeyPath="yes" Source="SourceDir\.vagrant\machines\rpmhost\virtualbox\action_provision" />
+                                </Component>
+                                <Component Id="cmp2894A1CBC672540B2A144E825EB23E2B" Guid="9E2257AB-703A-4CA9-977B-03A377777A9C">
+                                    <File Id="fil0647853D886BCFF23ABE37B4395A4D47" KeyPath="yes" Source="SourceDir\.vagrant\machines\rpmhost\virtualbox\action_set_name" />
+                                </Component>
+                                <Component Id="cmp3B7F6E49AEC1559A20328227271B0C56" Guid="185A7F7F-F711-4148-88AA-B6E587D35ECE">
+                                    <File Id="fil841F4F5A89B5B5BE20771CE5290E2211" KeyPath="yes" Source="SourceDir\.vagrant\machines\rpmhost\virtualbox\creator_uid" />
+                                </Component>
+                                <Component Id="cmp495232217E59EAED2214FF89F8CF12CB" Guid="2684265D-3664-4CF2-9A00-963D4865E586">
+                                    <File Id="fil534C91BB17B81300F8AA6A7F456A26F7" KeyPath="yes" Source="SourceDir\.vagrant\machines\rpmhost\virtualbox\id" />
+                                </Component>
+                                <Component Id="cmp966D24FE6F6C346229AAE5EE727C8BB7" Guid="9FAB4DC1-88BB-4205-84C9-D2F17079A1D8">
+                                    <File Id="filB4B017D9712BF0CF500E5863FDFC30DB" KeyPath="yes" Source="SourceDir\.vagrant\machines\rpmhost\virtualbox\index_uuid" />
+                                </Component>
+                                <Component Id="cmpC86FA01192B362D953661A7C079ADF13" Guid="19D08FE0-01F7-4B31-8481-FE474F2A766F">
+                                    <File Id="fil7502298F64F790987A701BBF24E94D0B" KeyPath="yes" Source="SourceDir\.vagrant\machines\rpmhost\virtualbox\private_key" />
+                                </Component>
+                                <Component Id="cmp01832F15AFB2427E1D37C6A7923E07AA" Guid="B5C125F1-3E84-4B1D-832C-A496F76C1A18">
+                                    <File Id="filF07D5E77BF164587F6BFBEF441117738" KeyPath="yes" Source="SourceDir\.vagrant\machines\rpmhost\virtualbox\synced_folders" />
+                                </Component>
+                                <Component Id="cmpAE62D2E041E482ECC71973D67FA12516" Guid="DCF7939C-D144-46FC-9294-8FFB19F5242C">
+                                    <File Id="fil9218C56EA5834EF595C5F798EC9B59A1" KeyPath="yes" Source="SourceDir\.vagrant\machines\rpmhost\virtualbox\vagrant_cwd" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                </Directory>
+                <Directory Id="dir18E2AC0A2C47BB58974CD5B80C6008BB" Name="build">
+                    <Component Id="cmp923FF43B3366A544C824F362774A6DF4" Guid="55FAAD3F-ACD2-4013-9F08-18890C603E19">
+                        <File Id="fil5D07254211C8C10531F383304EB5ED6F" KeyPath="yes" Source="SourceDir\build\build.bat" />
+                    </Component>
+                    <Component Id="cmpEA419A4DB53D04F377BF23ADA5CBC8B2" Guid="38B3F929-8453-4CFA-BEFC-452BC0BA131E">
+                        <File Id="fil0D4442B947333E08D824C47AA525993F" KeyPath="yes" Source="SourceDir\build\build.ps1" />
+                    </Component>
+                    <Component Id="cmpCFFC45462D21A31037DDB6DD31E05CA2" Guid="D1911EF0-C2F2-4653-8BB2-F6D7F8D5B0A2">
+                        <File Id="filD03C04E28ADAA789941314D2E5444EC5" KeyPath="yes" Source="SourceDir\build\build.sh" />
+                    </Component>
+                    <Component Id="cmp15E7531EC8F1075B8F7EB5FE44DB0A76" Guid="FCEC81DE-C4EA-4D38-B5F5-5CA9CA5EE1FF">
+                        <File Id="fil613B29B23B25BFAE38E1831A7EA98489" KeyPath="yes" Source="SourceDir\build\posix.make" />
+                    </Component>
+                    <Component Id="cmpE4B27C51D6A6F685BDF616E896C2420F" Guid="F6BCD6A6-C8F2-47D7-B9F8-F2A6BE1B0509">
+                        <File Id="filFECF97AE7DB4FA583C10728D244C6A9A" KeyPath="yes" Source="SourceDir\build\unittest.sh" />
+                    </Component>
+                </Directory>
+                <Directory Id="dirA358F6F8654153982074CA67267EC125" Name="documentation">
+                    <Component Id="cmp5535BA96C3CFE6739762F9F8480BBDB9" Guid="E824E4C0-31DB-4349-9BA0-B658F81BCC26">
+                        <File Id="filBB37514528576B4DF145CC2599294DEF" KeyPath="yes" Source="SourceDir\documentation\asn1-2.4.1.json" />
+                    </Component>
+                    <Component Id="cmp97CAB65223C696480B5541CE01D40AAF" Guid="3A58B8A7-C5DD-4FE5-8B8B-DE6864C0FC18">
+                        <File Id="fil66C1DAEFCDE1C79FDD739B3DE1F1AA7F" KeyPath="yes" Source="SourceDir\documentation\asn1.md" />
+                    </Component>
+                    <Component Id="cmpCB7A2996A6A75A3E29114D980D0E35FA" Guid="86E34424-A9FC-4842-B286-81AC11C0313A">
+                        <File Id="fil23E7EA621E7FB4E167FA8244246513D8" KeyPath="yes" Source="SourceDir\documentation\compliance.md" />
+                    </Component>
+                    <Component Id="cmp1EFEC676AC235897625245015B412708" Guid="2B87D29B-8413-4FD6-8344-E2CE8AFAB234">
+                        <File Id="fil691C55E978E384A9B4BA2948F147D224" KeyPath="yes" Source="SourceDir\documentation\concurrency.md" />
+                    </Component>
+                    <Component Id="cmp8EA5D642574D794DA80FD744A81A5CE0" Guid="38B3E809-82BA-4BA2-89A0-D45CF60E64BE">
+                        <File Id="fil87321CFAD9C4AC60FBD8B86A3D673A53" KeyPath="yes" Source="SourceDir\documentation\contributing.md" />
+                    </Component>
+                    <Component Id="cmpA67BDF60D8F6F65B3FA4705154B1263A" Guid="67D08BC6-3419-40E1-9EDB-ED7F21BC16B5">
+                        <File Id="fil6999E9DAFBB16EB39C5439FD2C116E89" KeyPath="yes" Source="SourceDir\documentation\credits.csv" />
+                    </Component>
+                    <Component Id="cmp118353F1E67E18C67A41031EA37EA021" Guid="6D4BF240-1106-4E10-A813-965A8EA220F5">
+                        <File Id="fil3A5E6EED66CA91AC3ABFC64324D34E4F" KeyPath="yes" Source="SourceDir\documentation\design.md" />
+                    </Component>
+                    <Component Id="cmp821E3BFD70DF930625E2BC963016E70B" Guid="5EB88B03-4B96-4BF2-ADEF-C782BDF601B5">
+                        <File Id="fil52C88DCECC6D3AA915C528034E820DE7" KeyPath="yes" Source="SourceDir\documentation\install.md" />
+                    </Component>
+                    <Component Id="cmp417CC6BF25A1215FD5829BD0701ED8AE" Guid="E79E0342-EE10-467F-BED9-44B236A7D73B">
+                        <File Id="filD7249BA6FAD1733853B6005A59A63FE3" KeyPath="yes" Source="SourceDir\documentation\library.md" />
+                    </Component>
+                    <Component Id="cmpA04FD4C00368062601A5912E63E78165" Guid="07C33ABD-9917-474A-8D2C-E98F8B85D41D">
+                        <File Id="filAF1A67CB74448F95081E46863C2B6192" KeyPath="yes" Source="SourceDir\documentation\mit.license" />
+                    </Component>
+                    <Component Id="cmp3F7010DE8F6FB48E3AB09DF2E714B5B6" Guid="596891DA-EB2F-40C9-88DC-DA6B2D8FF823">
+                        <File Id="filE2A3606EDF16986303DA5B3263DE55BD" KeyPath="yes" Source="SourceDir\documentation\releases.csv" />
+                    </Component>
+                    <Component Id="cmp95DC5847BA50EBC62AE4D1CFD85F11F7" Guid="035968A5-B7FC-4F10-A768-52680F63D7E6">
+                        <File Id="filBC5085E8592064EB36FAFDF54DA3BAFA" KeyPath="yes" Source="SourceDir\documentation\roadmap.md" />
+                    </Component>
+                    <Component Id="cmpC8592A3C8E29030AAB89CF0631451C73" Guid="2502EEDE-6862-4038-B65D-88CBA8EA936B">
+                        <File Id="filBC4A16EFD7AC6C76F72D23A1B589494D" KeyPath="yes" Source="SourceDir\documentation\security.md" />
+                    </Component>
+                    <Component Id="cmp8B2A69BC6F1B997CC0C66BA7B03F00E4" Guid="14FBACFF-2D5D-41EF-BEA9-62A6DDCFC052">
+                        <File Id="fil5323A8453ECAC4527254A2CB59514FB2" KeyPath="yes" Source="SourceDir\documentation\tools.md" />
+                    </Component>
+                    <Directory Id="dirE1D1F1BADF136FF3E0271A2E549DF0FF" Name="html">
+                        <Directory Id="dirF74548DD80598AA362E226A7BB3ACE8B" Name="source">
+                            <Directory Id="dir94F6BC3207579D60C6756F9E6252E286" Name="asn1">
+                                <Component Id="cmpD54473679CC38DF879F8EA02E5F5B6E1" Guid="26390459-7841-42A0-8227-4EF8CA9310A5">
+                                    <File Id="fil2D9FC1577AFC9DCCD7727C2D13AE69CF" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\codec.html" />
+                                </Component>
+                                <Component Id="cmp4E788EBD4F8D981F74783B7D4BE3124C" Guid="53AC2CD7-BE5D-4E4F-A0F3-D7107567548D">
+                                    <File Id="filFBC6EA086D5BFA487CE6A0B1393B368E" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\compiler.html" />
+                                </Component>
+                                <Component Id="cmpC7B7B45940FCDEE2E5D219EDCC6FA1F6" Guid="21BBAF2D-3E86-4EA2-98ED-0B77370FD1F3">
+                                    <File Id="filB85A9C581D23E38EBB6F64C2F45FD2F5" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\constants.html" />
+                                </Component>
+                                <Component Id="cmpEBC6E01AEAED1B2BB70C801C53EA0890" Guid="37606195-9DFF-4564-81D0-17EE9401D2DD">
+                                    <File Id="fil8F77C5235678CC5D0F8FBD1499071EAB" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\interfaces.html" />
+                                </Component>
+                                <Directory Id="dir6F1F565779F31C995BB00701DDDF847A" Name="codecs">
+                                    <Component Id="cmpD3C8B5395D6116785A909E371A2FDD24" Guid="8A5F1F4B-DBF8-4418-87AE-C7FFD88258C6">
+                                        <File Id="filF3F28B3F8EB603670EE759AB412D98EA" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\codecs\ber.html" />
+                                    </Component>
+                                    <Component Id="cmp151EA2FEE99712C55A4142DC26399044" Guid="CACF6502-BF43-475B-828C-24D91D738FC6">
+                                        <File Id="filB33BB2CC40BB43787CA6B655E2CFDB42" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\codecs\cer.html" />
+                                    </Component>
+                                    <Component Id="cmp877328806586164136B22C7AD0A8D348" Guid="DE57E8CB-3B67-4985-954B-00EADD698140">
+                                        <File Id="filB733F5F3668640F3400F16995E36D796" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\codecs\der.html" />
+                                    </Component>
+                                </Directory>
+                                <Directory Id="dirFDDBC8C73C6709DFB8F76F7EDA6AEA92" Name="types">
+                                    <Component Id="cmpFD234D66885C3CE00EEF8B21CD8C3949" Guid="A7C88123-2C5A-4953-B8C4-40AB98899A81">
+                                        <File Id="fil8640A62D57C05B97D8932E7E18AD16F4" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\types\alltypes.html" />
+                                    </Component>
+                                    <Component Id="cmp80C3422A943AE8F73D58B4E581E23DA0" Guid="BC55748E-8172-4D2F-9D8C-D1CF5073B832">
+                                        <File Id="fil88F9B411E646844C16F9B72738798E15" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\types\identification.html" />
+                                    </Component>
+                                    <Component Id="cmpA8816A91B95FEC19DB83F3C1B3C7F54C" Guid="D6A131B2-59F3-4200-816C-F3C771AF7C1C">
+                                        <File Id="fil00D2EECF21935BF70BBF84C721BBE185" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\types\oidtype.html" />
+                                    </Component>
+                                    <Directory Id="dir5038EB13F2F21F1C9F3092AD16A9F8FB" Name="universal">
+                                        <Component Id="cmp4A18B071915C444F56BB5306D03057E1" Guid="4258C643-4796-4BC3-ABB3-D8C644D4C54C">
+                                            <File Id="fil5C27B840F8620846D13F3F066AD59DD0" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\types\universal\characterstring.html" />
+                                        </Component>
+                                        <Component Id="cmp6B3C0EE7DBAB0DCF3D901BCD6A3249C9" Guid="1B225C22-6522-4C53-9041-27E9166B3217">
+                                            <File Id="filA4B96097A3362FD507E09BF9AFEBFB23" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\types\universal\embeddedpdv.html" />
+                                        </Component>
+                                        <Component Id="cmpDF8320F1912AF3C5AEFBDC98E6F5FA8E" Guid="9D391969-A431-42C2-B45B-68DD546B22E5">
+                                            <File Id="fil83067952E0E2005A21C123828A5F3998" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\types\universal\external.html" />
+                                        </Component>
+                                        <Component Id="cmp92E7B51E6B5A03B1C779AA7682855A07" Guid="D60AFB29-E2FC-497A-B564-DFA0DE948076">
+                                            <File Id="filFBE2707B3E2784EFD83C2B91918E7EE2" KeyPath="yes" Source="SourceDir\documentation\html\source\asn1\types\universal\objectidentifier.html" />
+                                        </Component>
+                                    </Directory>
+                                </Directory>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dirED35A5DCB80850919747D24DCD50A005" Name="links">
+                        <Component Id="cmpE676FA485650784035EC7851C8487811" Guid="C3554DCB-E433-4415-891B-CAA1C3A98673">
+                            <File Id="fil4A44A7A73A79E00304F4C12E4E054B40" KeyPath="yes" Source="SourceDir\documentation\links\asn1-playground.uri" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dir87E2B03DD5CB6147D80337FA58D7E2B7" Name="man">
+                        <Directory Id="dir762BB10DCEC3B361B892642AA108B311" Name="1">
+                            <Component Id="cmp745DB728CF18AAA4FC35F3C5C79D472E" Guid="25BA320A-CE91-4C84-A53D-3127371ACC65">
+                                <File Id="fil9D024775AB9FB9CE13BC615D3D674D13" KeyPath="yes" Source="SourceDir\documentation\man\1\decode-ber.1" />
+                            </Component>
+                            <Component Id="cmpCE6673A416D34E79A192A79AA81EC2B5" Guid="7DDD051E-365E-4618-B001-5B7F3184611B">
+                                <File Id="fil38A51D2B30A8C240D7AE9059097F8741" KeyPath="yes" Source="SourceDir\documentation\man\1\decode-cer.1" />
+                            </Component>
+                            <Component Id="cmpA34E1286A1E40C8BC3391D3CAAE97E04" Guid="AAE67604-C7D9-413C-9B35-2C81CD3D45CA">
+                                <File Id="filC92543C76654E36C92D3A8B2712EC66F" KeyPath="yes" Source="SourceDir\documentation\man\1\decode-der.1" />
+                            </Component>
+                            <Component Id="cmp5B35E6ADC790B7F3FBC7B4296F811B80" Guid="3918F28D-35EB-480D-B2C5-9C7BF3729C93">
+                                <File Id="fil5E789817127549832144C619C6BB5ACD" KeyPath="yes" Source="SourceDir\documentation\man\1\encode-ber.1" />
+                            </Component>
+                            <Component Id="cmp93B9692EFFDA0E0BF75FFC71622CB19A" Guid="84FB2949-D99C-4572-B910-86136D0CE1D9">
+                                <File Id="fil768580FC2AD7856531BE09C096E1363E" KeyPath="yes" Source="SourceDir\documentation\man\1\encode-cer.1" />
+                            </Component>
+                            <Component Id="cmp213AC514CC6151DB7D8FDF008FD00B7F" Guid="DF1E4585-7826-4680-BDB0-ACE3971D4F79">
+                                <File Id="filD4BAA298002C1CC20B17ABBF895FECE6" KeyPath="yes" Source="SourceDir\documentation\man\1\encode-der.1" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir8D8864775558DDDCA96B3214AD47681F" Name="miscellaneous">
+                        <Component Id="cmp958285B2B7EB8DB9A25F9174FC2698DC" Guid="CD4E40FF-7A26-476D-B0B7-7D2B61D1B815">
+                            <File Id="fil05AC7784DB69E86A82C65B5688605492" KeyPath="yes" Source="SourceDir\documentation\miscellaneous\CVE-2006-0645.patch" />
+                        </Component>
+                        <Component Id="cmp8766C4BEA9FB04CE4DEA753EDE5DF8D3" Guid="551C5BE1-C183-48C2-B0D1-1DBF341FE873">
+                            <File Id="filD1901418E14049C98D643E18E2CBFB21" KeyPath="yes" Source="SourceDir\documentation\miscellaneous\CVE-2006-2937.patch" />
+                        </Component>
+                        <Component Id="cmpAF987C3C55CE0B295FB6E199A9F26EF4" Guid="C65241CA-AECE-4F06-A960-8B0DE560B2AC">
+                            <File Id="fil0E3E88183CA3B2BD0883E590D3566887" KeyPath="yes" Source="SourceDir\documentation\miscellaneous\notes.md" />
+                        </Component>
+                    </Directory>
+                </Directory>
+                <Directory Id="dir6FA92039FF01182F20B93EB727D8F7F2" Name="output">
+                    <Directory Id="dir986B6D3A8AF863FE44FEF7A8EAFF1A0F" Name="executables">
+                        <Component Id="cmpC3BD696F48D3E8E0A77B5322E8AC1C58" Guid="C6DB41EE-EC02-410B-B4DD-FABA1E769CAF">
+                            <File Id="filD8BB34879FC670CD21021F9EF44E4642" KeyPath="yes" Source="SourceDir\output\executables\decode-ber.exe" />
+                        </Component>
+                        <Component Id="cmp79C5D7F276297F09B49988257065B6B0" Guid="9953EA39-097F-4D5B-8662-5D2E0F18C5E9">
+                            <File Id="fil64DF37AE0F8C4DA7257185F01428FB6D" KeyPath="yes" Source="SourceDir\output\executables\decode-cer.exe" />
+                        </Component>
+                        <Component Id="cmp0DF41AA68B68941DF45B6C5C4E862BAD" Guid="51F34DA6-CDF9-46F9-8BE9-01D31B7DCF57">
+                            <File Id="filA3A18F01415BD250476E05103FB8C62F" KeyPath="yes" Source="SourceDir\output\executables\decode-der.exe" />
+                        </Component>
+                        <Component Id="cmpAAA843B3EA1E2E21B52C0E7E21A2CD67" Guid="919AF700-B55F-4649-8C36-2A9B39EA0B90">
+                            <File Id="fil5D1FB0E4842CED7AA071233B852B6432" KeyPath="yes" Source="SourceDir\output\executables\encode-ber.exe" />
+                        </Component>
+                        <Component Id="cmpDBA65E8245E73FF38DAEE76EA3B7C8ED" Guid="1360FAD8-EF03-43B1-9867-B7BD84728A4B">
+                            <File Id="fil389EDAB82D605CC448C0F9C26DC44387" KeyPath="yes" Source="SourceDir\output\executables\encode-cer.exe" />
+                        </Component>
+                        <Component Id="cmpE4A6AED58751078CC24D4541718563FD" Guid="18A79164-A46D-40CC-B5F8-90410ADAE8CC">
+                            <File Id="fil654F11D7690B6D31678234790322BC8D" KeyPath="yes" Source="SourceDir\output\executables\encode-der.exe" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dir15D60F09A4C7C3B1B068FA041F89546A" Name="interfaces">
+                        <Directory Id="dirD1DACE2CF3433480E4216924028A9DB0" Name="source">
+                            <Directory Id="dir6967493E84DCA1F6ECF753F26555EDEA" Name="asn1">
+                                <Component Id="cmp092052F4B927BF29F5AD100EA73A2641" Guid="8EF8979F-D8EE-4E9D-B7CA-C7184C973FAD">
+                                    <File Id="filE916D11A1B1ECBCD591D88C0C1C15A87" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\codec.di" />
+                                </Component>
+                                <Component Id="cmp4F061E8E6FE044D5C0523954747F38D1" Guid="2E2FBDED-1EF0-42E6-9E26-F301780C92F3">
+                                    <File Id="filEA5FFE559045C6F0F48A7B95B56EFF39" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\compiler.di" />
+                                </Component>
+                                <Component Id="cmp9F0AE9892D09AEBB3E0987D3B29A18A1" Guid="70566752-9E90-4978-9B17-2D2F272D7E1B">
+                                    <File Id="fil00FAA786D4CC0595F29FB97D4491F8EA" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\constants.di" />
+                                </Component>
+                                <Component Id="cmpB1BDA7AB2D1EBACF842E140AF2328633" Guid="7BB11B3E-6088-4386-BA5A-13D284330C51">
+                                    <File Id="fil1ED2E52FDB1910126A63F941234B74AC" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\interfaces.di" />
+                                </Component>
+                                <Directory Id="dirC3F30A0F148FF219BBEC01EDAE11D873" Name="codecs">
+                                    <Component Id="cmp0DC2393009E0BF1B9A2E88B00C95C086" Guid="C060BA5F-F29B-4B59-A266-A0A7591C9C6D">
+                                        <File Id="filDE3543FA1CC52C74F16FE81854A18754" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\codecs\ber.di" />
+                                    </Component>
+                                    <Component Id="cmp5E73C3A82C7F94ACF4F8AB26D058167D" Guid="7A4EFE3B-0216-4376-B5C7-6870B90C5D82">
+                                        <File Id="filCB4E18CB1F18393424084693FEE73090" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\codecs\cer.di" />
+                                    </Component>
+                                    <Component Id="cmp829BCE87D712A1C06EF7495C9F132E7A" Guid="EDB25ED4-E95A-45B9-9CAB-5DD88EEA6045">
+                                        <File Id="fil95AE4E9606B98B349EEB9AA2552FD08B" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\codecs\der.di" />
+                                    </Component>
+                                </Directory>
+                                <Directory Id="dirE02B8FEE54607B42800330A46DEDA56C" Name="types">
+                                    <Component Id="cmp3361F818470C3D85F4949DE48972BAAC" Guid="190057D8-49F0-4FDC-B2DF-81A3C18E72CA">
+                                        <File Id="filA3A5CE3117671F30C8B53D120890A946" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\types\alltypes.di" />
+                                    </Component>
+                                    <Component Id="cmp9A2892D9F5CA69B4C6EA51211380AC8B" Guid="60A3B068-9C66-4F3B-81FD-0DB2B87CB35D">
+                                        <File Id="filD091E0F3CE67B73E9A6AD37E40B5D323" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\types\identification.di" />
+                                    </Component>
+                                    <Component Id="cmp2F2454372B3C5848BD896F18C988601E" Guid="663489F4-73FC-420D-B27F-B222BC74B7ED">
+                                        <File Id="filC5B89424CBAB8B28A1AD8EA3775820C8" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\types\oidtype.di" />
+                                    </Component>
+                                    <Directory Id="dir701549AD4E7624499F27C84FBD45532A" Name="universal">
+                                        <Component Id="cmp6ED8A8D5758B490E3223282C0B095759" Guid="60970696-F8B7-4AA3-983B-8C1734EC22E6">
+                                            <File Id="fil6998D4014598BE8FD34F98B04C7FBBA7" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\types\universal\characterstring.di" />
+                                        </Component>
+                                        <Component Id="cmp221E5AD78582E21683D88A0112C658C3" Guid="EA4E33E1-533B-4CCF-BE7B-EEE91F996121">
+                                            <File Id="filE188F3247676A1BE3DFBD50FF7E5AAF4" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\types\universal\embeddedpdv.di" />
+                                        </Component>
+                                        <Component Id="cmp8DF00DCACBE6684466F291CDB5C3F715" Guid="6AB6275E-DD6B-4828-BFCD-745CB5C27E86">
+                                            <File Id="fil6E3563D406EE58A04FAF1317290DFFD8" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\types\universal\external.di" />
+                                        </Component>
+                                        <Component Id="cmp474CB0182AA84B33C3D33D578B7D7B10" Guid="67EB90DB-85DB-4F43-BB12-31B83C06A266">
+                                            <File Id="filF2868A56EBEEB66C0ECDCC9E0670B645" KeyPath="yes" Source="SourceDir\output\interfaces\source\asn1\types\universal\objectidentifier.di" />
+                                        </Component>
+                                    </Directory>
+                                </Directory>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir4D5106C7C1A4808A4AEDC8AFF86A8318" Name="libraries">
+                        <Component Id="cmp475C7F8E290A926A87DFB939A91F414A" Guid="1922CF19-B6EB-40AD-93E8-0A84D0A3E21A">
+                            <File Id="fil2092667FD3FBF01118A932A08CC6D099" KeyPath="yes" Source="SourceDir\output\libraries\asn1-2.4.1.a" />
+                        </Component>
+                        <Component Id="cmp38C9A30E0904F0AC60F6197ED071B5CE" Guid="A6055121-1733-4542-A39E-667DAA53A145">
+                            <File Id="filA9CA1D20599D6F6AC0A2151AD7F5E6A3" KeyPath="yes" Source="SourceDir\output\libraries\asn1-2.4.1.dll" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dirA6F4E756566F675F58CE195D3736C018" Name="objects">
+                        <Component Id="cmp5C7448CB8A57FA67B4F073CB17A63788" Guid="D5435454-591B-4D93-88D7-99B0C3C9C37C">
+                            <File Id="fil7C16AB488E525CBC4079899DCB26715D" KeyPath="yes" Source="SourceDir\output\objects\decode-ber.obj" />
+                        </Component>
+                        <Component Id="cmp20EBD6E6E823DFCDD68D7DB88863BCE3" Guid="C41ADC13-1221-4B04-9300-DA44266FE55C">
+                            <File Id="fil6008798689DDA40BBE475F8718881749" KeyPath="yes" Source="SourceDir\output\objects\decode-cer.obj" />
+                        </Component>
+                        <Component Id="cmpBD8D1A08581F2E304ADF42974707E841" Guid="17E9D2A3-1D7A-4829-AF71-86A69382D9DE">
+                            <File Id="filD0DDC3C9AEDFD04015C181B5217F1166" KeyPath="yes" Source="SourceDir\output\objects\decode-der.obj" />
+                        </Component>
+                        <Component Id="cmp0666B00CC02DBB2E07E93BADDF910449" Guid="6D40D401-08D4-41AA-929C-0A8A021F39AF">
+                            <File Id="fil17EAABDC4C554BEAE933FC96139EB95E" KeyPath="yes" Source="SourceDir\output\objects\encode-ber.obj" />
+                        </Component>
+                        <Component Id="cmpA4DF14115536CE1C3FA10B147C769B68" Guid="7394C717-4CB5-4205-B1E2-4ABDE37834A2">
+                            <File Id="fil12560C76DDA2E8F9A64F457B9CBF78D6" KeyPath="yes" Source="SourceDir\output\objects\encode-cer.obj" />
+                        </Component>
+                        <Component Id="cmp98E4C70C76368A4A71279955F773EF49" Guid="29C268ED-F9D1-4646-B9A2-10D6827E39C8">
+                            <File Id="fil65FE9CB3C17F893FAEBBD6D50438A726" KeyPath="yes" Source="SourceDir\output\objects\encode-der.obj" />
+                        </Component>
+                    </Directory>
+                </Directory>
+                <Directory Id="dirB79CFAD274B0358C4FD07709A13B1993" Name="package">
+                    <Component Id="cmp073499ADF96C07922286BCA6E37FE525" Guid="B5517219-C561-4474-983D-E8059290F62A">
+                        <File Id="filC113E353A65473731B7F6CA16E37D9E1" KeyPath="yes" Source="SourceDir\package\mac.app.sh" />
+                    </Component>
+                    <Directory Id="dirAD2B4B36651CC56583A6879C7067132D" Name="ASN.1 Tools.app">
+                        <Component Id="cmp195D37525A2FDD241D76FDA060F75F20" Guid="C91B13B3-13FB-4527-9C8D-51EDA9CB6342">
+                            <File Id="fil4D046A8BD4E2C02EC6080CB92963CCFF" KeyPath="yes" Source="SourceDir\package\ASN.1 Tools.app\Icon512.png" />
+                        </Component>
+                        <Component Id="cmpB1643C669B19012E7E2BB08D8BCFD5E0" Guid="FC4CA6F3-8DDB-43C9-9FED-3F1EB72225A6">
+                            <File Id="filADB7186D069922568C952DA390578FFF" KeyPath="yes" Source="SourceDir\package\ASN.1 Tools.app\iconset.sh" />
+                        </Component>
+                        <Directory Id="dir226331B48F3E61DC397C3F706F7C3C49" Name="Contents">
+                            <Component Id="cmp7C91B3E4E340D2B4713EB1494884D68D" Guid="6DD993CD-7633-486B-B63D-EDF238D4FE9B">
+                                <File Id="filD4EEC778A8A7CC7C769A0143444B2425" KeyPath="yes" Source="SourceDir\package\ASN.1 Tools.app\Contents\Info.plist" />
+                            </Component>
+                            <Directory Id="dir02BFF7715CC21E1785DD24504A756827" Name="Resources">
+                                <Component Id="cmp37C695FBECCA74C182D9B9C22DE3A5AD" Guid="2D98EFAE-24D9-482B-AFA3-B1C9A11EB691">
+                                    <File Id="fil2011F882D9563E0C50C844AFD41E4E7C" KeyPath="yes" Source="SourceDir\package\ASN.1 Tools.app\Contents\Resources\ASN.1-Tools.icns" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir36C0729F541065CDE93233432E6F5F97" Name="brew">
+                        <Component Id="cmpAF69BC7F3764ED3AE27A50FA77908647" Guid="083425F3-306D-4AF7-B56F-BE44B20BD9DD">
+                            <File Id="fil06F6F272864D3F5A06AF83ED2E264BB1" KeyPath="yes" Source="SourceDir\package\brew\asn1-d.rb" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dir49C58E60C0C75FCA5E00D4EA4A4B9545" Name="deb">
+                        <Component Id="cmp78697DB44BEE42B7B6A5820263465C0B" Guid="6C7DBA29-CAB3-4D22-A300-A739ABCE25FB">
+                            <File Id="fil149A9808354FC38C4BD9B6292248B9E0" KeyPath="yes" Source="SourceDir\package\deb\gpg.script" />
+                        </Component>
+                        <Component Id="cmp7510CAC219FDE0CA88A83AD014640681" Guid="EFC7BE7F-EC76-4E6C-87C7-FFB65BDEF058">
+                            <File Id="filCB5FEDD09303905BC4C7DF95CAE70EF1" KeyPath="yes" Source="SourceDir\package\deb\makeswap.sh" />
+                        </Component>
+                        <Directory Id="dir5B7F9E2491BB18603EBC8F5CB022307C" Name="debian">
+                            <Component Id="cmp1DE4A7BFE364C47997D3B10DD1042E94" Guid="14731B00-B704-47D6-B95F-6362AFA44443">
+                                <File Id="filFFBEC3754789677046B6647DAC60C77C" KeyPath="yes" Source="SourceDir\package\deb\debian\asn1-docs.docs" />
+                            </Component>
+                            <Component Id="cmp644AFFC569C12CBF2B5334F7C7123F45" Guid="2325156D-7025-421E-9541-A450D52BB17A">
+                                <File Id="filD54ED6536DE383B2C72DF02D1978CA04" KeyPath="yes" Source="SourceDir\package\deb\debian\asn1.install" />
+                            </Component>
+                            <Component Id="cmp08D4DBDE0F86B63C53D2E69D3258F233" Guid="B52C7155-BCB1-496C-8630-AF352E69DE55">
+                                <File Id="filC10740B08D52872779D0375D54339B88" KeyPath="yes" Source="SourceDir\package\deb\debian\asn1.manpages" />
+                            </Component>
+                            <Component Id="cmpDA02E1DD30FD5E5301270CAF248DD1E1" Guid="E358BCE0-F6BD-47F4-8523-6CC636C1F731">
+                                <File Id="fil490C75A086A9602B3DFF0583446ED17F" KeyPath="yes" Source="SourceDir\package\deb\debian\changelog" />
+                            </Component>
+                            <Component Id="cmpA0E5F9BD5C9CC3B869F55DEA33CCFB75" Guid="B12E5510-F026-48B9-9F38-F5D491C76315">
+                                <File Id="filC32F9AD36EBD6C447470592CF29FB47B" KeyPath="yes" Source="SourceDir\package\deb\debian\control" />
+                            </Component>
+                            <Component Id="cmp9FCE4967C6C9B82041B87DD45C7CA976" Guid="AE49C4DD-9F25-4356-AC06-20E8D3ED88A8">
+                                <File Id="fil2FC2A9F7ACB12C4133F9A21411779AB5" KeyPath="yes" Source="SourceDir\package\deb\debian\copyright" />
+                            </Component>
+                            <Component Id="cmp8E8ADC1E416F795EF03ECA95F59FDB64" Guid="24B9E4B3-51BE-4730-89A1-DD56EB2563F4">
+                                <File Id="fil7B2C89D312A9B70952292B13DBB607A1" KeyPath="yes" Source="SourceDir\package\deb\debian\docs" />
+                            </Component>
+                            <Component Id="cmpAC5A196B06788F0B37C1A229452CACD5" Guid="799D7D79-6796-47FC-9EE8-12536A838EA9">
+                                <File Id="filD992B5CB29EB8498C9FCEB7BC66D6F31" KeyPath="yes" Source="SourceDir\package\deb\debian\rules" />
+                            </Component>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dir269F46B88EC3EB0AC2074CF664D2A39D" Name="msi">
+                        <Component Id="cmpE7638837B738FF7CAE25500283CED23C" Guid="0A39F331-F080-4D7F-A7A7-DFA6BBC83175">
+                            <File Id="fil8B9EAED49420E6B9773DC52EB54AF899" KeyPath="yes" Source="SourceDir\package\msi\asn1.cab" />
+                        </Component>
+                        <Component Id="cmp2214BF6D02FB4378AA930DF13CC75987" Guid="3657D0EF-A2E2-4F77-9030-5E7B58DFFDEE">
+                            <File Id="fil5EC709B66AAE2272D1AB1FC5E9DB1452" KeyPath="yes" Source="SourceDir\package\msi\asn1.wixobj" />
+                        </Component>
+                        <Component Id="cmpF6FFECE5BC5E99DC5E1C6D9B076F4B66" Guid="5432DBE2-0BCC-4121-998C-B1DCA7943A72">
+                            <File Id="fil65C765CDEF87568085D5C3D26FAB6CC7" KeyPath="yes" Source="SourceDir\package\msi\asn1.wxs" />
+                        </Component>
+                        <Component Id="cmp352E68FB262B98159C4B8687C8735D60" Guid="B53CF217-21E0-4254-93F8-FD49AE6C2F47">
+                            <File Id="fil982AAF86C7A7E896D1B989BEB796DD5D" KeyPath="yes" Source="SourceDir\package\msi\buildmsi.bat" />
+                        </Component>
+                        <Component Id="cmp9EDFF63403E21048C68555E063D4E90D" Guid="23E5EBD1-FDF1-4A4A-BA4B-16B37B6F9BD2">
+                            <File Id="fil01C784DFF45B17EFFE5AD5D456632442" KeyPath="yes" Source="SourceDir\package\msi\cab.ddf" />
+                        </Component>
+                        <Component Id="cmp86FF589232D4A361828DF0D0C58CDA26" Guid="5ED109D3-CEB8-4351-B3EE-391D74DE1546">
+                            <File Id="fil1A1FC35D2D6EE64E537662F63876DEBD" KeyPath="yes" Source="SourceDir\package\msi\license.rtf" />
+                        </Component>
+                        <Component Id="cmp6C43291B050154CB0FB8CEA773D29057" Guid="9297E3AF-340B-4C92-BFDB-157A645FC630">
+                            <File Id="fil5F3A6B9B0C2F063B07C570384FDF9D01" KeyPath="yes" Source="SourceDir\package\msi\makecab.bat" />
+                        </Component>
+                        <Component Id="cmpB07CA0D5FB82B3B25E64315BD13C419A" Guid="CCD453B8-462A-4A1D-B261-56912365DF07">
+                            <File Id="fil6E07AB445817D2665C7C2BBBCE12B806" KeyPath="yes" Source="SourceDir\package\msi\makewxs.bat" />
+                        </Component>
+                        <Component Id="cmp4841880977D6F8FF1AABAA988380199E" Guid="89A8B9DD-8EEA-4CD3-98C3-89ACBCF33500">
+                            <File Id="filF45A899CA00EA79CE1680D75664DEDF8" KeyPath="yes" Source="SourceDir\package\msi\setup.inf" />
+                        </Component>
+                        <Component Id="cmp6D7D12CBD8BE7E1E23369C6C75EEE1F7" Guid="33645B53-AF12-4E7C-AF1B-79169073A56B">
+                            <File Id="fil15E5B6CA957A91FE9D11A2808C0F19A4" KeyPath="yes" Source="SourceDir\package\msi\setup.rpt" />
+                        </Component>
+                    </Directory>
+                </Directory>
+                <Directory Id="dir6ABB743A5919C33D59D02A99DA6B72B1" Name="source">
+                    <Component Id="cmp3D550CA0C80DB275346D60B23B8DDFEF" Guid="65C2939C-FCDF-4504-8191-77BA3F5E297C">
+                        <File Id="filE199D6B9E4AA0C66D4E56EBF696B55B6" KeyPath="yes" Source="SourceDir\source\BUILD" />
+                    </Component>
+                    <Component Id="cmp238D545E1AE286457B40A469B4E6160D" Guid="68257A9D-449D-4006-9134-CE5E7399B760">
+                        <File Id="fil99A122F67E03E38662CB3E9939D6FFB5" KeyPath="yes" Source="SourceDir\source\macros.ddoc" />
+                    </Component>
+                    <Directory Id="dir957FC26FC936799D2727145371E24361" Name="asn1">
+                        <Component Id="cmp112EC621DD3DD0629E8DAFF85E342F62" Guid="1A1AA815-2EE8-4945-A256-9862B4F42CC9">
+                            <File Id="filF2C6DF13FED240F36692757FA498DB7E" KeyPath="yes" Source="SourceDir\source\asn1\codec.d" />
+                        </Component>
+                        <Component Id="cmp061BDC51E45236AEBE07C6676962C7D0" Guid="BF8573AF-952B-46D9-B9B3-2E077976C537">
+                            <File Id="filC67EFE1FDCC3BA5567672564F8E5B8AD" KeyPath="yes" Source="SourceDir\source\asn1\compiler.d" />
+                        </Component>
+                        <Component Id="cmp66311B79CDA2586AADA8E33513BB2B23" Guid="117CD5D2-4910-4913-96DF-FB3FEDCDAF0E">
+                            <File Id="fil6C35BF9BE05A749AF0712B3A086C2C2F" KeyPath="yes" Source="SourceDir\source\asn1\constants.d" />
+                        </Component>
+                        <Component Id="cmpF33971CE747A7E484CEEFC2365551171" Guid="779C4E58-C677-45D7-844D-1949F8185FF6">
+                            <File Id="fil598475588EC0C69FB74AF3FFAD038FCD" KeyPath="yes" Source="SourceDir\source\asn1\interfaces.d" />
+                        </Component>
+                        <Directory Id="dirE341ED45C8D75CB0FF94811FE4517722" Name="codecs">
+                            <Component Id="cmp707142CCE7EBE81764039D46B2F6D3F9" Guid="4390A5C1-5CE5-4F13-929D-5E206927F618">
+                                <File Id="filEC2D7E9EFC340DB29B18714382C3DE92" KeyPath="yes" Source="SourceDir\source\asn1\codecs\ber.d" />
+                            </Component>
+                            <Component Id="cmpA367B0AE01A9DDE0476C7E683E57A472" Guid="F191A278-C790-4551-960B-F4DA5A1F9BE2">
+                                <File Id="fil64C29DF7DC54E9386F596ABB3BD1DEEC" KeyPath="yes" Source="SourceDir\source\asn1\codecs\cer.d" />
+                            </Component>
+                            <Component Id="cmp10220FC96AE87F63F9D5DD9248A22551" Guid="9FE60229-8172-4E11-8A6D-F0C9011073E5">
+                                <File Id="filF36B7E636D53523B9CA756B102BAA30E" KeyPath="yes" Source="SourceDir\source\asn1\codecs\der.d" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir26A32E7A78B070E95757593677D7503E" Name="types">
+                            <Component Id="cmpEF5BD196AFDB7B5117AEB78BC26A74E0" Guid="FECCF9ED-4790-4D34-BF03-CF6B74481179">
+                                <File Id="fil7EBBA0DC95633EBE38D7FFAAE4F1A285" KeyPath="yes" Source="SourceDir\source\asn1\types\alltypes.d" />
+                            </Component>
+                            <Component Id="cmpF9D3EB13378525A19AC5D95F50F83BD1" Guid="FD861C51-EBFF-4B48-94B3-E817DF510585">
+                                <File Id="fil7EB1504D3390E38163F9DCDA1D220768" KeyPath="yes" Source="SourceDir\source\asn1\types\identification.d" />
+                            </Component>
+                            <Component Id="cmp39BEC4C18282E4B72593FB3FC610F828" Guid="A9DD66D6-8F52-4A42-A22D-EE2995C761B7">
+                                <File Id="fil8EB94EAF7D809F38F3B96ACF6C215470" KeyPath="yes" Source="SourceDir\source\asn1\types\oidtype.d" />
+                            </Component>
+                            <Directory Id="dir501F1AC11161918546643C6F58D79C9F" Name="universal">
+                                <Component Id="cmpF8C8139298C66D01AD22FDC234D08C6E" Guid="8854164F-1F6C-4F2B-8FAB-EA344D5B035F">
+                                    <File Id="fil5C8CEACCC023C29CB9472084EB63A46D" KeyPath="yes" Source="SourceDir\source\asn1\types\universal\characterstring.d" />
+                                </Component>
+                                <Component Id="cmp6B77A96EC2F04AECB07368297B1BAF9E" Guid="1EE5A08D-4CB0-438B-80BD-3167779AD803">
+                                    <File Id="fil83370922AF4FC67AB591801E3AF1728E" KeyPath="yes" Source="SourceDir\source\asn1\types\universal\embeddedpdv.d" />
+                                </Component>
+                                <Component Id="cmp1AA785B46FBA9BA21FD2827135DED2EE" Guid="4B9AE9A1-5BF8-481A-8913-DFE470FA1EB6">
+                                    <File Id="filFDF0809AEC0FA66015514D72D06D9C64" KeyPath="yes" Source="SourceDir\source\asn1\types\universal\external.d" />
+                                </Component>
+                                <Component Id="cmp518222958A0033CA8108A5024E219326" Guid="64C8BC97-B9F9-4143-9DD4-8B6E40E91C47">
+                                    <File Id="fil7714F16B156CABFBD02F2B809CC64C0E" KeyPath="yes" Source="SourceDir\source\asn1\types\universal\objectidentifier.d" />
+                                </Component>
+                            </Directory>
+                        </Directory>
+                    </Directory>
+                    <Directory Id="dirF64864FE972FEE71D1C304929085D779" Name="tools">
+                        <Component Id="cmp0B5687C1A68F4350745AE3E3C212E89D" Guid="E6197AAA-A67E-4F8E-B4F9-E66478D761BF">
+                            <File Id="filC5B714AD5202BD00A6D24D61CA9E182D" KeyPath="yes" Source="SourceDir\source\tools\decoder_mixin.d" />
+                        </Component>
+                        <Component Id="cmpD3B14FD91C617D89966C425B50D30815" Guid="83E3A6BE-CF4D-49EB-9A24-AD29D22A613F">
+                            <File Id="filB291CBA635B860FF296E4DD7BC957761" KeyPath="yes" Source="SourceDir\source\tools\decode_ber.d" />
+                        </Component>
+                        <Component Id="cmpD2F67D436F4FE445F18C2F5BBF41C5ED" Guid="6A6FA042-2948-4778-AEBC-A01D47D92986">
+                            <File Id="fil24A0EE983151751362FE4E1808E43853" KeyPath="yes" Source="SourceDir\source\tools\decode_cer.d" />
+                        </Component>
+                        <Component Id="cmp306B1EC6301CF5459D133A690DF74B3A" Guid="121D5220-5658-4728-94B5-C72E962E4D1E">
+                            <File Id="fil520BED007D06BF4D7489B463F963F886" KeyPath="yes" Source="SourceDir\source\tools\decode_der.d" />
+                        </Component>
+                        <Component Id="cmp97E05058A6F8600B3AD8B1731747A89D" Guid="C7BEE79D-8D95-47F8-B176-13992635F9A2">
+                            <File Id="fil3E21090D3B6B951832E0CAE2A7406120" KeyPath="yes" Source="SourceDir\source\tools\encoder_mixin.d" />
+                        </Component>
+                        <Component Id="cmpFEBDE37A93833573FFD92BF8C37E14E8" Guid="BC62B34D-BCA5-4A6F-837D-F9E46363A767">
+                            <File Id="fil76895FD5E670BEC099FC50521FA99529" KeyPath="yes" Source="SourceDir\source\tools\encode_ber.d" />
+                        </Component>
+                        <Component Id="cmpC1F78CE1B6325D3D3201EA8FC1431864" Guid="5C7FFD7D-E59B-40C2-BE65-CBF29042C027">
+                            <File Id="fil14007E4F1E931AB79D85EB42525AF19C" KeyPath="yes" Source="SourceDir\source\tools\encode_cer.d" />
+                        </Component>
+                        <Component Id="cmpD258719DCC1281FAA875C41E839AE61F" Guid="01C4C547-6F90-4C2E-9A51-EDD4C29302E4">
+                            <File Id="fil2BA930948B8DF3246DC58A83BC772956" KeyPath="yes" Source="SourceDir\source\tools\encode_der.d" />
+                        </Component>
+                    </Directory>
+                </Directory>
+                <Directory Id="dir5E94ABC7FE30EE914B62B7362950AB1D" Name="test">
+                    <Component Id="cmpDE90FF68DA4BA2BAB0C8B0FD821F1992" Guid="0E92430D-DD88-457A-91E0-7ECCF92AC057">
+                        <File Id="filC896AAF94CF6519FC13400F128C32467" KeyPath="yes" Source="SourceDir\test\handshake.d" />
+                    </Component>
+                    <Component Id="cmpF378748D2D09BEB48C0ADEC9323AA79E" Guid="961D4D42-795C-4D74-ACF0-DD030BE63144">
+                        <File Id="fil7E456E0466F22057E51DABEFA18CA086" KeyPath="yes" Source="SourceDir\test\pyasn1comparison.py" />
+                    </Component>
+                    <Directory Id="dir299C2309B336340EDFA061691638A017" Name="data">
+                        <Component Id="cmpDB2819905E6865232913543FF15220A6" Guid="46CCD5B6-4258-4571-805B-5C8050779AD6">
+                            <File Id="filE474868CD2F2F3843AFA1E60833A5FA8" KeyPath="yes" Source="SourceDir\test\data\bad-cms.der" />
+                        </Component>
+                        <Component Id="cmp2FC5833469681D3DF8E67BB240FB4ACF" Guid="E3F23AA8-F2EA-4D82-88ED-66154848A405">
+                            <File Id="fil0ABC4568E4D8C02E56789861D83735C6" KeyPath="yes" Source="SourceDir\test\data\cert.hexdump.txt" />
+                        </Component>
+                        <Component Id="cmp53BCFB95ED2891F97D9693AF635050AE" Guid="7078456D-67EE-4BBF-8A6D-BF14C3E83302">
+                            <File Id="fil61A8605878BE3CF5D952A693D9BEAFB8" KeyPath="yes" Source="SourceDir\test\data\jonathan@wilbur.space.cert.der" />
+                        </Component>
+                        <Component Id="cmpB0F67153E4ED1CE86C2D0F15924E6B2E" Guid="1EC41959-C289-476F-9790-0CC336ACAFDA">
+                            <File Id="filF1E2B7D2D7C9B4F4DB8593B2389FB7B1" KeyPath="yes" Source="SourceDir\test\data\jonathan@wilbur.space.cert.txt" />
+                        </Component>
+                        <Component Id="cmpF1CBA85CD68F1BE4FE11AF8D3FC671C7" Guid="29A138DB-BD55-4064-AB46-6A6F18EB1D94">
+                            <File Id="fil441AA3903D652D8C4F873B1B2F7013DD" KeyPath="yes" Source="SourceDir\test\data\openssl.rsa.key.der" />
+                        </Component>
+                        <Component Id="cmpB8A88794B6F7D4E4E42AD7436D3A5EA2" Guid="88DF8B19-E645-4EDF-A4FD-1EABFB8EF48A">
+                            <File Id="fil076A3D149382A2C1EA24F4D68325EEF6" KeyPath="yes" Source="SourceDir\test\data\p772-transfer-success.pcap" />
+                        </Component>
+                        <Component Id="cmpEC79867063A241C6BFC9726A0BC1A658" Guid="B9B86A82-3EBD-4E9E-82D4-73E013391665">
+                            <File Id="fil01F0AB63E3114E1EA6DE8BFB241930C5" KeyPath="yes" Source="SourceDir\test\data\x400-ping-refuse.pcap" />
+                        </Component>
+                        <Component Id="cmpBFFD6735FD094291F9E99B8C1294B3EC" Guid="4FC32B9C-BD35-4D12-A36C-64217B09806D">
+                            <File Id="filE46F01E4FC634A7FD3FCC2C41FAB3FC5" KeyPath="yes" Source="SourceDir\test\data\x400-ping-success.pcap" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dirB68587D7736D934DAF483C4CD07098C7" Name="fuzz">
+                        <Component Id="cmp2706CEC8127515A030E0E36D3CDD4C94" Guid="311B5823-C2FE-4700-9B49-A8A99680C9C9">
+                            <File Id="fil5F0E3FC942CE0A38CD8D8C6722E4BC19" KeyPath="yes" Source="SourceDir\test\fuzz\fourbytes.d" />
+                        </Component>
+                        <Component Id="cmp026EBE9789A0AE289A740AC44F4B4758" Guid="451EA470-0571-4098-B74D-C287650765BA">
+                            <File Id="filCDC7EC6E204A7E5EEDBA2FD61580BEC6" KeyPath="yes" Source="SourceDir\test\fuzz\threebytes.d" />
+                        </Component>
+                        <Component Id="cmpD07242F6136D2ACE6856AB360208A147" Guid="553C26C4-C148-4100-9451-926137F0AA28">
+                            <File Id="fil8CEF9D3575CB33B06FA81AA019203B52" KeyPath="yes" Source="SourceDir\test\fuzz\twobytes.d" />
+                        </Component>
+                    </Directory>
+                </Directory>
+            </Directory>
+        </Directory>
+        <Feature Id="ProductFeature" Level="1" Title="PUT-FEATURE-TITLE-HERE" />
+        <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
+    </Product>
+</Wix>

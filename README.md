@@ -3,7 +3,7 @@
 * Author: [Jonathan M. Wilbur](https://jonathan.wilbur.space) <[jonathan@wilbur.space](mailto:jonathan@wilbur.space)>
 * Copyright Year: 2018
 * License: [MIT License](https://mit-license.org/)
-* Version: [2.4.1](https://semver.org/)
+* Version: _See `version` file or git tags._
 
 ## What is ASN.1?
 
@@ -145,6 +145,8 @@ Version 1.0.0 was released on January 12th, 2018. For a list of all past
 releases, see `documentation/releases.csv`. For the plans for future releases,
 see `documentation/roadmap.md`. If you would like to contribute (and please do),
 please see `documentation/contributing.md`.
+
+This library uses [Semantic Versioning](https://semver.org/).
 
 ## Bugs
 

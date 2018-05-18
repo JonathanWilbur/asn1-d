@@ -25,8 +25,8 @@ if dmd \
  -of./unittest \
  -unittest \
  -main \
- -v >> ./build/logs/${TIMESTAMP}.log 2>&1; then
+ -v >> ./output/logs/${TIMESTAMP}.log 2>&1; then
     echo $ECHOFLAGS "${GREEN}Done. Run ./unittest to test.${NOCOLOR}"
 else
-    echo $ECHOFLAGS "${RED}Failed. See ./build/logs.${NOCOLOR}"
+    echo $ECHOFLAGS "${RED}Failed. See ./output/logs.${NOCOLOR}"
 fi

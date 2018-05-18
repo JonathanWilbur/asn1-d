@@ -5,8 +5,16 @@ Vagrant.configure("2") do |config|
   # A Debian distro for testing the installation of the Debian package
   config.vm.define "debhost" do |debhost|
     debhost.vm.box = "ubuntu/bionic64"
-    debhost.vm.synced_folder "./build/packaging/deb", "/vagrant"
+    debhost.vm.hostname = "debhost"
     debhost.vm.box_check_update = true
+
+    debhost.vm.synced_folder ".", "/vagrant"
+
+    # This folder is where all of the configuration files for building the package start
+    debhost.vm.synced_folder "./build/packaging/deb", "/vagrant/packaging", mount_options: [ "dmode=700", "fmode=400", "ro" ]
+
+    # This folder is where all of the built debs should go
+    debhost.vm.synced_folder "./build/packages/deb", "/vagrant/packages", mount_options: [ "dmode=700", "fmode=400", "rw" ]
 
     # TODO: Make and test with $VERSION variable
     debhost.vm.provision "shell", inline: <<-SHELL
@@ -21,7 +29,8 @@ Vagrant.configure("2") do |config|
         debmake \
         dh-dlang \
         quilt \
-        rng-tools
+        rng-tools \
+        dupload
 
       # Install D
       sudo wget http://master.dl.sourceforge.net/project/d-apt/files/d-apt.list -O /etc/apt/sources.list.d/d-apt.list
@@ -51,8 +60,8 @@ Vagrant.configure("2") do |config|
       cd asn1-2.4.1/
       export DEBEMAIL=jonathan@wilbur.space
       export DEBFULLNAME="Jonathan M. Wilbur"
-      dh_make --single --createorig
-      cp /vagrant/debian/* /package/asn1-2.4.1/debian
+      dh_make --single --createorig --email jonathan@wilbur.space --copyright=mit --yes
+      cp -prv /vagrant/packaging/debian/* /package/asn1-2.4.1/debian
       rm /package/asn1-2.4.1/debian/*.ex
       rm /package/asn1-2.4.1/debian/*.EX
 

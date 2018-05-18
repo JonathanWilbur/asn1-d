@@ -1,22 +1,22 @@
 #!/usr/bin/make
 #
 # Run this from the root directory like so:
-# make -f ./build/scripts/posix.make
-# sudo make -f ./build/scripts/posix.make install
+# make -f ./output/scripts/posix.make
+# sudo make -f ./output/scripts/posix.make install
 #
-version = 2.4.1
 root = .
-vpath %.o $(root)/build/objects
-vpath %.di $(root)/build/interfaces
+version := $(shell cat $(root)/version)
+vpath %.o $(root)/output/objects
+vpath %.di $(root)/output/interfaces
 vpath %.d $(root)/source/asn1
 vpath %.d $(root)/source/asn1/types
 vpath %.d $(root)/source/asn1/types/universal
 vpath %.d $(root)/source/asn1/codecs
 vpath %.d $(root)/source/tools
 vpath %.html $(root)/documentation/html
-vpath %.a $(root)/build/libraries
-vpath %.so $(root)/build/libraries
-vpath % $(root)/build/executables
+vpath %.a $(root)/output/libraries
+vpath %.so $(root)/output/libraries
+vpath % $(root)/output/executables
 
 universaltypes = \
 	characterstring \
@@ -65,11 +65,11 @@ endif
 
 # You will most likely need to run this will root privileges
 install : all
-	cp $(root)/build/libraries/asn1-$(version).so /usr/local/lib
+	cp $(root)/output/libraries/asn1-$(version).so /usr/local/lib
 	-rm -f /usr/local/lib/asn1.so
 	ln -s /usr/local/lib/asn1-$(version).so /usr/local/lib/asn1.so
-	cp $(root)/build/executables/encode-* /usr/local/bin
-	cp $(root)/build/executables/decode-* /usr/local/bin
+	cp $(root)/output/executables/encode-* /usr/local/bin
+	cp $(root)/output/executables/decode-* /usr/local/bin
 	-cp $(root)/documentation/man/1/* /usr/local/share/man/1
 	-cp $(root)/documentation/man/1/* /usr/local/share/man/man1
 	mkdir -p /usr/local/share/asn1/{html,md,json}
@@ -104,14 +104,14 @@ unittest : $(sources)
 # From the Debian New Maintainer's Guide, Version 1.2.40:
 # clean target: to clean all compiled, generated, and useless files in the build-tree. (Required) 
 clean :
-	-rm -f $(root)/build/assemblies/*
-	-rm -f $(root)/build/executables/*
-	-rm -rf $(root)/build/interfaces/*
-	-rm -f $(root)/build/libraries/*
-	-rm -f $(root)/build/logs/*
-	-rm -f $(root)/build/maps/*
-	-rm -f $(root)/build/objects/*
-	-rm -f $(root)/build/packages/*
+	-rm -f $(root)/output/assemblies/*
+	-rm -f $(root)/output/executables/*
+	-rm -rf $(root)/output/interfaces/*
+	-rm -f $(root)/output/libraries/*
+	-rm -f $(root)/output/logs/*
+	-rm -f $(root)/output/maps/*
+	-rm -f $(root)/output/objects/*
+	-rm -f $(root)/output/packages/*
 	-rm -f $(root)/documentation/asn1-*.json
 	-rm -rf $(root)/documentation/html/*
 
@@ -135,9 +135,9 @@ asn1-$(version).a : $(sources)
 	$(root)/source/asn1/types/universal/*.d \
 	$(root)/source/asn1/codecs/*.d \
 	-Dd$(root)/documentation/html \
-	-Hd$(root)/build/interfaces \
+	-Hd$(root)/output/interfaces \
 	-op \
-	-of$(root)/build/libraries/asn1-$(version).a \
+	-of$(root)/output/libraries/asn1-$(version).a \
 	-Xf$(root)/documentation/asn1-$(version).json \
 	-lib \
 	-inline \
@@ -156,9 +156,9 @@ asn1-$(version).so : $(sources)
 	$(root)/source/asn1/types/universal/*.d \
 	$(root)/source/asn1/codecs/*.d \
 	-Dd$(root)/documentation/html \
-	-Hd$(root)/build/interfaces \
+	-Hd$(root)/output/interfaces \
 	-op \
-	-of$(root)/build/libraries/asn1-$(version).so \
+	-of$(root)/output/libraries/asn1-$(version).so \
 	-lib \
 	-inline \
 	-release \
@@ -170,33 +170,33 @@ asn1-$(version).so : $(sources)
 $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
 	echo $(echoflags) "Building the ASN.1 Command-Line Tool, $@... \c"
 	dmd \
-	-I$(root)/build/interfaces/source \
-	-L$(root)/build/libraries/asn1-$(version).a \
+	-I$(root)/output/interfaces/source \
+	-L$(root)/output/libraries/asn1-$(version).a \
 	$(root)/source/tools/encoder_mixin.d \
 	$< \
-	-od$(root)/build/objects \
-	-of$(root)/build/executables/$@ \
+	-od$(root)/output/objects \
+	-of$(root)/output/executables/$@ \
 	-inline \
 	-release \
 	-O \
 	-d
-	chmod +x $(root)/build/executables/$@
+	chmod +x $(root)/output/executables/$@
 	echo $(echoflags) "\033[32mDone.\033[0m"
 
 $(decoders) : decode-% : decode_%.d decoder_mixin.d asn1-$(version).so
 	echo $(echoflags) "Building the ASN.1 Command-Line Tool, $@... \c"
 	dmd \
-	-I$(root)/build/interfaces/source \
-	-L$(root)/build/libraries/asn1-$(version).a \
+	-I$(root)/output/interfaces/source \
+	-L$(root)/output/libraries/asn1-$(version).a \
 	$(root)/source/tools/decoder_mixin.d \
 	$< \
-	-od$(root)/build/objects \
-	-of$(root)/build/executables/$@ \
+	-od$(root)/output/objects \
+	-of$(root)/output/executables/$@ \
 	-inline \
 	-release \
 	-O \
 	-d
-	chmod +x $(root)/build/executables/$@
+	chmod +x $(root)/output/executables/$@
 	echo $(echoflags) "\033[32mDone.\033[0m"
 
 # How Phobos compiles only the JSON file:

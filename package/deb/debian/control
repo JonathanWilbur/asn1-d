@@ -1,0 +1,14 @@
+Source: asn1
+Section: devel
+Priority: optional
+Maintainer: Jonathan M. Wilbur <jonathan@wilbur.space>
+Build-Depends: debhelper (>= 10)
+Standards-Version: 4.1.2
+Homepage: https://github.com/JonathanWilbur/asn1-d
+
+Package: asn1
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: ASN.1 codecs, including BER, CER, and DER, written in D
+ Library and executables for ASN.1 encoding and decoding using BER, CER, and
+ DER codecs, all written in the D programming language.
