@@ -1,0 +1,24 @@
+{
+    "version": "2.4.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "./build/build.sh",
+            "linux": {
+                "command": "./build/build.sh"
+            },
+            "osx": {
+                "command": "./build/build.sh"
+            },
+            "windows": {
+                "command": ".\\build\\build.bat"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}

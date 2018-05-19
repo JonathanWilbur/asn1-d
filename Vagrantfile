@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
     debhost.vm.provision "shell", inline: <<-SHELL
       VERSION=`cat /vagrant/version`
       PACKAGE_NAME="asn1"
-      
+
       apt-get update -y
       apt-get upgrade -y
       apt --fix-broken install -y
@@ -92,11 +92,50 @@ Vagrant.configure("2") do |config|
   # An RPM distro for testing the installation of the RPM package
   config.vm.define "rpmhost" do |rpmhost|
     rpmhost.vm.box = "generic/fedora27"
-    rpmhost.vm.synced_folder "./build/packaging/rpm", "/vagrant/rpm"
+    rpmhost.vm.hostname = "rpmhost"
+    rpmhost.vm.synced_folder ".", "/vagrant", mount_options: [ "dmode=700", "fmode=400", "rw" ]
     rpmhost.vm.box_check_update = true
     rpmhost.vm.provision "shell", inline: <<-SHELL
-      yum upgrade
-      # curl -fsS https://dlang.org/install.sh | bash -s dmd
+      VERSION=`cat /vagrant/version`
+      PACKAGE_NAME="asn1"
+
+      yum upgrade -y
+
+      # Install DMD
+      yum install -y glibc-devel.i686 libcurl.i686 # For some reason, you need the 32-bit libs
+      wget -q http://downloads.dlang.org/releases/2.x/2.080.0/dmd-2.080.0-0.fedora.x86_64.rpm
+      rpm -i dmd-2.080.0-0.fedora.x86_64.rpm
+
+      # Install GDC
+      wget -q http://gdcproject.org/downloads/binaries/6.3.0/x86_64-linux-gnu/gdc-6.3.0+2.068.2.tar.xz
+      tar -xvf gdc-6.3.0+2.068.2.tar.xz
+
+      # Install LDC
+      yum install -y ldc
+
+      # Download Other utilities
+      yum install -y \
+        nano \
+        rpm-build
+
+      # Download the Example RPM
+      # Instructions sourced from here: https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf
+      wget ftp://ftp.redhat.com/pub/redhat/linux/enterprise/6Workstation/en/os/SRPMS/tree-1.5.3-2.el6.src.rpm
+      rpm -i tree-1.5.3-2.el6.src.rpm
+
+      # Create a GPG Key. You must have this to create the package.
+      gpg --batch --gen-key /vagrant/package/deb/gpg.script
+
+      # Copy over the entire source directory so we don't accidentally screw up the source
+      mkdir -p /package/${PACKAGE_NAME}-${VERSION}
+      cp -pr /vagrant/* /package/${PACKAGE_NAME}-${VERSION}
+      cd /package/${PACKAGE_NAME}-${VERSION}
+
+      # Build the RPM Package
+      # cp /vagrant/package/rpm/SPECS/asn1.spec /package/asn1-2.4.1/SPECS
+      cp /vagrant/package/rpm/SPECS/asn1.spec ~/rpmbuild/SPECS
+      
+
     SHELL
   end
 
