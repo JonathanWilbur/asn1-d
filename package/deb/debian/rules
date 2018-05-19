@@ -2,17 +2,16 @@
 #export DH_VERBOSE = 1
 
 override_dh_auto_test:
-	make --makefile=./build/scripts/posix.make test
+	make --makefile=./build/posix.make test
 
 # Skipped, because the install target uses absolute paths.
 override_dh_auto_install:
-	echo "This is just a filler message, to test an error."
 
 override_dh_auto_build:
-	make --makefile=./build/scripts/posix.make all
+	make --makefile=./build/posix.make all
 
 override_dh_auto_clean:
-	make --makefile=./build/scripts/posix.make clean
+	make --makefile=./build/posix.make clean
 
 %:
 	dh $@

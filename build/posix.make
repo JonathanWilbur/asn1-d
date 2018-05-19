@@ -104,8 +104,8 @@ unittest : $(sources)
 # From the Debian New Maintainer's Guide, Version 1.2.40:
 # clean target: to clean all compiled, generated, and useless files in the build-tree. (Required) 
 clean :
-	-rm -f $(root)/output/*
 	-rm -f $(root)/documentation/asn1-*.json
+	-rm -rf $(root)/output/*
 	-rm -rf $(root)/documentation/html/*
 
 uninstall :
@@ -121,9 +121,9 @@ uninstall :
 
 asn1-$(version).a : $(sources)
 	echo $(echoflags) "Building the ASN.1 Library (static)... \c"
-	mkdir $(root)/output
-	mkdir $(root)/output/interfaces
-	mkdir $(root)/output/libraries
+	-mkdir -p $(root)/output
+	-mkdir -p $(root)/output/interfaces
+	-mkdir -p $(root)/output/libraries
 	dmd \
 	$(root)/source/macros.ddoc \
 	$(root)/source/asn1/*.d \
@@ -145,9 +145,9 @@ asn1-$(version).a : $(sources)
 
 asn1-$(version).so : $(sources)
 	echo $(echoflags) "Building the ASN.1 Library (shared / dynamic)... \c"
-	mkdir $(root)/output
-	mkdir $(root)/output/interfaces
-	mkdir $(root)/output/libraries
+	-mkdir -p $(root)/output
+	-mkdir -p $(root)/output/interfaces
+	-mkdir -p $(root)/output/libraries
 	dmd \
 	$(root)/source/macros.ddoc \
 	$(root)/source/asn1/*.d \
@@ -168,8 +168,8 @@ asn1-$(version).so : $(sources)
 
 $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
 	echo $(echoflags) "Building the ASN.1 Command-Line Tool, $@... \c"
-	mkdir $(root)/output
-	mkdir $(root)/output/executables
+	-mkdir -p $(root)/output
+	-mkdir -p $(root)/output/executables
 	dmd \
 	-I$(root)/output/interfaces/source \
 	-L$(root)/output/libraries/asn1-$(version).a \
@@ -186,8 +186,8 @@ $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
 
 $(decoders) : decode-% : decode_%.d decoder_mixin.d asn1-$(version).so
 	echo $(echoflags) "Building the ASN.1 Command-Line Tool, $@... \c"
-	mkdir $(root)/output
-	mkdir $(root)/output/executables
+	-mkdir -p $(root)/output
+	-mkdir -p $(root)/output/executables
 	dmd \
 	-I$(root)/output/interfaces/source \
 	-L$(root)/output/libraries/asn1-$(version).a \

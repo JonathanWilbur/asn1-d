@@ -14,16 +14,26 @@ Vagrant.configure("2") do |config|
     debhost.vm.provision "shell", inline: <<-SHELL
       VERSION=`cat /vagrant/version`
       PACKAGE_NAME="asn1"
+      
+      apt-get update -y
+      apt-get upgrade -y
+      apt --fix-broken install -y
+      apt-get install -y libc6-dev gcc
 
-      echo "deb http://master.dl.sourceforge.net/project/d-apt/ d-apt main" > /etc/apt/sources.list.d/d-apt.list
-      apt-get update
-      apt-get -y --allow-unauthenticated install --reinstall d-apt-keyring
-      apt-get upgrade
+      # Install DMD
+      wget -q http://downloads.dlang.org/releases/2018/dmd_2.080.0-0_amd64.deb
+      dpkg -i dmd_2.080.0-0_amd64.deb
+
+      # Install GDC and LDC
+      apt-get install -y gdc ldc
+
+      # Install Dub
+      wget -q https://code.dlang.org/files/dub-1.9.0-linux-x86.tar.gz
+      tar -xvzf dub-1.9.0-linux-x86.tar.gz
+      mv dub /usr/bin
 
       # Without rng-tools, generating the GPG key will hang forever on some boxes
       apt-get install -y \
-        dmd-compiler \
-        dub \
         dpkg-dev \
         lintian \
         dh-make \
@@ -49,7 +59,7 @@ Vagrant.configure("2") do |config|
 
       # Copy over the entire source directory so we don't accidentally screw up the source
       mkdir -p /package/${PACKAGE_NAME}-${VERSION}
-      cp -prv /vagrant/* /package/${PACKAGE_NAME}-${VERSION}
+      cp -pr /vagrant/* /package/${PACKAGE_NAME}-${VERSION}
       cd /package/${PACKAGE_NAME}-${VERSION}
 
       # Create the package skeleton
@@ -64,8 +74,7 @@ Vagrant.configure("2") do |config|
       # results.
       cp -prv /vagrant/package/deb/debian/* /package/${PACKAGE_NAME}-${VERSION}/debian
 
-      # Let's just double-tap to make sure.
-      chmod -R -x /package/${PACKAGE_NAME}-${VERSION}/debian
+      chmod -R +w /package/${PACKAGE_NAME}-${VERSION}
 
       # This is the only one (I know of) that must be executable
       chmod +x /package/${PACKAGE_NAME}-${VERSION}/debian/rules
@@ -87,7 +96,7 @@ Vagrant.configure("2") do |config|
     rpmhost.vm.box_check_update = true
     rpmhost.vm.provision "shell", inline: <<-SHELL
       yum upgrade
-      curl -fsS https://dlang.org/install.sh | bash -s dmd
+      # curl -fsS https://dlang.org/install.sh | bash -s dmd
     SHELL
   end
 
