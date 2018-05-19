@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define VERSION="2.4.1"?>
+<?define VERSION="2.4.2"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product 
-        Id="2B28FEE1-20FD-4C99-9BAB-B768C16E680E" 
-        UpgradeCode="219C67AA-00F6-4B1B-997C-1EBB8FC8E115" 
-        Name="ASN.1 Tools" 
-        Version="$(var.VERSION)" 
-        Manufacturer="Jonathan M. Wilbur" 
+    <Product
+        Id="2B28FEE1-20FD-4C99-9BAB-B768C16E680E"
+        UpgradeCode="219C67AA-00F6-4B1B-997C-1EBB8FC8E115"
+        Name="ASN.1 Tools"
+        Version="$(var.VERSION)"
+        Manufacturer="Jonathan M. Wilbur"
         Language="1033">
         <Package
             InstallerVersion="200"
@@ -112,13 +112,13 @@
                                 </Component>
                                 <Component Id="ExecutablesPATH" Guid="87260BC9-5008-41DF-A359-4B19C969F9C6">
                                     <CreateFolder />
-                                    <Environment 
-                                        Id="PATH" 
-                                        Name="PATH" 
-                                        Value="[ExecutablesFolder]" 
-                                        Permanent="no" 
-                                        Part="last" 
-                                        Action="set" 
+                                    <Environment
+                                        Id="PATH"
+                                        Name="PATH"
+                                        Value="[ExecutablesFolder]"
+                                        Permanent="no"
+                                        Part="last"
+                                        Action="set"
                                         System="no" />
                                 </Component>
                             </Directory>
@@ -343,45 +343,45 @@
             <ComponentRef Id="Workspace" />
         </Feature>
         <Feature
-            Id="LibrariesFeature" 
-            Level="1" 
-            Absent="disallow" 
-            Title="Libraries" 
+            Id="LibrariesFeature"
+            Level="1"
+            Absent="disallow"
+            Title="Libraries"
             Description="Both the Dynamically-Linked and Statically-Linked Libraries.">
             <ComponentRef Id="ASN1StaticallyLinkedLibrary" />
             <ComponentRef Id="ASN1DynamicallyLinkedLibrary" />
         </Feature>
         <Feature
-            Id="CodecsFeature" 
-            Level="1" 
-            Absent="allow" 
+            Id="CodecsFeature"
+            Level="1"
+            Absent="allow"
             Display="collapse"
-            Title="Encoding and Decoding Tools" 
+            Title="Encoding and Decoding Tools"
             Description="Tools for encoding and decoding using ASN.1 encoding specifications.">
             <ComponentRef Id="ExecutablesPATH" />
-            <Feature 
-                Id="BERCodecsFeature" 
-                Level="1" 
-                Absent="allow" 
-                Title="Basic Encoding Rules Tools" 
+            <Feature
+                Id="BERCodecsFeature"
+                Level="1"
+                Absent="allow"
+                Title="Basic Encoding Rules Tools"
                 Description="Tools for encoding and decoding per the Basic Encoding Rules.">
                 <ComponentRef Id="BasicEncodingRulesEncoder" />
                 <ComponentRef Id="BasicEncodingRulesDecoder" />
             </Feature>
-            <Feature 
-                Id="CERCodecsFeature" 
-                Level="1" 
-                Absent="allow" 
-                Title="Canonical Encoding Rules Tools" 
+            <Feature
+                Id="CERCodecsFeature"
+                Level="1"
+                Absent="allow"
+                Title="Canonical Encoding Rules Tools"
                 Description="Tools for encoding and decoding per the Canonical Encoding Rules.">
                 <ComponentRef Id="CanonicalEncodingRulesEncoder" />
                 <ComponentRef Id="CanonicalEncodingRulesDecoder" />
             </Feature>
-            <Feature 
-                Id="DERCodecsFeature" 
-                Level="1" 
-                Absent="allow" 
-                Title="Distinguished Encoding Rules Tools" 
+            <Feature
+                Id="DERCodecsFeature"
+                Level="1"
+                Absent="allow"
+                Title="Distinguished Encoding Rules Tools"
                 Description="Tools for encoding and decoding per the Distinguished Encoding Rules.">
                 <ComponentRef Id="DistinguishedEncodingRulesEncoder" />
                 <ComponentRef Id="DistinguishedEncodingRulesDecoder" />

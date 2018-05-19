@@ -1,4 +1,4 @@
-asn1 (2.4.1-1) bionic; urgency=high
+asn1 (2.4.2-1) bionic; urgency=high
 
   * Fixed improper OID encoding
 

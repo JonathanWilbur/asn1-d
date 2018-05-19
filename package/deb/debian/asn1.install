@@ -1,4 +1,4 @@
-output/libraries/asn1-2.4.1.so /usr/lib
+output/libraries/asn1-2.4.2.so /usr/lib
 output/executables/encode-ber /usr/bin
 output/executables/encode-cer /usr/bin
 output/executables/encode-der /usr/bin

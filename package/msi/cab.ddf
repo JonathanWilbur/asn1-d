@@ -1,12 +1,12 @@
 .OPTION EXPLICIT
-.Define Version=2.4.1
+.Define Version=2.4.2
 .Set CabinetNameTemplate=asn1.cab
 .Set Cabinet=on
 .Set Compress=on
-.Set CabinetFileCountThreshold=0 
-.Set FolderFileCountThreshold=0 
-.Set FolderSizeThreshold=0 
-.Set MaxCabinetSize=0 
+.Set CabinetFileCountThreshold=0
+.Set FolderFileCountThreshold=0
+.Set FolderSizeThreshold=0
+.Set MaxCabinetSize=0
 .Set MaxDiskFileCount=0
 .Set MaxDiskSize=0
 .Set DestinationDir=build\packaging\msi

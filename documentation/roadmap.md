@@ -42,8 +42,8 @@
 - [x] Create "test" `GNU Make` target
 - [x] Create an [MSI Installer](https://wixtoolset.org/)
 - [x] Create a Mac OS X App Bundle + Disk Image
-- [ ] Publish an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
-- [ ] Publish an [Debian package](https://debian-handbook.info/browse/stable/debian-packaging.html)
+- [x] Create an [RPM package](https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf)
+- [x] Create a [Debian package](https://debian-handbook.info/browse/stable/debian-packaging.html)
 
 ### 2.4.3 Release
 

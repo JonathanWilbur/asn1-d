@@ -676,7 +676,7 @@
                 </Directory>
                 <Directory Id="dirA358F6F8654153982074CA67267EC125" Name="documentation">
                     <Component Id="cmp5535BA96C3CFE6739762F9F8480BBDB9" Guid="E824E4C0-31DB-4349-9BA0-B658F81BCC26">
-                        <File Id="filBB37514528576B4DF145CC2599294DEF" KeyPath="yes" Source="SourceDir\documentation\asn1-2.4.1.json" />
+                        <File Id="filBB37514528576B4DF145CC2599294DEF" KeyPath="yes" Source="SourceDir\documentation\asn1-2.4.2.json" />
                     </Component>
                     <Component Id="cmp97CAB65223C696480B5541CE01D40AAF" Guid="3A58B8A7-C5DD-4FE5-8B8B-DE6864C0FC18">
                         <File Id="fil66C1DAEFCDE1C79FDD739B3DE1F1AA7F" KeyPath="yes" Source="SourceDir\documentation\asn1.md" />
@@ -887,10 +887,10 @@
                     </Directory>
                     <Directory Id="dir4D5106C7C1A4808A4AEDC8AFF86A8318" Name="libraries">
                         <Component Id="cmp475C7F8E290A926A87DFB939A91F414A" Guid="1922CF19-B6EB-40AD-93E8-0A84D0A3E21A">
-                            <File Id="fil2092667FD3FBF01118A932A08CC6D099" KeyPath="yes" Source="SourceDir\output\libraries\asn1-2.4.1.a" />
+                            <File Id="fil2092667FD3FBF01118A932A08CC6D099" KeyPath="yes" Source="SourceDir\output\libraries\asn1-2.4.2.a" />
                         </Component>
                         <Component Id="cmp38C9A30E0904F0AC60F6197ED071B5CE" Guid="A6055121-1733-4542-A39E-667DAA53A145">
-                            <File Id="filA9CA1D20599D6F6AC0A2151AD7F5E6A3" KeyPath="yes" Source="SourceDir\output\libraries\asn1-2.4.1.dll" />
+                            <File Id="filA9CA1D20599D6F6AC0A2151AD7F5E6A3" KeyPath="yes" Source="SourceDir\output\libraries\asn1-2.4.2.dll" />
                         </Component>
                     </Directory>
                     <Directory Id="dirA6F4E756566F675F58CE195D3736C018" Name="objects">

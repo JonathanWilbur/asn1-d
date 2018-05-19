@@ -132,9 +132,7 @@ Vagrant.configure("2") do |config|
       cd /package/${PACKAGE_NAME}-${VERSION}
 
       # Build the RPM Package
-      # cp /vagrant/package/rpm/SPECS/asn1.spec /package/asn1-2.4.1/SPECS
       cp /vagrant/package/rpm/SPECS/asn1.spec ~/rpmbuild/SPECS
-      
 
     SHELL
   end
