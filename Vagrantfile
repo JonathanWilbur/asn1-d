@@ -133,6 +133,7 @@ Vagrant.configure("2") do |config|
 
       # Build the RPM Package
       cp /vagrant/package/rpm/SPECS/asn1.spec ~/rpmbuild/SPECS
+      wget https://github.com/JonathanWilbur/asn1-d/archive/v${VERSION}.tar.gz -O ~/rpmbuild/SOURCES/v${VERSION}.tar.gz
 
     SHELL
   end

@@ -174,7 +174,7 @@ $(encoders) : encode-% : encode_%.d encoder_mixin.d asn1-$(version).so
 	-I$(root)/output/interfaces/source \
 	-L$(root)/output/libraries/asn1-$(version).a \
 	$(root)/source/tools/encoder_mixin.d \
-	$< \
+	$(root)/$< \
 	-od$(root)/output/objects \
 	-of$(root)/output/executables/$@ \
 	-inline \
@@ -192,7 +192,7 @@ $(decoders) : decode-% : decode_%.d decoder_mixin.d asn1-$(version).so
 	-I$(root)/output/interfaces/source \
 	-L$(root)/output/libraries/asn1-$(version).a \
 	$(root)/source/tools/decoder_mixin.d \
-	$< \
+	$(root)/$< \
 	-od$(root)/output/objects \
 	-of$(root)/output/executables/$@ \
 	-inline \
