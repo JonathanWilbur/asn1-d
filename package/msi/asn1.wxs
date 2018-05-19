@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define VERSION="2.4.2"?>
+<?define VERSION="2.4.3"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Product
         Id="2B28FEE1-20FD-4C99-9BAB-B768C16E680E"

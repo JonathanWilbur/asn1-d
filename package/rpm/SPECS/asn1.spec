@@ -1,6 +1,6 @@
 Summary: Libraries and Tools for encoding and decoding ASN.1 data
 Name: asn1
-Version: 2.4.2
+Version: 2.4.3
 Release: 1
 Group: D Development Tools and Libraries
 License: MIT

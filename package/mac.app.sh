@@ -9,7 +9,7 @@ GREEN='\033[32m'
 RED='\033[31m'
 NOCOLOR='\033[0m'
 TIMESTAMP=$(date '+%Y-%m-%d@%H:%M:%S')
-VERSION="2.4.2"
+VERSION="2.4.3"
 ECHOFLAGS=""
 
 # Unfortunately, because this is running in a shell script, brace expansion

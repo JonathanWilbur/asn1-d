@@ -2,8 +2,8 @@
 class Asn1D < Formula
   desc "ASN.1 Codecs, including BER, CER, and DER"
   homepage "https://github.com/JonathanWilbur/asn1-d"
-  url "https://github.com/JonathanWilbur/asn1-d/archive/v2.4.2.tar.gz"
-  version = "2.4.2"
+  url "https://github.com/JonathanWilbur/asn1-d/archive/v2.4.3.tar.gz"
+  version = "2.4.3"
   sha256 "e86694b2e15d8d4da2477c44e584fb5e860666787d010801199a0a77bcf28a2d"
 
   def install

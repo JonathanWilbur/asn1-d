@@ -1,5 +1,5 @@
 .OPTION EXPLICIT
-.Define Version=2.4.2
+.Define Version=2.4.3
 .Set CabinetNameTemplate=asn1.cab
 .Set Cabinet=on
 .Set Compress=on
