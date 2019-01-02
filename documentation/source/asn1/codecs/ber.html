@@ -1,0 +1,4031 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>asn1.codecs.ber</title>
+    <style type="text/css" media="screen">
+      html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
+      blockquote, pre, a, abbr, address, cite, code, del, dfn, em, figure,
+      img, ins, kbd, q, s, samp, small, strong, sub, sup, var, b, u, i, dl,
+      dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption,
+      tbody, tfoot, thead, tr, th, td {
+        background: transparent none repeat scroll 0 0;
+        border: 0 none;
+        font-size: 100%;
+        margin: 0;
+        outline: 0 none;
+        padding: 0;
+        vertical-align: baseline;
+      }
+
+      .color_red { color: #dc322f; }
+      .color_blue { color: #268bd2; }
+      .color_green { color: #859901; }
+      .color_yellow { color: #b58901; }
+      .color_black { color: black; }
+      .color_white { color: white; }
+
+      .font_big {
+        font-size: 1.2em;
+      }
+
+      .ddoc_section_h {
+        font-weight: bold;
+        font-size: 13px;
+        line-height: 19.5px;
+        margin-top: 11px;
+        display: block;
+      }
+
+      body.dlang .dlang {
+        display: inline-block;
+      }
+
+      body.dlang .declaration .dlang {
+          display: block;
+      }
+
+      body.dlang .ddoc_header_anchor a.dlang {
+        display: block;
+        color: rgba(0, 136, 204, 1);
+        text-decoration: none;
+      }
+
+      body.dlang .ddoc_header_anchor .code {
+        color: rgba(0, 136, 204, 1);
+      }
+
+      #ddoc_main .module {
+          border-color: currentColor rgba(233, 233, 233, 1) rgba(233, 233, 233, 1);
+          border-style: none solid solid;
+          border-width: 0 1px 1px;
+          overflow-x: hidden;
+          padding: 15px;
+      }
+
+      #ddoc_main .section .section {
+        margin-top: 0;
+      }
+
+      #ddoc_main .ddoc_module_members_section {
+          padding: 1px 0 0;
+          transition: transform 0.3s ease 0s;
+      }
+
+      #ddoc_main .ddoc_member, #ddoc_main .ddoc_module_members section.intro {
+          background: #fff none repeat scroll 0 0;
+          list-style-type: none;
+          width: 100%;
+      }
+
+      #ddoc_main .ddoc_header_anchor {
+          font-size: 1.4em;
+          transition: transform 0.3s ease 0s;
+      }
+
+      #ddoc_main .ddoc_header_anchor > .code {
+          display: inline-block;
+
+      }
+
+      #ddoc_main .ddoc_decl {
+        background-color: transparent;
+        height: 100%;
+        left: 0;
+        top: 0;
+        padding: 0;
+        padding-left: 15px;
+      }
+
+      #ddoc_main .ddoc_decl .section, #ddoc_main .section.ddoc_sections {
+        background: white none repeat scroll 0 0;
+        margin: 0;
+        padding: 5px;
+        position: relative;
+        border-radius: 5px;
+      }
+
+      #ddoc_main .ddoc_decl .section h4, #ddoc_main .section.ddoc_sections h4 {
+        font-size: 13px;
+        line-height: 1.5;
+        margin-top: 21px;
+      }
+
+      #ddoc_main .section .declaration {
+          margin-top: 21px;
+      }
+
+      #ddoc_main .section .declaration .code {
+          color: rgba(0, 0, 0, 1);
+          margin-bottom: 15px;
+          padding-bottom: 6px;
+      }
+
+      #ddoc_main .declaration div .para {
+          margin-bottom: 0;
+      }
+
+      #ddoc_main .ddoc_params .graybox tr td:first-of-type {
+        padding: 7px;
+        text-align: right;
+        vertical-align: top;
+        word-break: normal;
+        white-space: nowrap;
+      }
+
+      #ddoc_main .ddoc_params .graybox {
+        border: 0 none;
+      }
+
+      #ddoc_main .ddoc_params .graybox td {
+        border-color: rgba(214, 214, 214, 1);
+      }
+
+      #ddoc_main .ddoc_params .graybox tr:first-child > td {
+        border-top: 0 none;
+      }
+
+      #ddoc_main .ddoc_params .graybox tr:last-child > td {
+        border-bottom: 0 none;
+      }
+
+      #ddoc_main .ddoc_params .graybox tr > td:first-child {
+        border-left: 0 none;
+      }
+
+      #ddoc_main .ddoc_params .graybox tr > td:last-child {
+        border-right: 0 none;
+        width: 100%;
+      }
+
+      #ddoc_main em.term, #ddoc_main em.term .code {
+        color: rgba(65, 65, 65, 1);
+        font-size: 12px;
+        font-style: italic;
+        line-height: 1.5;
+      }
+
+      #ddoc_main .see-also {
+        cursor: pointer;
+        font-family: Menlo,monospace;
+      }
+
+      #ddoc_main .ddoc_decl .section > div:last-of-type {
+        margin-bottom: 15px;
+      }
+
+      #ddoc_main .ddoc_member, #ddoc_main .ddoc_module_members {
+          transition: transform 0.3s ease 0s;
+      }
+
+      #ddoc_main .code_sample {
+        background: inherit;
+      }
+
+      #ddoc_main .declaration .code-line {
+          display: block;
+          font: 1em Menlo,monospace;
+      }
+
+      #ddoc_main a[name] {
+        margin: -112px 0 0;
+        padding-top: 112px;
+      }
+
+      #ddoc_main .ddoc_decl td {
+        max-width: inherit;
+      }
+
+      #ddoc_main .declaration a {
+        color: inherit;
+      }
+
+      #ddoc_main .declaration a:hover {
+          color: rgba(0, 136, 204, 1);
+          text-decoration: underline;
+      }
+
+      body.ddoc {
+        background-color: transparent;
+        color: rgba(0, 0, 0, 1);
+        font-family: Helvetica,Arial,sans-serif;
+        font-size: 62.5%;
+        margin: 0;
+        border: 0;
+        left: 0;
+        top: 0;
+        padding: 0;
+      }
+
+      .ddoc a[name] {
+        display: block;
+        height: 0;
+        margin: -85px 0 0;
+        padding-top: 85px;
+        width: 0;
+      }
+
+      .ddoc .module {
+          border-color: transparent;
+          background-color: rgba(255, 255, 255, 1);
+          border-color: currentColor rgba(233, 233, 233, 1) rgba(233, 233, 233, 1);
+          border-image: none;
+          border-style: none solid solid;
+          border-width: 0 1px 1px;
+          box-shadow: 0 0 1px rgba(0, 0, 0, 0.07);
+          display: block;
+          margin-left: 0;
+          min-height: calc(100% - 173px);
+          overflow: auto;
+          padding-bottom: 100px;
+      }
+
+      .ddoc .content_wrapper {
+          background-color: rgba(242, 242, 242, 1);
+          margin: 0 auto;
+          max-width: 980px;
+      }
+
+      .ddoc .section {
+        padding: 15px 25px 30px;
+      }
+
+      .ddoc .section .section {
+        margin: 30px 0 0;
+        padding: 0;
+      }
+
+      .ddoc .para {
+        color: rgba(65, 65, 65, 1);
+        font-size: 1.4em;
+        line-height: 145%;
+        margin-bottom: 15px;
+      }
+
+      .ddoc .ddoc_examples .para {
+        margin-bottom: 0;
+      }
+
+      .ddoc .module_name {
+          color: rgba(0, 0, 0, 1);
+          display: block;
+          font-family: Helvetica;
+          font-size: 2.8em;
+          font-weight: 100;
+          margin-bottom: 0;
+          padding: 15px 0;
+      }
+
+      .ddoc .module a {
+          color: rgba(0, 136, 204, 1);
+          text-decoration: none;
+      }
+
+      .ddoc .code {
+        color: rgba(128, 128, 128, 1);
+        font-family: Menlo,monospace;
+        font-size: 0.85em;
+        word-wrap: break-word;
+      }
+
+      .ddoc .code i {
+        font-style: normal;
+      }
+
+      .ddoc .code .code {
+        font-size: 1em;
+      }
+
+      .ddoc .code_sample {
+        background-clip: padding-box;
+        margin: 1px 0;
+        text-align: left;
+      }
+
+      .ddoc .code_sample {
+        display: block;
+        font-size: 1.4em;
+        margin-left: 21px;
+      }
+
+      .ddoc ol .code_sample {
+        font-size: 1em;
+      }
+
+      .ddoc .code_lines {
+        counter-reset: li;
+        line-height: 1.6em;
+        list-style: outside none none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .ddoc .code_listing .code_sample div {
+        margin-left: 13px;
+        width: 93%;
+      }
+
+      .ddoc .code_listing .code_sample div .code_lines li {
+        list-style-type: none;
+        margin: 0;
+        padding-right: 10px;
+      }
+
+      .ddoc .code_sample div .code_lines li::before {
+        margin-left: -33px;
+        margin-right: 25px;
+      }
+
+      .ddoc .code_sample div .code_lines li:nth-child(n+10)::before {
+        margin-left: -39px;
+        margin-right: 25px;
+      }
+
+      .ddoc .code_sample div .code_lines li:nth-child(n+100)::before {
+        margin-left: -46px;
+        margin-right: 25px;
+      }
+
+      .ddoc .code_sample .code_lines .code {
+        color: #000;
+      }
+
+      .ddoc div.dlang {
+        margin: 10px 0 21px;
+        padding: 4px 0 2px 10px;
+      }
+
+      .ddoc div.dlang {
+          margin: 10px 0 21px;
+          padding: 4px 0 2px 10px;
+      }
+
+      .ddoc div.dlang {
+        border-left: 5px solid rgba(0, 155, 51, 0.2);
+      }
+
+      .ddoc .code_lines li::before {
+        color: rgba(128, 128, 128, 1);
+        content: counter(li, decimal);
+        counter-increment: li;
+        font-family: Menlo,monospace;
+        font-size: 0.9em;
+        margin-right: 16px;
+      }
+
+      .ddoc .code_lines li {
+        padding-left: 0;
+        white-space: pre-wrap;
+      }
+
+      .ddoc .code_lines li:only-of-type::before {
+        color: rgba(255, 255, 255, 1);
+        content: " ";
+      }
+
+      .ddoc .code_lines li:only-of-type {
+        color: rgba(255, 255, 255, 1);
+        content: " ";
+      }
+
+      .ddoc .code_lines li:nth-child(n+10) {
+        text-indent: -17px;
+      }
+
+      .ddoc .code_lines li:nth-child(n+10)::before {
+        margin-right: 12px;
+      }
+
+      .ddoc .graybox {
+        border: 1px solid rgba(233, 233, 233, 1);
+        border-collapse: collapse;
+        border-spacing: 0;
+        empty-cells: hide;
+        margin: 20px 0 36px;
+        text-align: left;
+      }
+
+      .ddoc .graybox p {
+        margin: 0;
+        min-width: 50px;
+      }
+
+      .ddoc td {
+        border: 1px solid rgba(233, 233, 233, 1);
+        margin: 0;
+        max-width: 260px;
+        padding: 5px 25px 5px 10px;
+        vertical-align: middle;
+      }
+
+      .punctuation {
+        color: rgba(0, 0, 0, 1);
+      }
+
+      .comment {
+        color: rgba(0, 131, 18, 1);
+      }
+
+      .operator {
+        color: #000;
+      }
+
+      .keyword {
+        color: rgba(170, 13, 145, 1);
+      }
+
+      .keyword_type {
+        color: rgba(170, 51, 145, 1);
+      }
+
+      .string_literal {
+        color: rgba(196, 26, 22, 1);
+      }
+
+      .ddoc_psuper_symbol {
+        color: rgba(92, 38, 153, 1);
+      }
+
+      .param {
+        color: rgba(0, 0, 0, 1);
+      }
+
+      .psymbol {
+        color: rgba(0, 0, 0, 1);
+      }
+
+      .ddoc_member_header .ddoc_header_anchor .code {
+        font-size: 1em;
+      }
+    </style>
+  </head>
+  <body id="ddoc_main" class="ddoc dlang">
+    <div class="content_wrapper">
+      <article class="module">
+        <h1 class="module_name">asn1.codecs.ber</h1>
+        <section id="module_content"><section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Basic Encoding Rules (BER) is a standard for encoding ASN.1 data. It is by
+    far the most common standard for doing so, being used in LDAP, TLS, SNMP,
+    RDP, and other protocols. Like Distinguished Encoding Rules (DER),
+    Canonical Encoding Rules (CER), and Packed Encoding Rules (PER), Basic
+    Encoding Rules is a specification created by the
+    <a href="https://www.itu.int/en/pages/default.aspx, International Telecommunications Union">https://www.itu.int/en/pages/default.aspx, International Telecommunications Union</a>,
+    and specified in
+    <a href="http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules">http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules</a>
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    BER is generally regarded as the most flexible of the encoding schemes,
+    because all values can be encoded in a multitude of ways. This flexibility
+    might be convenient for developers who use a BER Library, but creating
+    a BER library in the first place is a nightmare, because of its flexibility.
+    I personally suspect that the complexity of BER may make its implementation
+    inclined to security vulnerabilities, so I would not use it if you have a
+    choice in the matter. Also, the ability to represent values in several
+    different ways is actually a security problem when data has to be guarded
+    against tampering with a cryptographic signature. (Basically, it makes it
+    a lot easier to find a tampered payload that has the identical signature
+    as the genuine payload.)
+
+
+  </p>
+</div>
+<div class="ddoc_authors">
+  <h4>Authors</h4>
+  <p class="para">
+    <ul>        <li></li>
+    </ul>
+
+  </p>
+</div>
+<div class="ddoc_license">
+  <h4>License</h4>
+  <p class="para">
+    <a href="https://mit-license.org/, MIT License">https://mit-license.org/, MIT License</a>
+
+  </p>
+</div>
+<div class="ddoc_standards">
+  <h4>Standards</h4>
+  <p class="para">
+    <ul>        <li><a href="https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)">https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)</a></li>
+        <li><a href="http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules">http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules</a></li>
+    </ul>
+
+  </p>
+</div><div class="ddoc_see_also">
+  <h4>See Also</h4>
+  <p class="para">
+    <ul>        <li><a href="https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One, The Wikipedia Page on ASN.1">https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One, The Wikipedia Page on ASN.1</a></li>
+        <li><a href="https://en.wikipedia.org/wiki/X.690, The Wikipedia Page on X.690">https://en.wikipedia.org/wiki/X.690, The Wikipedia Page on X.690</a></li>
+        <li><a href="https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf, ASN.1 By Simple Words">https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf, ASN.1 By Simple Words</a></li>
+        <li><a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems">http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems</a></li>
+    </ul>
+  </p>
+</div>
+
+</section>
+<section class="section ddoc_module_members_section">
+  <div class="ddoc_module_members">
+    <ul class="ddoc_members">
+  <li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#berOID" id="berOID"><code class="code">berOID</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="berOID"></span>alias <code class="code">berOID</code> = basicEncodingRulesObjectIdentifier;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#berObjectID" id="berObjectID"><code class="code">berObjectID</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="berObjectID"></span>alias <code class="code">berObjectID</code> = basicEncodingRulesObjectIdentifier;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#berObjectIdentifier" id="berObjectIdentifier"><code class="code">berObjectIdentifier</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="berObjectIdentifier"></span>alias <code class="code">berObjectIdentifier</code> = basicEncodingRulesObjectIdentifier;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#basicEncodingRulesObjectIdentifier" id="basicEncodingRulesObjectIdentifier"><code class="code">basicEncodingRulesObjectIdentifier</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="basicEncodingRulesObjectIdentifier"></span>immutable OID <code class="code">basicEncodingRulesObjectIdentifier</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The object identifier assigned to the Basic Encoding Rules (BER), per the
+    <a href="https://www.itu.int/en/pages/default.aspx, International Telecommunications Union">https://www.itu.int/en/pages/default.aspx, International Telecommunications Union</a>'s,
+    <a href="http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules">http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules</a>
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BERElement" id="BERElement"><code class="code">BERElement</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BERElement"></span>alias <code class="code">BERElement</code> = BasicEncodingRulesElement;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement" id="BasicEncodingRulesElement"><code class="code">BasicEncodingRulesElement</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement"></span>class <code class="code">BasicEncodingRulesElement</code>: <span class="ddoc_psuper_symbol">asn1.codec.ASN1Element!(<code class="code">BasicEncodingRulesElement</code>).AbstractSyntaxNotation1Element</span>, <span class="ddoc_psuper_symbol">asn1.interfaces.Byteable</span>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    The unit of encoding and decoding for Basic Encoding Rules (BER).
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+        There are three parts to an element encoded according to the Basic
+    Encoding Rules (BER):
+<br><br>
+    <ul>        <li>A Type Tag, which specifies what data type is encoded</li>
+        <li>A Length Tag, which specifies how many subsequent bytes encode the data</li>
+        <li>The Encoded Value</li>
+    </ul>
+<br><br>
+    They appear in the binary encoding in that order, and as such, the encoding
+    scheme is sometimes described as "TLV," which stands for Type-Length-Value.
+<br><br>
+    This class provides a properties for getting and setting bit fields of
+    the type tag, but most of it is functionality for encoding data per
+    the specification.
+<br><br>
+    As an example, this is what encoding a simple INTEGER looks like:
+
+<section class="code_listing">
+  <div class="code_sample">
+    <div class="dlang">
+      <ol class="code_lines">
+        <li><code class="code">BERElement bv = <span class="keyword">new</span> BERElement();
+bv.tagNumber = 0x02u; <span class="comment">// "2" means this is an INTEGER
+</span>bv.integer = 1433; <span class="comment">// Now the data is encoded.
+</span>transmit(<span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) bv); <span class="comment">// transmit() is a made-up function.
+</span></code></li>
+      </ol>
+    </div>
+  </div>
+</section>
+    And this is what decoding looks like:
+
+<section class="code_listing">
+  <div class="code_sample">
+    <div class="dlang">
+      <ol class="code_lines">
+        <li><code class="code"><span class="keyword">ubyte</span>[] data = receive(); <span class="comment">// receive() is a made-up function.
+</span>BERElement bv2 = <span class="keyword">new</span> BERElement(data);
+
+<span class="keyword">long</span> x;
+<span class="keyword">if</span> (bv.tagNumber == 0x02u) <span class="comment">// it is an INTEGER
+</span>{
+    x = bv.integer;
+}
+<span class="comment">// Now x is 1433!
+</span></code></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+  </p>
+</div>
+
+</section>
+<ul class="ddoc_members">
+  <li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.lengthEncodingPreference" id="BasicEncodingRulesElement.lengthEncodingPreference"><code class="code">lengthEncodingPreference</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.lengthEncodingPreference"></span>static LengthEncodingPreference <code class="code">lengthEncodingPreference</code>;
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.endOfContent" id="BasicEncodingRulesElement.endOfContent"><code class="code">endOfContent</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.endOfContent"></span>const @property @safe void <code class="code">endOfContent</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    "Decodes" an , by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if the element is marked as "constructed"</li>
+            <li> if there are any content octets</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.boolean" id="BasicEncodingRulesElement.boolean"><code class="code">boolean</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.boolean"></span>const @property @safe bool <code class="code">boolean</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a .
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    Any non-zero value will be interpreted as . Only zero will be
+        interpreted as .
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if the encoded value is not primitively-constructed</li>
+            <li>
+                if the encoded value is not exactly 1 byte in size</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.boolean" id="BasicEncodingRulesElement.boolean"><code class="code">boolean</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.boolean.2"></span>nothrow @property @safe void <code class="code">boolean</code>(in bool <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a 
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.integer" id="BasicEncodingRulesElement.integer"><code class="code">integer</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.integer"></span>const @property @system T <code class="code">integer</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T || is(T == BigInt));
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a signed <code class="code">integer</code>.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if the encoded value is not primitively-constructed</li>
+            <li>
+                if the value is too big to decode to a signed integral type,
+                or if the value is zero bytes</li>
+            <li>
+                if there are padding bytes</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.integer" id="BasicEncodingRulesElement.integer"><code class="code">integer</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.integer.2"></span>@property @system void <code class="code">integer</code>(T)(in T <code class="code">value</code>) if (isIntegral!T &amp;&amp; isSigned!T || is(T == BigInt));
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a signed integral type
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.bitString" id="BasicEncodingRulesElement.bitString"><code class="code">bitString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.bitString"></span>const @property bool[] <code class="code">bitString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes an array of s representing a string of bits.
+
+  </p>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    an array of s, where each  represents a bit
+            in the encoded bit string
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if the any primitive contains 0 bytes</li>
+            <li>
+                if the first byte has a value greater
+                than seven, or if the first byte indicates the presence of
+                padding bits when no subsequent bytes exist, or if any primitive
+                but the last in a constructed BIT STRING uses padding bits</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.bitString" id="BasicEncodingRulesElement.bitString"><code class="code">bitString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.bitString.2"></span>@property void <code class="code">bitString</code>(in bool[] <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes an array of s representing a string of bits.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.octetString" id="BasicEncodingRulesElement.octetString"><code class="code">octetString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.octetString"></span>const @property @system ubyte[] <code class="code">octetString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes an  into an unsigned byte array.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.octetString" id="BasicEncodingRulesElement.octetString"><code class="code">octetString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.octetString.2"></span>@property @safe void <code class="code">octetString</code>(in ubyte[] <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes an  from an unsigned byte () array.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.nill" id="BasicEncodingRulesElement.nill"><code class="code">nill</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.nill"></span>const @property @safe void <code class="code">nill</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    "Decodes" a , by which I mean: returns nothing, but
+        throws exceptions if the element is not correct.
+
+  </p>
+</div>
+<div class="ddoc_section">
+  <p class="para">
+    <span class="ddoc_section_h">Note:</span>
+I had to name this method , because  is a keyword in D.
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if the element is marked as "constructed"</li>
+            <li> if there are any content octets</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.objectIdentifier" id="BasicEncodingRulesElement.objectIdentifier"><code class="code">objectIdentifier</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.objectIdentifier"></span>const @property @system OID <code class="code">objectIdentifier</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes an .
+        See  for information about
+        the  class (aliased as ).
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if the element is marked as "constructed"</li>
+            <li> if there are no value bytes</li>
+            <li> if a single OID number is encoded with
+                "leading zero bytes" ()</li>
+            <li> if a single OID number is too big to
+                decode to a </li>
+            <li> if a single OID number is "cut off"</li>
+        </ul>
+
+
+  </p>
+</div><div class="ddoc_standards">
+  <h4>Standards</h4>
+  <p class="para">
+    <ul>            <li><a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660">http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660</a></li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.objectIdentifier" id="BasicEncodingRulesElement.objectIdentifier"><code class="code">objectIdentifier</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.objectIdentifier.2"></span>@property @system void <code class="code">objectIdentifier</code>(in OID <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes an .
+        See  for information about
+        the  class (aliased as ).
+
+  </p>
+</div>
+<div class="ddoc_standards">
+  <h4>Standards</h4>
+  <p class="para">
+    <ul>            <li><a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660">http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660</a></li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.objectDescriptor" id="BasicEncodingRulesElement.objectDescriptor"><code class="code">objectDescriptor</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.objectDescriptor"></span>const @property @system string <code class="code">objectDescriptor</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes an , which is a string consisting of only
+        graphical characters. In fact,  is actually implicitly
+        just a ! The formal specification for an 
+        is:
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    
+<br><br>
+         is just a string containing only characters between
+        and including  and , therefore ObjectDescriptor is just
+         and .
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if the encoded value contains any character outside of
+                 to , which means any control characters or </li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+
+
+  </p>
+</div><div class="ddoc_section">
+  <p class="para">
+    <span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022">https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html, ISO 2022">https://www.iso.org/standard/22747.html, ISO 2022</a></li>
+        </ul>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.objectDescriptor" id="BasicEncodingRulesElement.objectDescriptor"><code class="code">objectDescriptor</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.objectDescriptor.2"></span>@property @system void <code class="code">objectDescriptor</code>(in string <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes an , which is a string consisting of only
+        graphical characters. In fact,  is actually implicitly
+        just a ! The formal specification for an 
+        is:
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    
+<br><br>
+         is just a string containing only characters between
+        and including  and , therefore ObjectDescriptor is just
+         and .
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if the string <code class="code">value</code> contains any character outside of
+                 to , which means any control characters or </li>
+        </ul>
+
+
+  </p>
+</div><div class="ddoc_section">
+  <p class="para">
+    <span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022">https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html, ISO 2022">https://www.iso.org/standard/22747.html, ISO 2022</a></li>
+        </ul>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.external" id="BasicEncodingRulesElement.external"><code class="code">external</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.external"></span>deprecated const @property @system External <code class="code">external</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes an .
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    According to the
+        <a href="https://www.itu.int/en/pages/default.aspx, International Telecommunications Union">https://www.itu.int/en/pages/default.aspx, International Telecommunications Union</a>'s
+        <a href="https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)">https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)</a>,
+        the abstract definition for an , after removing the comments in the
+        specification, is as follows:
+<br><br>
+        
+<br><br>
+        Note that the abstract syntax resembles that of  and
+        , except with a  constraint that removes some
+        of our choices of .
+        As can be seen on page 303 of Olivier Dubuisson's
+        <i><a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
+            ASN.1: Communication Between Heterogeneous Systems">http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
+            ASN.1: Communication Between Heterogeneous Systems</a></i>,
+        after applying the  constraint, our reduced syntax becomes:
+<br><br>
+        
+<br><br>
+        But, according to the
+        <a href="https://www.itu.int/en/pages/default.aspx, International Telecommunications Union">https://www.itu.int/en/pages/default.aspx, International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules">http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules</a>,
+        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
+        follows, for compatibility reasons:
+<br><br>
+        
+<br><br>
+        The definition above is the pre-1994 definition of . The 
+        field of the post-1994 definition maps to the  field of
+        the pre-1994 definition. The  field of the post-1994
+        definition maps to the  field of the pre-1994 definition.
+        If  is used, per the abstract syntax, then the
+         field of the   in the
+        post-1994 definition maps to the  field of the pre-1994
+        definition, and the  field of the 
+         maps to the  field of the pre-1994 definition.
+
+
+  </p>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    an , defined in .
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if the SEQUENCE does not contain two to four elements</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not have the correct tag class</li>
+            <li>
+                if any element has the wrong construction</li>
+            <li>
+                if any nested primitives do not have the correct tag number</li>
+            <li>
+                if a data-value-descriptor is supplied with invalid characters</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.external" id="BasicEncodingRulesElement.external"><code class="code">external</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.external.2"></span>deprecated @property @system void <code class="code">external</code>(in External <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes an .
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    According to the
+        <a href="https://www.itu.int/en/pages/default.aspx, International Telecommunications Union">https://www.itu.int/en/pages/default.aspx, International Telecommunications Union</a>'s
+        <a href="https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)">https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1)</a>,
+        the abstract definition for an , after removing the comments in the
+        specification, is as follows:
+<br><br>
+        
+<br><br>
+        Note that the abstract syntax resembles that of  and
+        , except with a  constraint that removes some
+        of our choices of .
+        As can be seen on page 303 of Olivier Dubuisson's
+        <i><a href="http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
+            ASN.1: Communication Between Heterogeneous Systems">http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF,
+            ASN.1: Communication Between Heterogeneous Systems</a></i>,
+        after applying the  constraint, our reduced syntax becomes:
+<br><br>
+        
+<br><br>
+        But, according to the
+        <a href="https://www.itu.int/en/pages/default.aspx, International Telecommunications Union">https://www.itu.int/en/pages/default.aspx, International Telecommunications Union</a>'s
+        <a href="http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules">http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules</a>,
+        section 8.18, when encoded using Basic Encoding Rules (BER), is encoded as
+        follows, for compatibility reasons:
+<br><br>
+        
+<br><br>
+        The definition above is the pre-1994 definition of . The 
+        field of the post-1994 definition maps to the  field of
+        the pre-1994 definition. The  field of the post-1994
+        definition maps to the  field of the pre-1994 definition.
+        If  is used, per the abstract syntax, then the
+         field of the   in the
+        post-1994 definition maps to the  field of the pre-1994
+        definition, and the  field of the 
+         maps to the  field of the pre-1994 definition.
+
+
+  </p>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    an instance of 
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if a data-<code class="code">value</code>-descriptor is supplied with invalid characters</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.realNumber" id="BasicEncodingRulesElement.realNumber"><code class="code">realNumber</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realNumber"></span>const @property @system T <code class="code">realNumber</code>(T)() if (isFloatingPoint!T);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a floating-point type.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    Note that this method assumes that your machine uses
+        <a href="http://ieeexplore.ieee.org/document/4610935/, IEEE 754-2008">http://ieeexplore.ieee.org/document/4610935/, IEEE 754-2008</a>
+        floating point format.
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if the element is marked as "constructed"</li>
+            <li> if the value appears to be "cut off"</li>
+            <li> if character-encoding cannot be converted to
+                the selected floating-point type, T</li>
+            <li> if the character-encoding encodes a
+                number that is too big for the selected floating-point
+                type to express</li>
+            <li> if the binary-encoding contains fewer
+                bytes than the information byte purports, or if the
+                binary-encoded mantissa is too big to be expressed by an
+                unsigned long integer</li>
+            <li> if a complicated-form exponent or a
+                non-zero-byte mantissa encodes a zero</li>
+            <li> if both bits indicating the base in the
+                information byte of a binary-encoded 's information byte
+                are set, which would indicate an invalid base, or if a special
+                value has been indicated that is not defined by the specification</li>
+        </ul>
+
+
+  </p>
+</div><div class="ddoc_section">
+  <p class="para">
+    <span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 400-402.</li>
+            <li><a href="https://www.iso.org/standard/12285.html, ISO 6093">https://www.iso.org/standard/12285.html, ISO 6093</a></li>
+        </ul>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.realNumber" id="BasicEncodingRulesElement.realNumber"><code class="code">realNumber</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.realNumber.2"></span>nothrow @property @system void <code class="code">realNumber</code>(T)(in T <code class="code">value</code>) if (isFloatingPoint!T);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a floating-point type, using base-2 binary encoding.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    Note that this method assumes that your machine uses
+        <a href="http://ieeexplore.ieee.org/document/4610935/, IEEE 754-2008">http://ieeexplore.ieee.org/document/4610935/, IEEE 754-2008</a>
+        floating point format.
+
+
+  </p>
+</div>
+<div class="ddoc_section">
+  <p class="para">
+    <span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 400-402.</li>
+            <li><a href="https://www.iso.org/standard/12285.html, ISO 6093">https://www.iso.org/standard/12285.html, ISO 6093</a></li>
+        </ul>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.enumerated" id="BasicEncodingRulesElement.enumerated"><code class="code">enumerated</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.enumerated"></span>const @property @system T <code class="code">enumerated</code>(T)() if (isIntegral!T &amp;&amp; isSigned!T);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a signed integer, which represents a selection from an
+         of choices.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if the encoded value is not primitively-constructed</li>
+            <li>
+                if the value is too big to decode to a signed integral type,
+                or if the value is zero bytes</li>
+            <li>
+                if there are padding bytes</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.enumerated" id="BasicEncodingRulesElement.enumerated"><code class="code">enumerated</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.enumerated.2"></span>nothrow @property @system void <code class="code">enumerated</code>(T)(in T <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes an  type from an integer.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.embeddedPresentationDataValue" id="BasicEncodingRulesElement.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.embeddedPresentationDataValue"></span>const @property @system EmbeddedPDV <code class="code">embeddedPresentationDataValue</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes an , which is a constructed data type, defined in
+            the <a href="https://www.itu.int, International Telecommunications Union">https://www.itu.int, International Telecommunications Union</a>'s
+            <a href="https://www.itu.int/rec/T-REC-X.680/en, X.680">https://www.itu.int/rec/T-REC-X.680/en, X.680</a>.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    The specification defines  as:
+<br><br>
+        
+<br><br>
+        This assumes , so all of the 
+        choices will be  and numbered from 0 to 5.
+
+
+  </p>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    an instance of 
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if encoded EmbeddedPDV has too few or too many
+                elements, or if syntaxes or context-negotiation element has
+                too few or too many elements</li>
+            <li> if encoded INTEGER is too large to decode</li>
+            <li> if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li> if any nested primitives do not have the
+                correct tag class</li>
+            <li> if any element has the wrong construction</li>
+            <li> if any nested primitives do not have the
+                correct tag number</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.embeddedPresentationDataValue" id="BasicEncodingRulesElement.embeddedPresentationDataValue"><code class="code">embeddedPresentationDataValue</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.embeddedPresentationDataValue.2"></span>@property @system void <code class="code">embeddedPresentationDataValue</code>(in EmbeddedPDV <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes an , which is a constructed data type, defined in
+            the <a href="https://www.itu.int, International Telecommunications Union">https://www.itu.int, International Telecommunications Union</a>'s
+            <a href="https://www.itu.int/rec/T-REC-X.680/en, X.680">https://www.itu.int/rec/T-REC-X.680/en, X.680</a>.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    The specification defines  as:
+<br><br>
+        
+<br><br>
+        This assumes , so all of the 
+        choices will be  and numbered from 0 to 5.
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if encoded ObjectDescriptor contains
+                invalid characters</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.unicodeTransformationFormat8String" id="BasicEncodingRulesElement.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.unicodeTransformationFormat8String"></span>const @property @system string <code class="code">unicodeTransformationFormat8String</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes the value to UTF-8 characters.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if the encoded value does not decode to UTF-8</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.unicodeTransformationFormat8String" id="BasicEncodingRulesElement.unicodeTransformationFormat8String"><code class="code">unicodeTransformationFormat8String</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.unicodeTransformationFormat8String.2"></span>nothrow @property @system void <code class="code">unicodeTransformationFormat8String</code>(in string <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a UTF-8 string to bytes.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.relativeObjectIdentifier" id="BasicEncodingRulesElement.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.relativeObjectIdentifier"></span>const @property @system OIDNode[] <code class="code">relativeObjectIdentifier</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a .
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if the element is marked as "constructed"</li>
+            <li> if a single OID number is encoded with
+                "leading zero bytes" ()</li>
+            <li> if a single OID number is too big to
+                decode to a </li>
+            <li> if a single OID number is "cut off"</li>
+        </ul>
+
+
+  </p>
+</div><div class="ddoc_standards">
+  <h4>Standards</h4>
+  <p class="para">
+    <ul>            <li><a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660">http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660</a></li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.relativeObjectIdentifier" id="BasicEncodingRulesElement.relativeObjectIdentifier"><code class="code">relativeObjectIdentifier</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.relativeObjectIdentifier.2"></span>nothrow @property @system void <code class="code">relativeObjectIdentifier</code>(in OIDNode[] <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a .
+
+  </p>
+</div>
+<div class="ddoc_standards">
+  <h4>Standards</h4>
+  <p class="para">
+    <a href="http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660">http://www.itu.int/rec/T-REC-X.660-201107-I/en, X.660</a>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.sequence" id="BasicEncodingRulesElement.sequence"><code class="code">sequence</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.sequence"></span>const @property @system BERElement[] <code class="code">sequence</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a <code class="code">sequence</code> of elements
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if the element is marked as "primitive"</li>
+            <li>And all of the exceptions thrown by the constructor</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.sequence" id="BasicEncodingRulesElement.sequence"><code class="code">sequence</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.sequence.2"></span>@property @system void <code class="code">sequence</code>(in BERElement[] <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a <code class="code">sequence</code> of elements
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.set" id="BasicEncodingRulesElement.set"><code class="code">set</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.set"></span>const @property @system BERElement[] <code class="code">set</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a <code class="code">set</code> of elements
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if the element is marked as "primitive"</li>
+            <li>And all of the exceptions thrown by the constructor</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.set" id="BasicEncodingRulesElement.set"><code class="code">set</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.set.2"></span>@property @system void <code class="code">set</code>(in BERElement[] <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a <code class="code">set</code> of elements
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.numericString" id="BasicEncodingRulesElement.numericString"><code class="code">numericString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.numericString"></span>const @property @system string <code class="code">numericString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a string, where the characters of the string are limited to
+        0 - 9 and .
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if any character other than 0-9 or space is encoded.</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.numericString" id="BasicEncodingRulesElement.numericString"><code class="code">numericString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.numericString.2"></span>@property @system void <code class="code">numericString</code>(in string <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a string, where the characters of the string are limited to
+        0 - 9 and space.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if any character other than 0-9 or space is supplied.</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.printableString" id="BasicEncodingRulesElement.printableString"><code class="code">printableString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.printableString"></span>const @property @system string <code class="code">printableString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a string that will only contain characters a-z, A-Z, 0-9,
+        space, apostrophe, parentheses, comma, minus, plus, period,
+        forward slash, colon, equals, and question mark.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if any character other than a-z, A-Z,
+                0-9, space, apostrophe, parentheses, comma, minus, plus,
+                period, forward slash, colon, equals, or question mark are
+                encoded</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.printableString" id="BasicEncodingRulesElement.printableString"><code class="code">printableString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.printableString.2"></span>@property @system void <code class="code">printableString</code>(in string <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a string that may only contain characters a-z, A-Z, 0-9,
+        space, apostrophe, parentheses, comma, minus, plus, period,
+        forward slash, colon, equals, and question mark.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <li> if any character other than a-z, A-Z,
+                0-9, space, apostrophe, parentheses, comma, minus, plus,
+                period, forward slash, colon, equals, or question mark are
+                supplied</li>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.teletexString" id="BasicEncodingRulesElement.teletexString"><code class="code">teletexString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.teletexString"></span>const @property @system ubyte[] <code class="code">teletexString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Literally just returns the value bytes.
+
+  </p>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    an unsigned byte array, where each byte is a T.61 character.
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.teletexString" id="BasicEncodingRulesElement.teletexString"><code class="code">teletexString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.teletexString.2"></span>nothrow @property @safe void <code class="code">teletexString</code>(in ubyte[] <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Literally just sets the <code class="code">value</code> bytes.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.videotexString" id="BasicEncodingRulesElement.videotexString"><code class="code">videotexString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.videotexString"></span>const @property @system ubyte[] <code class="code">videotexString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Literally just returns the value bytes.
+
+  </p>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    an unsigned byte array, where each byte is a Videotex character.
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.videotexString" id="BasicEncodingRulesElement.videotexString"><code class="code">videotexString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.videotexString.2"></span>nothrow @property @safe void <code class="code">videotexString</code>(in ubyte[] <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Literally just sets the <code class="code">value</code> bytes.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.internationalAlphabetNumber5String" id="BasicEncodingRulesElement.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.internationalAlphabetNumber5String"></span>const @property @system string <code class="code">internationalAlphabetNumber5String</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a string that only contains ASCII characters.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+     differs from ASCII ever so slightly: IA5 is international,
+        leaving 10 characters up to be locale-specific:
+<br><br>
+        <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
+            <tr><td>0x40</td> <td>@</td></tr>
+            <tr><td>0x5B</td> <td>[</td></tr>
+            <tr><td>0x5C</td> <td>\</td></tr>
+            <tr><td>0x5D</td> <td>]</td></tr>
+            <tr><td>0x5E</td> <td>^</td></tr>
+            <tr><td>0x60</td> <td>`</td></tr>
+            <tr><td>0x7B</td> <td>{</td></tr>
+            <tr><td>0x7C</td> <td>/</td></tr>
+            <tr><td>0x7D</td> <td>}</td></tr>
+            <tr><td>0x7E</td> <td>~</td></tr>
+        </table>
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if any encoded character is not ASCII</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.internationalAlphabetNumber5String" id="BasicEncodingRulesElement.internationalAlphabetNumber5String"><code class="code">internationalAlphabetNumber5String</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.internationalAlphabetNumber5String.2"></span>@property @system void <code class="code">internationalAlphabetNumber5String</code>(in string <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a string that may only contain ASCII characters.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+     differs from ASCII ever so slightly: IA5 is international,
+        leaving 10 characters up to be locale-specific:
+<br><br>
+        <table>            <tr><th>Byte</th> <th>ASCII Character</th></tr>
+            <tr><td>0x40</td> <td>@</td></tr>
+            <tr><td>0x5B</td> <td>[</td></tr>
+            <tr><td>0x5C</td> <td>\</td></tr>
+            <tr><td>0x5D</td> <td>]</td></tr>
+            <tr><td>0x5E</td> <td>^</td></tr>
+            <tr><td>0x60</td> <td>`</td></tr>
+            <tr><td>0x7B</td> <td>{</td></tr>
+            <tr><td>0x7C</td> <td>/</td></tr>
+            <tr><td>0x7D</td> <td>}</td></tr>
+            <tr><td>0x7E</td> <td>~</td></tr>
+        </table>
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if any encoded character is not ASCII</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.coordinatedUniversalTime" id="BasicEncodingRulesElement.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.coordinatedUniversalTime"></span>const @property @system DateTime <code class="code">coordinatedUniversalTime</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime">https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime</a>.
+        The value is just the ASCII character representation of the UTC-formatted timestamp.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    An UTC Timestamp looks like:
+        <ul>            <li></li>
+            <li></li>
+        </ul>
+<br><br>
+        If the first digit of the two-digit year is 7, 6, 5, 4, 3, 2, 1, or 0,
+        meaning that the date refers to the first 80 years of the century, this
+        assumes we are talking about the 21st century and prepend '20' when
+        creating the ISO Date String. Otherwise, it assumes we are talking
+        about the 20th century, and prepend '19' when creating the string.
+
+
+  </p>
+</div>
+<div class="ddoc_see_also">
+  <h4>See Also</h4>
+  <p class="para">
+    <ul>            <li><a href="https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime">https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime</a></li>
+            <li><a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime">https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime</a></li>
+        </ul>
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if any character is not valid in a </li>
+            <li> if the encoded string cannot be decoded to a DateTime</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.coordinatedUniversalTime" id="BasicEncodingRulesElement.coordinatedUniversalTime"><code class="code">coordinatedUniversalTime</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.coordinatedUniversalTime.2"></span>nothrow @property @system void <code class="code">coordinatedUniversalTime</code>(in DateTime <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime">https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime</a>.
+        The <code class="code">value</code> is just the ASCII character representation of the UTC-formatted timestamp.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    An UTC Timestamp looks like:
+        <ul>            <li></li>
+            <li></li>
+        </ul>
+
+
+  </p>
+</div>
+<div class="ddoc_see_also">
+  <h4>See Also</h4>
+  <p class="para">
+    <a href="https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime">https://www.obj-sys.com/asn1tutorial/node15.html, UTCTime</a>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.generalizedTime" id="BasicEncodingRulesElement.generalizedTime"><code class="code">generalizedTime</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.generalizedTime"></span>const @property @system DateTime <code class="code">generalizedTime</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime">https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime</a>.
+        The value is just the ASCII character representation of
+        the <a href="https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601">https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601</a>-formatted timestamp.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    An ISO-8601 Timestamp looks like:
+        <ul>            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if any character is not valid in a </li>
+            <li> if the encoded string cannot be decoded to a DateTime</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+
+
+  </p>
+</div><div class="ddoc_standards">
+  <h4>Standards</h4>
+  <p class="para">
+    <ul>            <li><a href="https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601">https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601</a></li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.generalizedTime" id="BasicEncodingRulesElement.generalizedTime"><code class="code">generalizedTime</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.generalizedTime.2"></span>nothrow @property @system void <code class="code">generalizedTime</code>(in DateTime <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a <a href="https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime">https://dlang.org/phobos/std_datetime_date.html#.DateTime, DateTime</a>.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    The <code class="code">value</code> is just the ASCII character representation of
+        the <a href="https://www.iso.org/iso-8601-date-and-time-format.html,
+        ISO 8601">https://www.iso.org/iso-8601-date-and-time-format.html,
+        ISO 8601</a>-formatted timestamp.
+<br><br>
+        An ISO-8601 Timestamp looks like:
+        <ul>            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+
+
+  </p>
+</div>
+<div class="ddoc_standards">
+  <h4>Standards</h4>
+  <p class="para">
+    <ul>            <li><a href="https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601">https://www.iso.org/iso-8601-date-and-time-format.html, ISO 8601</a></li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.graphicString" id="BasicEncodingRulesElement.graphicString"><code class="code">graphicString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.graphicString"></span>const @property @system string <code class="code">graphicString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes an ASCII string that contains only characters between and
+        including  and . Deprecated, according to page 182 of the
+        Dubuisson book.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if any non-graphical character (including space) is encoded</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+
+
+  </p>
+</div><div class="ddoc_section">
+  <p class="para">
+    <span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022">https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html, ISO 2022">https://www.iso.org/standard/22747.html, ISO 2022</a></li>
+        </ul>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.graphicString" id="BasicEncodingRulesElement.graphicString"><code class="code">graphicString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.graphicString.2"></span>@property @system void <code class="code">graphicString</code>(in string <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes an ASCII string that may contain only characters between and
+        including  and . Deprecated, according to page 182
+        of the Dubuisson book.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if any non-graphical character (including space) is supplied</li>
+        </ul>
+
+
+  </p>
+</div><div class="ddoc_section">
+  <p class="para">
+    <span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, pp. 175-178.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022">https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html, ISO 2022">https://www.iso.org/standard/22747.html, ISO 2022</a></li>
+        </ul>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.visibleString" id="BasicEncodingRulesElement.visibleString"><code class="code">visibleString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.visibleString"></span>const @property @system string <code class="code">visibleString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a string that only contains characters between and including
+         and . (Honestly, I don't know how this differs from
+        .)
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if any non-graphical character (including space) is encoded</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.visibleString" id="BasicEncodingRulesElement.visibleString"><code class="code">visibleString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.visibleString.2"></span>@property @system void <code class="code">visibleString</code>(in string <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a string that only contains characters between and including
+         and . (Honestly, I don't know how this differs from
+        .)
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if any non-graphical character (including space) is supplied.</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.generalString" id="BasicEncodingRulesElement.generalString"><code class="code">generalString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.generalString"></span>const @property @system string <code class="code">generalString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a string containing only ASCII characters. Deprecated, according
+        to page 182 of the Dubuisson book.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if any encoded character is not ASCII</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+
+
+  </p>
+</div><div class="ddoc_section">
+  <p class="para">
+    <span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, p. 182.</li>
+            <li><a href="https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022">https://en.wikipedia.org/wiki/ISO/IEC_2022, The Wikipedia Page on ISO 2022</a></li>
+            <li><a href="https://www.iso.org/standard/22747.html, ISO 2022">https://www.iso.org/standard/22747.html, ISO 2022</a></li>
+        </ul>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.generalString" id="BasicEncodingRulesElement.generalString"><code class="code">generalString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.generalString.2"></span>@property @system void <code class="code">generalString</code>(in string <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a string containing only ASCII characters. Deprecated,
+        according to page 182 of the Dubuisson book.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if any encoded character is not ASCII</li>
+        </ul>
+
+
+  </p>
+</div><div class="ddoc_section">
+  <p class="para">
+    <span class="ddoc_section_h">Citations:</span>
+<ul>            <li>Dubuisson, Olivier. “Basic Encoding Rules (BER).”
+                <i>ASN.1: Communication between Heterogeneous Systems</i>,
+                Morgan Kaufmann, 2001, p. 182.</li>
+        </ul>
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.universalString" id="BasicEncodingRulesElement.universalString"><code class="code">universalString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.universalString"></span>const @property @system dstring <code class="code">universalString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a  of UTF-32 characters.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if the encoded bytes is not evenly divisible by four</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.universalString" id="BasicEncodingRulesElement.universalString"><code class="code">universalString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.universalString.2"></span>@property @system void <code class="code">universalString</code>(in dstring <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a  of UTF-32 characters.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.characterString" id="BasicEncodingRulesElement.characterString"><code class="code">characterString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.characterString"></span>const @property @system CharacterString <code class="code">characterString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a , which is a constructed data type, defined
+        in the <a href="https://www.itu.int, International Telecommunications Union">https://www.itu.int, International Telecommunications Union</a>'s
+            <a href="https://www.itu.int/rec/T-REC-X.680/en, X.680">https://www.itu.int/rec/T-REC-X.680/en, X.680</a>.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    The specification defines  as:
+<br><br>
+        
+<br><br>
+        This assumes , so all of the 
+        choices will be  and numbered from 0 to 5.
+
+
+  </p>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    an instance of .
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if encoded  has too few or too many
+                elements, or if  or  element has
+                too few or too many elements</li>
+            <li> if encoded  is too large to decode</li>
+            <li> if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li> if any nested primitives do not have the
+                correct tag class</li>
+            <li> if any element has the wrong construction</li>
+            <li> if any nested primitives do not have the
+                correct tag number</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.characterString" id="BasicEncodingRulesElement.characterString"><code class="code">characterString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.characterString.2"></span>@property @system void <code class="code">characterString</code>(in CharacterString <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a , which is a constructed data type, defined
+        in the <a href="https://www.itu.int, International Telecommunications Union">https://www.itu.int, International Telecommunications Union</a>'s
+            <a href="https://www.itu.int/rec/T-REC-X.680/en, X.680">https://www.itu.int/rec/T-REC-X.680/en, X.680</a>.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    The specification defines  as:
+<br><br>
+        
+<br><br>
+        This assumes , so all of the 
+        choices will be  and numbered from 0 to 5.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.basicMultilingualPlaneString" id="BasicEncodingRulesElement.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.basicMultilingualPlaneString"></span>const @property @system wstring <code class="code">basicMultilingualPlaneString</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Decodes a  of UTF-16 characters.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li>
+                if the encoded bytes is not evenly divisible by two</li>
+            <li>
+                if using constructed form and the element
+                is constructed of too many nested constructed elements</li>
+            <li>
+                if any nested primitives do not share the
+                same tag class as their outer constructed element</li>
+            <li>
+                if any nested primitives do not share the
+                same tag number as their outer constructed element</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.basicMultilingualPlaneString" id="BasicEncodingRulesElement.basicMultilingualPlaneString"><code class="code">basicMultilingualPlaneString</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.basicMultilingualPlaneString.2"></span>@property @system void <code class="code">basicMultilingualPlaneString</code>(in wstring <code class="code">value</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Encodes a  of UTF-16 characters.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.this" id="BasicEncodingRulesElement.this"><code class="code">this</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.this"></span>nothrow @nogc @safe this(ASN1TagClass <code class="code">tagClass</code> = ASN1TagClass.universal, ASN1Construction <code class="code">construction</code> = ASN1Construction.primitive, size_t <code class="code">tagNumber</code> = 0u);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Creates an  by default
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.this" id="BasicEncodingRulesElement.this"><code class="code">this</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.this.2"></span>@system this(ref ubyte[] <code class="code">bytes</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Creates a  from the supplied <code class="code">bytes</code>, inferring that the first
+        byte is the type tag. The supplied  array is "chomped" by
+        reference, so the original array will grow shorter as s are
+        generated.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    All of the same exceptions as 
+
+
+  </p>
+</div><div class="ddoc_examples">
+  <h4>Examples</h4>
+  <p class="para">
+    
+<section class="code_listing">
+  <div class="code_sample">
+    <div class="dlang">
+      <ol class="code_lines">
+        <li><code class="code"><span class="comment">// Decoding looks like:
+</span>BERElement[] result;
+<span class="keyword">while</span> (<span class="param">bytes</span>.length &gt; 0)
+    result ~= <span class="keyword">new</span> BERElement(<span class="param">bytes</span>);
+
+<span class="comment">// Encoding looks like:
+</span><span class="keyword">ubyte</span>[] result;
+<span class="keyword">foreach</span> (bv; bervalues)
+{
+    result ~= <span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) bv;
+}
+</code></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.this" id="BasicEncodingRulesElement.this"><code class="code">this</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.this.3"></span>@system this(in ubyte[] <code class="code">bytes</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Creates a  from the supplied <code class="code">bytes</code>, inferring that the first
+        byte is the type tag. Unlike the construct that accepts a 
+        reference, this constructor does not "chomp" the array. This constructor
+        expects the encoded <code class="code">bytes</code> to encode only one . If there are
+        any remaining <code class="code">bytes</code> after decoding, an exception is thrown.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    All of the same exceptions as , but also throws an
+             if there are excess <code class="code">bytes</code>.
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.this" id="BasicEncodingRulesElement.this"><code class="code">this</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.this.4"></span>@system this(ref size_t <code class="code">bytesRead</code>, in ubyte[] <code class="code">bytes</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    Creates a  from the supplied <code class="code">bytes</code>, inferring that the first
+        byte is the type tag. The supplied  array is read, starting
+        from the index specified by , and increments
+         by the number of <code class="code">bytes</code> read.
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    All of the same exceptions as 
+
+
+  </p>
+</div><div class="ddoc_examples">
+  <h4>Examples</h4>
+  <p class="para">
+    
+<section class="code_listing">
+  <div class="code_sample">
+    <div class="dlang">
+      <ol class="code_lines">
+        <li><code class="code"><span class="comment">// Decoding looks like:
+</span>BERElement[] result;
+size_t i = 0u;
+<span class="keyword">while</span> (i &lt; <span class="param">bytes</span>.length)
+    result ~= <span class="keyword">new</span> BERElement(i, <span class="param">bytes</span>);
+
+<span class="comment">// Encoding looks like:
+</span><span class="keyword">ubyte</span>[] result;
+<span class="keyword">foreach</span> (bv; bervalues)
+{
+    result ~= <span class="keyword">cast</span>(<span class="keyword">ubyte</span>[]) bv;
+}
+</code></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.fromBytes" id="BasicEncodingRulesElement.fromBytes"><code class="code">fromBytes</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.fromBytes"></span>size_t <code class="code">fromBytes</code>(in ubyte[] <code class="code">bytes</code>);
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    the number of <code class="code">bytes</code> read
+
+
+  </p>
+</div>
+<div class="ddoc_throws">
+  <h4>Throws</h4>
+  <p class="para">
+    <ul>            <li> if the tag number is "padded" with
+                "leading zero <code class="code">bytes</code>" ()</li>
+            <li> if the tag number is too large to
+                fit into a </li>
+            <li> if the reserved length byte of
+                 is encountered</li>
+            <li> if the length is too large to fit
+                into a </li>
+            <li> if the tag, length, or value appear to
+                be truncated</li>
+            <li> if the length is indefinite, but the
+                element is marked as being encoded primitively</li>
+            <li> if, when trying to determine the end of
+                an indefinite-length encoded element, the parser has to recurse
+                too deep</li>
+        </ul>
+  </p>
+</div>
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.toBytes" id="BasicEncodingRulesElement.toBytes"><code class="code">toBytes</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.toBytes"></span>const nothrow @property @system ubyte[] <code class="code">toBytes</code>();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    This differs from  in that
+         only returns the value octets, whereas
+         returns the type tag, length tag / octets,
+        and the value octets, all concatenated.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    This is the exact same as .
+
+
+  </p>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    type tag, length tag, and value, all concatenated as a  array.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li><li class="ddoc_member">
+  <div class="ddoc_member_header">
+  <div class="ddoc_header_anchor">
+  <a href="#BasicEncodingRulesElement.opCast" id="BasicEncodingRulesElement.opCast"><code class="code">opCast</code></a>
+</div>
+</div><div class="ddoc_decl">
+  <section class="section">
+    <div class="declaration">
+      <h4>Declaration</h4>
+      <div class="dlang">
+        <p class="para">
+          <code class="code">
+            <span class="ddoc_anchor" id="BasicEncodingRulesElement.opCast"></span>nothrow @system ubyte[] <code class="code">opCast</code>(T = ubyte[])();
+
+          </code>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="ddoc_decl">
+  <section class="section ddoc_sections">
+  <div class="ddoc_summary">
+  <p class="para">
+    This differs from  in that
+         only returns the value octets, whereas
+         returns the type tag, length tag / octets,
+        and the value octets, all concatenated.
+
+  </p>
+</div>
+<div class="ddoc_description">
+  <h4>Discussion</h4>
+  <p class="para">
+    This is the exact same as .
+
+
+  </p>
+</div>
+<div class="ddoc_returns">
+  <h4>Return Value</h4>
+  <p class="para">
+    type tag, length tag, and value, all concatenated as a  array.
+  </p>
+</div>
+
+</section>
+
+</div>
+
+</li>
+</ul>
+
+</div>
+
+</li>
+</ul>
+  </div>
+</section>
+</section>
+      </article>
+    </div>
+  </body>
+</html>

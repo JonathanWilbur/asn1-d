@@ -1,0 +1,2680 @@
+[
+ {
+  "name" : "asn1.codec",
+  "kind" : "module",
+  "file" : "./source/asn1/codec.d",
+  "members" : [
+   {
+    "name" : "asn1.constants",
+    "kind" : "import",
+    "line" : 38,
+    "char" : 15
+   },
+   {
+    "name" : "asn1.types.alltypes",
+    "kind" : "import",
+    "line" : 39,
+    "char" : 15
+   },
+   {
+    "name" : "asn1.types.identification",
+    "kind" : "import",
+    "line" : 40,
+    "char" : 15
+   },
+   {
+    "name" : "asn1.types.oidtype",
+    "kind" : "import",
+    "line" : 41,
+    "char" : 15
+   },
+   {
+    "name" : "std.algorithm.mutation",
+    "kind" : "import",
+    "line" : 42,
+    "char" : 15,
+    "selective" : [
+     "reverse"
+    ]
+   },
+   {
+    "name" : "std.algorithm.searching",
+    "kind" : "import",
+    "line" : 43,
+    "char" : 15,
+    "selective" : [
+     "canFind"
+    ]
+   },
+   {
+    "name" : "std.array",
+    "kind" : "import",
+    "line" : 44,
+    "char" : 15,
+    "selective" : [
+     "appender",
+     "Appender",
+     "replace",
+     "split"
+    ]
+   },
+   {
+    "name" : "std.ascii",
+    "kind" : "import",
+    "line" : 45,
+    "char" : 15,
+    "selective" : [
+     "isASCII",
+     "isGraphical"
+    ]
+   },
+   {
+    "name" : "std.bigint",
+    "kind" : "import",
+    "line" : 46,
+    "char" : 15,
+    "selective" : [
+     "BigInt"
+    ]
+   },
+   {
+    "name" : "std.conv",
+    "kind" : "import",
+    "line" : 47,
+    "char" : 15,
+    "selective" : [
+     "text",
+     "to"
+    ]
+   },
+   {
+    "name" : "std.datetime.date",
+    "kind" : "import",
+    "line" : 48,
+    "char" : 15,
+    "selective" : [
+     "DateTime"
+    ]
+   },
+   {
+    "name" : "std.datetime.systime",
+    "kind" : "import",
+    "line" : 49,
+    "char" : 15,
+    "selective" : [
+     "SysTime"
+    ]
+   },
+   {
+    "name" : "std.datetime.timezone",
+    "kind" : "import",
+    "line" : 50,
+    "char" : 15,
+    "selective" : [
+     "TimeZone",
+     "UTC"
+    ]
+   },
+   {
+    "name" : "std.exception",
+    "kind" : "import",
+    "line" : 51,
+    "char" : 16,
+    "protection" : "private",
+    "selective" : [
+     "basicExceptionCtors"
+    ]
+   },
+   {
+    "name" : "std.math",
+    "kind" : "import",
+    "line" : 52,
+    "char" : 15,
+    "selective" : [
+     "isIdentical",
+     "isNaN",
+     "log2"
+    ]
+   },
+   {
+    "name" : "std.string",
+    "kind" : "import",
+    "line" : 53,
+    "char" : 15,
+    "selective" : [
+     "indexOf"
+    ]
+   },
+   {
+    "name" : "std.traits",
+    "kind" : "import",
+    "line" : 54,
+    "char" : 15,
+    "selective" : [
+     "isFloatingPoint",
+     "isIntegral",
+     "isSigned",
+     "isUnsigned"
+    ]
+   },
+   {
+    "name" : "ASN1CodecException",
+    "kind" : "alias",
+    "line" : 57,
+    "char" : 8,
+    "deco" : "C4asn15codec37AbstractSyntaxNotation1CodecException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1CodecException",
+    "kind" : "class",
+    "line" : 60,
+    "char" : 1,
+    "base" : "asn1.constants.AbstractSyntaxNotation1Exception",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 62,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1RecursionException",
+    "kind" : "alias",
+    "line" : 66,
+    "char" : 8,
+    "deco" : "C4asn15codec41AbstractSyntaxNotation1RecursionException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1RecursionException",
+    "kind" : "class",
+    "line" : 69,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1CodecException",
+    "members" : [
+     {
+      "name" : "recursionLimit",
+      "kind" : "variable",
+      "line" : 72,
+      "char" : 22,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "ym",
+      "originalType" : "size_t",
+      "offset" : 80
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 76,
+      "char" : 5,
+      "deco" : "FNaNfmAyaQdmZC4asn15codec41AbstractSyntaxNotation1RecursionException",
+      "originalType" : "pure @safe (size_t recursionLimit, string whatYouAttemptedToDo, string file = __FILE__, size_t line = __LINE__)",
+      "parameters" : [
+       {
+        "name" : "recursionLimit",
+        "deco" : "m"
+       },
+       {
+        "name" : "whatYouAttemptedToDo",
+        "deco" : "Aya"
+       },
+       {
+        "name" : "file",
+        "deco" : "Aya",
+        "default" : "__FILE__"
+       },
+       {
+        "name" : "line",
+        "deco" : "m",
+        "default" : "cast(ulong)__LINE__"
+       }
+      ],
+      "endline" : 96,
+      "endchar" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1TruncationException",
+    "kind" : "alias",
+    "line" : 100,
+    "char" : 8,
+    "deco" : "C4asn15codec42AbstractSyntaxNotation1TruncationException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1TruncationException",
+    "kind" : "class",
+    "line" : 109,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1CodecException",
+    "members" : [
+     {
+      "name" : "expectedBytes",
+      "kind" : "variable",
+      "line" : 112,
+      "char" : 22,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "ym",
+      "originalType" : "size_t",
+      "offset" : 80
+     },
+     {
+      "name" : "actualBytes",
+      "kind" : "variable",
+      "line" : 114,
+      "char" : 22,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "ym",
+      "originalType" : "size_t",
+      "offset" : 88
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 118,
+      "char" : 5,
+      "deco" : "FNaNfmmAyaQdmZC4asn15codec42AbstractSyntaxNotation1TruncationException",
+      "originalType" : "pure @safe (size_t expectedBytes, size_t actualBytes, string whatYouAttemptedToDo, string file = __FILE__, size_t line = __LINE__)",
+      "parameters" : [
+       {
+        "name" : "expectedBytes",
+        "deco" : "m"
+       },
+       {
+        "name" : "actualBytes",
+        "deco" : "m"
+       },
+       {
+        "name" : "whatYouAttemptedToDo",
+        "deco" : "Aya"
+       },
+       {
+        "name" : "file",
+        "deco" : "Aya",
+        "default" : "__FILE__"
+       },
+       {
+        "name" : "line",
+        "deco" : "m",
+        "default" : "cast(ulong)__LINE__"
+       }
+      ],
+      "endline" : 145,
+      "endchar" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1TagException",
+    "kind" : "alias",
+    "line" : 149,
+    "char" : 8,
+    "deco" : "C4asn15codec35AbstractSyntaxNotation1TagException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1TagException",
+    "kind" : "class",
+    "line" : 152,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1CodecException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 154,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1TagOverflowException",
+    "kind" : "alias",
+    "line" : 158,
+    "char" : 8,
+    "deco" : "C4asn15codec43AbstractSyntaxNotation1TagOverflowException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1TagOverflowException",
+    "kind" : "class",
+    "line" : 161,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1TagException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 163,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1TagPaddingException",
+    "kind" : "alias",
+    "line" : 167,
+    "char" : 8,
+    "deco" : "C4asn15codec42AbstractSyntaxNotation1TagPaddingException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1TagPaddingException",
+    "kind" : "class",
+    "line" : 170,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1TagException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 172,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1TagClassException",
+    "kind" : "alias",
+    "line" : 176,
+    "char" : 8,
+    "deco" : "C4asn15codec40AbstractSyntaxNotation1TagClassException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1TagClassException",
+    "kind" : "class",
+    "line" : 179,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1TagException",
+    "members" : [
+     {
+      "name" : "expectedTagClasses",
+      "kind" : "variable",
+      "line" : 182,
+      "char" : 26,
+      "storageClass" : [
+       "const"
+      ],
+      "deco" : "xAE4asn19constants31AbstractSyntaxNotation1TagClass",
+      "originalType" : "ASN1TagClass[]",
+      "offset" : 80
+     },
+     {
+      "name" : "actualTagClass",
+      "kind" : "variable",
+      "line" : 184,
+      "char" : 28,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "yE4asn19constants31AbstractSyntaxNotation1TagClass",
+      "originalType" : "ASN1TagClass",
+      "offset" : 96
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 188,
+      "char" : 5,
+      "deco" : "FNaNfAE4asn19constants31AbstractSyntaxNotation1TagClassQBxAyaQdmZCQCh5codec40AbstractSyntaxNotation1TagClassException",
+      "originalType" : "pure @safe (ASN1TagClass[] expectedTagClasses, ASN1TagClass actualTagClass, string whatYouAttemptedToDo, string file = __FILE__, size_t line = __LINE__)",
+      "parameters" : [
+       {
+        "name" : "expectedTagClasses",
+        "deco" : "AE4asn19constants31AbstractSyntaxNotation1TagClass"
+       },
+       {
+        "name" : "actualTagClass",
+        "deco" : "E4asn19constants31AbstractSyntaxNotation1TagClass"
+       },
+       {
+        "name" : "whatYouAttemptedToDo",
+        "deco" : "Aya"
+       },
+       {
+        "name" : "file",
+        "deco" : "Aya",
+        "default" : "__FILE__"
+       },
+       {
+        "name" : "line",
+        "deco" : "m",
+        "default" : "cast(ulong)__LINE__"
+       }
+      ],
+      "endline" : 209,
+      "endchar" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ConstructionException",
+    "kind" : "alias",
+    "line" : 213,
+    "char" : 8,
+    "deco" : "C4asn15codec44AbstractSyntaxNotation1ConstructionException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1ConstructionException",
+    "kind" : "class",
+    "line" : 216,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1TagException",
+    "members" : [
+     {
+      "name" : "actualConstruction",
+      "kind" : "variable",
+      "line" : 219,
+      "char" : 32,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "yE4asn19constants35AbstractSyntaxNotation1Construction",
+      "originalType" : "ASN1Construction",
+      "offset" : 76
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 223,
+      "char" : 5,
+      "deco" : "FNaNfE4asn19constants35AbstractSyntaxNotation1ConstructionAyaQdmZCQCi5codec44AbstractSyntaxNotation1ConstructionException",
+      "originalType" : "pure @safe (ASN1Construction actualConstruction, string whatYouAttemptedToDo, string file = __FILE__, size_t line = __LINE__)",
+      "parameters" : [
+       {
+        "name" : "actualConstruction",
+        "deco" : "E4asn19constants35AbstractSyntaxNotation1Construction"
+       },
+       {
+        "name" : "whatYouAttemptedToDo",
+        "deco" : "Aya"
+       },
+       {
+        "name" : "file",
+        "deco" : "Aya",
+        "default" : "__FILE__"
+       },
+       {
+        "name" : "line",
+        "deco" : "m",
+        "default" : "cast(ulong)__LINE__"
+       }
+      ],
+      "endline" : 241,
+      "endchar" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1TypeException",
+    "kind" : "alias",
+    "line" : 245,
+    "char" : 8,
+    "deco" : "C4asn15codec41AbstractSyntaxNotation1TagNumberException"
+   },
+   {
+    "name" : "ASN1TagNumberException",
+    "kind" : "alias",
+    "line" : 247,
+    "char" : 8,
+    "deco" : "C4asn15codec41AbstractSyntaxNotation1TagNumberException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1TagNumberException",
+    "kind" : "class",
+    "line" : 250,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1TagException",
+    "members" : [
+     {
+      "name" : "expectedTagNumber",
+      "kind" : "variable",
+      "line" : 253,
+      "char" : 22,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "ym",
+      "originalType" : "size_t",
+      "offset" : 80
+     },
+     {
+      "name" : "actualTagNumber",
+      "kind" : "variable",
+      "line" : 255,
+      "char" : 22,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "ym",
+      "originalType" : "size_t",
+      "offset" : 88
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 259,
+      "char" : 5,
+      "deco" : "FNaNfAmmAyaQdmZC4asn15codec41AbstractSyntaxNotation1TagNumberException",
+      "originalType" : "pure @safe (size_t[] expectedTagNumbers, size_t actualTagNumber, string whatYouAttemptedToDo, string file = __FILE__, size_t line = __LINE__)",
+      "parameters" : [
+       {
+        "name" : "expectedTagNumbers",
+        "deco" : "Am"
+       },
+       {
+        "name" : "actualTagNumber",
+        "deco" : "m"
+       },
+       {
+        "name" : "whatYouAttemptedToDo",
+        "deco" : "Aya"
+       },
+       {
+        "name" : "file",
+        "deco" : "Aya",
+        "default" : "__FILE__"
+       },
+       {
+        "name" : "line",
+        "deco" : "m",
+        "default" : "cast(ulong)__LINE__"
+       }
+      ],
+      "endline" : 281,
+      "endchar" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1LengthException",
+    "kind" : "alias",
+    "line" : 285,
+    "char" : 8,
+    "deco" : "C4asn15codec38AbstractSyntaxNotation1LengthException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1LengthException",
+    "kind" : "class",
+    "line" : 288,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1CodecException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 290,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1LengthOverflowException",
+    "kind" : "alias",
+    "line" : 294,
+    "char" : 8,
+    "deco" : "C4asn15codec46AbstractSyntaxNotation1LengthOverflowException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1LengthOverflowException",
+    "kind" : "class",
+    "line" : 297,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1LengthException",
+    "members" : [
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 301,
+      "char" : 5,
+      "deco" : "FNaNfAyamZC4asn15codec46AbstractSyntaxNotation1LengthOverflowException",
+      "originalType" : "pure @safe (string file = __FILE__, size_t line = __LINE__)",
+      "parameters" : [
+       {
+        "name" : "file",
+        "deco" : "Aya",
+        "default" : "__FILE__"
+       },
+       {
+        "name" : "line",
+        "deco" : "m",
+        "default" : "cast(ulong)__LINE__"
+       }
+      ],
+      "endline" : 309,
+      "endchar" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1LengthUndefinedException",
+    "kind" : "alias",
+    "line" : 313,
+    "char" : 8,
+    "deco" : "C4asn15codec47AbstractSyntaxNotation1LengthUndefinedException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1LengthUndefinedException",
+    "kind" : "class",
+    "line" : 316,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1LengthException",
+    "members" : [
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 320,
+      "char" : 5,
+      "deco" : "FNaNfAyamZC4asn15codec47AbstractSyntaxNotation1LengthUndefinedException",
+      "originalType" : "pure @safe (string file = __FILE__, size_t line = __LINE__)",
+      "parameters" : [
+       {
+        "name" : "file",
+        "deco" : "Aya",
+        "default" : "__FILE__"
+       },
+       {
+        "name" : "line",
+        "deco" : "m",
+        "default" : "cast(ulong)__LINE__"
+       }
+      ],
+      "endline" : 328,
+      "endchar" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ValueException",
+    "kind" : "alias",
+    "line" : 332,
+    "char" : 8,
+    "deco" : "C4asn15codec37AbstractSyntaxNotation1ValueException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1ValueException",
+    "kind" : "class",
+    "line" : 335,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1CodecException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 337,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ValueSizeException",
+    "kind" : "alias",
+    "line" : 341,
+    "char" : 8,
+    "deco" : "C4asn15codec41AbstractSyntaxNotation1ValueSizeException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1ValueSizeException",
+    "kind" : "class",
+    "line" : 344,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1ValueException",
+    "members" : [
+     {
+      "name" : "min",
+      "kind" : "variable",
+      "line" : 347,
+      "char" : 22,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "ym",
+      "originalType" : "size_t",
+      "offset" : 80
+     },
+     {
+      "name" : "max",
+      "kind" : "variable",
+      "line" : 349,
+      "char" : 22,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "ym",
+      "originalType" : "size_t",
+      "offset" : 88
+     },
+     {
+      "name" : "actual",
+      "kind" : "variable",
+      "line" : 351,
+      "char" : 22,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "ym",
+      "originalType" : "size_t",
+      "offset" : 96
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 355,
+      "char" : 5,
+      "deco" : "FNbNfmmmAyaQdmZC4asn15codec41AbstractSyntaxNotation1ValueSizeException",
+      "originalType" : "nothrow @safe (size_t min, size_t max, size_t actual, string whatYouAttemptedToDo, string file = __FILE__, size_t line = __LINE__)",
+      "parameters" : [
+       {
+        "name" : "min",
+        "deco" : "m"
+       },
+       {
+        "name" : "max",
+        "deco" : "m"
+       },
+       {
+        "name" : "actual",
+        "deco" : "m"
+       },
+       {
+        "name" : "whatYouAttemptedToDo",
+        "deco" : "Aya"
+       },
+       {
+        "name" : "file",
+        "deco" : "Aya",
+        "default" : "__FILE__"
+       },
+       {
+        "name" : "line",
+        "deco" : "m",
+        "default" : "cast(ulong)__LINE__"
+       }
+      ],
+      "endline" : 381,
+      "endchar" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ValueOverflowException",
+    "kind" : "alias",
+    "line" : 385,
+    "char" : 8,
+    "deco" : "C4asn15codec45AbstractSyntaxNotation1ValueOverflowException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1ValueOverflowException",
+    "kind" : "class",
+    "line" : 388,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1ValueException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 390,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ValuePaddingException",
+    "kind" : "alias",
+    "line" : 394,
+    "char" : 8,
+    "deco" : "C4asn15codec44AbstractSyntaxNotation1ValuePaddingException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1ValuePaddingException",
+    "kind" : "class",
+    "line" : 397,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1ValueException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 399,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ValueCharactersException",
+    "kind" : "alias",
+    "line" : 403,
+    "char" : 8,
+    "deco" : "C4asn15codec47AbstractSyntaxNotation1ValueCharactersException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1ValueCharactersException",
+    "kind" : "class",
+    "line" : 406,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1ValueException",
+    "members" : [
+     {
+      "name" : "offendingCharacter",
+      "kind" : "variable",
+      "line" : 409,
+      "char" : 21,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "yw",
+      "originalType" : "dchar",
+      "offset" : 76
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 413,
+      "char" : 5,
+      "deco" : "FNaNfAyawQeQgmZC4asn15codec47AbstractSyntaxNotation1ValueCharactersException",
+      "originalType" : "pure @safe (string descriptionOfPermittedCharacters, dchar offendingCharacter, string typeName, string file = __FILE__, size_t line = __LINE__)",
+      "parameters" : [
+       {
+        "name" : "descriptionOfPermittedCharacters",
+        "deco" : "Aya"
+       },
+       {
+        "name" : "offendingCharacter",
+        "deco" : "w"
+       },
+       {
+        "name" : "typeName",
+        "deco" : "Aya"
+       },
+       {
+        "name" : "file",
+        "deco" : "Aya",
+        "default" : "__FILE__"
+       },
+       {
+        "name" : "line",
+        "deco" : "m",
+        "default" : "cast(ulong)__LINE__"
+       }
+      ],
+      "endline" : 435,
+      "endchar" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ValueUndefinedException",
+    "kind" : "alias",
+    "line" : 439,
+    "char" : 8,
+    "deco" : "C4asn15codec46AbstractSyntaxNotation1ValueUndefinedException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1ValueUndefinedException",
+    "kind" : "class",
+    "line" : 442,
+    "char" : 1,
+    "base" : "asn1.codec.AbstractSyntaxNotation1ValueException",
+    "members" : [
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 444,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1Element",
+    "kind" : "alias",
+    "line" : 448,
+    "char" : 8
+   },
+   {
+    "kind" : "template",
+    "line" : 451,
+    "char" : 1,
+    "name" : "AbstractSyntaxNotation1Element",
+    "parameters" : [
+     {
+      "name" : "Element",
+      "kind" : "type"
+     }
+    ],
+    "members" : [
+     {
+      "name" : "AbstractSyntaxNotation1Element",
+      "kind" : "class",
+      "line" : 451,
+      "char" : 1,
+      "members" : [
+       {
+        "name" : "__unittest_L456_C5",
+        "kind" : "function",
+        "line" : 456,
+        "char" : 5,
+        "endline" : 464,
+        "endchar" : 5
+       },
+       {
+        "name" : "lengthRecursionCount",
+        "kind" : "variable",
+        "line" : 464,
+        "char" : 28,
+        "storageClass" : [
+         "static"
+        ],
+        "deco" : "h",
+        "init" : "0u"
+       },
+       {
+        "name" : "valueRecursionCount",
+        "kind" : "variable",
+        "line" : 467,
+        "char" : 28,
+        "storageClass" : [
+         "static"
+        ],
+        "deco" : "h",
+        "init" : "0u"
+       },
+       {
+        "name" : "nestingRecursionLimit",
+        "kind" : "variable",
+        "line" : 477,
+        "char" : 28,
+        "storageClass" : [
+         "static",
+         "immutable"
+        ],
+        "deco" : "h",
+        "init" : "5u"
+       },
+       {
+        "name" : "notWhatYouMeantText",
+        "kind" : "variable",
+        "line" : 481,
+        "char" : 22,
+        "storageClass" : [
+         "immutable"
+        ],
+        "type" : "string",
+        "init" : "\"It is highly likely that what you attempted to decode was not the \" ~ \"data type that you thought it was. Most likely, one of the following \" ~ \"scenarios occurred: (1) you did not write this program to the exact \" ~ \"specification of the protocol, or (2) someone is attempting to hack \" ~ \"this program (review the HeartBleed bug), or (3) the client sent \" ~ \"valid data that was just too big to decode. \""
+       },
+       {
+        "name" : "forMoreInformationText",
+        "kind" : "variable",
+        "line" : 488,
+        "char" : 22,
+        "storageClass" : [
+         "immutable"
+        ],
+        "type" : "string",
+        "init" : "\"For more information on the specific method or property that originated \" ~ \"this exception, see the documentation associated with this ASN.1 \" ~ \"library. For more information on ASN.1's data types in general, see \" ~ \"the International Telecommunications Union's X.680 specification, \" ~ \"which can be found at: \" ~ \"https://www.itu.int/ITU-T/studygroups/com17/languages/X.680-0207.pdf. \" ~ \"For more information on how those data types are supposed to be \" ~ \"encoded using Basic Encoding Rules, Canonical Encoding Rules, or \" ~ \"Distinguished Encoding Rules, see the International \" ~ \"Telecommunications Union's X.690 specification, which can be found \" ~ \"at: https://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf. \""
+       },
+       {
+        "name" : "debugInformationText",
+        "kind" : "variable",
+        "line" : 500,
+        "char" : 22,
+        "storageClass" : [
+         "immutable"
+        ],
+        "type" : "string",
+        "init" : "\"If reviewing the documentation does not help, you may want to run \" ~ \"the ASN.1 library in debug mode. To do this, compile the source code \" ~ \"for this library with the `-debug=asn1` flag (if you are compiling \" ~ \"with `dmd`). This will display information to the console that may \" ~ \"help you diagnose any issues. \""
+       },
+       {
+        "name" : "reportBugsText",
+        "kind" : "variable",
+        "line" : 506,
+        "char" : 22,
+        "storageClass" : [
+         "immutable"
+        ],
+        "type" : "string",
+        "init" : "\"If none of the steps above helped, and you believe that you have \" ~ \"discovered a bug, please create an issue on the GitHub page's Issues \" ~ \"section at: https://github.com/JonathanWilbur/asn1-d/issues. \""
+       },
+       {
+        "name" : "tagClass",
+        "kind" : "variable",
+        "line" : 512,
+        "char" : 25,
+        "type" : "ASN1TagClass"
+       },
+       {
+        "name" : "construction",
+        "kind" : "variable",
+        "line" : 514,
+        "char" : 29,
+        "type" : "ASN1Construction"
+       },
+       {
+        "name" : "tagNumber",
+        "kind" : "variable",
+        "line" : 516,
+        "char" : 19,
+        "type" : "size_t"
+       },
+       {
+        "name" : "length",
+        "kind" : "function",
+        "line" : 520,
+        "char" : 12,
+        "type" : "const nothrow @property @safe size_t()",
+        "endline" : 523,
+        "endchar" : 5
+       },
+       {
+        "name" : "value",
+        "kind" : "variable",
+        "line" : 543,
+        "char" : 20,
+        "type" : "ubyte[]"
+       },
+       {
+        "name" : "validateTag",
+        "kind" : "function",
+        "line" : 569,
+        "char" : 10,
+        "type" : "const @system void(ASN1TagClass[] acceptableTagClasses, ASN1Construction acceptableConstruction, size_t[] acceptableTagNumbers, string whatYouAttemptedToDo)",
+        "parameters" : [
+         {
+          "name" : "acceptableTagClasses",
+          "type" : "ASN1TagClass[]"
+         },
+         {
+          "name" : "acceptableConstruction",
+          "type" : "ASN1Construction"
+         },
+         {
+          "name" : "acceptableTagNumbers",
+          "type" : "size_t[]"
+         },
+         {
+          "name" : "whatYouAttemptedToDo",
+          "type" : "string"
+         }
+        ],
+        "endline" : 594,
+        "endchar" : 5
+       },
+       {
+        "name" : "validateTag",
+        "kind" : "function",
+        "line" : 624,
+        "char" : 10,
+        "type" : "const @system void(ASN1TagClass[] acceptableTagClasses, size_t[] acceptableTagNumbers, string whatYouAttemptedToDo)",
+        "parameters" : [
+         {
+          "name" : "acceptableTagClasses",
+          "type" : "ASN1TagClass[]"
+         },
+         {
+          "name" : "acceptableTagNumbers",
+          "type" : "size_t[]"
+         },
+         {
+          "name" : "whatYouAttemptedToDo",
+          "type" : "string"
+         }
+        ],
+        "endline" : 644,
+        "endchar" : 5
+       },
+       {
+        "name" : "isUniversal",
+        "kind" : "function",
+        "line" : 651,
+        "char" : 10,
+        "type" : "const nothrow @nogc @property @safe bool()",
+        "endline" : 654,
+        "endchar" : 5
+       },
+       {
+        "name" : "isApplication",
+        "kind" : "function",
+        "line" : 661,
+        "char" : 10,
+        "type" : "const nothrow @nogc @property @safe bool()",
+        "endline" : 664,
+        "endchar" : 5
+       },
+       {
+        "name" : "isContextSpecific",
+        "kind" : "function",
+        "line" : 671,
+        "char" : 10,
+        "type" : "const nothrow @nogc @property @safe bool()",
+        "endline" : 674,
+        "endchar" : 5
+       },
+       {
+        "name" : "isPrivate",
+        "kind" : "function",
+        "line" : 681,
+        "char" : 10,
+        "type" : "const nothrow @nogc @property @safe bool()",
+        "endline" : 684,
+        "endchar" : 5
+       },
+       {
+        "name" : "isPrimitive",
+        "kind" : "function",
+        "line" : 691,
+        "char" : 10,
+        "type" : "const nothrow @nogc @property @safe bool()",
+        "endline" : 694,
+        "endchar" : 5
+       },
+       {
+        "name" : "isConstructed",
+        "kind" : "function",
+        "line" : 701,
+        "char" : 10,
+        "type" : "const nothrow @nogc @property @safe bool()",
+        "endline" : 704,
+        "endchar" : 5
+       },
+       {
+        "name" : "LengthEncodingPreference",
+        "kind" : "enum",
+        "line" : 713,
+        "char" : 5,
+        "baseDeco" : "h",
+        "members" : [
+         {
+          "name" : "definite",
+          "kind" : "enum member",
+          "line" : 715,
+          "char" : 9
+         },
+         {
+          "name" : "indefinite",
+          "kind" : "enum member",
+          "line" : 716,
+          "char" : 9
+         }
+        ]
+       },
+       {
+        "name" : "endOfContent",
+        "kind" : "function",
+        "line" : 730,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property void()"
+       },
+       {
+        "name" : "boolean",
+        "kind" : "function",
+        "line" : 734,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property bool()"
+       },
+       {
+        "name" : "boolean",
+        "kind" : "function",
+        "line" : 738,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in bool value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "deco" : "b",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L741_C5",
+        "kind" : "function",
+        "line" : 741,
+        "char" : 5,
+        "endline" : 754,
+        "endchar" : 5
+       },
+       {
+        "kind" : "template",
+        "line" : 755,
+        "char" : 7,
+        "name" : "integer",
+        "parameters" : [
+         {
+          "name" : "T",
+          "kind" : "type"
+         }
+        ],
+        "constraint" : "isIntegral!T && isSigned!T || is(T == BigInt)",
+        "members" : [
+         {
+          "name" : "integer",
+          "kind" : "function",
+          "line" : 755,
+          "char" : 7,
+          "storageClass" : [
+           "abstract"
+          ],
+          "type" : "const @property T()"
+         }
+        ]
+       },
+       {
+        "kind" : "template",
+        "line" : 759,
+        "char" : 10,
+        "name" : "integer",
+        "parameters" : [
+         {
+          "name" : "T",
+          "kind" : "type"
+         }
+        ],
+        "constraint" : "isIntegral!T && isSigned!T || is(T == BigInt)",
+        "members" : [
+         {
+          "name" : "integer",
+          "kind" : "function",
+          "line" : 759,
+          "char" : 10,
+          "storageClass" : [
+           "abstract"
+          ],
+          "type" : "@property void(in T value)",
+          "parameters" : [
+           {
+            "name" : "value",
+            "type" : "T",
+            "storageClass" : [
+             "in"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L763_C5",
+        "kind" : "function",
+        "line" : 763,
+        "char" : 5,
+        "endline" : 782,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L783_C5",
+        "kind" : "function",
+        "line" : 783,
+        "char" : 5,
+        "endline" : 801,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L802_C5",
+        "kind" : "function",
+        "line" : 802,
+        "char" : 5,
+        "endline" : 821,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L822_C5",
+        "kind" : "function",
+        "line" : 822,
+        "char" : 5,
+        "endline" : 838,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L839_C5",
+        "kind" : "function",
+        "line" : 839,
+        "char" : 5,
+        "endline" : 1010,
+        "endchar" : 5
+       },
+       {
+        "name" : "bitString",
+        "kind" : "function",
+        "line" : 1011,
+        "char" : 12,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property bool[]()"
+       },
+       {
+        "name" : "bitString",
+        "kind" : "function",
+        "line" : 1014,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in bool[] value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "bool[]",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L1017_C5",
+        "kind" : "function",
+        "line" : 1017,
+        "char" : 5,
+        "endline" : 1034,
+        "endchar" : 5
+       },
+       {
+        "name" : "octetString",
+        "kind" : "function",
+        "line" : 1035,
+        "char" : 13,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property ubyte[]()"
+       },
+       {
+        "name" : "octetString",
+        "kind" : "function",
+        "line" : 1039,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in ubyte[] value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "ubyte[]",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L1042_C5",
+        "kind" : "function",
+        "line" : 1042,
+        "char" : 5,
+        "endline" : 1053,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1054_C5",
+        "kind" : "function",
+        "line" : 1054,
+        "char" : 5,
+        "endline" : 1064,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1065_C5",
+        "kind" : "function",
+        "line" : 1065,
+        "char" : 5,
+        "endline" : 1088,
+        "endchar" : 5
+       },
+       {
+        "name" : "nill",
+        "kind" : "function",
+        "line" : 1089,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property void()"
+       },
+       {
+        "name" : "oid",
+        "kind" : "alias",
+        "line" : 1092,
+        "char" : 12,
+        "type" : "objectIdentifier"
+       },
+       {
+        "name" : "objectID",
+        "kind" : "alias",
+        "line" : 1094,
+        "char" : 12,
+        "type" : "objectIdentifier"
+       },
+       {
+        "name" : "objectIdentifier",
+        "kind" : "function",
+        "line" : 1097,
+        "char" : 9,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property OID()"
+       },
+       {
+        "name" : "objectIdentifier",
+        "kind" : "function",
+        "line" : 1101,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in OID value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "OID",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L1104_C5",
+        "kind" : "function",
+        "line" : 1104,
+        "char" : 5,
+        "endline" : 1208,
+        "endchar" : 5
+       },
+       {
+        "name" : "objectDescriptor",
+        "kind" : "function",
+        "line" : 1209,
+        "char" : 12,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property string()"
+       },
+       {
+        "name" : "objectDescriptor",
+        "kind" : "function",
+        "line" : 1230,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in string value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "string",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L1233_C5",
+        "kind" : "function",
+        "line" : 1233,
+        "char" : 5,
+        "endline" : 1277,
+        "endchar" : 5
+       },
+       {
+        "name" : "external",
+        "kind" : "function",
+        "line" : 1278,
+        "char" : 14,
+        "storageClass" : [
+         "abstract",
+         "deprecated"
+        ],
+        "type" : "const @property External()"
+       },
+       {
+        "name" : "external",
+        "kind" : "function",
+        "line" : 1303,
+        "char" : 10,
+        "storageClass" : [
+         "abstract",
+         "deprecated"
+        ],
+        "type" : "@property void(in External value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "External",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L1307_C5",
+        "kind" : "function",
+        "line" : 1307,
+        "char" : 5,
+        "endline" : 1346,
+        "endchar" : 5
+       },
+       {
+        "kind" : "template",
+        "line" : 1347,
+        "char" : 7,
+        "name" : "realNumber",
+        "parameters" : [
+         {
+          "name" : "T",
+          "kind" : "type"
+         }
+        ],
+        "constraint" : "isFloatingPoint!T",
+        "members" : [
+         {
+          "name" : "realNumber",
+          "kind" : "function",
+          "line" : 1347,
+          "char" : 7,
+          "storageClass" : [
+           "abstract"
+          ],
+          "type" : "const @property T()"
+         }
+        ]
+       },
+       {
+        "kind" : "template",
+        "line" : 1351,
+        "char" : 10,
+        "name" : "realNumber",
+        "parameters" : [
+         {
+          "name" : "T",
+          "kind" : "type"
+         }
+        ],
+        "constraint" : "isFloatingPoint!T",
+        "members" : [
+         {
+          "name" : "realNumber",
+          "kind" : "function",
+          "line" : 1351,
+          "char" : 10,
+          "storageClass" : [
+           "abstract"
+          ],
+          "type" : "@property void(in T value)",
+          "parameters" : [
+           {
+            "name" : "value",
+            "type" : "T",
+            "storageClass" : [
+             "in"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L1354_C5",
+        "kind" : "function",
+        "line" : 1354,
+        "char" : 5,
+        "endline" : 1381,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1382_C5",
+        "kind" : "function",
+        "line" : 1382,
+        "char" : 5,
+        "endline" : 1406,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1407_C5",
+        "kind" : "function",
+        "line" : 1407,
+        "char" : 5,
+        "endline" : 1506,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1507_C5",
+        "kind" : "function",
+        "line" : 1507,
+        "char" : 5,
+        "endline" : 1558,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1559_C5",
+        "kind" : "function",
+        "line" : 1559,
+        "char" : 5,
+        "endline" : 1594,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1595_C5",
+        "kind" : "function",
+        "line" : 1595,
+        "char" : 5,
+        "endline" : 1694,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1695_C5",
+        "kind" : "function",
+        "line" : 1695,
+        "char" : 5,
+        "endline" : 1758,
+        "endchar" : 5
+       },
+       {
+        "kind" : "template",
+        "line" : 1759,
+        "char" : 7,
+        "name" : "enumerated",
+        "parameters" : [
+         {
+          "name" : "T",
+          "kind" : "type"
+         }
+        ],
+        "constraint" : "isIntegral!T && isSigned!T",
+        "members" : [
+         {
+          "name" : "enumerated",
+          "kind" : "function",
+          "line" : 1759,
+          "char" : 7,
+          "storageClass" : [
+           "abstract"
+          ],
+          "type" : "const @property T()"
+         }
+        ]
+       },
+       {
+        "kind" : "template",
+        "line" : 1763,
+        "char" : 10,
+        "name" : "enumerated",
+        "parameters" : [
+         {
+          "name" : "T",
+          "kind" : "type"
+         }
+        ],
+        "constraint" : "isIntegral!T && isSigned!T",
+        "members" : [
+         {
+          "name" : "enumerated",
+          "kind" : "function",
+          "line" : 1763,
+          "char" : 10,
+          "storageClass" : [
+           "abstract"
+          ],
+          "type" : "@property void(in T value)",
+          "parameters" : [
+           {
+            "name" : "value",
+            "type" : "T",
+            "storageClass" : [
+             "in"
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L1767_C5",
+        "kind" : "function",
+        "line" : 1767,
+        "char" : 5,
+        "endline" : 1784,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1785_C5",
+        "kind" : "function",
+        "line" : 1785,
+        "char" : 5,
+        "endline" : 1800,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1801_C5",
+        "kind" : "function",
+        "line" : 1801,
+        "char" : 5,
+        "endline" : 1818,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1819_C5",
+        "kind" : "function",
+        "line" : 1819,
+        "char" : 5,
+        "endline" : 1829,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L1830_C5",
+        "kind" : "function",
+        "line" : 1830,
+        "char" : 5,
+        "endline" : 2002,
+        "endchar" : 5
+       },
+       {
+        "name" : "embeddedPDV",
+        "kind" : "alias",
+        "line" : 2002,
+        "char" : 12,
+        "type" : "embeddedPresentationDataValue"
+       },
+       {
+        "name" : "embeddedPresentationDataValue",
+        "kind" : "function",
+        "line" : 2032,
+        "char" : 17,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property EmbeddedPDV()"
+       },
+       {
+        "name" : "embeddedPresentationDataValue",
+        "kind" : "function",
+        "line" : 2063,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in EmbeddedPDV value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "EmbeddedPDV",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2066_C5",
+        "kind" : "function",
+        "line" : 2066,
+        "char" : 5,
+        "endline" : 2090,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2091_C5",
+        "kind" : "function",
+        "line" : 2091,
+        "char" : 5,
+        "endline" : 2107,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2108_C5",
+        "kind" : "function",
+        "line" : 2108,
+        "char" : 5,
+        "endline" : 2124,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2125_C5",
+        "kind" : "function",
+        "line" : 2125,
+        "char" : 5,
+        "endline" : 2142,
+        "endchar" : 5
+       },
+       {
+        "name" : "utf8String",
+        "kind" : "alias",
+        "line" : 2142,
+        "char" : 12,
+        "type" : "unicodeTransformationFormat8String"
+       },
+       {
+        "name" : "unicodeTransformationFormat8String",
+        "kind" : "function",
+        "line" : 2145,
+        "char" : 12,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property string()"
+       },
+       {
+        "name" : "unicodeTransformationFormat8String",
+        "kind" : "function",
+        "line" : 2149,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in string value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "string",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2152_C5",
+        "kind" : "function",
+        "line" : 2152,
+        "char" : 5,
+        "endline" : 2165,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2166_C5",
+        "kind" : "function",
+        "line" : 2166,
+        "char" : 5,
+        "endline" : 2176,
+        "endchar" : 5
+       },
+       {
+        "name" : "roid",
+        "kind" : "alias",
+        "line" : 2176,
+        "char" : 12,
+        "type" : "relativeObjectIdentifier"
+       },
+       {
+        "name" : "relativeOID",
+        "kind" : "alias",
+        "line" : 2178,
+        "char" : 12,
+        "type" : "relativeObjectIdentifier"
+       },
+       {
+        "name" : "relativeObjectIdentifier",
+        "kind" : "function",
+        "line" : 2181,
+        "char" : 15,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property OIDNode[]()"
+       },
+       {
+        "name" : "relativeObjectIdentifier",
+        "kind" : "function",
+        "line" : 2185,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in OIDNode[] value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "OIDNode[]",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2188_C5",
+        "kind" : "function",
+        "line" : 2188,
+        "char" : 5,
+        "endline" : 2205,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2206_C5",
+        "kind" : "function",
+        "line" : 2206,
+        "char" : 5,
+        "endline" : 2258,
+        "endchar" : 5
+       },
+       {
+        "name" : "sequence",
+        "kind" : "function",
+        "line" : 2259,
+        "char" : 15,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property Element[]()"
+       },
+       {
+        "name" : "sequence",
+        "kind" : "function",
+        "line" : 2271,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in Element[] value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "Element[]",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "set",
+        "kind" : "function",
+        "line" : 2283,
+        "char" : 15,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property Element[]()"
+       },
+       {
+        "name" : "set",
+        "kind" : "function",
+        "line" : 2295,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in Element[] value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "Element[]",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "numericString",
+        "kind" : "function",
+        "line" : 2302,
+        "char" : 12,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property string()"
+       },
+       {
+        "name" : "numericString",
+        "kind" : "function",
+        "line" : 2309,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in string value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "string",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2312_C5",
+        "kind" : "function",
+        "line" : 2312,
+        "char" : 5,
+        "endline" : 2329,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2330_C5",
+        "kind" : "function",
+        "line" : 2330,
+        "char" : 5,
+        "endline" : 2344,
+        "endchar" : 5
+       },
+       {
+        "name" : "printableString",
+        "kind" : "function",
+        "line" : 2345,
+        "char" : 12,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property string()"
+       },
+       {
+        "name" : "printableString",
+        "kind" : "function",
+        "line" : 2353,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in string value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "string",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2356_C5",
+        "kind" : "function",
+        "line" : 2356,
+        "char" : 5,
+        "endline" : 2378,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2379_C5",
+        "kind" : "function",
+        "line" : 2379,
+        "char" : 5,
+        "endline" : 2389,
+        "endchar" : 5
+       },
+       {
+        "name" : "t61String",
+        "kind" : "alias",
+        "line" : 2389,
+        "char" : 12,
+        "type" : "teletexString"
+       },
+       {
+        "name" : "teletexString",
+        "kind" : "function",
+        "line" : 2392,
+        "char" : 13,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property ubyte[]()"
+       },
+       {
+        "name" : "teletexString",
+        "kind" : "function",
+        "line" : 2396,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in ubyte[] value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "ubyte[]",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2399_C5",
+        "kind" : "function",
+        "line" : 2399,
+        "char" : 5,
+        "endline" : 2412,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2413_C5",
+        "kind" : "function",
+        "line" : 2413,
+        "char" : 5,
+        "endline" : 2423,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2424_C5",
+        "kind" : "function",
+        "line" : 2424,
+        "char" : 5,
+        "endline" : 2434,
+        "endchar" : 5
+       },
+       {
+        "name" : "videotexString",
+        "kind" : "function",
+        "line" : 2435,
+        "char" : 13,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property ubyte[]()"
+       },
+       {
+        "name" : "videotexString",
+        "kind" : "function",
+        "line" : 2438,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in ubyte[] value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "ubyte[]",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2441_C5",
+        "kind" : "function",
+        "line" : 2441,
+        "char" : 5,
+        "endline" : 2454,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2455_C5",
+        "kind" : "function",
+        "line" : 2455,
+        "char" : 5,
+        "endline" : 2465,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2466_C5",
+        "kind" : "function",
+        "line" : 2466,
+        "char" : 5,
+        "endline" : 2477,
+        "endchar" : 5
+       },
+       {
+        "name" : "ia5String",
+        "kind" : "alias",
+        "line" : 2477,
+        "char" : 12,
+        "type" : "internationalAlphabetNumber5String"
+       },
+       {
+        "name" : "internationalAlphabetNumber5String",
+        "kind" : "function",
+        "line" : 2480,
+        "char" : 12,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property string()"
+       },
+       {
+        "name" : "internationalAlphabetNumber5String",
+        "kind" : "function",
+        "line" : 2484,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in string value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "string",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2487_C5",
+        "kind" : "function",
+        "line" : 2487,
+        "char" : 5,
+        "endline" : 2501,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2502_C5",
+        "kind" : "function",
+        "line" : 2502,
+        "char" : 5,
+        "endline" : 2512,
+        "endchar" : 5
+       },
+       {
+        "name" : "utc",
+        "kind" : "alias",
+        "line" : 2512,
+        "char" : 12,
+        "type" : "coordinatedUniversalTime"
+       },
+       {
+        "name" : "utcTime",
+        "kind" : "alias",
+        "line" : 2514,
+        "char" : 12,
+        "type" : "coordinatedUniversalTime"
+       },
+       {
+        "name" : "coordinatedUniversalTime",
+        "kind" : "function",
+        "line" : 2517,
+        "char" : 14,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property DateTime()"
+       },
+       {
+        "name" : "coordinatedUniversalTime",
+        "kind" : "function",
+        "line" : 2521,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in DateTime value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "DateTime",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2524_C5",
+        "kind" : "function",
+        "line" : 2524,
+        "char" : 5,
+        "endline" : 2535,
+        "endchar" : 5
+       },
+       {
+        "name" : "generalizedTime",
+        "kind" : "function",
+        "line" : 2536,
+        "char" : 14,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property DateTime()"
+       },
+       {
+        "name" : "generalizedTime",
+        "kind" : "function",
+        "line" : 2540,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in DateTime value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "DateTime",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2543_C5",
+        "kind" : "function",
+        "line" : 2543,
+        "char" : 5,
+        "endline" : 2563,
+        "endchar" : 5
+       },
+       {
+        "name" : "graphicString",
+        "kind" : "function",
+        "line" : 2565,
+        "char" : 12,
+        "storageClass" : [
+         "abstract",
+         "deprecated"
+        ],
+        "type" : "const @property string()"
+       },
+       {
+        "name" : "graphicString",
+        "kind" : "function",
+        "line" : 2579,
+        "char" : 10,
+        "storageClass" : [
+         "abstract",
+         "deprecated"
+        ],
+        "type" : "@property void(in string value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "string",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2582_C5",
+        "kind" : "function",
+        "line" : 2582,
+        "char" : 5,
+        "endline" : 2605,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2606_C5",
+        "kind" : "function",
+        "line" : 2606,
+        "char" : 5,
+        "endline" : 2616,
+        "endchar" : 5
+       },
+       {
+        "name" : "iso646String",
+        "kind" : "alias",
+        "line" : 2616,
+        "char" : 12,
+        "type" : "visibleString"
+       },
+       {
+        "name" : "visibleString",
+        "kind" : "function",
+        "line" : 2623,
+        "char" : 12,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property string()"
+       },
+       {
+        "name" : "visibleString",
+        "kind" : "function",
+        "line" : 2631,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in string value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "string",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2634_C5",
+        "kind" : "function",
+        "line" : 2634,
+        "char" : 5,
+        "endline" : 2657,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2658_C5",
+        "kind" : "function",
+        "line" : 2658,
+        "char" : 5,
+        "endline" : 2668,
+        "endchar" : 5
+       },
+       {
+        "name" : "generalString",
+        "kind" : "function",
+        "line" : 2670,
+        "char" : 12,
+        "storageClass" : [
+         "abstract",
+         "deprecated"
+        ],
+        "type" : "@property string()"
+       },
+       {
+        "name" : "generalString",
+        "kind" : "function",
+        "line" : 2675,
+        "char" : 10,
+        "storageClass" : [
+         "abstract",
+         "deprecated"
+        ],
+        "type" : "@property void(in string value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "string",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2678_C5",
+        "kind" : "function",
+        "line" : 2678,
+        "char" : 5,
+        "endline" : 2692,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2693_C5",
+        "kind" : "function",
+        "line" : 2693,
+        "char" : 5,
+        "endline" : 2703,
+        "endchar" : 5
+       },
+       {
+        "name" : "universalString",
+        "kind" : "function",
+        "line" : 2704,
+        "char" : 13,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property dstring()"
+       },
+       {
+        "name" : "universalString",
+        "kind" : "function",
+        "line" : 2708,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in dstring value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "dstring",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2711_C5",
+        "kind" : "function",
+        "line" : 2711,
+        "char" : 5,
+        "endline" : 2724,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2725_C5",
+        "kind" : "function",
+        "line" : 2725,
+        "char" : 5,
+        "endline" : 2760,
+        "endchar" : 5
+       },
+       {
+        "name" : "characterString",
+        "kind" : "function",
+        "line" : 2761,
+        "char" : 21,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property CharacterString()"
+       },
+       {
+        "name" : "characterString",
+        "kind" : "function",
+        "line" : 2790,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in CharacterString value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "CharacterString",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2793_C5",
+        "kind" : "function",
+        "line" : 2793,
+        "char" : 5,
+        "endline" : 2815,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2816_C5",
+        "kind" : "function",
+        "line" : 2816,
+        "char" : 5,
+        "endline" : 2832,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2833_C5",
+        "kind" : "function",
+        "line" : 2833,
+        "char" : 5,
+        "endline" : 2849,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2850_C5",
+        "kind" : "function",
+        "line" : 2850,
+        "char" : 5,
+        "endline" : 2870,
+        "endchar" : 5
+       },
+       {
+        "name" : "bmpString",
+        "kind" : "alias",
+        "line" : 2870,
+        "char" : 12,
+        "type" : "basicMultilingualPlaneString"
+       },
+       {
+        "name" : "basicMultilingualPlaneString",
+        "kind" : "function",
+        "line" : 2873,
+        "char" : 13,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "const @property wstring()"
+       },
+       {
+        "name" : "basicMultilingualPlaneString",
+        "kind" : "function",
+        "line" : 2877,
+        "char" : 10,
+        "storageClass" : [
+         "abstract"
+        ],
+        "type" : "@property void(in wstring value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "wstring",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ]
+       },
+       {
+        "name" : "__unittest_L2880_C5",
+        "kind" : "function",
+        "line" : 2880,
+        "char" : 5,
+        "endline" : 2893,
+        "endchar" : 5
+       },
+       {
+        "name" : "__unittest_L2894_C5",
+        "kind" : "function",
+        "line" : 2894,
+        "char" : 5,
+        "endline" : 2903,
+        "endchar" : 1
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+]

@@ -99,7 +99,7 @@ Vagrant.configure("2") do |config|
       VERSION=`cat /vagrant/version`
       PACKAGE_NAME="asn1"
 
-      yum upgrade -y
+      # yum upgrade -y
 
       # Install DMD
       yum install -y glibc-devel.i686 libcurl.i686 # For some reason, you need the 32-bit libs
@@ -120,20 +120,21 @@ Vagrant.configure("2") do |config|
 
       # Download the Example RPM
       # Instructions sourced from here: https://access.redhat.com/sites/default/files/attachments/rpm_building_howto.pdf
-      wget ftp://ftp.redhat.com/pub/redhat/linux/enterprise/6Workstation/en/os/SRPMS/tree-1.5.3-2.el6.src.rpm
-      rpm -i tree-1.5.3-2.el6.src.rpm
+      # wget ftp://ftp.redhat.com/pub/redhat/linux/enterprise/6Workstation/en/os/SRPMS/tree-1.5.3-2.el6.src.rpm
+      # rpm -i tree-1.5.3-2.el6.src.rpm
 
       # Create a GPG Key. You must have this to create the package.
       gpg --batch --gen-key /vagrant/package/deb/gpg.script
 
-      # Copy over the entire source directory so we don't accidentally screw up the source
-      mkdir -p /package/${PACKAGE_NAME}-${VERSION}
-      cp -pr /vagrant/* /package/${PACKAGE_NAME}-${VERSION}
-      cd /package/${PACKAGE_NAME}-${VERSION}
-
-      # Build the RPM Package
-      cp /vagrant/package/rpm/SPECS/asn1.spec ~/rpmbuild/SPECS
-      wget https://github.com/JonathanWilbur/asn1-d/archive/v${VERSION}.tar.gz -O ~/rpmbuild/SOURCES/v${VERSION}.tar.gz
+      mkdir -p /home/vagrant/rpmbuild/BUILD
+      mkdir -p /home/vagrant/rpmbuild/BUILDROOT
+      mkdir -p /home/vagrant/rpmbuild/RPMS
+      mkdir -p /home/vagrant/rpmbuild/SPECS
+      mkdir -p /home/vagrant/rpmbuild/SOURCES
+      mkdir -p /home/vagrant/rpmbuild/SRPMS
+      tar --create --gzip --file /home/vagrant/rpmbuild/SOURCES/${PACKAGE_NAME}-${VERSION}.tar.gz /vagrant
+      cp /vagrant/package/rpm/SPECS/asn1.spec /home/vagrant/rpmbuild/SPECS
+      chown -R vagrant:vagrant /home/vagrant
 
     SHELL
   end

@@ -1,0 +1,186 @@
+[
+ {
+  "name" : "asn1.types.oidtype",
+  "kind" : "module",
+  "file" : "./source/asn1/types/oidtype.d",
+  "members" : [
+   {
+    "name" : "asn1.codec",
+    "kind" : "import",
+    "line" : 2,
+    "char" : 8,
+    "protection" : "private",
+    "selective" : [
+     "ASN1ValueException"
+    ]
+   },
+   {
+    "name" : "std.ascii",
+    "kind" : "import",
+    "line" : 3,
+    "char" : 8,
+    "protection" : "private",
+    "selective" : [
+     "isGraphical"
+    ]
+   },
+   {
+    "name" : "std.exception",
+    "kind" : "import",
+    "line" : 4,
+    "char" : 8,
+    "protection" : "private",
+    "selective" : [
+     "assertThrown"
+    ]
+   },
+   {
+    "name" : "OIDNode",
+    "kind" : "alias",
+    "line" : 7,
+    "char" : 8,
+    "deco" : "S4asn15types7oidtype20ObjectIdentifierNode"
+   },
+   {
+    "name" : "ObjectIdentifierNode",
+    "kind" : "struct",
+    "line" : 13,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "number",
+      "kind" : "variable",
+      "line" : 19,
+      "char" : 19,
+      "deco" : "m",
+      "originalType" : "size_t",
+      "offset" : 0
+     },
+     {
+      "name" : "_descriptor",
+      "kind" : "variable",
+      "protection" : "private",
+      "line" : 20,
+      "char" : 20,
+      "deco" : "Aya",
+      "offset" : 8
+     },
+     {
+      "name" : "descriptor",
+      "kind" : "function",
+      "line" : 33,
+      "char" : 12,
+      "deco" : "xFNaNbNdNfZAya",
+      "endline" : 36,
+      "endchar" : 5
+     },
+     {
+      "name" : "descriptor",
+      "kind" : "function",
+      "line" : 49,
+      "char" : 10,
+      "deco" : "FNaNdNfAyaZv",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "Aya"
+       }
+      ],
+      "endline" : 73,
+      "endchar" : 5
+     },
+     {
+      "name" : "opEquals",
+      "kind" : "function",
+      "line" : 77,
+      "char" : 10,
+      "deco" : "xFNaNbNiNfxS4asn15types7oidtype20ObjectIdentifierNodeZb",
+      "originalType" : "const pure nothrow @nogc @safe bool(const OIDNode other)",
+      "parameters" : [
+       {
+        "name" : "other",
+        "deco" : "xS4asn15types7oidtype20ObjectIdentifierNode"
+       }
+      ],
+      "endline" : 80,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L84_C5",
+      "kind" : "function",
+      "line" : 84,
+      "char" : 5,
+      "endline" : 92,
+      "endchar" : 5
+     },
+     {
+      "name" : "opCmp",
+      "kind" : "function",
+      "line" : 93,
+      "char" : 15,
+      "deco" : "xFNaNbNiNfKxS4asn15types7oidtype20ObjectIdentifierNodeZl",
+      "originalType" : "const pure nothrow @nogc @safe ptrdiff_t(ref OIDNode other)",
+      "parameters" : [
+       {
+        "name" : "other",
+        "deco" : "xS4asn15types7oidtype20ObjectIdentifierNode",
+        "storageClass" : [
+         "ref"
+        ]
+       }
+      ],
+      "endline" : 96,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L100_C5",
+      "kind" : "function",
+      "line" : 100,
+      "char" : 5,
+      "endline" : 112,
+      "endchar" : 5
+     },
+     {
+      "name" : "toHash",
+      "kind" : "function",
+      "line" : 113,
+      "char" : 12,
+      "deco" : "xFNbNeZm",
+      "originalType" : "const nothrow @trusted size_t()",
+      "endline" : 116,
+      "endchar" : 5
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 135,
+      "char" : 5,
+      "deco" : "FNaNcNfxmxAyaZS4asn15types7oidtype20ObjectIdentifierNode",
+      "originalType" : "pure ref @safe (in size_t number, in string descriptor = \"\")",
+      "parameters" : [
+       {
+        "name" : "number",
+        "deco" : "xm"
+       },
+       {
+        "name" : "descriptor",
+        "deco" : "xAya",
+        "default" : "\"\""
+       }
+      ],
+      "endline" : 139,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L142_C5",
+      "kind" : "function",
+      "line" : 142,
+      "char" : 5,
+      "endline" : 159,
+      "endchar" : 1
+     }
+    ]
+   }
+  ]
+ }
+]

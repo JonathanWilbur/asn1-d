@@ -1,0 +1,41 @@
+[
+ {
+  "name" : "asn1.types.universal.characterstring",
+  "kind" : "module",
+  "file" : "./source/asn1/types/universal/characterstring.d",
+  "members" : [
+   {
+    "name" : "asn1.types.identification",
+    "kind" : "import",
+    "line" : 2,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "CharacterString",
+    "kind" : "struct",
+    "line" : 31,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "identification",
+      "kind" : "variable",
+      "line" : 38,
+      "char" : 39,
+      "deco" : "S4asn15types14identification38ASN1ContextSwitchingTypeIdentification",
+      "originalType" : "ASN1ContextSwitchingTypeID",
+      "offset" : 0
+     },
+     {
+      "name" : "stringValue",
+      "kind" : "variable",
+      "line" : 40,
+      "char" : 20,
+      "deco" : "Ah",
+      "offset" : 96
+     }
+    ]
+   }
+  ]
+ }
+]

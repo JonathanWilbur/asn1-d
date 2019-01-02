@@ -1,0 +1,33 @@
+[
+ {
+  "name" : "asn1.types.alltypes",
+  "kind" : "module",
+  "file" : "./source/asn1/types/alltypes.d",
+  "members" : [
+   {
+    "name" : "asn1.types.universal.characterstring",
+    "kind" : "import",
+    "line" : 3,
+    "char" : 5
+   },
+   {
+    "name" : "asn1.types.universal.embeddedpdv",
+    "kind" : "import",
+    "line" : 4,
+    "char" : 5
+   },
+   {
+    "name" : "asn1.types.universal.external",
+    "kind" : "import",
+    "line" : 5,
+    "char" : 5
+   },
+   {
+    "name" : "asn1.types.universal.objectidentifier",
+    "kind" : "import",
+    "line" : 6,
+    "char" : 5
+   }
+  ]
+ }
+]

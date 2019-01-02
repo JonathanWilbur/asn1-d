@@ -1,0 +1,172 @@
+[
+ {
+  "name" : "asn1.types.identification",
+  "kind" : "module",
+  "file" : "./source/asn1/types/identification.d",
+  "members" : [
+   {
+    "name" : "std.typecons",
+    "kind" : "import",
+    "line" : 2,
+    "char" : 8,
+    "protection" : "private",
+    "selective" : [
+     "Nullable"
+    ]
+   },
+   {
+    "name" : "asn1.types.universal.objectidentifier",
+    "kind" : "import",
+    "line" : 3,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "ASN1ContextNegotiation",
+    "kind" : "struct",
+    "line" : 7,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "presentationContextID",
+      "kind" : "variable",
+      "line" : 10,
+      "char" : 22,
+      "deco" : "l",
+      "originalType" : "ptrdiff_t",
+      "init" : "0L",
+      "offset" : 0
+     },
+     {
+      "name" : "transferSyntax",
+      "kind" : "variable",
+      "line" : 12,
+      "char" : 29,
+      "deco" : "C4asn15types9universal16objectidentifier16ObjectIdentifier",
+      "originalType" : "ObjectIdentifier",
+      "offset" : 8
+     },
+     {
+      "name" : "directReference",
+      "kind" : "alias",
+      "line" : 15,
+      "char" : 12
+     },
+     {
+      "name" : "indirectReference",
+      "kind" : "alias",
+      "line" : 16,
+      "char" : 12
+     }
+    ]
+   },
+   {
+    "name" : "ASN1Syntaxes",
+    "kind" : "struct",
+    "line" : 21,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "abstractSyntax",
+      "kind" : "variable",
+      "line" : 24,
+      "char" : 29,
+      "deco" : "C4asn15types9universal16objectidentifier16ObjectIdentifier",
+      "originalType" : "ObjectIdentifier",
+      "offset" : 0
+     },
+     {
+      "name" : "transferSyntax",
+      "kind" : "variable",
+      "line" : 26,
+      "char" : 29,
+      "deco" : "C4asn15types9universal16objectidentifier16ObjectIdentifier",
+      "originalType" : "ObjectIdentifier",
+      "offset" : 8
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ContextSwitchingTypeID",
+    "kind" : "alias",
+    "line" : 30,
+    "char" : 8,
+    "deco" : "S4asn15types14identification38ASN1ContextSwitchingTypeIdentification"
+   },
+   {
+    "name" : "ASN1ContextSwitchingTypeIdentification",
+    "kind" : "struct",
+    "line" : 35,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "syntaxes",
+      "kind" : "variable",
+      "line" : 38,
+      "char" : 34,
+      "deco" : "S3std8typecons__T8NullableTS4asn15types14identification12ASN1SyntaxesZQCb",
+      "originalType" : "Nullable!ASN1Syntaxes",
+      "offset" : 0
+     },
+     {
+      "name" : "syntax",
+      "kind" : "variable",
+      "line" : 40,
+      "char" : 38,
+      "deco" : "S3std8typecons__T8NullableTC4asn15types9universal16objectidentifier16ObjectIdentifierZQCr",
+      "originalType" : "Nullable!ObjectIdentifier",
+      "offset" : 24
+     },
+     {
+      "name" : "presentationContextID",
+      "kind" : "variable",
+      "line" : 42,
+      "char" : 22,
+      "deco" : "l",
+      "originalType" : "ptrdiff_t",
+      "init" : "0L",
+      "offset" : 40
+     },
+     {
+      "name" : "contextNegotiation",
+      "kind" : "variable",
+      "line" : 44,
+      "char" : 44,
+      "deco" : "S3std8typecons__T8NullableTS4asn15types14identification22ASN1ContextNegotiationZQCl",
+      "originalType" : "Nullable!ASN1ContextNegotiation",
+      "offset" : 48
+     },
+     {
+      "name" : "transferSyntax",
+      "kind" : "variable",
+      "line" : 46,
+      "char" : 38,
+      "deco" : "S3std8typecons__T8NullableTC4asn15types9universal16objectidentifier16ObjectIdentifierZQCr",
+      "originalType" : "Nullable!ObjectIdentifier",
+      "offset" : 72
+     },
+     {
+      "name" : "fixed",
+      "kind" : "variable",
+      "line" : 48,
+      "char" : 17,
+      "deco" : "b",
+      "offset" : 88
+     },
+     {
+      "name" : "directReference",
+      "kind" : "alias",
+      "line" : 51,
+      "char" : 12
+     },
+     {
+      "name" : "indirectReference",
+      "kind" : "alias",
+      "line" : 52,
+      "char" : 12
+     }
+    ]
+   }
+  ]
+ }
+]

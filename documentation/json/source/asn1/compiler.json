@@ -1,0 +1,47 @@
+[
+ {
+  "name" : "asn1.compiler",
+  "kind" : "module",
+  "file" : "./source/asn1/compiler.d",
+  "members" : [
+   {
+    "name" : "asn1.constants",
+    "kind" : "import",
+    "line" : 7,
+    "char" : 15
+   },
+   {
+    "name" : "ASN1CompilerException",
+    "kind" : "alias",
+    "line" : 10,
+    "char" : 8,
+    "deco" : "C4asn18compiler40AbstractSyntaxNotation1CompilerException"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1CompilerException",
+    "kind" : "class",
+    "line" : 13,
+    "char" : 1,
+    "base" : "asn1.constants.AbstractSyntaxNotation1Exception",
+    "members" : [
+     {
+      "name" : "std.exception",
+      "kind" : "import",
+      "line" : 15,
+      "char" : 12,
+      "protection" : "private",
+      "selective" : [
+       "basicExceptionCtors"
+      ]
+     },
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 16,
+      "char" : 5
+     }
+    ]
+   }
+  ]
+ }
+]

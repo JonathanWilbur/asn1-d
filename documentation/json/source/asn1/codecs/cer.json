@@ -1,0 +1,1936 @@
+[
+ {
+  "name" : "asn1.codecs.cer",
+  "kind" : "module",
+  "file" : "./source/asn1/codecs/cer.d",
+  "members" : [
+   {
+    "name" : "asn1.codec",
+    "kind" : "import",
+    "line" : 34,
+    "char" : 15
+   },
+   {
+    "name" : "asn1.interfaces",
+    "kind" : "import",
+    "line" : 35,
+    "char" : 15,
+    "selective" : [
+     "Byteable"
+    ]
+   },
+   {
+    "name" : "asn1.types.identification",
+    "kind" : "import",
+    "line" : 36,
+    "char" : 15
+   },
+   {
+    "name" : "cerOID",
+    "kind" : "alias",
+    "line" : 39,
+    "char" : 8
+   },
+   {
+    "name" : "cerObjectID",
+    "kind" : "alias",
+    "line" : 41,
+    "char" : 8
+   },
+   {
+    "name" : "cerObjectIdentifier",
+    "kind" : "alias",
+    "line" : 43,
+    "char" : 8
+   },
+   {
+    "name" : "canonicalEncodingRulesObjectIdentifier",
+    "kind" : "variable",
+    "line" : 52,
+    "char" : 22,
+    "storageClass" : [
+     "immutable"
+    ],
+    "deco" : "yC4asn15types9universal16objectidentifier16ObjectIdentifier",
+    "originalType" : "OID",
+    "init" : "ObjectIdentifier([ObjectIdentifierNode(2LU, \"\"), ObjectIdentifierNode(1LU, \"\"), ObjectIdentifierNode(2LU, \"\"), ObjectIdentifierNode(0LU, \"\")])"
+   },
+   {
+    "name" : "CERElement",
+    "kind" : "alias",
+    "line" : 55,
+    "char" : 8,
+    "deco" : "C4asn16codecs3cer29CanonicalEncodingRulesElement"
+   },
+   {
+    "name" : "CanonicalEncodingRulesElement",
+    "kind" : "class",
+    "line" : 108,
+    "char" : 1,
+    "base" : "asn1.codec.ASN1Element!(asn1.codecs.cer.CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element",
+    "interfaces" : [
+     "asn1.interfaces.Byteable"
+    ],
+    "members" : [
+     {
+      "name" : "__unittest_L111_C5",
+      "kind" : "function",
+      "line" : 111,
+      "char" : 5,
+      "endline" : 126,
+      "endchar" : 5
+     },
+     {
+      "name" : "endOfContent",
+      "kind" : "function",
+      "line" : 127,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdNfZv",
+      "endline" : 136,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.endOfContent"
+      ]
+     },
+     {
+      "name" : "boolean",
+      "kind" : "function",
+      "line" : 156,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdNfZb",
+      "endline" : 185,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.boolean"
+      ]
+     },
+     {
+      "name" : "boolean",
+      "kind" : "function",
+      "line" : 189,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNbNdNfxbZv",
+      "originalType" : "nothrow @property @safe void(in bool value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xb"
+       }
+      ],
+      "endline" : 198,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.boolean"
+      ],
+      "out" : {
+       "name" : "__ensure",
+       "kind" : "function",
+       "line" : 191,
+       "char" : 5,
+       "deco" : "FNaNbNiNfZv",
+       "originalType" : "nothrow @safe void()",
+       "endline" : 191,
+       "endchar" : 5
+      }
+     },
+     {
+      "name" : "__unittest_L201_C5",
+      "kind" : "function",
+      "line" : 201,
+      "char" : 5,
+      "endline" : 230,
+      "endchar" : 5
+     },
+     {
+      "kind" : "template",
+      "line" : 231,
+      "char" : 7,
+      "name" : "integer",
+      "parameters" : [
+       {
+        "name" : "T",
+        "kind" : "type"
+       }
+      ],
+      "constraint" : "isIntegral!T && isSigned!T || is(T == BigInt)",
+      "members" : [
+       {
+        "name" : "integer",
+        "kind" : "function",
+        "line" : 231,
+        "char" : 7,
+        "type" : "const @property @system T()",
+        "endline" : 316,
+        "endchar" : 5
+       }
+      ]
+     },
+     {
+      "kind" : "template",
+      "line" : 320,
+      "char" : 10,
+      "name" : "integer",
+      "parameters" : [
+       {
+        "name" : "T",
+        "kind" : "type"
+       }
+      ],
+      "constraint" : "isIntegral!T && isSigned!T || is(T == BigInt)",
+      "members" : [
+       {
+        "name" : "integer",
+        "kind" : "function",
+        "line" : 320,
+        "char" : 10,
+        "type" : "@property @system void(in T value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "T",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ],
+        "endline" : 414,
+        "endchar" : 5
+       }
+      ]
+     },
+     {
+      "name" : "__unittest_L417_C5",
+      "kind" : "function",
+      "line" : 417,
+      "char" : 5,
+      "endline" : 456,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L457_C5",
+      "kind" : "function",
+      "line" : 457,
+      "char" : 5,
+      "endline" : 481,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L482_C5",
+      "kind" : "function",
+      "line" : 482,
+      "char" : 5,
+      "endline" : 530,
+      "endchar" : 5
+     },
+     {
+      "name" : "bitString",
+      "kind" : "function",
+      "line" : 531,
+      "char" : 12,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAb",
+      "endline" : 685,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.bitString"
+      ],
+      "in" : {
+       "name" : "__require",
+       "kind" : "function",
+       "line" : 533,
+       "char" : 5,
+       "type" : "@system void()",
+       "endline" : 533,
+       "endchar" : 5
+      }
+     },
+     {
+      "name" : "bitString",
+      "kind" : "function",
+      "line" : 689,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAbZv",
+      "originalType" : "@property @system void(in bool[] value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAb"
+       }
+      ],
+      "endline" : 736,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.bitString"
+      ],
+      "out" : {
+       "name" : "__ensure",
+       "kind" : "function",
+       "line" : 691,
+       "char" : 5,
+       "deco" : "FNaNbNiZv",
+       "originalType" : "@system void()",
+       "endline" : 691,
+       "endchar" : 5
+      }
+     },
+     {
+      "name" : "__unittest_L739_C5",
+      "kind" : "function",
+      "line" : 739,
+      "char" : 5,
+      "endline" : 752,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L753_C5",
+      "kind" : "function",
+      "line" : 753,
+      "char" : 5,
+      "endline" : 781,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L782_C5",
+      "kind" : "function",
+      "line" : 782,
+      "char" : 5,
+      "endline" : 796,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L797_C5",
+      "kind" : "function",
+      "line" : 797,
+      "char" : 5,
+      "endline" : 820,
+      "endchar" : 5
+     },
+     {
+      "name" : "octetString",
+      "kind" : "function",
+      "line" : 821,
+      "char" : 13,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAh",
+      "endline" : 882,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.octetString"
+      ]
+     },
+     {
+      "name" : "octetString",
+      "kind" : "function",
+      "line" : 886,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAhZv",
+      "originalType" : "@property @system void(in ubyte[] value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAh"
+       }
+      ],
+      "endline" : 924,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.octetString"
+      ],
+      "in" : {
+       "name" : "__require",
+       "kind" : "function",
+       "line" : 888,
+       "char" : 5,
+       "type" : "@system void()",
+       "endline" : 888,
+       "endchar" : 5
+      }
+     },
+     {
+      "name" : "__unittest_L927_C5",
+      "kind" : "function",
+      "line" : 927,
+      "char" : 5,
+      "endline" : 967,
+      "endchar" : 5
+     },
+     {
+      "name" : "nill",
+      "kind" : "function",
+      "line" : 968,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdNfZv",
+      "endline" : 977,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.nill"
+      ]
+     },
+     {
+      "name" : "objectIdentifier",
+      "kind" : "function",
+      "line" : 1001,
+      "char" : 9,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZC4asn15types9universal16objectidentifier16ObjectIdentifier",
+      "originalType" : "const @property @system OID()",
+      "endline" : 1089,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.objectIdentifier"
+      ],
+      "out" : {
+       "name" : "__ensure",
+       "kind" : "function",
+       "line" : 1003,
+       "char" : 5,
+       "deco" : "FKxC4asn15types9universal16objectidentifier16ObjectIdentifierZv",
+       "originalType" : "@system void(ref const ObjectIdentifier value)",
+       "parameters" : [
+        {
+         "name" : "value",
+         "deco" : "xC4asn15types9universal16objectidentifier16ObjectIdentifier",
+         "storageClass" : [
+          "ref"
+         ]
+        }
+       ],
+       "endline" : 1003,
+       "endchar" : 5
+      }
+     },
+     {
+      "name" : "objectIdentifier",
+      "kind" : "function",
+      "line" : 1102,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxC4asn15types9universal16objectidentifier16ObjectIdentifierZv",
+      "originalType" : "@property @system void(in OID value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xC4asn15types9universal16objectidentifier16ObjectIdentifier"
+       }
+      ],
+      "endline" : 1146,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.objectIdentifier"
+      ],
+      "in" : {
+       "name" : "__require",
+       "kind" : "function",
+       "line" : 1104,
+       "char" : 5,
+       "type" : "@system void()",
+       "endline" : 1104,
+       "endchar" : 5
+      },
+      "out" : {
+       "name" : "__ensure",
+       "kind" : "function",
+       "line" : 1113,
+       "char" : 5,
+       "deco" : "FNaNbNiZv",
+       "originalType" : "@system void()",
+       "endline" : 1113,
+       "endchar" : 5
+      }
+     },
+     {
+      "name" : "__unittest_L1149_C5",
+      "kind" : "function",
+      "line" : 1149,
+      "char" : 5,
+      "endline" : 1168,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L1169_C5",
+      "kind" : "function",
+      "line" : 1169,
+      "char" : 5,
+      "endline" : 1237,
+      "endchar" : 5
+     },
+     {
+      "name" : "objectDescriptor",
+      "kind" : "function",
+      "line" : 1238,
+      "char" : 12,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAya",
+      "endline" : 1305,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.objectDescriptor"
+      ]
+     },
+     {
+      "name" : "objectDescriptor",
+      "kind" : "function",
+      "line" : 1336,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAyaZv",
+      "originalType" : "@property @system void(in string value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAya"
+       }
+      ],
+      "endline" : 1372,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.objectDescriptor"
+      ]
+     },
+     {
+      "name" : "__unittest_L1375_C5",
+      "kind" : "function",
+      "line" : 1375,
+      "char" : 5,
+      "endline" : 1571,
+      "endchar" : 5
+     },
+     {
+      "name" : "external",
+      "kind" : "function",
+      "line" : 1572,
+      "char" : 14,
+      "storageClass" : [
+       "deprecated",
+       "override"
+      ],
+      "deco" : "xFNdZS4asn15types9universal8external8External",
+      "endline" : 1655,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.external"
+      ]
+     },
+     {
+      "name" : "external",
+      "kind" : "function",
+      "line" : 1818,
+      "char" : 10,
+      "storageClass" : [
+       "deprecated",
+       "override"
+      ],
+      "deco" : "FNdxS4asn15types9universal8external8ExternalZv",
+      "originalType" : "@property @system void(in External value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xS4asn15types9universal8external8External"
+       }
+      ],
+      "endline" : 1858,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.external"
+      ],
+      "out" : {
+       "name" : "__ensure",
+       "kind" : "function",
+       "line" : 1820,
+       "char" : 5,
+       "deco" : "FNaNbNiZv",
+       "originalType" : "@system void()",
+       "endline" : 1820,
+       "endchar" : 5
+      }
+     },
+     {
+      "name" : "__unittest_L1866_C5",
+      "kind" : "function",
+      "line" : 1866,
+      "char" : 5,
+      "endline" : 1881,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L1882_C5",
+      "kind" : "function",
+      "line" : 1882,
+      "char" : 5,
+      "endline" : 1910,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L1911_C5",
+      "kind" : "function",
+      "line" : 1911,
+      "char" : 5,
+      "endline" : 1996,
+      "endchar" : 5
+     },
+     {
+      "kind" : "template",
+      "line" : 1997,
+      "char" : 7,
+      "name" : "realNumber",
+      "parameters" : [
+       {
+        "name" : "T",
+        "kind" : "type"
+       }
+      ],
+      "constraint" : "isFloatingPoint!T",
+      "members" : [
+       {
+        "name" : "realNumber",
+        "kind" : "function",
+        "line" : 1997,
+        "char" : 7,
+        "type" : "const @property @system T()",
+        "endline" : 2288,
+        "endchar" : 5
+       }
+      ]
+     },
+     {
+      "kind" : "template",
+      "line" : 2306,
+      "char" : 10,
+      "name" : "realNumber",
+      "parameters" : [
+       {
+        "name" : "T",
+        "kind" : "type"
+       }
+      ],
+      "constraint" : "isFloatingPoint!T",
+      "members" : [
+       {
+        "name" : "realNumber",
+        "kind" : "function",
+        "line" : 2306,
+        "char" : 10,
+        "type" : "nothrow @property @system void(in T value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "T",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ],
+        "endline" : 2489,
+        "endchar" : 5
+       }
+      ]
+     },
+     {
+      "name" : "__unittest_L2492_C5",
+      "kind" : "function",
+      "line" : 2492,
+      "char" : 5,
+      "endline" : 2606,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L2607_C5",
+      "kind" : "function",
+      "line" : 2607,
+      "char" : 5,
+      "endline" : 2650,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L2651_C5",
+      "kind" : "function",
+      "line" : 2651,
+      "char" : 5,
+      "endline" : 2697,
+      "endchar" : 5
+     },
+     {
+      "kind" : "template",
+      "line" : 2698,
+      "char" : 7,
+      "name" : "enumerated",
+      "parameters" : [
+       {
+        "name" : "T",
+        "kind" : "type"
+       }
+      ],
+      "constraint" : "isIntegral!T && isSigned!T",
+      "members" : [
+       {
+        "name" : "enumerated",
+        "kind" : "function",
+        "line" : 2698,
+        "char" : 7,
+        "type" : "const @property @system T()",
+        "endline" : 2749,
+        "endchar" : 5
+       }
+      ]
+     },
+     {
+      "kind" : "template",
+      "line" : 2753,
+      "char" : 10,
+      "name" : "enumerated",
+      "parameters" : [
+       {
+        "name" : "T",
+        "kind" : "type"
+       }
+      ],
+      "members" : [
+       {
+        "name" : "enumerated",
+        "kind" : "function",
+        "line" : 2753,
+        "char" : 10,
+        "type" : "nothrow @property @system void(in T value)",
+        "parameters" : [
+         {
+          "name" : "value",
+          "type" : "T",
+          "storageClass" : [
+           "in"
+          ]
+         }
+        ],
+        "endline" : 2811,
+        "endchar" : 5
+       }
+      ]
+     },
+     {
+      "name" : "__unittest_L2815_C5",
+      "kind" : "function",
+      "line" : 2815,
+      "char" : 5,
+      "endline" : 2839,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L2840_C5",
+      "kind" : "function",
+      "line" : 2840,
+      "char" : 5,
+      "endline" : 2966,
+      "endchar" : 5
+     },
+     {
+      "name" : "embeddedPresentationDataValue",
+      "kind" : "function",
+      "line" : 2967,
+      "char" : 17,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZS4asn15types9universal11embeddedpdv29EmbeddedPresentationDataValue",
+      "originalType" : "const @property @system EmbeddedPDV()",
+      "endline" : 3117,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.embeddedPresentationDataValue"
+      ]
+     },
+     {
+      "name" : "embeddedPresentationDataValue",
+      "kind" : "function",
+      "line" : 3218,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxS4asn15types9universal11embeddedpdv29EmbeddedPresentationDataValueZv",
+      "originalType" : "@property @system void(in EmbeddedPDV value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xS4asn15types9universal11embeddedpdv29EmbeddedPresentationDataValue"
+       }
+      ],
+      "endline" : 3273,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.embeddedPresentationDataValue"
+      ],
+      "out" : {
+       "name" : "__ensure",
+       "kind" : "function",
+       "line" : 3220,
+       "char" : 5,
+       "deco" : "FNaNbNiZv",
+       "originalType" : "@system void()",
+       "endline" : 3220,
+       "endchar" : 5
+      }
+     },
+     {
+      "name" : "__unittest_L3284_C5",
+      "kind" : "function",
+      "line" : 3284,
+      "char" : 5,
+      "endline" : 3309,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L3310_C5",
+      "kind" : "function",
+      "line" : 3310,
+      "char" : 5,
+      "endline" : 3331,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L3332_C5",
+      "kind" : "function",
+      "line" : 3332,
+      "char" : 5,
+      "endline" : 3386,
+      "endchar" : 5
+     },
+     {
+      "name" : "unicodeTransformationFormat8String",
+      "kind" : "function",
+      "line" : 3387,
+      "char" : 12,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAya",
+      "endline" : 3448,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"
+      ]
+     },
+     {
+      "name" : "unicodeTransformationFormat8String",
+      "kind" : "function",
+      "line" : 3452,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAyaZv",
+      "originalType" : "@property @system void(in string value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAya"
+       }
+      ],
+      "endline" : 3481,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.unicodeTransformationFormat8String"
+      ]
+     },
+     {
+      "name" : "__unittest_L3484_C5",
+      "kind" : "function",
+      "line" : 3484,
+      "char" : 5,
+      "endline" : 3529,
+      "endchar" : 5
+     },
+     {
+      "name" : "relativeObjectIdentifier",
+      "kind" : "function",
+      "line" : 3530,
+      "char" : 15,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAS4asn15types7oidtype20ObjectIdentifierNode",
+      "originalType" : "const @property @system OIDNode[]()",
+      "endline" : 3599,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
+      ]
+     },
+     {
+      "name" : "relativeObjectIdentifier",
+      "kind" : "function",
+      "line" : 3608,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNbNdxAS4asn15types7oidtype20ObjectIdentifierNodeZv",
+      "originalType" : "nothrow @property @system void(in OIDNode[] value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAS4asn15types7oidtype20ObjectIdentifierNode"
+       }
+      ],
+      "endline" : 3635,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.relativeObjectIdentifier"
+      ]
+     },
+     {
+      "name" : "__unittest_L3638_C5",
+      "kind" : "function",
+      "line" : 3638,
+      "char" : 5,
+      "endline" : 3657,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L3658_C5",
+      "kind" : "function",
+      "line" : 3658,
+      "char" : 5,
+      "endline" : 3690,
+      "endchar" : 5
+     },
+     {
+      "name" : "sequence",
+      "kind" : "function",
+      "line" : 3691,
+      "char" : 18,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAC4asn16codecs3cer29CanonicalEncodingRulesElement",
+      "originalType" : "const @property @system CERElement[]()",
+      "endline" : 3702,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
+      ]
+     },
+     {
+      "name" : "sequence",
+      "kind" : "function",
+      "line" : 3706,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAC4asn16codecs3cer29CanonicalEncodingRulesElementZv",
+      "originalType" : "@property @system void(in CERElement[] value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAC4asn16codecs3cer29CanonicalEncodingRulesElement"
+       }
+      ],
+      "endline" : 3715,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.sequence"
+      ]
+     },
+     {
+      "name" : "set",
+      "kind" : "function",
+      "line" : 3727,
+      "char" : 18,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAC4asn16codecs3cer29CanonicalEncodingRulesElement",
+      "originalType" : "const @property @system CERElement[]()",
+      "endline" : 3738,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.set"
+      ]
+     },
+     {
+      "name" : "set",
+      "kind" : "function",
+      "line" : 3742,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAC4asn16codecs3cer29CanonicalEncodingRulesElementZv",
+      "originalType" : "@property @system void(in CERElement[] value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAC4asn16codecs3cer29CanonicalEncodingRulesElement"
+       }
+      ],
+      "endline" : 3751,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.set"
+      ]
+     },
+     {
+      "name" : "numericString",
+      "kind" : "function",
+      "line" : 3772,
+      "char" : 12,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAya",
+      "endline" : 3839,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
+      ]
+     },
+     {
+      "name" : "numericString",
+      "kind" : "function",
+      "line" : 3851,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAyaZv",
+      "originalType" : "@property @system void(in string value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAya"
+       }
+      ],
+      "endline" : 3887,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.numericString"
+      ]
+     },
+     {
+      "name" : "__unittest_L3890_C5",
+      "kind" : "function",
+      "line" : 3890,
+      "char" : 5,
+      "endline" : 3940,
+      "endchar" : 5
+     },
+     {
+      "name" : "printableString",
+      "kind" : "function",
+      "line" : 3941,
+      "char" : 12,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAya",
+      "endline" : 4008,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
+      ]
+     },
+     {
+      "name" : "printableString",
+      "kind" : "function",
+      "line" : 4022,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAyaZv",
+      "originalType" : "@property @system void(in string value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAya"
+       }
+      ],
+      "endline" : 4058,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.printableString"
+      ]
+     },
+     {
+      "name" : "__unittest_L4061_C5",
+      "kind" : "function",
+      "line" : 4061,
+      "char" : 5,
+      "endline" : 4106,
+      "endchar" : 5
+     },
+     {
+      "name" : "teletexString",
+      "kind" : "function",
+      "line" : 4107,
+      "char" : 13,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAh",
+      "endline" : 4168,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
+      ]
+     },
+     {
+      "name" : "teletexString",
+      "kind" : "function",
+      "line" : 4172,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAhZv",
+      "originalType" : "@property @system void(in ubyte[] value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAh"
+       }
+      ],
+      "endline" : 4201,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.teletexString"
+      ]
+     },
+     {
+      "name" : "__unittest_L4204_C5",
+      "kind" : "function",
+      "line" : 4204,
+      "char" : 5,
+      "endline" : 4249,
+      "endchar" : 5
+     },
+     {
+      "name" : "videotexString",
+      "kind" : "function",
+      "line" : 4250,
+      "char" : 13,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAh",
+      "endline" : 4311,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
+      ]
+     },
+     {
+      "name" : "videotexString",
+      "kind" : "function",
+      "line" : 4315,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAhZv",
+      "originalType" : "@property @system void(in ubyte[] value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAh"
+       }
+      ],
+      "endline" : 4344,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.videotexString"
+      ]
+     },
+     {
+      "name" : "__unittest_L4347_C5",
+      "kind" : "function",
+      "line" : 4347,
+      "char" : 5,
+      "endline" : 4408,
+      "endchar" : 5
+     },
+     {
+      "name" : "internationalAlphabetNumber5String",
+      "kind" : "function",
+      "line" : 4409,
+      "char" : 12,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAya",
+      "endline" : 4476,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
+      ]
+     },
+     {
+      "name" : "internationalAlphabetNumber5String",
+      "kind" : "function",
+      "line" : 4504,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAyaZv",
+      "originalType" : "@property @system void(in string value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAya"
+       }
+      ],
+      "endline" : 4540,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.internationalAlphabetNumber5String"
+      ]
+     },
+     {
+      "name" : "__unittest_L4543_C5",
+      "kind" : "function",
+      "line" : 4543,
+      "char" : 5,
+      "endline" : 4608,
+      "endchar" : 5
+     },
+     {
+      "name" : "coordinatedUniversalTime",
+      "kind" : "function",
+      "line" : 4609,
+      "char" : 14,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZS3std8datetime4date8DateTime",
+      "endline" : 4642,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
+      ]
+     },
+     {
+      "name" : "coordinatedUniversalTime",
+      "kind" : "function",
+      "line" : 4658,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxS3std8datetime4date8DateTimeZv",
+      "originalType" : "@property @system void(in DateTime value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xS3std8datetime4date8DateTime"
+       }
+      ],
+      "endline" : 4670,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.coordinatedUniversalTime"
+      ],
+      "out" : {
+       "name" : "__ensure",
+       "kind" : "function",
+       "line" : 4660,
+       "char" : 5,
+       "deco" : "FNaNbNiZv",
+       "originalType" : "@system void()",
+       "endline" : 4660,
+       "endchar" : 5
+      }
+     },
+     {
+      "name" : "__unittest_L4673_C5",
+      "kind" : "function",
+      "line" : 4673,
+      "char" : 5,
+      "endline" : 4714,
+      "endchar" : 5
+     },
+     {
+      "name" : "generalizedTime",
+      "kind" : "function",
+      "line" : 4715,
+      "char" : 14,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZS3std8datetime4date8DateTime",
+      "endline" : 4787,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
+      ]
+     },
+     {
+      "name" : "generalizedTime",
+      "kind" : "function",
+      "line" : 4809,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxS3std8datetime4date8DateTimeZv",
+      "originalType" : "@property @system void(in DateTime value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xS3std8datetime4date8DateTime"
+       }
+      ],
+      "endline" : 4820,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalizedTime"
+      ],
+      "out" : {
+       "name" : "__ensure",
+       "kind" : "function",
+       "line" : 4811,
+       "char" : 5,
+       "deco" : "FNaZv",
+       "originalType" : "@system void()",
+       "endline" : 4811,
+       "endchar" : 5
+      }
+     },
+     {
+      "name" : "__unittest_L4824_C5",
+      "kind" : "function",
+      "line" : 4824,
+      "char" : 5,
+      "endline" : 4839,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L4840_C5",
+      "kind" : "function",
+      "line" : 4840,
+      "char" : 5,
+      "endline" : 4888,
+      "endchar" : 5
+     },
+     {
+      "name" : "graphicString",
+      "kind" : "function",
+      "line" : 4889,
+      "char" : 12,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAya",
+      "endline" : 4956,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
+      ]
+     },
+     {
+      "name" : "graphicString",
+      "kind" : "function",
+      "line" : 4978,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAyaZv",
+      "originalType" : "@property @system void(in string value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAya"
+       }
+      ],
+      "endline" : 5014,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.graphicString"
+      ]
+     },
+     {
+      "name" : "__unittest_L5017_C5",
+      "kind" : "function",
+      "line" : 5017,
+      "char" : 5,
+      "endline" : 5064,
+      "endchar" : 5
+     },
+     {
+      "name" : "visibleString",
+      "kind" : "function",
+      "line" : 5065,
+      "char" : 12,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAya",
+      "endline" : 5132,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
+      ]
+     },
+     {
+      "name" : "visibleString",
+      "kind" : "function",
+      "line" : 5146,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAyaZv",
+      "originalType" : "@property @system void(in string value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAya"
+       }
+      ],
+      "endline" : 5182,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.visibleString"
+      ]
+     },
+     {
+      "name" : "__unittest_L5185_C5",
+      "kind" : "function",
+      "line" : 5185,
+      "char" : 5,
+      "endline" : 5239,
+      "endchar" : 5
+     },
+     {
+      "name" : "generalString",
+      "kind" : "function",
+      "line" : 5240,
+      "char" : 12,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAya",
+      "endline" : 5307,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
+      ]
+     },
+     {
+      "name" : "generalString",
+      "kind" : "function",
+      "line" : 5326,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAyaZv",
+      "originalType" : "@property @system void(in string value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAya"
+       }
+      ],
+      "endline" : 5362,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.generalString"
+      ]
+     },
+     {
+      "name" : "__unittest_L5365_C5",
+      "kind" : "function",
+      "line" : 5365,
+      "char" : 5,
+      "endline" : 5410,
+      "endchar" : 5
+     },
+     {
+      "name" : "universalString",
+      "kind" : "function",
+      "line" : 5411,
+      "char" : 13,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAyw",
+      "endline" : 5506,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
+      ]
+     },
+     {
+      "name" : "universalString",
+      "kind" : "function",
+      "line" : 5510,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAywZv",
+      "originalType" : "@property @system void(in dstring value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAyw"
+       }
+      ],
+      "endline" : 5587,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.universalString"
+      ]
+     },
+     {
+      "name" : "__unittest_L5590_C5",
+      "kind" : "function",
+      "line" : 5590,
+      "char" : 5,
+      "endline" : 5660,
+      "endchar" : 5
+     },
+     {
+      "name" : "characterString",
+      "kind" : "function",
+      "line" : 5661,
+      "char" : 21,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZS4asn15types9universal15characterstring15CharacterString",
+      "endline" : 5814,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
+      ]
+     },
+     {
+      "name" : "characterString",
+      "kind" : "function",
+      "line" : 5843,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxS4asn15types9universal15characterstring15CharacterStringZv",
+      "originalType" : "@property @system void(in CharacterString value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xS4asn15types9universal15characterstring15CharacterString"
+       }
+      ],
+      "endline" : 5898,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.characterString"
+      ],
+      "out" : {
+       "name" : "__ensure",
+       "kind" : "function",
+       "line" : 5845,
+       "char" : 5,
+       "deco" : "FNaNbNiZv",
+       "originalType" : "@system void()",
+       "endline" : 5845,
+       "endchar" : 5
+      }
+     },
+     {
+      "name" : "__unittest_L5909_C5",
+      "kind" : "function",
+      "line" : 5909,
+      "char" : 5,
+      "endline" : 5930,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L5931_C5",
+      "kind" : "function",
+      "line" : 5931,
+      "char" : 5,
+      "endline" : 5985,
+      "endchar" : 5
+     },
+     {
+      "name" : "basicMultilingualPlaneString",
+      "kind" : "function",
+      "line" : 5986,
+      "char" : 13,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNdZAyu",
+      "endline" : 6079,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
+      ]
+     },
+     {
+      "name" : "basicMultilingualPlaneString",
+      "kind" : "function",
+      "line" : 6083,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdxAyuZv",
+      "originalType" : "@property @system void(in wstring value)",
+      "parameters" : [
+       {
+        "name" : "value",
+        "deco" : "xAyu"
+       }
+      ],
+      "endline" : 6160,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.codec.ASN1Element!(CanonicalEncodingRulesElement).AbstractSyntaxNotation1Element.basicMultilingualPlaneString"
+      ]
+     },
+     {
+      "name" : "__unittest_L6163_C5",
+      "kind" : "function",
+      "line" : 6163,
+      "char" : 5,
+      "endline" : 6191,
+      "endchar" : 5
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 6192,
+      "char" : 5,
+      "deco" : "FNbNiNfE4asn19constants31AbstractSyntaxNotation1TagClassEQBxQBv35AbstractSyntaxNotation1ConstructionmZCQDr6codecs3cer29CanonicalEncodingRulesElement",
+      "originalType" : "nothrow @nogc @safe (ASN1TagClass tagClass = ASN1TagClass.universal, ASN1Construction construction = ASN1Construction.primitive, size_t tagNumber = 0u)",
+      "parameters" : [
+       {
+        "name" : "tagClass",
+        "deco" : "E4asn19constants31AbstractSyntaxNotation1TagClass",
+        "default" : "cast(AbstractSyntaxNotation1TagClass)cast(ubyte)0u"
+       },
+       {
+        "name" : "construction",
+        "deco" : "E4asn19constants35AbstractSyntaxNotation1Construction",
+        "default" : "cast(AbstractSyntaxNotation1Construction)cast(ubyte)0u"
+       },
+       {
+        "name" : "tagNumber",
+        "deco" : "m",
+        "default" : "0LU"
+       }
+      ],
+      "endline" : 6203,
+      "endchar" : 5
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 6230,
+      "char" : 5,
+      "deco" : "FKAhZC4asn16codecs3cer29CanonicalEncodingRulesElement",
+      "originalType" : "@system (ref ubyte[] bytes)",
+      "parameters" : [
+       {
+        "name" : "bytes",
+        "deco" : "Ah",
+        "storageClass" : [
+         "ref"
+        ]
+       }
+      ],
+      "endline" : 6234,
+      "endchar" : 5
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 6248,
+      "char" : 5,
+      "deco" : "FxAhZC4asn16codecs3cer29CanonicalEncodingRulesElement",
+      "originalType" : "@system (in ubyte[] bytes)",
+      "parameters" : [
+       {
+        "name" : "bytes",
+        "deco" : "xAh"
+       }
+      ],
+      "endline" : 6260,
+      "endchar" : 5
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 6288,
+      "char" : 5,
+      "deco" : "FKmxAhZC4asn16codecs3cer29CanonicalEncodingRulesElement",
+      "originalType" : "@system (ref size_t bytesRead, in ubyte[] bytes)",
+      "parameters" : [
+       {
+        "name" : "bytesRead",
+        "deco" : "m",
+        "storageClass" : [
+         "ref"
+        ]
+       },
+       {
+        "name" : "bytes",
+        "deco" : "xAh"
+       }
+      ],
+      "endline" : 6291,
+      "endchar" : 5
+     },
+     {
+      "name" : "fromBytes",
+      "kind" : "function",
+      "line" : 6316,
+      "char" : 12,
+      "deco" : "FxAhZm",
+      "originalType" : "size_t(in ubyte[] bytes)",
+      "parameters" : [
+       {
+        "name" : "bytes",
+        "deco" : "xAh"
+       }
+      ],
+      "endline" : 6566,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.interfaces.Byteable.fromBytes"
+      ]
+     },
+     {
+      "name" : "toBytes",
+      "kind" : "function",
+      "line" : 6579,
+      "char" : 13,
+      "deco" : "xFNbNdZAh",
+      "endline" : 6658,
+      "endchar" : 5,
+      "overrides" : [
+       "asn1.interfaces.Byteable.toBytes"
+      ]
+     },
+     {
+      "kind" : "template",
+      "line" : 6671,
+      "char" : 13,
+      "name" : "opCast",
+      "parameters" : [
+       {
+        "name" : "T",
+        "kind" : "type",
+        "default" : "ubyte[]"
+       }
+      ],
+      "members" : [
+       {
+        "name" : "opCast",
+        "kind" : "function",
+        "line" : 6671,
+        "char" : 13,
+        "type" : "nothrow @system ubyte[]()",
+        "endline" : 6674,
+        "endchar" : 5
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "name" : "__unittest_L6680_C1",
+    "kind" : "function",
+    "line" : 6680,
+    "char" : 1,
+    "endline" : 6832,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L6833_C1",
+    "kind" : "function",
+    "line" : 6833,
+    "char" : 1,
+    "endline" : 6918,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L6919_C1",
+    "kind" : "function",
+    "line" : 6919,
+    "char" : 1,
+    "endline" : 6931,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L6932_C1",
+    "kind" : "function",
+    "line" : 6932,
+    "char" : 1,
+    "endline" : 6943,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L6944_C1",
+    "kind" : "function",
+    "line" : 6944,
+    "char" : 1,
+    "endline" : 6954,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L6955_C1",
+    "kind" : "function",
+    "line" : 6955,
+    "char" : 1,
+    "endline" : 6973,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L6974_C1",
+    "kind" : "function",
+    "line" : 6974,
+    "char" : 1,
+    "endline" : 6997,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L6998_C1",
+    "kind" : "function",
+    "line" : 6998,
+    "char" : 1,
+    "endline" : 7015,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7016_C1",
+    "kind" : "function",
+    "line" : 7016,
+    "char" : 1,
+    "endline" : 7030,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7031_C1",
+    "kind" : "function",
+    "line" : 7031,
+    "char" : 1,
+    "endline" : 7040,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7041_C1",
+    "kind" : "function",
+    "line" : 7041,
+    "char" : 1,
+    "endline" : 7048,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7049_C1",
+    "kind" : "function",
+    "line" : 7049,
+    "char" : 1,
+    "endline" : 7056,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7057_C1",
+    "kind" : "function",
+    "line" : 7057,
+    "char" : 1,
+    "endline" : 7064,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7065_C1",
+    "kind" : "function",
+    "line" : 7065,
+    "char" : 1,
+    "endline" : 7076,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7077_C1",
+    "kind" : "function",
+    "line" : 7077,
+    "char" : 1,
+    "endline" : 7088,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7089_C1",
+    "kind" : "function",
+    "line" : 7089,
+    "char" : 1,
+    "endline" : 7097,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7098_C1",
+    "kind" : "function",
+    "line" : 7098,
+    "char" : 1,
+    "endline" : 7106,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7107_C1",
+    "kind" : "function",
+    "line" : 7107,
+    "char" : 1,
+    "endline" : 7115,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7116_C1",
+    "kind" : "function",
+    "line" : 7116,
+    "char" : 1,
+    "endline" : 7141,
+    "endchar" : 1
+   },
+   {
+    "name" : "__unittest_L7142_C1",
+    "kind" : "function",
+    "line" : 7142,
+    "char" : 1,
+    "endline" : 7158,
+    "endchar" : 2
+   }
+  ]
+ }
+]

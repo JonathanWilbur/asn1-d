@@ -1,0 +1,103 @@
+[
+ {
+  "name" : "asn1.types.universal.external",
+  "kind" : "module",
+  "file" : "./source/asn1/types/universal/external.d",
+  "members" : [
+   {
+    "name" : "asn1.types.identification",
+    "kind" : "import",
+    "line" : 2,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "External",
+    "kind" : "struct",
+    "line" : 153,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "identification",
+      "kind" : "variable",
+      "line" : 160,
+      "char" : 39,
+      "deco" : "S4asn15types14identification38ASN1ContextSwitchingTypeIdentification",
+      "originalType" : "ASN1ContextSwitchingTypeID",
+      "offset" : 0
+     },
+     {
+      "name" : "dataValueDescriptor",
+      "kind" : "variable",
+      "line" : 162,
+      "char" : 19,
+      "deco" : "Aya",
+      "offset" : 96
+     },
+     {
+      "name" : "dataValue",
+      "kind" : "variable",
+      "line" : 164,
+      "char" : 20,
+      "deco" : "Ah",
+      "offset" : 112
+     },
+     {
+      "name" : "encoding",
+      "kind" : "variable",
+      "line" : 172,
+      "char" : 32,
+      "deco" : "E4asn15types9universal8external45AbstractSyntaxNotation1ExternalEncodingChoice",
+      "originalType" : "ASN1ExternalEncodingChoice",
+      "init" : "cast(AbstractSyntaxNotation1ExternalEncodingChoice)cast(ubyte)1u",
+      "offset" : 128
+     }
+    ]
+   },
+   {
+    "name" : "ASN1ExternalEncodingChoice",
+    "kind" : "alias",
+    "line" : 176,
+    "char" : 8,
+    "deco" : "E4asn15types9universal8external45AbstractSyntaxNotation1ExternalEncodingChoice"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1ExternalEncodingChoice",
+    "kind" : "enum",
+    "line" : 183,
+    "char" : 1,
+    "baseDeco" : "h",
+    "members" : [
+     {
+      "name" : "singleASN1Type",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)0u",
+      "line" : 186,
+      "char" : 5
+     },
+     {
+      "name" : "singleAbstractSyntaxNotation1Type",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)0u",
+      "line" : 188,
+      "char" : 5
+     },
+     {
+      "name" : "octetAligned",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)1u",
+      "line" : 190,
+      "char" : 5
+     },
+     {
+      "name" : "arbitrary",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)2u",
+      "line" : 192,
+      "char" : 5
+     }
+    ]
+   }
+  ]
+ }
+]

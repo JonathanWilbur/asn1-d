@@ -13,19 +13,20 @@ Library and executables for ASN.1 encoding and decoding using BER, CER, and
 DER codecs, all written in the D programming language.
 
 %prep
-tar -xf $RPM_SOURCE_DIR/v%{version}.tar.gz -C $RPM_BUILD_DIR
+tar -xf $RPM_SOURCE_DIR/asn1-%{version}.tar.gz -C $RPM_BUILD_DIR
+mv $RPM_BUILD_DIR/vagrant $RPM_BUILD_DIR/asn1-%{version}
 
 %build
-make --makefile=$RPM_BUILD_DIR/asn1-d-%{version}/build/posix.make root=$RPM_BUILD_DIR/asn1-d-%{version}
+make --makefile=$RPM_BUILD_DIR/asn1-%{version}/build/posix.make root=$RPM_BUILD_DIR/asn1-%{version}
 
 %install
-make --makefile=$RPM_BUILD_DIR/asn1-d-%{version}/build/posix.make install root=$RPM_BUILD_DIR/asn1-d-%{version}
+make --makefile=$RPM_BUILD_DIR/asn1-%{version}/build/posix.make install root=$RPM_BUILD_DIR/asn1-%{version}
 
 %check
-make --makefile=$RPM_BUILD_DIR/asn1-d-%{version}/build/posix.make test root=$RPM_BUILD_DIR/asn1-d-%{version}
+make --makefile=$RPM_BUILD_DIR/asn1-%{version}/build/posix.make test root=$RPM_BUILD_DIR/asn1-%{version}
 
 %clean
-make --makefile=$RPM_BUILD_DIR/asn1-d-%{version}/build/posix.make clean root=$RPM_BUILD_DIR/asn1-d-%{version}
+make --makefile=$RPM_BUILD_DIR/asn1-%{version}/build/posix.make clean root=$RPM_BUILD_DIR/asn1-%{version}
 
 %files
 output/libraries/asn1-%{version}.so

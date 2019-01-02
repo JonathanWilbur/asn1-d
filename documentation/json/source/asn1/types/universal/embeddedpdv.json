@@ -1,0 +1,48 @@
+[
+ {
+  "name" : "asn1.types.universal.embeddedpdv",
+  "kind" : "module",
+  "file" : "./source/asn1/types/universal/embeddedpdv.d",
+  "members" : [
+   {
+    "name" : "asn1.types.identification",
+    "kind" : "import",
+    "line" : 2,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "EmbeddedPDV",
+    "kind" : "alias",
+    "line" : 10,
+    "char" : 8,
+    "deco" : "S4asn15types9universal11embeddedpdv29EmbeddedPresentationDataValue"
+   },
+   {
+    "name" : "EmbeddedPresentationDataValue",
+    "kind" : "struct",
+    "line" : 100,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "identification",
+      "kind" : "variable",
+      "line" : 107,
+      "char" : 39,
+      "deco" : "S4asn15types14identification38ASN1ContextSwitchingTypeIdentification",
+      "originalType" : "ASN1ContextSwitchingTypeID",
+      "offset" : 0
+     },
+     {
+      "name" : "dataValue",
+      "kind" : "variable",
+      "line" : 109,
+      "char" : 20,
+      "deco" : "Ah",
+      "offset" : 96
+     }
+    ]
+   }
+  ]
+ }
+]

@@ -1,0 +1,463 @@
+[
+ {
+  "name" : "asn1.types.universal.objectidentifier",
+  "kind" : "module",
+  "file" : "./source/asn1/types/universal/objectidentifier.d",
+  "members" : [
+   {
+    "name" : "asn1.constants",
+    "kind" : "import",
+    "line" : 2,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "asn1.types.oidtype",
+    "kind" : "import",
+    "line" : 3,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.array",
+    "kind" : "import",
+    "line" : 4,
+    "char" : 8,
+    "protection" : "private",
+    "selective" : [
+     "appender",
+     "Appender"
+    ]
+   },
+   {
+    "name" : "OIDException",
+    "kind" : "alias",
+    "line" : 7,
+    "char" : 8,
+    "deco" : "C4asn15types9universal16objectidentifier25ObjectIdentifierException"
+   },
+   {
+    "name" : "ObjectIDException",
+    "kind" : "alias",
+    "line" : 9,
+    "char" : 8,
+    "deco" : "C4asn15types9universal16objectidentifier25ObjectIdentifierException"
+   },
+   {
+    "name" : "ObjectIdentifierException",
+    "kind" : "class",
+    "line" : 12,
+    "char" : 1,
+    "base" : "asn1.constants.AbstractSyntaxNotation1Exception",
+    "members" : [
+     {
+      "name" : "std.exception",
+      "kind" : "import",
+      "line" : 14,
+      "char" : 12,
+      "protection" : "private",
+      "selective" : [
+       "basicExceptionCtors"
+      ]
+     },
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 15,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "OID",
+    "kind" : "alias",
+    "line" : 19,
+    "char" : 8,
+    "deco" : "C4asn15types9universal16objectidentifier16ObjectIdentifier"
+   },
+   {
+    "name" : "ObjectID",
+    "kind" : "alias",
+    "line" : 21,
+    "char" : 8,
+    "deco" : "C4asn15types9universal16objectidentifier16ObjectIdentifier"
+   },
+   {
+    "name" : "ObjectIdentifier",
+    "kind" : "class",
+    "line" : 26,
+    "char" : 8,
+    "members" : [
+     {
+      "name" : "std.conv",
+      "kind" : "import",
+      "line" : 28,
+      "char" : 12,
+      "protection" : "private",
+      "selective" : [
+       "text"
+      ]
+     },
+     {
+      "name" : "showDescriptors",
+      "kind" : "variable",
+      "line" : 31,
+      "char" : 24,
+      "storageClass" : [
+       "static"
+      ],
+      "deco" : "b",
+      "init" : "true"
+     },
+     {
+      "name" : "nodes",
+      "kind" : "variable",
+      "line" : 33,
+      "char" : 32,
+      "storageClass" : [
+       "immutable"
+      ],
+      "deco" : "yAS4asn15types7oidtype20ObjectIdentifierNode",
+      "originalType" : "OIDNode[]",
+      "offset" : 16
+     },
+     {
+      "name" : "length",
+      "kind" : "function",
+      "line" : 37,
+      "char" : 12,
+      "deco" : "xFNdNfZm",
+      "originalType" : "const @property @safe size_t()",
+      "endline" : 40,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L43_C5",
+      "kind" : "function",
+      "line" : 43,
+      "char" : 5,
+      "endline" : 63,
+      "endchar" : 5
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 64,
+      "char" : 5,
+      "deco" : "FNfxAmXC4asn15types9universal16objectidentifier16ObjectIdentifier",
+      "originalType" : "@safe (in size_t[] numbers...)",
+      "parameters" : [
+       {
+        "name" : "numbers",
+        "deco" : "xAm"
+       }
+      ],
+      "endline" : 99,
+      "endchar" : 5
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 113,
+      "char" : 5,
+      "deco" : "FNfxAS4asn15types7oidtype20ObjectIdentifierNodeXCQBrQBp9universal16objectidentifier16ObjectIdentifier",
+      "originalType" : "@safe (in OIDNode[] nodes...)",
+      "parameters" : [
+       {
+        "name" : "nodes",
+        "deco" : "xAS4asn15types7oidtype20ObjectIdentifierNode"
+       }
+      ],
+      "endline" : 142,
+      "endchar" : 5
+     },
+     {
+      "name" : "this",
+      "kind" : "constructor",
+      "line" : 159,
+      "char" : 5,
+      "deco" : "FNfxAyaZC4asn15types9universal16objectidentifier16ObjectIdentifier",
+      "originalType" : "@safe (in string str)",
+      "parameters" : [
+       {
+        "name" : "str",
+        "deco" : "xAya"
+       }
+      ],
+      "endline" : 210,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L213_C5",
+      "kind" : "function",
+      "line" : 213,
+      "char" : 5,
+      "endline" : 235,
+      "endchar" : 5
+     },
+     {
+      "name" : "opEquals",
+      "kind" : "function",
+      "line" : 236,
+      "char" : 10,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFxC6ObjectZb",
+      "originalType" : "const @system bool(in Object other)",
+      "parameters" : [
+       {
+        "name" : "other",
+        "deco" : "xC6Object"
+       }
+      ],
+      "endline" : 246,
+      "endchar" : 5,
+      "overrides" : [
+       "object.Object.opEquals"
+      ]
+     },
+     {
+      "name" : "__unittest_L249_C5",
+      "kind" : "function",
+      "line" : 249,
+      "char" : 5,
+      "endline" : 265,
+      "endchar" : 5
+     },
+     {
+      "name" : "opIndex",
+      "kind" : "function",
+      "line" : 266,
+      "char" : 13,
+      "deco" : "xFNbNiNfxlZS4asn15types7oidtype20ObjectIdentifierNode",
+      "originalType" : "const nothrow @nogc @safe OIDNode(in ptrdiff_t index)",
+      "parameters" : [
+       {
+        "name" : "index",
+        "deco" : "xl"
+       }
+      ],
+      "endline" : 269,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L272_C5",
+      "kind" : "function",
+      "line" : 272,
+      "char" : 5,
+      "endline" : 283,
+      "endchar" : 5
+     },
+     {
+      "name" : "opSlice",
+      "kind" : "function",
+      "line" : 284,
+      "char" : 15,
+      "deco" : "xFNbNixlxlZAS4asn15types7oidtype20ObjectIdentifierNode",
+      "originalType" : "const nothrow @nogc @system OIDNode[](in ptrdiff_t index1, in ptrdiff_t index2)",
+      "parameters" : [
+       {
+        "name" : "index1",
+        "deco" : "xl"
+       },
+       {
+        "name" : "index2",
+        "deco" : "xl"
+       }
+      ],
+      "endline" : 287,
+      "endchar" : 5
+     },
+     {
+      "name" : "opDollar",
+      "kind" : "function",
+      "line" : 291,
+      "char" : 12,
+      "deco" : "xFNbNiNfZm",
+      "originalType" : "const nothrow @nogc @safe size_t()",
+      "endline" : 294,
+      "endchar" : 5
+     },
+     {
+      "name" : "descriptor",
+      "kind" : "function",
+      "line" : 304,
+      "char" : 12,
+      "deco" : "xFNbNfxmZAya",
+      "originalType" : "const nothrow @safe string(in size_t index)",
+      "parameters" : [
+       {
+        "name" : "index",
+        "deco" : "xm"
+       }
+      ],
+      "endline" : 307,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L310_C5",
+      "kind" : "function",
+      "line" : 310,
+      "char" : 5,
+      "endline" : 318,
+      "endchar" : 5
+     },
+     {
+      "name" : "numbers",
+      "kind" : "alias",
+      "line" : 318,
+      "char" : 12
+     },
+     {
+      "name" : "numericArray",
+      "kind" : "function",
+      "line" : 325,
+      "char" : 14,
+      "deco" : "xFNbNdNfZAm",
+      "originalType" : "const nothrow @property @safe size_t[]()",
+      "endline" : 338,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L341_C5",
+      "kind" : "function",
+      "line" : 341,
+      "char" : 5,
+      "endline" : 348,
+      "endchar" : 5
+     },
+     {
+      "name" : "asn1Notation",
+      "kind" : "alias",
+      "line" : 348,
+      "char" : 12
+     },
+     {
+      "name" : "abstractSyntaxNotation1Notation",
+      "kind" : "function",
+      "line" : 351,
+      "char" : 12,
+      "deco" : "xFNbNdNfZAya",
+      "endline" : 367,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L370_C5",
+      "kind" : "function",
+      "line" : 370,
+      "char" : 5,
+      "endline" : 386,
+      "endchar" : 5
+     },
+     {
+      "name" : "dotNotation",
+      "kind" : "function",
+      "line" : 387,
+      "char" : 12,
+      "deco" : "xFNbNdNfZAya",
+      "endline" : 403,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L406_C5",
+      "kind" : "function",
+      "line" : 406,
+      "char" : 5,
+      "endline" : 418,
+      "endchar" : 5
+     },
+     {
+      "name" : "iriNotation",
+      "kind" : "alias",
+      "line" : 418,
+      "char" : 12
+     },
+     {
+      "name" : "uriNotation",
+      "kind" : "alias",
+      "line" : 420,
+      "char" : 12
+     },
+     {
+      "name" : "uniformResourceIdentifierNotation",
+      "kind" : "alias",
+      "line" : 422,
+      "char" : 12
+     },
+     {
+      "name" : "internationalizedResourceIdentifierNotation",
+      "kind" : "function",
+      "line" : 430,
+      "char" : 12,
+      "deco" : "xFNdZAya",
+      "endline" : 447,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L450_C5",
+      "kind" : "function",
+      "line" : 450,
+      "char" : 5,
+      "endline" : 462,
+      "endchar" : 5
+     },
+     {
+      "name" : "urnNotation",
+      "kind" : "alias",
+      "line" : 462,
+      "char" : 12
+     },
+     {
+      "name" : "uniformResourceNameNotation",
+      "kind" : "function",
+      "line" : 472,
+      "char" : 12,
+      "deco" : "xFNbNdNfZAya",
+      "endline" : 481,
+      "endchar" : 5
+     },
+     {
+      "name" : "__unittest_L484_C5",
+      "kind" : "function",
+      "line" : 484,
+      "char" : 5,
+      "endline" : 496,
+      "endchar" : 5
+     },
+     {
+      "name" : "toString",
+      "kind" : "function",
+      "line" : 497,
+      "char" : 12,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "FNdZAya",
+      "endline" : 500,
+      "endchar" : 5,
+      "overrides" : [
+       "object.Object.toString"
+      ]
+     },
+     {
+      "name" : "toHash",
+      "kind" : "function",
+      "line" : 508,
+      "char" : 12,
+      "storageClass" : [
+       "override"
+      ],
+      "deco" : "xFNbNeZm",
+      "originalType" : "const nothrow @trusted size_t()",
+      "endline" : 516,
+      "endchar" : 5,
+      "overrides" : [
+       "object.Object.toHash"
+      ]
+     }
+    ]
+   }
+  ]
+ }
+]

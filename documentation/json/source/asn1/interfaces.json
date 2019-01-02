@@ -1,0 +1,43 @@
+[
+ {
+  "name" : "asn1.interfaces",
+  "kind" : "module",
+  "file" : "./source/asn1/interfaces.d",
+  "members" : [
+   {
+    "name" : "Byteable",
+    "kind" : "interface",
+    "line" : 7,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "fromBytes",
+      "kind" : "function",
+      "line" : 10,
+      "char" : 19,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "FxAhZm",
+      "originalType" : "size_t(in ubyte[])",
+      "parameters" : [
+       {
+        "deco" : "xAh"
+       }
+      ]
+     },
+     {
+      "name" : "toBytes",
+      "kind" : "function",
+      "line" : 12,
+      "char" : 20,
+      "storageClass" : [
+       "abstract"
+      ],
+      "deco" : "xFZAh"
+     }
+    ]
+   }
+  ]
+ }
+]

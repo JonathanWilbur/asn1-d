@@ -1,0 +1,841 @@
+[
+ {
+  "name" : "asn1.constants",
+  "kind" : "module",
+  "file" : "./source/asn1/constants.d",
+  "comment" : "    This file contains the constants and $(D enum)s used by the library.\n\n    Authors:\n    $(UL\n        $(LI $(PERSON Jonathan M. Wilbur, jonathan@wilbur.space, http://jonathan.wilbur.space))\n    )\n    Copyright: Copyright (C) Jonathan M. Wilbur\n    License: $(LINK https://mit-license.org/, MIT License)\n    Standards:\n        $(LINK https://www.itu.int/rec/T-REC-X.680/en, X.680 - Abstract Syntax Notation One (ASN.1))\n    See_Also:\n        $(LINK https://en.wikipedia.org/wiki/Abstract_Syntax_Notation_One, The Wikipedia Page on ASN.1)\n        $(LINK https://www.strozhevsky.com/free_docs/asn1_in_simple_words.pdf, ASN.1 By Simple Words)\n        $(LINK http://www.oss.com/asn1/resources/books-whitepapers-pubs/dubuisson-asn1-book.PDF, ASN.1: Communication Between Heterogeneous Systems)\n",
+  "members" : [
+   {
+    "name" : "std.stdio",
+    "kind" : "import",
+    "line" : 28,
+    "char" : 19,
+    "protection" : "private",
+    "selective" : [
+     "write",
+     "writefln",
+     "writeln"
+    ]
+   },
+   {
+    "name" : "core.exception",
+    "kind" : "import",
+    "line" : 33,
+    "char" : 19,
+    "protection" : "private",
+    "selective" : [
+     "AssertError",
+     "RangeError"
+    ]
+   },
+   {
+    "name" : "std.exception",
+    "kind" : "import",
+    "line" : 34,
+    "char" : 19,
+    "protection" : "private",
+    "selective" : [
+     "assertNotThrown",
+     "assertThrown"
+    ]
+   },
+   {
+    "name" : "std.math",
+    "kind" : "import",
+    "line" : 35,
+    "char" : 19,
+    "protection" : "private",
+    "selective" : [
+     "approxEqual"
+    ]
+   },
+   {
+    "name" : "std.stdio",
+    "kind" : "import",
+    "line" : 36,
+    "char" : 19,
+    "protection" : "private",
+    "selective" : [
+     "write",
+     "writefln",
+     "writeln"
+    ]
+   },
+   {
+    "name" : "ASN1Exception",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 47,
+    "char" : 8,
+    "deco" : "C4asn19constants32AbstractSyntaxNotation1Exception"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1Exception",
+    "kind" : "class",
+    "comment" : "A Generic Exception from which all other ASN.1 Exceptions will inherit.\n",
+    "line" : 49,
+    "char" : 1,
+    "base" : "object.Exception",
+    "members" : [
+     {
+      "name" : "std.exception",
+      "kind" : "import",
+      "line" : 51,
+      "char" : 20,
+      "protection" : "private",
+      "selective" : [
+       "basicExceptionCtors"
+      ]
+     },
+     {
+      "name" : "basicExceptionCtors!()",
+      "kind" : "mixin",
+      "line" : 52,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1TagClass",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 56,
+    "char" : 8,
+    "deco" : "E4asn19constants31AbstractSyntaxNotation1TagClass"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1TagClass",
+    "kind" : "enum",
+    "comment" : "\n",
+    "line" : 59,
+    "char" : 1,
+    "baseDeco" : "h",
+    "members" : [
+     {
+      "name" : "universal",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)0u",
+      "line" : 61,
+      "char" : 5
+     },
+     {
+      "name" : "application",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)64u",
+      "line" : 62,
+      "char" : 5
+     },
+     {
+      "name" : "contextSpecific",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)128u",
+      "line" : 63,
+      "char" : 5
+     },
+     {
+      "name" : "privatelyDefined",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)192u",
+      "line" : 64,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1Construction",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 68,
+    "char" : 8,
+    "deco" : "E4asn19constants35AbstractSyntaxNotation1Construction"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1Construction",
+    "kind" : "enum",
+    "comment" : "\n",
+    "line" : 71,
+    "char" : 1,
+    "baseDeco" : "h",
+    "members" : [
+     {
+      "name" : "primitive",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)0u",
+      "line" : 73,
+      "char" : 5
+     },
+     {
+      "name" : "constructed",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)32u",
+      "line" : 74,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1UniversalType",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 78,
+    "char" : 8,
+    "deco" : "E4asn19constants36AbstractSyntaxNotation1UniversalType"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1UniversalType",
+    "kind" : "enum",
+    "comment" : "    The data types, as well as their permitted construction and numeric\n    identifiers, according to the\n    $(LINK https://www.itu.int/en/pages/default.aspx,\n    International Telecommunications Union)'s\n    $(LINK http://www.itu.int/rec/T-REC-X.690/en, X.690 - ASN.1 encoding rules)\n\n    $(TABLE\n        $(TR $(TH Type)                 $(TH Construction)      $(TH Hexadecimal Value))\n        $(TR $(TD End-of-Content)       $(TD Primitive)         $(TD 0x00))\n        $(TR $(TD BOOLEAN)\t            $(TD Primitive)         $(TD 0x01))\n        $(TR $(TD INTEGER)\t            $(TD Primitive)         $(TD 0x02))\n        $(TR $(TD BIT STRING)           $(TD Both)              $(TD 0x03))\n        $(TR $(TD OCTET STRING)         $(TD Both)              $(TD 0x04))\n        $(TR $(TD NULL)                 $(TD Primitive)         $(TD 0x05))\n        $(TR $(TD OBJECT IDENTIFIER)\t$(TD Primitive)         $(TD 0x06))\n        $(TR $(TD Object Descriptor)    $(TD Both)              $(TD 0x07))\n        $(TR $(TD EXTERNAL)\t            $(TD Constructed)       $(TD 0x08))\n        $(TR $(TD REAL)            \t    $(TD Primitive)         $(TD 0x09))\n        $(TR $(TD ENUMERATED)\t        $(TD Primitive)         $(TD 0x0A))\n        $(TR $(TD EmbeddedPDV)\t        $(TD Constructed)       $(TD 0x0B))\n        $(TR $(TD UTF8String)\t        $(TD Both)              $(TD 0x0C))\n        $(TR $(TD RELATIVE-OID)\t        $(TD Primitive)         $(TD 0x0D))\n        $(TR $(TD SEQUENCE)\t            $(TD Constructed)       $(TD 0x10))\n        $(TR $(TD SET)\t                $(TD Constructed)       $(TD 0x11))\n        $(TR $(TD NumericString)\t    $(TD Both)              $(TD 0x12))\n        $(TR $(TD PrintableString)\t    $(TD Both)              $(TD 0x13))\n        $(TR $(TD T61String)\t        $(TD Both)              $(TD 0x14))\n        $(TR $(TD VideotexString)\t    $(TD Both)              $(TD 0x15))\n        $(TR $(TD IA5String)\t        $(TD Both)              $(TD 0x16))\n        $(TR $(TD UTCTime)\t            $(TD Both)              $(TD 0x17))\n        $(TR $(TD GeneralizedTime)\t    $(TD Both)              $(TD 0x18))\n        $(TR $(TD GraphicString)\t    $(TD Both)              $(TD 0x19))\n        $(TR $(TD VisibleString)\t    $(TD Both)              $(TD 0x1A))\n        $(TR $(TD GeneralString)\t    $(TD Both)              $(TD 0x1B))\n        $(TR $(TD UniversalString)\t    $(TD Both)              $(TD 0x1C))\n        $(TR $(TD CHARACTER STRING)\t    $(TD Both)              $(TD 0x1D))\n        $(TR $(TD BMPString)\t        $(TD Both)              $(TD 0x1E))\n    )\n",
+    "line" : 120,
+    "char" : 1,
+    "baseDeco" : "h",
+    "members" : [
+     {
+      "name" : "endOfContent",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)0u",
+      "line" : 122,
+      "char" : 5
+     },
+     {
+      "name" : "eoc",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)0u",
+      "line" : 123,
+      "char" : 5
+     },
+     {
+      "name" : "boolean",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)1u",
+      "line" : 124,
+      "char" : 5
+     },
+     {
+      "name" : "integer",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)2u",
+      "line" : 125,
+      "char" : 5
+     },
+     {
+      "name" : "bitString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)3u",
+      "line" : 126,
+      "char" : 5
+     },
+     {
+      "name" : "octetString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)4u",
+      "line" : 127,
+      "char" : 5
+     },
+     {
+      "name" : "nill",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)5u",
+      "line" : 128,
+      "char" : 5
+     },
+     {
+      "name" : "objectIdentifier",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)6u",
+      "line" : 129,
+      "char" : 5
+     },
+     {
+      "name" : "oid",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)6u",
+      "line" : 130,
+      "char" : 5
+     },
+     {
+      "name" : "objectDescriptor",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)7u",
+      "line" : 131,
+      "char" : 5
+     },
+     {
+      "name" : "external",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)8u",
+      "line" : 132,
+      "char" : 5
+     },
+     {
+      "name" : "ext",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)8u",
+      "line" : 133,
+      "char" : 5
+     },
+     {
+      "name" : "realNumber",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)9u",
+      "line" : 134,
+      "char" : 5
+     },
+     {
+      "name" : "enumerated",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)10u",
+      "line" : 135,
+      "char" : 5
+     },
+     {
+      "name" : "embeddedPresentationDataValue",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)11u",
+      "line" : 136,
+      "char" : 5
+     },
+     {
+      "name" : "embeddedPDV",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)11u",
+      "line" : 137,
+      "char" : 5
+     },
+     {
+      "name" : "pdv",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)11u",
+      "line" : 138,
+      "char" : 5
+     },
+     {
+      "name" : "unicodeTransformationFormat8String",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)12u",
+      "line" : 139,
+      "char" : 5
+     },
+     {
+      "name" : "utf8String",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)12u",
+      "line" : 140,
+      "char" : 5
+     },
+     {
+      "name" : "utf8",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)12u",
+      "line" : 141,
+      "char" : 5
+     },
+     {
+      "name" : "relativeObjectIdentifier",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)13u",
+      "line" : 142,
+      "char" : 5
+     },
+     {
+      "name" : "relativeOID",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)13u",
+      "line" : 143,
+      "char" : 5
+     },
+     {
+      "name" : "roid",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)13u",
+      "line" : 144,
+      "char" : 5
+     },
+     {
+      "name" : "reserved14",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)14u",
+      "line" : 145,
+      "char" : 5
+     },
+     {
+      "name" : "reserved15",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)15u",
+      "line" : 146,
+      "char" : 5
+     },
+     {
+      "name" : "sequence",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)16u",
+      "line" : 147,
+      "char" : 5
+     },
+     {
+      "name" : "set",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)17u",
+      "line" : 148,
+      "char" : 5
+     },
+     {
+      "name" : "numericString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)18u",
+      "line" : 149,
+      "char" : 5
+     },
+     {
+      "name" : "numeric",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)18u",
+      "line" : 150,
+      "char" : 5
+     },
+     {
+      "name" : "printableString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)19u",
+      "line" : 151,
+      "char" : 5
+     },
+     {
+      "name" : "printable",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)19u",
+      "line" : 152,
+      "char" : 5
+     },
+     {
+      "name" : "teletexString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)20u",
+      "line" : 153,
+      "char" : 5
+     },
+     {
+      "name" : "t61String",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)20u",
+      "line" : 154,
+      "char" : 5
+     },
+     {
+      "name" : "videotexString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)21u",
+      "line" : 155,
+      "char" : 5
+     },
+     {
+      "name" : "internationalAlphabetNumber5String",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)22u",
+      "line" : 156,
+      "char" : 5
+     },
+     {
+      "name" : "ia5String",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)22u",
+      "line" : 157,
+      "char" : 5
+     },
+     {
+      "name" : "coordinatedUniversalTime",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)23u",
+      "line" : 158,
+      "char" : 5
+     },
+     {
+      "name" : "utcTime",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)23u",
+      "line" : 159,
+      "char" : 5
+     },
+     {
+      "name" : "generalizedTime",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)24u",
+      "line" : 160,
+      "char" : 5
+     },
+     {
+      "name" : "graphicString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)25u",
+      "line" : 161,
+      "char" : 5
+     },
+     {
+      "name" : "graphic",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)25u",
+      "line" : 162,
+      "char" : 5
+     },
+     {
+      "name" : "visibleString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)26u",
+      "line" : 163,
+      "char" : 5
+     },
+     {
+      "name" : "visible",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)26u",
+      "line" : 164,
+      "char" : 5
+     },
+     {
+      "name" : "generalString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)27u",
+      "line" : 165,
+      "char" : 5
+     },
+     {
+      "name" : "general",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)27u",
+      "line" : 166,
+      "char" : 5
+     },
+     {
+      "name" : "universalString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)28u",
+      "line" : 167,
+      "char" : 5
+     },
+     {
+      "name" : "universal",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)28u",
+      "line" : 168,
+      "char" : 5
+     },
+     {
+      "name" : "characterString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)29u",
+      "line" : 169,
+      "char" : 5
+     },
+     {
+      "name" : "basicMultilingualPlaneString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)30u",
+      "line" : 170,
+      "char" : 5
+     },
+     {
+      "name" : "bmpString",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)30u",
+      "line" : 171,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1LengthEncoding",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 175,
+    "char" : 8,
+    "deco" : "E4asn19constants37AbstractSyntaxNotation1LengthEncoding"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1LengthEncoding",
+    "kind" : "enum",
+    "comment" : "\n",
+    "line" : 178,
+    "char" : 1,
+    "baseDeco" : "h",
+    "members" : [
+     {
+      "name" : "definiteShort",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)0u",
+      "line" : 180,
+      "char" : 5
+     },
+     {
+      "name" : "indefinite",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)128u",
+      "line" : 181,
+      "char" : 5
+     },
+     {
+      "name" : "definiteLong",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)129u",
+      "line" : 182,
+      "char" : 5
+     },
+     {
+      "name" : "reserved",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)255u",
+      "line" : 183,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1RealEncodingBase",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 187,
+    "char" : 8,
+    "deco" : "E4asn19constants39AbstractSyntaxNotation1RealEncodingBase"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1RealEncodingBase",
+    "kind" : "enum",
+    "comment" : "\n",
+    "line" : 190,
+    "char" : 1,
+    "baseDeco" : "h",
+    "members" : [
+     {
+      "name" : "base2",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)2u",
+      "line" : 192,
+      "char" : 5
+     },
+     {
+      "name" : "base8",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)8u",
+      "line" : 193,
+      "char" : 5
+     },
+     {
+      "name" : "base10",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)10u",
+      "line" : 194,
+      "char" : 5
+     },
+     {
+      "name" : "base16",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)16u",
+      "line" : 195,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1RealEncodingScale",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 199,
+    "char" : 8,
+    "deco" : "E4asn19constants40AbstractSyntaxNotation1RealEncodingScale"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1RealEncodingScale",
+    "kind" : "enum",
+    "comment" : "\n",
+    "line" : 202,
+    "char" : 1,
+    "baseDeco" : "h",
+    "members" : [
+     {
+      "name" : "scale0",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)0u",
+      "line" : 204,
+      "char" : 5
+     },
+     {
+      "name" : "scale1",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)1u",
+      "line" : 205,
+      "char" : 5
+     },
+     {
+      "name" : "scale2",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)2u",
+      "line" : 206,
+      "char" : 5
+     },
+     {
+      "name" : "scale3",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)3u",
+      "line" : 207,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1RealExponentEncoding",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 211,
+    "char" : 8,
+    "deco" : "E4asn19constants43AbstractSyntaxNotation1RealExponentEncoding"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1RealExponentEncoding",
+    "kind" : "enum",
+    "comment" : "\n",
+    "line" : 214,
+    "char" : 1,
+    "baseDeco" : "h",
+    "members" : [
+     {
+      "name" : "followingOctet",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)0u",
+      "line" : 216,
+      "char" : 5
+     },
+     {
+      "name" : "following2Octets",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)1u",
+      "line" : 217,
+      "char" : 5
+     },
+     {
+      "name" : "following3Octets",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)2u",
+      "line" : 218,
+      "char" : 5
+     },
+     {
+      "name" : "complicated",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)3u",
+      "line" : 219,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1SpecialRealValue",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 223,
+    "char" : 8,
+    "deco" : "E4asn19constants39AbstractSyntaxNotation1SpecialRealValue"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1SpecialRealValue",
+    "kind" : "enum",
+    "comment" : "    Special values for REALs, as assigned in section 8.5.9 of X.690.\n\n    Note that NOT-A-NUMBER and minus zero were added in the 2015 version.\n",
+    "line" : 230,
+    "char" : 1,
+    "baseDeco" : "h",
+    "members" : [
+     {
+      "name" : "plusInfinity",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)64u",
+      "line" : 232,
+      "char" : 5
+     },
+     {
+      "name" : "minusInfinity",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)65u",
+      "line" : 233,
+      "char" : 5
+     },
+     {
+      "name" : "notANumber",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)66u",
+      "line" : 234,
+      "char" : 5
+     },
+     {
+      "name" : "minusZero",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)67u",
+      "line" : 235,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "ASN1Base10RealNumericalRepresentation",
+    "kind" : "alias",
+    "comment" : "\n",
+    "line" : 239,
+    "char" : 8,
+    "deco" : "E4asn19constants56AbstractSyntaxNotation1Base10RealNumericalRepresentation"
+   },
+   {
+    "name" : "AbstractSyntaxNotation1Base10RealNumericalRepresentation",
+    "kind" : "enum",
+    "comment" : "    The standardized string representations of floating point numbers, as\n    specified in $(LINK https://www.iso.org/standard/12285.html, ISO 6093).\n\n    $(TABLE\n        $(TR $(TH Representation) $(TH Description) $(TH Examples))\n        $(TR $(TD NR1) $(TD Implicit decimal point) $(TD \"3\", \"-1\", \"+1000\"))\n        $(TR $(TD NR2) $(TD Explicit decimal) $(TD \"3.0\", \"-1.3\", \"-.3\"))\n        $(TR $(TD NR3) $(TD Explicit exponent) $(TD \"3.0E1\", \"123E+100\"))\n    )\n\n    Citations:\n        Dubuisson, Olivier. “Character String Types.” ASN.1:\n            Communication between Heterogeneous Systems, Morgan\n            Kaufmann, 2001, p. 143.\n",
+    "line" : 257,
+    "char" : 1,
+    "baseDeco" : "h",
+    "members" : [
+     {
+      "name" : "nr1",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)1u",
+      "line" : 259,
+      "char" : 5
+     },
+     {
+      "name" : "nr2",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)2u",
+      "line" : 260,
+      "char" : 5
+     },
+     {
+      "name" : "nr3",
+      "kind" : "enum member",
+      "value" : "cast(ubyte)3u",
+      "line" : 261,
+      "char" : 5
+     }
+    ]
+   },
+   {
+    "name" : "numericStringCharacters",
+    "kind" : "variable",
+    "comment" : "The acceptable characters for a NumericString\n",
+    "line" : 265,
+    "char" : 25,
+    "storageClass" : [
+     "immutable"
+    ],
+    "deco" : "yAa",
+    "originalType" : "string",
+    "init" : "\"0123456789 \""
+   },
+   {
+    "name" : "printableStringCharacters",
+    "kind" : "variable",
+    "comment" : "    The acceptable characters for a printableString.\n\n    The sorting of letters below is a slight optimization:\n    they are sorted in order of decreasing frequency in the English\n    language, so that canFind will usually have to iterate through\n    fewer letters before finding a match.\n",
+    "line" : 275,
+    "char" : 25,
+    "storageClass" : [
+     "immutable"
+    ],
+    "deco" : "yAa",
+    "originalType" : "string",
+    "init" : "\"etaoinsrhdlucmfywgpbvkxqjzETAOINSRHDLUCMFYWGPBVKXQJZ0123456789 '()+,-./:=?\""
+   }
+  ]
+ }
+]
