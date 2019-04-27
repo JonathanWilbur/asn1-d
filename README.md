@@ -5,6 +5,23 @@
 * License: [MIT License](https://mit-license.org/)
 * Version: _See `version` file or git tags._
 
+## Status
+
+As of now, this project is "abandoned," but if a bug is found in it, I am generally a pretty good steward of the things I write and I will still fix it. Though this library is "abandoned," I still consider it perfectly fine for production use.
+
+Here are my remaining todos that I will probably not fix unless I fix a bug at the same time:
+
+- Unused variable 'i' in BER.objectIdentifier getter in D library (line 898)
+- The D Library does not accept constructed UTCTime and GeneralizedTime
+- Unnecessary "if (numbers.length > 2) {" in OID types
+- ITU X.680 S 47.3: "UTCTime ::= [UNIVERSAL 23] IMPLICIT VisibleString"
+- ITU X.680 S 46.3: "GeneralizedTime ::= [UNIVERSAL 24] IMPLICIT VisibleString"
+- Is it a problem that my ASN.1 D library supports length tags with leading zeros? Section 8.1.3.5: "NOTE 2 –In the long form, it is a sender's option whether to use more length octets than the minimum necessary"
+- Fix typo in D ASN.1 library: "At least two nodes must be provided to ObjectIdenifier constructor."
+- Fix error in D ASN.1 library, line 1934 of ber.d: should be "else if"
+
+Though I consider this a _good_ implementation of an ASN.1 codec, my TypeScript implementation is _much better_. If you wish to model an ASN.1 library off of my work, I highly encourage you use [my TypeScript library](https://github.com/JonathanWilbur/asn1-ts) as a reference instead, and only defer to this library when the low-level memory / performance details are at issue. Structurally, the libraries are almost identical.
+
 ## What is ASN.1?
 
 ASN.1 stands for *Abstract Syntax Notation*. ASN.1 was first specified in
